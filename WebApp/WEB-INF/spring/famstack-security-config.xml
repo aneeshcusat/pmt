@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+
+	<sec:global-method-security pre-post-annotations="enabled" secured-annotations="enabled" order="1">
+    </sec:global-method-security>
+    <sec:authentication-manager alias="authenticationManager">
+		<sec:authentication-provider ref="famstackAuthenticationProvider" />
+	</sec:authentication-manager>
+	
+	<sec:http use-expressions="true" auto-config="false" entry-point-ref="CustomAuthenticationEntryPoint">
+	    <sec:intercept-url pattern="/dashboard/login*" access="isAnonymous()" />
+        <sec:intercept-url pattern="/dashboard/**" access="isAuthenticated()"/>
+		<sec:custom-filter position="CHANNEL_FILTER" ref="channelProcessingFilter" />
+		<sec:csrf disabled="true"/>
+	</sec:http>
+
+	<bean id="channelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
+		<property name="channelDecisionManager" ref="channelDecisionManager" />
+		<property name="securityMetadataSource">
+			<sec:filter-security-metadata-source use-expressions="false">
+				<sec:intercept-url pattern="/admin/*" method="POST" access="REQUIRES_SECURE_CHANNEL" />
+				<sec:intercept-url pattern="/admin/*" method="GET" access="REQUIRES_SECURE_CHANNEL" />
+			</sec:filter-security-metadata-source>
+		</property>
+	</bean>
+
+
+	<bean class="com.famstack.projectscheduler.security.expression.CustomAuthenticationEntryPoint" id="CustomAuthenticationEntryPoint" />
+
+	<bean id="channelDecisionManager" class="org.springframework.security.web.access.channel.ChannelDecisionManagerImpl">
+		<property name="channelProcessors">
+			<list>
+				<ref bean="secureChannelProcessor" />
+				<ref bean="insecureChannelProcessor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="secureChannelProcessor" class="org.springframework.security.web.access.channel.SecureChannelProcessor">
+		<property name="entryPoint" ref="secureEntryPoint" />
+	</bean>
+
+	<bean id="insecureChannelProcessor" class="org.springframework.security.web.access.channel.InsecureChannelProcessor">
+		<property name="entryPoint" ref="insecureEntryPoint" />
+	</bean>
+
+	<bean id="secureEntryPoint" class="org.springframework.security.web.access.channel.RetryWithHttpsEntryPoint">
+		<property name="portMapper" ref="portMapper" />
+	</bean>
+
+	<bean id="insecureEntryPoint" class="org.springframework.security.web.access.channel.RetryWithHttpEntryPoint">
+		<property name="portMapper" ref="portMapper" />
+	</bean>
+
+	<bean id="portMapper" class="org.springframework.security.web.PortMapperImpl">
+		<property name="portMappings">
+			<map>
+				<entry key="8080" value="8443" />
+				<entry key="8443" value="8080" />
+			</map>
+		</property>
+	</bean>
+	
+    <bean id="famstackAuthenticationProvider" class="com.famstack.projectscheduler.security.FamstackAuthenticationProvider" />
+    <bean id="authenticationTrustResolver" class="org.springframework.security.authentication.AuthenticationTrustResolverImpl" />
+	
+</beans>

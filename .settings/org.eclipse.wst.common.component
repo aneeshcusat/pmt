@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="famstack-ps">
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Rest.Services/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Base/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/External.Services/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Services.Email/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Services.Email/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Services.Dashboard/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Services.Scheduling/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/External.Services/src/test/groovy"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Base/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Rest.Services/src/test/groovy"/>
+        <wb-resource deploy-path="/" source-path="/WebApp"/>
+        <property name="context-root" value="famstack-ps"/>
+        <property name="java-output-path" value="/famstack-ps/bin"/>
+    </wb-module>
+</project-modules>

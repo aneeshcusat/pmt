@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+        
+<context:property-placeholder location="classpath:properties/famstack-application-default.properties, classpath:properties/famstack-application-${spring.profiles.active}.properties" ignore-unresolvable="true" />
+
+ <bean id="famstackTemplateEmailInfo" class=" com.famstack.email.util.FamstackTemplateEmailInfo">
+  <property name="mailCc" value="${email.mailCC}"/>
+  <property name="mailBcc" value="${email.mailBCC}"/>
+  <property name="mailSubject" value="${email.mailSubject}" />
+  <property name="mailFrom" value="${email.mailFrom}" />
+  <property name="mailTo" value="${email.mailTo}" />
+ </bean>
+
+ <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+  <property name="host" value="${email.host}" />
+  <property name="port" value="${email.port}" />
+  <property name="username" value="${email.username}" /> 
+  <property name="password" value="${email.password}" /> 
+  <property name="javaMailProperties">
+   <props>
+    <prop key="mail.debug">${email.debug}</prop> 
+    <prop key="mail.smtp.auth">true</prop>
+    <prop key="mail.smtp.starttls.enable">true</prop>
+    <prop key="mail.mime.charset">UTF-8</prop>
+    <prop key="mail.transport.protocol">smtp</prop>
+   </props>
+  </property>
+ </bean>
+
+<bean id="famstackVelocityService" class="com.famstack.email.velocity.FamstackVelocityService"/>
+<bean id="famstackEmailTemplateRendererService" class="com.famstack.email.velocity.FamstackEmailTemplateRendererService"/>
+<bean id="famstackEmailSender" class="com.famstack.email.FamstackEmailSender"/>
+<bean id="famstackEmailNotificationManager" class="com.famstack.email.manager.FamstackEmailNotificationManager"/>
+<bean id="velocityInitService" class="com.famstack.email.velocity.VelocityInitService">
+  <property name="templateDirPath" value="/WEB-INF/velocity/templates/"/>
+</bean>
+  
+</beans>

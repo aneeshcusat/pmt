@@ -1,0 +1,214 @@
+// project version
+version = "$applicationVersion"
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'pmd'
+apply plugin: "org.sonarqube"
+apply plugin: "jacoco"
+
+// JDK version source compatibility
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// War file name
+war.baseName = "$warBaseName"
+
+// Web directory, this overrides the default value "webapp"
+project.webAppDirName = 'WebApp'
+
+
+buildscript {
+	repositories {
+		jcenter()
+		maven {
+          url "https://plugins.gradle.org/m2/"
+          url "https://plugins.gradle.org/m2/"
+        }
+	}
+
+	dependencies {
+		classpath 'com.bmuschko:gradle-tomcat-plugin:2.0'
+		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1"
+	}
+}
+
+// dependencies to run on tomcat, are mandatory for tomcat plugin
+dependencies {
+	compile 'org.slf4j:slf4j-api:1.7.21'
+	
+	// Spring support
+	compile group: 'org.springframework', name: 'spring-aop', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-beans', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-context', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-core', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-expression', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-web', version: '4.2.6.RELEASE'
+	compile group: 'org.springframework', name: 'spring-jms', version: '4.2.6.RELEASE'
+	
+	//spring security
+	compile group: 'org.springframework.security', name: 'spring-security-core', version: '4.1.0.RELEASE'
+	compile group: 'aopalliance', name: 'aopalliance', version: '1.0'
+	compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.1.0.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.1.0.RELEASE'
+	//compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '4.1.0.RELEASE'
+	
+	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+	
+	compile group: 'com.sun.jersey.contribs', name: 'jersey-spring', version: '1.19.1'
+	compile group: 'com.sun.jersey', name: 'jersey-core', version: '1.19.1'
+	compile group: 'com.sun.jersey', name: 'jersey-server', version: '1.19.1'
+	compile group: 'com.sun.jersey', name: 'jersey-json', version: '1.19.1'
+	
+    //Supports log4j2 logging
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6'
+  	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.6'
+	compile group: 'com.lmax', name: 'disruptor', version: '3.3.4'
+	
+	
+	//email support
+	compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.5'
+	compile group: 'org.apache.velocity', name: 'velocity', version: '1.7'
+	compile group: 'javax.mail', name: 'mail', version: '1.4.7'
+	compile group: 'org.springframework', name: 'spring-context-support', version: '4.2.6.RELEASE'
+	
+	//sprint mvc for admin console
+	compile group: 'org.springframework', name: 'spring-webmvc', version: '4.2.6.RELEASE'
+	compile group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.2'
+	compile group: 'jstl', name: 'jstl', version: '1.2'
+	
+	//spring mvc file upload
+	compile group: 'commons-io', name: 'commons-io', version: '2.5'
+	compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.2'
+	
+	// Spring ORM support
+	compile group: 'org.springframework', name: 'spring-orm', version: '4.2.6.RELEASE'
+	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.2.1.Final'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.1.Final'
+	compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+	
+	//message queue
+    compile group: 'javax.jms', name: 'jms', version: '2.0'
+    compile group: 'com.ibm', name: 'com.ibm.mqjms', version: '8.0.0.4'
+    compile group: 'com.ibm', name: 'com.ibm.mq.jmqi', version: '8.0.0.4'
+    compile ('com.walmart.platform.messaging:messaging-jms-client:5.0.7') {
+        exclude group: 'javax.ws.rs'
+    }
+
+	//Rest Json
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.7.1'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.7.1'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.1'
+	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.7.1'
+			
+	//Groovy spock configuraion		
+    compile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.3'
+    compile group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4'
+    compile group: 'cglib', name: 'cglib-nodep', version: '2.1_3'
+    compile group: 'org.objenesis', name: 'objenesis', version: '2.4'
+   
+	def tomcatVersion = '7.0.50'
+	
+	tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+			"org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+	
+	tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+		exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+	}
+   
+   testCompile group: 'junit', name: 'junit', version: '4.12'
+   testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.3'
+   testCompile group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4'
+   compile group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.7.1'
+    
+    testRuntime(
+            'com.athaydes:spock-reports:1.2.7'
+    )
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven {
+		url "http://central.maven.org/maven2/"
+		url "https://maven.oracle.com/"
+		url "http://gec-maven-nexus.walmart.com/nexus/content/groups/public/"
+	}
+	jcenter()
+}
+
+task explodedWar(type: Copy) {
+	into "$buildDir/DeliveryInterface"
+	with war
+}
+
+war.dependsOn explodedWar
+
+build.dependsOn pmdMain
+
+// Set source directory
+sourceSets {
+		main {
+			java {
+				srcDir 'Base/src/main/java'
+				srcDir 'Rest.Services/src/main/java'
+				srcDir 'External.Services/src/main/java'
+				srcDir 'Services.Email/src/main/java'
+				srcDir 'Services.Scheduling/src/main/java'
+				srcDir 'Services.Dashboard/src/main/java'
+			}
+			resources {
+				srcDir 'Base/src/main/resources'
+				srcDir 'Services.Email/src/main/resources'
+			}
+		}
+		test {
+    		groovy {
+      			srcDir 'Base/src/test/groovy'
+      			srcDir 'Rest.Services/src/test/groovy'
+      			srcDir 'External.Services/src/test/groovy'
+      			srcDir 'Services.Email/src/test/groovy'
+      			srcDir 'Services.Scheduling/src/test/groovy'
+      			srcDir 'Services.Dashboard/src/test/groovy'
+   			}
+  		}
+  		
+	}
+
+// context where tomcat is deployed, by defautl localhost:8080/
+tomcatRun.contextPath = '/'
+tomcatRunWar.contextPath = '/'
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.4'
+}
+
+compileTestJava {
+	enabled = false
+}
+processTestResources {
+	enabled = false
+}
+pmdTest {
+	enabled = false
+}
+
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.projectName", "Delivery Interface"
+        property "sonar.projectKey", "com.walmart.deliveryinterface"
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+}
