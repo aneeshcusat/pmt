@@ -122,13 +122,13 @@
     	console.log("jello2");
         $.ajax({
         type: "POST",
-        url: "/famstack-ps/dashboard/loginAjax",
+        url: "/bops/dashboard/loginAjax",
         data: dataString, 
         success: function(response){
         	$("#invalidLoginSpan").hide();
         	var responseJsonObj = JSON.parse(response);
         	if(responseJsonObj.status == true){
-        		   window.location = "/famstack-ps/dashboard/index";
+        		   window.location = "/bops/dashboard/index";
         	} else {
         		$("#invalidLoginSpan").show();
         	}

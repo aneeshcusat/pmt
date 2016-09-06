@@ -14,12 +14,10 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.util.StringUtils;
 
-@Component
 public class FamstackSecurityTokenManager extends BaseFamstackService {
 
     /** The Constant STRING_COLUMN. */

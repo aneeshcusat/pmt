@@ -33,11 +33,11 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.current_session_context_class">thread</prop>
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.format_sql">false</prop>
-				<prop key="hibernate.generate_statistics">false</prop>
-				<prop key="hibernate.use_sql_comments">false</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.use_sql_comments">true</prop>
 				<prop key="hibernate.jdbc.batch_size">10</prop>
 			</props>
 		</property>

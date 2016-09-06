@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.dashboard.manager;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -8,22 +10,68 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
+import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.security.user.FamstackUserProfileManager;
+import com.famstack.projectscheduler.util.StringUtils;
 
 @Component
 public class FamstackDashboardManager extends BaseFamstackService {
-	
+
 	@Resource
 	FamstackDataAccessObjectManager famstackDataAccessObjectManager;
-   
-    public Map<String, Object> getUserData() {
-        return null;
-    }
 
-    public void deleteUser(String userId) {
+	@Resource
+	FamstackUserProfileManager userProfileManager;
 
-    }
+	public Map<String, Object> getUserData() {
+		return null;
+	}
 
-    public void createUser(String userId, String oldUserName, String userRole, String password, String clubId) {
-     
-    }
+	public void deleteUser(String userId) {
+
+	}
+
+	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
+		Map<String, String> errorMap = valiateUser(employeeDetails);
+		if (!errorMap.isEmpty()) {
+			return errorMap;
+		}
+		UserItem userItem = userProfileManager.getUserItem(employeeDetails.getEmail());
+
+		if (userItem != null) {
+			errorMap.put("userExists", "user already exist in the system");
+		}
+
+		userProfileManager.createUserItem(employeeDetails);
+
+		return errorMap;
+	}
+
+	private Map<String, String> valiateUser(EmployeeDetails employeeDetails) {
+		Map<String, String> errorMap = new HashMap<>();
+		if (!StringUtils.isNotBlank(employeeDetails.getFirstName())
+				|| !StringUtils.isNotBlank(employeeDetails.getConfirmPassword())
+				|| !StringUtils.isNotBlank(employeeDetails.getEmail())) {
+			errorMap.put("invalidInput", "required inputs are missing");
+		}
+
+		String password = employeeDetails.getPassword();
+		String confirmPassword = employeeDetails.getConfirmPassword();
+
+		if (!password.equals(confirmPassword)) {
+			errorMap.put("passwordMissmatch", "password missmatch");
+		}
+
+		return errorMap;
+	}
+
+	public List<UserItem> getUsersData() {
+		return userProfileManager.getAllUserItems();
+	}
+
+	public UserItem getUser(int userId) {
+		return userProfileManager.getUserItemById(userId);
+	}
+
 }
