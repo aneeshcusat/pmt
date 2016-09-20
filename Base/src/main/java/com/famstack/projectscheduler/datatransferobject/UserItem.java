@@ -42,7 +42,22 @@ public class UserItem {
 
 	@Column(name = "first_name")
 	private String firstName;
+	
+	@Column(name = "last_name")
+	private String lastName;
+	
+	@Column(name = "gender")
+	private String gender;
 
+	@Column(name = "user_group")
+	private String userGroup;
+	
+	@Column(name = "qualification")
+	private String qualification;
+	
+	@Column(name = "dob")
+	private String dob;
+	
 	@Column(name = "designation")
 	private String designation;
 
@@ -166,5 +181,75 @@ public class UserItem {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @return the gender
+	 */
+	public String getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender the gender to set
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	/**
+	 * @return the userGroup
+	 */
+	public String getUserGroup() {
+		return userGroup;
+	}
+
+	/**
+	 * @param userGroup the userGroup to set
+	 */
+	public void setUserGroup(String userGroup) {
+		this.userGroup = userGroup;
+	}
+
+	/**
+	 * @return the qualification
+	 */
+	public String getQualification() {
+		return qualification;
+	}
+
+	/**
+	 * @param qualification the qualification to set
+	 */
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
+	}
+
+	/**
+	 * @return the dob
+	 */
+	public String getDob() {
+		return dob;
+	}
+
+	/**
+	 * @param dob the dob to set
+	 */
+	public void setDob(String dob) {
+		this.dob = dob;
 	}
 }

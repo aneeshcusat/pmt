@@ -2,6 +2,8 @@ package com.famstack.projectscheduler.employees.bean;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.famstack.projectscheduler.security.user.UserRole;
+
 public class EmployeeDetails {
 
 	private String firstName;
@@ -12,6 +14,12 @@ public class EmployeeDetails {
 	private String group;
 	private String mobileNumber;
 	private MultipartFile filePhoto;
+	private String gender;
+	private String qualification;
+	private String designation;
+	private UserRole role;
+	private String dateOfBirth;
+	
 
 	public String getFirstName() {
 		return firstName;
@@ -77,7 +85,6 @@ public class EmployeeDetails {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	private String dateOfBirth;
 
 	public MultipartFile getFilePhoto() {
 		return filePhoto;
@@ -86,5 +93,63 @@ public class EmployeeDetails {
 	public void setFilePhoto(MultipartFile filePhoto) {
 		this.filePhoto = filePhoto;
 	}
+
+	/**
+	 * @return the gender
+	 */
+	public String getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender the gender to set
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	/**
+	 * @return the qualification
+	 */
+	public String getQualification() {
+		return qualification;
+	}
+
+	/**
+	 * @param qualification the qualification to set
+	 */
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
+	}
+
+
+	/**
+	 * @return the designation
+	 */
+	public String getDesignation() {
+		return designation;
+	}
+
+	/**
+	 * @param designation the designation to set
+	 */
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	/**
+	 * @return the role
+	 */
+	public UserRole getRole() {
+		return role;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(UserRole role) {
+		this.role = role;
+	}
+
 
 }

@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.security.user;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -93,6 +94,18 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		userItem.setHashkey(hashKey);
 		byte[] imageBytes = getImageBytes(employeeDetails.getFilePhoto());
 		userItem.setProfilePhoto(imageBytes);
+		
+		userItem.setLastName(employeeDetails.getLastName());
+		userItem.setDesignation(employeeDetails.getDesignation());
+		userItem.setDob(employeeDetails.getDateOfBirth());
+		userItem.setFirstName(employeeDetails.getFirstName());
+		userItem.setMobileNumber(employeeDetails.getMobileNumber());
+		userItem.setQualification(employeeDetails.getQualification());
+		userItem.setUserRole(employeeDetails.getRole());
+		userItem.setGender(employeeDetails.getGender());
+		userItem.setUserGroup(employeeDetails.getGroup());
+		
+		
 		famstackDataAccessObjectManager.saveItem(userItem);
 	}
 
@@ -100,7 +113,7 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		byte[] photoFileBytes = new byte[(int) filePhoto.getSize()];
 
 		try {
-			ByteArrayInputStream fileInputStream = (ByteArrayInputStream) filePhoto.getInputStream();
+			FileInputStream fileInputStream = (FileInputStream) filePhoto.getInputStream();
 			fileInputStream.read(photoFileBytes);
 			fileInputStream.close();
 		} catch (Exception e) {

@@ -57,12 +57,15 @@
 					<div class="col-md-9">
 						<div class="input-group">
 							<span class="input-group-addon"><span
-								class="fa fa-calendar"></span></span> <input type="text"
+								class="fa fa-calendar"></span></span> <form:input type="text"
 								class="form-control datepicker" data-date-format="dd-mm-yyyy"
-								placeholder="eg:05-07-2014">
+								placeholder="eg:05-07-2014" path="dateOfBirth" id="dateOfBirth"/>
+							
+      						<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
 						</div>
 					</div>
 				</div>
+				
 				<div class="form-group">
 					<div class="col-md-12">
 						<label>Photo</label><br /> <input type="file" multiple
@@ -79,8 +82,8 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Last Name</label>
 					<div class="col-md-9">
-						<input type="text" value="" name="lastName"
-							class="form-control" placeholder="eg:Lastname" tabindex="1" />
+						<form:input type="text" value="" name="lastName"
+							class="form-control" placeholder="eg:Lastname" tabindex="1" path="lastName"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -93,56 +96,58 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Group</label>
 					<div class="col-md-9">
-						<select class="form-control select" data-live-search="true" name="group">
+						<form:select path="group" class="form-control select" data-live-search="true" name="group">
 							<option>Select a group</option>
 							<option>Group 1</option>
 							<option>Group 2</option>
 							<option>Group 3</option>
 							<option>Group 4</option>
 							<option>Group 5</option>
-						</select>
+						</form:select>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-md-3 control-label">Qualification</label>
 					<div class="col-md-9">
-						<select class="form-control select" data-live-search="true">
+						<form:select path="qualification" class="form-control select" data-live-search="true">
 							<option>Select a qualification</option>
 							<option>Qualification 1</option>
 							<option>Qualification 2</option>
 							<option>Qualification 3</option>
 							<option>Qualification 4</option>
 							<option>Qualification 5</option>
-						</select>
+						</form:select>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-md-3 control-label">Designation</label>
 					<div class="col-md-9">
-						<select class="form-control select" data-live-search="true">
+						<form:select path="designation" class="form-control select" data-live-search="true">
 							<option>Select a designation</option>
 							<option>Designation 1</option>
 							<option>Designation 2</option>
 							<option>Designation 3</option>
 							<option>Designation 4</option>
 							<option>Designation 5</option>
-						</select>
+						</form:select>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-md-3 control-label">Role</label>
 					<div class="col-md-9">
-						<select class="form-control select" data-live-search="true">
+						<form:select path="role" class="form-control select" data-live-search="true">
 							<option>Select a role</option>
-							<option>Role 1</option>
-							<option>Role 2</option>
-							<option>Role</option>
-							<option>Role 4</option>
-							<option>Role 5</option>
-						</select>
+							<option>MANAGER</option>
+							<option>ANALYST</option>
+							<option>ADMIN</option>
+							<option>SUPPORT</option>
+							<option>BUSINESS</option>
+							<option>CLUBUSER</option>
+						</form:select>
+    
 					</div>
 				</div>
 			</div>
