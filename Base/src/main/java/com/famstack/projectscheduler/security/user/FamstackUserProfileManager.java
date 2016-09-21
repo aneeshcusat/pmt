@@ -22,6 +22,7 @@ import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManage
 import com.famstack.projectscheduler.security.hasher.generator.PasswordTokenGenerator;
 import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
+import com.famstack.projectscheduler.util.StringUtils;
 
 /**
  * The Class UserProfileManager.
@@ -101,8 +102,7 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		
 		userItem.setLastName(employeeDetails.getLastName());
 		userItem.setDesignation(employeeDetails.getDesignation());
-		if (employeeDetails.getDateOfBirth() != null) {
-			
+		if (StringUtils.isNotBlank(employeeDetails.getDateOfBirth())) {
 			try {
 				userItem.setDob(new Date(sdf.parse(employeeDetails.getDateOfBirth()).getTime()));
 			} catch (ParseException e) {
@@ -125,20 +125,11 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		
 	}
 
-	private byte[] getImageBytes(MultipartFile filePhoto) {
+	private byte[] getImageBytes(String filePhoto) {
 		if (filePhoto == null) {
 			return null;
 		}
-		byte[] photoFileBytes = new byte[(int) filePhoto.getSize()];
-
-		try {
-			FileInputStream fileInputStream = (FileInputStream) filePhoto.getInputStream();
-			fileInputStream.read(photoFileBytes);
-			fileInputStream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return photoFileBytes;
+		return filePhoto.getBytes();
 	}
 
 	public List<UserItem> getAllUserItems() {
@@ -155,6 +146,10 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 	
 	public EmployeeDetails getEmployee(int userId) {
 		UserItem userItem = getUserItemById(userId);
+		return getEmployeeDetailsFromUserItem(userItem);
+	}
+	
+	public EmployeeDetails getEmployeeDetailsFromUserItem(UserItem userItem) {
 		if (userItem != null) {
 			EmployeeDetails employeeDetails = new EmployeeDetails();
 			if (userItem.getDob() != null) {
@@ -170,8 +165,12 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 			employeeDetails.setQualification(userItem.getQualification());
 			employeeDetails.setRole(userItem.getUserRole());
 			employeeDetails.setId(userItem.getId());
+			if (userItem.getProfilePhoto() != null) {
+				employeeDetails.setFilePhoto(new String(userItem.getProfilePhoto())); 
+			}
 			return employeeDetails;
 		}
 		return null;
+		
 	}
 }

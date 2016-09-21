@@ -67,8 +67,18 @@
                 </div>
 				<div class="form-group">
 					<div class="col-md-12">
-						<label>Photo</label><br /> <form:input type="file" multiple=""
-							id="filePhoto" accept="image/*" name="filephoto" path="filePhoto"/>
+						<label>Photo</label><form:input type="hidden" multiple=""
+							id="filePhoto" name="filephoto" path="filePhoto"/>
+							
+							<div class="image-editor">
+						      <input type="file" class="cropit-image-input">
+						      <div class="cropit-preview"></div>
+						      <div class="image-size-label">
+						        Resize image
+						      </div>
+						      <input type="range" class="cropit-image-zoom-input">
+						    </div>
+    
 					</div>
 				</div>
 

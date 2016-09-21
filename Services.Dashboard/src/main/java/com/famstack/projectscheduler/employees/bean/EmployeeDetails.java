@@ -16,7 +16,7 @@ public class EmployeeDetails {
 	private String confirmPassword;
 	private String group;
 	private String mobileNumber;
-	private MultipartFile filePhoto;
+	private String filePhoto;
 	private String gender;
 	private String qualification;
 	private String designation;
@@ -89,11 +89,11 @@ public class EmployeeDetails {
 	}
 
 
-	public MultipartFile getFilePhoto() {
+	public String getFilePhoto() {
 		return filePhoto;
 	}
 
-	public void setFilePhoto(MultipartFile filePhoto) {
+	public void setFilePhoto(String filePhoto) {
 		this.filePhoto = filePhoto;
 	}
 

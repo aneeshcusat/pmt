@@ -1,7 +1,9 @@
 package com.famstack.projectscheduler.dashboard.manager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +96,23 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			e.printStackTrace();
 		}
 		return jsonString;
+	}
+	
+	public List<EmployeeDetails> getEmployeeDataList() {
+		List<EmployeeDetails> employeeDetailsList = new ArrayList<EmployeeDetails>();
+		List<UserItem> userItemList = getUsersData();
+		if (userItemList != null) {
+			Iterator<UserItem> iter = userItemList.iterator();
+			while (iter.hasNext()) {
+				UserItem userItem = iter.next();
+				EmployeeDetails employeeDetails = userProfileManager.getEmployeeDetailsFromUserItem(userItem);
+				if (employeeDetails != null) {
+					employeeDetailsList.add(employeeDetails);
+				}
+			}
+		}
+		
+		return employeeDetailsList;
 	}
 	
 }

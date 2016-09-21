@@ -34,13 +34,15 @@
         <!-- START PLUGINS -->
         <script type="text/javascript" src="${js}/plugins/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script>  
+              
         <!-- END PLUGINS -->
 
         <!-- START THIS PAGE PLUGINS-->        
         <script type='text/javascript' src="${js}/plugins/icheck/icheck.min.js"></script>        
         <script type="text/javascript" src="${js}/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/scrolltotop/scrolltopcontrol.js"></script>
+        <script type="text/javascript" src="${js}/jquery.cropit.js"></script>  
         
         <script type="text/javascript" src="${js}/plugins/morris/raphael-min.js"></script>
         <script type="text/javascript" src="${js}/plugins/morris/morris.min.js"></script>       

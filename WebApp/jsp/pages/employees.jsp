@@ -3,6 +3,33 @@
 <style>
     @media screen and (min-width: 800px) {
     #registerusermodal .modal-dialog  {width:65%;}
+    
+    
+    .cropit-preview {
+        background-color: #f8f8f8;
+        background-size: cover;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-top: 7px;
+        width: 250px;
+        height: 250px;
+      }
+
+      .cropit-preview-image-container {
+        cursor: move;
+      }
+
+      .image-size-label {
+        margin-top: 10px;
+      }
+
+      input, .export {
+        display: block;
+      }
+
+      button {
+        margin-top: 10px;
+      }
 }
 </style>         
 <!-- PAGE TITLE -->
@@ -53,7 +80,7 @@
             <div class="panel panel-default">
                 <div class="panel-body profile">
                     <div class="profile-image">
-                        <img src="image/${user.id}" alt="Nadia Ali"/>
+                        <img src="${user.filePhoto}" alt="Nadia Ali"/>
                     </div>
                     <div class="profile-data">
                         <div class="profile-data-name">${user.firstName}</div>
@@ -67,7 +94,7 @@
                 <div class="panel-body">                                    
                     <div class="contact-info">
                         <p><small>Mobile</small><br/>${user.mobileNumber}</p>
-                        <p><small>Email</small><br/>${user.userId}</p>
+                        <p><small>Email</small><br/>${user.email}</p>
                         <p><small>Group</small><br/>${user.group}</p>                                   
                     </div>
                 </div>                                
@@ -308,23 +335,19 @@
 <script type="text/javascript" src="${js}/plugins/fileinput/fileinput.min.js"></script> 
 
 <script>
-$(function(){
-    $("#filePhoto").fileinput({
-            showUpload: false,
-            showCaption: false,
-            browseClass: "btn btn-danger",
-            fileType: "any"
-    });    
-});
+
 
 $('#createUserFormId').ajaxForm(function(response) { 
 	console.log(response);
-    if (response == "success" ){
+	var responseJson = JSON.parse(response);
+    if (responseJson.status){
         window.location.reload(true);
     }
 }); 
 
 function doAjaxCreateUserForm(){
+	var imageData = $('.image-editor').cropit('export');
+	$('#filePhoto').val(imageData);
     $('#createUserFormId').submit();
 }
 
@@ -370,5 +393,17 @@ function processUserResponseData(data) {
 	
 }
 
+$(function() {
+    $('.image-editor').cropit({
+      imageState: {
+        src: 'http://lorempixel.com/500/400/',
+      },
+    });
+
+    $('.export').click(function() {
+      var imageData = $('.image-editor').cropit('export');
+      window.open(imageData);
+    });
+  });
 
 </script>        
