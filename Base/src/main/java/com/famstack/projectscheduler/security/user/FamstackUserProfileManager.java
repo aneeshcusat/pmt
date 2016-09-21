@@ -1,7 +1,7 @@
 package com.famstack.projectscheduler.security.user;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.sql.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -97,16 +97,23 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		
 		userItem.setLastName(employeeDetails.getLastName());
 		userItem.setDesignation(employeeDetails.getDesignation());
-		userItem.setDob(employeeDetails.getDateOfBirth());
+		if (employeeDetails.getDateOfBirth() != null) {
+			userItem.setDob(new Date(employeeDetails.getDateOfBirth().getTime()));
+		}
 		userItem.setFirstName(employeeDetails.getFirstName());
 		userItem.setMobileNumber(employeeDetails.getMobileNumber());
 		userItem.setQualification(employeeDetails.getQualification());
 		userItem.setUserRole(employeeDetails.getRole());
 		userItem.setGender(employeeDetails.getGender());
-		userItem.setUserGroup(employeeDetails.getGroup());
+		userItem.setGroup(employeeDetails.getGroup());
 		
+		if (employeeDetails.getId() == 0) {
+			famstackDataAccessObjectManager.saveItem(userItem);
+		} else {
+			userItem.setId(employeeDetails.getId());
+			famstackDataAccessObjectManager.updateItem(userItem);
+		}
 		
-		famstackDataAccessObjectManager.saveItem(userItem);
 	}
 
 	private byte[] getImageBytes(MultipartFile filePhoto) {
@@ -132,5 +139,25 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 
 	public UserItem getUserItem(String userId) {
 		return famstackDataAccessObjectManager.getUser(userId);
+	}
+	
+	public EmployeeDetails getEmployee(int userId) {
+		UserItem userItem = getUserItemById(userId);
+		if (userItem != null) {
+			EmployeeDetails employeeDetails = new EmployeeDetails();
+			employeeDetails.setDateOfBirth(userItem.getDob());
+			employeeDetails.setDesignation(userItem.getDesignation());
+			employeeDetails.setEmail(userItem.getUserId());
+			employeeDetails.setFirstName(userItem.getFirstName());
+			employeeDetails.setGender(userItem.getGender());
+			employeeDetails.setGroup(userItem.getGroup());
+			employeeDetails.setLastName(userItem.getLastName());
+			employeeDetails.setMobileNumber(userItem.getMobileNumber());
+			employeeDetails.setQualification(userItem.getQualification());
+			employeeDetails.setRole(userItem.getUserRole());
+			employeeDetails.setId(userItem.getId());
+			return employeeDetails;
+		}
+		return null;
 	}
 }

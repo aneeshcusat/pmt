@@ -88,6 +88,13 @@ public class FamstackDashboardController extends BaseFamstackService {
 		List<UserItem> userItemList = famstackDashboardManager.getUsersData();
 		return new ModelAndView("employees", "command", new EmployeeDetails()).addObject("employeesData", userItemList);
 	}
+	
+	@RequestMapping(value = "/editEmployee", method = RequestMethod.GET)
+	@ResponseBody
+	public String editEmployee(@RequestParam("userId") int userId) {
+		return famstackDashboardManager.getEmployeeDetails(userId);
+		
+	}
 
 	@RequestMapping(value = "/createEmployee", method = RequestMethod.POST)
 	@ResponseBody

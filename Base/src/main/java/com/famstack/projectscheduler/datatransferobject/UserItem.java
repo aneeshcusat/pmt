@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.datatransferobject;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -50,13 +52,13 @@ public class UserItem {
 	private String gender;
 
 	@Column(name = "user_group")
-	private String userGroup;
+	private String group;
 	
 	@Column(name = "qualification")
 	private String qualification;
 	
 	@Column(name = "dob")
-	private String dob;
+	private Date dob;
 	
 	@Column(name = "designation")
 	private String designation;
@@ -214,15 +216,15 @@ public class UserItem {
 	/**
 	 * @return the userGroup
 	 */
-	public String getUserGroup() {
-		return userGroup;
+	public String getGroup() {
+		return group;
 	}
 
 	/**
 	 * @param userGroup the userGroup to set
 	 */
-	public void setUserGroup(String userGroup) {
-		this.userGroup = userGroup;
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	/**
@@ -242,14 +244,14 @@ public class UserItem {
 	/**
 	 * @return the dob
 	 */
-	public String getDob() {
+	public Date getDob() {
 		return dob;
 	}
 
 	/**
 	 * @param dob the dob to set
 	 */
-	public void setDob(String dob) {
+	public void setDob(Date dob) {
 		this.dob = dob;
 	}
 }

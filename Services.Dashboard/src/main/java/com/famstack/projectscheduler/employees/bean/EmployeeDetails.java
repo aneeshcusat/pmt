@@ -1,11 +1,14 @@
 package com.famstack.projectscheduler.employees.bean;
 
+import java.util.Date;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.famstack.projectscheduler.security.user.UserRole;
 
 public class EmployeeDetails {
 
+	private int id;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -18,7 +21,7 @@ public class EmployeeDetails {
 	private String qualification;
 	private String designation;
 	private UserRole role;
-	private String dateOfBirth;
+	private Date dateOfBirth;
 	
 
 	public String getFirstName() {
@@ -77,11 +80,11 @@ public class EmployeeDetails {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public String getDateOfBirth() {
+	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -149,6 +152,20 @@ public class EmployeeDetails {
 	 */
 	public void setRole(UserRole role) {
 		this.role = role;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 
 

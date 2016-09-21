@@ -1,11 +1,15 @@
 package com.famstack.projectscheduler.dashboard.manager;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
@@ -33,7 +37,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
-		Map<String, String> errorMap = valiateUser(employeeDetails);
+		Map<String, String> errorMap = new HashMap<String, String>();
+		/*Map<String, String> errorMap = valiateUser(employeeDetails);
 		if (!errorMap.isEmpty()) {
 			return errorMap;
 		}
@@ -41,7 +46,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 		if (userItem != null) {
 			errorMap.put("userExists", "user already exist in the system");
-		}
+		}*/
 
 		userProfileManager.createUserItem(employeeDetails);
 
@@ -74,4 +79,21 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return userProfileManager.getUserItemById(userId);
 	}
 
+	public String getEmployeeDetails(int userId) {
+		
+		EmployeeDetails employeeDetails = userProfileManager.getEmployee(userId);
+		String jsonString = null;
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			jsonString = objectMapper.writeValueAsString(employeeDetails);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return jsonString;
+	}
+	
 }

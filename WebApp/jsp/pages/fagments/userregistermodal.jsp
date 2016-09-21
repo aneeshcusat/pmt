@@ -11,7 +11,7 @@
 					<label class="col-md-3 control-label">First Name</label>
 					<div class="col-md-9">
 						<form:input path="firstName" type="text" value=""
-							name="firstName" class="form-control" placeholder="eg:Myname"
+							name="firstName" id="firstName" class="form-control" placeholder="eg:Myname"
 							tabindex="1" />
 					</div>
 				</div>
@@ -19,35 +19,22 @@
 					<label class="col-xs-3 control-label">Gender</label>
 					<div class="col-xs-9">
 						<div class="btn-group" data-toggle="buttons">
-							<label class="btn btn-default"> <input type="radio"
+							<label class="btn btn-default" id="male"> <input type="radio"
 								name="gender" value="male" /> Male
 							</label> <label class="btn btn-default"> <input type="radio"
-								name="gender" value="female" /> Female
+								name="gender" value="female" id="female"/> Female
 							</label> <label class="btn btn-default"> <input type="radio"
-								name="gender" value="other" /> Other
+								name="gender" value="other" id="other"/> Other
 							</label>
 						</div>
 					</div>
 				</div>
 				
-				<div class="form-group">
-					<label class="col-md-3 control-label">Password:</label>
-					<div class="col-md-9">
-						<form:input path="password" type="password"
-							class="form-control" name="password" id="password2" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label">Confirm Password:</label>
-					<div class="col-md-9">
-						<form:input path="confirmPassword" type="password"
-							class="form-control" name="confirmPassword" />
-					</div>
-				</div>
+				
 				<div class="form-group">
 					<label class="col-md-3 control-label">Mobile Number:</label>
 					<div class="col-md-9">
-						<form:input path="mobileNumber" type="text" value=""
+						<form:input path="mobileNumber" id="mobileNumber" type="text" value=""
 							name="mobile" class="form-control"
 							placeholder="eg:+919686301304" />
 					</div>
@@ -57,15 +44,27 @@
 					<div class="col-md-9">
 						<div class="input-group">
 							<span class="input-group-addon"><span
-								class="fa fa-calendar"></span></span> <form:input type="text"
-								class="form-control datepicker" data-date-format="dd-mm-yyyy"
-								placeholder="eg:05-07-2014" path="dateOfBirth" id="dateOfBirth"/>
+								class="fa fa-calendar"></span></span> <form:input type="date"
+								class="form-control" data-date-format="dd-mm-yyyy"
+								placeholder="eg:05-07-2014" path="dateOfBirth" id="dateOfBirth" style="position: relative; z-index: 100000 !important;"/>
 							
       						<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
 						</div>
 					</div>
 				</div>
-				
+				<div class="form-group">
+                    <label class="col-md-3 control-label">Designation</label>
+                    <div class="col-md-9">
+                        <form:select path="designation" id="designation" class="form-control select" data-live-search="true">
+                            <option>Select a designation</option>
+                            <option>Designation 1</option>
+                            <option>Designation 2</option>
+                            <option>Designation 3</option>
+                            <option>Designation 4</option>
+                            <option>Designation 5</option>
+                        </form:select>
+                    </div>
+                </div>
 				<div class="form-group">
 					<div class="col-md-12">
 						<label>Photo</label><br /> <input type="file" multiple
@@ -83,20 +82,20 @@
 					<label class="col-md-3 control-label">Last Name</label>
 					<div class="col-md-9">
 						<form:input type="text" value="" name="lastName"
-							class="form-control" placeholder="eg:Lastname" tabindex="1" path="lastName"/>
+							class="form-control" placeholder="eg:Lastname" id="lastName" tabindex="1" path="lastName"/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-md-3 control-label">E-mail:</label>
 					<div class="col-md-9">
-						<form:input path="email" type="text" value="" name="email"
+						<form:input path="email" type="text" value="" name="email" id="email"
 							class="form-control" placeholder="eg:name@email.com" />
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-md-3 control-label">Group</label>
 					<div class="col-md-9">
-						<form:select path="group" class="form-control select" data-live-search="true" name="group">
+						<form:select path="group" id="group" class="form-control select" data-live-search="true" name="group">
 							<option>Select a group</option>
 							<option>Group 1</option>
 							<option>Group 2</option>
@@ -110,7 +109,7 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Qualification</label>
 					<div class="col-md-9">
-						<form:select path="qualification" class="form-control select" data-live-search="true">
+						<form:select path="qualification" id="qualification" class="form-control select" data-live-search="true">
 							<option>Select a qualification</option>
 							<option>Qualification 1</option>
 							<option>Qualification 2</option>
@@ -121,24 +120,12 @@
 					</div>
 				</div>
 
-				<div class="form-group">
-					<label class="col-md-3 control-label">Designation</label>
-					<div class="col-md-9">
-						<form:select path="designation" class="form-control select" data-live-search="true">
-							<option>Select a designation</option>
-							<option>Designation 1</option>
-							<option>Designation 2</option>
-							<option>Designation 3</option>
-							<option>Designation 4</option>
-							<option>Designation 5</option>
-						</form:select>
-					</div>
-				</div>
+				<form:input path="id" type="hidden" id="id"/>
 
 				<div class="form-group">
 					<label class="col-md-3 control-label">Role</label>
 					<div class="col-md-9">
-						<form:select path="role" class="form-control select" data-live-search="true">
+						<form:select path="role" id="role" class="form-control select" data-live-search="true">
 							<option>Select a role</option>
 							<option>MANAGER</option>
 							<option>ANALYST</option>

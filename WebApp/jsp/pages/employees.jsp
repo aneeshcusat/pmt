@@ -60,7 +60,7 @@
                         <div class="profile-data-title">${user.designation}</div>
                     </div>
                     <div class="profile-controls">
-                        <a href="#" class="profile-control-left"><span class="fa fa-edit"></span></a>
+                        <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit"></span></a>
                         <a href="#" class="profile-control-right"><span class="fa fa-times"></span></a>
                     </div>
                 </div>                                
@@ -293,7 +293,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-dismiss="modal">Cancel</button>
-							<button type="button" onclick="doAjaxCreateUserForm();" class="btn btn-primary">Create</button>
+							<button type="button" onclick="doAjaxCreateUserForm();" class="btn btn-primary"><span id="userButton">Save</span></button>
 						</div>
 					</div>
 				</div>
@@ -326,5 +326,47 @@ $('#createUserFormId').ajaxForm(function(response) {
 
 function doAjaxCreateUserForm(){
     $('#createUserFormId').submit();
+}
+
+function loadUser(userId) {
+	$.ajax({
+        type : "GET",
+        contentType : "application/json",
+        url : "${home}editEmployee",
+        data: "userId="+userId,
+        timeout : 1000,
+        success : function(data) {
+            console.log("SUCCESS: ", data);
+            processUserResponseData(data);
+        },
+        error : function(e) {
+            console.log("ERROR: ", e);
+            alert(e);
+        },
+        done : function(e) {
+            console.log("DONE");
+        }
+    });
+
+}
+function processUserResponseData(data) {
+	var response = JSON.parse(data);
+	$('#firstName').val(response.firstName);
+	$('#mobileNumber').val(response.mobileNumber);
+	$('#dateOfBirth').val(response.dateOfBirth);
+	$('#lastName').val(response.lastName);
+	$('#email').val(response.email);
+	$('#id').val(response.id);
+	$('#'+response.gender).click();
+	
+	$('#role').val(response.role);
+	$('#qualification').val(response.qualification);
+	$('#group').val(response.group);
+	$('#designation').val(response.designation);
+	$('#role').selectpicker('refresh');
+	$('#qualification').selectpicker('refresh');
+	$('#group').selectpicker('refresh');
+	$('#designation').selectpicker('refresh');
+	
 }
 </script>        
