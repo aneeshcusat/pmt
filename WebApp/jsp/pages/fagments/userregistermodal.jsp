@@ -67,8 +67,8 @@
                 </div>
 				<div class="form-group">
 					<div class="col-md-12">
-						<label>Photo</label><br /> <input type="file" multiple
-							id="filephoto" accept="image/*" name="filephoto"/>
+						<label>Photo</label><br /> <form:input type="file" multiple=""
+							id="filePhoto" accept="image/*" name="filephoto" path="filePhoto"/>
 					</div>
 				</div>
 

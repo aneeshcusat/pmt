@@ -99,9 +99,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/createEmployee", method = RequestMethod.POST)
 	@ResponseBody
 	public String createEmployee(@ModelAttribute("employeeDetails") EmployeeDetails employeeDetails,
-			BindingResult result, Model model, @RequestParam("filephoto") MultipartFile filePhoto) {
-
-		employeeDetails.setFilePhoto(filePhoto);
+			BindingResult result, Model model) {
 		famstackDashboardManager.createUser(employeeDetails);
 		return "{\"status\": true}";
 	}

@@ -21,7 +21,7 @@ public class EmployeeDetails {
 	private String qualification;
 	private String designation;
 	private UserRole role;
-	private Date dateOfBirth;
+	private String dateOfBirth;
 	
 
 	public String getFirstName() {
@@ -80,11 +80,11 @@ public class EmployeeDetails {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public Date getDateOfBirth() {
+	public String getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -167,6 +167,5 @@ public class EmployeeDetails {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 }

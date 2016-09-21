@@ -2,6 +2,8 @@ package com.famstack.projectscheduler.security.user;
 
 import java.io.FileInputStream;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -36,7 +38,9 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 
 	@Resource
 	PasswordTokenGenerator passwordTokenGenerator;
-
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	
 	/**
 	 * Login.
 	 *
@@ -98,7 +102,12 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		userItem.setLastName(employeeDetails.getLastName());
 		userItem.setDesignation(employeeDetails.getDesignation());
 		if (employeeDetails.getDateOfBirth() != null) {
-			userItem.setDob(new Date(employeeDetails.getDateOfBirth().getTime()));
+			
+			try {
+				userItem.setDob(new Date(sdf.parse(employeeDetails.getDateOfBirth()).getTime()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		userItem.setFirstName(employeeDetails.getFirstName());
 		userItem.setMobileNumber(employeeDetails.getMobileNumber());
@@ -117,6 +126,9 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 	}
 
 	private byte[] getImageBytes(MultipartFile filePhoto) {
+		if (filePhoto == null) {
+			return null;
+		}
 		byte[] photoFileBytes = new byte[(int) filePhoto.getSize()];
 
 		try {
@@ -145,7 +157,9 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		UserItem userItem = getUserItemById(userId);
 		if (userItem != null) {
 			EmployeeDetails employeeDetails = new EmployeeDetails();
-			employeeDetails.setDateOfBirth(userItem.getDob());
+			if (userItem.getDob() != null) {
+				employeeDetails.setDateOfBirth(sdf.format(userItem.getDob()));
+			}
 			employeeDetails.setDesignation(userItem.getDesignation());
 			employeeDetails.setEmail(userItem.getUserId());
 			employeeDetails.setFirstName(userItem.getFirstName());

@@ -68,7 +68,7 @@
                     <div class="contact-info">
                         <p><small>Mobile</small><br/>${user.mobileNumber}</p>
                         <p><small>Email</small><br/>${user.userId}</p>
-                        <p><small>Address</small><br/>123 45 Street San Francisco, CA, USA</p>                                   
+                        <p><small>Group</small><br/>${user.group}</p>                                   
                     </div>
                 </div>                                
             </div>
@@ -309,7 +309,7 @@
 
 <script>
 $(function(){
-    $("#filephoto").fileinput({
+    $("#filePhoto").fileinput({
             showUpload: false,
             showCaption: false,
             browseClass: "btn btn-danger",
@@ -369,4 +369,6 @@ function processUserResponseData(data) {
 	$('#designation').selectpicker('refresh');
 	
 }
+
+
 </script>        
