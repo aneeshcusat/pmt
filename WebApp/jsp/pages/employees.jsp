@@ -27,9 +27,6 @@
         display: block;
       }
 
-      button {
-        margin-top: 10px;
-      }
 }
 </style>         
 <!-- PAGE TITLE -->
@@ -341,11 +338,14 @@ $('#createUserFormId').ajaxForm(function(response) {
 	console.log(response);
 	var responseJson = JSON.parse(response);
     if (responseJson.status){
+    	//$.growlUI('User has been created!', 'Have a nice day!'); 
         window.location.reload(true);
     }
+   //$.unblockUI();
 }); 
 
 function doAjaxCreateUserForm(){
+	//$.blockUI();
 	var imageData = $('.image-editor').cropit('export');
 	$('#filePhoto').val(imageData);
     $('#createUserFormId').submit();

@@ -7339,3 +7339,8 @@ display:none;
 ::-webkit-scrollbar-thumb {
     #background: #FF0000;
 }
+
+div.growlUI { background: url(check48.png) no-repeat 10px 10px }
+div.growlUI h3, div.growlUI h4 {
+    color: white; padding: 5px 5px 5px 75px; text-align: left
+}
