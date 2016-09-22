@@ -7344,3 +7344,12 @@ div.growlUI { background: url(check48.png) no-repeat 10px 10px }
 div.growlUI h3, div.growlUI h4 {
     color: white; padding: 5px 5px 5px 75px; text-align: left
 }
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}

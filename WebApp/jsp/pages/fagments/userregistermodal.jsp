@@ -66,17 +66,18 @@
                     </div>
                 </div>
 				<div class="form-group">
-					<div class="col-md-12">
-						<label>Photo</label><form:input type="hidden" multiple=""
+					<div class="col-md-6">
+						<label>Choose a Photo</label><form:input type="hidden" multiple=""
 							id="filePhoto" name="filephoto" path="filePhoto"/>
 							
 							<div class="image-editor">
-						      <input type="file" class="cropit-image-input">
-						      <div class="cropit-preview"></div>
-						      <div class="image-size-label">
+						      <input type="file" name="file" id="file" class="cropit-image-input inputfile" onchange="$('.cropit-preview').show();$('.cropit-image-zoom-input').show();$('.image-size-label').show();">
+						      <label  class="btn btn-default" for="file"><i class="fa fa-upload fa-2x" style="color: red"></i></label>
+						      <div class="cropit-preview" style="display: none"></div>
+						      <div class="image-size-label" style="display: none">
 						        Resize image
 						      </div>
-						      <input type="range" class="cropit-image-zoom-input">
+						      <input type="range" class="cropit-image-zoom-input"  style="display: none">
 						    </div>
     
 					</div>
