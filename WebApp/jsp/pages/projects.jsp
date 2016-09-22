@@ -1,5 +1,9 @@
 <%@include file="includes/header.jsp" %>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>       
 <style>
+ @media screen and (min-width: 700px) {
+ #createprojectmodal .modal-dialog  {width:75%;}
+ 
 .disabled .fc-day-content {
     background-color: #123959;
     color: #FFFFFF;
@@ -41,8 +45,8 @@
 	                              </div>
 	                          </div>
 	                          <div class="col-md-4">
-	                          <a href="createProject.jsp" class="btn btn-success btn-block">
-	                             <span class="fa fa-plus"></span> Create a new Project</button></a>
+	                             <a data-toggle="modal" data-target="#createprojectmodal" class="btn btn-success btn-block">
+	                             <span class="fa fa-plus"></span> Create a new Project</a>
 	                          </div>
 	                      </div>
 	                  </form>                                    
@@ -190,11 +194,75 @@
            
           </tbody>
       </table>
-    
 </div>               
-<!-- END CONTENT FRAME -->                                
- <%@include file="includes/footer.jsp" %>            
+<!-- END CONTENT FRAME -->     
 
+<!-- project create modal start -->
+<div class="modal fade" id="createprojectmodal" tabindex="-1"
+role="dialog" aria-labelledby="createprojectmodal"
+aria-hidden="true">
+<form:form id="createProjectFormId" action="createProject" method="POST" role="form" class="form-horizontal">
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myModalLabel">Create a Project</h4>
+		</div>
+		<div class="modal-body">
+			<%@include file="fagments/createprojectmodal.jsp" %>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary"
+			data-dismiss="modal">Cancel</button>
+		<button type="button" onclick="doAjaxCreateProjectForm();" class="btn btn-primary"><span id="userButton">Save</span></button>
+		</div>
+	</div>
+</div>
+</form:form>
+</div>
+<!-- project create modal end -->
+                           
+<%@include file="includes/footer.jsp" %>            
+<script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.js'></script>   
+<script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+<script type="text/javascript" src="${js}/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="${js}/plugins/fileinput/fileinput.min.js"></script>
+<script type="text/javascript" src="${js}/plugins/dropzone/dropzone.min.js"></script>
+<script type="text/javascript" src="${js}/plugins/autocomplete/jquery.autocomplete.js"></script>
+
+<script>
+var countries = [
+                 { value: 'Andorra', data: 'AD' },
+                 // ...
+                 { value: 'Zimbabwe', data: 'ZZ' }
+             ];
+
+$('.autocomplete').autocomplete({
+    //serviceUrl: '/autocomplete/countries',
+     lookup: countries,
+    onSelect: function (suggestion) {
+        alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+    }
+});
+$(document).ready(function () {
+    Dropzone.autoDiscover = false;
+    $("#my-dropzone").dropzone({
+        url: "/upload",
+        addRemoveLinks: true,
+        success: function (file, response) {
+            var imgName = response;
+            file.previewElement.classList.add("dz-success");
+            console.log("Successfully uploaded :" + imgName);
+        },
+        error: function (file, response) {
+            file.previewElement.classList.add("dz-error");
+        }
+    });
+});
+</script>
        
 
 

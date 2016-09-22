@@ -1,14 +1,18 @@
 package com.famstack.projectscheduler.datatransferobject;
 
 import java.sql.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -44,22 +48,22 @@ public class UserItem {
 
 	@Column(name = "first_name")
 	private String firstName;
-	
+
 	@Column(name = "last_name")
 	private String lastName;
-	
+
 	@Column(name = "gender")
 	private String gender;
 
 	@Column(name = "user_group")
 	private String group;
-	
+
 	@Column(name = "qualification")
 	private String qualification;
-	
+
 	@Column(name = "dob")
 	private Date dob;
-	
+
 	@Column(name = "designation")
 	private String designation;
 
@@ -68,6 +72,9 @@ public class UserItem {
 
 	@Column(name = "profile_photo", columnDefinition = "blob")
 	private byte[] profilePhoto;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userItem", cascade = CascadeType.ALL)
+	private Set<UserActivityItem> userActivities;
 
 	public String getDesignation() {
 		return designation;
@@ -193,7 +200,8 @@ public class UserItem {
 	}
 
 	/**
-	 * @param lastName the lastName to set
+	 * @param lastName
+	 *            the lastName to set
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
@@ -207,7 +215,8 @@ public class UserItem {
 	}
 
 	/**
-	 * @param gender the gender to set
+	 * @param gender
+	 *            the gender to set
 	 */
 	public void setGender(String gender) {
 		this.gender = gender;
@@ -221,7 +230,8 @@ public class UserItem {
 	}
 
 	/**
-	 * @param userGroup the userGroup to set
+	 * @param userGroup
+	 *            the userGroup to set
 	 */
 	public void setGroup(String group) {
 		this.group = group;
@@ -235,7 +245,8 @@ public class UserItem {
 	}
 
 	/**
-	 * @param qualification the qualification to set
+	 * @param qualification
+	 *            the qualification to set
 	 */
 	public void setQualification(String qualification) {
 		this.qualification = qualification;
@@ -249,9 +260,19 @@ public class UserItem {
 	}
 
 	/**
-	 * @param dob the dob to set
+	 * @param dob
+	 *            the dob to set
 	 */
 	public void setDob(Date dob) {
 		this.dob = dob;
 	}
+
+	public Set<UserActivityItem> getUserActivities() {
+		return userActivities;
+	}
+
+	public void setUserActivities(Set<UserActivityItem> userActivities) {
+		this.userActivities = userActivities;
+	}
+
 }

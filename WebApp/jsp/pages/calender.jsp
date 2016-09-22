@@ -25,24 +25,8 @@
     </div>
     <!-- END CONTENT FRAME TOP -->
     
-    <!-- START CONTENT FRAME LEFT -->
-    <div class="content-frame-left">
-                
-        <h4>Unassigned Projects</h4>
-        <div class="list-group border-bottom" id="external-events">                                    
-            <a class="list-group-item external-event">Project 1</a>
-            <a class="list-group-item external-event">Project 2</a>
-            <a class="list-group-item external-event">Project 3</a>
-            <a class="list-group-item external-event">Project 4</a>
-            <a class="list-group-item external-event">Project 5</a>                                    
-            <a class="list-group-item external-event">Project 6</a>
-        </div>    
-        
-    </div>
-    <!-- END CONTENT FRAME LEFT -->
-    
     <!-- START CONTENT FRAME BODY -->
-    <div class="content-frame-body padding-bottom-0">
+    <div class=" padding-bottom-0">
         
         <div class="row">
             <div class="col-md-12">

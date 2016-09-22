@@ -439,8 +439,8 @@ $(function() {
             
             function tp_clock_time(){
                 var now     = new Date();
-                var hour    = now.getHours();
-                var minutes = now.getMinutes();                    
+                var hour    = 09;
+                var minutes = 01;                    
                 
                 hour = hour < 10 ? '0'+hour : hour;
                 minutes = minutes < 10 ? '0'+minutes : minutes;

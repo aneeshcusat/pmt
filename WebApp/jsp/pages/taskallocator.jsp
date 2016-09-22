@@ -42,7 +42,8 @@ position: static;
 }
 .draggable.task{
 border: 1px solid blue;
-background-color: blue;
+background-color: lightblue;
+font-size: 1.4em;
 }
 </style>
 <!-- START CONTENT FRAME -->
@@ -59,7 +60,7 @@ background-color: blue;
     <!-- END CONTENT FRAME TOP -->
     
     <!-- START CONTENT FRAME LEFT -->
-    <div class="content-frame-left">
+    <div class="content-frame-left"  style="background-color: white">
         <h4>Unassigned Projects</h4>
         <div class="list-group border-bottom" id="external-events">                                    
            <span class="list-group-item draggable ">Project 1</span>
@@ -83,31 +84,25 @@ background-color: blue;
              <thead>
                  <tr style="width: 500px;overflow: scroll;font-weight: none;font-size: 10pt">
                      <th class="nodrop">Employee</th>
-                     <th>06</th>
-                     <th>07</th>
-                     <th>08</th>
-                     <th>09</th>
-                     <th>10</th>
-                     <th>11</th>
-                     <th>12</th>
+                     <th>09:00 - 10:00</th>
+                     <th>10:01 - 11:00</th>
+                     <th>11:01 - 12:00</th>
+                     <th>12:01 - 01:00</th>
                      <th style="background-color: gray; width: 50px">13</th>
-                     <th>14</th>
-                     <th>15</th>
-                     <th>16</th>
-                     <th>17</th>
-                     <th>18</th>
-                     <th>19</th>
-                     <th>20</th>
-                     <th>21</th>
-                     <th>22</th>
+                     <th>14:01 - 15:00</th>
+                     <th>15:01 - 16:00</th>
+                     <th>16:01 - 17:00</th>
+                     <th>17:01 - 18:00</th>
+                     <th>18:01 - 19:00</th>
+                     <th>19:01 - 20:00</th>
+                     <th>20:01 - 21:00</th>
+                     <th style="width: 50px;font-weight:bold">Total Hrs</th>
+                     <th style="width: 50px;font-weight:bold">Avlbl Hrs</th>
                  </tr>
              </thead>
              <tbody>
              <tr class="droppable">
-           		  <td class="nodrop">Aneesh sssssssssssssss</td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
+           		  <td class="nodrop">Aneesh </td>
                   <td class="drop"></td>
                   <td class="drop"></td>
                   <td class="drop"></td>
@@ -120,14 +115,11 @@ background-color: blue;
                   <td class="drop"></td>
                   <td class="drop"></td>
                   <td class="drop"></td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
+                   <td style="background-color: white;"></td>
+                    <td style="background-color: white;"></td>
               </tr>
                <tr class="droppable">
-           		  <td class="nodrop">Aneesh sssssssssssssss</td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
+           		  <td class="nodrop">Aneesh </td>
                   <td class="drop"></td>
                   <td class="drop"></td>
                   <td class="drop"></td>
@@ -140,14 +132,11 @@ background-color: blue;
                   <td class="drop"></td>
                   <td class="drop"></td>
                   <td class="drop"></td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
+                  <td style="background-color: white;"></td>
+                    <td style="background-color: white;"></td>
               </tr>
                <tr class="droppable">
-           		  <td class="nodrop">Aneesh sssssssssssssss</td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
+           		  <td class="nodrop">Aneesh </td>
                   <td class="drop"></td>
                   <td class="drop"></td>
                   <td class="drop"></td>
@@ -160,8 +149,8 @@ background-color: blue;
                   <td class="drop"></td>
                   <td class="drop"></td>
                   <td class="drop"></td>
-                  <td class="drop"></td>
-                  <td class="drop"></td>
+                  <td style="background-color: white;"></td>
+                    <td style="background-color: white;"></td>
               </tr>
               </tbody>
               </table>
@@ -198,7 +187,22 @@ var dragableItemData = {
 $(function() {
   $(".draggable").draggable(dragableItemData);
   $('.droppable td.drop').droppable({
-      accept: '.draggable',
+	  accept: function(ui, item) {
+          if($(this).html().trim().length != 0)
+             return false;
+
+          if($(ui).index()==$(this).index())
+            return true;
+
+          var next=$(this).next().get(0);
+          var prev=$(this).prev().get(0);
+          var me=ui.get(0);
+
+          if(me==next||me==prev)
+          return true;
+
+          return false;  
+      },
       hoverClass: 'droppable-hover',
       greedy : true,
       drop: function(event, ui) {
@@ -207,7 +211,7 @@ $(function() {
         if (dropableItem != null) {
         	dropableItem.hide();
         }
-        var item = $("<div class='draggable task'>dropped</div>");
+        var item = $("<div class='draggable task'><span style='color:red'>P1</span></div>");
         item.draggable(dragableItemData);
         $(this).html("");
         $(this).append(item);

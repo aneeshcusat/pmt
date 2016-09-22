@@ -27,6 +27,10 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>com.famstack.projectscheduler.datatransferobject.UserItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.ProjectActivityItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.ProjectCommentItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.ProjectItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.UserActivityItem</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
