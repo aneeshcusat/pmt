@@ -173,4 +173,11 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		return null;
 		
 	}
+
+	public void deleteUserItem(int userId) {
+		UserItem userItem = getUserItemById(userId);
+		if (userItem != null) {
+			famstackDataAccessObjectManager.deleteItem(userItem);
+		} 
+	}
 }

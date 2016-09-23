@@ -103,6 +103,13 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.createUser(employeeDetails);
 		return "{\"status\": true}";
 	}
+	
+	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
+	@ResponseBody
+	public String deleteEmployee(@RequestParam("userId") int userId) {
+		famstackDashboardManager.deleteUser(userId);
+		return "{\"status\": true}";
+	}
 
 	@RequestMapping("/image/{userId}")
 	public void getImage(@PathVariable(value = "userId") int userId, HttpServletResponse httpServletResponse) {

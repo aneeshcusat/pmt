@@ -114,5 +114,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		
 		return employeeDetailsList;
 	}
+
+	public void deleteUser(int userId) {
+		userProfileManager.deleteUserItem(userId);
+		
+	}
 	
 }
