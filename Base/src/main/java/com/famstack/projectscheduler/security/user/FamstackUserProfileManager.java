@@ -37,9 +37,9 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 
 	@Resource
 	PasswordTokenGenerator passwordTokenGenerator;
-
+	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+	
 	/**
 	 * Login.
 	 *
@@ -91,13 +91,22 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 	public void createUserItem(EmployeeDetails employeeDetails) {
 		String hashKey = passwordTokenGenerator.generate(32);
 		String password = employeeDetails.getPassword();
-		UserItem userItem = new UserItem();
+		UserItem userItem = null;
+		
+		if (employeeDetails.getId() == 0) {
+			 userItem = new UserItem();
+		} else {
+			userItem = getUserItemById(employeeDetails.getId());
+			if (userItem == null) {
+				userItem = new UserItem();
+			}
+		}
 		userItem.setUserId(employeeDetails.getEmail());
-		userItem.setPassword(FamstackSecurityTokenManager.encryptString(password, hashKey));
-		userItem.setHashkey(hashKey);
 		byte[] imageBytes = getImageBytes(employeeDetails.getFilePhoto());
-		userItem.setProfilePhoto(imageBytes);
-
+		if (imageBytes.length > 0) {
+			userItem.setProfilePhoto(imageBytes);
+		}
+		
 		userItem.setLastName(employeeDetails.getLastName());
 		userItem.setDesignation(employeeDetails.getDesignation());
 		if (StringUtils.isNotBlank(employeeDetails.getDateOfBirth())) {
@@ -113,14 +122,8 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		userItem.setUserRole(employeeDetails.getRole());
 		userItem.setGender(employeeDetails.getGender());
 		userItem.setGroup(employeeDetails.getGroup());
-
-		if (employeeDetails.getId() == 0) {
-			famstackDataAccessObjectManager.saveItem(userItem);
-		} else {
-			userItem.setId(employeeDetails.getId());
-			famstackDataAccessObjectManager.updateItem(userItem);
-		}
-
+		famstackDataAccessObjectManager.saveOrUpdateItem(userItem);
+		 
 	}
 
 	private byte[] getImageBytes(String filePhoto) {
@@ -141,12 +144,12 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 	public UserItem getUserItem(String userId) {
 		return famstackDataAccessObjectManager.getUser(userId);
 	}
-
+	
 	public EmployeeDetails getEmployee(int userId) {
 		UserItem userItem = getUserItemById(userId);
 		return getEmployeeDetailsFromUserItem(userItem);
 	}
-
+	
 	public EmployeeDetails getEmployeeDetailsFromUserItem(UserItem userItem) {
 		if (userItem != null) {
 			EmployeeDetails employeeDetails = new EmployeeDetails();
@@ -164,18 +167,18 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 			employeeDetails.setRole(userItem.getUserRole());
 			employeeDetails.setId(userItem.getId());
 			if (userItem.getProfilePhoto() != null) {
-				employeeDetails.setFilePhoto(new String(userItem.getProfilePhoto()));
+				employeeDetails.setFilePhoto(new String(userItem.getProfilePhoto())); 
 			}
 			return employeeDetails;
 		}
 		return null;
-
+		
 	}
 
 	public void deleteUserItem(int userId) {
 		UserItem userItem = getUserItemById(userId);
 		if (userItem != null) {
 			famstackDataAccessObjectManager.deleteItem(userItem);
-		}
+		} 
 	}
 }

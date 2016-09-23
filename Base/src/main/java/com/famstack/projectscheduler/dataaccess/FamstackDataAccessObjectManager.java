@@ -65,7 +65,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 	public void updateItem(Object updateItem) {
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
-		session.saveOrUpdate(updateItem);
+		session.update(updateItem);
 		tx.commit();
 		session.close();
 	}
@@ -75,6 +75,15 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		session.delete(deleteItem);
+		tx.commit();
+		session.close();
+	}
+	
+	@Override
+	public void saveOrUpdateItem(Object updateItem) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		session.saveOrUpdate(updateItem);
 		tx.commit();
 		session.close();
 	}
