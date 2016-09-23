@@ -40,15 +40,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
-		/*Map<String, String> errorMap = valiateUser(employeeDetails);
-		if (!errorMap.isEmpty()) {
-			return errorMap;
-		}
-		UserItem userItem = userProfileManager.getUserItem(employeeDetails.getEmail());
-
-		if (userItem != null) {
-			errorMap.put("userExists", "user already exist in the system");
-		}*/
+		/*
+		 * Map<String, String> errorMap = valiateUser(employeeDetails); if
+		 * (!errorMap.isEmpty()) { return errorMap; } UserItem userItem =
+		 * userProfileManager.getUserItem(employeeDetails.getEmail());
+		 * 
+		 * if (userItem != null) { errorMap.put("userExists",
+		 * "user already exist in the system"); }
+		 */
 
 		userProfileManager.createUserItem(employeeDetails);
 
@@ -73,7 +72,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return errorMap;
 	}
 
-	public List<UserItem> getUsersData() {
+	public List<?> getUsersData() {
 		return userProfileManager.getAllUserItems();
 	}
 
@@ -82,7 +81,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public String getEmployeeDetails(int userId) {
-		
+
 		EmployeeDetails employeeDetails = userProfileManager.getEmployee(userId);
 		String jsonString = null;
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -97,10 +96,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		}
 		return jsonString;
 	}
-	
+
 	public List<EmployeeDetails> getEmployeeDataList() {
 		List<EmployeeDetails> employeeDetailsList = new ArrayList<EmployeeDetails>();
-		List<UserItem> userItemList = getUsersData();
+		List<UserItem> userItemList = (List<UserItem>) getUsersData();
 		if (userItemList != null) {
 			Iterator<UserItem> iter = userItemList.iterator();
 			while (iter.hasNext()) {
@@ -111,13 +110,13 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				}
 			}
 		}
-		
+
 		return employeeDetailsList;
 	}
 
 	public void deleteUser(int userId) {
 		userProfileManager.deleteUserItem(userId);
-		
+
 	}
-	
+
 }

@@ -40,14 +40,15 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	public List<UserItem> getAllUsers() {
+	public List<?> getAllItems(String itemName) {
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
-		Query<UserItem> query = session.createQuery("from UserItem");
-		List<UserItem> userItemList = query.list();
+		String hql = String.format("from %s", itemName);
+		Query<?> query = session.createQuery(hql);
+		List<?> itemList = query.list();
 		tx.commit();
 		session.close();
-		return userItemList;
+		return itemList;
 	}
 
 	@Override
