@@ -24,6 +24,26 @@
             </div>
         </div>
         <!-- END MESSAGE BOX-->
+        
+         <!-- MESSAGE BOX-->
+        <div class="message-box message-box-danger animated fadeIn" data-sound="alert" id="confirmationbox">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-times"></span> <span class="msgConfirmText"></span> ?</div>
+                    <div class="mb-content">
+                        <p>Are you sure you want to <span class="msgConfirmText"></span>?</p>                    
+                        <p>Press No if you want to continue work. Press Yes to <span class="msgConfirmText"></span>.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <div class="pull-right">
+                            <a href="#" class="btn btn-success btn-lg" id="confirmYesId">Yes</a>
+                            <button class="btn btn-default btn-lg mb-control-close">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END MESSAGE BOX-->
 
         <!-- START PRELOADS -->
         <audio id="audio-alert" src="${audio}/alert.mp3" preload="auto"></audio>
