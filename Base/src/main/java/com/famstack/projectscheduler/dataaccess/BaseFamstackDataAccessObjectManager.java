@@ -27,6 +27,8 @@ public abstract class BaseFamstackDataAccessObjectManager extends BaseFamstackSe
     public abstract void updateItem(Object updateItem);
     
     public abstract void deleteItem(Object deleteItem);
+    
+    public abstract void saveOrUpdateItem(Object updateItem);
 
     
 }
