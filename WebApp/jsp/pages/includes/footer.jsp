@@ -29,10 +29,10 @@
         <div class="message-box message-box-danger animated fadeIn" data-sound="alert" id="confirmationbox">
             <div class="mb-container">
                 <div class="mb-middle">
-                    <div class="mb-title"><span class="fa fa-times"></span> <span class="msgConfirmText"></span> ?</div>
+                    <div class="mb-title"><span class="fa fa-times"></span> <span class="msgConfirmText"></span> <strong  class="msgConfirmText1"></strong> ?</div>
                     <div class="mb-content">
-                        <p>Are you sure you want to <span class="msgConfirmText"></span>?</p>                    
-                        <p>Press No if you want to continue work. Press Yes to <span class="msgConfirmText"></span>.</p>
+                        <p>Do you really want to <span class="msgConfirmText"></span>?</p>                    
+                        <p>Press No if you want to continue work. Press Yes to <span class="msgConfirmText"></span> <strong  class="msgConfirmText1"></strong>.</p>
                     </div>
                     <div class="mb-footer">
                         <div class="pull-right">

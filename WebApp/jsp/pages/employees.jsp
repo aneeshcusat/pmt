@@ -85,7 +85,7 @@
                     </div>
                     <div class="profile-controls">
                         <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit"></span></a>
-                        <a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}')"><span class="fa fa-times"></span></a>
+                        <a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}','${user.lastName} ${user.firstName}')"><span class="fa fa-times"></span></a>
                     </div>
                 </div>                                
                 <div class="panel-body">                                    
@@ -194,8 +194,9 @@ function loadUser(userId) {
 
 }
 
-function deleteUser(userId){
+function deleteUser(userId, userName){
 	$(".msgConfirmText").html("Delete user");
+	$(".msgConfirmText1").html(userName);
 	$("#confirmYesId").prop("href","javascript:doAjaxDeleteUser('"+userId+"')");
 }
 
