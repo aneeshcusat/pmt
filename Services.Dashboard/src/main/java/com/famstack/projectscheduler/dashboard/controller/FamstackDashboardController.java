@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
 
@@ -121,8 +121,36 @@ public class FamstackDashboardController extends BaseFamstackService {
 			httpServletResponse.getOutputStream().close();
 			httpServletResponse.flushBuffer();
 		} catch (IOException e) {
+			
 		}
 
 	}
 
+	@RequestMapping(value = "/projects", method = RequestMethod.GET)
+	public ModelAndView listProjects() {
+		List<ProjectDetails> employeeItemList = famstackDashboardManager.getProjectsDataList();
+		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("projectData", employeeItemList);
+	}
+	
+	@RequestMapping(value = "/saveProject", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails,
+			BindingResult result, Model model) {
+		famstackDashboardManager.createProject(projectDetails);
+		return "{\"status\": true}";
+	}
+	
+	@RequestMapping(value = "/editProject", method = RequestMethod.GET)
+	@ResponseBody
+	public String editProject(@RequestParam("projectId") int projectId) {
+		return famstackDashboardManager.getProjectDetailsJSON(projectId);
+		
+	}
+	
+	@RequestMapping(value = "/deleteProject", method = RequestMethod.GET)
+	@ResponseBody
+	public String deleteProject(@RequestParam("projectId") int projectId) {
+		famstackDashboardManager.deleteProject(projectId);
+		return "{\"status\": true}";
+	}
 }

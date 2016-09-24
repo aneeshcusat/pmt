@@ -17,7 +17,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Project Name</label>
                                 <div class="col-md-9">                                            
-                                        <input type="text" class="autocomplete form-control"/>
+                                        <form:input type="text" class="autocomplete form-control" id="projectName" path="name"/>
                                     <span class="help-block">required project name</span>
                                 </div>
                             </div>
@@ -25,13 +25,13 @@
                             <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Project Category</label>
                                  <div class="col-md-9">                                                                                            
-                                    <select class="form-control select">
+                                    <form:select class="form-control select" id="category" path="category">
                                         <option>Option 1</option>
                                         <option>Option 2</option>
                                         <option>Option 3</option>
                                         <option>Option 4</option>
                                         <option>Option 5</option>
-                                    </select>
+                                    </form:select>
                                     <span class="help-block">required project type</span>
                                 </div>
                             </div>
@@ -39,7 +39,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Summary</label>
                                 <div class="col-md-9 col-xs-12">                                            
-                                    <textarea class="form-control" rows="5"></textarea>
+                                    <form:textarea class="form-control" rows="5" path="description" id="summary"></form:textarea>
                                     <span class="help-block">required summary</span>
                                 </div>
                             </div>
@@ -47,10 +47,11 @@
 							<label class="col-xs-3 control-label">Project Type</label>
 							<div class="col-xs-9">
 								<div class="btn-group" data-toggle="buttons">
-									<label class="btn btn-default" id="male"> <input type="radio"
-										name="gender" value="male" /> Billable
-									</label> <label class="btn btn-default"> <input type="radio"
-										name="gender" value="female" id="female"/> Non Billable
+									<label class="btn btn-default" > <input type="radio"
+										name="type" value="billable" id="billable"  /> Billable
+									</label> 
+									<label class="btn btn-default"> <input type="radio"
+										name="type" value="nonbillable" id="nonbillable" /> Non Billable
 									</label>
 								</div>
 							</div>
@@ -60,12 +61,12 @@
                                 <label class="col-md-3 control-label">Priority</label>
                                 <div class="col-md-6 col-xs-6">
                                     <div class="input-group">
-                                        <select class="form-control">
+                                        <form:select class="form-control" path="priority" id="priority">
                                         <option>Urgent</option>
                                         <option>High</option>
                                         <option>Medium</option>
                                         <option>Low</option>
-                                    </select>
+                                    </form:select>
                                     </div>            
                                     <span class="help-block">required priority</span>
                                 </div>
@@ -75,7 +76,7 @@
                                 <label class="col-md-3 control-label">Client</label>
                                 <div class="col-md-6 col-xs-6">
                                     <div class="input-group">
-                                      <select class="selectpicker form-control">
+                                      <form:select class="selectpicker form-control" path="clientId" id="clientId">
 										  <optgroup label="Picnic">
 										    <option>Mustard</option>
 										    <option>Ketchup</option>
@@ -86,7 +87,7 @@
 										    <option>Flashlight</option>
 										    <option>Toilet Paper</option>
 										  </optgroup>
-										</select>
+										</form:select>
                                     </div>            
                                     <span class="help-block">required priority</span>
                                 </div>
@@ -94,7 +95,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Tags</label>
                                 <div class="col-md-9">
-                                    <input type="text" class="tagsinput" value="First,Second,Third" placeholder="add a tag"/>
+                                    <form:input type="text" class="tagsinput" placeholder="add a tag" path="tags" id="tags"/>
                                     <span class="help-block">tag project with keywords</span>
                                 </div>
                             </div>
@@ -104,7 +105,7 @@
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Reporter</label>
                                 <div class="col-md-9">                                                                                            
-                                   <input type="text" class="autocomplete form-control" value="Aneeshkumar" readonly="readonly"/>
+                                   <form:input type="text" class="autocomplete form-control" value="Aneeshkumar" readonly="readonly" path="reporter" id="reporter"/>
                                     <span class="help-block">required reporter</span>
                                 </div>
                             </div>
@@ -112,7 +113,7 @@
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Assignee</label>
                                 <div class="col-md-9">                                                                                            
-                                    <input type="text" class="autocomplete form-control"/>
+                                    <form:input type="text" class="autocomplete form-control" path="assignee" id="assignee"/>
                                     <span class="help-block">required assignee</span>
                                 </div>
                             </div>
@@ -121,7 +122,7 @@
                                 <div class="col-md-9">
                                     <div class="input-group">
                                         <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                                        <input type="text" class="form-control datepicker" value="2014-11-01">                                            
+                                        <form:input type="date" class="form-control datepicker" value="2014-11-01" path="startTime" id="startTime"/>                                            
                                     </div>
                                     <span class="help-block">Click on input field to get datepicker</span>
                                 </div>
@@ -132,7 +133,7 @@
                                 <label class="col-md-3 control-label">Estimated completion time</label>
                                <div class="col-md-5">
                                             <div class="input-group bootstrap-timepicker">
-                                                <input type="text" class="form-control timepicker24">
+                                                <form:input type="text" class="form-control timepicker24" path="duration" id="duration"/>
                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                             </div>
                                         </div>
@@ -142,25 +143,26 @@
 							<label class="col-xs-3 control-label">Review</label>
 							<div class="col-xs-9">
 								<div class="btn-group" data-toggle="buttons">
-									<label class="btn btn-default" id="male"> <input type="radio"
-										name="gender" value="male" /> Yes
+									<label class="btn btn-default" id="Y"> <input type="radio"
+										name="review" value="Y"  /> Yes
 									</label> <label class="btn btn-default"> <input type="radio"
-										name="gender" value="female" id="female"/> No
+										name="review" value="N" id="N"/> No
 									</label>
 								</div>
 							</div>
 						</div>
+						<form:input path="id" type="hidden" id="id"/>
                             <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Reviewer</label>
                                 <div class="col-md-9">                                                                                            
-                                    <input type="text" class="autocomplete form-control"/>
+                                    <form:input type="text" class="autocomplete form-control" path="reviewer" id="reviewer"/>
                                     <span class="help-block">required reviewer</span>
                                 </div>
                             </div>
                              <div class="form-group">
                                 <label class="col-md-3 control-label">Watchers</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="tagsinput autocomplete" placeholder="add an email" value="aneesh@gmail.com,udhayan@gmail.com,aneesh@gmail.com,udhayan@gmail.com"  id="autocomplete"/>
+                                <div class="col-md-9" id="watcher_tag_div">
+                                    <form:input type="text" class="tagsinput autocomplete" placeholder="add an email" value="" path="watchers"  id="watchers"/>
                                     <span class="help-block">who all monitoring this project</span>
                                 </div>
                             </div>

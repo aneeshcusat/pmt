@@ -1,6 +1,6 @@
 package com.famstack.projectscheduler.datatransferobject;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,8 +12,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -30,39 +31,72 @@ public class ProjectItem {
 	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private int id;
 
-	@Column(name = "project_name")
-	private String projectName;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "project_code")
-	private String projectCode;
+	@Column(name = "code")
+	private String code;
 
-	@Column(name = "project_des")
-	private String projectDescription;
+	@Column(name = "description")
+	private String description;
 
 	@Column(name = "created_by")
-	private String createdBy;
+	private int createdBy;
+	
+	@Column(name = "created_date")
+	private Timestamp createdDate;
+
+	@Column(name = "modified_by")
+	private int modifiedBy;
+	
+	@Column(name = "modified_date")
+	private Timestamp modifiedDate;
+	
+	@Column(name = "type")
+	private String type;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="reporter")
+	private UserItem reporter;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "assignee")
+	private UserItem assignee;
+	
+	@Column(name = "review")
+	private String review;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "reviewer")
+	private UserItem reviewer;
+	
+	@Column(name = "category")
+	private String category;
+	
+	@Column(name = "tags")
+	private String tags;
+	
+	@Column(name = "watchers")
+	private String watchers;
+	
+	@Column(name = "priority")
+	private String priority;
+	
+	@Column(name = "start_time")
+	private Timestamp startTime;
+	
+	@Column(name = "duration")
+	private int duration;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "project_status")
-	private ProjectStatus projectStaus;
+	@Column(name = "status")
+	private ProjectStatus status;
 
-	@Column(name = "client_id")
+	@Column(name = "client")
 	private String clientId;
-
-	@Column(name = "created_date")
-	private Date createdDate;
-
-	@Column(name = "modified_date")
-	private Date modifiedDate;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
 	private Set<ProjectCommentItem> projectComments;
-
-	@ManyToOne
-	private ProjectItem projectItem;
-
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
-	private Set<ProjectItem> projectParents;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
 	private Set<ProjectActivityItem> projectActivityItem;
@@ -75,44 +109,116 @@ public class ProjectItem {
 		this.id = id;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public String getName() {
+		return name;
 	}
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getProjectCode() {
-		return projectCode;
+	public String getCode() {
+		return code;
 	}
 
-	public void setProjectCode(String projectCode) {
-		this.projectCode = projectCode;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
-	public String getProjectDescription() {
-		return projectDescription;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setProjectDescription(String projectDescription) {
-		this.projectDescription = projectDescription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getCreatedBy() {
+	public int getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(int createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public ProjectStatus getProjectStaus() {
-		return projectStaus;
+	public Timestamp getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setProjectStaus(ProjectStatus projectStaus) {
-		this.projectStaus = projectStaus;
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public int getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(int modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Timestamp getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Timestamp modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	public ProjectStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ProjectStatus status) {
+		this.status = status;
 	}
 
 	public String getClientId() {
@@ -123,36 +229,12 @@ public class ProjectItem {
 		this.clientId = clientId;
 	}
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
 	public Set<ProjectCommentItem> getProjectComments() {
 		return projectComments;
 	}
 
 	public void setProjectComments(Set<ProjectCommentItem> projectComments) {
 		this.projectComments = projectComments;
-	}
-
-	public Set<ProjectItem> getProjectParents() {
-		return projectParents;
-	}
-
-	public void setProjectParents(Set<ProjectItem> projectParents) {
-		this.projectParents = projectParents;
 	}
 
 	public Set<ProjectActivityItem> getProjectActivityItem() {
@@ -163,12 +245,45 @@ public class ProjectItem {
 		this.projectActivityItem = projectActivityItem;
 	}
 
-	public ProjectItem getProjectItem() {
-		return projectItem;
+	public UserItem getReporter() {
+		return reporter;
 	}
 
-	public void setProjectItem(ProjectItem projectItem) {
-		this.projectItem = projectItem;
+	public void setReporter(UserItem reporter) {
+		this.reporter = reporter;
 	}
 
+	public UserItem getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(UserItem assignee) {
+		this.assignee = assignee;
+	}
+
+	public String getReview() {
+		return review;
+	}
+
+	public void setReview(String review) {
+		this.review = review;
+	}
+
+	public UserItem getReviewer() {
+		return reviewer;
+	}
+
+	public void setReviewer(UserItem reviewer) {
+		this.reviewer = reviewer;
+	}
+
+	public String getWatchers() {
+		return watchers;
+	}
+
+	public void setWatchers(String watchers) {
+		this.watchers = watchers;
+	}
+
+	
 }

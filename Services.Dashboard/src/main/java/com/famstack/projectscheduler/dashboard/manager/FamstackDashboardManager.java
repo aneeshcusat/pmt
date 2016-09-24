@@ -16,8 +16,11 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
+import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.manager.FamstackProjectManager;
 import com.famstack.projectscheduler.security.user.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.StringUtils;
 
@@ -29,13 +32,12 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackUserProfileManager userProfileManager;
+	
+	@Resource
+	FamstackProjectManager projectManager;
 
 	public Map<String, Object> getUserData() {
 		return null;
-	}
-
-	public void deleteUser(String userId) {
-
 	}
 
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
@@ -75,7 +77,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public List<?> getUsersData() {
 		return userProfileManager.getAllUserItems();
 	}
-
+	
 	public UserItem getUser(int userId) {
 		return userProfileManager.getUserItemById(userId);
 	}
@@ -119,4 +121,51 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	}
 
+	public void createProject(ProjectDetails projectDetails) {
+		projectManager.createProjectItem(projectDetails);
+		
+	}
+
+	public List<ProjectDetails> getProjectsDataList() {
+		List<ProjectDetails> projectDetailsList = new ArrayList<ProjectDetails>();
+		List<ProjectItem> projectItemList = (List<ProjectItem>) getProjectDetails();
+		if (projectItemList != null) {
+			Iterator<ProjectItem> iter = projectItemList.iterator();
+			while (iter.hasNext()) {
+				ProjectItem projectItem = iter.next();
+				ProjectDetails projectDetails = projectManager.getProjectDetailsFromProjectItem(projectItem);
+				if (projectDetails != null) {
+					projectDetailsList.add(projectDetails);
+				}
+			}
+		}
+
+		return projectDetailsList;
+	}
+
+	public List<?> getProjectDetails() {
+		return projectManager.getAllProjectItems();
+	}
+
+	public String getProjectDetailsJSON(int projectId) {
+		
+		ProjectItem projectItem = projectManager.getProjectItemById(projectId);
+		ProjectDetails projectDetails = projectManager.getProjectDetailsFromProjectItem(projectItem);
+		String jsonString = null;
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			jsonString = objectMapper.writeValueAsString(projectDetails);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return jsonString;
+	}
+
+	public void deleteProject(int projectId) {
+		projectManager.deleteProjectItem(projectId);
+	}
 }

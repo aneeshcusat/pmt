@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 
 public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjectManager {
@@ -86,6 +87,16 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		session.saveOrUpdate(updateItem);
 		tx.commit();
 		session.close();
+	}
+	
+	public ProjectItem getProjectById(int id) {
+		ProjectItem projectItem = null;
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		projectItem = session.get(ProjectItem.class, id);
+		tx.commit();
+		session.close();
+		return projectItem;
 	}
 
 }
