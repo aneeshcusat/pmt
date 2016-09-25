@@ -101,7 +101,7 @@
 						onclick="loadProject('${project.id}')">
 						<span class="fa fa-pencil"></span>
 					</button>
-					<a href="javascript:void(0)" class="btn btn-danger btn-rounded btn-sm" 
+					<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right btn btn-danger btn-rounded btn-sm" 
 						onclick="deleteProject('${project.id}','${project.name}');">
 						<span class="fa fa-times"></span>
 					</a>
@@ -245,10 +245,11 @@
 	    $('#id').val(response.id);
 	}
 	
+	
 	function deleteProject(projectId, projectName){
-	   //confirmation box code to be inserted
-	   
-		doAjaxDeleteProject(projectId);
+		$(".msgConfirmText").html("Delete project");
+		$(".msgConfirmText1").html(projectName);
+		$("#confirmYesId").prop("href","javascript:doAjaxDeleteProject('"+projectId+"')");
 	}
 	
 	function doAjaxDeleteProject(projectId) {
