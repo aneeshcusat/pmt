@@ -484,6 +484,14 @@ $(function() {
         }
     }();
     
+    var events_array = [
+                        {
+                        title: 'Prj10002',
+                        start: moment('2016-09-26T05:00:00'),
+                        end : moment('2016-09-26T12'),
+                        tip: 'Create a logo'},
+                    ];
+    
     var fullCalendar = function(){
             
         var calendar = function(){
@@ -519,13 +527,17 @@ $(function() {
                         center: 'title',
                         right: 'agendaDay,agendaWeek,month'
                     },
+                    height: 500,
                     defaultView: 'agendaDay',
                     weekends: false,
                     editable: false,
                     eventSources: {url: "assets/ajax_fullcalendar.jsp"},
-                    droppable: true,
-                    selectable: true,
-                    selectHelper: true,
+                    droppable: false,
+                    selectable: false,
+                    selectHelper: false,
+                    maxTime: "22:00:00",
+                    minTime: "09:00:00",
+                    events:events_array,
                     select: function(start, end, allDay) {
                        /* var title = prompt('Event Title:');
                         if (title) {

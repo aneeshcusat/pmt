@@ -161,8 +161,7 @@
 	src="${js}/plugins/tagsinput/jquery.tagsinput.min.js"></script>
 <script type="text/javascript"
 	src="${js}/plugins/fileinput/fileinput.min.js"></script>
-<script type="text/javascript"
-	src="${js}/plugins/dropzone/dropzone.min.js"></script>
+
 <script type="text/javascript"
 	src="${js}/plugins/autocomplete/jquery.autocomplete.js"></script>
 
@@ -186,21 +185,6 @@
 							+ suggestion.data);
 				}
 			});
-	$(document).ready(function() {
-		Dropzone.autoDiscover = false;
-		$("#my-dropzone").dropzone({
-			url : "/upload",
-			addRemoveLinks : true,
-			success : function(file, response) {
-				var imgName = response;
-				file.previewElement.classList.add("dz-success");
-				console.log("Successfully uploaded :" + imgName);
-			},
-			error : function(file, response) {
-				file.previewElement.classList.add("dz-error");
-			}
-		});
-	});
 
 	function doAjaxCreateProjectForm() {
 		$('#createProjectFormId').submit();
@@ -247,7 +231,7 @@
 	    $('#priority').selectpicker('refresh');
 	    $('#clientId').val(response.clientId);
 	    $('#clientId').selectpicker('refresh');
-	    $('#tags_tag').val(response.tags);
+	    $('#tags').val(response.tags);
 	    $('#reporter').val(response.reporter);
 	    $('#reporter').selectpicker('refresh');
 	    $('#assignee').val(response.assignee);

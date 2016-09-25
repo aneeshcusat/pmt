@@ -25,18 +25,44 @@ margin-left: 15px;
 .panel .panel-heading{
 border-bottom: 1px solid lightgray;
 }
+/*
+.dropzone {
+width: 100%;
+height: 80px;
+min-height: 0px !important;
+}   
+.dropzone .dz-default.dz-message{
+/*height: 80px;*/
+}
+*/
+
 </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
-	<div class="content-frame-top">                        
-            <h4><span class="fa "></span> Project - Prj 10002 </h4>
+	<div class="content-frame-top">  
+	<div class="row">
+                  <div class="col-md-7">                      
+            <h4><span class="fa "></span> PRJ100 - create a logo for microsoft.</h4>
+            </div>
+            <div class="col-md-5 text-right">               
+           <span style="background-color: lightgray;" class="btn  btn-default" disabled=disabled>To Do</span>       
+           <span style="background-color: lightblue;"  class="btn  btn-default" disabled=disabled>Assign</span>
+           <a href="#" class="btn  btn-default">Reviewed</a>
+           <a href="#" class="btn  btn-default">Completed</a>
+            </div>
+            </div>
 	</div>        
 	      <div class="row">
+	      
                   <div class="col-md-8">
                       <section class="panel">
-                          <div class="project project-heading">
-                              <strong> Short description </strong>
-                          </div>
+                         <!--  <div class="project project-heading">
+                              <strong> Sub Tasks</strong>
+                              <p>Sometimes the simplest things are the hardest to find.dddddddd dsdsasds Sometimes the simplest things are the hardest to find. 
+                              Sometimes the simplest things are the hardest to find. 
+                              Sometimes the simplest things are the hardest to find. Sometimes the simplest things are the hardest to find. Sometimes the simplest t
+                              hings are the hardest to find.</p>
+                          </div> -->
                           <div class="panel-body bio-graph-info">
                               <!--<h1>New Dashboard BS3 </h1>-->
                               <div class="row project_details">
@@ -53,13 +79,15 @@ border-bottom: 1px solid lightgray;
                                       <p><span class="bold">Last Updated</span>: 22.08.2014 03:11:45</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Client </span>: <a href="#">Themeforest</a></p>
+                                      <p><span class="bold">Client </span>: <a href="#">MicroSoft</a> - Chris thomas</p>
                                   </div>
+                                   <div class="col-md-6">
+                                   	<ul class="nav nav-pills nav-stacked labels-info ">
+                                 	 <li><i class=" fa fa-circle text-danger"></i> High Priority<p></p></li>
+	                              </ul>
+	                              </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Version </span>: v.2.3</p>
-                                  </div>
-                                  <div class="col-md-6">
-                                      <p><span class="bold">Participants </span>:
+                                      <p><span class="bold">Assignees </span>:
                                       <span class="project_team">
                                          <a href="#"><img alt="image" class="" src="${assets}/images/users/user2.jpg"></a>
 						                  <a href="#"><img alt="image" class="" src="${assets}/images/users/user3.jpg"></a>
@@ -73,14 +101,33 @@ border-bottom: 1px solid lightgray;
                                           <dt>Project Completed:</dt>
                                           <dd>
                                               <div class="progress progress-striped active ">
-                                                  <div style="width: 80%;" class="progress-bar progress-bar-success"></div>
+                                                  <div style="width: 40%;" class="progress-bar progress-bar-danger"></div>
                                               </div>
                                               <small>Project completed in <strong>80%</strong>. Remaining close the project, sign a contract and invoice.</small>
                                           </dd>
                                       </dl>
                                   </div>
                               </div>
-
+                              <div class="row">
+	                    <div class="col-md-12">
+	                    <h5 class="bold">Description</h5>
+	                      <p>
+                                  Sometimes the simplest things are the hardest to find. I imagined a line of my favorite pieces, the things i would live in every day, all year round. So I stopped looking and started designing. Sometimes the simplest things are the hardest to find. Sometimes the simplest things are the hardest to find. I imagined a line of my favorite pieces, the things i would live in every day, all year round. So I stopped looking and started designing. Sometimes the simplest things are the hardest to find.
+                              </p>
+	                    </div>
+	                    </div>
+                              
+						<div class="row">
+	                    <div class="col-md-12">
+	                    	  <div class="form-group">
+                                <label class="col-md-2 control-label">Attachments</label>
+                                <div class="col-md-12">
+                                   <div class="dropzone dropzone-mini dz-clickable" id="my-dropzone">
+							        </div>
+								</div>
+								</div>
+                    	</div>
+                    </div>
                           </div>
 
                       </section>
@@ -216,29 +263,53 @@ border-bottom: 1px solid lightgray;
                   </div>
                   <div class="col-md-4">
                       <section class="panel">
-                          <header class="panel-heading">
-                            <h4> Projects Description</h4>
-                          </header>
-
                           <div class="panel-body">
-                              <p>
-                                  Sometimes the simplest things are the hardest to find. I imagined a line of my favorite pieces, the things i would live in every day, all year round. So I stopped looking and started designing. Sometimes the simplest things are the hardest to find. Sometimes the simplest things are the hardest to find. I imagined a line of my favorite pieces, the things i would live in every day, all year round. So I stopped looking and started designing. Sometimes the simplest things are the hardest to find.
-                              </p>
-                              <br>
+                           <h5 class="bold">Tasks</h5>
+                              <table class="table">
+                                        <tbody>
+                                            <tr>
+                                             <td width="5%">1</td>
+                                                <td><a href="#">Create slide 1 to 10</a> 
+                                                 <div class="progress progress-small progress-striped active">
+                                        			<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                                    			</div>
+                                                </td>
+                                               <td  width="10%"><span class="label label-warning">Inprogress</span></td>
+                                            </tr>
+                                            <tr>
+                                            <td>2</td>
+                                                <td><a href="#">Create slide 11 to 20</a>
+                                                 <div class="progress progress-small progress-striped active">
+                                        			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                                    			</div>
+                                                </td>
+                                                  <td><span class="label label-success">New</span></td>
+                                            </tr>
+                                            <tr>
+                                            <td>3</td>
+                                                <td><a href="#">Review all slides</a>
+                                                
+                                                 <div class="progress progress-small progress-striped active">
+                                        			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                                    			</div>
+                                                </td>
+                                                  <td><span class="label label-success">New</span></td>
+                                            </tr>
+                                             <tr >
+                                            <td colspan="3" class="text-right"><a class="btn btn-info">Create a task</a></td>
+                                            </tr>
+                                           
+                                       </tbody>
+                                  </table>
                                <h5 class="bold">Time Tracking</h5>
                               <ul class="nav nav-pills nav-stacked labels-info ">
-                                  <li>Estimated time : 2014-12-12 12:00AM<p></p></li>
-                                  <li>Completed time : 2014-12-12 12:00AM<p></p></li>
+                                  <li>Estimated start time:<b> 2014-12-12 12:00AM</b></li>
+                                  <li>Estimated start time:<b> 2014-12-12 12:00AM</b></li>
+                                  <li>Duration : <b>5 hours</b></li>
                               </ul>
 
                               <br>
                               
-                              <h5 class="bold">Priority</h5>
-                              <ul class="nav nav-pills nav-stacked labels-info ">
-                                  <li><i class=" fa fa-circle text-danger"></i> High Priority<p></p></li>
-                              </ul>
-
-                              <br>
                               <h5 class="bold">Project files</h5>
                               <ul class="list-unstyled p-files">
                                   <li><a href=""><i class="fa fa-file-text"></i> Project-document.docx</a></li>
@@ -260,8 +331,8 @@ border-bottom: 1px solid lightgray;
                         	</ul>
 
                               <div class="text-center mtop20">
-                                  <a href="#" class="btn  btn-primary">Add files</a>
-                                  <a href="#" class="btn btn-warning">Report contact</a>
+                                <!--   <a href="#" class="btn  btn-primary">Add files</a>
+                                  <a href="#" class="btn btn-warning">Report contact</a> -->
                               </div>
                           </div>
 
@@ -272,8 +343,26 @@ border-bottom: 1px solid lightgray;
 </div>               
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>            
-
+<script type="text/javascript"
+	src="${js}/plugins/dropzone/dropzone.min.js"></script>
+       <script>
        
+       $(document).ready(function() {
+   		Dropzone.autoDiscover = false;
+   		$("#my-dropzone").dropzone({
+   			url : "/upload",
+   			addRemoveLinks : true,
+   			success : function(file, response) {
+   				var imgName = response;
+   				file.previewElement.classList.add("dz-success");
+   				console.log("Successfully uploaded :" + imgName);
+   			},
+   			error : function(file, response) {
+   				file.previewElement.classList.add("dz-error");
+   			}
+   		});
+   	});
+       </script>
 
 
 

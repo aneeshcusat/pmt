@@ -169,16 +169,5 @@
                         </div>
                         
                     </div>
-  					<div class="row">
-	                    <div class="col-md-12">
-	                    	  <div class="form-group">
-                                <label class="col-md-2 control-label">File upload</label>
-                                <div class="col-md-12">
-                                   <div class="dropzone dropzone-mini dz-clickable" id="my-dropzone">
-							        </div>
-								</div>
-								</div>
-                    	</div>
-                    </div>
                 </div>
             </div>
