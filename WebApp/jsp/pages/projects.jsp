@@ -51,7 +51,7 @@
 							</div>
 							<div class="col-md-4">
 								<a data-toggle="modal" data-target="#createprojectmodal"
-									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
+									class="btn btn-success btn-block" onclick="clearProjectFormFields()"> <span class="fa fa-plus"></span>
 									Create a new Project
 								</a>
 							</div>
@@ -241,11 +241,36 @@
 	    $('#'+response.review).click();
 	    $('#reviewer').val(response.reviewer);
 	    $('#reviewer').selectpicker('refresh');
-	    $('#watchers_tag').val($('#watchers_tag').val() + response.watchers);
+	    $('#watchers').val(response.watchers);
 	    $('#id').val(response.id);
 	}
 	
-	
+	function clearProjectFormFields() {
+		$('#projectName').val('');
+        $('#category').val('-1');
+        //$('#category').selectpicker('refresh');
+        $('#summary').val('');
+        //$('#'+response.type).click();
+        $('#priority').val('-1');
+        //$('#priority').selectpicker('refresh');
+        $('#clientId').val('-1');
+        //$('#clientId').selectpicker('refresh');
+       
+        $('#reporter').val('-1');
+        //$('#reporter').selectpicker('refresh');
+        $('#assignee').val('-1');
+        //$('#assignee').selectpicker('refresh');
+        $('#startTime').val('');
+        $('#duration').val('');
+        //$('#'+response.review).click();
+        $('#reviewer').val('-1');
+        //$('#reviewer').selectpicker('refresh');
+        $('#watchers').val('');
+        $('#tags').val('');
+        $('#id').val('');
+        
+        // add -1 head value for combo boxes and set those during clearing values.
+	}
 	function deleteProject(projectId, projectName){
 		$(".msgConfirmText").html("Delete project");
 		$(".msgConfirmText1").html(projectName);
