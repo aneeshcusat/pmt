@@ -2,7 +2,10 @@ package com.famstack.projectscheduler.manager;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -10,13 +13,15 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
+import com.famstack.projectscheduler.datatransferobject.ProjectCommentItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
+import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 
 /**
- * The Class UserProfileManager.
+ * The Class FamstackProjectManager.
  * 
- * @author Aneeshkumar
+ * @author Kiran Thankaraj
  * @version 1.0
  */
 @Component
@@ -25,6 +30,9 @@ public class FamstackProjectManager extends BaseFamstackService {
 	/** The delivery interface data access object manager. */
 	@Resource
 	FamstackDataAccessObjectManager famstackDataAccessObjectManager;
+	
+	@Resource
+	FamstackProjectCommentManager famstackProjectCommentManager;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -126,10 +134,27 @@ public class FamstackProjectManager extends BaseFamstackService {
 			if (projectItem.getReviewer() != null) {
 				projectDetails.setReviewerName(projectItem.getReviewer().getFirstName() + " " + projectItem.getReviewer().getLastName());
 			}
-			
+			projectDetails.setProjectComments(getProjectCommentDetailsSet(projectItem.getProjectComments()));
 			return projectDetails;
 			
 		}
+		return null;
+	}
+	
+	
+	public Set<ProjectCommentDetails> getProjectCommentDetailsSet(Set<ProjectCommentItem> projectCommentItemSet) {
+		if (projectCommentItemSet != null) {
+			Set<ProjectCommentDetails> projectCommentDetailsSet = new HashSet<ProjectCommentDetails>();
+			Iterator<ProjectCommentItem> iter = projectCommentItemSet.iterator();
+			while (iter.hasNext()) {
+				ProjectCommentItem commentItem = iter.next();
+				ProjectCommentDetails commentDetails = famstackProjectCommentManager
+						.getProjectCommentDetailsFromProjectCommentItem(commentItem);
+				projectCommentDetailsSet.add(commentDetails);
+			}
+			return projectCommentDetailsSet;
+		}
+		
 		return null;
 	}
 }

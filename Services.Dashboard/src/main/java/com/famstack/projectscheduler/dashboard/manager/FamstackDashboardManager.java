@@ -19,7 +19,9 @@ import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
 import com.famstack.projectscheduler.security.user.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.StringUtils;
@@ -35,6 +37,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	
 	@Resource
 	FamstackProjectManager projectManager;
+	
+	@Resource
+	FamstackProjectCommentManager projectCommentManager;
 
 	public Map<String, Object> getUserData() {
 		return null;
@@ -167,5 +172,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public void deleteProject(int projectId) {
 		projectManager.deleteProjectItem(projectId);
+	}
+
+	public void createComment(ProjectCommentDetails projectCommentDetails) {
+		projectCommentManager.createProjectCommentItem(projectCommentDetails);
 	}
 }

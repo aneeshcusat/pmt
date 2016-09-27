@@ -26,6 +26,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
@@ -151,6 +152,16 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@ResponseBody
 	public String deleteProject(@RequestParam("projectId") int projectId) {
 		famstackDashboardManager.deleteProject(projectId);
+		return "{\"status\": true}";
+	}
+	
+	//---------- Project Comments ------------//
+	
+	@RequestMapping(value = "/saveComment", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveComment(@ModelAttribute("projectCommentDetails") ProjectCommentDetails projectCommentDetails,
+			BindingResult result, Model model) {
+		famstackDashboardManager.createComment(projectCommentDetails);
 		return "{\"status\": true}";
 	}
 }

@@ -1,6 +1,5 @@
 package com.famstack.projectscheduler.employees.bean;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -64,7 +63,7 @@ public class ProjectDetails {
 	
 	private String clientName;
 
-	private Set<ProjectCommentItem> projectComments;
+	private Set<ProjectCommentDetails> projectComments;
 
 	private Set<ProjectActivityItem> projectActivityItem;
 
@@ -156,11 +155,11 @@ public class ProjectDetails {
 		this.clientId = clientId;
 	}
 
-	public Set<ProjectCommentItem> getProjectComments() {
+	public Set<ProjectCommentDetails> getProjectComments() {
 		return projectComments;
 	}
 
-	public void setProjectComments(Set<ProjectCommentItem> projectComments) {
+	public void setProjectComments(Set<ProjectCommentDetails> projectComments) {
 		this.projectComments = projectComments;
 	}
 

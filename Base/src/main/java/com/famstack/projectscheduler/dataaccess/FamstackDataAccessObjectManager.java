@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import com.famstack.projectscheduler.datatransferobject.ProjectCommentItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 
@@ -97,6 +98,35 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		tx.commit();
 		session.close();
 		return projectItem;
+	}
+	
+	//------------ Comments -------------//
+	
+	public ProjectCommentItem getCommentById(int id) {
+		ProjectCommentItem projectCommentItem = null;
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		projectCommentItem = session.get(ProjectCommentItem.class, id);
+		tx.commit();
+		session.close();
+		return projectCommentItem;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ProjectCommentItem> getProjectComments(int projectId) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		Query<ProjectCommentItem> query = session.createQuery("from ProjectCommentItem where projectItem = :projectId");
+		query.setParameter("projectId", projectId);
+		List<ProjectCommentItem> projectComments = null;
+		try {
+			projectComments = query.list();
+		} catch (NoResultException ne) {
+			logError(ne.getMessage(), ne);
+		}
+		tx.commit();
+		session.close();
+		return projectComments;
 	}
 
 }
