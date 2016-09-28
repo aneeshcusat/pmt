@@ -83,7 +83,7 @@
         
 		<tbody>
 			<tr>
-				<td class="project_name"><a href="projectdetails.jsp">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
+				<td class="project_name"><a href="${home}loadProject?projectId=${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
 				<td class="project_team">
                     ${project.assigneeName}
                 </td>
@@ -97,10 +97,10 @@
 					<button class="btn btn-default btn-rounded btn-sm">
 						<span class="fa fa-folder-open-o"></span>
 					</button>
-					<button class="btn btn-default btn-rounded btn-sm" data-toggle="modal" data-target="#createprojectmodal"
+					<%-- <button class="btn btn-default btn-rounded btn-sm" data-toggle="modal" data-target="#createprojectmodal"
 						onclick="loadProject('${project.id}')">
 						<span class="fa fa-pencil"></span>
-					</button>
+					</button>--%>
 					<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right btn btn-danger btn-rounded btn-sm" 
 						onclick="deleteProject('${project.id}','${project.name}');">
 						<span class="fa fa-times"></span>

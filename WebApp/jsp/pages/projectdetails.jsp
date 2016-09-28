@@ -42,7 +42,7 @@ min-height: 0px !important;
 	<div class="content-frame-top">  
 	<div class="row">
                   <div class="col-md-7">                      
-            <h4><span class="fa "></span> PRJ100 - create a logo for microsoft.</h4>
+            <h4><span class="fa "></span>${projectDetails.name}</h4>
             </div>
             <div class="col-md-5 text-right">               
            <span style="background-color: lightgray;" class="btn  btn-default" disabled=disabled>To Do</span>       
@@ -67,31 +67,30 @@ min-height: 0px !important;
                               <!--<h1>New Dashboard BS3 </h1>-->
                               <div class="row project_details">
                                   <div class="col-md-6">
-                                      <p><span class="bold">Created by </span>: Jonathan Smith</p>
+                                      <p><span class="bold">Created by </span>: ${projectDetails.createdByName}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Status </span>: <span class="label label-primary">Active</span></p>
+                                      <p><span class="bold">Status </span>: <span class="label label-primary">${projectDetails.status}</span></p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Created </span>: 13.05.2014 10:16:23</p>
+                                      <p><span class="bold">Created </span>: ${projectDetails.createdDate}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Last Updated</span>: 22.08.2014 03:11:45</p>
+                                      <p><span class="bold">Last Updated</span>: ${projectDetails.modifiedDate}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Client </span>: <a href="#">MicroSoft</a> - Chris thomas</p>
+                                      <p><span class="bold">Client </span>: ${projectDetails.clientName}</p>
                                   </div>
                                    <div class="col-md-6">
                                    	<ul class="nav nav-pills nav-stacked labels-info ">
-                                 	 <li><i class=" fa fa-circle text-danger"></i> High Priority<p></p></li>
+                                 	 <li><i class=" fa fa-circle text-danger"></i> ${projectDetails.priority}<p></p></li>
 	                              </ul>
 	                              </div>
+	                              <input type="hidden" id="hdn_project_id" value="${projectDetails.id}">
                                   <div class="col-md-6">
-                                      <p><span class="bold">Assignees </span>:
+                                      <p><span class="bold">Assignee </span>:
                                       <span class="project_team">
-                                         <a href="#"><img alt="image" class="" src="${assets}/images/users/user2.jpg"></a>
-						                  <a href="#"><img alt="image" class="" src="${assets}/images/users/user3.jpg"></a>
-						                  <a href="#"><img alt="image" class="" src="${assets}/images/users/user4.jpg"></a>
+                                         <a href="#"><img alt="image" src="image/${projectDetails.assignee}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
                                       </span>
                                       </p>
                                   </div>
@@ -112,7 +111,7 @@ min-height: 0px !important;
 	                    <div class="col-md-12">
 	                    <h5 class="bold">Description</h5>
 	                      <p>
-                                  Sometimes the simplest things are the hardest to find. I imagined a line of my favorite pieces, the things i would live in every day, all year round. So I stopped looking and started designing. Sometimes the simplest things are the hardest to find. Sometimes the simplest things are the hardest to find. I imagined a line of my favorite pieces, the things i would live in every day, all year round. So I stopped looking and started designing. Sometimes the simplest things are the hardest to find.
+                                  ${projectDetails.description}
                               </p>
 	                    </div>
 	                    </div>
@@ -188,9 +187,9 @@ min-height: 0px !important;
 					            </div>
 					            <div class="panel panel-default push-up-10">
 					                <div class="input-group">
-					                    <textarea class="form-control" placeholder="Enter your comments"></textarea>
+					                    <textarea class="form-control" placeholder="Enter your comments" id="comment_textarea"></textarea>
 					                    <div class="input-group-btn">
-					                        <button class="btn btn-primary">Add</button>
+					                        <button class="btn btn-primary" onclick="addComment()">Add</button>
 					                    </div>
 					                </div>
 					            </div>
@@ -362,9 +361,36 @@ min-height: 0px !important;
    			}
    		});
    	});
-       </script>
-
-
-
-
-
+       
+function addComment() {
+   var projectId = $('#hdn_project_id').val();
+   var commentData = $('#comment_textarea').val();
+   var jsonData = '{"id":0,"projectId":0,"description":""}';
+   var json = JSON.parse(jsonData);
+   json.description = commentData;
+   json.projectId = projectId;
+   $.ajax({
+       type : "POST",
+       contentType : "application/json",
+       url : "${home}saveComment",
+       data: JSON.stringify(json),
+       timeout : 1000,
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader("Accept", "application/json");
+           xhr.setRequestHeader("Content-Type", "application/json");
+       },
+       success : function(data) {
+           if (data.status){
+               window.location.reload(true);
+           }
+       },
+       error : function(e) {
+           console.log("ERROR: ", e);
+           alert(e);
+       },
+       done : function(e) {
+           console.log("DONE");
+       }
+   });
+}
+</script>

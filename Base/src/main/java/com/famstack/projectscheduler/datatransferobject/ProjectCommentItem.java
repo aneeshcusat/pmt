@@ -25,7 +25,7 @@ public class ProjectCommentItem {
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "project_id", referencedColumnName = "id", insertable = false, updatable = false)
+	@JoinColumn(name = "project_id", referencedColumnName = "id")
 	private ProjectItem projectItem;
 	
 	@OneToOne(fetch = FetchType.EAGER)

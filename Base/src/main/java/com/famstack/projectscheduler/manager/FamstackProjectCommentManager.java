@@ -50,13 +50,12 @@ public class FamstackProjectCommentManager extends BaseFamstackService {
 		projectCommentItem.setDescription(projectCommentDetails.getDescription());
 		projectCommentItem.setTitle(projectCommentDetails.getTitle());
 		if (projectCommentDetails.getUserId() != 0) {
-			UserItem commentUser = new UserItem();
+			UserItem commentUser = famstackDataAccessObjectManager.getUserById(projectCommentDetails.getUserId());
 			commentUser.setId(projectCommentDetails.getUserId());
 			projectCommentItem.setUser(commentUser);
 		}
 		if (projectCommentDetails.getProjectId() != 0) {
-			ProjectItem projectItem = new ProjectItem();
-			projectItem.setId(projectCommentDetails.getProjectId());
+			ProjectItem projectItem = famstackDataAccessObjectManager.getProjectById(projectCommentDetails.getProjectId());
 			projectCommentItem.setProjectItem(projectItem);
 		}
 		famstackDataAccessObjectManager.saveOrUpdateItem(projectCommentItem);
@@ -90,9 +89,11 @@ public class FamstackProjectCommentManager extends BaseFamstackService {
 			projectCommentDetails.setModifiedDate(projectCommentItem.getModifiedDate());
 			projectCommentDetails.setProjectId(projectCommentItem.getProjectItem().getId());
 			projectCommentDetails.setTitle(projectCommentItem.getTitle());
-			projectCommentDetails.setUserId(projectCommentItem.getUser().getId());
-			projectCommentDetails.setUserName(projectCommentItem.getUser().getFirstName() + " " 
-			+ projectCommentItem.getUser().getLastName());
+			if (projectCommentItem.getUser() != null) {
+				projectCommentDetails.setUserId(projectCommentItem.getUser().getId());
+				projectCommentDetails.setUserName(projectCommentItem.getUser().getFirstName() + " " 
+						+ projectCommentItem.getUser().getLastName());
+			}
 			
 			return projectCommentDetails;
 			

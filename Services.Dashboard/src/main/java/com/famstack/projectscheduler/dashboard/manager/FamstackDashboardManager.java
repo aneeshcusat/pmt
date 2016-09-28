@@ -177,4 +177,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public void createComment(ProjectCommentDetails projectCommentDetails) {
 		projectCommentManager.createProjectCommentItem(projectCommentDetails);
 	}
+
+	public ProjectDetails getProjectDetails(int projectId) {
+		ProjectDetails projectDetails = projectManager.getProjectDetailsFromProjectItem(projectManager.getProjectItemById(projectId));
+		return projectDetails;
+	}
 }

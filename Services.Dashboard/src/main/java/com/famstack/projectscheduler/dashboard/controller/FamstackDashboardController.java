@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -113,18 +114,17 @@ public class FamstackDashboardController extends BaseFamstackService {
 	}
 
 	@RequestMapping("/image/{userId}")
-	public void getImage(@PathVariable(value = "userId") int userId, HttpServletResponse httpServletResponse) {
+	@ResponseBody
+	public String getImage(@PathVariable(value = "userId") int userId, HttpServletResponse httpServletResponse) {
 		logDebug("" + userId);
 		UserItem userItem = famstackDashboardManager.getUser(userId);
 		System.out.println(userItem);
-		try {
-			httpServletResponse.getOutputStream().write(userItem.getProfilePhoto());
-			httpServletResponse.getOutputStream().close();
-			httpServletResponse.flushBuffer();
-		} catch (IOException e) {
-			
+		if (userItem == null || userItem.getProfilePhoto() == null) {
+			return "";
+		} else {
+			System.out.println(new String(userItem.getProfilePhoto()));
+			return new String(userItem.getProfilePhoto());
 		}
-
 	}
 
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
@@ -155,11 +155,25 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 	
+	@RequestMapping(value = "/loadProject", method = RequestMethod.GET)
+	public ModelAndView loadProject(@RequestParam("projectId") int projectId) {
+		ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId);
+		return new ModelAndView("projectdetails", "command", new ProjectDetails()).addObject("projectDetails", projectDetails);
+	}
+	
 	//---------- Project Comments ------------//
 	
 	@RequestMapping(value = "/saveComment", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveComment(@ModelAttribute("projectCommentDetails") ProjectCommentDetails projectCommentDetails,
+	public String saveComment(@RequestBody ProjectCommentDetails projectCommentDetails) {
+		famstackDashboardManager.createComment(projectCommentDetails);
+		return "{\"status\": true}";
+	}
+	
+
+	@RequestMapping(value = "/createComment", method = RequestMethod.POST)
+	@ResponseBody
+	public String createComment(@ModelAttribute("projectCommentDetails") ProjectCommentDetails projectCommentDetails,
 			BindingResult result, Model model) {
 		famstackDashboardManager.createComment(projectCommentDetails);
 		return "{\"status\": true}";
