@@ -26,13 +26,14 @@
                                 <label class="col-md-3 control-label">Project Category</label>
                                  <div class="col-md-9">                                                                                            
                                     <form:select class="form-control select" id="category" path="category">
+                                        <option value="-1">- select -</option>
                                         <option>Option 1</option>
                                         <option>Option 2</option>
                                         <option>Option 3</option>
                                         <option>Option 4</option>
                                         <option>Option 5</option>
                                     </form:select>
-                                    <span class="help-block">required project type</span>
+                                    <span class="help-block">required project category</span>
                                 </div>
                             </div>
                             
@@ -59,24 +60,23 @@
                         
                         <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Priority</label>
-                                <div class="col-md-6 col-xs-6">
-                                    <div class="input-group">
-                                        <form:select class="form-control" path="priority" id="priority">
+                                <div class="col-md-9">
+                                        <form:select class="form-control select" path="priority" id="priority">
+                                        <option value="-1">- select -</option>
                                         <option>Urgent</option>
                                         <option>High</option>
                                         <option>Medium</option>
                                         <option>Low</option>
                                     </form:select>
-                                    </div>            
                                     <span class="help-block">required priority</span>
                                 </div>
                                 
                             </div>
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Client</label>
-                                <div class="col-md-6 col-xs-6">
-                                    <div class="input-group">
+                                <div class="col-md-9">
                                       <form:select class="selectpicker form-control" path="clientId" id="clientId">
+                                          <option value="-1">- select -</option>
 										  <optgroup label="Picnic">
 										    <option>Mustard</option>
 										    <option>Ketchup</option>
@@ -88,8 +88,7 @@
 										    <option>Toilet Paper</option>
 										  </optgroup>
 										</form:select>
-                                    </div>            
-                                    <span class="help-block">required priority</span>
+                                    <span class="help-block">required client</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -105,15 +104,29 @@
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Reporter</label>
                                 <div class="col-md-9">                                                                                            
-                                   <form:input type="text" class="autocomplete form-control" value="Aneeshkumar" readonly="readonly" path="reporter" id="reporter"/>
-                                    <span class="help-block">required reporter</span>
+                                   <form:select  class="form-control select" path="reporter" id="reporter">
+                                   <option  value="-1">Select a reporter</option>
+                                   <c:if test="${not empty modelViewMap.userMap}">
+							       <c:forEach var="user" items="${modelViewMap.userMap}">
+			                            <option value="${user.id}">${user.firstName}&nbsp;${user.lastName}</option>
+							       </c:forEach>
+							       </c:if>
+							       </form:select>
+                                   <span class="help-block">required reporter</span>
                                 </div>
                             </div>
                             
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Assignee</label>
                                 <div class="col-md-9">                                                                                            
-                                    <form:input type="text" class="autocomplete form-control" path="assignee" id="assignee"/>
+                                    <form:select class="form-control select" path="assignee" id="assignee">
+                                     <option value="-1">Select a assignee</option>
+                                   <c:if test="${not empty modelViewMap.userMap}">
+                                   <c:forEach var="user" items="${modelViewMap.userMap}">
+                                        <option value="${user.id}">${user.firstName}&nbsp;${user.lastName}</option>
+                                   </c:forEach>
+                                   </c:if>
+                                   </form:select>
                                     <span class="help-block">required assignee</span>
                                 </div>
                             </div>
@@ -155,7 +168,14 @@
                             <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Reviewer</label>
                                 <div class="col-md-9">                                                                                            
-                                    <form:input type="text" class="autocomplete form-control" path="reviewer" id="reviewer"/>
+                                    <form:select type="text" class="form-control select" path="reviewer" id="reviewer">
+                                    <option value="-1">Select a reviewer</option>
+                                   <c:if test="${not empty modelViewMap.userMap}">
+                                   <c:forEach var="user" items="${modelViewMap.userMap}">
+                                        <option value="${user.id}">${user.firstName}&nbsp;${user.lastName}</option>
+                                   </c:forEach>
+                                   </c:if>
+                                   </form:select>
                                     <span class="help-block">required reviewer</span>
                                 </div>
                             </div>

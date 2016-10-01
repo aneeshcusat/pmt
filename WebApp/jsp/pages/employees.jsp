@@ -70,8 +70,8 @@
     </div>
     
     <div class="row">
-    <c:if test="${not empty employeesData}">
-    <c:forEach var="user" items="${employeesData}">
+    <c:if test="${not empty modelViewMap.employeeItemList}">
+    <c:forEach var="user" items="${modelViewMap.employeeItemList}">
         <div class="col-md-3">
             <!-- CONTACT ITEM -->
             <div class="panel panel-default">

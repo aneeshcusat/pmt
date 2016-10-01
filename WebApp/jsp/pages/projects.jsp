@@ -76,9 +76,9 @@
 				<th>Project Status</th>
 				<th>Actions</th>
 			</tr>
-		</thead>
-		<c:if test="${not empty projectData}">
-        <c:forEach var="project" items="${projectData}">
+		</thead> 
+		<c:if test="${not empty modelViewMap.projectDetailsData}">
+        <c:forEach var="project" items="${modelViewMap.projectDetailsData}">
         
         
 		<tbody>
@@ -111,7 +111,7 @@
 		</tbody>
 		</c:forEach>
         </c:if>
-		<c:if test="${empty projectData}">
+		<c:if test="${empty modelViewMap.projectDetailsData}">
 		  There are no assigned projects
 		</c:if>
 	</table>

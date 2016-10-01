@@ -1,7 +1,8 @@
 package com.famstack.projectscheduler.dashboard.controller;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
@@ -46,6 +48,9 @@ public class FamstackDashboardController extends BaseFamstackService {
 	/** The user security context binder. */
 	@Resource
 	private UserSecurityContextBinder userSecurityContextBinder;
+	
+	@Resource
+	private FamstackApplicationConfiguration famstackApplicationConfiguration;
 
 	/**
 	 * Request response login.
@@ -88,14 +93,21 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/employees", method = RequestMethod.GET)
 	public ModelAndView newEmployee() {
 		List<EmployeeDetails> employeeItemList = famstackDashboardManager.getEmployeeDataList();
-		return new ModelAndView("employees", "command", new EmployeeDetails()).addObject("employeesData", employeeItemList);
+		if (!famstackApplicationConfiguration.isUserMapInitialized()) {
+			famstackApplicationConfiguration.initUserMap();
+			famstackApplicationConfiguration.setInitialized(true);
+		}
+		List<EmployeeDetails> userMap = famstackApplicationConfiguration.getUserList();
+		Map<String, Object> modelViewMap = new HashMap<String, Object>();
+		modelViewMap.put("employeeItemList", employeeItemList);
+		modelViewMap.put("userMap", userMap);
+		return new ModelAndView("employees", "command", new EmployeeDetails()).addObject("modelViewMap", modelViewMap);
 	}
 	
 	@RequestMapping(value = "/editEmployee", method = RequestMethod.GET)
 	@ResponseBody
 	public String editEmployee(@RequestParam("userId") int userId) {
 		return famstackDashboardManager.getEmployeeDetails(userId);
-		
 	}
 
 	@RequestMapping(value = "/createEmployee", method = RequestMethod.POST)
@@ -103,6 +115,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String createEmployee(@ModelAttribute("employeeDetails") EmployeeDetails employeeDetails,
 			BindingResult result, Model model) {
 		famstackDashboardManager.createUser(employeeDetails);
+		famstackApplicationConfiguration.initUserMap();
 		return "{\"status\": true}";
 	}
 	
@@ -110,6 +123,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@ResponseBody
 	public String deleteEmployee(@RequestParam("userId") int userId) {
 		famstackDashboardManager.deleteUser(userId);
+		famstackApplicationConfiguration.initUserMap();
 		return "{\"status\": true}";
 	}
 
@@ -129,8 +143,16 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public ModelAndView listProjects() {
-		List<ProjectDetails> employeeItemList = famstackDashboardManager.getProjectsDataList();
-		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("projectData", employeeItemList);
+		List<ProjectDetails> projectData = famstackDashboardManager.getProjectsDataList();
+		if (!famstackApplicationConfiguration.isUserMapInitialized()) {
+			famstackApplicationConfiguration.initUserMap();
+			famstackApplicationConfiguration.setInitialized(true);
+		}
+		List<EmployeeDetails> userMap = famstackApplicationConfiguration.getUserList();
+		Map<String, Object> modelViewMap = new HashMap<String, Object>();
+		modelViewMap.put("projectDetailsData", projectData);
+		modelViewMap.put("userMap", userMap);
+		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
 	
 	@RequestMapping(value = "/saveProject", method = RequestMethod.POST)
