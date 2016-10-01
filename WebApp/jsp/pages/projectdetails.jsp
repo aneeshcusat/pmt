@@ -90,7 +90,7 @@ min-height: 0px !important;
                                   <div class="col-md-6">
                                       <p><span class="bold">Assignee </span>:
                                       <span class="project_team">
-                                         <a href="#"><img alt="image" src="image/${projectDetails.assignee}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
+                                         <a href="#"><img alt="image" src="${projectDetails.assigneePhoto}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
                                       </span>
                                       </p>
                                   </div>
@@ -134,65 +134,22 @@ min-height: 0px !important;
 						<h4>Comments</h4>
 							<div class="row">
 							  <div class="messages messages-img">
+							  <c:if test="${not empty projectDetails.projectComments}">
+                                 <c:forEach var="comment" items="${projectDetails.projectComments}"> 
 					              <div class="item">
 					                <div class="image">
-					                    <img src="${assets}/images/users/user.jpg" alt="Dmitry Ivaniuk">
+					                    <img src="${comment.user.filePhoto}" alt="${comment.user.firstName}&nbsp;${comment.user.lastName}">
 					                </div>                                
 					                <div class="text">
 					                    <div class="heading">
-					                        <a href="#">Dmitry Ivaniuk</a>
-					                        <span class="date">08:39</span>
+					                        <a href="#">${comment.user.firstName}&nbsp;${comment.user.lastName}</a>
+					                        <span class="date">${comment.createdDate}</span>
 					                    </div>                                    
-					                    Integer et ipsum vitae urna mattis dictum. Sed eu sollicitudin nibh, in luctus velit.
+					                   ${comment.description}
 					                </div>
 					            </div>
-					            
-					              <div class="item">
-					                <div class="image">
-					                    <img src="${assets}/images/users/user.jpg" alt="Dmitry Ivaniuk">
-					                </div>                                
-					                <div class="text">
-					                    <div class="heading">
-					                        <a href="#">Dmitry Ivaniuk</a>
-					                        <span class="date">08:39</span>
-					                    </div>                                    
-					                    Integer et ipsum vitae urna mattis dictum. Sed eu sollicitudin nibh, in luctus velit.
-					                </div>
-					            </div>
-					            
-					              <div class="item">
-					                <div class="image">
-					                    <img src="${assets}/images/users/user.jpg" alt="Dmitry Ivaniuk">
-					                </div>                                
-					                <div class="text">
-					                    <div class="heading">
-					                        <a href="#">Dmitry Ivaniuk</a>
-					                        <span class="date">08:39</span>
-					                    </div>                                    
-					                    Integer et ipsum vitae urna mattis dictum. Sed eu sollicitudin nibh, in luctus velit.
-					                </div>
-					            </div>
-					            
-					              <div class="item">
-					                <div class="image">
-					                    <img src="${assets}/images/users/user.jpg" alt="Dmitry Ivaniuk">
-					                </div>                                
-					                <div class="text">
-					                    <div class="heading">
-					                        <a href="#">Dmitry Ivaniuk</a>
-					                        <span class="date">08:39</span>
-					                    </div>                                    
-					                    Integer et ipsum vitae urna mattis dictum. Sed eu sollicitudin nibh, in luctus velit.
-					                </div>
-					            </div>
-					            <div class="panel panel-default push-up-10">
-					                <div class="input-group">
-					                    <textarea class="form-control" placeholder="Enter your comments" id="comment_textarea"></textarea>
-					                    <div class="input-group-btn">
-					                        <button class="btn btn-primary" onclick="addComment()">Add</button>
-					                    </div>
-					                </div>
-					            </div>
+					         </c:forEach>
+					         </c:if>   
 					       </div>
 							
 							</div>

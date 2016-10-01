@@ -111,12 +111,18 @@ public class FamstackProjectManager extends BaseFamstackService {
 			projectDetails.setType(projectItem.getType());
 			if (projectItem.getReporter() != null) {
 				projectDetails.setReporter(projectItem.getReporter().getId());
+				projectDetails.setReporterName(projectItem.getReporter().getFirstName() + " " + projectItem.getReporter().getLastName());
 			}
 			if (projectItem.getAssignee() != null) {
 				projectDetails.setAssignee(projectItem.getAssignee().getId());
+				projectDetails.setAssigneeName(projectItem.getAssignee().getFirstName() + " " + projectItem.getAssignee().getLastName());
+				if (projectItem.getAssignee().getProfilePhoto() != null) {
+					projectDetails.setAssigneePhoto(new String(projectItem.getAssignee().getProfilePhoto()));
+				}
 			}
 			if (projectItem.getReviewer() != null) {
 				projectDetails.setReviewer(projectItem.getReviewer().getId());
+				projectDetails.setReviewerName(projectItem.getReviewer().getFirstName() + " " + projectItem.getReviewer().getLastName());
 			}
 			projectDetails.setReview(projectItem.getReview());
 			projectDetails.setWatchers(projectItem.getWatchers());
@@ -125,15 +131,6 @@ public class FamstackProjectManager extends BaseFamstackService {
 			projectDetails.setModifiedDate(projectItem.getModifiedDate());
 			projectDetails.setModifiedBy(projectItem.getModifiedBy());
 			projectDetails.setId(projectItem.getId());
-			if (projectItem.getReporter() != null) {
-				projectDetails.setReporterName(projectItem.getReporter().getFirstName() + " " + projectItem.getReporter().getLastName());
-			}
-			if (projectItem.getAssignee() != null) {
-				projectDetails.setAssigneeName(projectItem.getAssignee().getFirstName() + " " + projectItem.getAssignee().getLastName());
-			}
-			if (projectItem.getReviewer() != null) {
-				projectDetails.setReviewerName(projectItem.getReviewer().getFirstName() + " " + projectItem.getReviewer().getLastName());
-			}
 			projectDetails.setProjectComments(getProjectCommentDetailsSet(projectItem.getProjectComments()));
 			return projectDetails;
 			

@@ -16,6 +16,7 @@ import com.famstack.projectscheduler.datatransferobject.ProjectCommentItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
+import com.famstack.projectscheduler.security.user.FamstackUserProfileManager;
 
 /**
  * The Class FamstackProjectCommentManager.
@@ -29,6 +30,9 @@ public class FamstackProjectCommentManager extends BaseFamstackService {
 	/** The delivery interface data access object manager. */
 	@Resource
 	FamstackDataAccessObjectManager famstackDataAccessObjectManager;
+	
+	@Resource
+	FamstackUserProfileManager famstackUserProfileManager;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -49,9 +53,9 @@ public class FamstackProjectCommentManager extends BaseFamstackService {
 		}
 		projectCommentItem.setDescription(projectCommentDetails.getDescription());
 		projectCommentItem.setTitle(projectCommentDetails.getTitle());
-		if (projectCommentDetails.getUserId() != 0) {
-			UserItem commentUser = famstackDataAccessObjectManager.getUserById(projectCommentDetails.getUserId());
-			commentUser.setId(projectCommentDetails.getUserId());
+		if (projectCommentDetails.getUser() != null) {
+			UserItem commentUser = famstackDataAccessObjectManager.getUserById(projectCommentDetails.getUser().getId());
+			commentUser.setId(projectCommentDetails.getUser().getId());
 			projectCommentItem.setUser(commentUser);
 		}
 		if (projectCommentDetails.getProjectId() != 0) {
@@ -90,9 +94,7 @@ public class FamstackProjectCommentManager extends BaseFamstackService {
 			projectCommentDetails.setProjectId(projectCommentItem.getProjectItem().getId());
 			projectCommentDetails.setTitle(projectCommentItem.getTitle());
 			if (projectCommentItem.getUser() != null) {
-				projectCommentDetails.setUserId(projectCommentItem.getUser().getId());
-				projectCommentDetails.setUserName(projectCommentItem.getUser().getFirstName() + " " 
-						+ projectCommentItem.getUser().getLastName());
+				projectCommentDetails.setUser(famstackUserProfileManager.getEmployeeDetailsFromUserItem(projectCommentItem.getUser()));
 			}
 			
 			return projectCommentDetails;

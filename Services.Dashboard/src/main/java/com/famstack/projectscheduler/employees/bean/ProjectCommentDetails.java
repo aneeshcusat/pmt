@@ -17,7 +17,7 @@ public class ProjectCommentDetails {
 
 	private String userName;
 
-	private int userId;
+	private EmployeeDetails user;
 
 	private String description;
 	
@@ -51,12 +51,12 @@ public class ProjectCommentDetails {
 		this.userName = userName;
 	}
 
-	public int getUserId() {
-		return userId;
+	public EmployeeDetails getUser() {
+		return user;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUser(EmployeeDetails userId) {
+		this.user = userId;
 	}
 
 	public String getDescription() {

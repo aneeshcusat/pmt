@@ -49,6 +49,8 @@ public class ProjectDetails {
 	
 	private String assigneeName;
 	
+	private String assigneePhoto;
+	
 	private String review;
 	
 	private int reviewer;
@@ -297,6 +299,14 @@ public class ProjectDetails {
 
 	public void setClientName(String clientName) {
 		this.clientName = clientName;
+	}
+
+	public String getAssigneePhoto() {
+		return assigneePhoto;
+	}
+
+	public void setAssigneePhoto(String assigneePhoto) {
+		this.assigneePhoto = assigneePhoto;
 	}
 
 }
