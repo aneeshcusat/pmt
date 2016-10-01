@@ -83,7 +83,7 @@
         
 		<tbody>
 			<tr>
-				<td class="project_name"><a href="${home}loadProject?projectId=${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
+				<td class="project_name"><a href="${home}loadProject/${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
 				<td class="project_team">
                     ${project.assigneeName}
                 </td>

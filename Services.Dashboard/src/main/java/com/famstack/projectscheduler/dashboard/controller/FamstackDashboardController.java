@@ -48,7 +48,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	/** The user security context binder. */
 	@Resource
 	private UserSecurityContextBinder userSecurityContextBinder;
-	
+
 	@Resource
 	private FamstackApplicationConfiguration famstackApplicationConfiguration;
 
@@ -103,7 +103,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		modelViewMap.put("userMap", userMap);
 		return new ModelAndView("employees", "command", new EmployeeDetails()).addObject("modelViewMap", modelViewMap);
 	}
-	
+
 	@RequestMapping(value = "/editEmployee", method = RequestMethod.GET)
 	@ResponseBody
 	public String editEmployee(@RequestParam("userId") int userId) {
@@ -118,7 +118,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackApplicationConfiguration.initUserMap();
 		return "{\"status\": true}";
 	}
-	
+
 	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
 	@ResponseBody
 	public String deleteEmployee(@RequestParam("userId") int userId) {
@@ -154,44 +154,44 @@ public class FamstackDashboardController extends BaseFamstackService {
 		modelViewMap.put("userMap", userMap);
 		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
-	
+
 	@RequestMapping(value = "/saveProject", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails,
-			BindingResult result, Model model) {
+	public String saveProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,
+			Model model) {
 		famstackDashboardManager.createProject(projectDetails);
 		return "{\"status\": true}";
 	}
-	
+
 	@RequestMapping(value = "/editProject", method = RequestMethod.GET)
 	@ResponseBody
 	public String editProject(@RequestParam("projectId") int projectId) {
 		return famstackDashboardManager.getProjectDetailsJSON(projectId);
-		
+
 	}
-	
+
 	@RequestMapping(value = "/deleteProject", method = RequestMethod.GET)
 	@ResponseBody
 	public String deleteProject(@RequestParam("projectId") int projectId) {
 		famstackDashboardManager.deleteProject(projectId);
 		return "{\"status\": true}";
 	}
-	
-	@RequestMapping(value = "/loadProject", method = RequestMethod.GET)
-	public ModelAndView loadProject(@RequestParam("projectId") int projectId) {
+
+	@RequestMapping(value = "/loadProject/{projectId}", method = RequestMethod.GET)
+	public ModelAndView loadProject(@PathVariable("projectId") int projectId) {
 		ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId);
-		return new ModelAndView("projectdetails", "command", new ProjectDetails()).addObject("projectDetails", projectDetails);
+		return new ModelAndView("projectdetails", "command", new ProjectDetails()).addObject("projectDetails",
+				projectDetails);
 	}
-	
-	//---------- Project Comments ------------//
-	
+
+	// ---------- Project Comments ------------//
+
 	@RequestMapping(value = "/saveComment", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveComment(@RequestBody ProjectCommentDetails projectCommentDetails) {
 		famstackDashboardManager.createComment(projectCommentDetails);
 		return "{\"status\": true}";
 	}
-	
 
 	@RequestMapping(value = "/createComment", method = RequestMethod.POST)
 	@ResponseBody
