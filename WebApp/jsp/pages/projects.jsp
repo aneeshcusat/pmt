@@ -83,7 +83,7 @@
         
 		<tbody>
 			<tr>
-				<td class="project_name"><a href="${home}loadProject/${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
+				<td class="project_name"><a href="${applicationHome}/loadProject/${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
 				<td class="project_team">
                     ${project.assigneeName}
                 </td>
@@ -202,7 +202,7 @@
 		$.ajax({
 			type : "GET",
 			contentType : "application/json",
-			url : "${home}editProject",
+			url : "${applicationHome}/editProject",
 			data : "projectId=" + projectId,
 			timeout : 1000,
 			success : function(data) {
@@ -281,7 +281,7 @@
 		$.ajax({
 	        type : "GET",
 	        contentType : "application/json",
-	        url : "${home}deleteProject",
+	        url : "${applicationHome}/deleteProject",
 	        data: "projectId="+projectId,
 	        timeout : 1000,
 	        success : function(data) {

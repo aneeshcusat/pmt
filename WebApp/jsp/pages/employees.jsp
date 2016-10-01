@@ -176,7 +176,7 @@ function loadUser(userId) {
 	$.ajax({
         type : "GET",
         contentType : "application/json",
-        url : "${home}editEmployee",
+        url : "${applicationHome}/editEmployee",
         data: "userId="+userId,
         timeout : 1000,
         success : function(data) {
@@ -204,7 +204,7 @@ function doAjaxDeleteUser(userId) {
     $.ajax({
         type : "GET",
         contentType : "application/json",
-        url : "${home}deleteEmployee",
+        url : "${applicationHome}/deleteEmployee",
         data: "userId="+userId,
         timeout : 1000,
         success : function(data) {

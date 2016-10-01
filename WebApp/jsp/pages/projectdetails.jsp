@@ -220,7 +220,15 @@ min-height: 0px !important;
                   <div class="col-md-4">
                       <section class="panel">
                           <div class="panel-body">
+                           <div class="row padding-bottom-5" >
+                          <div class="col-md-7">
                            <h5 class="bold">Tasks</h5>
+                          </div>
+                           <div class="col-md-5 text-right">
+                            <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success line-height-15">
+                               <span class="fa fa-plus"></span> Create a Task</a>
+                            </div>
+                          </div>
                               <table class="table">
                                         <tbody>
                                             <tr>
@@ -251,10 +259,6 @@ min-height: 0px !important;
                                                 </td>
                                                   <td><span class="label label-success">New</span></td>
                                             </tr>
-                                             <tr >
-                                            <td colspan="3" class="text-right"><a class="btn btn-info">Create a task</a></td>
-                                            </tr>
-                                           
                                        </tbody>
                                   </table>
                                <h5 class="bold">Time Tracking</h5>
@@ -329,7 +333,7 @@ function addComment() {
    $.ajax({
        type : "POST",
        contentType : "application/json",
-       url : "${home}saveComment",
+       url : "${applicationHome}/saveComment",
        data: JSON.stringify(json),
        timeout : 1000,
        beforeSend: function(xhr) {

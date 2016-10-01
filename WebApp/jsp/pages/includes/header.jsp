@@ -7,7 +7,8 @@
 <spring:url value="/jsp/img" var="image" htmlEscape="true"/>
 <spring:url value="/jsp/js" var="js" htmlEscape="true"/>
 <spring:url value="/jsp/audio" var="audio" htmlEscape="true"/>
-        
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <!DOCTYPE html>
 <html lang="en">
     <head>        
@@ -25,7 +26,7 @@
         <!-- EOF CSS INCLUDE -->                                    
     </head>
     <body>
-    
+    <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
     <!-- START PAGE CONTAINER -->
         <div class="page-container page-navigation-top-fixed">
             
@@ -150,7 +151,7 @@
 
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
-                    <li><a href="#">Home</a></li>                    
+                    <li><a href="${applicationHome}/index">Home</a></li>                    
                     <li class="active">Dashboard</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       

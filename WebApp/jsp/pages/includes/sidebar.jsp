@@ -25,17 +25,17 @@
                     </li>
                     <li class="xn-title">Navigation</li>
                     <li class="active">
-                        <a href="index.jsp"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
+                        <a href="${applicationHome}/index"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
                     </li>                    
                     <li class="xn-openable active">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Pages</span></a>
                         <ul>
-                            <li><a href="employees"><span class="fa fa-users"></span> Employees</a></li>
-                            <li><a href="messages"><span class="fa fa-comments"></span> Messages</a></li>
-                            <li><a href="calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
-                            <li><a href="tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>
-                            <li><a href="projects"><span class="fa fa-edit"></span> Projects</a></li>
-                            <li><a href="taskallocator"><span class="fa fa-edit"></span> taskscheduler</a></li>
+                            <li><a href="${applicationHome}/employees"><span class="fa fa-users"></span> Employees</a></li>
+                            <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
+                            <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
+                            <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>
+                            <li><a href="${applicationHome}/projects"><span class="fa fa-edit"></span> Projects</a></li>
+                            <li><a href="${applicationHome}/taskallocator"><span class="fa fa-edit"></span> taskscheduler</a></li>
                         </ul>
                     </li>
                 </ul>

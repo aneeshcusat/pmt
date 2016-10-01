@@ -7352,3 +7352,10 @@ div.growlUI h3, div.growlUI h4 {
 	position: absolute;
 	z-index: -1;
 }
+.padding-bottom-5{
+	padding-bottom: 5px;
+}
+
+ .line-height-15 {
+ line-height: 15px;
+ }
