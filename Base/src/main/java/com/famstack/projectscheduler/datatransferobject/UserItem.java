@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.datatransferobject;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -75,6 +76,50 @@ public class UserItem {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userItem", cascade = CascadeType.ALL)
 	private Set<UserActivityItem> userActivities;
+	
+	@Column(name = "created_by")
+	private int createdBy;
+	
+	@Column(name = "created_date")
+	private Timestamp createdDate;
+
+	@Column(name = "modified_by")
+	private int modifiedBy;
+	
+	@Column(name = "modified_date")
+	private Timestamp modifiedDate;
+
+	public int getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(int createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Timestamp getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public int getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(int modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public Timestamp getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Timestamp modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
 
 	public String getDesignation() {
 		return designation;

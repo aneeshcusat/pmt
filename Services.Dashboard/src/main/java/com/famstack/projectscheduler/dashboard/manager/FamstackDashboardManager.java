@@ -47,15 +47,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
-		/*
-		 * Map<String, String> errorMap = valiateUser(employeeDetails); if
-		 * (!errorMap.isEmpty()) { return errorMap; } UserItem userItem =
-		 * userProfileManager.getUserItem(employeeDetails.getEmail());
-		 * 
-		 * if (userItem != null) { errorMap.put("userExists",
-		 * "user already exist in the system"); }
-		 */
-
 		userProfileManager.createUserItem(employeeDetails);
 
 		return errorMap;

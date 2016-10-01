@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.security.login;
 
 import java.io.Serializable;
 
+import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.security.user.UserRole;
 
 /**
@@ -37,60 +38,21 @@ public class LoginResult implements Serializable {
         USER_ACCOUNT_LOCKED
     }
 
-    /** The user role. */
-    private UserRole userRole;
-
     /** The status. */
     private Status status = Status.FAILED;
 
-    /** The user name. */
-    private String userName;
-
     /** The club id. */
     private String clubId;
+    
+    private UserItem userItem;
+    
 
-    /**
-     * Gets the user role.
-     *
-     * @return the user role
-     */
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    /**
-     * Sets the user role.
-     *
-     * @param userRole the new user role
-     */
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
-
-    /**
-     * Gets the status.
-     *
-     * @return the status
-     */
     public Status getStatus() {
         return status;
     }
-
-    /**
-     * Sets the status.
-     *
-     * @param status the new status
-     */
+    
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getClubId() {
@@ -100,5 +62,13 @@ public class LoginResult implements Serializable {
     public void setClubId(String clubId) {
         this.clubId = clubId;
     }
+
+	public UserItem getUserItem() {
+		return userItem;
+	}
+
+	public void setUserItem(UserItem userItem) {
+		this.userItem = userItem;
+	}
 
 }

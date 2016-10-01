@@ -149,7 +149,15 @@ min-height: 0px !important;
 					                </div>
 					            </div>
 					         </c:forEach>
-					         </c:if>   
+					         </c:if>  
+					         <div class="panel panel-default push-up-10">
+                                    <div class="input-group">
+                                        <textarea class="form-control" placeholder="Enter your comments" id="comment_textarea"></textarea>
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary" onclick="addComment()">Add</button>
+                                        </div>
+                                    </div>
+                                </div> 
 					       </div>
 							
 							</div>

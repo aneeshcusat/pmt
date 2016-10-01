@@ -47,17 +47,14 @@ public class FamstackProjectCommentManager extends BaseFamstackService {
 			if (projectCommentItem == null) {
 				projectCommentItem = new ProjectCommentItem();
 				projectCommentItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
-			} else {
-				projectCommentItem.setModifiedDate(new Timestamp((new java.util.Date()).getTime()));
-			}
+				
+			} 
 		}
+		projectCommentItem.setModifiedDate(new Timestamp((new java.util.Date()).getTime()));
 		projectCommentItem.setDescription(projectCommentDetails.getDescription());
 		projectCommentItem.setTitle(projectCommentDetails.getTitle());
-		if (projectCommentDetails.getUser() != null) {
-			UserItem commentUser = famstackDataAccessObjectManager.getUserById(projectCommentDetails.getUser().getId());
-			commentUser.setId(projectCommentDetails.getUser().getId());
-			projectCommentItem.setUser(commentUser);
-		}
+		UserItem commentUser = famstackDataAccessObjectManager.getUserById(getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId());
+		projectCommentItem.setUser(commentUser);
 		if (projectCommentDetails.getProjectId() != 0) {
 			ProjectItem projectItem = famstackDataAccessObjectManager.getProjectById(projectCommentDetails.getProjectId());
 			projectCommentItem.setProjectItem(projectItem);

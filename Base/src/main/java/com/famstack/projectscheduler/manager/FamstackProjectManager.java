@@ -42,16 +42,17 @@ public class FamstackProjectManager extends BaseFamstackService {
 		if (projectDetails.getId() == 0) {
 			 projectItem = new ProjectItem();
 			 projectItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
-			 projectItem.setCreatedBy(projectDetails.getCreatedBy());
+			 projectItem.setCreatedBy(getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId());
 		} else {
 			projectItem = getProjectItemById(projectDetails.getId());
 			if (projectItem == null) {
 				projectItem = new ProjectItem();
 				projectItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
-				projectItem.setCreatedBy(projectDetails.getCreatedBy());
+				projectItem.setModifiedDate(new Timestamp((new java.util.Date()).getTime()));
+				projectItem.setCreatedBy(getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId());
 			} else {
 				projectItem.setModifiedDate(new Timestamp((new java.util.Date()).getTime()));
-				projectItem.setModifiedBy(projectDetails.getModifiedBy());
+				projectItem.setModifiedBy(getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId());
 				
 			}
 		}

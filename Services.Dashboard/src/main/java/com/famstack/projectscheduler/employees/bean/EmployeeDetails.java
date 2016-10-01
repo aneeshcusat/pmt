@@ -22,7 +22,6 @@ public class EmployeeDetails {
 	private String designation;
 	private UserRole role;
 	private String dateOfBirth;
-	
 
 	public String getFirstName() {
 		return firstName;

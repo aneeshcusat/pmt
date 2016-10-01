@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
-import com.famstack.projectscheduler.security.user.UserRole;
 
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -34,8 +33,6 @@ public class FamstackUserSessionConfiguration implements Serializable{
     public LoginResult getLoginResult() {
         if (loginResult == null) {
             loginResult = new LoginResult();
-            loginResult.setUserName("Anonymous");
-            loginResult.setUserRole(UserRole.ANALYST);
             loginResult.setStatus(Status.FAILED);
         }
         return loginResult;
