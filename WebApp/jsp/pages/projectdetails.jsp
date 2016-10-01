@@ -1,42 +1,5 @@
 <%@include file="includes/header.jsp" %>
-<style>
-.disabled .fc-day-content {
-    background-color: #123959;
-    color: #FFFFFF;
-    cursor: default;
-  }
-.project_team img {
-	width:40px;
-	border: 2px solid #FFF;
-	border-radius: 20%;
-}
-.project_progress .progress{
-	margin-bottom: 5px;
-    height: 8px;
-    }
-.project_details .bold{
-	font-weight: bold;
-
-}
-.project strong{
-margin-top: 5px;
-margin-left: 15px;
-}
-.panel .panel-heading{
-border-bottom: 1px solid lightgray;
-}
-/*
-.dropzone {
-width: 100%;
-height: 80px;
-min-height: 0px !important;
-}   
-.dropzone .dz-default.dz-message{
-/*height: 80px;*/
-}
-*/
-
-</style>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
 	<div class="content-frame-top">  
@@ -233,7 +196,7 @@ min-height: 0px !important;
                            <h5 class="bold">Tasks</h5>
                           </div>
                            <div class="col-md-5 text-right">
-                            <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success line-height-15">
+                            <a data-toggle="modal" data-target="#createtaskmodal" class="btn btn-success line-height-15">
                                <span class="fa fa-plus"></span> Create a Task</a>
                             </div>
                           </div>
@@ -309,10 +272,43 @@ min-height: 0px !important;
               </div>
     
 </div>               
-<!-- END CONTENT FRAME -->                                
+<!-- END CONTENT FRAME -->       
+
+<!-- task create modal start -->
+<div class="modal fade" id="createtaskmodal" tabindex="-1"
+	role="dialog" aria-labelledby="createtaskmodal" aria-hidden="true">
+	<form:form id="createProjectFormId" action="createTask" method="POST"
+		role="form" class="form-horizontal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Create a Project</h4>
+				</div>
+				<div class="modal-body">
+					<%@include file="fagments/createtaskmodal.jsp"%>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancel</button>
+					<button type="button" onclick="doAjaxCreateProjectForm();"
+						class="btn btn-primary">
+						<span id="userButton">Save</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</form:form>
+</div>
+                         
  <%@include file="includes/footer.jsp" %>            
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js"></script>
+	<script type="text/javascript"
+	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
        <script>
        
        $(document).ready(function() {

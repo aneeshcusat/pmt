@@ -1,9 +1,11 @@
-package com.famstack.projectscheduler.security.user;
+package com.famstack.projectscheduler.manager;
 
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -11,8 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.famstack.projectscheduler.BaseFamstackService;
-import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
+import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
@@ -29,17 +30,13 @@ import com.famstack.projectscheduler.util.StringUtils;
  * @version 1.0
  */
 @Component
-public class FamstackUserProfileManager extends BaseFamstackService {
-
-	/** The delivery interface data access object manager. */
-	@Resource
-	FamstackDataAccessObjectManager famstackDataAccessObjectManager;
+public class FamstackUserProfileManager extends BaseFamstackManager {
 
 	@Resource
 	PasswordTokenGenerator passwordTokenGenerator;
-	
+
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	/**
 	 * Login.
 	 *
@@ -56,8 +53,6 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 			String encryptPassword = FamstackSecurityTokenManager.encryptString(password, userItem.getHashkey());
 			if (userItem.getPassword().equals(encryptPassword)) {
 				loginResult.setStatus(Status.SUCCESS);
-				loginResult.setUserRole(userItem.getUserRole());
-				loginResult.setUserName(name);
 				return loginResult;
 			}
 		}
@@ -92,9 +87,9 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		String hashKey = passwordTokenGenerator.generate(32);
 		String password = employeeDetails.getPassword();
 		UserItem userItem = null;
-		
+
 		if (employeeDetails.getId() == 0) {
-			 userItem = new UserItem();
+			userItem = new UserItem();
 		} else {
 			userItem = getUserItemById(employeeDetails.getId());
 			if (userItem == null) {
@@ -106,7 +101,7 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		if (imageBytes.length > 0) {
 			userItem.setProfilePhoto(imageBytes);
 		}
-		
+
 		userItem.setLastName(employeeDetails.getLastName());
 		userItem.setDesignation(employeeDetails.getDesignation());
 		if (StringUtils.isNotBlank(employeeDetails.getDateOfBirth())) {
@@ -122,8 +117,8 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 		userItem.setUserRole(employeeDetails.getRole());
 		userItem.setGender(employeeDetails.getGender());
 		userItem.setGroup(employeeDetails.getGroup());
-		famstackDataAccessObjectManager.saveOrUpdateItem(userItem);
-		 
+		getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
+
 	}
 
 	private byte[] getImageBytes(String filePhoto) {
@@ -134,22 +129,29 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 	}
 
 	public List<?> getAllUserItems() {
-		return famstackDataAccessObjectManager.getAllItems("UserItem");
+		return getFamstackDataAccessObjectManager().getAllItems("UserItem");
 	}
 
 	public UserItem getUserItemById(int id) {
-		return famstackDataAccessObjectManager.getUserById(id);
+		return (UserItem) getFamstackDataAccessObjectManager().getItemById(id, UserItem.class);
 	}
 
 	public UserItem getUserItem(String userId) {
-		return famstackDataAccessObjectManager.getUser(userId);
+		Map<String, String> dataMap = new HashMap<String, String>();
+		dataMap.put("id", userId);
+		List<?> userItemList = getFamstackDataAccessObjectManager()
+				.executeQuery(HQLStrings.getString("FamstackQueryStringsusersByUserId"), dataMap);
+		if (userItemList != null) {
+			return (UserItem) userItemList.get(0);
+		}
+		return null;
 	}
-	
+
 	public EmployeeDetails getEmployee(int userId) {
 		UserItem userItem = getUserItemById(userId);
 		return getEmployeeDetailsFromUserItem(userItem);
 	}
-	
+
 	public EmployeeDetails getEmployeeDetailsFromUserItem(UserItem userItem) {
 		if (userItem != null) {
 			EmployeeDetails employeeDetails = new EmployeeDetails();
@@ -167,18 +169,18 @@ public class FamstackUserProfileManager extends BaseFamstackService {
 			employeeDetails.setRole(userItem.getUserRole());
 			employeeDetails.setId(userItem.getId());
 			if (userItem.getProfilePhoto() != null) {
-				employeeDetails.setFilePhoto(new String(userItem.getProfilePhoto())); 
+				employeeDetails.setFilePhoto(new String(userItem.getProfilePhoto()));
 			}
 			return employeeDetails;
 		}
 		return null;
-		
+
 	}
 
 	public void deleteUserItem(int userId) {
 		UserItem userItem = getUserItemById(userId);
 		if (userItem != null) {
-			famstackDataAccessObjectManager.deleteItem(userItem);
-		} 
+			getFamstackDataAccessObjectManager().deleteItem(userItem);
+		}
 	}
 }

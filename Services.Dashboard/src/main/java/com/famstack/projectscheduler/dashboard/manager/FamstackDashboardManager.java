@@ -23,7 +23,7 @@ import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
-import com.famstack.projectscheduler.security.user.FamstackUserProfileManager;
+import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.StringUtils;
 
 @Component

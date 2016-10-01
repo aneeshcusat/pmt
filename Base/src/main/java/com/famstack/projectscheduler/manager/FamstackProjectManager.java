@@ -11,10 +11,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
-import com.famstack.projectscheduler.BaseFamstackService;
-import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ProjectCommentItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
+import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 
@@ -25,24 +24,20 @@ import com.famstack.projectscheduler.employees.bean.ProjectDetails;
  * @version 1.0
  */
 @Component
-public class FamstackProjectManager extends BaseFamstackService {
+public class FamstackProjectManager extends BaseFamstackManager {
 
-	/** The delivery interface data access object manager. */
-	@Resource
-	FamstackDataAccessObjectManager famstackDataAccessObjectManager;
-	
 	@Resource
 	FamstackProjectCommentManager famstackProjectCommentManager;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	public void createProjectItem(ProjectDetails projectDetails) {
 		ProjectItem projectItem = null;
-		
+
 		if (projectDetails.getId() == 0) {
-			 projectItem = new ProjectItem();
-			 projectItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
-			 projectItem.setCreatedBy(getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId());
+			projectItem = new ProjectItem();
+			projectItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
+			projectItem.setCreatedBy(getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId());
 		} else {
 			projectItem = getProjectItemById(projectDetails.getId());
 			if (projectItem == null) {
@@ -53,7 +48,7 @@ public class FamstackProjectManager extends BaseFamstackService {
 			} else {
 				projectItem.setModifiedDate(new Timestamp((new java.util.Date()).getTime()));
 				projectItem.setModifiedBy(getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId());
-				
+
 			}
 		}
 		projectItem.setCategory(projectDetails.getCategory());
@@ -69,36 +64,37 @@ public class FamstackProjectManager extends BaseFamstackService {
 		projectItem.setStatus(projectDetails.getStatus());
 		projectItem.setTags(projectDetails.getTags());
 		projectItem.setType(projectDetails.getType());
-		projectItem.setReporter(famstackDataAccessObjectManager.getUserById(projectDetails.getReporter()));
-		projectItem.setAssignee(famstackDataAccessObjectManager.getUserById(projectDetails.getAssignee()));
-		projectItem.setReviewer(famstackDataAccessObjectManager.getUserById(projectDetails.getReviewer()));
+		projectItem.setReporter(
+				(UserItem) famstackDataAccessObjectManager.getItemById(projectDetails.getReporter(), UserItem.class));
+		projectItem.setAssignee(
+				(UserItem) famstackDataAccessObjectManager.getItemById(projectDetails.getAssignee(), UserItem.class));
+		projectItem.setReviewer(
+				(UserItem) famstackDataAccessObjectManager.getItemById(projectDetails.getReviewer(), UserItem.class));
 		projectItem.setReview(projectDetails.getReview());
 		projectItem.setWatchers(projectDetails.getWatchers());
 		famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
-		 
+
 	}
 
 	public ProjectItem getProjectItemById(int id) {
 		return famstackDataAccessObjectManager.getProjectById(id);
 	}
-	
 
 	public void deleteProjectItem(int projectId) {
 		ProjectItem projectItem = getProjectItemById(projectId);
 		if (projectItem != null) {
 			famstackDataAccessObjectManager.deleteItem(projectItem);
-		} 
+		}
 	}
-	
+
 	public List<?> getAllProjectItems() {
 		return famstackDataAccessObjectManager.getAllItems("ProjectItem");
 	}
 
-	public ProjectDetails getProjectDetailsFromProjectItem(
-			ProjectItem projectItem) {
+	public ProjectDetails getProjectDetailsFromProjectItem(ProjectItem projectItem) {
 		if (projectItem != null) {
 			ProjectDetails projectDetails = new ProjectDetails();
-			
+
 			projectDetails.setCategory(projectItem.getCategory());
 			projectDetails.setClientId(projectItem.getClientId());
 			projectDetails.setCode(projectItem.getCode());
@@ -112,18 +108,21 @@ public class FamstackProjectManager extends BaseFamstackService {
 			projectDetails.setType(projectItem.getType());
 			if (projectItem.getReporter() != null) {
 				projectDetails.setReporter(projectItem.getReporter().getId());
-				projectDetails.setReporterName(projectItem.getReporter().getFirstName() + " " + projectItem.getReporter().getLastName());
+				projectDetails.setReporterName(
+						projectItem.getReporter().getFirstName() + " " + projectItem.getReporter().getLastName());
 			}
 			if (projectItem.getAssignee() != null) {
 				projectDetails.setAssignee(projectItem.getAssignee().getId());
-				projectDetails.setAssigneeName(projectItem.getAssignee().getFirstName() + " " + projectItem.getAssignee().getLastName());
+				projectDetails.setAssigneeName(
+						projectItem.getAssignee().getFirstName() + " " + projectItem.getAssignee().getLastName());
 				if (projectItem.getAssignee().getProfilePhoto() != null) {
 					projectDetails.setAssigneePhoto(new String(projectItem.getAssignee().getProfilePhoto()));
 				}
 			}
 			if (projectItem.getReviewer() != null) {
 				projectDetails.setReviewer(projectItem.getReviewer().getId());
-				projectDetails.setReviewerName(projectItem.getReviewer().getFirstName() + " " + projectItem.getReviewer().getLastName());
+				projectDetails.setReviewerName(
+						projectItem.getReviewer().getFirstName() + " " + projectItem.getReviewer().getLastName());
 			}
 			projectDetails.setReview(projectItem.getReview());
 			projectDetails.setWatchers(projectItem.getWatchers());
@@ -134,12 +133,11 @@ public class FamstackProjectManager extends BaseFamstackService {
 			projectDetails.setId(projectItem.getId());
 			projectDetails.setProjectComments(getProjectCommentDetailsSet(projectItem.getProjectComments()));
 			return projectDetails;
-			
+
 		}
 		return null;
 	}
-	
-	
+
 	public Set<ProjectCommentDetails> getProjectCommentDetailsSet(Set<ProjectCommentItem> projectCommentItemSet) {
 		if (projectCommentItemSet != null) {
 			Set<ProjectCommentDetails> projectCommentDetailsSet = new HashSet<ProjectCommentDetails>();
@@ -152,7 +150,7 @@ public class FamstackProjectManager extends BaseFamstackService {
 			}
 			return projectCommentDetailsSet;
 		}
-		
+
 		return null;
 	}
 }

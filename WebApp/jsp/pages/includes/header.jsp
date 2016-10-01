@@ -4,7 +4,7 @@
 
 <spring:url value="/jsp/css" var="css" htmlEscape="true"/>
 <spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
-<spring:url value="/jsp/img" var="image" htmlEscape="true"/>
+<spring:url value="/jsp/image" var="image" htmlEscape="true"/>
 <spring:url value="/jsp/js" var="js" htmlEscape="true"/>
 <spring:url value="/jsp/audio" var="audio" htmlEscape="true"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
@@ -23,6 +23,7 @@
         
         <!-- CSS INCLUDE -->        
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/theme-default.css"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/famstack.css"/>
         <!-- EOF CSS INCLUDE -->                                    
     </head>
     <body>

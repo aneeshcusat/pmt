@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.dataaccess;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.NoResultException;
 
@@ -14,18 +15,8 @@ import com.famstack.projectscheduler.datatransferobject.UserItem;
 
 public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjectManager {
 
-	public UserItem getUserById(int id) {
-		UserItem userItem = null;
-		Session session = getSessionFactory().openSession();
-		Transaction tx = session.beginTransaction();
-		userItem = session.get(UserItem.class, id);
-		tx.commit();
-		session.close();
-		return userItem;
-	}
-
 	@SuppressWarnings("unchecked")
-	public UserItem getUser(String userId) {
+	public UserItem getUser1(String userId) {
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		Query<UserItem> query = session.createQuery("from UserItem where userId = :id");
@@ -39,18 +30,6 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		tx.commit();
 		session.close();
 		return userItem;
-	}
-
-	@SuppressWarnings({ "deprecation", "unchecked" })
-	public List<?> getAllItems(String itemName) {
-		Session session = getSessionFactory().openSession();
-		Transaction tx = session.beginTransaction();
-		String hql = String.format("from %s", itemName);
-		Query<?> query = session.createQuery(hql);
-		List<?> itemList = query.list();
-		tx.commit();
-		session.close();
-		return itemList;
 	}
 
 	@Override
@@ -80,7 +59,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		tx.commit();
 		session.close();
 	}
-	
+
 	@Override
 	public void saveOrUpdateItem(Object updateItem) {
 		Session session = getSessionFactory().openSession();
@@ -89,7 +68,50 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		tx.commit();
 		session.close();
 	}
-	
+
+	@Override
+	public Object getItemById(int id, Class<?> className) {
+		Object item = null;
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		item = session.get(className, id);
+		tx.commit();
+		session.close();
+		return item;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public List<?> getAllItems(String itemName) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		String hql = String.format("from %s", itemName);
+		Query<?> query = session.createQuery(hql);
+		List<?> itemList = query.list();
+		tx.commit();
+		session.close();
+		return itemList;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public List<?> executeQuery(String hqlQuery, Map<String, String> dataMap) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		Query<?> query = session.createQuery(hqlQuery);
+		logDebug("executeQuery :" + hqlQuery);
+		if (dataMap != null) {
+			logDebug("dataMap :" + dataMap.keySet());
+			for (String paramName : dataMap.keySet()) {
+				query.setParameter(paramName, dataMap.get(paramName));
+			}
+		}
+		List<?> itemList = query.list();
+		tx.commit();
+		session.close();
+		return itemList;
+	}
+
 	public ProjectItem getProjectById(int id) {
 		ProjectItem projectItem = null;
 		Session session = getSessionFactory().openSession();
@@ -99,9 +121,9 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		session.close();
 		return projectItem;
 	}
-	
-	//------------ Comments -------------//
-	
+
+	// ------------ Comments -------------//
+
 	public ProjectCommentItem getCommentById(int id) {
 		ProjectCommentItem projectCommentItem = null;
 		Session session = getSessionFactory().openSession();
@@ -111,8 +133,8 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		session.close();
 		return projectCommentItem;
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public List<ProjectCommentItem> getProjectComments(int projectId) {
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
@@ -128,5 +150,4 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		session.close();
 		return projectComments;
 	}
-
 }

@@ -7,9 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
-import com.famstack.projectscheduler.security.user.FamstackUserProfileManager;
 
 /**
  * The Class DeliveryInterfaceAuthenticationProvider.

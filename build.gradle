@@ -68,7 +68,6 @@ dependencies {
 	compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.6'
 	compile group: 'com.lmax', name: 'disruptor', version: '3.3.4'
 	
-	
 	//email support
 	compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.5'
 	compile group: 'org.apache.velocity', name: 'velocity', version: '1.7'
@@ -90,27 +89,12 @@ dependencies {
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.1.Final'
 	compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
 	
-	//message queue
-    compile group: 'javax.jms', name: 'jms', version: '2.0'
-    compile group: 'com.ibm', name: 'com.ibm.mqjms', version: '8.0.0.4'
-    compile group: 'com.ibm', name: 'com.ibm.mq.jmqi', version: '8.0.0.4'
-    compile ('com.walmart.platform.messaging:messaging-jms-client:5.0.7') {
-        exclude group: 'javax.ws.rs'
-    }
-
 	//Rest Json
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.7.1'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.7.1'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.1'
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.7.1'
 			
-	//Groovy spock configuraion		
-    compile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.3'
-    compile group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4'
-    compile group: 'cglib', name: 'cglib-nodep', version: '2.1_3'
-    compile group: 'org.objenesis', name: 'objenesis', version: '2.4'
-   
 	def tomcatVersion = '7.0.50'
 	
 	tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
@@ -136,13 +120,12 @@ repositories {
 	maven {
 		url "http://central.maven.org/maven2/"
 		url "https://maven.oracle.com/"
-		url "http://gec-maven-nexus.walmart.com/nexus/content/groups/public/"
 	}
 	jcenter()
 }
 
 task explodedWar(type: Copy) {
-	into "$buildDir/DeliveryInterface"
+	into "$buildDir/bops"
 	with war
 }
 
@@ -155,8 +138,6 @@ sourceSets {
 		main {
 			java {
 				srcDir 'Base/src/main/java'
-				srcDir 'Rest.Services/src/main/java'
-				srcDir 'External.Services/src/main/java'
 				srcDir 'Services.Email/src/main/java'
 				srcDir 'Services.Scheduling/src/main/java'
 				srcDir 'Services.Dashboard/src/main/java'
@@ -166,17 +147,6 @@ sourceSets {
 				srcDir 'Services.Email/src/main/resources'
 			}
 		}
-		test {
-    		groovy {
-      			srcDir 'Base/src/test/groovy'
-      			srcDir 'Rest.Services/src/test/groovy'
-      			srcDir 'External.Services/src/test/groovy'
-      			srcDir 'Services.Email/src/test/groovy'
-      			srcDir 'Services.Scheduling/src/test/groovy'
-      			srcDir 'Services.Dashboard/src/test/groovy'
-   			}
-  		}
-  		
 	}
 
 // context where tomcat is deployed, by defautl localhost:8080/
@@ -200,8 +170,8 @@ pmdTest {
 sonarqube {
     properties {
         property "sonar.sourceEncoding", "UTF-8"
-        property "sonar.projectName", "Delivery Interface"
-        property "sonar.projectKey", "com.walmart.deliveryinterface"
+        property "sonar.projectName", "famstack"
+        property "sonar.projectKey", "com.famstack"
     }
 }
 

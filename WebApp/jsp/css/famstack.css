@@ -1,0 +1,25 @@
+.disabled .fc-day-content {
+    background-color: #123959;
+    color: #FFFFFF;
+    cursor: default;
+  }
+.project_team img {
+	width:40px;
+	border: 2px solid #FFF;
+	border-radius: 20%;
+}
+.project_progress .progress{
+	margin-bottom: 5px;
+    height: 8px;
+    }
+.project_details .bold{
+	font-weight: bold;
+
+}
+.project strong{
+margin-top: 5px;
+margin-left: 15px;
+}
+.panel .panel-heading{
+border-bottom: 1px solid lightgray;
+}

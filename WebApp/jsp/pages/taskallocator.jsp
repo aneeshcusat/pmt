@@ -79,7 +79,7 @@ font-size: 1.4em;
         
         <div class="row">
             <div class="col-md-12">
-            Today
+            <div class="fc-toolbar"><div class="fc-left"><div class="fc-button-group"><button type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left"><span class="fc-icon fc-icon-left-single-arrow"></span></button><button type="button" class="fc-next-button fc-button fc-state-default fc-corner-right"><span class="fc-icon fc-icon-right-single-arrow"></span></button></div><button type="button" class="fc-today-button fc-button fc-state-default fc-corner-left fc-corner-right fc-state-disabled" disabled="disabled">today</button></div><div class="fc-right"><div class="fc-button-group"><button type="button" class="fc-agendaDay-button fc-button fc-state-default fc-corner-left fc-state-active">day</button><button type="button" class="fc-agendaWeek-button fc-button fc-state-default">week</button><button type="button" class="fc-month-button fc-button fc-state-default fc-corner-right">month</button></div></div><div class="fc-center"><h2>September 24, 2016</h2></div><div class="fc-clear"></div></div>
              <table class="table table-bordered" id="taskAllocationTable">
              <thead>
                  <tr style="width: 500px;overflow: scroll;font-weight: none;font-size: 10pt">
@@ -169,51 +169,48 @@ $('#dataTables-example').DataTable({
     responsive: true
 });
 var dropableItem=null;
-$_dropEnd = null;
+var dragDivHeight;
+var dragDivWidth;
 var dragableItemData = {
     cursor: 'move',
     cancel: 'a',
     revert: 'invalid',
-    snap: 'true',
+    snap: 'false',
     stop: function(event, ui) { 
-       $(this).appendTo($_dropEnd);
-       $_dropEnd = null;
+    	$(this).height(dragDivHeight);
+    	$(this).width(dragDivWidth);
     },
 	start: function() {
-      $(this).height(15).width(40);
-       dropableItem=$(this);
+	  dragDivHeight =  $(this).height();
+	  dragDivWidth =$(this).width();
+      $(this).height(5).width(10);
+      console.log($(this).parent());
+      $(this).parent().prop("colspan","");
+      $(this).parent().after("<td class='drop ui-droppable'></td>");
+      dropableItem=$(this);
    }};
 
 $(function() {
   $(".draggable").draggable(dragableItemData);
   $('.droppable td.drop').droppable({
 	  accept: function(ui, item) {
-          if($(this).html().trim().length != 0)
-             return false;
-
-          if($(ui).index()==$(this).index())
-            return true;
-
-          var next=$(this).next().get(0);
-          var prev=$(this).prev().get(0);
-          var me=ui.get(0);
-
-          if(me==next||me==prev)
+         if($(this).find("div").length != 0 || $(this).find("div").css("display") == 'none'){
+	  		return false;
+  		 }
           return true;
-
-          return false;  
-      },
+      }, 
       hoverClass: 'droppable-hover',
       greedy : true,
       drop: function(event, ui) {
-         $_dropEnd = this;
         $(this).css('color', 'red');
         if (dropableItem != null) {
-        	dropableItem.hide();
+        	$(dropableItem).hide();
         }
         var item = $("<div class='draggable task'><span style='color:red'>P1</span></div>");
         item.draggable(dragableItemData);
         $(this).html("");
+        $(this).prop("colspan",2);
+        $(this).next().remove();
         $(this).append(item);
       }
   });
