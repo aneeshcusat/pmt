@@ -136,7 +136,7 @@
 					<h4 class="modal-title" id="myModalLabel">Create a Project</h4>
 				</div>
 				<div class="modal-body">
-					<%@include file="fagments/createprojectmodal.jsp"%>
+					<%@include file="fagments/createProjectModal.jspf"%>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"

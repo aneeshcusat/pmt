@@ -151,7 +151,7 @@
 						<h4 class="modal-title" id="myModalLabel">Register Employee</h4>
 					</div>
 					<div class="modal-body">
-						<%@include file="fagments/userregistermodal.jsp" %>
+						<%@include file="fagments/userRegisterModal.jspf" %>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"

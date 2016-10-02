@@ -289,7 +289,7 @@
 					<h4 class="modal-title" id="myModalLabel">Create a Project</h4>
 				</div>
 				<div class="modal-body">
-					<%@include file="fagments/createtaskmodal.jsp"%>
+					<%@include file="fagments/createTaskModal.jspf"%>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
@@ -364,15 +364,18 @@ $(document).ready(function() {
     $('.editableFieldText').editable('saveProjectDetails', {
         indicator : 'Saving...',
         tooltip   : 'Click to edit...',
-        cancel    : 'Cancel',
-        submit    : 'Save'
+        cancel	  : '<i class="fa fa-times" aria-hidden="true"></i>',
+        submit	  : '<i class="fa fa-check" aria-hidden="true"></i>',
+        height 	  : '25px',
+        width     : '100%'
     });
     $('.editableFieldTextArea').editable('saveProjectDetails', {
         type      : 'textarea',
-        cancel    : 'Cancel',
-        submit    : 'Save',
-        indicator : '<img src="img/indicator.gif">',
-        tooltip   : 'Click to edit...'
+        cancel	  : '<i class="fa fa-times fa-2x" aria-hidden="true"></i>',
+        submit	  : '<i class="fa fa-check fa-2x" aria-hidden="true"></i>',
+        tooltip   : 'Click to edit...',
+        rows	  : 5,
+        cols	  : 130
     });
 });
 </script>
