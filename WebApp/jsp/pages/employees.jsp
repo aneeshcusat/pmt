@@ -13,6 +13,7 @@
         margin-top: 7px;
         width: 250px;
         height: 250px;
+         cursor: move;
       }
 
       .cropit-preview-image-container {
@@ -26,8 +27,27 @@
       input, .export {
         display: block;
       }
+      
+      
+      .cropit-image-background {
+        opacity: .2;
+        cursor: auto;
+      }
+
+      .image-size-label {
+        margin-top: 10px;
+      }
+
+      input {
+        display: block;
+      }
+
+      .export {
+        margin-top: 10px;
+      }
 
 }
+
 </style>         
 <!-- PAGE TITLE -->
 <div class="page-title">                    
@@ -138,7 +158,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-dismiss="modal">Cancel</button>
-							<a id="createOrUpdateEmployeeId" href="javascript:doAjaxCreateUserForm();" class="btn btn-primary"><span id="userButton">Save</span></a>
+							<a id="createOrUpdateEmployeeId" href="#" class="btn btn-primary"><span id="userButton">Save</span></a>
 						</div>
 					</div>
 				</div>
@@ -166,6 +186,7 @@ $('#createUserFormId').ajaxForm(function(response) {
 }); 
 
 function createEmployeeDetails(){
+	$("#createOrUpdateEmployeeId span").html("Save");
 	$("#createOrUpdateEmployeeId").prop("href","javascript:doAjaxCreateUserForm()");
 }
 
@@ -193,6 +214,7 @@ function loadUser(userId) {
         success : function(data) {
             console.log("SUCCESS: ", data);
             processUserResponseData(data);
+            $("#createOrUpdateEmployeeId span").html("Update");
             $("#createOrUpdateEmployeeId").prop("href","javascript:doAjaxUpdateUserForm()");
         },
         error : function(e) {
@@ -245,7 +267,13 @@ function processUserResponseData(data) {
 	$('#email').val(response.email);
 	$('#id').val(response.id);
 	$('#'+response.gender).click();
-	
+	if (response.filePhoto != "" && response.filePhoto != null ) {
+		$(".cropit-preview").show();
+		$(".cropit-preview-image").prop("src", response.filePhoto);
+	} else {
+		$(".cropit-preview").hide();
+		$(".cropit-preview-image").prop("src", "");
+	}
 	$('#role').val(response.role);
 	$('#qualification').val(response.qualification);
 	$('#group').val(response.group);
@@ -258,16 +286,7 @@ function processUserResponseData(data) {
 }
 
 $(function() {
-    $('.image-editor').cropit({
-      imageState: {
-        src: 'http://lorempixel.com/500/400/',
-      },
-    });
-
-    $('.export').click(function() {
-      var imageData = $('.image-editor').cropit('export');
-      window.open(imageData);
-    });
+    $('.image-editor').cropit();
   });
 
 </script>        

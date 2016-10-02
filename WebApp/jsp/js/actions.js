@@ -24,77 +24,7 @@ $(document).ready(function(){
         return false;
     });
     /* END WIDGETS */
-    
-    /* Gallery Items */
-    $(".gallery-item .iCheck-helper").on("click",function(){
-        var wr = $(this).parent("div");
-        if(wr.hasClass("checked")){
-            $(this).parents(".gallery-item").addClass("active");
-        }else{            
-            $(this).parents(".gallery-item").removeClass("active");
-        }
-    });
-    $(".gallery-item-remove").on("click",function(){
-        $(this).parents(".gallery-item").fadeOut(400,function(){
-            $(this).remove();
-        });
-        return false;
-    });
-    $("#gallery-toggle-items").on("click",function(){
-        
-        $(".gallery-item").each(function(){
-            
-            var wr = $(this).find(".iCheck-helper").parent("div");
-            
-            if(wr.hasClass("checked")){
-                $(this).removeClass("active");
-                wr.removeClass("checked");
-                wr.find("input").prop("checked",false);
-            }else{            
-                $(this).addClass("active");
-                wr.addClass("checked");
-                wr.find("input").prop("checked",true);
-            }
-            
-        });
-        
-    });
-    /* END Gallery Items */
-
-    // XN PANEL DRAGGING
-    $( ".xn-panel-dragging" ).draggable({
-        containment: ".page-content", handle: ".panel-heading", scroll: false,
-        start: function(event,ui){
-            html_click_avail = false;
-            $(this).addClass("dragged");
-        },
-        stop: function( event, ui ) {
-            $(this).resizable({
-                maxHeight: 400,
-                maxWidth: 600,
-                minHeight: 200,
-                minWidth: 200,
-                helper: "resizable-helper",
-                start: function( event, ui ) {
-                    html_click_avail = false;
-                },
-                stop: function( event, ui ) {
-                    $(this).find(".panel-body").height(ui.size.height - 82);
-                    $(this).find(".scroll").mCustomScrollbar("update");
-                                            
-                    setTimeout(function(){
-                        html_click_avail = true; 
-                    },1000);
-                                            
-                }
-            })
-            
-            setTimeout(function(){
-                html_click_avail = true; 
-            },1000);            
-        }
-    });
-    // END XN PANEL DRAGGING
+  
     
     /* DROPDOWN TOGGLE */
     $(".dropdown-toggle").on("click",function(){
@@ -124,39 +54,7 @@ $(document).ready(function(){
        return false;
     });    
     /* END MESSAGE BOX */
-    
-    /* CONTENT FRAME */
-    $(".content-frame-left-toggle").on("click",function(){
-        $(".content-frame-left").is(":visible") 
-        ? $(".content-frame-left").hide() 
-        : $(".content-frame-left").show();
-        page_content_onresize();
-    });
-    $(".content-frame-right-toggle").on("click",function(){
-        $(".content-frame-right").is(":visible") 
-        ? $(".content-frame-right").hide() 
-        : $(".content-frame-right").show();
-        page_content_onresize();
-    });    
-    /* END CONTENT FRAME */
-    
-    /* MAILBOX */
-    $(".mail .mail-star").on("click",function(){
-        $(this).toggleClass("starred");
-    });
-    
-    $(".mail-checkall .iCheck-helper").on("click",function(){
-        
-        var prop = $(this).prev("input").prop("checked");
-                    
-        $(".mail .mail-item").each(function(){            
-            var cl = $(this).find(".mail-checkbox > div");            
-            cl.toggleClass("checked",prop).find("input").prop("checked",prop);                        
-        }); 
-        
-    });
-    /* END MAILBOX */
-    
+ 
     /* PANELS */
     
     $(".panel-fullscreen").on("click",function(){
@@ -187,38 +85,6 @@ $(document).ready(function(){
         return false;
     });
     /* EOF PANELS */
-    
-    /* ACCORDION */
-    $(".accordion .panel-title a").on("click",function(){
-        
-        var blockOpen = $(this).attr("href");
-        var accordion = $(this).parents(".accordion");        
-        var noCollapse = accordion.hasClass("accordion-dc");
-        
-        
-        if($(blockOpen).length > 0){            
-            
-            if($(blockOpen).hasClass("panel-body-open")){
-                $(blockOpen).slideUp(200,function(){
-                    $(this).removeClass("panel-body-open");
-                });
-            }else{
-                $(blockOpen).slideDown(200,function(){
-                    $(this).addClass("panel-body-open");
-                });
-            }
-            
-            if(!noCollapse){
-                accordion.find(".panel-body-open").not(blockOpen).slideUp(200,function(){
-                    $(this).removeClass("panel-body-open");
-                });                                           
-            }
-            
-            return false;
-        }
-        
-    });
-    /* EOF ACCORDION */
     
     /* DATATABLES/CONTENT HEIGHT FIX */
     $(".dataTables_length select").on("change",function(){
