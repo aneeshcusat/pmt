@@ -5,7 +5,7 @@
 	<div class="content-frame-top">  
 	<div class="row">
                   <div class="col-md-7">                      
-            <h4><span class="fa "></span>${projectDetails.name}</h4>
+            <h4><span class="fa "></span><span class="editableFieldText">${projectDetails.name}</span></h4>
             </div>
             <div class="col-md-5 text-right">               
            <span style="background-color: lightgray;" class="btn  btn-default" disabled=disabled>To Do</span>       
@@ -74,7 +74,7 @@
 	                    <div class="col-md-12">
 	                    <h5 class="bold">Description</h5>
 	                      <p>
-                                  ${projectDetails.description}
+                                  <span class="editableFieldTextArea">${projectDetails.description}</span>
                               </p>
 	                    </div>
 	                    </div>
@@ -358,4 +358,21 @@ function addComment() {
        }
    });
 }
+
+$(document).ready(function() {
+    
+    $('.editableFieldText').editable('saveProjectDetails', {
+        indicator : 'Saving...',
+        tooltip   : 'Click to edit...',
+        cancel    : 'Cancel',
+        submit    : 'Save'
+    });
+    $('.editableFieldTextArea').editable('saveProjectDetails', {
+        type      : 'textarea',
+        cancel    : 'Cancel',
+        submit    : 'Save',
+        indicator : '<img src="img/indicator.gif">',
+        tooltip   : 'Click to edit...'
+    });
+});
 </script>

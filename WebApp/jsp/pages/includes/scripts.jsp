@@ -32,6 +32,7 @@
         <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js"></script>  
         <script type="text/javascript" src="${js}/plugins/jquery/jquery.form.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/blockui/jquery.blockUI.js"></script>
+        <script type="text/javascript" src="${js}/plugins/jeditable/jquery.jeditable.js"></script>
         <!-- END THIS PAGE PLUGINS-->        
 
 <script>
@@ -64,7 +65,6 @@ var site_settings = '<div class="ts-button">'
 
         <!-- START TEMPLATE -->
         <script type="text/javascript" src="${js}/settings.js"></script>
-        
         <script type="text/javascript" src="${js}/plugins.js"></script>        
         <script type="text/javascript" src="${js}/actions.js"></script>
         <!--

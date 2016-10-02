@@ -66,7 +66,8 @@
        <!-- START PLUGINS -->
         <script type="text/javascript" src="${js}/plugins/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script> z       
+        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script>
+        <script type="text/javascript" src="${js}/famstack.ajax.js"></script>   
         <!-- END PLUGINS -->  
  <script type="text/javascript">
  
@@ -115,30 +116,21 @@
     	}
     	console.log("jello");
     	var dataString = {"email": $('#emailId').val() , "password": $('#password').val() };
-    	doAjax(dataString);
-    }
-    
-    function doAjax(dataString) {
-    	console.log("jello2");
-        $.ajax({
-        type: "POST",
-        url: "/bops/dashboard/loginAjax",
-        data: dataString, 
-        success: function(response){
-        	$("#invalidLoginSpan").hide();
-        	var responseJsonObj = JSON.parse(response);
-        	if(responseJsonObj.status == true){
-        		   window.location = "/bops/dashboard/index";
-        	} else {
-        		$("#invalidLoginSpan").show();
-        	}
-        },
-        error: function(e){
-        	$("#invalidLoginSpan").show();
-        }
-        });
-        }
-</script>
+    	
+		doAjaxRequest("POST", "/bops/dashboard/loginAjax", dataString,
+					function(response) {
+						$("#invalidLoginSpan").hide();
+						var responseJsonObj = JSON.parse(response);
+						if (responseJsonObj.status == true) {
+							window.location = "/bops/dashboard/index";
+						} else {
+							$("#invalidLoginSpan").show();
+						}
+					}, function(e) {
+						$("#invalidLoginSpan").show();
+					});
+		}
+	</script>
         
     </body>
 </html>
