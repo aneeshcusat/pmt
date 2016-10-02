@@ -3,8 +3,6 @@
 <style>
     @media screen and (min-width: 800px) {
     #registerusermodal .modal-dialog  {width:65%;}
-    
-    
     .cropit-preview {
         background-color: #f8f8f8;
         background-size: cover;
@@ -219,7 +217,6 @@ function loadUser(userId) {
         },
         error : function(e) {
             console.log("ERROR: ", e);
-            alert(e);
         },
         done : function(e) {
             console.log("DONE");
@@ -250,7 +247,6 @@ function doAjaxDeleteUser(userId) {
         },
         error : function(e) {
             console.log("ERROR: ", e);
-            alert(e);
         },
         done : function(e) {
             console.log("DONE");
