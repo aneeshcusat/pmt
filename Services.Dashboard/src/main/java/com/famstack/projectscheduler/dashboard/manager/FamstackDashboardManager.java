@@ -34,10 +34,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackUserProfileManager userProfileManager;
-	
+
 	@Resource
 	FamstackProjectManager projectManager;
-	
+
 	@Resource
 	FamstackProjectCommentManager projectCommentManager;
 
@@ -52,6 +52,13 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return errorMap;
 	}
 
+	public Map<String, String> updateUser(EmployeeDetails employeeDetails) {
+		Map<String, String> errorMap = new HashMap<String, String>();
+		userProfileManager.updateUserItem(employeeDetails);
+
+		return errorMap;
+	}
+
 	private Map<String, String> valiateUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<>();
 		if (!StringUtils.isNotBlank(employeeDetails.getFirstName())
@@ -59,21 +66,13 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				|| !StringUtils.isNotBlank(employeeDetails.getEmail())) {
 			errorMap.put("invalidInput", "required inputs are missing");
 		}
-
-		String password = employeeDetails.getPassword();
-		String confirmPassword = employeeDetails.getConfirmPassword();
-
-		if (!password.equals(confirmPassword)) {
-			errorMap.put("passwordMissmatch", "password missmatch");
-		}
-
 		return errorMap;
 	}
 
 	public List<?> getUsersData() {
 		return userProfileManager.getAllUserItems();
 	}
-	
+
 	public UserItem getUser(int userId) {
 		return userProfileManager.getUserItemById(userId);
 	}
@@ -119,7 +118,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public void createProject(ProjectDetails projectDetails) {
 		projectManager.createProjectItem(projectDetails);
-		
+
 	}
 
 	public List<ProjectDetails> getProjectsDataList() {
@@ -144,7 +143,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public String getProjectDetailsJSON(int projectId) {
-		
+
 		ProjectItem projectItem = projectManager.getProjectItemById(projectId);
 		ProjectDetails projectDetails = projectManager.getProjectDetailsFromProjectItem(projectItem);
 		String jsonString = null;
@@ -170,7 +169,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public ProjectDetails getProjectDetails(int projectId) {
-		ProjectDetails projectDetails = projectManager.getProjectDetailsFromProjectItem(projectManager.getProjectItemById(projectId));
+		ProjectDetails projectDetails = projectManager
+				.getProjectDetailsFromProjectItem(projectManager.getProjectItemById(projectId));
 		return projectDetails;
 	}
 }

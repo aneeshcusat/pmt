@@ -1,5 +1,5 @@
-create user FAMSTACK_PS identified by FAMSTACK_PS;
-grant create session, grant any privilege to FAMSTACK_PS;
-grant create table to FAMSTACK_PS;
-grant unlimited tablespace to FAMSTACK_PS;
-grant ALL PRIVILEGES to FAMSTACK_PS;
+create user bops identified by bops;
+grant create session, grant any privilege to bops;
+grant create table to bops;
+grant unlimited tablespace to bops;
+grant ALL PRIVILEGES to bops;

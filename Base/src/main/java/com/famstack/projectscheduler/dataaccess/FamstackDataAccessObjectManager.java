@@ -11,26 +11,8 @@ import org.hibernate.query.Query;
 
 import com.famstack.projectscheduler.datatransferobject.ProjectCommentItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
-import com.famstack.projectscheduler.datatransferobject.UserItem;
 
 public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjectManager {
-
-	@SuppressWarnings("unchecked")
-	public UserItem getUser1(String userId) {
-		Session session = getSessionFactory().openSession();
-		Transaction tx = session.beginTransaction();
-		Query<UserItem> query = session.createQuery("from UserItem where userId = :id");
-		query.setParameter("id", userId);
-		UserItem userItem = null;
-		try {
-			userItem = query.getSingleResult();
-		} catch (NoResultException ne) {
-			logError(ne.getMessage(), ne);
-		}
-		tx.commit();
-		session.close();
-		return userItem;
-	}
 
 	@Override
 	public void saveItem(Object saveItem) {
@@ -39,7 +21,6 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		session.save(saveItem);
 		tx.commit();
 		session.close();
-
 	}
 
 	@Override

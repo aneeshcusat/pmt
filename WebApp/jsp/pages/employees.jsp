@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                            <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block">
+                            <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
                                <span class="fa fa-plus"></span> Register a new Employee</a>
                             </div>
                         </div>
@@ -138,7 +138,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-dismiss="modal">Cancel</button>
-							<button type="button" onclick="doAjaxCreateUserForm();" class="btn btn-primary"><span id="userButton">Save</span></button>
+							<a id="createOrUpdateEmployeeId" href="javascript:doAjaxCreateUserForm();" class="btn btn-primary"><span id="userButton">Save</span></a>
 						</div>
 					</div>
 				</div>
@@ -165,8 +165,19 @@ $('#createUserFormId').ajaxForm(function(response) {
    //$.unblockUI();
 }); 
 
+function createEmployeeDetails(){
+	$("#createOrUpdateEmployeeId").prop("href","javascript:doAjaxCreateUserForm()");
+}
+
+function doAjaxUpdateUserForm(){
+	//$.blockUI();
+	$('#createUserFormId').prop("action", "updateEmployee");
+    $('#createUserFormId').submit();
+}
+
 function doAjaxCreateUserForm(){
 	//$.blockUI();
+	$('#createUserFormId').prop("action", "createEmployee");
 	var imageData = $('.image-editor').cropit('export');
 	$('#filePhoto').val(imageData);
     $('#createUserFormId').submit();
@@ -182,6 +193,7 @@ function loadUser(userId) {
         success : function(data) {
             console.log("SUCCESS: ", data);
             processUserResponseData(data);
+            $("#createOrUpdateEmployeeId").prop("href","javascript:doAjaxUpdateUserForm()");
         },
         error : function(e) {
             console.log("ERROR: ", e);

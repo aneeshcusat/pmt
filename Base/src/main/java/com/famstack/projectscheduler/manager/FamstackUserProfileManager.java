@@ -53,6 +53,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 			String encryptPassword = FamstackSecurityTokenManager.encryptString(password, userItem.getHashkey());
 			if (userItem.getPassword().equals(encryptPassword)) {
 				loginResult.setStatus(Status.SUCCESS);
+				loginResult.setUserItem(userItem);
 				return loginResult;
 			}
 		}
@@ -85,18 +86,24 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 
 	public void createUserItem(EmployeeDetails employeeDetails) {
 		String hashKey = passwordTokenGenerator.generate(32);
-		String password = employeeDetails.getPassword();
-		UserItem userItem = null;
+		String password = passwordTokenGenerator.generate(8);
+		UserItem userItem = new UserItem();
+		String encryptedPassword = FamstackSecurityTokenManager.encryptString(password, hashKey);
+		userItem.setHashkey(hashKey);
+		userItem.setPassword(encryptedPassword);
+		saveUserItem(employeeDetails, userItem);
+	}
 
-		if (employeeDetails.getId() == 0) {
-			userItem = new UserItem();
-		} else {
-			userItem = getUserItemById(employeeDetails.getId());
-			if (userItem == null) {
-				userItem = new UserItem();
-			}
+	public void updateUserItem(EmployeeDetails employeeDetails) {
+		UserItem userItem = getUserItem(employeeDetails.getEmail());
+		if (userItem != null) {
+			saveUserItem(employeeDetails, userItem);
 		}
+	}
+
+	private void saveUserItem(EmployeeDetails employeeDetails, UserItem userItem) {
 		userItem.setUserId(employeeDetails.getEmail());
+
 		byte[] imageBytes = getImageBytes(employeeDetails.getFilePhoto());
 		if (imageBytes.length > 0) {
 			userItem.setProfilePhoto(imageBytes);
@@ -118,7 +125,6 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 		userItem.setGender(employeeDetails.getGender());
 		userItem.setGroup(employeeDetails.getGroup());
 		getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
-
 	}
 
 	private byte[] getImageBytes(String filePhoto) {

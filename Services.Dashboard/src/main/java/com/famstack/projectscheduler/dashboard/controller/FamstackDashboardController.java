@@ -115,6 +115,15 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 
+	@RequestMapping(value = "/updateEmployee", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateEmployee(@ModelAttribute("employeeDetails") EmployeeDetails employeeDetails,
+			BindingResult result, Model model) {
+		famstackDashboardManager.updateUser(employeeDetails);
+		getFamstackApplicationConfiguration().initUserMap();
+		return "{\"status\": true}";
+	}
+
 	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
 	@ResponseBody
 	public String deleteEmployee(@RequestParam("userId") int userId) {
