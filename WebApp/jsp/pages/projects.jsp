@@ -1,4 +1,10 @@
 <%@include file="includes/header.jsp"%>
+ <!-- START BREADCRUMB -->
+ <ul class="breadcrumb">
+     <li><a href="${applicationHome}/index">Home</a></li>                    
+     <li class="active">Projects</li>
+ </ul>
+ <!-- END BREADCRUMB -->       
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <style>
 @media screen and (min-width: 700px) {

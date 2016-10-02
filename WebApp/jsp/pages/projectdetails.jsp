@@ -1,4 +1,11 @@
 <%@include file="includes/header.jsp" %>
+ <!-- START BREADCRUMB -->
+ <ul class="breadcrumb">
+     <li><a href="${applicationHome}/index">Home</a></li>  
+     <li><a href="${applicationHome}/projects">Projects</a></li>                  
+     <li class="active">${projectDetails.name}</li>
+ </ul>
+ <!-- END BREADCRUMB -->  
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    

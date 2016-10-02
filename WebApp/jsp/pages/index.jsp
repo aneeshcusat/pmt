@@ -1,4 +1,10 @@
 <%@include file="includes/header.jsp" %>
+ <!-- START BREADCRUMB -->
+ <ul class="breadcrumb">
+     <li><a href="${applicationHome}/index">Home</a></li>  
+     <li class="active">Dashboard</li>
+ </ul>
+ <!-- END BREADCRUMB -->  
         <style>
 
         </style>
