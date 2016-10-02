@@ -42,7 +42,7 @@
 									<div class="input-group-addon">
 										<span class="fa fa-search"></span>
 									</div>
-									<input type="text" class="form-control"
+									<input type="text" class="form-control" id="projectSearchBoxId"
 										placeholder="Search for a project.." />
 									<div class="input-group-btn">
 										<button class="btn btn-primary">Search</button>
@@ -67,7 +67,7 @@
 			<span class="fa fa-clock-o"></span>ASSIGNED
 		</h4>
 	</div>
-	<table class="table table-hover p-table">
+	<table class="table table-hover p-table datatable">
 		<thead>
 			<tr>
 				<th>Project Name</th>
@@ -166,6 +166,10 @@
 	src="${js}/plugins/autocomplete/jquery.autocomplete.js"></script>
 
 <script>
+
+$( document ).ready(function(){
+	$("input[type='search']").parent().hide();
+});
 	var countries = [ {
 		value : 'Andorra',
 		data : 'AD'
@@ -300,4 +304,14 @@
 	        }
 	    });
 	}
+	
+	$("#projectSearchBoxId").keydown(function(e){
+		$("input[type='search']").val($("#projectSearchBoxId").val());
+		$("input[type='search']").trigger(e);
+	});
+	
+	$("#projectSearchBoxId").keyup(function(e){
+		$("input[type='search']").val($("#projectSearchBoxId").val());
+		$("input[type='search']").trigger(e);
+	});
 </script>
