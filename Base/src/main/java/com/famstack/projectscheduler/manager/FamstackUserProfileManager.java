@@ -156,7 +156,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 
 	public EmployeeDetails getEmployee(int userId) {
 		UserItem userItem = getUserItemById(userId);
-		return getEmployeeDetailsFromUserItem(userItem);
+		return mapEmployeeDetails(userItem);
 	}
 
 	public List<EmployeeDetails> getEmployeeDataList() {
@@ -165,7 +165,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 		if (userItemList != null) {
 			for (Object userItemObj : userItemList) {
 				UserItem userItem = (UserItem) userItemObj;
-				EmployeeDetails employeeDetails = getEmployeeDetailsFromUserItem(userItem);
+				EmployeeDetails employeeDetails = mapEmployeeDetails(userItem);
 				if (employeeDetails != null) {
 					employeeDetailsList.add(employeeDetails);
 				}
@@ -176,7 +176,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 
 	}
 
-	public EmployeeDetails getEmployeeDetailsFromUserItem(UserItem userItem) {
+	public EmployeeDetails mapEmployeeDetails(UserItem userItem) {
 		if (userItem != null) {
 			EmployeeDetails employeeDetails = new EmployeeDetails();
 			if (userItem.getDob() != null) {

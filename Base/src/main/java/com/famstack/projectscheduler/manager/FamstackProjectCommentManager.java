@@ -56,8 +56,8 @@ public class FamstackProjectCommentManager extends BaseFamstackManager {
 				projectCommentDetails.setProjectId(projectCommentItem.getProjectItem().getProjectId());
 				projectCommentDetails.setTitle(projectCommentItem.getTitle());
 				if (projectCommentItem.getUser() != null) {
-					projectCommentDetails.setUser(
-							famstackUserProfileManager.getEmployeeDetailsFromUserItem(projectCommentItem.getUser()));
+					projectCommentDetails
+							.setUser(famstackUserProfileManager.mapEmployeeDetails(projectCommentItem.getUser()));
 				}
 				projectCommentDetailsSet.add(projectCommentDetails);
 			}

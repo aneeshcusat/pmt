@@ -51,14 +51,15 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	public void deleteProjectItem(int projectId) {
-		ProjectItem projectItem = famstackDataAccessObjectManager.getProjectById(projectId);
+		ProjectItem projectItem = (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId,
+				ProjectItem.class);
 		if (projectItem != null) {
 			famstackDataAccessObjectManager.deleteItem(projectItem);
 		}
 	}
 
 	public ProjectItem getProjectItemById(int projectId) {
-		return famstackDataAccessObjectManager.getProjectById(projectId);
+		return (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class);
 	}
 
 	public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem) {
@@ -111,6 +112,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	public ProjectDetails getProjectDetails(int projectId) {
-		return mapProjectItemToProjectDetails(famstackDataAccessObjectManager.getProjectById(projectId));
+		return mapProjectItemToProjectDetails(
+				(ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class));
 	}
 }
