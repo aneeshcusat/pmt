@@ -176,6 +176,7 @@ $('#createUserFormId').ajaxForm(function(response) {
 }); 
 
 function createEmployeeDetails(){
+	clearUserData();
 	$("#createOrUpdateEmployeeId span").html("Save");
 	$("#createOrUpdateEmployeeId").prop("href","javascript:doAjaxCreateUserForm()");
 }
@@ -269,6 +270,32 @@ function processUserResponseData(data) {
 	$('#qualification').val(response.qualification);
 	$('#group').val(response.group);
 	$('#designation').val(response.designation);
+	$('#role').selectpicker('refresh');
+	$('#qualification').selectpicker('refresh');
+	$('#group').selectpicker('refresh');
+	$('#designation').selectpicker('refresh');
+	
+}
+
+function clearUserData() {
+	$('#firstName').val("");
+	$('#mobileNumber').val("");
+	$('#dateOfBirth').val("");
+	$('#lastName').val("");
+	$('#email').val("");
+	$('#id').val("");
+	$(".cropit-preview").hide();
+	$(".cropit-preview-image").prop("src", "");
+	$('#role').val("");
+	$('#qualification').val("");
+	$('#group').val("");
+	$('#designation').val("");
+	$(".genderGroup label").removeClass("active");
+	$('#role').prop('selectedIndex', 0);
+	$('#qualification').prop('selectedIndex', 0);
+	$('#group').prop('selectedIndex', 0);
+	$('#designation').prop('selectedIndex', 0);
+	
 	$('#role').selectpicker('refresh');
 	$('#qualification').selectpicker('refresh');
 	$('#group').selectpicker('refresh');

@@ -18,7 +18,7 @@
 				<div class="form-group">
 					<label class="col-xs-3 control-label">Gender</label>
 					<div class="col-xs-9">
-						<div class="btn-group" data-toggle="buttons">
+						<div class="btn-group genderGroup" data-toggle="buttons">
 							<label class="btn btn-default" id="male"> <input type="radio"
 								name="gender" value="male" /> Male
 							</label> <label class="btn btn-default"> <input type="radio"
