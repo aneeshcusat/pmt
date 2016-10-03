@@ -1,6 +1,5 @@
 package com.famstack.projectscheduler.manager;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,6 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 	@Resource
 	FamstackProjectActivityManager famstackProjectActivityManager;
-
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public void createProjectItem(ProjectDetails projectDetails) {
 		ProjectItem projectItem = new ProjectItem();

@@ -1,6 +1,5 @@
 package com.famstack.projectscheduler.manager;
 
-import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +23,6 @@ public class FamstackProjectCommentManager extends BaseFamstackManager {
 
 	@Resource
 	FamstackUserProfileManager famstackUserProfileManager;
-
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public void createProjectCommentItem(String projectComments, int projectId) {
 		ProjectCommentItem projectCommentItem = new ProjectCommentItem();

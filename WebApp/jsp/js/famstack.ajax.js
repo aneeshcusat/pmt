@@ -1,4 +1,4 @@
-var doAjaxRequest = $function(requestType, requestUrl, requestJsonData, successCallBackMethod, errorCallBackMethod) {
+function doAjaxRequest(requestType, requestUrl, requestJsonData, successCallBackMethod, errorCallBackMethod) {
    $.ajax({
        type : requestType,
        url : requestUrl ,
