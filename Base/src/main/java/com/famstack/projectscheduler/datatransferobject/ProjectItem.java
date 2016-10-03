@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.datatransferobject;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -15,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -24,7 +24,12 @@ import com.famstack.projectscheduler.contants.ProjectStatus;
 
 @Entity
 @Table(name = "project_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" }) })
-public class ProjectItem {
+public class ProjectItem implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5628656638213113049L;
 
 	@Id
 	@Column(name = "id")
@@ -43,49 +48,49 @@ public class ProjectItem {
 
 	@Column(name = "created_by")
 	private int createdBy;
-	
+
 	@Column(name = "created_date")
 	private Timestamp createdDate;
 
 	@Column(name = "modified_by")
 	private int modifiedBy;
-	
+
 	@Column(name = "modified_date")
 	private Timestamp modifiedDate;
-	
+
 	@Column(name = "type")
 	private String type;
-	
+
 	@OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="reporter")
+	@JoinColumn(name = "reporter")
 	private UserItem reporter;
-	
+
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "assignee")
 	private UserItem assignee;
-	
+
 	@Column(name = "review")
 	private String review;
-	
+
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "reviewer")
 	private UserItem reviewer;
-	
+
 	@Column(name = "category")
 	private String category;
-	
+
 	@Column(name = "tags")
 	private String tags;
-	
+
 	@Column(name = "watchers")
 	private String watchers;
-	
+
 	@Column(name = "priority")
 	private String priority;
-	
+
 	@Column(name = "start_time")
 	private Timestamp startTime;
-	
+
 	@Column(name = "duration")
 	private int duration;
 
@@ -286,5 +291,4 @@ public class ProjectItem {
 		this.watchers = watchers;
 	}
 
-	
 }

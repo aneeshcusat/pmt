@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.datatransferobject;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -16,7 +17,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "project_comments")
-public class ProjectCommentItem {
+public class ProjectCommentItem implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4517129887687820791L;
 
 	@Id
 	@Column(name = "id")
@@ -27,20 +33,20 @@ public class ProjectCommentItem {
 	@ManyToOne
 	@JoinColumn(name = "project_id", referencedColumnName = "id")
 	private ProjectItem projectItem;
-	
+
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private UserItem user;
-	
+
 	@Column(name = "created_date")
 	private Timestamp createdDate;
 
 	@Column(name = "modified_date")
 	private Timestamp modifiedDate;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@Column(name = "title")
 	private String title;
 

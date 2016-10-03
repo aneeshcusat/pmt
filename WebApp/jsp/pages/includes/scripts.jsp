@@ -70,4 +70,9 @@ var site_settings = '<div class="ts-button">'
         <!--
         <script type="text/javascript" src="${js}/demo_dashboard.js"></script>
          END TEMPLATE -->
+         
+         <!--  famstack scripts -->
+         <script type="text/javascript" src="${js}/famstack.ajax.js"></script>
+         <!--  famstack scripts ends -->
     <!-- END SCRIPTS --> 
+    

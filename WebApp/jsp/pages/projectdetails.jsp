@@ -108,11 +108,11 @@
                                  <c:forEach var="comment" items="${projectDetails.projectComments}"> 
 					              <div class="item">
 					                <div class="image">
-					                    <img src="${comment.user.filePhoto}" alt="${comment.user.firstName}&nbsp;${comment.user.lastName}">
+					                    <img src="${comment.user.filePhoto}" alt="${comment.user.firstName} ${comment.user.lastName}" onerror="this.src='${assets}/images/users/no-image.jpg'">
 					                </div>                                
 					                <div class="text">
 					                    <div class="heading">
-					                        <a href="#">${comment.user.firstName}&nbsp;${comment.user.lastName}</a>
+					                        <a href="#">${comment.user.firstName} ${comment.user.lastName}</a>
 					                        <span class="date">${comment.createdDate}</span>
 					                    </div>                                    
 					                   ${comment.description}
@@ -335,34 +335,13 @@
    	});
        
 function addComment() {
-   var projectId = $('#hdn_project_id').val();
-   var commentData = $('#comment_textarea').val();
-   var jsonData = '{"id":0,"projectId":0,"description":""}';
-   var json = JSON.parse(jsonData);
-   json.description = commentData;
-   json.projectId = projectId;
-   $.ajax({
-       type : "POST",
-       contentType : "application/json",
-       url : "${applicationHome}/saveComment",
-       data: JSON.stringify(json),
-       timeout : 1000,
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader("Accept", "application/json");
-           xhr.setRequestHeader("Content-Type", "application/json");
-       },
-       success : function(data) {
-           if (data.status){
-               window.location.reload(true);
-           }
-       },
-       error : function(e) {
-           console.log("ERROR: ", e);
-           alert(e);
-       },
-       done : function(e) {
-           console.log("DONE");
+   var dataString = {"projectId": $('#hdn_project_id').val() , "projectComments": $('#comment_textarea').val() };
+   
+   doAjaxRequest("POST", "${applicationHome}/addComment", dataString,  function(data) {
+       if (data.status){
+           window.location.reload(true);
        }
+   }, function(e) {
    });
 }
 

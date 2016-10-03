@@ -29,43 +29,21 @@ public class FamstackProjectCommentManager extends BaseFamstackManager {
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-	public void createProjectCommentItem(ProjectCommentDetails projectCommentDetails) {
-		ProjectCommentItem projectCommentItem = null;
-
-		if (projectCommentDetails.getId() == 0) {
-			projectCommentItem = new ProjectCommentItem();
-			projectCommentItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
-		} else {
-			projectCommentItem = getProjectCommentItemById(projectCommentDetails.getId());
-			if (projectCommentItem == null) {
-				projectCommentItem = new ProjectCommentItem();
-				projectCommentItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
-
-			}
-		}
+	public void createProjectCommentItem(String projectComments, int projectId) {
+		ProjectCommentItem projectCommentItem = new ProjectCommentItem();
+		projectCommentItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
 		projectCommentItem.setModifiedDate(new Timestamp((new java.util.Date()).getTime()));
-		projectCommentItem.setDescription(projectCommentDetails.getDescription());
-		projectCommentItem.setTitle(projectCommentDetails.getTitle());
+
+		projectCommentItem.setDescription(projectComments);
+		projectCommentItem.setTitle("");
+
 		UserItem commentUser = getFamstackUserSessionConfiguration().getLoginResult().getUserItem();
 		projectCommentItem.setUser(commentUser);
-		if (projectCommentDetails.getProjectId() != 0) {
-			ProjectItem projectItem = famstackDataAccessObjectManager
-					.getProjectById(projectCommentDetails.getProjectId());
-			projectCommentItem.setProjectItem(projectItem);
-		}
+		ProjectItem projectItem = (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId,
+				ProjectItem.class);
+		projectCommentItem.setProjectItem(projectItem);
 		famstackDataAccessObjectManager.saveOrUpdateItem(projectCommentItem);
 
-	}
-
-	public ProjectCommentItem getProjectCommentItemById(int id) {
-		return famstackDataAccessObjectManager.getCommentById(id);
-	}
-
-	public void deleteProjectCommentItem(int projectId) {
-		ProjectCommentItem projectCommentItem = getProjectCommentItemById(projectId);
-		if (projectCommentItem != null) {
-			famstackDataAccessObjectManager.deleteItem(projectCommentItem);
-		}
 	}
 
 	public List<ProjectCommentItem> getAllProjectCommentItems(int projectId) {

@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.datatransferobject;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -22,7 +23,12 @@ import com.famstack.projectscheduler.security.user.UserRole;
 
 @Entity
 @Table(name = "user_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id" }) })
-public class UserItem {
+public class UserItem implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4647776200318098517L;
 
 	@Id
 	@Column(name = "id")
@@ -76,16 +82,16 @@ public class UserItem {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userItem", cascade = CascadeType.ALL)
 	private Set<UserActivityItem> userActivities;
-	
+
 	@Column(name = "created_by")
 	private int createdBy;
-	
+
 	@Column(name = "created_date")
 	private Timestamp createdDate;
 
 	@Column(name = "modified_by")
 	private int modifiedBy;
-	
+
 	@Column(name = "modified_date")
 	private Timestamp modifiedDate;
 

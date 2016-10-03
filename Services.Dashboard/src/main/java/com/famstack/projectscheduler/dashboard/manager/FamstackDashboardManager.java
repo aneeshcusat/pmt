@@ -19,7 +19,6 @@ import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
-import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
@@ -142,30 +141,12 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return projectManager.getAllProjectItems();
 	}
 
-	public String getProjectDetailsJSON(int projectId) {
-
-		ProjectItem projectItem = projectManager.getProjectItemById(projectId);
-		ProjectDetails projectDetails = projectManager.getProjectDetailsFromProjectItem(projectItem);
-		String jsonString = null;
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			jsonString = objectMapper.writeValueAsString(projectDetails);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return jsonString;
-	}
-
 	public void deleteProject(int projectId) {
 		projectManager.deleteProjectItem(projectId);
 	}
 
-	public void createComment(ProjectCommentDetails projectCommentDetails) {
-		projectCommentManager.createProjectCommentItem(projectCommentDetails);
+	public void createComment(String projectComments, int projectId) {
+		projectCommentManager.createProjectCommentItem(projectComments, projectId);
 	}
 
 	public ProjectDetails getProjectDetails(int projectId) {

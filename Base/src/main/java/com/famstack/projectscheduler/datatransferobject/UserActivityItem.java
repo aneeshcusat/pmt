@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.datatransferobject;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,12 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "user_activity_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" }) })
-public class UserActivityItem {
+public class UserActivityItem implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5145320086419804408L;
 
 	@Id
 	@Column(name = "id")

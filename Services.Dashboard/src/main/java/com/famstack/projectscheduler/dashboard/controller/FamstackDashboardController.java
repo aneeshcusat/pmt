@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +27,6 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
-import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
@@ -135,13 +133,11 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping("/image/{userId}")
 	@ResponseBody
 	public String getImage(@PathVariable(value = "userId") int userId, HttpServletResponse httpServletResponse) {
-		logDebug("" + userId);
+		logDebug("get image user id " + userId);
 		UserItem userItem = famstackDashboardManager.getUser(userId);
-		System.out.println(userItem);
 		if (userItem == null || userItem.getProfilePhoto() == null) {
 			return "";
 		} else {
-			System.out.println(new String(userItem.getProfilePhoto()));
 			return new String(userItem.getProfilePhoto());
 		}
 	}
@@ -168,13 +164,6 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 
-	@RequestMapping(value = "/editProject", method = RequestMethod.GET)
-	@ResponseBody
-	public String editProject(@RequestParam("projectId") int projectId) {
-		return famstackDashboardManager.getProjectDetailsJSON(projectId);
-
-	}
-
 	@RequestMapping(value = "/deleteProject", method = RequestMethod.GET)
 	@ResponseBody
 	public String deleteProject(@RequestParam("projectId") int projectId) {
@@ -182,7 +171,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 
-	@RequestMapping(value = "/loadProject/{projectId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
 	public ModelAndView loadProject(@PathVariable("projectId") int projectId) {
 		ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId);
 		return new ModelAndView("projectdetails", "command", new ProjectDetails()).addObject("projectDetails",
@@ -191,18 +180,11 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	// ---------- Project Comments ------------//
 
-	@RequestMapping(value = "/saveComment", method = RequestMethod.POST)
+	@RequestMapping(value = "/addComment", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveComment(@RequestBody ProjectCommentDetails projectCommentDetails) {
-		famstackDashboardManager.createComment(projectCommentDetails);
-		return "{\"status\": true}";
-	}
-
-	@RequestMapping(value = "/createComment", method = RequestMethod.POST)
-	@ResponseBody
-	public String createComment(@ModelAttribute("projectCommentDetails") ProjectCommentDetails projectCommentDetails,
-			BindingResult result, Model model) {
-		famstackDashboardManager.createComment(projectCommentDetails);
+	public String createComment(@RequestParam("projectComments") String projectComments,
+			@RequestParam("projectId") int projectId) {
+		famstackDashboardManager.createComment(projectComments, projectId);
 		return "{\"status\": true}";
 	}
 }
