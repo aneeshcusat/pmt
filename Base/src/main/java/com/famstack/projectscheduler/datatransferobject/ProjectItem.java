@@ -1,6 +1,5 @@
 package com.famstack.projectscheduler.datatransferobject;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -14,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -23,19 +23,16 @@ import javax.persistence.UniqueConstraint;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 
 @Entity
-@Table(name = "project_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "id" }) })
-public class ProjectItem implements Serializable {
+@Table(name = "project_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "project_id" }) })
+public class ProjectItem implements FamstackBaseItem {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5628656638213113049L;
 
 	@Id
-	@Column(name = "id")
+	@Column(name = "project_id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
 	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-	private int id;
+	private int projectId;
 
 	@Column(name = "name")
 	private String name;
@@ -44,37 +41,24 @@ public class ProjectItem implements Serializable {
 	private String code;
 
 	@Column(name = "description")
+	@Lob
 	private String description;
-
-	@Column(name = "created_by")
-	private int createdBy;
 
 	@Column(name = "created_date")
 	private Timestamp createdDate;
 
-	@Column(name = "modified_by")
-	private int modifiedBy;
-
-	@Column(name = "modified_date")
-	private Timestamp modifiedDate;
+	@Column(name = "last_modified_date")
+	private Timestamp lastModifiedDate;
 
 	@Column(name = "type")
 	private String type;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@Column(name = "team")
+	private String team;
+
+	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
 	@JoinColumn(name = "reporter")
 	private UserItem reporter;
-
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "assignee")
-	private UserItem assignee;
-
-	@Column(name = "review")
-	private String review;
-
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "reviewer")
-	private UserItem reviewer;
 
 	@Column(name = "category")
 	private String category;
@@ -91,6 +75,9 @@ public class ProjectItem implements Serializable {
 	@Column(name = "start_time")
 	private Timestamp startTime;
 
+	@Column(name = "completion_time")
+	private Timestamp completionTime;
+
 	@Column(name = "duration")
 	private int duration;
 
@@ -106,14 +93,6 @@ public class ProjectItem implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
 	private Set<ProjectActivityItem> projectActivityItem;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -139,36 +118,14 @@ public class ProjectItem implements Serializable {
 		this.description = description;
 	}
 
-	public int getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(int createdBy) {
-		this.createdBy = createdBy;
-	}
-
+	@Override
 	public Timestamp getCreatedDate() {
 		return createdDate;
 	}
 
+	@Override
 	public void setCreatedDate(Timestamp createdDate) {
 		this.createdDate = createdDate;
-	}
-
-	public int getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(int modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Timestamp getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Timestamp modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public String getType() {
@@ -177,6 +134,22 @@ public class ProjectItem implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public UserItem getReporter() {
+		return reporter;
+	}
+
+	public void setReporter(UserItem reporter) {
+		this.reporter = reporter;
 	}
 
 	public String getCategory() {
@@ -193,6 +166,14 @@ public class ProjectItem implements Serializable {
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+
+	public String getWatchers() {
+		return watchers;
+	}
+
+	public void setWatchers(String watchers) {
+		this.watchers = watchers;
 	}
 
 	public String getPriority() {
@@ -251,44 +232,29 @@ public class ProjectItem implements Serializable {
 		this.projectActivityItem = projectActivityItem;
 	}
 
-	public UserItem getReporter() {
-		return reporter;
+	public Timestamp getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
-	public void setReporter(UserItem reporter) {
-		this.reporter = reporter;
+	@Override
+	public void setLastModifiedDate(Timestamp lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public UserItem getAssignee() {
-		return assignee;
+	public Timestamp getCompletionTime() {
+		return completionTime;
 	}
 
-	public void setAssignee(UserItem assignee) {
-		this.assignee = assignee;
+	public void setCompletionTime(Timestamp completionTime) {
+		this.completionTime = completionTime;
 	}
 
-	public String getReview() {
-		return review;
+	public int getProjectId() {
+		return projectId;
 	}
 
-	public void setReview(String review) {
-		this.review = review;
-	}
-
-	public UserItem getReviewer() {
-		return reviewer;
-	}
-
-	public void setReviewer(UserItem reviewer) {
-		this.reviewer = reviewer;
-	}
-
-	public String getWatchers() {
-		return watchers;
-	}
-
-	public void setWatchers(String watchers) {
-		this.watchers = watchers;
+	public void setProjectId(int projectId) {
+		this.projectId = projectId;
 	}
 
 }

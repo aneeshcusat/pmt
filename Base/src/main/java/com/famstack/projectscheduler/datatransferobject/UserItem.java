@@ -1,6 +1,5 @@
 package com.famstack.projectscheduler.datatransferobject;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -23,7 +22,7 @@ import com.famstack.projectscheduler.security.user.UserRole;
 
 @Entity
 @Table(name = "user_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id" }) })
-public class UserItem implements Serializable {
+public class UserItem implements FamstackBaseItem {
 
 	/**
 	 * 
@@ -89,11 +88,11 @@ public class UserItem implements Serializable {
 	@Column(name = "created_date")
 	private Timestamp createdDate;
 
+	@Column(name = "last_modified_date")
+	private Timestamp lastModifiedDate;
+
 	@Column(name = "modified_by")
 	private int modifiedBy;
-
-	@Column(name = "modified_date")
-	private Timestamp modifiedDate;
 
 	public int getCreatedBy() {
 		return createdBy;
@@ -107,6 +106,7 @@ public class UserItem implements Serializable {
 		return createdDate;
 	}
 
+	@Override
 	public void setCreatedDate(Timestamp createdDate) {
 		this.createdDate = createdDate;
 	}
@@ -117,14 +117,6 @@ public class UserItem implements Serializable {
 
 	public void setModifiedBy(int modifiedBy) {
 		this.modifiedBy = modifiedBy;
-	}
-
-	public Timestamp getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Timestamp modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public String getDesignation() {
@@ -324,6 +316,15 @@ public class UserItem implements Serializable {
 
 	public void setUserActivities(Set<UserActivityItem> userActivities) {
 		this.userActivities = userActivities;
+	}
+
+	public Timestamp getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	@Override
+	public void setLastModifiedDate(Timestamp lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 }

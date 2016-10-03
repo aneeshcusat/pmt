@@ -1,10 +1,8 @@
 package com.famstack.projectscheduler.manager;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -31,8 +29,6 @@ public class FamstackProjectCommentManager extends BaseFamstackManager {
 
 	public void createProjectCommentItem(String projectComments, int projectId) {
 		ProjectCommentItem projectCommentItem = new ProjectCommentItem();
-		projectCommentItem.setCreatedDate(new Timestamp((new java.util.Date()).getTime()));
-		projectCommentItem.setModifiedDate(new Timestamp((new java.util.Date()).getTime()));
 
 		projectCommentItem.setDescription(projectComments);
 		projectCommentItem.setTitle("");
@@ -42,48 +38,31 @@ public class FamstackProjectCommentManager extends BaseFamstackManager {
 		ProjectItem projectItem = (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId,
 				ProjectItem.class);
 		projectCommentItem.setProjectItem(projectItem);
-		famstackDataAccessObjectManager.saveOrUpdateItem(projectCommentItem);
+		famstackDataAccessObjectManager.saveItem(projectCommentItem);
 
 	}
 
-	public List<ProjectCommentItem> getAllProjectCommentItems(int projectId) {
-		return famstackDataAccessObjectManager.getProjectComments(projectId);
-	}
+	public Set<ProjectCommentDetails> mapProjectCommentDetails(Set<ProjectCommentItem> projectComments) {
+		Set<ProjectCommentDetails> projectCommentDetailsSet = new HashSet<ProjectCommentDetails>();
+		if (projectComments != null) {
 
-	public ProjectCommentDetails getProjectCommentDetailsFromProjectCommentItem(ProjectCommentItem projectCommentItem) {
-		if (projectCommentItem != null) {
-			ProjectCommentDetails projectCommentDetails = new ProjectCommentDetails();
+			for (ProjectCommentItem projectCommentItem : projectComments) {
+				ProjectCommentDetails projectCommentDetails = new ProjectCommentDetails();
 
-			projectCommentDetails.setCreatedDate(projectCommentItem.getCreatedDate());
-			projectCommentDetails.setDescription(projectCommentItem.getDescription());
-			projectCommentDetails.setId(projectCommentItem.getId());
-			projectCommentDetails.setModifiedDate(projectCommentItem.getModifiedDate());
-			projectCommentDetails.setProjectId(projectCommentItem.getProjectItem().getId());
-			projectCommentDetails.setTitle(projectCommentItem.getTitle());
-			if (projectCommentItem.getUser() != null) {
-				projectCommentDetails.setUser(
-						famstackUserProfileManager.getEmployeeDetailsFromUserItem(projectCommentItem.getUser()));
+				projectCommentDetails.setCreatedDate(projectCommentItem.getCreatedDate());
+				projectCommentDetails.setDescription(projectCommentItem.getDescription());
+				projectCommentDetails.setId(projectCommentItem.getCommentId());
+				projectCommentDetails.setModifiedDate(projectCommentItem.getLastModifiedDate());
+				projectCommentDetails.setProjectId(projectCommentItem.getProjectItem().getProjectId());
+				projectCommentDetails.setTitle(projectCommentItem.getTitle());
+				if (projectCommentItem.getUser() != null) {
+					projectCommentDetails.setUser(
+							famstackUserProfileManager.getEmployeeDetailsFromUserItem(projectCommentItem.getUser()));
+				}
+				projectCommentDetailsSet.add(projectCommentDetails);
 			}
-
-			return projectCommentDetails;
-
 		}
-		return null;
-	}
 
-	public List<ProjectCommentDetails> getAllProjectCommentDetails(int projectId) {
-		List<ProjectCommentItem> commentItemDetails = famstackDataAccessObjectManager.getProjectComments(projectId);
-		if (commentItemDetails != null) {
-			List<ProjectCommentDetails> projectCommentItemList = new ArrayList<ProjectCommentDetails>();
-			Iterator<ProjectCommentItem> iter = commentItemDetails.iterator();
-			while (iter.hasNext()) {
-				ProjectCommentItem commentItem = iter.next();
-				ProjectCommentDetails projectCommentDetails = getProjectCommentDetailsFromProjectCommentItem(
-						commentItem);
-				projectCommentItemList.add(projectCommentDetails);
-			}
-			return projectCommentItemList;
-		}
-		return null;
+		return projectCommentDetailsSet;
 	}
 }

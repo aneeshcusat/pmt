@@ -6,6 +6,7 @@ import java.util.Map;
 import org.hibernate.SessionFactory;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.datatransferobject.FamstackBaseItem;
 
 /**
  * The Class BaseDeliveryInterfaceDataAccessObjectManager.
@@ -43,7 +44,7 @@ public abstract class BaseFamstackDataAccessObjectManager extends BaseFamstackSe
 	 * @param saveItem
 	 *            the save item
 	 */
-	public abstract void saveItem(Object saveItem);
+	public abstract void saveItem(FamstackBaseItem saveItem);
 
 	/**
 	 * Update item.
@@ -51,7 +52,7 @@ public abstract class BaseFamstackDataAccessObjectManager extends BaseFamstackSe
 	 * @param updateItem
 	 *            the update item
 	 */
-	public abstract void updateItem(Object updateItem);
+	public abstract void updateItem(FamstackBaseItem updateItem);
 
 	/**
 	 * Delete item.
@@ -59,7 +60,7 @@ public abstract class BaseFamstackDataAccessObjectManager extends BaseFamstackSe
 	 * @param deleteItem
 	 *            the delete item
 	 */
-	public abstract void deleteItem(Object deleteItem);
+	public abstract void deleteItem(FamstackBaseItem deleteItem);
 
 	/**
 	 * Save or update item.
@@ -67,7 +68,7 @@ public abstract class BaseFamstackDataAccessObjectManager extends BaseFamstackSe
 	 * @param updateItem
 	 *            the update item
 	 */
-	public abstract void saveOrUpdateItem(Object updateItem);
+	public abstract void saveOrUpdateItem(FamstackBaseItem updateItem);
 
 	/**
 	 * Gets the item by id.

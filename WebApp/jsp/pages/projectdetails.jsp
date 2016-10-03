@@ -37,7 +37,7 @@
                               <!--<h1>New Dashboard BS3 </h1>-->
                               <div class="row project_details">
                                   <div class="col-md-6">
-                                      <p><span class="bold">Created by </span>: ${projectDetails.createdByName}</p>
+                                      <p><span class="bold">Created by </span>: ${projectDetails.reporterName}</p>
                                   </div>
                                   <div class="col-md-6">
                                       <p><span class="bold">Status </span>: <span class="label label-primary">${projectDetails.status}</span></p>
@@ -46,10 +46,10 @@
                                       <p><span class="bold">Created </span>: ${projectDetails.createdDate}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Last Updated</span>: ${projectDetails.modifiedDate}</p>
+                                      <p><span class="bold">Last Updated</span>: ${projectDetails.lastModifiedDate}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Client </span>: ${projectDetails.clientName}</p>
+                                      <p><span class="bold">Client </span>: ${projectDetails.clientId}</p>
                                   </div>
                                    <div class="col-md-6">
                                    	<ul class="nav nav-pills nav-stacked labels-info ">
@@ -60,7 +60,7 @@
                                   <div class="col-md-6">
                                       <p><span class="bold">Assignee </span>:
                                       <span class="project_team">
-                                         <a href="#"><img alt="image" src="${projectDetails.assigneePhoto}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
+                                         <a href="#"><img alt="image" src=""  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
                                       </span>
                                       </p>
                                   </div>
@@ -147,48 +147,26 @@
                           </tr>
                           </thead>
                           <tbody>
+                           <c:if test="${not empty projectDetails.projectActivityDetails}">
+                                 <c:forEach var="activities" items="${projectDetails.projectActivityDetails}"> 
                           <tr>
                               <td>
-                                  Project analysis
+                                  Project ${activities.projectActivityType}
                               </td>
                               <td>
-                                  28/11/2014 12:23:03
+                                  ${activities.modifiedDate}
                               </td>
                               <td>
-                                   Ipsum is that it has a as opposed to using Lorem Ipsum is that it has a as opposed to using
+                              <c:if test="${activities.projectActivityType == 'CREATED'}">
+                              	${activities.userName} has created the project.
+                              </c:if>
                               </td>
                               <td>
-                                  <span class="label label-info">Completed</span>
+                                  <span class="label label-info"> ${activities.projectStatus}</span>
                               </td>
                           </tr>
-                          <tr>
-                              <td>
-                                  Requirement Collection
-                              </td>
-                              <td>
-                                  22/11/2014 12:23:03
-                              </td>
-                              <td>
-                                  Tawseef Ipsum is that it has a as opposed to using Lorem Ipsum is that it has a as opposed to using
-                              </td>
-                              <td>
-                                  <span class="label label-info">Reported</span>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>
-                                  Design Implement
-                              </td>
-                              <td>
-                                  28/11/2014 12:23:03
-                              </td>
-                              <td>
-                                  Dism Ipsum is that it has a as opposed to using Lorem Ipsum is that it has a as opposed to using
-                              </td>
-                              <td>
-                                  <span class="label label-info">Accepted</span>
-                              </td>
-                          </tr>
+                          </c:forEach>
+                          </c:if>
                           </tbody>
                           </table>
                         </div>
@@ -318,27 +296,12 @@
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
        <script>
        
-       $(document).ready(function() {
-   		Dropzone.autoDiscover = false;
-   		$("#my-dropzone").dropzone({
-   			url : "/upload",
-   			addRemoveLinks : true,
-   			success : function(file, response) {
-   				var imgName = response;
-   				file.previewElement.classList.add("dz-success");
-   				console.log("Successfully uploaded :" + imgName);
-   			},
-   			error : function(file, response) {
-   				file.previewElement.classList.add("dz-error");
-   			}
-   		});
-   	});
-       
 function addComment() {
    var dataString = {"projectId": $('#hdn_project_id').val() , "projectComments": $('#comment_textarea').val() };
    
    doAjaxRequest("POST", "${applicationHome}/addComment", dataString,  function(data) {
-       if (data.status){
+	   var responseJsonObj = JSON.parse(data)
+       if (responseJsonObj.status){
            window.location.reload(true);
        }
    }, function(e) {
@@ -363,5 +326,19 @@ $(document).ready(function() {
         rows	  : 5,
         cols	  : 130
     });
+    
+	Dropzone.autoDiscover = false;
+  		$("#my-dropzone").dropzone({
+  			url : "/upload",
+  			addRemoveLinks : true,
+  			success : function(file, response) {
+  				var imgName = response;
+  				file.previewElement.classList.add("dz-success");
+  				console.log("Successfully uploaded :" + imgName);
+  			},
+  			error : function(file, response) {
+  				file.previewElement.classList.add("dz-error");
+  			}
+  		});
 });
 </script>

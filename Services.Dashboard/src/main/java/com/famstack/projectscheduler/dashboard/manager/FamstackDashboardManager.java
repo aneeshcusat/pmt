@@ -1,22 +1,15 @@
 package com.famstack.projectscheduler.dashboard.manager;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
-import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -24,6 +17,7 @@ import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.StringUtils;
+import com.famstack.projectscheduler.utils.FamstackUtils;
 
 @Component
 public class FamstackDashboardManager extends BaseFamstackService {
@@ -73,20 +67,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public String getEmployeeDetails(int userId) {
-
 		EmployeeDetails employeeDetails = userProfileManager.getEmployee(userId);
-		String jsonString = null;
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			jsonString = objectMapper.writeValueAsString(employeeDetails);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return jsonString;
+		return FamstackUtils.getJsonFromObject(employeeDetails);
 	}
 
 	public void deleteUser(int userId) {
@@ -100,24 +82,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public List<ProjectDetails> getProjectsDataList() {
-		List<ProjectDetails> projectDetailsList = new ArrayList<ProjectDetails>();
-		List<ProjectItem> projectItemList = (List<ProjectItem>) getProjectDetails();
-		if (projectItemList != null) {
-			Iterator<ProjectItem> iter = projectItemList.iterator();
-			while (iter.hasNext()) {
-				ProjectItem projectItem = iter.next();
-				ProjectDetails projectDetails = projectManager.getProjectDetailsFromProjectItem(projectItem);
-				if (projectDetails != null) {
-					projectDetailsList.add(projectDetails);
-				}
-			}
-		}
-
+		List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList();
 		return projectDetailsList;
-	}
-
-	public List<?> getProjectDetails() {
-		return projectManager.getAllProjectItems();
 	}
 
 	public void deleteProject(int projectId) {
@@ -129,8 +95,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public ProjectDetails getProjectDetails(int projectId) {
-		ProjectDetails projectDetails = projectManager
-				.getProjectDetailsFromProjectItem(projectManager.getProjectItemById(projectId));
+		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
 		return projectDetails;
 	}
 }

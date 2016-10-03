@@ -1,11 +1,11 @@
 package com.famstack.projectscheduler.employees.bean;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
 import com.famstack.projectscheduler.contants.ProjectStatus;
-import com.famstack.projectscheduler.datatransferobject.ProjectActivityItem;
-import com.famstack.projectscheduler.datatransferobject.ProjectCommentItem;
+import com.famstack.projectscheduler.datatransferobject.UserItem;
 
 public class ProjectDetails {
 
@@ -17,57 +17,39 @@ public class ProjectDetails {
 
 	private String description;
 
-	private int createdBy;
-	
-	private String createdByName;
-	
-	private Date createdDate;
+	private Timestamp createdDate;
 
-	private int modifiedBy;
-	
-	private String modifiedByName;
-	
-	private Date modifiedDate;
-	
+	private Timestamp lastModifiedDate;
+
 	private String type;
-	
+
+	private String team;
+
+	private UserItem reporter;
+
 	private String category;
-	
+
 	private String tags;
-	
-	private String priority;
-	
-	private Date startTime;
-	
-	private int duration;
-	
-	private int reporter;
-	
-	private String reporterName;
-	
-	private int assignee;
-	
-	private String assigneeName;
-	
-	private String assigneePhoto;
-	
-	private String review;
-	
-	private int reviewer;
-	
-	private String reviewerName;
-	
+
 	private String watchers;
+
+	private String priority;
+
+	private Timestamp startTime;
+
+	private Timestamp completionTime;
+
+	private int duration;
 
 	private ProjectStatus status;
 
 	private String clientId;
-	
-	private String clientName;
 
 	private Set<ProjectCommentDetails> projectComments;
 
-	private Set<ProjectActivityItem> projectActivityItem;
+	private Set<ProjectActivityDetails> projectActivityDetails;
+
+	private String reporterName;
 
 	public int getId() {
 		return id;
@@ -101,36 +83,8 @@ public class ProjectDetails {
 		this.description = description;
 	}
 
-	public int getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(int createdBy) {
-		this.createdBy = createdBy;
-	}
-
 	public Date getCreatedDate() {
 		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public int getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(int modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public int getDuration() {
@@ -165,20 +119,12 @@ public class ProjectDetails {
 		this.projectComments = projectComments;
 	}
 
-	public Set<ProjectActivityItem> getProjectActivityItem() {
-		return projectActivityItem;
+	public Set<ProjectActivityDetails> getProjectActivityDetails() {
+		return projectActivityDetails;
 	}
 
-	public void setProjectActivityItem(Set<ProjectActivityItem> projectActivityItem) {
-		this.projectActivityItem = projectActivityItem;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
+	public void setProjectActivityItem(Set<ProjectActivityDetails> projectActivityDetails) {
+		this.projectActivityDetails = projectActivityDetails;
 	}
 
 	public String getCategory() {
@@ -209,64 +155,12 @@ public class ProjectDetails {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-
-	public int getReporter() {
-		return reporter;
-	}
-
-	public void setReporter(int reporter) {
-		this.reporter = reporter;
-	}
-
-	public int getAssignee() {
-		return assignee;
-	}
-
-	public void setAssignee(int assignee) {
-		this.assignee = assignee;
-	}
-
-	public String getReview() {
-		return review;
-	}
-
-	public void setReview(String review) {
-		this.review = review;
-	}
-
-	public int getReviewer() {
-		return reviewer;
-	}
-
-	public void setReviewer(int reviewer) {
-		this.reviewer = reviewer;
-	}
-
 	public String getWatchers() {
 		return watchers;
 	}
 
 	public void setWatchers(String watchers) {
 		this.watchers = watchers;
-	}
-
-	public String getCreatedByName() {
-		return createdByName;
-	}
-
-	public void setCreatedByName(String createdByName) {
-		this.createdByName = createdByName;
-	}
-
-	public String getModifiedByName() {
-		return modifiedByName;
-	}
-
-	public void setModifiedByName(String modifiedByName) {
-		this.modifiedByName = modifiedByName;
 	}
 
 	public String getReporterName() {
@@ -277,36 +171,52 @@ public class ProjectDetails {
 		this.reporterName = reporterName;
 	}
 
-	public String getAssigneeName() {
-		return assigneeName;
+	public String getTeam() {
+		return team;
 	}
 
-	public void setAssigneeName(String assigneeName) {
-		this.assigneeName = assigneeName;
+	public void setTeam(String team) {
+		this.team = team;
 	}
 
-	public String getReviewerName() {
-		return reviewerName;
+	public Timestamp getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
-	public void setReviewerName(String reviewerName) {
-		this.reviewerName = reviewerName;
+	public void setLastModifiedDate(Timestamp lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public String getClientName() {
-		return clientName;
+	public String getType() {
+		return type;
 	}
 
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public String getAssigneePhoto() {
-		return assigneePhoto;
+	public UserItem getReporter() {
+		return reporter;
 	}
 
-	public void setAssigneePhoto(String assigneePhoto) {
-		this.assigneePhoto = assigneePhoto;
+	public void setReporter(UserItem reporter) {
+		this.reporter = reporter;
+	}
+
+	public Timestamp getCompletionTime() {
+		return completionTime;
+	}
+
+	public void setCompletionTime(Timestamp completionTime) {
+		this.completionTime = completionTime;
+	}
+
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
 	}
 
 }

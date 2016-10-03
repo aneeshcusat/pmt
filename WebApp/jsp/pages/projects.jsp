@@ -57,7 +57,7 @@
 							</div>
 							<div class="col-md-4">
 								<a data-toggle="modal" data-target="#createprojectmodal"
-									class="btn btn-success btn-block" onclick="clearProjectFormFields()"> <span class="fa fa-plus"></span>
+									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
 									Create a new Project
 								</a>
 							</div>
@@ -91,7 +91,7 @@
 			<tr>
 				<td class="project_name"><a href="${applicationHome}/project/${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
 				<td class="project_team">
-                    ${project.assigneeName}
+                   <img alt="" src=""  onerror="this.src='${assets}/images/users/no-image.jpg'">
                 </td>
 				<td class="project_progress">
 					<div class="progress progress-xs">
@@ -130,7 +130,7 @@
 <!-- project create modal start -->
 <div class="modal fade" id="createprojectmodal" tabindex="-1"
 	role="dialog" aria-labelledby="createprojectmodal" aria-hidden="true">
-	<form:form id="createProjectFormId" action="saveProject" method="POST"
+	<form:form id="createProjectFormId" action="createProject" method="POST"
 		role="form" class="form-horizontal">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -173,28 +173,28 @@
 
 <script>
 
-$( document ).ready(function(){
-	$("input[type='search']").parent().hide();
-});
-	var countries = [ {
-		value : 'Andorra',
-		data : 'AD'
+	$( document ).ready(function(){
+		$("input[type='search']").parent().hide();
+	});
+	
+	var projectNames = [ {
+		value : 'Project 1',
+		data : 'P100'
 	},
-	// ...
 	{
-		value : 'Zimbabwe',
-		data : 'ZZ'
+		value : 'Project 2',
+		data : 'P102'
 	} ];
 
 	$('.autocomplete').autocomplete(
-			{
-				//serviceUrl: '/autocomplete/countries',
-				lookup : countries,
-				onSelect : function(suggestion) {
-					alert('You selected: ' + suggestion.value + ', '
-							+ suggestion.data);
-				}
-			});
+		{
+			//serviceUrl: '/autocomplete/projects',
+			lookup : projectNames,
+			onSelect : function(suggestion) {
+				alert('You selected: ' + suggestion.value + ', '
+						+ suggestion.data);
+			}
+		});
 
 	function doAjaxCreateProjectForm() {
 		$('#createProjectFormId').submit();
@@ -208,79 +208,6 @@ $( document ).ready(function(){
 		}
 	});
 
-	function loadProject(projectId) {
-		$.ajax({
-			type : "GET",
-			contentType : "application/json",
-			url : "${applicationHome}/editProject",
-			data : "projectId=" + projectId,
-			timeout : 1000,
-			success : function(data) {
-				console.log("SUCCESS: ", data);
-				processProjectResponseData(data);
-			},
-			error : function(e) {
-				console.log("ERROR: ", e);
-				alert(e);
-			},
-			done : function(e) {
-				console.log("DONE");
-			}
-		});
-
-	}
-	
-	function processProjectResponseData(data) {
-	    var response = JSON.parse(data);
-	    $('#projectName').val(response.name);
-	    $('#category').val(response.category);
-	    $('#category').selectpicker('refresh');
-	    $('#summary').val(response.description);
-	    $('#'+response.type).click();
-	    $('#priority').val(response.priority);
-	    $('#priority').selectpicker('refresh');
-	    $('#clientId').val(response.clientId);
-	    $('#clientId').selectpicker('refresh');
-	    $('#tags').val(response.tags);
-	    $('#reporter').val(response.reporter);
-	    $('#reporter').selectpicker('refresh');
-	    $('#assignee').val(response.assignee);
-	    $('#assignee').selectpicker('refresh');
-	    $('#startTime').val(response.startTime);
-	    $('#duration').val(response.duration);
-	    $('#'+response.review).click();
-	    $('#reviewer').val(response.reviewer);
-	    $('#reviewer').selectpicker('refresh');
-	    $('#watchers').val(response.watchers);
-	    $('#id').val(response.id);
-	}
-	
-	function clearProjectFormFields() {
-		$('#projectName').val('');
-        $('#category').val('-1');
-        //$('#category').selectpicker('refresh');
-        $('#summary').val('');
-        //$('#'+response.type).click();
-        $('#priority').val('-1');
-        //$('#priority').selectpicker('refresh');
-        $('#clientId').val('-1');
-        //$('#clientId').selectpicker('refresh');
-       
-        $('#reporter').val('-1');
-        //$('#reporter').selectpicker('refresh');
-        $('#assignee').val('-1');
-        //$('#assignee').selectpicker('refresh');
-        $('#startTime').val('');
-        $('#duration').val('');
-        //$('#'+response.review).click();
-        $('#reviewer').val('-1');
-        //$('#reviewer').selectpicker('refresh');
-        $('#watchers').val('');
-        $('#tags').val('');
-        $('#id').val('');
-        
-        // add -1 head value for combo boxes and set those during clearing values.
-	}
 	function deleteProject(projectId, projectName){
 		$(".msgConfirmText").html("Delete project");
 		$(".msgConfirmText1").html(projectName);
@@ -288,27 +215,17 @@ $( document ).ready(function(){
 	}
 	
 	function doAjaxDeleteProject(projectId) {
-		$.ajax({
-	        type : "GET",
-	        contentType : "application/json",
-	        url : "${applicationHome}/deleteProject",
-	        data: "projectId="+projectId,
-	        timeout : 1000,
-	        success : function(data) {
-	            console.log("SUCCESS: ", data);
-	            var responseJson = JSON.parse(data);
-	            if (responseJson.status){
-	                window.location.reload(true);
-	            }
-	        },
-	        error : function(e) {
-	            console.log("ERROR: ", e);
-	            alert(e);
-	        },
-	        done : function(e) {
-	            console.log("DONE");
-	        }
-	    });
+		var dataString = {"projectId" : projectId};
+		doAjaxRequest("POST", "${applicationHome}/deleteProject", dataString, function(data) {
+            console.log("SUCCESS: ", data);
+            var responseJson = JSON.parse(data);
+            if (responseJson.status){
+                window.location.reload(true);
+            }
+        }, function(e) {
+            console.log("ERROR: ", e);
+            alert(e);
+        });
 	}
 	
 	$("#projectSearchBoxId").keydown(function(e){

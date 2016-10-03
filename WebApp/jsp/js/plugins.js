@@ -55,7 +55,7 @@ $(function() {
                         if(!$(this).attr("multiple"))
                             $(this).val("").find("option").removeAttr("selected").prop("selected",false);
                     }else{
-                        $(this).find("option[value="+$(this).val()+"]").attr("selected",true);
+                        //$(this).find("option[value="+$(this).val()+"]").attr("selected",true);
                     }
                 });
             }

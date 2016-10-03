@@ -146,7 +146,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
-	@RequestMapping(value = "/saveProject", method = RequestMethod.POST)
+	@RequestMapping(value = "/createProject", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,
 			Model model) {
@@ -154,7 +154,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 
-	@RequestMapping(value = "/deleteProject", method = RequestMethod.GET)
+	@RequestMapping(value = "/deleteProject", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteProject(@RequestParam("projectId") int projectId) {
 		famstackDashboardManager.deleteProject(projectId);
@@ -172,7 +172,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(value = "/addComment", method = RequestMethod.POST)
 	@ResponseBody
-	public String createComment(@RequestParam("projectComments") String projectComments,
+	public String addComment(@RequestParam("projectComments") String projectComments,
 			@RequestParam("projectId") int projectId) {
 		famstackDashboardManager.createComment(projectComments, projectId);
 		return "{\"status\": true}";

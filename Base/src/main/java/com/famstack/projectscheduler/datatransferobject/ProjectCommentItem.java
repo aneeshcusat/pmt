@@ -1,6 +1,5 @@
 package com.famstack.projectscheduler.datatransferobject;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -10,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "project_comments")
-public class ProjectCommentItem implements Serializable {
+public class ProjectCommentItem implements FamstackBaseItem {
 
 	/**
 	 * 
@@ -25,38 +25,31 @@ public class ProjectCommentItem implements Serializable {
 	private static final long serialVersionUID = -4517129887687820791L;
 
 	@Id
-	@Column(name = "id")
+	@Column(name = "comment_id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
 	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-	private int id;
+	private int commentId;
 
 	@ManyToOne
-	@JoinColumn(name = "project_id", referencedColumnName = "id")
+	@JoinColumn(name = "project_id")
 	private ProjectItem projectItem;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "id")
 	private UserItem user;
 
 	@Column(name = "created_date")
 	private Timestamp createdDate;
 
-	@Column(name = "modified_date")
-	private Timestamp modifiedDate;
+	@Column(name = "last_modified_date")
+	private Timestamp lastModifiedDate;
 
 	@Column(name = "description")
+	@Lob
 	private String description;
 
 	@Column(name = "title")
 	private String title;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public ProjectItem getProjectItem() {
 		return projectItem;
@@ -74,20 +67,14 @@ public class ProjectCommentItem implements Serializable {
 		this.user = user;
 	}
 
+	@Override
 	public Timestamp getCreatedDate() {
 		return createdDate;
 	}
 
+	@Override
 	public void setCreatedDate(Timestamp createdDate) {
 		this.createdDate = createdDate;
-	}
-
-	public Timestamp getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Timestamp modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 
 	public String getDescription() {
@@ -104,6 +91,23 @@ public class ProjectCommentItem implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public Timestamp getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	@Override
+	public void setLastModifiedDate(Timestamp lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public int getCommentId() {
+		return commentId;
+	}
+
+	public void setCommentId(int commentId) {
+		this.commentId = commentId;
 	}
 
 }

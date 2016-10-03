@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.dataaccess;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,13 +11,16 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import com.famstack.projectscheduler.datatransferobject.FamstackBaseItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectCommentItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 
 public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjectManager {
 
 	@Override
-	public void saveItem(Object saveItem) {
+	public void saveItem(FamstackBaseItem saveItem) {
+		saveItem.setCreatedDate(new Timestamp(new Date().getTime()));
+		saveItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		session.save(saveItem);
@@ -24,7 +29,8 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 	}
 
 	@Override
-	public void updateItem(Object updateItem) {
+	public void updateItem(FamstackBaseItem updateItem) {
+		updateItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		session.update(updateItem);
@@ -33,7 +39,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 	}
 
 	@Override
-	public void deleteItem(Object deleteItem) {
+	public void deleteItem(FamstackBaseItem deleteItem) {
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		session.delete(deleteItem);
@@ -42,7 +48,11 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 	}
 
 	@Override
-	public void saveOrUpdateItem(Object updateItem) {
+	public void saveOrUpdateItem(FamstackBaseItem updateItem) {
+		if (updateItem.getCreatedDate() == null) {
+			updateItem.setCreatedDate(new Timestamp(new Date().getTime()));
+		}
+		updateItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		session.saveOrUpdate(updateItem);
