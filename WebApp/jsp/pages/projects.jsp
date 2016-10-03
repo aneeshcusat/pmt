@@ -77,19 +77,22 @@
 		<thead>
 			<tr>
 				<th>Project Name</th>
+				<th>Project Code</th>
 				<th>Assignees</th>
 				<th>Project Progress</th>
 				<th>Project Status</th>
 				<th>Actions</th>
 			</tr>
 		</thead> 
+
 		<c:if test="${not empty modelViewMap.projectDetailsData}">
+		<tbody>
         <c:forEach var="project" items="${modelViewMap.projectDetailsData}">
         
-        
-		<tbody>
+
 			<tr>
 				<td class="project_name"><a href="${applicationHome}/project/${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
+				<td><h5>${project.code}</h5></td>
 				<td class="project_team">
                    <img alt="" src=""  onerror="this.src='${assets}/images/users/no-image.jpg'">
                 </td>
@@ -113,9 +116,8 @@
 					</a>
 				</td>
 			</tr>
-			
-		</tbody>
 		</c:forEach>
+	</tbody>
         </c:if>
 		<c:if test="${empty modelViewMap.projectDetailsData}">
 		  There are no assigned projects
