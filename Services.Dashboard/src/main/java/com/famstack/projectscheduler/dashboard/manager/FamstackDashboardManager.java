@@ -68,10 +68,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return errorMap;
 	}
 
-	public List<?> getUsersData() {
-		return userProfileManager.getAllUserItems();
-	}
-
 	public UserItem getUser(int userId) {
 		return userProfileManager.getUserItemById(userId);
 	}
@@ -91,23 +87,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			e.printStackTrace();
 		}
 		return jsonString;
-	}
-
-	public List<EmployeeDetails> getEmployeeDataList() {
-		List<EmployeeDetails> employeeDetailsList = new ArrayList<EmployeeDetails>();
-		List<UserItem> userItemList = (List<UserItem>) getUsersData();
-		if (userItemList != null) {
-			Iterator<UserItem> iter = userItemList.iterator();
-			while (iter.hasNext()) {
-				UserItem userItem = iter.next();
-				EmployeeDetails employeeDetails = userProfileManager.getEmployeeDetailsFromUserItem(userItem);
-				if (employeeDetails != null) {
-					employeeDetailsList.add(employeeDetails);
-				}
-			}
-		}
-
-		return employeeDetailsList;
 	}
 
 	public void deleteUser(int userId) {

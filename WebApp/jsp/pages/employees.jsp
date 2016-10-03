@@ -75,7 +75,7 @@
                                     <div class="input-group-addon">
                                         <span class="fa fa-search"></span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Who are you looking for?"/>
+                                    <input type="text" class="form-control" placeholder="Who are you looking for?" id="employeeSearch"/>
                                     <div class="input-group-btn">
                                         <button class="btn btn-primary">Search</button>
                                     </div>
@@ -96,7 +96,7 @@
     <div class="row">
     <c:if test="${not empty modelViewMap.employeeItemList}">
     <c:forEach var="user" items="${modelViewMap.employeeItemList}">
-        <div class="col-md-3">
+        <div class="col-md-3 contact-name">
             <!-- CONTACT ITEM -->
             <div class="panel panel-default">
                 <div class="panel-body profile">
@@ -126,21 +126,7 @@
         </c:if>
         
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <ul class="pagination pagination-sm pull-right push-down-10 push-up-10">
-                            <li class="disabled"><a href="#">&lt;&lt;</a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>                                    
-                            <li><a href="#">.</a></li>
-                            <li><a href="#">.</a></li>
-                            <li><a href="#">&gt;&gt;</a></li>
-                        </ul>                            
-                    </div>
-                </div>
-
+               
             </div>
             
             <div class="modal fade" id="registerusermodal" tabindex="-1"
@@ -196,6 +182,9 @@ function createEmployeeDetails(){
 
 function doAjaxUpdateUserForm(){
 	//$.blockUI();
+	var imageData = $('.image-editor').cropit('export');
+	$('#filePhoto').val(imageData);
+	console.log(imageData);
 	$('#createUserFormId').prop("action", "updateEmployee");
     $('#createUserFormId').submit();
 }
@@ -290,5 +279,28 @@ function processUserResponseData(data) {
 $(function() {
     $('.image-editor').cropit();
   });
+
+function performSearch(){
+	var serarchText = $('#employeeSearch').val();
+	console.log(serarchText);
+	if (serarchText != "") {
+	 $('.contact-name').hide();
+    $('.contact-name').each(function(){
+       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
+           $(this).show();
+       }
+    });
+	} else {
+		$('.contact-name').show();
+	}
+}
+
+$('#employeeSearch').keydown(function(){
+	performSearch();
+});
+
+$('#employeeSearch').keyup(function(){
+	performSearch();
+});
 
 </script>        

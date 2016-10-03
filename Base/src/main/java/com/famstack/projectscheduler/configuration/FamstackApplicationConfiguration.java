@@ -5,57 +5,37 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.stereotype.Component;
-
-import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
+import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
-@Component
-public class FamstackApplicationConfiguration {
+import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 
-    private boolean initialized = false;
-    
-    private boolean userMapInitialized = false;
-    
-    @Resource
-    FamstackDashboardManager famstackDashboardManager;
+public class FamstackApplicationConfiguration extends BaseFamstackService {
 
-    private String hostName;
+	@Resource
+	FamstackUserProfileManager famstackUserProfileManager;
 
-    private int portNumber;
+	private String hostName;
 
-    private String protocol;
-    
+	private int portNumber;
+
+	private String protocol;
+
 	public Map<String, String> getConfigSettings() {
 		return null;
 	}
-	
+
 	private List<EmployeeDetails> userList;
 
-	public void initUserMap() {
-		userList = famstackDashboardManager.getEmployeeDataList();
+	public void initialize() {
+		logDebug("Initializing FamstackApplicationConfiguration...");
+		userList = famstackUserProfileManager.getEmployeeDataList();
 	}
-	
+
 	public List<EmployeeDetails> getUserList() {
 		return userList;
 	}
 
 	public void setUserList(List<EmployeeDetails> userList) {
 		this.userList = userList;
-	}
-
-	public boolean isInitialized() {
-		return initialized;
-	}
-
-	public void setInitialized(boolean initialized) {
-		this.initialized = initialized;
-	}
-
-	public boolean isUserMapInitialized() {
-		return userMapInitialized;
-	}
-
-	public void setUserMapInitialized(boolean userMapInitialized) {
-		this.userMapInitialized = userMapInitialized;
 	}
 }

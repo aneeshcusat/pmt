@@ -3,6 +3,7 @@ package com.famstack.projectscheduler.manager;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +157,23 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 	public EmployeeDetails getEmployee(int userId) {
 		UserItem userItem = getUserItemById(userId);
 		return getEmployeeDetailsFromUserItem(userItem);
+	}
+
+	public List<EmployeeDetails> getEmployeeDataList() {
+		List<EmployeeDetails> employeeDetailsList = new ArrayList<EmployeeDetails>();
+		List<?> userItemList = getAllUserItems();
+		if (userItemList != null) {
+			for (Object userItemObj : userItemList) {
+				UserItem userItem = (UserItem) userItemObj;
+				EmployeeDetails employeeDetails = getEmployeeDetailsFromUserItem(userItem);
+				if (employeeDetails != null) {
+					employeeDetailsList.add(employeeDetails);
+				}
+			}
+		}
+
+		return employeeDetailsList;
+
 	}
 
 	public EmployeeDetails getEmployeeDetailsFromUserItem(UserItem userItem) {

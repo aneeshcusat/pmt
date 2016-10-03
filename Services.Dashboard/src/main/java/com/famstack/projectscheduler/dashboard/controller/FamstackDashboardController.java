@@ -86,15 +86,9 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(value = "/employees", method = RequestMethod.GET)
 	public ModelAndView newEmployee() {
-		List<EmployeeDetails> employeeItemList = famstackDashboardManager.getEmployeeDataList();
-		if (!getFamstackApplicationConfiguration().isUserMapInitialized()) {
-			getFamstackApplicationConfiguration().initUserMap();
-			getFamstackApplicationConfiguration().setInitialized(true);
-		}
-		List<EmployeeDetails> userMap = getFamstackApplicationConfiguration().getUserList();
+		List<EmployeeDetails> employeeItemList = getFamstackApplicationConfiguration().getUserList();
 		Map<String, Object> modelViewMap = new HashMap<String, Object>();
 		modelViewMap.put("employeeItemList", employeeItemList);
-		modelViewMap.put("userMap", userMap);
 		return new ModelAndView("employees", "command", new EmployeeDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
@@ -109,7 +103,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String createEmployee(@ModelAttribute("employeeDetails") EmployeeDetails employeeDetails,
 			BindingResult result, Model model) {
 		famstackDashboardManager.createUser(employeeDetails);
-		getFamstackApplicationConfiguration().initUserMap();
+		getFamstackApplicationConfiguration().initialize();
 		return "{\"status\": true}";
 	}
 
@@ -118,7 +112,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String updateEmployee(@ModelAttribute("employeeDetails") EmployeeDetails employeeDetails,
 			BindingResult result, Model model) {
 		famstackDashboardManager.updateUser(employeeDetails);
-		getFamstackApplicationConfiguration().initUserMap();
+		getFamstackApplicationConfiguration().initialize();
 		return "{\"status\": true}";
 	}
 
@@ -126,7 +120,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@ResponseBody
 	public String deleteEmployee(@RequestParam("userId") int userId) {
 		famstackDashboardManager.deleteUser(userId);
-		getFamstackApplicationConfiguration().initUserMap();
+		getFamstackApplicationConfiguration().initialize();
 		return "{\"status\": true}";
 	}
 
@@ -145,10 +139,6 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public ModelAndView listProjects() {
 		List<ProjectDetails> projectData = famstackDashboardManager.getProjectsDataList();
-		if (!getFamstackApplicationConfiguration().isUserMapInitialized()) {
-			getFamstackApplicationConfiguration().initUserMap();
-			getFamstackApplicationConfiguration().setInitialized(true);
-		}
 		List<EmployeeDetails> userMap = getFamstackApplicationConfiguration().getUserList();
 		Map<String, Object> modelViewMap = new HashMap<String, Object>();
 		modelViewMap.put("projectDetailsData", projectData);
