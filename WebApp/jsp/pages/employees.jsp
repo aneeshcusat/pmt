@@ -1,3 +1,4 @@
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>           
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
@@ -5,7 +6,6 @@
      <li class="active">Employees</li>
  </ul>
  <!-- END BREADCRUMB -->  
-<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>                                
 <style>
     @media screen and (min-width: 800px) {
     #registerusermodal .modal-dialog  {width:65%;}
@@ -55,7 +55,7 @@
 </style>         
 <!-- PAGE TITLE -->
 <div class="page-title">                    
-    <h2><span class="fa fa-users"></span> Employees <small>139 contacts</small></h2>
+    <h2><span class="fa fa-users"></span> Employees <small>${fn:length(modelViewMap.employeeItemList)} contacts</small></h2>
 </div>
 <!-- END PAGE TITLE -->                
 
