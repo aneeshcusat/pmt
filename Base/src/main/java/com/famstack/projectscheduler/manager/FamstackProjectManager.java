@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
-import com.famstack.projectscheduler.datatransferobject.ProjectActivityItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -30,6 +29,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 	@Resource
 	FamstackProjectActivityManager famstackProjectActivityManager;
+
+	@Resource
+	FamstackProjectTaskManager famstackProjectTaskManager;
 
 	public void createProjectItem(ProjectDetails projectDetails) {
 		ProjectItem projectItem = new ProjectItem();
@@ -63,10 +65,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		projectItem.setType(projectDetails.getType());
 		projectItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
 		projectItem.setWatchers(projectDetails.getWatchers());
-		ProjectActivityItem projectActivityItem = famstackProjectActivityManager
-				.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
+		famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
 		famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
-		famstackDataAccessObjectManager.saveOrUpdateItem(projectActivityItem);
 	}
 
 	public void deleteProjectItem(int projectId) {
@@ -97,8 +97,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			projectDetails.setName(projectItem.getName());
 			projectDetails.setPriority(projectItem.getPriority());
 			projectDetails.setComplexity(projectItem.getComplexity());
-			String startDateString = DateUtils.format(projectItem.getStartTime(), "yyyy/MM/dd HH:mm");
-			String completionDateString = DateUtils.format(projectItem.getCompletionTime(), "yyyy/MM/dd HH:mm");
+			String startDateString = DateUtils.format(projectItem.getStartTime(), DateUtils.DATE_TIME_FORMAT);
+			String completionDateString = DateUtils.format(projectItem.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
 			projectDetails.setStartTime(startDateString);
 			projectDetails.setCompletionTime(completionDateString);
 
@@ -117,6 +117,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 					famstackProjectCommentManager.mapProjectCommentDetails(projectItem.getProjectComments()));
 			projectDetails.setProjectActivityItem(
 					famstackProjectActivityManager.mapProjectActivityDetails(projectItem.getProjectActivityItem()));
+			projectDetails.setProjectTaskDeatils(
+					famstackProjectTaskManager.mapProjectTaskDetails(projectItem.getTaskItems()));
 			return projectDetails;
 
 		}

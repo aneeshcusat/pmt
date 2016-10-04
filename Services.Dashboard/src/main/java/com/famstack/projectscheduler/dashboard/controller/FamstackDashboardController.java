@@ -28,6 +28,7 @@ import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
 
@@ -164,7 +165,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
 	public ModelAndView loadProject(@PathVariable("projectId") int projectId) {
 		ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId);
-		return new ModelAndView("projectdetails", "command", new ProjectDetails()).addObject("projectDetails",
+		return new ModelAndView("projectdetails", "command", new TaskDetails()).addObject("projectDetails",
 				projectDetails);
 	}
 
@@ -175,6 +176,14 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String addComment(@RequestParam("projectComments") String projectComments,
 			@RequestParam("projectId") int projectId) {
 		famstackDashboardManager.createComment(projectComments, projectId);
+		return "{\"status\": true}";
+	}
+
+	@RequestMapping(value = "/createTask", method = RequestMethod.POST)
+	@ResponseBody
+	public String createTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
+			Model model) {
+		famstackDashboardManager.createTask(taskDetails);
 		return "{\"status\": true}";
 	}
 }

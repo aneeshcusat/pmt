@@ -26,6 +26,7 @@
 		height: 8px;
 	}
 }
+
 </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">
@@ -129,6 +130,8 @@
 </div>
 <!-- END CONTENT FRAME -->
 
+
+
 <!-- project create modal start -->
 <div class="modal fade" id="createprojectmodal" tabindex="-1"
 	role="dialog" aria-labelledby="createprojectmodal" aria-hidden="true">
@@ -175,6 +178,8 @@
 
 <script>
 
+
+	
 	$( document ).ready(function(){
 		$("input[type='search']").parent().hide();
 	});

@@ -10,11 +10,14 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
+import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
+import com.famstack.projectscheduler.manager.FamstackProjectTaskManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.utils.FamstackUtils;
@@ -30,6 +33,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackProjectManager projectManager;
+
+	@Resource
+	FamstackProjectTaskManager famstackProjectTaskManager;
 
 	@Resource
 	FamstackProjectCommentManager projectCommentManager;
@@ -97,5 +103,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public ProjectDetails getProjectDetails(int projectId) {
 		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
 		return projectDetails;
+	}
+
+	public void createTask(TaskDetails taskDetails) {
+		ProjectItem projectItem = projectManager.getProjectItemById(taskDetails.getProjectId());
+		famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
+
 	}
 }

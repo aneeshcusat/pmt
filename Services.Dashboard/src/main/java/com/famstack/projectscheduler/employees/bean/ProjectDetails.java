@@ -56,6 +56,8 @@ public class ProjectDetails {
 
 	private Set<ProjectActivityDetails> projectActivityDetails;
 
+	private Set<TaskDetails> projectTaskDeatils;
+
 	private String reporterName;
 
 	public Integer getId() {
@@ -244,6 +246,14 @@ public class ProjectDetails {
 
 	public void setClientId(Integer clientId) {
 		this.clientId = clientId;
+	}
+
+	public Set<TaskDetails> getProjectTaskDeatils() {
+		return projectTaskDeatils;
+	}
+
+	public void setProjectTaskDeatils(Set<TaskDetails> projectTaskDeatils) {
+		this.projectTaskDeatils = projectTaskDeatils;
 	}
 
 }

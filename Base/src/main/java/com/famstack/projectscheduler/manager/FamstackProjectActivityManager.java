@@ -26,6 +26,7 @@ public class FamstackProjectActivityManager extends BaseFamstackManager {
 		projectActivityItem.setProjectStatus(projectItem.getStatus());
 		projectActivityItem.setUserName(projectItem.getReporter().getFirstName());
 		projectActivityItem.setDescription(description);
+		famstackDataAccessObjectManager.saveOrUpdateItem(projectActivityItem);
 		return projectActivityItem;
 	}
 

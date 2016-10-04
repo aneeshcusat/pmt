@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
+import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.datatransferobject.ProjectCommentItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
@@ -24,6 +25,9 @@ public class FamstackProjectCommentManager extends BaseFamstackManager {
 	@Resource
 	FamstackUserProfileManager famstackUserProfileManager;
 
+	@Resource
+	FamstackProjectActivityManager famstackProjectActivityManager;
+
 	public void createProjectCommentItem(String projectComments, int projectId) {
 		ProjectCommentItem projectCommentItem = new ProjectCommentItem();
 
@@ -36,6 +40,8 @@ public class FamstackProjectCommentManager extends BaseFamstackManager {
 				ProjectItem.class);
 		projectCommentItem.setProjectItem(projectItem);
 		famstackDataAccessObjectManager.saveItem(projectCommentItem);
+		famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.COMMENT_ADDED,
+				null);
 
 	}
 
