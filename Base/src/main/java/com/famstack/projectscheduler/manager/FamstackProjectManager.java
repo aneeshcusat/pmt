@@ -88,6 +88,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 			projectDetails.setCategory(projectItem.getCategory());
 			projectDetails.setClientId(projectItem.getClientId());
+			projectDetails.setAccountId(projectItem.getAccountId());
+			projectDetails.setTeamId(projectItem.getTeamId());
+
 			projectDetails.setCode(projectItem.getCode());
 			projectDetails.setDescription(projectItem.getDescription());
 			projectDetails.setDuration(projectItem.getDuration());

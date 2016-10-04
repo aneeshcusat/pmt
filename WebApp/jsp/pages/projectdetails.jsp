@@ -12,7 +12,7 @@
 	<div class="content-frame-top">  
 	<div class="row">
                   <div class="col-md-7">                      
-            <h4><span class="fa "></span><span class="editableFieldText">${projectDetails.name}</span></h4>
+            <h4><span class="fa ">${projectDetails.code}</span> - <span class="editableFieldText">${projectDetails.name}</span></h4>
             </div>
             <div class="col-md-5 text-right">               
            <span style="background-color: lightgray;" class="btn  btn-default" disabled=disabled>To Do</span>       
@@ -40,7 +40,7 @@
                                       <p><span class="bold">Created by </span>: ${projectDetails.reporterName}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Status </span>: <span class="label label-primary">${projectDetails.status}</span></p>
+                                      <p class="text-capitalize"><span class="bold">Status </span>: <span class="label label-primary">${projectDetails.status}</span></p>
                                   </div>
                                   <div class="col-md-6">
                                       <p><span class="bold">Created </span>: ${projectDetails.createdDate}</p>
@@ -49,11 +49,29 @@
                                       <p><span class="bold">Last Updated</span>: ${projectDetails.lastModifiedDate}</p>
                                   </div>
                                   <div class="col-md-6">
+                                      <p class="text-capitalize"><span class="bold">Project Type </span>: ${projectDetails.type}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <p class="text-capitalize"><span class="bold text-capitalize">Project Complexity </span>: ${projectDetails.complexity}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <p><span class="bold">Category </span>: ${projectDetails.category}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <p><span class="bold">Account </span>: ${projectDetails.accountId}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <p><span class="bold">Team </span>: ${projectDetails.teamId}</p>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <p><span class="bold">Sub Team </span>: ${projectDetails.teamId}</p>
+                                  </div>
+                                  <div class="col-md-6">
                                       <p><span class="bold">Client </span>: ${projectDetails.clientId}</p>
                                   </div>
                                    <div class="col-md-6">
                                    	<ul class="nav nav-pills nav-stacked labels-info ">
-                                 	 <li><i class=" fa fa-circle text-danger"></i> ${projectDetails.priority}<p></p></li>
+                                 	 <li><span class="bold">Priority </span> : <i class=" fa fa-circle text-danger"></i> ${projectDetails.priority}<p></p></li>
 	                              </ul>
 	                              </div>
 	                              <input type="hidden" id="hdn_project_id" value="${projectDetails.id}">
@@ -219,9 +237,9 @@
                                   </table>
                                <h5 class="bold">Time Tracking</h5>
                               <ul class="nav nav-pills nav-stacked labels-info ">
-                                  <li>Estimated start time:<b> 2014-12-12 12:00AM</b></li>
-                                  <li>Estimated start time:<b> 2014-12-12 12:00AM</b></li>
-                                  <li>Duration : <b>5 hours</b></li>
+                                  <li>Estimated start time:<b> ${projectDetails.startTime}</b></li>
+                                  <li>Estimated completion time:<b> ${projectDetails.completionTime}</b></li>
+                                  <li>Duration : <b>${projectDetails.duration} hours</b></li>
                               </ul>
 
                               <br>
@@ -234,23 +252,25 @@
                                   <li><a href=""><i class="fa fa-file"></i> Contract-10_12_2014.docx</a></li>
                               </ul>
                               <br>
-
-                              <h5 class="bold">Project Tags</h5>
-                             <ul class="list-tags">
-	                            <li><a href="#"><span class="fa fa-tag"></span> amet</a></li>
-	                            <li><a href="#"><span class="fa fa-tag"></span> rutrum</a></li>
-	                            <li><a href="#"><span class="fa fa-tag"></span> nunc</a></li>
-	                            <li><a href="#"><span class="fa fa-tag"></span> tempor</a></li>
-	                            <li><a href="#"><span class="fa fa-tag"></span> eros</a></li>
-	                            <li><a href="#"><span class="fa fa-tag"></span> suspendisse</a></li>
-	                            <li><a href="#"><span class="fa fa-tag"></span> dolor</a></li>
-                        	</ul>
-
-                              <div class="text-center mtop20">
-                                <!--   <a href="#" class="btn  btn-primary">Add files</a>
-                                  <a href="#" class="btn btn-warning">Report contact</a> -->
-                              </div>
-                          </div>
+							 <c:if test="${not empty projectDetails.tags}">
+	                             <h5 class="bold">Project Tags</h5>
+	                             <ul class="list-tags">
+		                             <c:set var="tags" value="${fn:split(projectDetails.tags, ',')}" />
+									 <c:forEach var="tag" items="${tags}"  varStatus="tagsIndex">
+									 	<li><a href="#"><span class="fa fa-tag"></span> ${tag}</a></li>
+									 </c:forEach>
+	                        	</ul>
+                        	</c:if>
+                        	  <br>
+                        	<c:if test="${not empty projectDetails.watchers}">
+	                             <h5 class="bold">Watchers</h5>
+	                             <ul class="list-tags">
+		                             <c:set var="watchers" value="${fn:split(projectDetails.watchers, ',')}" />
+									 <c:forEach var="watcher" items="${watchers}"  varStatus="watcherIndex">
+									 	<li><a href="#"><span class="fa fa-tag"></span> ${watcher}</a></li>
+									 </c:forEach>
+	                        	</ul>
+                        	</c:if>
 
                       </section>
                   </div>
