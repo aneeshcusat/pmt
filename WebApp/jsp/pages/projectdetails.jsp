@@ -1,3 +1,4 @@
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
@@ -6,7 +7,16 @@
      <li class="active">${projectDetails.name}</li>
  </ul>
  <!-- END BREADCRUMB -->  
-<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+ <style>
+#createtaskmodal .modal-dialog {
+	width: 70%;
+}
+
+#employeeListForTaskTable th{
+font-weight: normal;
+font-size: 8pt;
+}
+	</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
 	<div class="content-frame-top">  
@@ -282,7 +292,7 @@
 <!-- task create modal start -->
 <div class="modal fade" id="createtaskmodal" tabindex="-1"
 	role="dialog" aria-labelledby="createtaskmodal" aria-hidden="true">
-	<form:form id="createProjectFormId" action="createTask" method="POST"
+	<form:form id="createTaskFormId" action="createTask" method="POST"
 		role="form" class="form-horizontal">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -291,7 +301,7 @@
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h4 class="modal-title" id="myModalLabel">Create a Project</h4>
+					<h4 class="modal-title" id="myModalLabel">Create a Task</h4>
 				</div>
 				<div class="modal-body">
 					<%@include file="fagments/createTaskModal.jspf"%>
@@ -328,6 +338,16 @@ function addComment() {
    });
 }
 
+$.datetimepicker.setLocale('en');
+$('.dateTimePicker').datetimepicker({value:new Date(),onGenerate:function( ct ){
+	$(this).find('.xdsoft_date.xdsoft_weekend')
+	.addClass('xdsoft_disabled');
+	},
+	minDate:'${projectDetails.startTime}', // yesterday is minimum date
+	maxDate:'${projectDetails.completionTime}',
+	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'],
+	});
+
 $(document).ready(function() {
     
     $('.editableFieldText').editable('saveProjectDetails', {
@@ -361,4 +381,24 @@ $(document).ready(function() {
   			}
   		});
 });
+
+var toggleAssignTask = function(){
+	if ($("#assignTableId").is(':hidden')) {
+		$("#assignTableId").show(1000);
+		$("#toggleAssignTask").html("Hide Assign task");
+	} else {
+		$("#assignTableId").hide(1000);
+		$("#toggleAssignTask").html("Assign task");
+	}
+}
+
+$(document).ready(function() {
+    $('#employeeListForTaskTable').DataTable({ 
+    	responsive: true,
+        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        "ordering": false,
+    
+    });
+    
+} );
 </script>

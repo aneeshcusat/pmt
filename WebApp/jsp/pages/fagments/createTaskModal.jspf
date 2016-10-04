@@ -4,73 +4,139 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="row">
-			<div class="col-md-6">
-
+			<div class="col-md-7">
 				<div class="form-group">
 					<label class="col-md-3 control-label">Task Name</label>
 					<div class="col-md-9">
-						<form:input type="text" class="autocomplete form-control"
+						<input type="text" class="autocomplete form-control"
 							id="projectName" path="name" />
 						<span class="help-block">required task name</span>
 					</div>
 				</div>
-
-
 				<div class="form-group">
-					<label class="col-xs-3 control-label">Task Type</label>
-					<div class="col-xs-9">
-						<div class="btn-group" data-toggle="buttons">
-							<label class="btn btn-default"> <input type="radio"
-								name="type" value="billable" id="billable" /> Billable
-							</label> <label class="btn btn-default"> <input type="radio"
-								name="type" value="nonbillable" id="nonbillable" /> Non
-								Billable
-							</label>
-						</div>
-					</div>
+				<label class="col-md-3 control-label">Description</label>
+                     <div class="col-md-9">
+                            <textarea class="form-control" id="description" path="description"></textarea> 
+                         <span class="help-block">required description</span>
+                     </div>
 				</div>
+				
+				<div class="form-group">
+				<label class="col-md-3 control-label"></label>
+                     <div class="col-md-9">
+                           <a href="#" onclick="toggleAssignTask()" id="toggleAssignTask">Assign task</a>
+                     </div>
+				</div>
+				
 			</div>
-			<div class="col-md-6">
-
+			<div class="col-md-5">
 				<div class="form-group">
-					<label class="col-md-3 control-label">Assignee</label>
-					<div class="col-md-9">
-						<select class="form-control select" path="assignee"
-							id="assignee">
-							<option value="-1">Select a assignee</option>
-						</select>
-						<span class="help-block">required assignee</span>
-					</div>
+				<label class="col-md-4 control-label">Est Start Time</label>
+                     <div class="col-md-8">
+                            <input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/> 
+                         <span class="help-block">required estimated start time</span>
+                     </div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">Est Start Time</label>
-					<div class="col-md-9">
-						<div class="input-group">
-							<span class="input-group-addon"><span
-								class="fa fa-calendar"></span></span>
-							<form:input type="date" class="form-control datepicker"
-								value="2014-11-01" path="startTime" id="startTime" />
-						</div>
-						<span class="help-block">Click on input field to get
-							datepicker</span>
-					</div>
+				<label class="col-md-4 control-label">Est Completion Time</label>
+                     <div class="col-md-8">
+                            <input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime" onchange="alert($(this).val())"/> 
+                         <span class="help-block">required estimated completion time</span>
+                     </div>
 				</div>
-
-
+				
 				<div class="form-group">
-					<label class="col-md-3 control-label">Estimated completion
-						time</label>
-					<div class="col-md-5">
-						<div class="input-group bootstrap-timepicker">
-							<input type="text" class="form-control timepicker24"
-								path="duration" id="duration" />
-							<span class="input-group-addon"><span
-								class="glyphicon glyphicon-time"></span></span>
-						</div>
-					</div>
+				<label class="col-md-4 control-label">Pending duration</label>
+                     <div class="col-md-8" style="margin-top: 7px; font-size: 10pt;">
+                     <b>4</b> Hours
+                     </div>
 				</div>
 			</div>
 
+		</div>
+		<div class="row" style="display: none" id="assignTableId">
+		<table id="employeeListForTaskTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr style="height: 20px">
+            	<th>Select</th>
+                <th>Employee</th>
+                <th>08:00 - 09:00</th>
+                <th>09:00 - 10:00</th>
+                <th>10:01 - 11:00</th>
+                <th>11:01 - 12:00</th>
+                <th>12:01 - 01:00</th>
+                <th style="background-color: gray; width: 25px"></th>
+                <th>14:01 - 15:00</th>
+                <th>15:01 - 16:00</th>
+                <th>16:01 - 17:00</th>
+                <th>17:01 - 18:00</th>
+                <th>18:01 - 19:00</th>
+                <th>19:01 - 20:00</th>
+                <th>20:01 - 21:00</th>
+                <th style="width: 50px;font-weight:bold">Total Hrs</th>
+                <th style="width: 50px;font-weight:bold">Avlbl Hrs</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            	<td><input name="selection" type="radio"></td>
+                <td>Aneeshkumar</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="background-color: gray; width: 25px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+           <tr>
+           		<td><input name="selection" type="radio"></td>
+               <td>Aneeshkumar</td>
+                <td style="background-color: blue"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="background-color: gray; width: 25px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+            	<td><input name="selection" type="radio"></td>
+               <td>Aneeshkumar</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="background-color: gray; width: 25px"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 		</div>
 	</div>
 </div>

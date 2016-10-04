@@ -106,6 +106,8 @@ font-size: 1.4em;
              </thead>
              <tbody>
              <tr class="droppable">
+           		  
+           		  
            		  <td class="nodrop">Aneesh </td>
                   <td class="drop"></td>
                   <td class="drop"></td>
