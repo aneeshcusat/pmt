@@ -28,7 +28,7 @@ public class ProjectDetails {
 
 	private ProjectComplexity complexity;
 
-	private int accountId;
+	private Integer accountId;
 
 	private Integer teamId;
 
