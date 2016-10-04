@@ -13,7 +13,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -61,8 +63,8 @@ public class UserItem implements FamstackBaseItem {
 	@Column(name = "gender")
 	private String gender;
 
-	@Column(name = "user_group")
-	private String group;
+	@Column(name = "user_team")
+	private String team;
 
 	@Column(name = "qualification")
 	private String qualification;
@@ -94,6 +96,10 @@ public class UserItem implements FamstackBaseItem {
 	@Column(name = "modified_by")
 	private int modifiedBy;
 
+	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
+	@JoinColumn(name = "reportertingManager")
+	private UserItem reportertingManager;
+
 	public int getCreatedBy() {
 		return createdBy;
 	}
@@ -102,6 +108,7 @@ public class UserItem implements FamstackBaseItem {
 		this.createdBy = createdBy;
 	}
 
+	@Override
 	public Timestamp getCreatedDate() {
 		return createdDate;
 	}
@@ -266,21 +273,6 @@ public class UserItem implements FamstackBaseItem {
 	}
 
 	/**
-	 * @return the userGroup
-	 */
-	public String getGroup() {
-		return group;
-	}
-
-	/**
-	 * @param userGroup
-	 *            the userGroup to set
-	 */
-	public void setGroup(String group) {
-		this.group = group;
-	}
-
-	/**
 	 * @return the qualification
 	 */
 	public String getQualification() {
@@ -325,6 +317,22 @@ public class UserItem implements FamstackBaseItem {
 	@Override
 	public void setLastModifiedDate(Timestamp lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public UserItem getReportertingManager() {
+		return reportertingManager;
+	}
+
+	public void setReportertingManager(UserItem reportertingManager) {
+		this.reportertingManager = reportertingManager;
 	}
 
 }

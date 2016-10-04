@@ -119,12 +119,13 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 				e.printStackTrace();
 			}
 		}
+		userItem.setReportertingManager(getUserItemById(employeeDetails.getReportingManger()));
 		userItem.setFirstName(employeeDetails.getFirstName());
 		userItem.setMobileNumber(employeeDetails.getMobileNumber());
 		userItem.setQualification(employeeDetails.getQualification());
 		userItem.setUserRole(employeeDetails.getRole());
 		userItem.setGender(employeeDetails.getGender());
-		userItem.setGroup(employeeDetails.getGroup());
+		userItem.setTeam(employeeDetails.getTeam());
 		getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
 	}
 
@@ -186,11 +187,12 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 			employeeDetails.setEmail(userItem.getUserId());
 			employeeDetails.setFirstName(userItem.getFirstName());
 			employeeDetails.setGender(userItem.getGender());
-			employeeDetails.setGroup(userItem.getGroup());
+			employeeDetails.setTeam(userItem.getTeam());
 			employeeDetails.setLastName(userItem.getLastName());
 			employeeDetails.setMobileNumber(userItem.getMobileNumber());
 			employeeDetails.setQualification(userItem.getQualification());
 			employeeDetails.setRole(userItem.getUserRole());
+			employeeDetails.setReportingManger(userItem.getReportertingManager().getId());
 			employeeDetails.setId(userItem.getId());
 			if (userItem.getProfilePhoto() != null) {
 				employeeDetails.setFilePhoto(new String(userItem.getProfilePhoto()));

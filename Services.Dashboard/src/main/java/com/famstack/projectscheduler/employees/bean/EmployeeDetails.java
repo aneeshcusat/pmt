@@ -1,9 +1,5 @@
 package com.famstack.projectscheduler.employees.bean;
 
-import java.util.Date;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.famstack.projectscheduler.security.user.UserRole;
 
 public class EmployeeDetails {
@@ -14,7 +10,7 @@ public class EmployeeDetails {
 	private String email;
 	private String password;
 	private String confirmPassword;
-	private String group;
+	private String team;
 	private String mobileNumber;
 	private String filePhoto;
 	private String gender;
@@ -22,6 +18,7 @@ public class EmployeeDetails {
 	private String designation;
 	private UserRole role;
 	private String dateOfBirth;
+	private int reportingManger;
 
 	public String getFirstName() {
 		return firstName;
@@ -63,14 +60,6 @@ public class EmployeeDetails {
 		this.confirmPassword = confirmPassword;
 	}
 
-	public String getGroup() {
-		return group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
-	}
-
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
@@ -86,7 +75,6 @@ public class EmployeeDetails {
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-
 
 	public String getFilePhoto() {
 		return filePhoto;
@@ -104,7 +92,8 @@ public class EmployeeDetails {
 	}
 
 	/**
-	 * @param gender the gender to set
+	 * @param gender
+	 *            the gender to set
 	 */
 	public void setGender(String gender) {
 		this.gender = gender;
@@ -118,12 +107,12 @@ public class EmployeeDetails {
 	}
 
 	/**
-	 * @param qualification the qualification to set
+	 * @param qualification
+	 *            the qualification to set
 	 */
 	public void setQualification(String qualification) {
 		this.qualification = qualification;
 	}
-
 
 	/**
 	 * @return the designation
@@ -133,7 +122,8 @@ public class EmployeeDetails {
 	}
 
 	/**
-	 * @param designation the designation to set
+	 * @param designation
+	 *            the designation to set
 	 */
 	public void setDesignation(String designation) {
 		this.designation = designation;
@@ -147,7 +137,8 @@ public class EmployeeDetails {
 	}
 
 	/**
-	 * @param role the role to set
+	 * @param role
+	 *            the role to set
 	 */
 	public void setRole(UserRole role) {
 		this.role = role;
@@ -161,10 +152,27 @@ public class EmployeeDetails {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public int getReportingManger() {
+		return reportingManger;
+	}
+
+	public void setReportingManger(int reportingManger) {
+		this.reportingManger = reportingManger;
 	}
 
 }

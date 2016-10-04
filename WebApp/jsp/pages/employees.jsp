@@ -15,9 +15,9 @@
         border: 1px solid #ccc;
         border-radius: 3px;
         margin-top: 7px;
-        width: 250px;
-        height: 250px;
-         cursor: move;
+        width: 175px;
+        height: 175px;
+        cursor: move;
       }
 
       .cropit-preview-image-container {
@@ -116,7 +116,7 @@
                     <div class="contact-info">
                         <p><small>Mobile</small><br/>${user.mobileNumber}</p>
                         <p><small>Email</small><br/>${user.email}</p>
-                        <p><small>Group</small><br/>${user.group}</p>                                   
+                        <p><small>Team</small><br/>${user.team}</p>                                   
                     </div>
                 </div>                                
             </div>
@@ -267,12 +267,15 @@ function processUserResponseData(data) {
 		$(".cropit-preview-image").prop("src", "");
 	}
 	$('#role').val(response.role);
+	$('#reportingManger').val(response.reportingManger);
 	$('#qualification').val(response.qualification);
-	$('#group').val(response.group);
+	$('#team').val(response.team);
 	$('#designation').val(response.designation);
+	
 	$('#role').selectpicker('refresh');
+	$('#reportingManger').selectpicker('refresh');
 	$('#qualification').selectpicker('refresh');
-	$('#group').selectpicker('refresh');
+	$('#team').selectpicker('refresh');
 	$('#designation').selectpicker('refresh');
 	
 }
@@ -288,17 +291,18 @@ function clearUserData() {
 	$(".cropit-preview-image").prop("src", "");
 	$('#role').val("");
 	$('#qualification').val("");
-	$('#group').val("");
+	$('#team').val("");
 	$('#designation').val("");
 	$(".genderGroup label").removeClass("active");
 	$('#role').prop('selectedIndex', 0);
 	$('#qualification').prop('selectedIndex', 0);
 	$('#group').prop('selectedIndex', 0);
 	$('#designation').prop('selectedIndex', 0);
-	
+	$('#reportingManger').val("");
 	$('#role').selectpicker('refresh');
+	$('#reportingManger').selectpicker('refresh');
 	$('#qualification').selectpicker('refresh');
-	$('#group').selectpicker('refresh');
+	$('#team').selectpicker('refresh');
 	$('#designation').selectpicker('refresh');
 	
 }
@@ -330,4 +334,13 @@ $('#employeeSearch').keyup(function(){
 	performSearch();
 });
 
+$.datetimepicker.setLocale('en');
+
+$('.dateTimePicker').datetimepicker({
+	yearOffset:-50,
+	lang:'en',
+	timepicker:false,
+	format:'Y-m-d',
+	formatDate:'Y/m/d',
+});
 </script>        

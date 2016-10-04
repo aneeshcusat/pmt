@@ -2,28 +2,22 @@ package com.famstack.projectscheduler.security.user;
 
 /**
  * The Enum UserRole.
- * 
- * @author Aneeshkumar
- * @version 1.0
  */
 public enum UserRole {
 
-    /** The manager. */
-    MANAGER,
+	/** The manager. */
+	MANAGER,
 
-    /** The analist. */
-    ANALYST,
+	/** The admin. */
+	ADMIN,
 
-    /** The admin. */
-    ADMIN,
+	/** The production. */
+	PRODUCTION,
 
-    /** The support. */
-    SUPPORT,
+	/** The superadmin. */
+	SUPERADMIN,
 
-    /** The business. */
-    BUSINESS,
-
-    /** The clubuser. */
-    CLUBUSER
+	/** The cordinator. */
+	CORDINATOR
 
 }

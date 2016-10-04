@@ -239,4 +239,9 @@
 		$("input[type='search']").val($("#projectSearchBoxId").val());
 		$("input[type='search']").trigger(e);
 	});
+	$.datetimepicker.setLocale('en');
+	$('.dateTimePicker').datetimepicker({value:new Date(),step:10,onGenerate:function( ct ){
+		$(this).find('.xdsoft_date.xdsoft_weekend')
+		.addClass('xdsoft_disabled');
+	},});
 </script>
