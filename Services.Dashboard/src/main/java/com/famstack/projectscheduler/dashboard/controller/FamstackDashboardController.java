@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
@@ -163,8 +164,8 @@ public class FamstackDashboardController extends BaseFamstackService {
 	}
 
 	@RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
-	public ModelAndView loadProject(@PathVariable("projectId") int projectId) {
-		ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId);
+	public ModelAndView loadProject(@PathVariable("projectId") int projectId, HttpServletRequest request) {
+		ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId, request);
 		return new ModelAndView("projectdetails", "command", new TaskDetails()).addObject("projectDetails",
 				projectDetails);
 	}
@@ -184,6 +185,22 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String createTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
 			Model model) {
 		famstackDashboardManager.createTask(taskDetails);
+		return "{\"status\": true}";
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/uploadfile/{projectCode}")
+	@ResponseBody
+	public String uploadProjectFile(@PathVariable(value = "projectCode") String projectCode,
+			@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+		famstackDashboardManager.uploadProjectFile(file, projectCode, request);
+		return "{\"status\": true}";
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/deletefile/{projectCode}")
+	@ResponseBody
+	public String deleteProjectFile(@PathVariable(value = "projectCode") String projectCode,
+			@RequestParam(value = "fileName") String fileName, HttpServletRequest request) {
+		famstackDashboardManager.deleteProjectFile(fileName, projectCode, request);
 		return "{\"status\": true}";
 	}
 }

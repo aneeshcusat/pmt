@@ -261,11 +261,12 @@ div#task-pop-up {
                               <br>
                               
                               <h5 class="bold">Project files</h5>
-                              <ul class="list-unstyled p-files">
-                                  <li><a href=""><i class="fa fa-file-text"></i> Project-document.docx</a></li>
-                                  <li><a href=""><i class="fa fa-picture-o"></i> Logo-company.jpg</a></li>
-                                  <li><a href=""><i class="fa fa-mail-forward"></i> Email-from-flatbal.mln</a></li>
-                                  <li><a href=""><i class="fa fa-file"></i> Contract-10_12_2014.docx</a></li>
+                              <ul class="list-unstyled p-files" id="upladedFilesList">
+                                <c:if test="${not empty projectDetails.filesNames}">
+                                 <c:forEach var="fileName" items="${projectDetails.filesNames}" varStatus="fileNameIndex"> 
+                                 	<li><a href="#"><i class="fa fa-file-text"></i>${fileName}</a><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-times" style="color:red" aria-hidden="true"></i></a></li> 
+                                 </c:forEach>
+                                 </c:if>
                               </ul>
                               <br>
 							 <c:if test="${not empty projectDetails.tags}">
@@ -402,18 +403,52 @@ $(document).ready(function() {
     
 	Dropzone.autoDiscover = false;
   		$("#my-dropzone").dropzone({
-  			url : "/upload",
-  			addRemoveLinks : true,
+  			url : "${applicationHome}/uploadfile/${projectDetails.code}",
+  			addRemoveLinks : false,
   			success : function(file, response) {
   				var imgName = response;
   				file.previewElement.classList.add("dz-success");
-  				console.log("Successfully uploaded :" + imgName);
+  				var fileIcon = "fa-file-text";
+  				if (file.type == "text/xml") {
+  					fileIcon = "fa-file-excel-o";
+  					//fa-file-archive-o
+  					//fa-file-audio-o
+  					//fa-file-code-o
+  					//fa-file-excel-o
+  					//fa-file-image-o
+  					//fa-file-movie-o
+  					//fa-file-pdf-o
+  					//fa-file-video-o
+  					//fa-file-powerpoint-o
+  					//fa-file-word-o
+  				}
+  				
+  				$("#upladedFilesList").append('<li><a href="#"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
+  				console.log(file.name);
   			},
   			error : function(file, response) {
   				file.previewElement.classList.add("dz-error");
   			}
   		});
 });
+
+var deleteFile = function(fileName){
+	$(".msgConfirmText").html("Delete file");
+	$(".msgConfirmText1").html(fileName);
+	$("#confirmYesId").prop("href","javascript:doAjaxDeleteFile('"+fileName+"')");
+}
+
+var doAjaxDeleteFile = function(fileName){
+	var dataString = {"fileName" : fileName};
+	var url = '${applicationHome}/deletefile/${projectDetails.code}';
+	 doAjaxRequest("POST", url, dataString,  function(data) {
+		   var responseJsonObj = JSON.parse(data)
+	       if (responseJsonObj.status){
+	           window.location.reload(true);
+	       }
+	   }, function(e) {
+	   });
+}
 
 var toggleAssignTask = function(){
 	if ($("#assignTableId").is(':hidden')) {
