@@ -4,12 +4,15 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
+import com.famstack.projectscheduler.contants.ProjectComplexity;
+import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 
 public class ProjectDetails {
 
-	private int id;
+	private Integer id;
 
 	private String name;
 
@@ -21,9 +24,13 @@ public class ProjectDetails {
 
 	private Timestamp lastModifiedDate;
 
-	private String type;
+	private ProjectType type;
 
-	private String team;
+	private ProjectComplexity complexity;
+
+	private int accountId;
+
+	private Integer teamId;
 
 	private UserItem reporter;
 
@@ -33,17 +40,17 @@ public class ProjectDetails {
 
 	private String watchers;
 
-	private String priority;
+	private ProjectPriority priority;
 
-	private Timestamp startTime;
+	private String startTime;
 
-	private Timestamp completionTime;
+	private String completionTime;
 
-	private int duration;
+	private Integer duration;
 
 	private ProjectStatus status;
 
-	private String clientId;
+	private Integer clientId;
 
 	private Set<ProjectCommentDetails> projectComments;
 
@@ -51,11 +58,11 @@ public class ProjectDetails {
 
 	private String reporterName;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -87,11 +94,11 @@ public class ProjectDetails {
 		return createdDate;
 	}
 
-	public int getDuration() {
+	public Integer getDuration() {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 
@@ -101,14 +108,6 @@ public class ProjectDetails {
 
 	public void setStatus(ProjectStatus status) {
 		this.status = status;
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
 	}
 
 	public Set<ProjectCommentDetails> getProjectComments() {
@@ -143,15 +142,7 @@ public class ProjectDetails {
 		this.tags = tags;
 	}
 
-	public String getPriority() {
-		return priority;
-	}
-
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
-
-	public Date getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
 
@@ -171,28 +162,12 @@ public class ProjectDetails {
 		this.reporterName = reporterName;
 	}
 
-	public String getTeam() {
-		return team;
-	}
-
-	public void setTeam(String team) {
-		this.team = team;
-	}
-
 	public Timestamp getLastModifiedDate() {
 		return lastModifiedDate;
 	}
 
 	public void setLastModifiedDate(Timestamp lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public UserItem getReporter() {
@@ -203,11 +178,11 @@ public class ProjectDetails {
 		this.reporter = reporter;
 	}
 
-	public Timestamp getCompletionTime() {
+	public String getCompletionTime() {
 		return completionTime;
 	}
 
-	public void setCompletionTime(Timestamp completionTime) {
+	public void setCompletionTime(String completionTime) {
 		this.completionTime = completionTime;
 	}
 
@@ -215,8 +190,60 @@ public class ProjectDetails {
 		this.createdDate = createdDate;
 	}
 
-	public void setStartTime(Timestamp startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
+	}
+
+	public ProjectType getType() {
+		return type;
+	}
+
+	public void setType(ProjectType type) {
+		this.type = type;
+	}
+
+	public ProjectPriority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(ProjectPriority priority) {
+		this.priority = priority;
+	}
+
+	public void setProjectActivityDetails(Set<ProjectActivityDetails> projectActivityDetails) {
+		this.projectActivityDetails = projectActivityDetails;
+	}
+
+	public ProjectComplexity getComplexity() {
+		return complexity;
+	}
+
+	public void setComplexity(ProjectComplexity complexity) {
+		this.complexity = complexity;
+	}
+
+	public Integer getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+
+	public Integer getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(Integer teamId) {
+		this.teamId = teamId;
+	}
+
+	public Integer getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
 	}
 
 }

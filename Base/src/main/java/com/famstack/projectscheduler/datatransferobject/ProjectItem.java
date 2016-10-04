@@ -20,7 +20,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.famstack.projectscheduler.contants.ProjectComplexity;
+import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.ProjectType;
 
 @Entity
 @Table(name = "project_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "project_id" }) })
@@ -50,11 +53,9 @@ public class ProjectItem implements FamstackBaseItem {
 	@Column(name = "last_modified_date")
 	private Timestamp lastModifiedDate;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "type")
-	private String type;
-
-	@Column(name = "team")
-	private String team;
+	private ProjectType type;
 
 	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
 	@JoinColumn(name = "reporter")
@@ -69,8 +70,13 @@ public class ProjectItem implements FamstackBaseItem {
 	@Column(name = "watchers")
 	private String watchers;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "priority")
-	private String priority;
+	private ProjectPriority priority;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "complexity")
+	private ProjectComplexity complexity;
 
 	@Column(name = "start_time")
 	private Timestamp startTime;
@@ -79,14 +85,20 @@ public class ProjectItem implements FamstackBaseItem {
 	private Timestamp completionTime;
 
 	@Column(name = "duration")
-	private int duration;
+	private Integer duration;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
 	private ProjectStatus status;
 
-	@Column(name = "client")
-	private String clientId;
+	@Column(name = "client_id")
+	private Integer clientId;
+
+	@Column(name = "account_id")
+	private Integer accountId;
+
+	@Column(name = "team_id")
+	private Integer teamId;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
 	private Set<ProjectCommentItem> projectComments;
@@ -128,22 +140,6 @@ public class ProjectItem implements FamstackBaseItem {
 		this.createdDate = createdDate;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getTeam() {
-		return team;
-	}
-
-	public void setTeam(String team) {
-		this.team = team;
-	}
-
 	public UserItem getReporter() {
 		return reporter;
 	}
@@ -176,14 +172,6 @@ public class ProjectItem implements FamstackBaseItem {
 		this.watchers = watchers;
 	}
 
-	public String getPriority() {
-		return priority;
-	}
-
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
-
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -192,11 +180,11 @@ public class ProjectItem implements FamstackBaseItem {
 		this.startTime = startTime;
 	}
 
-	public int getDuration() {
+	public Integer getDuration() {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 
@@ -206,14 +194,6 @@ public class ProjectItem implements FamstackBaseItem {
 
 	public void setStatus(ProjectStatus status) {
 		this.status = status;
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
 	}
 
 	public Set<ProjectCommentItem> getProjectComments() {
@@ -255,6 +235,54 @@ public class ProjectItem implements FamstackBaseItem {
 
 	public void setProjectId(int projectId) {
 		this.projectId = projectId;
+	}
+
+	public ProjectType getType() {
+		return type;
+	}
+
+	public void setType(ProjectType type) {
+		this.type = type;
+	}
+
+	public ProjectPriority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(ProjectPriority priority) {
+		this.priority = priority;
+	}
+
+	public ProjectComplexity getComplexity() {
+		return complexity;
+	}
+
+	public void setComplexity(ProjectComplexity complexity) {
+		this.complexity = complexity;
+	}
+
+	public Integer getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
+	}
+
+	public Integer getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+
+	public Integer getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(Integer teamId) {
+		this.teamId = teamId;
 	}
 
 }

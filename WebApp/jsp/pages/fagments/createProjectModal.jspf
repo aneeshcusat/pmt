@@ -33,10 +33,10 @@
 							<div class="col-xs-5">
 								<div class="btn-group" data-toggle="buttons">
 									<label class="btn btn-default" > <input type="radio"
-										name="projectType" value="billable" id="billable"  /> Billable
+										name="type" value="BILLABLE" id="billable"  /> Billable
 									</label> 
 									<label class="btn btn-default"> <input type="radio"
-										name="projectType" value="nonbillable" id="nonbillable" /> Non Billable
+										name="type" value="NON_BILLABLE" id="nonbillable" /> Non Billable
 									</label>
 								</div>
 							</div>
@@ -45,10 +45,10 @@
                                 <div class="col-md-3">
                                         <form:select class="form-control select" path="priority" id="priority"  data-live-search="true">
                                         <option value="-1">- select -</option>
-                                        <option>Urgent</option>
-                                        <option>High</option>
-                                        <option>Medium</option>
-                                        <option>Low</option>
+                                        <option>URGENT</option>
+                                        <option>HIGH</option>
+                                        <option>MEDIUM</option>
+                                        <option>LOW</option>
                                     </form:select>
                                     <span class="help-block">required priority</span>
                                 </div>
@@ -56,19 +56,41 @@
 						 <div class="form-group">    
 						 <label class="col-xs-3 control-label">Project Duration (Hrs)</label>
 							<div class="col-xs-4">
-							 	<input type="text" class="form-control" id="duration"/>
-							 	 <span class="help-block">required priority</span>
+							 	<form:input type="text" class="form-control" id="duration" path="duration"/>
+							 	 <span class="help-block">required project duration</span>
 							</div>                                    
                                 <label class="col-md-2 control-label">Complexity</label>
                                 <div class="col-md-3">
-                                        <select class="form-control select" id="complexity"  data-live-search="true">
+                                        <form:select class="form-control select" id="complexity" path="complexity" data-live-search="true">
                                         <option value="-1">- select -</option>
-                                        <option>Urgent</option>
-                                        <option>High</option>
-                                        <option>Medium</option>
-                                        <option>Low</option>
-                                    </select>
-                                    <span class="help-block">required priority</span>
+                                        <option>BASIC</option>
+                                        <option>MEDIUM</option>
+                                        <option>COMPLEX</option>
+                                    </form:select>
+                                    <span class="help-block">required complexity</span>
+                                </div>
+                            </div>
+                             <div class="form-group">     
+                              <label class="col-md-3 control-label">Account</label>
+                                <div class="col-md-4">
+                                        <form:select class="form-control select" id="account" path="accountId" data-live-search="true">
+                                        <option value="-1">- select -</option>
+                                        <option value="1">Microsoft</option>
+                                        <option value="1">Cisco</option>
+                                        <option value="1">Intel</option>
+                                    </form:select>
+                                    <span class="help-block">required account</span>
+                                    </div>
+                                <label class="col-md-2 control-label">Team</label>
+                                <div class="col-md-3">
+                                        <form:select class="form-control select" path="teamId" id="team"  data-live-search="true">
+                                        <option value="-1">- select -</option>
+                                        <option value="1">Team 1</option>
+                                        <option value="1">Team 2</option>
+                                        <option value="1">Team 3</option>
+                                        <option value="1">Team 4</option>
+                                    </form:select>
+                                    <span class="help-block">required team</span>
                                 </div>
                             </div>
                              <div class="form-group">                                        
@@ -77,24 +99,17 @@
                                       <form:select class="selectpicker form-control select" path="clientId" id="clientId"  data-live-search="true">
                                           <option value="-1">- select -</option>
 										  <optgroup label="Microsoft">
-										    <option value="Client 1">Client 1</option>
-										    <option value="Client 2">Client 2</option>
-										    <option value="Client 3">Client 3</option>
+										    <option value="1">Client 1</option>
+										    <option value="2">Client 2</option>
+										    <option value="3">Client 3</option>
 										  </optgroup>
 										  <optgroup label="Cisco">
-										    <option>Client 4</option>
-										    <option>Client 5</option>
-										    <option>Client 6</option>
+										    <option value="3">Client 4</option>
+										    <option value="3">Client 5</option>
+										    <option value="3">Client 6</option>
 										  </optgroup>
 										</form:select>
                                     <span class="help-block">required client</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Tags</label>
-                                <div class="col-md-9">
-                                    <form:input type="text" class="tagsinput" placeholder="add a tag" path="tags" id="tags"/>
-                                    <span class="help-block">tag project with keywords</span>
                                 </div>
                             </div>
                             </div>
@@ -121,32 +136,19 @@
                                 </div>
                                 
                             </div>
-                              <div class="form-group">                                        
-                                <label class="col-md-3 control-label">Team</label>
-                                <div class="col-md-9">
-                                        <form:select class="form-control select" path="team" id="team"  data-live-search="true">
-                                        <option value="-1">- select -</option>
-                                        <option>Team 1</option>
-                                        <option>Team 2</option>
-                                        <option>Team 3</option>
-                                        <option>Team 4</option>
-                                    </form:select>
-                                    <span class="help-block">required priority</span>
-                                </div>
-                            </div>
                             
                             <div class="form-group">
 							<label class="col-md-3 control-label">Est Start Time</label>
 							<div class="col-md-9">
-								 <input type="text" class="form-control dateTimePicker" id="estStartTime"/>
-								 <span class="help-block">required priority</span>
+								 <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/>
+								 <span class="help-block">required estimated start time</span>
 							</div>
 							</div>
 							<div class="form-group">
 							<label class="col-md-3 control-label">Est Completion Time</label>
                                 <div class="col-md-9">
-                                       <input type="text" class="form-control dateTimePicker" id="estCompleteTime"/> 
-                                    <span class="help-block">required priority</span>
+                                       <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"/> 
+                                    <span class="help-block">required estimated completion time</span>
                                 </div>
 							</div>
                           
@@ -155,6 +157,14 @@
                                 <div class="col-md-9" id="watcher_tag_div">
                                     <form:input type="text" class="tagsinput autocomplete" placeholder="add an email" value="" path="watchers"  id="watchers"/>
                                     <span class="help-block">who all monitoring this project</span>
+                                </div>
+                            </div>
+                            
+                              <div class="form-group">
+                                <label class="col-md-3 control-label">Tags</label>
+                                <div class="col-md-9">
+                                    <form:input type="text" class="tagsinput" placeholder="add a tag" path="tags" id="tags"/>
+                                    <span class="help-block">tag project with keywords</span>
                                 </div>
                             </div>
                         </div>

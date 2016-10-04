@@ -31,6 +31,11 @@
 				<value>com.famstack.projectscheduler.datatransferobject.ProjectCommentItem</value>
 				<value>com.famstack.projectscheduler.datatransferobject.ProjectItem</value>
 				<value>com.famstack.projectscheduler.datatransferobject.UserActivityItem</value>
+				
+				<value>com.famstack.projectscheduler.datatransferobject.AccountItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.ClientItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.ProjectSubTeamItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.ProjectTeamItem</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
