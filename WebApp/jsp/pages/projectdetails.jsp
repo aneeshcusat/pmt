@@ -246,6 +246,7 @@ div#task-pop-up {
                                     			</div>
                                                 </td>
                                                <td  width="10%"><span class="label label-warning">${taskDetails.status}</span></td>
+                                               <td width="10%"><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                                             </tr>
                                             <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
                                             <input id="${taskDetails.taskId}description" type="hidden" value="${taskDetails.description}"/>
@@ -270,7 +271,7 @@ div#task-pop-up {
                               <ul class="list-unstyled p-files" id="upladedFilesList">
                                 <c:if test="${not empty projectDetails.filesNames}">
                                  <c:forEach var="fileName" items="${projectDetails.filesNames}" varStatus="fileNameIndex"> 
-                                 	<li><a href="${applicationHome}/download/${projectDetails.code}/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-times" style="color:red" aria-hidden="true"></i></a></li> 
+                                 	<li><a href="${applicationHome}/download/${projectDetails.code}/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-trash-o" style="color:red" aria-hidden="true"></i></a></li> 
                                  </c:forEach>
                                  </c:if>
                               </ul>
@@ -482,6 +483,25 @@ var deleteFile = function(fileName){
 	$(".msgConfirmText1").html(fileName);
 	$("#confirmYesId").prop("href","javascript:doAjaxDeleteFile('"+fileName+"')");
 }
+
+var deleteTask = function(taskName, taskId){
+	$(".msgConfirmText").html("Delete task");
+	$(".msgConfirmText1").html(taskName);
+	$("#confirmYesId").prop("href","javascript:doAjaxDeleteTask("+taskId+")");
+}
+
+var doAjaxDeleteTask = function(taskId){
+	var dataString = {"taskId" : taskId};
+	var url = '${applicationHome}/deletetask';
+	 doAjaxRequest("POST", url, dataString,  function(data) {
+		   var responseJsonObj = JSON.parse(data)
+	       if (responseJsonObj.status){
+	           window.location.reload(true);
+	       }
+	   }, function(e) {
+	   });
+}
+
 
 var doAjaxDeleteFile = function(fileName){
 	var dataString = {"fileName" : fileName};

@@ -211,6 +211,13 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 
+	@RequestMapping(method = RequestMethod.POST, value = "/deletetask")
+	@ResponseBody
+	public String deleteTask(@RequestParam(value = "taskId") int taskId) {
+		famstackDashboardManager.deleteProjectTask(taskId);
+		return "{\"status\": true}";
+	}
+
 	@RequestMapping(method = RequestMethod.POST, value = "/uploadfile/{projectCode}")
 	@ResponseBody
 	public String uploadProjectFile(@PathVariable(value = "projectCode") String projectCode,

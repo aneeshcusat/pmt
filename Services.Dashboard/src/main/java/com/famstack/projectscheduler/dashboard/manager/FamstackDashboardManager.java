@@ -148,4 +148,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		famstackProjectTaskManager.updateTask(taskDetails, projectItem);
 
 	}
+
+	public void deleteProjectTask(int taskId) {
+		famstackProjectTaskManager.deleteTaskItem(taskId);
+	}
 }
