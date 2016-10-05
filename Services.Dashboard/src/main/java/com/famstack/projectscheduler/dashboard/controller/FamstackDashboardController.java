@@ -203,6 +203,14 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 
+	@RequestMapping(value = "/updateTask", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
+			Model model) {
+		famstackDashboardManager.updateTask(taskDetails);
+		return "{\"status\": true}";
+	}
+
 	@RequestMapping(method = RequestMethod.POST, value = "/uploadfile/{projectCode}")
 	@ResponseBody
 	public String uploadProjectFile(@PathVariable(value = "projectCode") String projectCode,

@@ -24,6 +24,26 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 
 	public void createTaskItem(TaskDetails taskDetails, ProjectItem projectItem) {
 		TaskItem taskItem = new TaskItem();
+
+		taskItem.setStatus(TaskStatus.NEW);
+		taskItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
+
+		saveTask(taskDetails, projectItem, taskItem);
+		famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.TASK_ADDED,
+				taskItem.getName());
+	}
+
+	public void updateTask(TaskDetails taskDetails, ProjectItem projectItem) {
+		TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager.getItemById(taskDetails.getTaskId(),
+				TaskItem.class);
+		if (taskItem != null) {
+			saveTask(taskDetails, projectItem, taskItem);
+			famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.TASK_UPDTED,
+					taskItem.getName());
+		}
+	}
+
+	private void saveTask(TaskDetails taskDetails, ProjectItem projectItem, TaskItem taskItem) {
 		taskItem.setDescription(taskDetails.getDescription());
 		taskItem.setName(taskDetails.getName());
 		taskItem.setPriority(taskDetails.getPriority());
@@ -44,12 +64,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		taskItem.setCompletionTime(completionTimeStamp);
 		taskItem.setDuration(taskDetails.getDuration());
 
-		taskItem.setStatus(TaskStatus.NEW);
-		taskItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
-
 		famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
-		famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.TASK_ADDED,
-				taskItem.getName());
 	}
 
 	public void deleteTaskItem(int taskId) {
@@ -102,4 +117,5 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		}
 		return null;
 	}
+
 }

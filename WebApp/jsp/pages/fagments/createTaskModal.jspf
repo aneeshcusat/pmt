@@ -3,6 +3,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <div class="row">
 <form:input type="hidden" id="projectId" path="projectId" value="${projectDetails.id}"/>
+<form:input type="hidden" id="taskId" path="taskId"/>
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-7">
@@ -21,7 +22,12 @@
                          <span class="help-block">required description</span>
                      </div>
 				</div>
-				
+				<div class="form-group">
+				<label class="col-md-4 control-label">Unassigned duration</label>
+                     <div class="col-md-8" style="margin-top: 7px; font-size: 10pt;">
+                     <b id="unassignedDuration">4</b> Hours
+                     </div>
+				</div>
 				<div class="form-group">
 				<label class="col-md-3 control-label"></label>
                      <div class="col-md-9">
@@ -45,13 +51,20 @@
                          <span class="help-block">required estimated completion time</span>
                      </div>
 				</div>
-				
 				<div class="form-group">
-				<label class="col-md-4 control-label">Pending duration</label>
-                     <div class="col-md-8" style="margin-top: 7px; font-size: 10pt;">
-                     <b>4</b> Hours
-                     </div>
+				<label class="col-md-4 control-label">Priority</label>
+                   <div class="col-md-8">
+                           <form:select class="form-control select" path="priority" id="priority"  data-live-search="true">
+                           <option value="-1">- select -</option>
+                           <option>URGENT</option>
+                           <option>HIGH</option>
+                           <option>MEDIUM</option>
+                           <option>LOW</option>
+                       </form:select>
+                       <span class="help-block">required priority</span>
+                   </div>
 				</div>
+				
 			</div>
 
 		</div>

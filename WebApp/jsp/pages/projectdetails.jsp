@@ -229,7 +229,7 @@ div#task-pop-up {
                            <h5 class="bold">Tasks</h5>
                           </div>
                            <div class="col-md-5 text-right">
-                            <a data-toggle="modal" data-target="#createtaskmodal" class="btn btn-success line-height-15">
+                            <a data-toggle="modal" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15">
                                <span class="fa fa-plus"></span> Create a Task</a>
                             </div>
                           </div>
@@ -240,13 +240,19 @@ div#task-pop-up {
                                  			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
                                  			<tr>
                                              <td width="5%">1</td>
-                                                <td><a href="#" class="trigger">${taskDetails.name}</a> 
+                                                <td><a data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">${taskDetails.name}</a> 
                                                  <div class="progress progress-small progress-striped active">
                                         			<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
                                     			</div>
                                                 </td>
                                                <td  width="10%"><span class="label label-warning">${taskDetails.status}</span></td>
                                             </tr>
+                                            <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
+                                            <input id="${taskDetails.taskId}description" type="hidden" value="${taskDetails.description}"/>
+                                            <input id="${taskDetails.taskId}startTime" type="hidden" value="${taskDetails.startTime}"/>
+                                            <input id="${taskDetails.taskId}completionTime" type="hidden" value="${taskDetails.completionTime}"/>
+                                            <input id="${taskDetails.taskId}duration" type="hidden" value="${taskDetails.duration}"/>
+                                             <input id="${taskDetails.taskId}priority" type="hidden" value="${taskDetails.priority}"/>
                                  			</c:forEach>
                                  		</c:if>
                                        </tbody>
@@ -325,7 +331,7 @@ div#task-pop-up {
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">Cancel</button>
-					<button type="button" onclick="doAjaxCreateProjectForm();"
+					<button type="button" onclick="doAjaxCreateTaskForm();" id="createOrUpdateTaskId"
 						class="btn btn-primary">
 						<span id="userButton">Save</span>
 					</button>
@@ -342,7 +348,7 @@ div#task-pop-up {
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
        <script>
    	
-       $(function() {
+/*        $(function() {
     	   var moveLeft = 0;
     	   var moveDown = 0;
 
@@ -358,8 +364,34 @@ div#task-pop-up {
     	   $('a#trigger').mousemove(function(e) {
     		    $("div#task-pop-up").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
     		  });
-    	 });
+    	 }); */
    	
+var clearTaskDetails = function(){
+    $("#taskId").val("");
+	$("#estStartTime").val("${projectDetails.startTime}");
+	$("#estCompleteTime").val("${projectDetails.completionTime}");
+	$("#unassignedDuration").html("5");
+	$("#taskName").val("");
+	$("#description").val("");
+	$("#priority").prop("selectedIndex", 0);
+	$("#createOrUpdateTaskId span").html("Save");
+    $('#createTaskFormId').prop("action", "${applicationHome}/createTask");
+}    
+
+var loadTaskDetails = function(taskId){
+	$("#taskId").val(taskId);
+    $("#estStartTime").val($("#"+taskId+"startTime").val());
+ 	$("#estCompleteTime").val($("#"+taskId+"completionTime").val());
+ 	$("#unassignedDuration").html($("#"+taskId+"duration").val());
+ 	$("#taskName").val($("#"+taskId+"name").val());
+ 	$("#description").val($("#"+taskId+"description").val());
+ 	$("#priority").val($("#"+taskId+"priority").val());
+ 	$('#priority').selectpicker('refresh');
+	$("#createOrUpdateTaskId span").html("Update");
+    $('#createTaskFormId').prop("action", "${applicationHome}/updateTask");
+ 	
+}  
+       
 function addComment() {
    var dataString = {"projectId": $('#hdn_project_id').val() , "projectComments": $('#comment_textarea').val() };
    
@@ -470,7 +502,7 @@ $(document).ready(function() {
     });
 } );
 
-function doAjaxCreateProjectForm() {
+function doAjaxCreateTaskForm() {
 	$('#createTaskFormId').submit();
 }
 

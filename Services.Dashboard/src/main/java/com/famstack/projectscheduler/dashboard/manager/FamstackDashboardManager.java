@@ -142,4 +142,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return famstackProjectFileManager.getFile(fileName, projectCode, request);
 
 	}
+
+	public void updateTask(TaskDetails taskDetails) {
+		ProjectItem projectItem = projectManager.getProjectItemById(taskDetails.getProjectId());
+		famstackProjectTaskManager.updateTask(taskDetails, projectItem);
+
+	}
 }
