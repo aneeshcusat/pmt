@@ -426,6 +426,7 @@ function addComment() {
    });
 }
 
+
 $.datetimepicker.setLocale('en');
 $('.dateTimePicker').datetimepicker({value:new Date(),onGenerate:function( ct ){
 	$(this).find('.xdsoft_date.xdsoft_weekend')
@@ -433,9 +434,21 @@ $('.dateTimePicker').datetimepicker({value:new Date(),onGenerate:function( ct ){
 	},
 	minDate:'${projectDetails.startTime}', // yesterday is minimum date
 	maxDate:'${projectDetails.completionTime}',
-	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'],
+	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']
 	});
-
+$("#estCompleteTime").on("change",function(){
+	
+	var startTime = $("#estStartTime").val();
+	var completionTime = $("#estCompleteTime").val();
+	console.log("startTime :" + startTime);
+	console.log("completionTime :" + completionTime);
+	if(new Date(startTime) >= new Date(completionTime))
+	{
+		$("#estCompleteTime").css("border-color","red");
+	} else {
+		$("#estCompleteTime").css("border-color","#D5D5D5");
+	}
+});
 $(document).ready(function() {
     
     $('.editableFieldText').editable('saveProjectDetails', {
@@ -465,16 +478,6 @@ $(document).ready(function() {
   				var fileIcon = "fa-file-text";
   				if (file.type == "text/xml") {
   					fileIcon = "fa-file-excel-o";
-  					//fa-file-archive-o
-  					//fa-file-audio-o
-  					//fa-file-code-o
-  					//fa-file-excel-o
-  					//fa-file-image-o
-  					//fa-file-movie-o
-  					//fa-file-pdf-o
-  					//fa-file-video-o
-  					//fa-file-powerpoint-o
-  					//fa-file-word-o
   				}
   				
   				$("#upladedFilesList").append('<li><a href="${applicationHome}/download/${projectDetails.code}/'+file.name+'?fileName='+file.name+'"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
@@ -530,6 +533,7 @@ var toggleAssignTask = function(){
 	} else {
 		$("#assignTableId").hide(1000);
 		$("#toggleAssignTask").html("Assign task");
+		resetAssignTable();
 		$('input:radio[name=selection]').each(function () { $(this).prop('checked', false); });
 	}
 }
@@ -630,6 +634,8 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	var userId  = cellId.split("-")[0];
 	
 	$("#"+userId+"-select").prop('checked', true);
+	$('input:radio[name=selection]').each(function () { $(this).prop('disabled', true); });
+	$("#"+userId+"-select").prop('disabled', false);
 	$("#employeeListForTaskTable tr").removeClass("editable");
 	$("#"+userId+"-row").addClass("editable");
 	
@@ -645,16 +651,20 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		$(this).css("background-color", cellColor);
 		cellSelectCount--;
 		$(this).attr("cellmarked",false);
+		$(this).attr("modified",false);
 	} else if (checkNextAndPreviousMarked(this.id, true)){
 		$(this).attr("cellcolor", cellBackGroundColor);
 		$(this).css("background-color", "yellow");
 		cellSelectCount++;
 		$(this).attr("cellmarked",true);
+		$(this).attr("modified",true);
 	}
 	
 	if (cellSelectCount == 0) {
 		$("#employeeListForTaskTable tr").addClass("editable");
+		$('input:radio[name=selection]').each(function () { $(this).prop('disabled', false); });
 	}
+	
 	$("#"+userId+"-totalHours").html(cellSelectCount);
 	if (8-cellSelectCount <= 0){
 		$("#"+userId+"-availabeHours").css("color", "red");
@@ -664,5 +674,18 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	$("#"+userId+"-availabeHours").html(8-cellSelectCount);
 	
 });
+
+var resetAssignTable = function(){
+	
+	$('table#employeeListForTaskTable td[modified="true"]').each(function () {
+		$("#employeeListForTaskTable tr").addClass("editable");
+		$('input:radio[name=selection]').each(function () { $(this).prop('disabled', false); });
+		var cellColor = $(this).attr("cellcolor");
+		$(this).css("background-color", cellColor);
+		cellSelectCount--;
+		$(this).attr("cellmarked",false);
+		$(this).attr("modified",false);
+	});
+}
 
 </script>

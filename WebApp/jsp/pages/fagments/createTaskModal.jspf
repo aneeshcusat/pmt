@@ -23,9 +23,13 @@
                      </div>
 				</div>
 				<div class="form-group">
-				<label class="col-md-4 control-label">Unassigned duration</label>
-                     <div class="col-md-8" style="margin-top: 7px; font-size: 10pt;">
-                     <b id="unassignedDuration">4</b> Hours
+				<label class="col-md-3 control-label">Unassigned duration</label>
+                     <div class="col-md-3" style="margin-top: 7px;">
+                     <b id="unassignedDuration">1</b> Hrs
+                     </div>
+                <label class="col-md-3 control-label">Task duration</label>
+                     <div class="col-md-3" style="margin-top: 7px;">
+                     <b id="taskDuration">1</b> Hrs
                      </div>
 				</div>
 				<div class="form-group">
@@ -47,7 +51,7 @@
 				<div class="form-group">
 				<label class="col-md-4 control-label">Est Completion Time</label>
                      <div class="col-md-8">
-                            <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime" onchange="alert($(this).val())"/> 
+                            <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"/> 
                          <span class="help-block">required estimated completion time</span>
                      </div>
 				</div>
@@ -98,19 +102,19 @@
              <tr class="editable" id="${user.id}-row"">
             	<td><input name="selection" type="radio" id="${user.id}-select"></td>
                 <td class="nonmarkable" id="${user.id}-name">${user.firstName} ${user.lastName}</td>
-                <td class="markable" id="${user.id}-8" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-9" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-8" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-9" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
                 <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false"></td>
-                <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-17" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-18" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-19" cellcolor="" cellmarked="false" celleditable="true"></td>
-                <td class="markable" id="${user.id}-20" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-17" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-18" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-19" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
+                <td class="markable" id="${user.id}-20" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
                 <td class="nonmarkable" style="font-weight: bold; font-size: 16px;" id="${user.id}-totalHours">0</td>
                 <td class="nonmarkable" style="font-weight: bold; font-size: 18px; color: green" id="${user.id}-availabeHours">8</td>
             </tr>
