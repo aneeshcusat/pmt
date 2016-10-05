@@ -8,15 +8,20 @@
 			<!-- START JQUERY VALIDATION PLUGIN -->
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="col-md-3 control-label">First Name</label>
+					<label class="col-md-3 control-label">Group Name</label>
 					<div class="col-md-9">
-						<input path="firstName" type="text" value=""
-							name="firstName" id="firstName" class="form-control" placeholder="eg:Myname"
+						<input path="name" type="text" value=""
+							name="name" id="name" class="form-control" placeholder="eg:Product Chat Group"
 							tabindex="1" />
 					</div>
 				</div>
 				
-
+				<div class="form-group">
+                    <label class="col-md-3 control-label">Description</label>
+                    <div class="col-md-9">
+                        <form:textarea class="form-control" rows="5" path="description" id="description"></form:textarea>
+                    </div>
+                </div>
 			</div>
 			<!-- END JQUERY VALIDATION PLUGIN -->
 		</div>
@@ -24,10 +29,17 @@
 			<!-- From fields start-->
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="col-md-3 control-label">Last Name</label>
+					<label class="col-md-3 control-label">Select Subscribers</label>
 					<div class="col-md-9">
-						<input type="text" value="" name="lastName"
-							class="form-control" placeholder="eg:Lastname" id="lastName" tabindex="1" path="lastName"/>
+					<c:if test="${not empty modelViewMap.userMap}">
+					 <c:forEach var="user" items="${modelViewMap.userMap}">
+					 <div style="margin-top: 10px">
+					 <form:checkbox  id="${user.id}" value="${user.id}" name="subscriberIds" path="subscriberIds" class="icheckbox" tabindex="1"/>&nbsp;<span style="margin-left: 10px; font-weight: bold;">${user.firstName}&nbsp;${user.lastName}</span>
+					 </div>
+					 </c:forEach>
+					 </c:if>
+					 
+						
 					</div>
 				</div>
 				

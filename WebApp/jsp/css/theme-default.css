@@ -3781,9 +3781,6 @@ background: #1caf9a !important;
 .messages .item .text:hover {
   border-color: #BBB;
 }
-.messages .item:nth-child(2n) .text {
-  background: #F6F6F6;
-}
 .messages .item.item-visible {
   opacity: 1;
   filter: alpha(opacity = 100);

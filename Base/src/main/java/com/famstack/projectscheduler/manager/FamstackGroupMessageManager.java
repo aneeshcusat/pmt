@@ -41,16 +41,13 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		famstackDataAccessObjectManager.saveOrUpdateItem(groupItem);
 	}
 
-	public Set<UserItem> getSubscriberItems(String subscriberIds) {
+	public Set<UserItem> getSubscriberItems(int[] subscriberIds) {
 		Set<UserItem> userItemSet = new HashSet<UserItem>();
 		if (subscriberIds != null) {
-			String[] userIdArray = subscriberIds.split(",");
-			for (String userId: userIdArray) {
-				if (!StringUtils.isEmpty(userId)) {
+			for (int userId: subscriberIds) {
 					UserItem userItem = new UserItem();
-					userItem.setId(Integer.parseInt(userId));
+					userItem.setId(userId);
 					userItemSet.add(userItem);
-				}
 			}
 		}
 		return userItemSet;
@@ -135,11 +132,14 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		return messageDetailsSet;
 	}
 
-	public String getSubscriberIds(Set<UserItem> subscribers) {
-		String subscriberIds = new String();
+	public int[] getSubscriberIds(Set<UserItem> subscribers) {
+		int[] subscriberIds = null;
 		if (subscribers != null) {
+			subscriberIds = new int[subscribers.size()];
+			int i = 0;
 			for (UserItem userItem : subscribers) {
-				subscriberIds += userItem.getId() + ",";
+				subscriberIds[i] = userItem.getId();
+				i++;
 			}
 		}
 		return subscriberIds;

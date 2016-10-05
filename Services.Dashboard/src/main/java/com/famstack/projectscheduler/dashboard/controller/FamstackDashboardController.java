@@ -192,8 +192,11 @@ public class FamstackDashboardController extends BaseFamstackService {
 		int userId = getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId();
 		List<GroupDetails> groupData = famstackDashboardManager.getAllGroups(userId);
 		Map<String, Object> modelViewMap = new HashMap<String, Object>();
+		List<EmployeeDetails> userMap = getFamstackApplicationConfiguration().getUserList();
 		modelViewMap.put("groupData", groupData);
-		return new ModelAndView("messages", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
+		modelViewMap.put("userMap", userMap);
+		modelViewMap.put("currentUserId", userId);
+		return new ModelAndView("messages", "command", new GroupDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
 	@RequestMapping(value = "/createTask", method = RequestMethod.POST)
@@ -203,7 +206,15 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.createTask(taskDetails);
 		return "{\"status\": true}";
 	}
-
+	
+	@RequestMapping(value = "/createGroup", method = RequestMethod.POST)
+	@ResponseBody
+	public String createGroup(@ModelAttribute("groupDetails") GroupDetails groupDetails, BindingResult result,
+			Model model) {
+		famstackDashboardManager.createGroup(groupDetails);
+		return "{\"status\": true}";
+	}
+	
 	@RequestMapping(value = "/updateTask", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
@@ -271,5 +282,12 @@ public class FamstackDashboardController extends BaseFamstackService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
+	@ResponseBody
+	public String sendMessage(@RequestParam("groupId") int groupId, @RequestParam("message") String message) {
+		famstackDashboardManager.sendMessage(groupId, message);
+		return "{\"status\": true}";
 	}
 }

@@ -102,7 +102,7 @@ public class UserItem implements FamstackBaseItem {
 	@JoinColumn(name = "reportertingManager")
 	private UserItem reportertingManager;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "group_subscribers", joinColumns = {
 			@JoinColumn(name = "user_id", nullable = false, updatable = false) },
 			inverseJoinColumns = { @JoinColumn(name = "group_id",

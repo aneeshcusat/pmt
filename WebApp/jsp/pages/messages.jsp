@@ -1,8 +1,14 @@
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Messages</li>
  </ul>
+<style>
+    #creategroupmodal .modal-dialog  {width:65%;}
+   
+    
+</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">                                    
     <!-- START CONTENT FRAME TOP -->
@@ -11,8 +17,8 @@
             <h2><span class="fa fa-comments"></span> Messages</h2>
         </div>                                                    
         <div class="pull-right">                            
-            <button class="btn btn-danger"><span class="fa fa-book"></span> Contacts</button>
-            <button class="btn btn-default content-frame-right-toggle"><span class="fa fa-bars"></span></button>
+            <a data-toggle="modal" data-target="#creategroupmodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
+              <span class="fa fa-plus"></span> Create Group</a>
         </div>                           
     </div>
     <!-- END CONTENT FRAME TOP -->
@@ -65,14 +71,7 @@
             </a>                            
         </div>
         
-        <div class="block">
-            <h4>Status</h4>
-            <div class="list-group list-group-simple">                                
-                <a href="#" class="list-group-item"><span class="fa fa-circle text-success"></span> Online</a>
-                <a href="#" class="list-group-item"><span class="fa fa-circle text-warning"></span> Away</a>
-                <a href="#" class="list-group-item"><span class="fa fa-circle text-muted"></span> Offline</a>                                
-            </div>
-        </div>
+       
         
     </div>
     <!-- END CONTENT FRAME RIGHT -->
@@ -82,102 +81,62 @@
         <!-- START VERTICAL TABS -->
      <div class="panel panel-default nav-tabs-vertical">                   
          <ul class="nav nav-tabs">
-             <li class="active"><a href="#tab22" data-toggle="tab">First</a></li>
-             <li><a href="#tab23" data-toggle="tab">Second</a></li>
-             <li><a href="#tab24" data-toggle="tab">Third</a></li>
+         <c:if test="${not empty modelViewMap.groupData}">
+         <c:forEach var="group" items="${modelViewMap.groupData}">
+            <li style="border-bottom: 1px dashed; border-color: #DCDCDC;"><a href="#tabGroup${group.groupId}" data-toggle="tab">${group.name}</a></li>
+         </c:forEach>
+             
+         </c:if>
          </ul>                    
-         <div class="panel-body tab-content">
-             <div class="tab-pane active" id="tab22">
-			                <div class="messages messages-img">
-			            <div class="item in">
-			                <div class="image">
-			                    <img src="${assets}/images/users/user2.jpg" alt="John Doe">
-			                </div>
-			                <div class="text">
-			                    <div class="heading">
-			                        <a href="#">John Doe</a>
-			                        <span class="date">08:33</span>
-			                    </div>
-			                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed facilisis suscipit eros vitae iaculis.
-			                </div>
-			            </div>
-			            <div class="item">
-			                <div class="image">
-			                    <img src="${assets}/images/users/user.jpg" alt="Dmitry Ivaniuk">
-			                </div>                                
-			                <div class="text">
-			                    <div class="heading">
-			                        <a href="#">Dmitry Ivaniuk</a>
-			                        <span class="date">08:39</span>
-			                    </div>                                    
-			                    Integer et ipsum vitae urna mattis dictum. Sed eu sollicitudin nibh, in luctus velit.
-			                </div>
-			            </div>
-			            <div class="item">
-			                <div class="image">
-			                    <img src="${assets}/images/users/user.jpg" alt="Dmitry Ivaniuk">
-			                </div>                                
-			                <div class="text">
-			                    <div class="heading">
-			                        <a href="#">Dmitry Ivaniuk</a>
-			                        <span class="date">08:42</span>
-			                    </div>                                    
-			                    In dapibus ex ut nisl laoreet aliquam. Donec in mollis leo. Aenean nec suscipit neque, non iaculis justo. Quisque eget odio efficitur, porta risus vitae, sagittis neque.
-			                </div>
-			            </div>
-			            <div class="item in">
-			                <div class="image">
-			                    <img src="${assets}/images/users/user2.jpg" alt="John Doe">
-			                </div>
-			                <div class="text">
-			                    <div class="heading">
-			                        <a href="#">John Doe</a>
-			                        <span class="date">08:58</span>
-			                    </div>
-			                    Curabitur et euismod urna?
-			                </div>
-			            </div>
-			            <div class="item">
-			                <div class="image">
-			                    <img src="${assets}/images/users/user.jpg" alt="Dmitry Ivaniuk">
-			                </div>                                
-			                <div class="text">
-			                    <div class="heading">
-			                        <a href="#">Dmitry Ivaniuk</a>
-			                        <span class="date">09:11</span>
-			                    </div>                                    
-			                    Fusce ultricies erat quis massa interdum, eu elementum urna iaculis
-			                </div>
-			            </div>
-			            <div class="item in">
-			                <div class="image">
-			                    <img src="${assets}/images/users/user2.jpg" alt="John Doe">
-			                </div>
-			                <div class="text">
-			                    <div class="heading">
-			                        <a href="#">John Doe</a>
-			                        <span class="date">09:22</span>
-			                    </div>
-			                    Vestibulum cursus ipsum ut dolor vulputate dapibus. Donec elementum est vel vulputate malesuada?
-			                </div>
-			            </div>
+         <div class="panel-body tab-content" style="background-color: #F5F5F5;">
+            <c:forEach var="group" items="${modelViewMap.groupData}">
+             <div class="tab-pane" id="tabGroup${group.groupId}">
+			                <div class="messages messages-img" style=" overflow: scroll; min-height: 300px; max-height: 300px;" >
+			                <c:forEach var="groupMessage" items="${group.messages}">
+			                
+			                <c:if test="${modelViewMap.currentUserId == groupMessage.user.id}">
+			                <div class="item in">
+			                </c:if>
+			                <c:if test="${modelViewMap.currentUserId != groupMessage.user.id}">
+                            <div class="item">
+                            </c:if>
+		                            <div class="image">
+		                                <img src="${groupMessage.user.filePhoto }" alt="${groupMessage.user.firstName}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
+		                            </div>
+		                            <c:if test="${modelViewMap.currentUserId == groupMessage.user.id}">
+		                            <div class="text" style="background: #F6F6F6;">
+		                            </c:if>
+		                            <c:if test="${modelViewMap.currentUserId != groupMessage.user.id}">
+		                            <div class="text">
+		                            </c:if>
+		                            
+		                                <div class="heading">
+		                                    <a href="#">${groupMessage.user.firstName}&nbsp;${groupMessage.user.lastName}</a>
+		                                    <span class="date">${groupMessage.createdDate}</span>
+		                                </div>
+		                                ${groupMessage.description}
+		                            </div>
+		                        </div>
+			                </c:forEach>
+			                
+			                
 			        </div>                        
-			        
 			        <div class="panel panel-default push-up-10">
-			            <div class="panel-body panel-body-search">
-			                <div class="input-group">
-			                    <div class="input-group-btn">
-			                        <button class="btn btn-default"><span class="fa fa-camera"></span></button>
-			                        <button class="btn btn-default"><span class="fa fa-chain"></span></button>
-			                    </div>
-			                    <input type="text" class="form-control" placeholder="Your message..."/>
-			                    <div class="input-group-btn">
-			                        <button class="btn btn-default">Send</button>
-			                    </div>
-			                </div>
-			            </div>
-			        </div>             
+                        <div class="panel-body panel-body-search">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    
+                                </div>
+                                <input type="text" id="messageTextAreaField_${group.groupId}" class="form-control" placeholder="Your message..."/>
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" onclick="sendMessage('${group.groupId}')">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+			                     
 			        </div>
+			        </c:forEach>
              <div class="tab-pane" id="tab23">
                  <p>Donec tristique eu sem et aliquam. Proin sodales elementum urna et euismod. Quisque nisl nisl, venenatis eget dignissim et, adipiscing eu tellus. Sed nulla massa, luctus id orci sed, elementum consequat est. Proin dictum odio quis diam gravida facilisis. Sed pharetra dolor a tempor tristique. Sed semper sed urna ac dignissim. Aenean fermentum leo at posuere mattis. Etiam vitae quam in magna viverra dictum. Curabitur feugiat ligula in dui luctus, sed aliquet neque posuere.</p>
                  <p>Nam a nisi et nisi tristique lacinia non sit amet orci. Duis blandit leo odio, eu varius nulla fringilla adipiscing. Praesent posuere blandit diam, sit amet suscipit justo consequat sed. Duis cursus volutpat ante at convallis. Integer posuere a enim eget imperdiet. Nulla consequat dui quis purus molestie fermentum. Donec faucibus sapien eu nisl placerat auctor. Pellentesque quis justo lobortis, tempor sapien vitae, dictum orci.</p>
@@ -193,6 +152,66 @@
         
     </div>
     <!-- END CONTENT FRAME BODY -->      
-</div>
 <!-- END PAGE CONTENT FRAME -->
+
+<div class="modal fade" id="creategroupmodal" tabindex="-1"
+    role="dialog" aria-labelledby="reprocessConfirmation"
+    aria-hidden="true">
+    <form:form id="createGroupFormId" action="createGroup" method="POST" role="form" class="form-horizontal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Create Group</h4>
+            </div>
+            <div class="modal-body">
+                <%@include file="fagments/createGroupModal.jspf" %>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                    data-dismiss="modal">Cancel</button>
+                <a id="createOrUpdateGroupId" href="#" onclick="doAjaxCreateGroupForm()" class="btn btn-primary"><span id="userButton">Save</span></a>
+            </div>
+        </div>
+    </div>
+    
+    </form:form>
+</div>
 <%@include file="includes/footer.jsp" %>     
+
+<script>
+function doAjaxCreateGroupForm(){
+    $('#createGroupFormId').prop("action", "createGroup");
+    $('#createGroupFormId').submit();
+}
+
+$('#createGroupFormId').ajaxForm(function(response) { 
+    console.log(response);
+    var responseJson = JSON.parse(response);
+    if (responseJson.status){
+        window.location.reload(true);
+    }
+}); 
+
+$('.nav-tabs li:first-child a').trigger( "click" );
+
+function sendMessage(group) {
+	var groupId = group;
+	var message = $('#messageTextAreaField_'+groupId).val();
+	
+	var data = {"groupId": groupId , "message": message };
+    
+	doAjaxRequest('POST', '/bops/dashboard/sendMessage', data, 
+			function(response) {
+		        var responseJsonObj = JSON.parse(response);
+		        if (responseJsonObj.status == true) {
+		        	window.location.reload(true);
+		        } 
+		    }, function(e) {
+		        alert(e)
+		    });
+}
+</script>

@@ -17,6 +17,7 @@ import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
+import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
@@ -151,5 +152,18 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public void deleteProjectTask(int taskId) {
 		famstackProjectTaskManager.deleteTaskItem(taskId);
+	}
+	
+	public void createGroup(GroupDetails groupDetails) {
+		groupMessageManager.createGroupItem(groupDetails);
+
+	}
+	
+	public void sendMessage(int groupId, String message) {
+		GroupMessageDetails groupMessageDetails = new GroupMessageDetails();
+		groupMessageDetails.setGroup(groupId);
+		groupMessageDetails.setDescription(message);
+		groupMessageManager.createGroupMessageItem(groupMessageDetails);
+
 	}
 }

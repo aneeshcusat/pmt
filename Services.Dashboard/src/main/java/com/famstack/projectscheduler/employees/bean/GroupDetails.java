@@ -23,7 +23,7 @@ public class GroupDetails {
 
 	private Timestamp lastModifiedDate;
 	
-	private String subscriberIds;
+	private int[] subscriberIds;
 	
 	private EmployeeDetails createdBy;
 	
@@ -87,11 +87,11 @@ public class GroupDetails {
 		this.messages = messages;
 	}
 
-	public String getSubscriberIds() {
+	public int[] getSubscriberIds() {
 		return subscriberIds;
 	}
 
-	public void setSubscriberIds(String subscriberIds) {
+	public void setSubscriberIds(int[] subscriberIds) {
 		this.subscriberIds = subscriberIds;
 	}
 

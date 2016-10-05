@@ -56,7 +56,7 @@ public class GroupItem implements FamstackBaseItem {
 	@Column(name = "last_modified_date")
 	private Timestamp lastModifiedDate;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "group_subscribers", joinColumns = {
 			@JoinColumn(name = "group_id", nullable = false, updatable = false) },
 			inverseJoinColumns = { @JoinColumn(name = "user_id",
