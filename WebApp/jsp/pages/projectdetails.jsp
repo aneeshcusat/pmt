@@ -240,7 +240,7 @@ div#task-pop-up {
                                  			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
                                  			<tr>
                                              <td width="5%">1</td>
-                                                <td><a data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">${taskDetails.name}</a> 
+                                                <td><a href="#" id="${taskDetails.taskId}" class="trigger" data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">${taskDetails.name}</a> 
                                                  <div class="progress progress-small progress-striped active">
                                         			<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
                                     			</div>
@@ -303,11 +303,16 @@ div#task-pop-up {
 <!-- END CONTENT FRAME -->       
 <!-- task pop up window start-->
     <div id="task-pop-up">
-      <h3>Pop-up div Successfully Displayed</h3>
+      <h5><span id="popup-taskname"></span></h5>
       <p>
-        This div only appears when the trigger link is hovered over.
-        Otherwise it is hidden from view.
+       <span id="popup-description"></span>
       </p>
+      <ul class="nav nav-pills nav-stacked labels-info ">
+	        <li>Estimated start time:<b><span id="popup-startTime"></span></b></li>
+	        <li>Estimated completion time:<b><span id="popup-completionTime"></span></b></li>
+	        <li>Duration : <b><span id="popup-duration"></span> hours</b></li>
+	        <li>Priority : <b><span id="popup-priority"></span></b></li>
+	    </ul>
     </div>
 <!-- task pop up window end -->
 
@@ -348,11 +353,19 @@ div#task-pop-up {
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
        <script>
    	
-/*        $(function() {
+     $(function() {
     	   var moveLeft = 0;
     	   var moveDown = 0;
 
     	   $('a.trigger').hover(function(e) {
+    		   
+    		 var taskId = this.id;
+   		    $("#popup-startTime").html($("#"+taskId+"startTime").val());
+   		 	$("#popup-completionTime").html($("#"+taskId+"completionTime").val());
+   		 	$("#popup-duration").html($("#"+taskId+"duration").val());
+   		 	$("#popup-taskname").html($("#"+taskId+"name").val());
+   		 	$("#popup-description").html($("#"+taskId+"description").val());
+    		 	
     	     $('div#task-pop-up').show()
     	     .css('top', e.pageY + moveDown)
     	      .css('left', e.pageX + moveLeft)
@@ -364,7 +377,7 @@ div#task-pop-up {
     	   $('a#trigger').mousemove(function(e) {
     		    $("div#task-pop-up").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
     		  });
-    	 }); */
+    	 }); 
    	
 var clearTaskDetails = function(){
     $("#taskId").val("");
