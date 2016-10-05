@@ -63,6 +63,8 @@ public class ProjectDetails {
 
 	private List<String> filesNames;
 
+	private int unAssignedDuration;
+
 	public Integer getId() {
 		return id;
 	}
@@ -265,6 +267,14 @@ public class ProjectDetails {
 
 	public void setFilesNames(List<String> filesNames) {
 		this.filesNames = filesNames;
+	}
+
+	public int getUnAssignedDuration() {
+		return unAssignedDuration;
+	}
+
+	public void setUnAssignedDuration(int unAssignedDuration) {
+		this.unAssignedDuration = unAssignedDuration;
 	}
 
 }

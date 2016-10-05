@@ -237,7 +237,11 @@ width: 60%;
                            <h5 class="bold">Tasks</h5>
                           </div>
                            <div class="col-md-5 text-right">
-                            <a data-toggle="modal" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15">
+                            <a data-toggle="modal" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
+                            <c:if test="${projectDetails.unAssignedDuration == 0}">
+                            disabled="true"
+                            </c:if>
+                            >
                                <span class="fa fa-plus"></span> Create a Task</a>
                             </div>
                           </div>
@@ -270,7 +274,8 @@ width: 60%;
                               <ul class="nav nav-pills nav-stacked labels-info ">
                                   <li>Estimated start time:<b> ${projectDetails.startTime}</b></li>
                                   <li>Estimated completion time:<b> ${projectDetails.completionTime}</b></li>
-                                  <li>Duration : <b>${projectDetails.duration} hours</b></li>
+                                  <li>Project Duration : <b>${projectDetails.duration} hours</b></li>
+                                  <li>Unassinged Duration : <b>${projectDetails.unAssignedDuration} hours</b></li>
                               </ul>
 
                               <br>
@@ -391,26 +396,45 @@ width: 60%;
 var clearTaskDetails = function(){
     $("#taskId").val("");
 	$("#estStartTime").val("${projectDetails.startTime}");
-	$("#estCompleteTime").val("${projectDetails.completionTime}");
-	$("#unassignedDuration").html("5");
+	$("#estCompleteTime").html("${projectDetails.completionTime}");
+	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
+	$("#projectDuration").html(${projectDetails.duration});
+ 	$("#taskDuration").html(${projectDetails.unAssignedDuration});
 	$("#taskName").val("");
 	$("#description").val("");
 	$("#priority").prop("selectedIndex", 0);
 	$("#createOrUpdateTaskId span").html("Save");
     $('#createTaskFormId').prop("action", "${applicationHome}/createTask");
+    createTaskDurationList(${projectDetails.unAssignedDuration});
+    $("#duration").prop('selectedIndex', ${projectDetails.unAssignedDuration});
+    $("#duration").selectpicker('refresh');
+    $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), ${projectDetails.unAssignedDuration}));
 }    
+
+var createTaskDurationList = function(duration){
+	 $("#duration").html("");
+	for (var index = 0; index <= duration; index++) {
+	     $("#duration").append('<option value="'+index+'">'+index+'</option>');
+	 }
+}
 
 var loadTaskDetails = function(taskId){
 	$("#taskId").val(taskId);
     $("#estStartTime").val($("#"+taskId+"startTime").val());
- 	$("#estCompleteTime").val($("#"+taskId+"completionTime").val());
- 	$("#unassignedDuration").html($("#"+taskId+"duration").val());
+ 	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
+ 	$("#taskName").val($("#"+taskId+"name").val());
+ 	$("#projectDuration").html(${projectDetails.duration});
+ 	$("#taskDuration").html($("#"+taskId+"duration").val());
  	$("#taskName").val($("#"+taskId+"name").val());
  	$("#description").val($("#"+taskId+"description").val());
  	$("#priority").val($("#"+taskId+"priority").val());
  	$('#priority').selectpicker('refresh');
 	$("#createOrUpdateTaskId span").html("Update");
     $('#createTaskFormId').prop("action", "${applicationHome}/updateTask");
+    createTaskDurationList(${projectDetails.unAssignedDuration}+parseInt($("#"+taskId+"duration").val()));
+    $("#duration").prop('selectedIndex', parseInt($("#"+taskId+"duration").val()));
+    $("#duration").selectpicker('refresh');
+    $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), parseInt($("#"+taskId+"duration").val())));
  	
 }  
        
@@ -426,29 +450,6 @@ function addComment() {
    });
 }
 
-
-$.datetimepicker.setLocale('en');
-$('.dateTimePicker').datetimepicker({value:new Date(),onGenerate:function( ct ){
-	$(this).find('.xdsoft_date.xdsoft_weekend')
-	.addClass('xdsoft_disabled');
-	},
-	minDate:'${projectDetails.startTime}', // yesterday is minimum date
-	maxDate:'${projectDetails.completionTime}',
-	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']
-	});
-$("#estCompleteTime").on("change",function(){
-	
-	var startTime = $("#estStartTime").val();
-	var completionTime = $("#estCompleteTime").val();
-	console.log("startTime :" + startTime);
-	console.log("completionTime :" + completionTime);
-	if(new Date(startTime) >= new Date(completionTime))
-	{
-		$("#estCompleteTime").css("border-color","red");
-	} else {
-		$("#estCompleteTime").css("border-color","#D5D5D5");
-	}
-});
 $(document).ready(function() {
     
     $('.editableFieldText').editable('saveProjectDetails', {
@@ -529,7 +530,7 @@ var doAjaxDeleteFile = function(fileName){
 var toggleAssignTask = function(){
 	if ($("#assignTableId").is(':hidden')) {
 		$("#assignTableId").show(1000);
-		$("#toggleAssignTask").html("Hide Assign task");
+		$("#toggleAssignTask").html("Assign task later");
 	} else {
 		$("#assignTableId").hide(1000);
 		$("#toggleAssignTask").html("Assign task");
@@ -537,33 +538,6 @@ var toggleAssignTask = function(){
 		$('input:radio[name=selection]').each(function () { $(this).prop('checked', false); });
 	}
 }
-
-
-var getTodayDate = function(){
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; //January is 0!
-
-	var yyyy = today.getFullYear();
-	if(dd<10){
-	    dd='0'+dd
-	} 
-	if(mm<10){
-	    mm='0'+mm
-	} 
-	return yyyy+'/'+mm+'/'+dd;
-}
-
-$(document).ready(function() {
-    $('#employeeListForTaskTable').DataTable({ 
-    	responsive: true,
-        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-        "ordering": false,
-    
-    });
-    
-    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;"> Date : '+getTodayDate()+'</span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
-} );
 
 function doAjaxCreateTaskForm() {
 	$('#createTaskFormId').submit();
@@ -576,6 +550,80 @@ $('#createTaskFormId').ajaxForm(function(response) {
 		window.location.reload(true);
 	}
 });
+
+
+var dateDisplayLogic = function( currentDateTime ){
+	var startProjectTime = '${projectDetails.startTime}';
+	var startDate = new Date(startProjectTime);
+	var startHours = startDate.getHours();
+	var dd = startDate.getDate();
+	var mm = startDate.getMonth(); //January is 0!
+	var yyyy = startDate.getFullYear();
+	startHours+=":00";
+	if (currentDateTime && currentDateTime.getDate() == dd && currentDateTime.getMonth() == mm && currentDateTime.getFullYear() == yyyy){
+		this.setOptions({
+			minTime:startHours
+		});
+	}else
+		this.setOptions({
+			minTime:'8:00'
+		});
+};
+
+$.datetimepicker.setLocale('en');
+$('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
+	$(this).find('.xdsoft_date.xdsoft_weekend')
+	.addClass('xdsoft_disabled');
+	},
+	minDate:'${projectDetails.startTime}', // yesterday is minimum date
+	maxDate:'${projectDetails.completionTime}',
+	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'],
+	onChangeDateTime:dateDisplayLogic,
+	onShow:dateDisplayLogic
+});
+	
+$("#estStartTime").on("change",function(){
+	var startProjectTime = '${projectDetails.startTime}';
+	var startProjectDate = new Date(startProjectTime);
+	
+	var startTaskTime = $("#estStartTime").val();
+	var startTaskDate = new Date(startTaskTime);
+	if(startTaskDate < startProjectDate) {
+		$("#estStartTime").css("border", "1px solid red");
+	} else {
+		$("#estStartTime").css("border", "none");
+	}
+	$("#estCompleteTime").html(getEstimatedCompletionTime( $("#estStartTime").val(), $("#duration").val()));
+	$("#taskDuration").html($("#duration").val());
+});
+
+$("#duration").on("change",function(){
+	$("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), $("#duration").val()));
+	$("#taskDuration").html($("#duration").val());
+});
+
+var getEstimatedCompletionTime = function(startTime, duration){
+	var estimatedCompletionTime = new Date(startTime);
+	estimatedCompletionTime.addHours(duration);
+	var completionTimeString = getTodayDate(estimatedCompletionTime);
+	var completionHour = estimatedCompletionTime.getHours();
+	if(completionHour == 13){
+		estimatedCompletionTime.addHours(1);
+	}
+	completionTimeString +=(" " +estimatedCompletionTime.getHours()+":00");
+	return completionTimeString;
+}
+
+$(document).ready(function() {
+    $('#employeeListForTaskTable').DataTable({ 
+    	responsive: true,
+        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        "ordering": false,
+    
+    });
+    
+    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;"> Date : '+getTodayDate(new Date())+'</span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
+} );
 
 var cellSelectCount = 0;
 var breakTime = 13;
@@ -628,6 +676,7 @@ var checkNextAndPreviousMarked = function(thisVarId, checkOrUnchek){
 	}
 	return (!preMarked || !nextMarked) && sameMarked;
 }
+
 
 $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", function(){
 	var cellId = this.id;

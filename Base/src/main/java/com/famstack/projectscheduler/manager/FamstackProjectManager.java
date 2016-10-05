@@ -13,6 +13,7 @@ import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.util.DateUtils;
 
 /**
@@ -65,8 +66,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		projectItem.setType(projectDetails.getType());
 		projectItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
 		projectItem.setWatchers(projectDetails.getWatchers());
-		famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
 		famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
+		famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
 	}
 
 	public void deleteProjectItem(int projectId) {
@@ -119,10 +120,21 @@ public class FamstackProjectManager extends BaseFamstackManager {
 					famstackProjectActivityManager.mapProjectActivityDetails(projectItem.getProjectActivityItem()));
 			projectDetails.setProjectTaskDeatils(
 					famstackProjectTaskManager.mapProjectTaskDetails(projectItem.getTaskItems()));
+			projectDetails.setUnAssignedDuration(getUnAssignedDuration(projectDetails));
 			return projectDetails;
 
 		}
 		return null;
+	}
+
+	private int getUnAssignedDuration(ProjectDetails projectDetails) {
+		int unassignedCount = projectDetails.getDuration();
+		if (projectDetails.getProjectTaskDeatils() != null) {
+			for (TaskDetails taskDetails : projectDetails.getProjectTaskDeatils()) {
+				unassignedCount -= taskDetails.getDuration();
+			}
+		}
+		return unassignedCount;
 	}
 
 	public List<ProjectDetails> getAllProjectDetailsList() {

@@ -6,9 +6,9 @@
 <form:input type="hidden" id="taskId" path="taskId"/>
 	<div class="col-md-12">
 		<div class="row">
-			<div class="col-md-7">
+			<div class="col-md-6">
 				<div class="form-group">
-					<label class="col-md-3 control-label">Task Name</label>
+					<label class="col-md-2 control-label">Task Name</label>
 					<div class="col-md-9">
 						<form:input type="text" class="autocomplete form-control"
 							id="taskName" path="name" />
@@ -16,63 +16,60 @@
 					</div>
 				</div>
 				<div class="form-group">
-				<label class="col-md-3 control-label">Description</label>
+				<label class="col-md-2 control-label">Description</label>
                      <div class="col-md-9">
                             <form:textarea class="form-control" id="description" path="description"></form:textarea> 
                          <span class="help-block">required description</span>
                      </div>
 				</div>
 				<div class="form-group">
-				<label class="col-md-3 control-label">Unassigned duration</label>
-                     <div class="col-md-3" style="margin-top: 7px;">
+				<label class="col-md-2 control-label" >Duration :</label>
+				<label class="col-md-2 control-label text-left">Unassigned</label>
+                     <div class="col-md-2" style="margin-top: 7px;">
                      <b id="unassignedDuration">1</b> Hrs
                      </div>
-                <label class="col-md-3 control-label">Task duration</label>
-                     <div class="col-md-3" style="margin-top: 7px;">
+                     <label class="col-md-1 control-label">Project</label>
+                     <div class="col-md-2" style="margin-top: 7px;">
+                     <b id="projectDuration">1</b> Hrs
+                     </div>
+                <label class="col-md-1 control-label">Task</label>
+                     <div class="col-md-2" style="margin-top: 7px;">
                      <b id="taskDuration">1</b> Hrs
                      </div>
 				</div>
 				<div class="form-group">
-				<label class="col-md-3 control-label"></label>
+				<label class="col-md-2 control-label"></label>
                      <div class="col-md-9">
                            <a href="#" onclick="toggleAssignTask()" id="toggleAssignTask">Assign task</a>
                      </div>
 				</div>
 				
 			</div>
-			<div class="col-md-5">
+			<div class="col-md-6">
 				<div class="form-group">
-				<label class="col-md-4 control-label">Est Start Time</label>
-                     <div class="col-md-8">
+				<label class="col-md-3 control-label">Est Start Time</label>
+                     <div class="col-md-4">
                             <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/> 
                          <span class="help-block">required estimated start time</span>
                      </div>
-				</div>
-				<div class="form-group">
-				<label class="col-md-4 control-label">Est Completion Time</label>
-                     <div class="col-md-8">
-                            <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"/> 
-                         <span class="help-block">required estimated completion time</span>
+					<label class="col-md-2 control-label">Duration</label>
+                     <div class="col-md-3">
+                         <form:select class="form-control select" path="duration" id="duration"  data-live-search="true">
+                       	 </form:select>
+                         <span class="help-block">required duration</span>
                      </div>
 				</div>
-				<div class="form-group">
-				<label class="col-md-4 control-label">Priority</label>
-                   <div class="col-md-8">
-                           <form:select class="form-control select" path="priority" id="priority"  data-live-search="true">
-                           <option value="-1">- select -</option>
-                           <option>URGENT</option>
-                           <option>HIGH</option>
-                           <option>MEDIUM</option>
-                           <option>LOW</option>
-                       </form:select>
-                       <span class="help-block">required priority</span>
-                   </div>
-				</div>
 				
+				<div class="form-group">
+				<label class="col-md-3 control-label">Est Completion Time</label>
+                     <div class="col-md-9">
+                           <h5 id="estCompleteTime">2016/12/02 20:11</h5>
+                     </div>
+				</div>
 			</div>
 
 		</div>
-		<div class="row" style="display: " id="assignTableId">
+		<div class="row" style="display:none" id="assignTableId">
 		<table id="employeeListForTaskTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr style="height: 20px">
