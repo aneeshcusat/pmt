@@ -27,6 +27,14 @@ div#task-pop-up {
   border: 1px solid #1a1a1a;
   font-size: 90%;
 }
+
+.dataTables_length {
+width: 40%;
+}
+
+.dataTables_filter{
+width: 60%;
+}
 	</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
@@ -526,6 +534,22 @@ var toggleAssignTask = function(){
 	}
 }
 
+
+var getTodayDate = function(){
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+
+	var yyyy = today.getFullYear();
+	if(dd<10){
+	    dd='0'+dd
+	} 
+	if(mm<10){
+	    mm='0'+mm
+	} 
+	return yyyy+'/'+mm+'/'+dd;
+}
+
 $(document).ready(function() {
     $('#employeeListForTaskTable').DataTable({ 
     	responsive: true,
@@ -533,6 +557,8 @@ $(document).ready(function() {
         "ordering": false,
     
     });
+    
+    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;"> Date : '+getTodayDate()+'</span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
 } );
 
 function doAjaxCreateTaskForm() {
@@ -545,6 +571,98 @@ $('#createTaskFormId').ajaxForm(function(response) {
 	if (responseJson.status) {
 		window.location.reload(true);
 	}
+});
+
+var cellSelectCount = 0;
+var breakTime = 13;
+var checkNextAndPreviousMarked = function(thisVarId, checkOrUnchek){
+	var cellIds  = thisVarId.split("-");
+	var userId = cellIds[0];
+	var time = parseInt(cellIds[1]);
+	console.log("time" + time);
+	console.log("userId" + userId);
+	var nextMarked = false;
+	var preMarked = false;
+	var sameMarked = false;
+	var celleditable = $("#"+userId+"-"+time).attr("celleditable");
+	var cellmarked	= $("#"+userId+"-"+time).attr("cellmarked");
+	if (cellmarked == 'true' && celleditable == 'true') {
+		sameMarked = true;
+	}
+	
+	
+	if (time >= 8 && 21 > time) {
+		var tmpTime = time + 1;
+		if (time == breakTime-1) {
+			tmpTime++;
+		}
+		console.log("next cell id :" + userId+"-"+tmpTime);
+		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
+		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
+		if (cellmarked == 'true' && celleditable == 'true') {
+			nextMarked = true;
+		}
+	}
+	
+	if (time <= 21 && 8 < time) {
+		var tmpTime = time - 1;
+		if (time == breakTime+1) {
+			tmpTime--;
+		}
+		console.log("pre cell id :" + userId+"-"+tmpTime);
+		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
+		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
+		if (cellmarked == 'true' && celleditable == 'true') {
+			preMarked = true;
+		}
+	}
+	console.log("cellSelectCount" + cellSelectCount);
+	console.log("preMarked" + preMarked);
+	console.log("nextMarked" + nextMarked);
+	if (checkOrUnchek) {
+		return (cellSelectCount == 0 || preMarked || nextMarked) && !sameMarked;
+	}
+	return (!preMarked || !nextMarked) && sameMarked;
+}
+
+$("table#employeeListForTaskTable").on("click", "tr.editable td.markable", function(){
+	var cellId = this.id;
+	var userId  = cellId.split("-")[0];
+	
+	$("#"+userId+"-select").prop('checked', true);
+	$("#employeeListForTaskTable tr").removeClass("editable");
+	$("#"+userId+"-row").addClass("editable");
+	
+	var cellBackGroundColor = $(this).css("background-color");
+	console.log(cellBackGroundColor);
+	if (cellBackGroundColor == "rgb(0, 0, 255)") {
+		return;
+	}
+	
+	if (cellBackGroundColor == "rgb(255, 255, 0)" && checkNextAndPreviousMarked(this.id, false)) {
+		var cellColor = $(this).attr("cellcolor");
+		console.log(cellColor);
+		$(this).css("background-color", cellColor);
+		cellSelectCount--;
+		$(this).attr("cellmarked",false);
+	} else if (checkNextAndPreviousMarked(this.id, true)){
+		$(this).attr("cellcolor", cellBackGroundColor);
+		$(this).css("background-color", "yellow");
+		cellSelectCount++;
+		$(this).attr("cellmarked",true);
+	}
+	
+	if (cellSelectCount == 0) {
+		$("#employeeListForTaskTable tr").addClass("editable");
+	}
+	$("#"+userId+"-totalHours").html(cellSelectCount);
+	if (8-cellSelectCount <= 0){
+		$("#"+userId+"-availabeHours").css("color", "red");
+	} else {
+		$("#"+userId+"-availabeHours").css("color", "green");
+	}
+	$("#"+userId+"-availabeHours").html(8-cellSelectCount);
+	
 });
 
 </script>

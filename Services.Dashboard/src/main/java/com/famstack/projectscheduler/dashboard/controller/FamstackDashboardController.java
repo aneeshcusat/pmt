@@ -172,8 +172,9 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
 	public ModelAndView loadProject(@PathVariable("projectId") int projectId, HttpServletRequest request) {
 		ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId, request);
-		return new ModelAndView("projectdetails", "command", new TaskDetails()).addObject("projectDetails",
-				projectDetails);
+		List<EmployeeDetails> userMap = getFamstackApplicationConfiguration().getUserList();
+		return new ModelAndView("projectdetails", "command", new TaskDetails())
+				.addObject("projectDetails", projectDetails).addObject("userMap", userMap);
 	}
 
 	// ---------- Project Comments ------------//

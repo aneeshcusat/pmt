@@ -68,7 +68,7 @@
 			</div>
 
 		</div>
-		<div class="row" style="display: none" id="assignTableId">
+		<div class="row" style="display: " id="assignTableId">
 		<table id="employeeListForTaskTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr style="height: 20px">
@@ -92,63 +92,30 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-            	<td><input name="selection" type="radio"></td>
-                <td>Aneeshkumar</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td style="background-color: gray; width: 25px"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+        
+         	 <c:if test="${not empty userMap}">
+             <c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
+             <tr class="editable" id="${user.id}-row"">
+            	<td><input name="selection" type="radio" id="${user.id}-select"></td>
+                <td class="nonmarkable" id="${user.id}-name">${user.firstName} ${user.lastName}</td>
+                <td class="markable" id="${user.id}-8" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-9" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false"></td>
+                <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-17" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-18" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-19" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="markable" id="${user.id}-20" cellcolor="" cellmarked="false" celleditable="true"></td>
+                <td class="nonmarkable" style="font-weight: bold; font-size: 16px;" id="${user.id}-totalHours">0</td>
+                <td class="nonmarkable" style="font-weight: bold; font-size: 18px; color: green" id="${user.id}-availabeHours">8</td>
             </tr>
-           <tr>
-           		<td><input name="selection" type="radio"></td>
-               <td>Aneeshkumar</td>
-                <td style="background-color: blue"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td style="background-color: gray; width: 25px"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-            	<td><input name="selection" type="radio"></td>
-               <td>Aneeshkumar</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td style="background-color: gray; width: 25px"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+             </c:forEach>
+             </c:if>
         </tbody>
     </table>
 		</div>
