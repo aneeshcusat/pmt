@@ -27,6 +27,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
@@ -177,4 +178,14 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.createComment(projectComments, projectId);
 		return "{\"status\": true}";
 	}
+	
+	@RequestMapping(value = "/messages", method = RequestMethod.GET)
+	public ModelAndView getMessages() {
+		int userId = getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId();
+		List<GroupDetails> groupData = famstackDashboardManager.getAllGroups(userId);
+		Map<String, Object> modelViewMap = new HashMap<String, Object>();
+		modelViewMap.put("groupData", groupData);
+		return new ModelAndView("messages", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
+	}
+	
 }

@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -99,6 +101,13 @@ public class UserItem implements FamstackBaseItem {
 	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
 	@JoinColumn(name = "reportertingManager")
 	private UserItem reportertingManager;
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "group_subscribers", joinColumns = {
+			@JoinColumn(name = "user_id", nullable = false, updatable = false) },
+			inverseJoinColumns = { @JoinColumn(name = "group_id",
+					nullable = false, updatable = false) })
+	private Set<GroupItem> groups;
 
 	public int getCreatedBy() {
 		return createdBy;
@@ -333,6 +342,14 @@ public class UserItem implements FamstackBaseItem {
 
 	public void setReportertingManager(UserItem reportertingManager) {
 		this.reportertingManager = reportertingManager;
+	}
+
+	public Set<GroupItem> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<GroupItem> groups) {
+		this.groups = groups;
 	}
 
 }

@@ -12,7 +12,9 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
@@ -33,6 +35,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackProjectCommentManager projectCommentManager;
+	
+	@Resource
+	FamstackGroupMessageManager groupMessageManager;
+	
 
 	public Map<String, Object> getUserData() {
 		return null;
@@ -97,5 +103,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public ProjectDetails getProjectDetails(int projectId) {
 		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
 		return projectDetails;
+	}
+	
+	public List<GroupDetails> getAllGroups(int userId) {
+		List<GroupDetails> groupDetailsList = groupMessageManager.getGroupsForUser(userId);
+		return groupDetailsList;
 	}
 }

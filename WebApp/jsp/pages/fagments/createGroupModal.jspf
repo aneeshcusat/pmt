@@ -1,0 +1,41 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<div class="row">
+	<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-6">
+			<!-- START JQUERY VALIDATION PLUGIN -->
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-md-3 control-label">First Name</label>
+					<div class="col-md-9">
+						<input path="firstName" type="text" value=""
+							name="firstName" id="firstName" class="form-control" placeholder="eg:Myname"
+							tabindex="1" />
+					</div>
+				</div>
+				
+
+			</div>
+			<!-- END JQUERY VALIDATION PLUGIN -->
+		</div>
+		<div class="col-md-6">
+			<!-- From fields start-->
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-md-3 control-label">Last Name</label>
+					<div class="col-md-9">
+						<input type="text" value="" name="lastName"
+							class="form-control" placeholder="eg:Lastname" id="lastName" tabindex="1" path="lastName"/>
+					</div>
+				</div>
+				
+			</div>
+			<!-- form fields ends -->
+
+		</div>
+
+	</div>
+</div>
+</div>
