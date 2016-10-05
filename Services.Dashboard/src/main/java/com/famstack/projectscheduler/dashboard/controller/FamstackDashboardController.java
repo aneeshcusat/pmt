@@ -1,10 +1,15 @@
 package com.famstack.projectscheduler.dashboard.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.PathParam;
@@ -180,7 +185,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.createComment(projectComments, projectId);
 		return "{\"status\": true}";
 	}
-	
+
 	@RequestMapping(value = "/messages", method = RequestMethod.GET)
 	public ModelAndView getMessages() {
 		int userId = getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId();
@@ -189,7 +194,6 @@ public class FamstackDashboardController extends BaseFamstackService {
 		modelViewMap.put("groupData", groupData);
 		return new ModelAndView("messages", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
-	
 
 	@RequestMapping(value = "/createTask", method = RequestMethod.POST)
 	@ResponseBody
@@ -213,5 +217,43 @@ public class FamstackDashboardController extends BaseFamstackService {
 			@RequestParam(value = "fileName") String fileName, HttpServletRequest request) {
 		famstackDashboardManager.deleteProjectFile(fileName, projectCode, request);
 		return "{\"status\": true}";
+	}
+
+	@RequestMapping(value = "/download/{projectCode}/{fileName}")
+	public void downloadFile(@RequestParam(value = "fileName") String fileName,
+			@PathVariable(value = "projectCode") String projectCode, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			File downloadFile = famstackDashboardManager.getProjectFile(fileName, projectCode, request);
+			if (downloadFile == null) {
+				return;
+			}
+			FileInputStream inputStream = new FileInputStream(downloadFile);
+			ServletContext context = request.getServletContext();
+			logDebug("file path :" + downloadFile.getAbsolutePath());
+			String mimeType = context.getMimeType(downloadFile.getAbsolutePath());
+			if (mimeType == null) {
+				mimeType = "application/octet-stream";
+			}
+			logDebug("MIME type: " + mimeType);
+
+			response.setContentType(mimeType);
+			response.setContentLength((int) downloadFile.length());
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
+			response.setHeader(headerKey, headerValue);
+			OutputStream outStream = response.getOutputStream();
+
+			byte[] buffer = new byte[4096];
+			int bytesRead = -1;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outStream.write(buffer, 0, bytesRead);
+			}
+
+			inputStream.close();
+			outStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

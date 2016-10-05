@@ -69,4 +69,16 @@ public class FamstackProjectFileManager extends BaseFamstackManager {
 		}
 	}
 
+	public File getFile(String fileName, String projectCode, HttpServletRequest request) {
+
+		String uploadsDir = "/uploads/";
+		String realPathtoUploads = request.getServletContext().getRealPath(uploadsDir);
+		String projectFileLocation = realPathtoUploads + "/" + projectCode + "/" + fileName;
+		File projectFile = new File(projectFileLocation);
+		if (projectFile.exists()) {
+			return projectFile;
+		}
+		return null;
+	}
+
 }

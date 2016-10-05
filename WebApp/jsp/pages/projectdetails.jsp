@@ -264,7 +264,7 @@ div#task-pop-up {
                               <ul class="list-unstyled p-files" id="upladedFilesList">
                                 <c:if test="${not empty projectDetails.filesNames}">
                                  <c:forEach var="fileName" items="${projectDetails.filesNames}" varStatus="fileNameIndex"> 
-                                 	<li><a href="#"><i class="fa fa-file-text"></i>${fileName}</a><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-times" style="color:red" aria-hidden="true"></i></a></li> 
+                                 	<li><a href="${applicationHome}/download/${projectDetails.code}/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-times" style="color:red" aria-hidden="true"></i></a></li> 
                                  </c:forEach>
                                  </c:if>
                               </ul>
@@ -423,7 +423,7 @@ $(document).ready(function() {
   					//fa-file-word-o
   				}
   				
-  				$("#upladedFilesList").append('<li><a href="#"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
+  				$("#upladedFilesList").append('<li><a href="${applicationHome}/download/${projectDetails.code}/'+file.name+'?fileName='+file.name+'"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
   				console.log(file.name);
   			},
   			error : function(file, response) {

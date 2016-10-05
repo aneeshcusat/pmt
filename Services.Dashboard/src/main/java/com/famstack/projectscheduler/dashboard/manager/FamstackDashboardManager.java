@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.dashboard.manager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,8 @@ import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
-import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectFileManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
@@ -44,12 +45,12 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackProjectCommentManager projectCommentManager;
-	
+
 	@Resource
 	FamstackGroupMessageManager groupMessageManager;
-	
+
 	@Resource
-	FamstackProjectFileManager FamstackProjectFileManager;
+	FamstackProjectFileManager famstackProjectFileManager;
 
 	public Map<String, Object> getUserData() {
 		return null;
@@ -113,11 +114,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public ProjectDetails getProjectDetails(int projectId, HttpServletRequest request) {
 		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
-		List<String> filesNames = FamstackProjectFileManager.getProjectFiles(projectDetails.getCode(), request);
+		List<String> filesNames = famstackProjectFileManager.getProjectFiles(projectDetails.getCode(), request);
 		projectDetails.setFilesNames(filesNames);
 		return projectDetails;
 	}
-	
+
 	public List<GroupDetails> getAllGroups(int userId) {
 		List<GroupDetails> groupDetailsList = groupMessageManager.getGroupsForUser(userId);
 		return groupDetailsList;
@@ -130,10 +131,15 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public void uploadProjectFile(MultipartFile file, String projectCode, HttpServletRequest request) {
-		FamstackProjectFileManager.uploadFile(file, projectCode, request);
+		famstackProjectFileManager.uploadFile(file, projectCode, request);
 	}
 
 	public void deleteProjectFile(String fileName, String projectCode, HttpServletRequest request) {
-		FamstackProjectFileManager.deleteFile(fileName, projectCode, request);
+		famstackProjectFileManager.deleteFile(fileName, projectCode, request);
+	}
+
+	public File getProjectFile(String fileName, String projectCode, HttpServletRequest request) {
+		return famstackProjectFileManager.getFile(fileName, projectCode, request);
+
 	}
 }
