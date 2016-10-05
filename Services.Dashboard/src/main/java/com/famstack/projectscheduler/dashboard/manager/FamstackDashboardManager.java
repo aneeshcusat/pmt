@@ -5,18 +5,24 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
+import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
+import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
+import com.famstack.projectscheduler.manager.FamstackProjectFileManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
+import com.famstack.projectscheduler.manager.FamstackProjectTaskManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.utils.FamstackUtils;
@@ -34,11 +40,16 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	FamstackProjectManager projectManager;
 
 	@Resource
+	FamstackProjectTaskManager famstackProjectTaskManager;
+
+	@Resource
 	FamstackProjectCommentManager projectCommentManager;
 	
 	@Resource
 	FamstackGroupMessageManager groupMessageManager;
 	
+	@Resource
+	FamstackProjectFileManager FamstackProjectFileManager;
 
 	public Map<String, Object> getUserData() {
 		return null;
@@ -100,13 +111,29 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		projectCommentManager.createProjectCommentItem(projectComments, projectId);
 	}
 
-	public ProjectDetails getProjectDetails(int projectId) {
+	public ProjectDetails getProjectDetails(int projectId, HttpServletRequest request) {
 		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
+		List<String> filesNames = FamstackProjectFileManager.getProjectFiles(projectDetails.getCode(), request);
+		projectDetails.setFilesNames(filesNames);
 		return projectDetails;
 	}
 	
 	public List<GroupDetails> getAllGroups(int userId) {
 		List<GroupDetails> groupDetailsList = groupMessageManager.getGroupsForUser(userId);
 		return groupDetailsList;
+	}
+
+	public void createTask(TaskDetails taskDetails) {
+		ProjectItem projectItem = projectManager.getProjectItemById(taskDetails.getProjectId());
+		famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
+
+	}
+
+	public void uploadProjectFile(MultipartFile file, String projectCode, HttpServletRequest request) {
+		FamstackProjectFileManager.uploadFile(file, projectCode, request);
+	}
+
+	public void deleteProjectFile(String fileName, String projectCode, HttpServletRequest request) {
+		FamstackProjectFileManager.deleteFile(fileName, projectCode, request);
 	}
 }

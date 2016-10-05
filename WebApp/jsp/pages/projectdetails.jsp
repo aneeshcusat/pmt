@@ -16,6 +16,17 @@
 font-weight: normal;
 font-size: 8pt;
 }
+
+div#task-pop-up {
+  display: none;
+  position: absolute;
+  width: 280px;
+  padding: 10px;
+  background: #eeeeee;
+  color: #000000;
+  border: 1px solid #1a1a1a;
+  font-size: 90%;
+}
 	</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
@@ -188,6 +199,15 @@ font-size: 8pt;
                               <c:if test="${activities.projectActivityType == 'CREATED'}">
                               	${activities.userName} has created the project.
                               </c:if>
+                              
+                              <c:if test="${activities.projectActivityType == 'TASK_ADDED'}">
+                              	${activities.userName} has created the task.
+                              </c:if>
+                              
+                               <c:if test="${activities.projectActivityType == 'COMMENT_ADDED'}">
+                              	${activities.userName} has added a comment.
+                              </c:if>
+                              
                               </td>
                               <td>
                                   <span class="label label-info"> ${activities.projectStatus}</span>
@@ -215,34 +235,20 @@ font-size: 8pt;
                           </div>
                               <table class="table">
                                         <tbody>
-                                            <tr>
+                                        
+                                        <c:if test="${not empty projectDetails.projectTaskDeatils}">
+                                 			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
+                                 			<tr>
                                              <td width="5%">1</td>
-                                                <td><a href="#">Create slide 1 to 10</a> 
+                                                <td><a href="#" class="trigger">${taskDetails.name}</a> 
                                                  <div class="progress progress-small progress-striped active">
-                                        			<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                                        			<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
                                     			</div>
                                                 </td>
-                                               <td  width="10%"><span class="label label-warning">Inprogress</span></td>
+                                               <td  width="10%"><span class="label label-warning">${taskDetails.status}</span></td>
                                             </tr>
-                                            <tr>
-                                            <td>2</td>
-                                                <td><a href="#">Create slide 11 to 20</a>
-                                                 <div class="progress progress-small progress-striped active">
-                                        			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
-                                    			</div>
-                                                </td>
-                                                  <td><span class="label label-success">New</span></td>
-                                            </tr>
-                                            <tr>
-                                            <td>3</td>
-                                                <td><a href="#">Review all slides</a>
-                                                
-                                                 <div class="progress progress-small progress-striped active">
-                                        			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
-                                    			</div>
-                                                </td>
-                                                  <td><span class="label label-success">New</span></td>
-                                            </tr>
+                                 			</c:forEach>
+                                 		</c:if>
                                        </tbody>
                                   </table>
                                <h5 class="bold">Time Tracking</h5>
@@ -255,11 +261,12 @@ font-size: 8pt;
                               <br>
                               
                               <h5 class="bold">Project files</h5>
-                              <ul class="list-unstyled p-files">
-                                  <li><a href=""><i class="fa fa-file-text"></i> Project-document.docx</a></li>
-                                  <li><a href=""><i class="fa fa-picture-o"></i> Logo-company.jpg</a></li>
-                                  <li><a href=""><i class="fa fa-mail-forward"></i> Email-from-flatbal.mln</a></li>
-                                  <li><a href=""><i class="fa fa-file"></i> Contract-10_12_2014.docx</a></li>
+                              <ul class="list-unstyled p-files" id="upladedFilesList">
+                                <c:if test="${not empty projectDetails.filesNames}">
+                                 <c:forEach var="fileName" items="${projectDetails.filesNames}" varStatus="fileNameIndex"> 
+                                 	<li><a href="#"><i class="fa fa-file-text"></i>${fileName}</a><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-times" style="color:red" aria-hidden="true"></i></a></li> 
+                                 </c:forEach>
+                                 </c:if>
                               </ul>
                               <br>
 							 <c:if test="${not empty projectDetails.tags}">
@@ -288,11 +295,20 @@ font-size: 8pt;
     
 </div>               
 <!-- END CONTENT FRAME -->       
+<!-- task pop up window start-->
+    <div id="task-pop-up">
+      <h3>Pop-up div Successfully Displayed</h3>
+      <p>
+        This div only appears when the trigger link is hovered over.
+        Otherwise it is hidden from view.
+      </p>
+    </div>
+<!-- task pop up window end -->
 
 <!-- task create modal start -->
 <div class="modal fade" id="createtaskmodal" tabindex="-1"
 	role="dialog" aria-labelledby="createtaskmodal" aria-hidden="true">
-	<form:form id="createTaskFormId" action="createTask" method="POST"
+	<form:form id="createTaskFormId" action="${applicationHome}/createTask" method="POST"
 		role="form" class="form-horizontal">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -325,7 +341,25 @@ font-size: 8pt;
 	<script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
        <script>
-       
+   	
+       $(function() {
+    	   var moveLeft = 0;
+    	   var moveDown = 0;
+
+    	   $('a.trigger').hover(function(e) {
+    	     $('div#task-pop-up').show()
+    	     .css('top', e.pageY + moveDown)
+    	      .css('left', e.pageX + moveLeft)
+    	      .appendTo('body');
+    	   }, function() {
+    	     $('div#task-pop-up').hide();
+    	   });
+    	   
+    	   $('a#trigger').mousemove(function(e) {
+    		    $("div#task-pop-up").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+    		  });
+    	 });
+   	
 function addComment() {
    var dataString = {"projectId": $('#hdn_project_id').val() , "projectComments": $('#comment_textarea').val() };
    
@@ -369,18 +403,52 @@ $(document).ready(function() {
     
 	Dropzone.autoDiscover = false;
   		$("#my-dropzone").dropzone({
-  			url : "/upload",
-  			addRemoveLinks : true,
+  			url : "${applicationHome}/uploadfile/${projectDetails.code}",
+  			addRemoveLinks : false,
   			success : function(file, response) {
   				var imgName = response;
   				file.previewElement.classList.add("dz-success");
-  				console.log("Successfully uploaded :" + imgName);
+  				var fileIcon = "fa-file-text";
+  				if (file.type == "text/xml") {
+  					fileIcon = "fa-file-excel-o";
+  					//fa-file-archive-o
+  					//fa-file-audio-o
+  					//fa-file-code-o
+  					//fa-file-excel-o
+  					//fa-file-image-o
+  					//fa-file-movie-o
+  					//fa-file-pdf-o
+  					//fa-file-video-o
+  					//fa-file-powerpoint-o
+  					//fa-file-word-o
+  				}
+  				
+  				$("#upladedFilesList").append('<li><a href="#"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
+  				console.log(file.name);
   			},
   			error : function(file, response) {
   				file.previewElement.classList.add("dz-error");
   			}
   		});
 });
+
+var deleteFile = function(fileName){
+	$(".msgConfirmText").html("Delete file");
+	$(".msgConfirmText1").html(fileName);
+	$("#confirmYesId").prop("href","javascript:doAjaxDeleteFile('"+fileName+"')");
+}
+
+var doAjaxDeleteFile = function(fileName){
+	var dataString = {"fileName" : fileName};
+	var url = '${applicationHome}/deletefile/${projectDetails.code}';
+	 doAjaxRequest("POST", url, dataString,  function(data) {
+		   var responseJsonObj = JSON.parse(data)
+	       if (responseJsonObj.status){
+	           window.location.reload(true);
+	       }
+	   }, function(e) {
+	   });
+}
 
 var toggleAssignTask = function(){
 	if ($("#assignTableId").is(':hidden')) {
@@ -389,6 +457,7 @@ var toggleAssignTask = function(){
 	} else {
 		$("#assignTableId").hide(1000);
 		$("#toggleAssignTask").html("Assign task");
+		$('input:radio[name=selection]').each(function () { $(this).prop('checked', false); });
 	}
 }
 
@@ -399,6 +468,18 @@ $(document).ready(function() {
         "ordering": false,
     
     });
-    
 } );
+
+function doAjaxCreateProjectForm() {
+	$('#createTaskFormId').submit();
+}
+
+$('#createTaskFormId').ajaxForm(function(response) {
+	console.log(response);
+	var responseJson = JSON.parse(response);
+	if (responseJson.status) {
+		window.location.reload(true);
+	}
+});
+
 </script>

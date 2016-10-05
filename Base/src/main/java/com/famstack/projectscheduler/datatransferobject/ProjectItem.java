@@ -106,6 +106,9 @@ public class ProjectItem implements FamstackBaseItem {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
 	private Set<ProjectActivityItem> projectActivityItem;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
+	private Set<TaskItem> taskItems;
+
 	public String getName() {
 		return name;
 	}
@@ -283,6 +286,14 @@ public class ProjectItem implements FamstackBaseItem {
 
 	public void setTeamId(Integer teamId) {
 		this.teamId = teamId;
+	}
+
+	public Set<TaskItem> getTaskItems() {
+		return taskItems;
+	}
+
+	public void setTaskItems(Set<TaskItem> taskItems) {
+		this.taskItems = taskItems;
 	}
 
 }

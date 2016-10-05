@@ -2,21 +2,22 @@
 	pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <div class="row">
+<form:input type="hidden" id="projectId" path="projectId" value="${projectDetails.id}"/>
 	<div class="col-md-12">
 		<div class="row">
 			<div class="col-md-7">
 				<div class="form-group">
 					<label class="col-md-3 control-label">Task Name</label>
 					<div class="col-md-9">
-						<input type="text" class="autocomplete form-control"
-							id="projectName" path="name" />
+						<form:input type="text" class="autocomplete form-control"
+							id="taskName" path="name" />
 						<span class="help-block">required task name</span>
 					</div>
 				</div>
 				<div class="form-group">
 				<label class="col-md-3 control-label">Description</label>
                      <div class="col-md-9">
-                            <textarea class="form-control" id="description" path="description"></textarea> 
+                            <form:textarea class="form-control" id="description" path="description"></form:textarea> 
                          <span class="help-block">required description</span>
                      </div>
 				</div>
@@ -33,14 +34,14 @@
 				<div class="form-group">
 				<label class="col-md-4 control-label">Est Start Time</label>
                      <div class="col-md-8">
-                            <input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/> 
+                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/> 
                          <span class="help-block">required estimated start time</span>
                      </div>
 				</div>
 				<div class="form-group">
 				<label class="col-md-4 control-label">Est Completion Time</label>
                      <div class="col-md-8">
-                            <input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime" onchange="alert($(this).val())"/> 
+                            <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime" onchange="alert($(this).val())"/> 
                          <span class="help-block">required estimated completion time</span>
                      </div>
 				</div>

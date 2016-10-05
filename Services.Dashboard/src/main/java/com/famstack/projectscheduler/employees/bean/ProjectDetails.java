@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import com.famstack.projectscheduler.contants.ProjectComplexity;
@@ -56,7 +57,11 @@ public class ProjectDetails {
 
 	private Set<ProjectActivityDetails> projectActivityDetails;
 
+	private Set<TaskDetails> projectTaskDeatils;
+
 	private String reporterName;
+
+	private List<String> filesNames;
 
 	public Integer getId() {
 		return id;
@@ -244,6 +249,22 @@ public class ProjectDetails {
 
 	public void setClientId(Integer clientId) {
 		this.clientId = clientId;
+	}
+
+	public Set<TaskDetails> getProjectTaskDeatils() {
+		return projectTaskDeatils;
+	}
+
+	public void setProjectTaskDeatils(Set<TaskDetails> projectTaskDeatils) {
+		this.projectTaskDeatils = projectTaskDeatils;
+	}
+
+	public List<String> getFilesNames() {
+		return filesNames;
+	}
+
+	public void setFilesNames(List<String> filesNames) {
+		this.filesNames = filesNames;
 	}
 
 }
