@@ -551,6 +551,71 @@ $('#createTaskFormId').ajaxForm(function(response) {
 	}
 });
 
+$('input:radio[name=selection]').on("click", function(){
+	fillAssignTabledBasedOnDate(this.id);
+});
+
+$('input:checkbox[name=helper]').on("click", function(){
+		fillHelperTabledBasedOnDate(this.id);
+});
+
+
+var fillHelperTabledBasedOnDate =function(id){
+	var startTaskTime = $("#estStartTime").val();
+	var startTimeHour = new Date(startTaskTime).getHours();
+	var duration = $("#duration").val();
+	var userId = id.split("-")[0];
+	if ($("#"+userId+"-helper").prop("checked") == true) {
+		markTableFields(userId, startTimeHour, duration, "lightgray", true, false);
+	} else {
+		markTableFields(userId, startTimeHour, duration, "lightgray", true, true);
+	}
+}
+
+var fillAssignTabledBasedOnDate =function(id){
+	
+	var startTaskTime = $("#estStartTime").val();
+	var startTimeHour = new Date(startTaskTime).getHours();
+	var duration = $("#duration").val();
+	var userId = id.split("-")[0];
+	resetAssignTable();
+	markTableFields(userId, startTimeHour, duration, "yellow", false, false);
+}
+
+var markTableFields = function(userId, startTimeHour, duration, color, helper, reset){
+	console.log("userId :"+userId+"startTimeHour :" + startTimeHour +"duration :"+ duration);
+	
+	for (var index = 0; index < duration; index++) {
+		if(startTimeHour ==  breakTime){
+			startTimeHour++;
+		}
+		console.log("index :" + index);
+		console.log("startTimeHour :" + startTimeHour);
+		var getCell = $("#"+userId+"-"+startTimeHour);
+		if (reset){
+			console.log("reset");
+			var cellBackGroundColor =$(getCell).attr("cellcolor");
+			$(getCell).css("background-color", cellBackGroundColor);
+			$(getCell).attr("cellmarked",false);
+			$(getCell).attr("modified",false);
+		} else {
+			console.log("helper");
+			var cellBackGroundColor = $(getCell).css("background-color");
+			$(getCell).attr("cellcolor", cellBackGroundColor);
+			$(getCell).css("background-color", color);
+			$(getCell).attr("cellmarked",true);
+			$(getCell).attr("modified",true);
+		}
+		
+		if (!helper){
+			cellSelectCount++;
+		} else {
+			$(getCell).attr("celleditable", false);
+		}
+		
+		startTimeHour++;
+	}
+}
 
 var dateDisplayLogic = function( currentDateTime ){
 	var startProjectTime = '${projectDetails.startTime}';
@@ -577,7 +642,7 @@ $('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
 	},
 	minDate:'${projectDetails.startTime}', // yesterday is minimum date
 	maxDate:'${projectDetails.completionTime}',
-	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'],
+	allowTimes:['08:00','09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'],
 	onChangeDateTime:dateDisplayLogic,
 	onShow:dateDisplayLogic
 });
@@ -595,19 +660,29 @@ $("#estStartTime").on("change",function(){
 	}
 	$("#estCompleteTime").html(getEstimatedCompletionTime( $("#estStartTime").val(), $("#duration").val()));
 	$("#taskDuration").html($("#duration").val());
+	
+	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=selection]:checked').length > 0) {
+		var id = $('input:radio[name=selection]:checked').attr('id');
+		console.log("select box id" + id);
+		fillAssignTabledBasedOnDate(id);
+	}
 });
 
 $("#duration").on("change",function(){
 	$("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), $("#duration").val()));
 	$("#taskDuration").html($("#duration").val());
+	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=selection]:checked').length > 0) {
+		var id = $('input:radio[name=selection]:checked').attr('id');
+		fillAssignTabledBasedOnDate(id);
+	}
 });
 
 var getEstimatedCompletionTime = function(startTime, duration){
-	var estimatedCompletionTime = new Date(startTime);
+	var estimatedCompletionTime = new Date(startTime); 
 	estimatedCompletionTime.addHours(duration);
 	var completionTimeString = getTodayDate(estimatedCompletionTime);
 	var completionHour = estimatedCompletionTime.getHours();
-	if(completionHour == 13){
+	if(completionHour > 13){
 		estimatedCompletionTime.addHours(1);
 	}
 	completionTimeString +=(" " +estimatedCompletionTime.getHours()+":00");
@@ -641,20 +716,23 @@ var checkNextAndPreviousMarked = function(thisVarId, checkOrUnchek){
 	if (cellmarked == 'true' && celleditable == 'true') {
 		sameMarked = true;
 	}
+	preMarked = isPreMarked(thisVarId);
+	nextMarked = isNextMarked(thisVarId);
 	
-	
-	if (time >= 8 && 21 > time) {
-		var tmpTime = time + 1;
-		if (time == breakTime-1) {
-			tmpTime++;
-		}
-		console.log("next cell id :" + userId+"-"+tmpTime);
-		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
-		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
-		if (cellmarked == 'true' && celleditable == 'true') {
-			nextMarked = true;
-		}
+	console.log("cellSelectCount" + cellSelectCount);
+	console.log("preMarked" + preMarked);
+	console.log("nextMarked" + nextMarked);
+	if (checkOrUnchek) {
+		return (cellSelectCount == 0 || preMarked || nextMarked) && !sameMarked;
 	}
+	return (!preMarked || !nextMarked) && sameMarked;
+}
+
+var isPreMarked = function(thisVarId){
+	var cellIds  = thisVarId.split("-");
+	var userId = cellIds[0];
+	var time = parseInt(cellIds[1]);
+	var preMarked = false;
 	
 	if (time <= 21 && 8 < time) {
 		var tmpTime = time - 1;
@@ -668,19 +746,41 @@ var checkNextAndPreviousMarked = function(thisVarId, checkOrUnchek){
 			preMarked = true;
 		}
 	}
-	console.log("cellSelectCount" + cellSelectCount);
 	console.log("preMarked" + preMarked);
-	console.log("nextMarked" + nextMarked);
-	if (checkOrUnchek) {
-		return (cellSelectCount == 0 || preMarked || nextMarked) && !sameMarked;
+	return preMarked;
+}
+
+
+var isNextMarked = function(thisVarId){
+	var cellIds  = thisVarId.split("-");
+	var userId = cellIds[0];
+	var time = parseInt(cellIds[1]);
+	var nextMarked = false;
+	
+	if (time >= 8 && 21 > time) {
+		var tmpTime = time + 1;
+		if (time == breakTime-1) {
+			tmpTime++;
+		}
+		console.log("next cell id :" + userId+"-"+tmpTime);
+		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
+		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
+		if (cellmarked == 'true' && celleditable == 'true') {
+			nextMarked = true;
+		}
 	}
-	return (!preMarked || !nextMarked) && sameMarked;
+	console.log("nextMarked" + nextMarked);
+	return nextMarked;
 }
 
 
 $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", function(){
+	
+	var maxDuration = $('#duration > option').length;
+	
 	var cellId = this.id;
 	var userId  = cellId.split("-")[0];
+	var hourId = cellId.split("-")[1];
 	
 	$("#"+userId+"-select").prop('checked', true);
 	$('input:radio[name=selection]').each(function () { $(this).prop('disabled', true); });
@@ -690,7 +790,8 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	
 	var cellBackGroundColor = $(this).css("background-color");
 	console.log(cellBackGroundColor);
-	if (cellBackGroundColor == "rgb(0, 0, 255)") {
+	var celleditable = $("#"+userId+"-"+hourId).attr("celleditable");
+	if (cellBackGroundColor == "rgb(0, 0, 255)" || celleditable == "false") {
 		return;
 	}
 	
@@ -701,17 +802,44 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		cellSelectCount--;
 		$(this).attr("cellmarked",false);
 		$(this).attr("modified",false);
+		
+		if (isPreMarked(this.id) && cellSelectCount == 1) {
+			var estimatedStartDate = new Date($("#estStartTime").val());
+			estimatedStartDate.setHours(hourId-1);
+			$("#estStartTime").val(getTodayDate(estimatedStartDate)+" "+estimatedStartDate.getHours()+":00");
+		}
+		
+		if (isNextMarked(this.id)) {
+			var estimatedStartDate = new Date($("#estStartTime").val());
+			estimatedStartDate.setHours(parseInt(hourId)+1);
+			$("#estStartTime").val(getTodayDate(estimatedStartDate)+" "+estimatedStartDate.getHours()+":00");
+		}
+		
 	} else if (checkNextAndPreviousMarked(this.id, true)){
+		if (maxDuration - 1 == cellSelectCount) {
+			return;
+		}
 		$(this).attr("cellcolor", cellBackGroundColor);
 		$(this).css("background-color", "yellow");
 		cellSelectCount++;
 		$(this).attr("cellmarked",true);
 		$(this).attr("modified",true);
+		
+		if (cellSelectCount == 1) {
+			var estimatedStartDate = new Date($("#estStartTime").val());
+			estimatedStartDate.setHours(hourId);
+			$("#estStartTime").val(getTodayDate(estimatedStartDate)+" "+estimatedStartDate.getHours()+":00");
+		} else if (!isPreMarked(this.id)) {
+			var estimatedStartDate = new Date($("#estStartTime").val());
+			estimatedStartDate.setHours(hourId);
+			$("#estStartTime").val(getTodayDate(estimatedStartDate)+" "+estimatedStartDate.getHours()+":00");
+		}
 	}
 	
 	if (cellSelectCount == 0) {
 		$("#employeeListForTaskTable tr").addClass("editable");
 		$('input:radio[name=selection]').each(function () { $(this).prop('disabled', false); });
+		$('input:radio[name=selection]').each(function () { $(this).prop('checked', false); });
 	}
 	
 	$("#"+userId+"-totalHours").html(cellSelectCount);
@@ -721,6 +849,9 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		$("#"+userId+"-availabeHours").css("color", "green");
 	}
 	$("#"+userId+"-availabeHours").html(8-cellSelectCount);
+	$("#estCompleteTime").html(getEstimatedCompletionTime( $("#estStartTime").val(), cellSelectCount));
+	$("#duration").val(cellSelectCount);
+	$("#duration").selectpicker("refresh");
 	
 });
 
@@ -734,6 +865,7 @@ var resetAssignTable = function(){
 		cellSelectCount--;
 		$(this).attr("cellmarked",false);
 		$(this).attr("modified",false);
+		$(this).attr("celleditable", true);
 	});
 }
 

@@ -90,6 +90,7 @@
                 <th>20:01 - 21:00</th>
                 <th style="width: 50px;font-weight:bold">Total Hrs</th>
                 <th style="width: 50px;font-weight:bold">Avlbl Hrs</th>
+                 <th style="width: 10px">Helper</th>
             </tr>
         </thead>
         <tbody>
@@ -114,6 +115,7 @@
                 <td class="markable" id="${user.id}-20" cellcolor="" cellmarked="false" celleditable="true" modified="false"></td>
                 <td class="nonmarkable" style="font-weight: bold; font-size: 16px;" id="${user.id}-totalHours">0</td>
                 <td class="nonmarkable" style="font-weight: bold; font-size: 18px; color: green" id="${user.id}-availabeHours">8</td>
+                <td class="nonmarkable"><input name="helper" id="${user.id}-helper"type="checkbox"/></td>
             </tr>
              </c:forEach>
              </c:if>
