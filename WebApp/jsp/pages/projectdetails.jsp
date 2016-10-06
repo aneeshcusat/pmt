@@ -409,6 +409,8 @@ var clearTaskDetails = function(){
     $("#duration").prop('selectedIndex', ${projectDetails.unAssignedDuration});
     $("#duration").selectpicker('refresh');
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), ${projectDetails.unAssignedDuration}));
+    $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
+
 }    
 
 var createTaskDurationList = function(duration){
@@ -435,6 +437,8 @@ var loadTaskDetails = function(taskId){
     $("#duration").prop('selectedIndex', parseInt($("#"+taskId+"duration").val()));
     $("#duration").selectpicker('refresh');
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), parseInt($("#"+taskId+"duration").val())));
+    $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
+
  	
 }  
        
@@ -531,6 +535,7 @@ var toggleAssignTask = function(){
 	if ($("#assignTableId").is(':hidden')) {
 		$("#assignTableId").show(1000);
 		$("#toggleAssignTask").html("Assign task later");
+		fillTableFromJson();
 	} else {
 		$("#assignTableId").hide(1000);
 		$("#toggleAssignTask").html("Assign task");
@@ -552,7 +557,10 @@ $('#createTaskFormId').ajaxForm(function(response) {
 });
 
 $('input:radio[name=assignee]').on("click", function(){
+	resetAssignTable();
+	fillTableFromJson();
 	fillAssignTabledBasedOnDate(this.id);
+	
 });
 
 $('input:checkbox[name=helper]').on("click", function(){
@@ -578,7 +586,6 @@ var fillAssignTabledBasedOnDate =function(id){
 	var startTimeHour = new Date(startTaskTime).getHours();
 	var duration = $("#duration").val();
 	var userId = id.split("-")[0];
-	resetAssignTable();
 	markTableFields(userId, startTimeHour, duration, "yellow", false, false);
 }
 
@@ -592,6 +599,7 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 		console.log("index :" + index);
 		console.log("startTimeHour :" + startTimeHour);
 		var getCell = $("#"+userId+"-"+startTimeHour);
+		$("#estStartTime").css("border", "1px solid #D5D5D5");
 		if (reset){
 			console.log("reset");
 			var cellBackGroundColor =$(getCell).attr("cellcolor");
@@ -601,6 +609,18 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 		} else {
 			console.log("helper");
 			var cellBackGroundColor = $(getCell).css("background-color");
+			if($(getCell).attr("isassigned") == "true"){
+				if (helper){
+					console.log("error- helper");
+					return;
+					//error
+					
+				} else {
+					$("#estStartTime").css("border", "1px solid red");
+					return;
+					//error
+				}
+			}
 			$(getCell).attr("cellcolor", cellBackGroundColor);
 			$(getCell).css("background-color", color);
 			$(getCell).attr("cellmarked",true);
@@ -650,13 +670,14 @@ $('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
 $("#estStartTime").on("change",function(){
 	var startProjectTime = '${projectDetails.startTime}';
 	var startProjectDate = new Date(startProjectTime);
-	
+	resetAssignTable();
+	fillTableFromJson();
 	var startTaskTime = $("#estStartTime").val();
 	var startTaskDate = new Date(startTaskTime);
 	if(startTaskDate < startProjectDate) {
 		$("#estStartTime").css("border", "1px solid red");
 	} else {
-		$("#estStartTime").css("border", "none");
+		$("#estStartTime").css("border", "1px solid #D5D5D5");
 	}
 	$("#estCompleteTime").html(getEstimatedCompletionTime( $("#estStartTime").val(), $("#duration").val()));
 	$("#taskDuration").html($("#duration").val());
@@ -666,9 +687,15 @@ $("#estStartTime").on("change",function(){
 		console.log("select box id" + id);
 		fillAssignTabledBasedOnDate(id);
 	}
+	
+	$("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
+
+
 });
 
 $("#duration").on("change",function(){
+	resetAssignTable();
+	fillTableFromJson();
 	$("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), $("#duration").val()));
 	$("#taskDuration").html($("#duration").val());
 	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=assignee]:checked').length > 0) {
@@ -697,7 +724,7 @@ $(document).ready(function() {
     
     });
     
-    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;"> Date : '+getTodayDate(new Date())+'</span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
+    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;" id="currentAssignmentDate"></span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
 } );
 
 var cellSelectCount = 0;
@@ -782,18 +809,17 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	var userId  = cellId.split("-")[0];
 	var hourId = cellId.split("-")[1];
 	
-	$("#"+userId+"-select").prop('checked', true);
-	$('input:radio[name=assignee]').each(function () { $(this).prop('disabled', true); });
-	$("#"+userId+"-select").prop('disabled', false);
-	$("#employeeListForTaskTable tr").removeClass("editable");
-	$("#"+userId+"-row").addClass("editable");
-	
 	var cellBackGroundColor = $(this).css("background-color");
 	console.log(cellBackGroundColor);
 	var celleditable = $("#"+userId+"-"+hourId).attr("celleditable");
 	if (cellBackGroundColor == "rgb(0, 0, 255)" || celleditable == "false") {
 		return;
 	}
+	if(cellSelectCount == 0) {
+		$("#"+userId+"-select").prop('checked', true);
+	}
+	//$('input:radio[name=assignee]').each(function () { $(this).prop('disabled', true); });
+	//$("#"+userId+"-select").prop('disabled', false);
 	
 	if (cellBackGroundColor == "rgb(255, 255, 0)" && checkNextAndPreviousMarked(this.id, false)) {
 		var cellColor = $(this).attr("cellcolor");
@@ -857,16 +883,54 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 
 var resetAssignTable = function(){
 	
-	$('table#employeeListForTaskTable td[modified="true"]').each(function () {
+	$('table#employeeListForTaskTable td[cellmarked="true"]').each(function () {
+		
 		$("#employeeListForTaskTable tr").addClass("editable");
 		$('input:radio[name=assignee]').each(function () { $(this).prop('disabled', false); });
 		var cellColor = $(this).attr("cellcolor");
 		$(this).css("background-color", cellColor);
-		cellSelectCount--;
+		cellSelectCount=0;
 		$(this).attr("cellmarked",false);
 		$(this).attr("modified",false);
 		$(this).attr("celleditable", true);
+		$(this).attr("isassigned",false);
+		
 	});
+}
+
+var fillTableFromJson = function(){
+	
+	var json = [{
+        "USER_ID": 4002,
+        "HOUR": 8,
+        "DURATION" : 4,
+        "DATE_ID": "2016/10/07"
+    	},
+    	{"USER_ID": 1000,
+            "HOUR": 8,
+            "DURATION" : 4,
+            "DATE_ID": "2016/10/07"
+        	
+    	}];
+		$.each(json, function(idx, elem){
+			if (getTodayDate(new Date($("#estStartTime").val())) == elem.DATE_ID) {
+				var hour = parseInt(elem.HOUR);
+				var duration = elem.DURATION;
+				
+				for (var index = 0; index < duration; index++) {
+					var cellId = $("#"+elem.USER_ID+"-"+hour);
+					console.log(cellId);
+					hour++;
+					$(cellId).attr("isassigned",true);
+					$(cellId).attr("cellmarked",true);
+					$(cellId).attr("modified",false);
+					$(cellId).attr("celleditable", false);
+					$(cellId).attr("cellcolor", $(cellId).css("background-color"));
+					$(cellId).css("background-color", "blue");
+				}
+				
+			}
+		});
 }
 
 </script>
