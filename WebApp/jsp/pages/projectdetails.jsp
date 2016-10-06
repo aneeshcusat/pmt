@@ -410,7 +410,10 @@ var clearTaskDetails = function(){
     $("#duration").selectpicker('refresh');
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), ${projectDetails.unAssignedDuration}));
     $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
-
+    $("#assignTableId").hide(1000);
+	$("#toggleAssignTask").html("Assign task");
+	resetAssignTable();
+	$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 }    
 
 var createTaskDurationList = function(duration){
@@ -438,6 +441,10 @@ var loadTaskDetails = function(taskId){
     $("#duration").selectpicker('refresh');
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), parseInt($("#"+taskId+"duration").val())));
     $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
+    $("#assignTableId").hide(1000);
+	$("#toggleAssignTask").html("Assign task");
+	resetAssignTable();
+	$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 
  	
 }  
