@@ -252,7 +252,7 @@ width: 60%;
                                  			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
                                  			<tr>
                                              <td width="5%">1</td>
-                                                <td><a href="#" id="${taskDetails.taskId}" class="trigger" data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">${taskDetails.name}</a> 
+                                                <td>${taskDetails.name}<a href="#" id="${taskDetails.taskId}" class="trigger" data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">  Details</a> 
                                                  <div class="progress progress-small progress-striped active">
                                         			<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
                                     			</div>
@@ -942,12 +942,18 @@ var fillTableFromJson = function(){
         "USER_ID": 4002,
         "HOUR": 8,
         "DURATION" : 4,
-        "DATE_ID": "2016/10/07"
+        "DATE_ID": "2016/10/07",
+        "TASK_ID":2012,
+        "TASK_NAME":2013,
+        "TYPE":"PROJECT"
     	},
     	{"USER_ID": 1000,
             "HOUR": 8,
             "DURATION" : 4,
-            "DATE_ID": "2016/10/07"
+            "DATE_ID": "2016/10/07",
+            "TASK_ID":7054,
+            "TASK_NAME":2013,
+            "TYPE":"HELPER"
         	
     	}];
 		$.each(json, function(idx, elem){
@@ -959,13 +965,18 @@ var fillTableFromJson = function(){
 					var cellId = $("#"+elem.USER_ID+"-"+hour);
 					console.log(cellId);
 					hour++;
-					$(cellId).attr("isassigned",true);
-					$(cellId).attr("cellmarked",true);
-					$(cellId).attr("modified",false);
-					$(cellId).attr("celleditable", false);
 					$(cellId).attr("cellcolor", $(cellId).css("background-color"));
-					$(cellId).css("background-color", "blue");
-					increaseTotalHours(elem.USER_ID);
+					if(elem.TASK_ID == $("#taskId").val()) {
+						
+					} else {
+						$(cellId).attr("celleditable", false);
+						$(cellId).attr("isassigned",true);
+						$(cellId).attr("cellmarked",true);
+						$(cellId).attr("modified",false);
+						$(cellId).css("background-color", "blue");
+						increaseTotalHours(elem.USER_ID);
+					}
+					
 				}
 			}
 		});
