@@ -145,7 +145,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 	}
 
 	public UserItem getUserItem(String userId) {
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("id", userId);
 		List<?> userItemList = getFamstackDataAccessObjectManager()
 				.executeQuery(HQLStrings.getString("FamstackQueryStringsusersByUserId"), dataMap);

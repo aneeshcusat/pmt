@@ -10,7 +10,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.datatransferobject.GroupItem;
@@ -28,10 +27,10 @@ import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
  */
 @Component
 public class FamstackGroupMessageManager extends BaseFamstackManager {
-	
+
 	@Resource
 	FamstackUserProfileManager userProfileManager;
-	
+
 	public void createGroupItem(GroupDetails groupDetails) {
 		GroupItem groupItem = new GroupItem();
 		groupItem.setSubscribers(getSubscriberItems(groupDetails.getSubscriberIds()));
@@ -44,23 +43,22 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 	public Set<UserItem> getSubscriberItems(int[] subscriberIds) {
 		Set<UserItem> userItemSet = new HashSet<UserItem>();
 		if (subscriberIds != null) {
-			for (int userId: subscriberIds) {
-					UserItem userItem = new UserItem();
-					userItem.setId(userId);
-					userItemSet.add(userItem);
+			for (int userId : subscriberIds) {
+				UserItem userItem = new UserItem();
+				userItem.setId(userId);
+				userItemSet.add(userItem);
 			}
 		}
 		return userItemSet;
 	}
-	
+
 	public void deleteGroup(int groupId) {
-		GroupItem groupItem = (GroupItem) famstackDataAccessObjectManager.getItemById(groupId,
-				GroupItem.class);
+		GroupItem groupItem = (GroupItem) famstackDataAccessObjectManager.getItemById(groupId, GroupItem.class);
 		if (groupItem != null) {
 			famstackDataAccessObjectManager.deleteItem(groupItem);
 		}
 	}
-	
+
 	public GroupDetails mapGroupItemToGroupDetails(GroupItem groupItem) {
 
 		if (groupItem != null) {
@@ -68,25 +66,25 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 
 			groupDetails.setDescription(groupItem.getDescription());
 			groupDetails.setName(groupItem.getName());
-			
+
 			if (groupItem.getCreatedBy() != null) {
 				UserItem userItem = userProfileManager.getUserItemById(groupItem.getCreatedBy().getId());
 				groupDetails.setCreatedBy(userProfileManager.mapEmployeeDetails(userItem));
 			}
 			groupDetails.setCreatedDate(groupItem.getCreatedDate());
 			groupDetails.setLastModifiedDate(groupItem.getLastModifiedDate());
-			
+
 			groupDetails.setGroupId(groupItem.getGroupId());
 			groupDetails.setMessages(mapMessageItems(groupItem.getMessages()));
 			groupDetails.setSubscriberIds(getSubscriberIds(groupItem.getSubscribers()));
-			
+
 			groupDetails.setSubscribers(getSubscriberDetails(groupItem.getSubscribers()));
 			return groupDetails;
 
 		}
 		return null;
 	}
-	
+
 	private Set<EmployeeDetails> getSubscriberDetails(Set<UserItem> subscribers) {
 		Set<EmployeeDetails> employeeDetailsList = new HashSet<EmployeeDetails>();
 		if (subscribers != null) {
@@ -112,9 +110,9 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		}
 		return groupDetailsList;
 	}
-	
+
 	public List<GroupItem> getGroupItems(Integer userId) {
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("id", String.valueOf(userId));
 		List<GroupItem> userItemList = (List<GroupItem>) getFamstackDataAccessObjectManager()
 				.executeQuery(HQLStrings.getString("FamstackQueryStringsGroupsByUserId"), dataMap);
@@ -144,8 +142,7 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		}
 		return subscriberIds;
 	}
-	
-	
+
 	public void createGroupMessageItem(GroupMessageDetails groupMessageDetails) {
 		GroupMessageItem groupMessage = new GroupMessageItem();
 		groupMessage.setDescription(groupMessageDetails.getDescription());
@@ -155,7 +152,7 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		groupMessage.setUser(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
 		famstackDataAccessObjectManager.saveOrUpdateItem(groupMessage);
 	}
-	
+
 	public GroupMessageDetails mapGroupMessageItemToGroupMessageDetails(GroupMessageItem groupMessageItem) {
 
 		if (groupMessageItem != null) {

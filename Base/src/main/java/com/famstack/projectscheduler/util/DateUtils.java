@@ -84,6 +84,12 @@ public final class DateUtils extends BaseFamstackService {
 			cal.add(Calendar.DAY_OF_MONTH, nextOrPrevious);
 		} else if (DateTimePeriod.HOUR == previousTimePeriod) {
 			cal.add(Calendar.HOUR, nextOrPrevious);
+		} else if (DateTimePeriod.DAY_START == previousTimePeriod) {
+			cal.add(Calendar.DAY_OF_MONTH, nextOrPrevious);
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0);
+		} else if (DateTimePeriod.DAY_END == previousTimePeriod) {
+			cal.add(Calendar.DAY_OF_MONTH, nextOrPrevious);
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59);
 		}
 		return cal.getTime();
 	}

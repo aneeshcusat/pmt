@@ -535,7 +535,7 @@ var toggleAssignTask = function(){
 		$("#assignTableId").hide(1000);
 		$("#toggleAssignTask").html("Assign task");
 		resetAssignTable();
-		$('input:radio[name=selection]').each(function () { $(this).prop('checked', false); });
+		$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 	}
 }
 
@@ -551,7 +551,7 @@ $('#createTaskFormId').ajaxForm(function(response) {
 	}
 });
 
-$('input:radio[name=selection]').on("click", function(){
+$('input:radio[name=assignee]').on("click", function(){
 	fillAssignTabledBasedOnDate(this.id);
 });
 
@@ -661,8 +661,8 @@ $("#estStartTime").on("change",function(){
 	$("#estCompleteTime").html(getEstimatedCompletionTime( $("#estStartTime").val(), $("#duration").val()));
 	$("#taskDuration").html($("#duration").val());
 	
-	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=selection]:checked').length > 0) {
-		var id = $('input:radio[name=selection]:checked').attr('id');
+	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=assignee]:checked').length > 0) {
+		var id = $('input:radio[name=assignee]:checked').attr('id');
 		console.log("select box id" + id);
 		fillAssignTabledBasedOnDate(id);
 	}
@@ -671,8 +671,8 @@ $("#estStartTime").on("change",function(){
 $("#duration").on("change",function(){
 	$("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), $("#duration").val()));
 	$("#taskDuration").html($("#duration").val());
-	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=selection]:checked').length > 0) {
-		var id = $('input:radio[name=selection]:checked').attr('id');
+	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=assignee]:checked').length > 0) {
+		var id = $('input:radio[name=assignee]:checked').attr('id');
 		fillAssignTabledBasedOnDate(id);
 	}
 });
@@ -783,7 +783,7 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	var hourId = cellId.split("-")[1];
 	
 	$("#"+userId+"-select").prop('checked', true);
-	$('input:radio[name=selection]').each(function () { $(this).prop('disabled', true); });
+	$('input:radio[name=assignee]').each(function () { $(this).prop('disabled', true); });
 	$("#"+userId+"-select").prop('disabled', false);
 	$("#employeeListForTaskTable tr").removeClass("editable");
 	$("#"+userId+"-row").addClass("editable");
@@ -838,8 +838,8 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	
 	if (cellSelectCount == 0) {
 		$("#employeeListForTaskTable tr").addClass("editable");
-		$('input:radio[name=selection]').each(function () { $(this).prop('disabled', false); });
-		$('input:radio[name=selection]').each(function () { $(this).prop('checked', false); });
+		$('input:radio[name=assignee]').each(function () { $(this).prop('disabled', false); });
+		$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 	}
 	
 	$("#"+userId+"-totalHours").html(cellSelectCount);
@@ -859,7 +859,7 @@ var resetAssignTable = function(){
 	
 	$('table#employeeListForTaskTable td[modified="true"]').each(function () {
 		$("#employeeListForTaskTable tr").addClass("editable");
-		$('input:radio[name=selection]').each(function () { $(this).prop('disabled', false); });
+		$('input:radio[name=assignee]').each(function () { $(this).prop('disabled', false); });
 		var cellColor = $(this).attr("cellcolor");
 		$(this).css("background-color", cellColor);
 		cellSelectCount--;

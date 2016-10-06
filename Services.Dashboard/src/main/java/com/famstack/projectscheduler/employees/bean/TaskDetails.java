@@ -29,6 +29,10 @@ public class TaskDetails {
 
 	private Integer duration;
 
+	private int assignee;
+
+	private int[] helper;
+
 	private TaskStatus status;
 
 	public int getTaskId() {
@@ -125,6 +129,22 @@ public class TaskDetails {
 
 	public void setProjectId(int projectId) {
 		this.projectId = projectId;
+	}
+
+	public int getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(int assignee) {
+		this.assignee = assignee;
+	}
+
+	public int[] getHelper() {
+		return helper;
+	}
+
+	public void setHelper(int[] helper) {
+		this.helper = helper;
 	}
 
 }

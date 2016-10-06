@@ -8,18 +8,18 @@ package com.famstack.projectscheduler.util;
  */
 public enum DateTimePeriod {
 
-    /** The year. */
-    YEAR,
+	/** The year. */
+	YEAR,
 
-    /** The month. */
-    MONTH,
+	/** The month. */
+	MONTH,
 
-    /** The week. */
-    WEEK,
+	/** The week. */
+	WEEK,
 
-    /** The day. */
-    DAY,
+	/** The day. */
+	DAY,
 
-    /** The hour. */
-    HOUR
+	/** The hour. */
+	HOUR, DAY_START, DAY_END
 }

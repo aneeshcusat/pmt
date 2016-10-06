@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
@@ -21,6 +22,12 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 
 	@Resource
 	FamstackProjectActivityManager famstackProjectActivityManager;
+
+	@Resource
+	FamstackUserProfileManager famstackUserProfileManager;
+
+	@Resource
+	FamstackUserActivityManager famstackUserActivityManager;
 
 	public void createTaskItem(TaskDetails taskDetails, ProjectItem projectItem) {
 		TaskItem taskItem = new TaskItem();
@@ -65,6 +72,28 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		taskItem.setDuration(taskDetails.getDuration());
 
 		famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+
+		updateUserActivity(taskDetails, startDate);
+	}
+
+	private void updateUserActivity(TaskDetails taskDetails, Date startDate) {
+
+		logDebug("task assignee :" + taskDetails.getAssignee());
+
+		famstackUserActivityManager.deleteAllUserTaskActivities(taskDetails.getTaskId());
+
+		if (taskDetails.getAssignee() > 0) {
+			famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate,
+					taskDetails.getTaskId(), taskDetails.getDuration(), UserTaskType.PROJECT);
+		}
+
+		logDebug("helpers :" + taskDetails.getHelper());
+		if (taskDetails.getHelper() != null && taskDetails.getHelper().length > 0) {
+			for (int helperId : taskDetails.getHelper()) {
+				famstackUserActivityManager.createUserActivityItem(helperId, startDate, taskDetails.getTaskId(),
+						taskDetails.getDuration(), UserTaskType.PROJECT_HELPER);
+			}
+		}
 	}
 
 	public void deleteTaskItem(int taskId) {

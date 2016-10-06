@@ -82,7 +82,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<?> executeQuery(String hqlQuery, Map<String, String> dataMap) {
+	public List<?> executeQuery(String hqlQuery, Map<String, Object> dataMap) {
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		Query<?> query = session.createQuery(hqlQuery);
@@ -97,5 +97,21 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		tx.commit();
 		session.close();
 		return itemList;
+	}
+
+	@Override
+	public void executeUpdate(String hqlQuery, Map<String, Object> dataMap) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		Query query = session.createQuery(hqlQuery);
+		if (dataMap != null) {
+			logDebug("dataMap :" + dataMap.keySet());
+			for (String paramName : dataMap.keySet()) {
+				query.setParameter(paramName, dataMap.get(paramName));
+			}
+		}
+		query.executeUpdate();
+		tx.commit();
+		session.close();
 	}
 }

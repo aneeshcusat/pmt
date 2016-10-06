@@ -99,6 +99,8 @@ public abstract class BaseFamstackDataAccessObjectManager extends BaseFamstackSe
 	 *            the data map
 	 * @return the list
 	 */
-	public abstract List<?> executeQuery(String hqlQuery, Map<String, String> dataMap);
+	public abstract List<?> executeQuery(String hqlQuery, Map<String, Object> dataMap);
+
+	public abstract void executeUpdate(String hqlQuery, Map<String, Object> dataMap);
 
 }
