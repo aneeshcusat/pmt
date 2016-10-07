@@ -109,6 +109,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 	public void deleteTaskItem(int taskId) {
 		TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager.getItemById(taskId, TaskItem.class);
 		if (taskItem != null) {
+			famstackUserActivityManager.deleteAllUserTaskActivities(taskItem.getTaskId());
 			famstackDataAccessObjectManager.deleteItem(taskItem);
 		}
 	}

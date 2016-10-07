@@ -592,6 +592,8 @@ $('#createTaskFormId').ajaxForm(function(response) {
 		window.location.reload(true);
 	}
 });
+var startProjectTime = '${projectDetails.startTime}';
+var completionProjectTime = '${projectDetails.completionTime}';
 
 $('input:radio[name=assignee]').on("click", function(){
 	resetAssignTable();
@@ -682,7 +684,7 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 }
 
 var dateDisplayLogic = function( currentDateTime ){
-	var startProjectTime = '${projectDetails.startTime}';
+	
 	var startDate = new Date(startProjectTime);
 	var startHours = startDate.getHours();
 	var dd = startDate.getDate();
@@ -704,15 +706,15 @@ $('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
 	$(this).find('.xdsoft_date.xdsoft_weekend')
 	.addClass('xdsoft_disabled');
 	},
-	minDate:'${projectDetails.startTime}', // yesterday is minimum date
-	maxDate:'${projectDetails.completionTime}',
+	minDate:startProjectTime, // yesterday is minimum date
+	maxDate:completionProjectTime,
 	allowTimes:['08:00','09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'],
 	onChangeDateTime:dateDisplayLogic,
 	onShow:dateDisplayLogic
 });
 	
 $("#estStartTime").on("change",function(){
-	var startProjectTime = '${projectDetails.startTime}';
+	
 	var startProjectDate = new Date(startProjectTime);
 	resetAssignTable();
 	fillTableFromJson();
