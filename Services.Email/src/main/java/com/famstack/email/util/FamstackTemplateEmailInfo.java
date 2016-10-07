@@ -14,192 +14,92 @@ import com.famstack.projectscheduler.BaseFamstackService;
  */
 public class FamstackTemplateEmailInfo extends BaseFamstackService {
 
-    /** The mail from. */
-    private String mailFrom;
+	/** The mail from. */
+	private String mailFrom;
 
-    /** The mail to. */
-    private String mailTo;
+	/** The mail to. */
+	private String mailTo;
 
-    /** The mail cc. */
-    private String mailCc;
+	/** The mail cc. */
+	private String mailCc;
 
-    /** The mail bcc. */
-    private String mailBcc;
+	/** The mail bcc. */
+	private String mailBcc;
 
-    /** The velocity template name. */
-    private String velocityTemplateName;
+	/** The velocity template name. */
+	private String velocityTemplateName;
 
-    /** The mail subject. */
-    private String mailSubject;
+	/** The mail subject. */
+	private String mailSubject;
 
-    /** The mime message. */
-    private MimeMessage mimeMessage;
+	/** The mime message. */
+	private MimeMessage mimeMessage;
 
-    /** The template parameters. */
-    Map<String, Object> templateParameters;
+	/** The template parameters. */
+	Map<String, Object> templateParameters;
 
-    /**
-     * Gets the mail from.
-     *
-     * @return the mail from
-     */
-    public String getMailFrom() {
-        return getConfigValue("emailFrom") != null ? getConfigValue("emailFrom") : mailFrom;
-    }
+	public String getMailFrom() {
+		return mailFrom;
+	}
 
-    /**
-     * Sets the mail from.
-     *
-     * @param mailFrom the new mail from
-     */
-    public void setMailFrom(String mailFrom) {
-        this.mailFrom = mailFrom;
-    }
+	public void setMailFrom(String mailFrom) {
+		this.mailFrom = mailFrom;
+	}
 
-    /**
-     * Gets the mail to.
-     *
-     * @return the mail to
-     */
-    public String getMailTo() {
-        return getConfigValue("emailTo") != null ? getConfigValue("emailTo") : mailTo;
-    }
+	public String getMailTo() {
+		return mailTo;
+	}
 
-    /**
-     * Sets the mail to.
-     *
-     * @param mailTo the new mail to
-     */
-    public void setMailTo(String mailTo) {
-        this.mailTo = mailTo;
-    }
+	public void setMailTo(String mailTo) {
+		this.mailTo = mailTo;
+	}
 
-    /**
-     * Gets the mail cc.
-     *
-     * @return the mail cc
-     */
-    public String getMailCc() {
-        return getConfigValue("emailCc") != null ? getConfigValue("emailCc") : mailCc;
-    }
+	public String getMailCc() {
+		return mailCc;
+	}
 
-    /**
-     * Sets the mail cc.
-     *
-     * @param mailCc the new mail cc
-     */
-    public void setMailCc(String mailCc) {
-        this.mailCc = mailCc;
-    }
+	public void setMailCc(String mailCc) {
+		this.mailCc = mailCc;
+	}
 
-    /**
-     * Gets the mail bcc.
-     *
-     * @return the mail bcc
-     */
-    public String getMailBcc() {
-        return getConfigValue("emailBcc") != null ? getConfigValue("emailBcc") : mailBcc;
-    }
+	public String getMailBcc() {
+		return mailBcc;
+	}
 
-    /**
-     * Sets the mail bcc.
-     *
-     * @param mailBcc the new mail bcc
-     */
-    public void setMailBcc(String mailBcc) {
-        this.mailBcc = mailBcc;
-    }
+	public void setMailBcc(String mailBcc) {
+		this.mailBcc = mailBcc;
+	}
 
-    /**
-     * Gets the velocity template name.
-     *
-     * @return the velocity template name
-     */
-    public String getVelocityTemplateName() {
-        return velocityTemplateName;
-    }
+	public String getVelocityTemplateName() {
+		return velocityTemplateName;
+	}
 
-    /**
-     * Sets the velocity template name.
-     *
-     * @param velocityTemplateName the new velocity template name
-     */
-    public void setVelocityTemplateName(String velocityTemplateName) {
-        this.velocityTemplateName = velocityTemplateName;
-    }
+	public void setVelocityTemplateName(String velocityTemplateName) {
+		this.velocityTemplateName = velocityTemplateName;
+	}
 
-    /**
-     * Gets the mail subject.
-     *
-     * @return the mail subject
-     */
-    public String getMailSubject() {
-        return getConfigValue("emailSubject") != null ? getConfigValue("emailSubject") : mailSubject;
-    }
+	public String getMailSubject() {
+		return mailSubject;
+	}
 
-    /**
-     * Sets the mail subject.
-     *
-     * @param mailSubject the new mail subject
-     */
-    public void setMailSubject(String mailSubject) {
-        this.mailSubject = mailSubject;
-    }
+	public void setMailSubject(String mailSubject) {
+		this.mailSubject = mailSubject;
+	}
 
-    /**
-     * Copy properties to.
-     *
-     * @param pCopy the copy
-     */
-    public void copyPropertiesTo(FamstackTemplateEmailInfo pCopy) {
-        pCopy.velocityTemplateName = velocityTemplateName;
-        pCopy.mailSubject = mailSubject;
-    }
+	public MimeMessage getMimeMessage() {
+		return mimeMessage;
+	}
 
-    /**
-     * Gets the template parameters.
-     *
-     * @return the template parameters
-     */
-    public Map<String, Object> getTemplateParameters() {
-        return templateParameters;
-    }
+	public void setMimeMessage(MimeMessage mimeMessage) {
+		this.mimeMessage = mimeMessage;
+	}
 
-    /**
-     * Sets the template parameters.
-     *
-     * @param templateParameters the template parameters
-     */
-    public void setTemplateParameters(Map<String, Object> templateParameters) {
-        this.templateParameters = templateParameters;
-    }
+	public Map<String, Object> getTemplateParameters() {
+		return templateParameters;
+	}
 
-    /**
-     * Gets the mime message.
-     *
-     * @return the mime message
-     */
-    public MimeMessage getMimeMessage() {
-        return mimeMessage;
-    }
-
-    /**
-     * Sets the mime message.
-     *
-     * @param mimeMessage the new mime message
-     */
-    public void setMimeMessage(MimeMessage mimeMessage) {
-        this.mimeMessage = mimeMessage;
-    }
-
-    /**
-     * Gets the config value.
-     *
-     * @param propertyName the property name
-     * @return the config value
-     */
-    private String getConfigValue(String propertyName) {
-        return getFamstackApplicationConfiguration().getConfigSettings().get(propertyName);
-    }
+	public void setTemplateParameters(Map<String, Object> templateParameters) {
+		this.templateParameters = templateParameters;
+	}
 
 }

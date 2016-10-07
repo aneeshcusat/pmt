@@ -98,6 +98,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 		String encryptedPassword = FamstackSecurityTokenManager.encryptString(password, hashKey);
 		userItem.setHashkey(hashKey);
 		userItem.setPassword(encryptedPassword);
+		userItem.setNeedPasswordReset(true);
 		saveUserItem(employeeDetails, userItem);
 	}
 

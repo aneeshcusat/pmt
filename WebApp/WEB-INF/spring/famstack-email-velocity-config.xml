@@ -36,9 +36,8 @@
 <bean id="famstackVelocityService" class="com.famstack.email.velocity.FamstackVelocityService"/>
 <bean id="famstackEmailTemplateRendererService" class="com.famstack.email.velocity.FamstackEmailTemplateRendererService"/>
 <bean id="famstackEmailSender" class="com.famstack.email.FamstackEmailSender"/>
-<bean id="famstackEmailNotificationManager" class="com.famstack.email.manager.FamstackEmailNotificationManager"/>
 <bean id="velocityInitService" class="com.famstack.email.velocity.VelocityInitService">
-  <property name="templateDirPath" value="/WEB-INF/velocity/templates/"/>
+	<property name="templateDirPath" value="/WEB-INF/velocity/templates/"/>
 </bean>
   
 </beans>

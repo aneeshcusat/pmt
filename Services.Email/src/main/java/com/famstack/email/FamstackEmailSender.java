@@ -11,24 +11,25 @@ import com.famstack.projectscheduler.BaseFamstackService;
 
 public class FamstackEmailSender extends BaseFamstackService {
 
-    /** The java mail sender. */
-    @Autowired
-    private JavaMailSender javaMailSender;
+	/** The java mail sender. */
+	@Autowired
+	private JavaMailSender javaMailSender;
 
-    /** The delivery interface email template renderer service. */
-    @Autowired
-    private FamstackEmailTemplateRendererService famstackEmailTemplateRendererService;
+	/** The delivery interface email template renderer service. */
+	@Autowired
+	private FamstackEmailTemplateRendererService famstackEmailTemplateRendererService;
 
-    /**
-     * Send email.
-     *
-     * @param emailInfo the email info
-     */
-    public void sendEmail(FamstackTemplateEmailInfo emailInfo) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        emailInfo.setMimeMessage(mimeMessage);
+	/**
+	 * Send email.
+	 *
+	 * @param emailInfo
+	 *            the email info
+	 */
+	public void sendEmail(FamstackTemplateEmailInfo emailInfo, String... emailsToList) {
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		emailInfo.setMimeMessage(mimeMessage);
 
-        javaMailSender.send(famstackEmailTemplateRendererService.createMessage(emailInfo));
-    }
+		javaMailSender.send(famstackEmailTemplateRendererService.createMessage(emailInfo, emailsToList));
+	}
 
 }
