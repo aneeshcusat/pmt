@@ -461,7 +461,7 @@ var loadTaskDetails = function(taskId){
 	
 	var assigneeId = $("#"+taskId+"assignee").val();
 	var helpers = $("#"+taskId+"helper").val();
-	if (assigneeId != "") {
+	if (assigneeId != "" && assigneeId != 0) {
 		 $("#"+assigneeId+"-select").click();
 		 $("#assignTableId").show(500);
 		 $("#toggleAssignTask").html("Assign task later");
