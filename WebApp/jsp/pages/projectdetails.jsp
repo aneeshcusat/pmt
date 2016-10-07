@@ -839,6 +839,7 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		var cellColor = $(this).attr("cellcolor");
 		console.log(cellColor);
 		$(this).css("background-color", cellColor);
+		decreaseTotalHours();
 		cellSelectCount--;
 		$(this).attr("cellmarked",false);
 		$(this).attr("modified",false);
@@ -861,6 +862,7 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		}
 		$(this).attr("cellcolor", cellBackGroundColor);
 		$(this).css("background-color", "yellow");
+		increaseTotalHours();
 		cellSelectCount++;
 		increaseTotalHours(userId);
 		$(this).attr("cellmarked",true);
@@ -886,13 +888,6 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		$('input:checkbox[name=helper]').each(function () { $(this).prop('checked', false); });
 	}
 	
-	$("#"+userId+"-totalHours").html(cellSelectCount);
-	if (8-cellSelectCount <= 0){
-		$("#"+userId+"-availabeHours").css("color", "red");
-	} else {
-		$("#"+userId+"-availabeHours").css("color", "green");
-	}
-	$("#"+userId+"-availabeHours").html(8-cellSelectCount);
 	$("#estCompleteTime").html(getEstimatedCompletionTime( $("#estStartTime").val(), cellSelectCount));
 	$("#duration").val(cellSelectCount);
 	$("#duration").selectpicker("refresh");
@@ -933,6 +928,27 @@ var increaseTotalHours = function(userId){
 	var availableHours = parseInt($("#"+userId+"-availabeHours").html()) - 1;
 	$("#"+userId+"-totalHours").html(""+totalHours);
 	$("#"+userId+"-availabeHours").html(""+availableHours);
+	
+	if (availableHours <= 0){
+		$("#"+userId+"-availabeHours").css("color", "red");
+	} else {
+		$("#"+userId+"-availabeHours").css("color", "green");
+	}
+	console.log("increase total hours:" +totalHours);
+}
+
+var decreaseTotalHours = function(userId){
+	console.log($("#"+userId+"-totalHours").html());
+	var totalHours = parseInt($("#"+userId+"-totalHours").html()) - 1;
+	var availableHours = parseInt($("#"+userId+"-availabeHours").html()) + 1;
+	$("#"+userId+"-totalHours").html(""+totalHours);
+	$("#"+userId+"-availabeHours").html(""+availableHours);
+	
+	if (availableHours <= 0){
+		$("#"+userId+"-availabeHours").css("color", "red");
+	} else {
+		$("#"+userId+"-availabeHours").css("color", "green");
+	}
 	console.log("increase total hours:" +totalHours);
 }
 
