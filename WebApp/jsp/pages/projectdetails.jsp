@@ -649,6 +649,7 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 			$(getCell).css("background-color", cellBackGroundColor);
 			$(getCell).attr("cellmarked",false);
 			$(getCell).attr("modified",false);
+			decreaseTotalHours(userId);
 		} else {
 			console.log("helper" + $(getCell).attr("isassigned"));
 			var cellBackGroundColor = $(getCell).css("background-color");
@@ -876,7 +877,7 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		cellSelectCount--;
 		$(this).attr("cellmarked",false);
 		$(this).attr("modified",false);
-		
+		$('input:checkbox[name=helper]:checked').each(function () { $(this).click();});
 		if (isPreMarked(this.id) && cellSelectCount == 1) {
 			var estimatedStartDate = new Date($("#estStartTime").val());
 			estimatedStartDate.setHours(hourId-1);
@@ -900,7 +901,7 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		increaseTotalHours(userId);
 		$(this).attr("cellmarked",true);
 		$(this).attr("modified",true);
-		
+		$('input:checkbox[name=helper]:checked').each(function () { $(this).click();});
 		if (cellSelectCount == 1) {
 			var estimatedStartDate = new Date($("#estStartTime").val());
 			estimatedStartDate.setHours(hourId);
