@@ -53,7 +53,13 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 		if (userItem != null) {
 			String encryptPassword = FamstackSecurityTokenManager.encryptString(password, userItem.getHashkey());
 			if (userItem.getPassword().equals(encryptPassword)) {
-				loginResult.setStatus(Status.SUCCESS);
+				if (userItem.getNeedPasswordReset()) {
+					loginResult.setStatus(Status.NEW_PASSWORD_REQUIRED);
+					loginResult.setHashKey(FamstackSecurityTokenManager.encryptStringWithDate(userItem.getHashkey(),
+							userItem.getHashkey()));
+				} else {
+					loginResult.setStatus(Status.SUCCESS);
+				}
 				loginResult.setUserItem(userItem);
 				return loginResult;
 			}
@@ -209,4 +215,31 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 			getFamstackDataAccessObjectManager().deleteItem(userItem);
 		}
 	}
+
+	public boolean isValidUserResetKey(String key, int userId) {
+		UserItem userItem = getUserItemById(userId);
+		logDebug("validating reset key: " + key);
+		if (userItem != null) {
+			logDebug("user item found");
+			logDebug("haskey :" + userItem.getHashkey());
+			return FamstackSecurityTokenManager.validateSecurityToken(userItem.getHashkey(), key,
+					userItem.getHashkey());
+		}
+		return false;
+	}
+
+	public boolean changePassword(String userName, String oldPassword, String password) {
+		UserItem userItem = getUserItem(userName);
+		if (userItem != null) {
+			String encryptPassword = FamstackSecurityTokenManager.encryptString(oldPassword, userItem.getHashkey());
+			if (userItem.getPassword().equals(encryptPassword)) {
+				userItem.setPassword(FamstackSecurityTokenManager.encryptString(password, userItem.getHashkey()));
+				userItem.setNeedPasswordReset(false);
+				getFamstackDataAccessObjectManager().updateItem(userItem);
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

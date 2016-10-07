@@ -98,15 +98,17 @@ public class UserItem implements FamstackBaseItem {
 	@Column(name = "modified_by")
 	private int modifiedBy;
 
+	@Column(name = "need_password_reset")
+	private boolean needPasswordReset;
+
 	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
 	@JoinColumn(name = "reportertingManager")
 	private UserItem reportertingManager;
-	
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "group_subscribers", joinColumns = {
-			@JoinColumn(name = "user_id", nullable = false, updatable = false) },
-			inverseJoinColumns = { @JoinColumn(name = "group_id",
-					nullable = false, updatable = false) })
+			@JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "group_id", nullable = false, updatable = false) })
 	private Set<GroupItem> groups;
 
 	public int getCreatedBy() {
@@ -350,6 +352,14 @@ public class UserItem implements FamstackBaseItem {
 
 	public void setGroups(Set<GroupItem> groups) {
 		this.groups = groups;
+	}
+
+	public boolean getNeedPasswordReset() {
+		return needPasswordReset;
+	}
+
+	public void setNeedPasswordReset(boolean needPasswordReset) {
+		this.needPasswordReset = needPasswordReset;
 	}
 
 }

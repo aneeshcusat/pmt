@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.PathParam;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +36,7 @@ import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
+import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
 
 @Controller
@@ -76,10 +76,17 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String loginAjax(@RequestParam("email") String username, @RequestParam("password") String password) {
 
 		FamstackAuthenticationToken token = new FamstackAuthenticationToken(username, password);
-		Authentication authentication = authenticationManager.authenticate(token);
-		if (authentication.isAuthenticated()) {
+		FamstackAuthenticationToken authentication = (FamstackAuthenticationToken) authenticationManager
+				.authenticate(token);
+		if (authentication.getLoginResult().getStatus() == Status.SUCCESS) {
 			userSecurityContextBinder.bindUserAuthentication(authentication);
 			return "{\"status\": true}";
+		} else if (authentication.getLoginResult().getStatus() == Status.NEW_PASSWORD_REQUIRED) {
+			logDebug(authentication.getLoginResult().getHashKey());
+			return "{\"status\": false,\"passwordreset\": true, \"key\": \""
+					+ authentication.getLoginResult().getHashKey() + "\", \"uid\": \""
+					+ authentication.getLoginResult().getUserItem().getId() + "\"}";
+
 		}
 
 		return "{\"status\": false, \"error\": \"Bad Credentials\"}";
@@ -90,6 +97,28 @@ public class FamstackDashboardController extends BaseFamstackService {
 		userSecurityContextBinder.unbindUserAuthentication();
 		request.getSession().invalidate();
 		return "login";
+	}
+
+	@RequestMapping(value = "/resetpassword", method = RequestMethod.GET)
+	public String resetPasswordValidation(@RequestParam("key") String key, @RequestParam("uid") int userId) {
+		if (famstackDashboardManager.isValidKeyForUserReset(key, userId)) {
+			return "passwordreset";
+		} else {
+			return "login";
+		}
+	}
+
+	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+	@ResponseBody
+	public String changePassword(@RequestParam("email") String username,
+			@RequestParam("oldPassword") String oldPassword, @RequestParam("password") String password,
+			@RequestParam("confPassword") String confPassword) {
+		if (password.equalsIgnoreCase(confPassword)
+				&& famstackDashboardManager.changePassword(username, oldPassword, password)) {
+			return "{\"status\": true}";
+		}
+
+		return "{\"status\": false, \"error\": \"Bad Credentials\"}";
 	}
 
 	@RequestMapping(value = "/employees", method = RequestMethod.GET)

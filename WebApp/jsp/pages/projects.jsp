@@ -246,8 +246,18 @@
 	});
 	
 	$.datetimepicker.setLocale('en');
-	$('.dateTimePicker').datetimepicker({value:new Date(),onGenerate:function( ct ){
+	$('.dateTimePicker').datetimepicker({value:new Date(),
+	onGenerate:function( ct ){
 		$(this).find('.xdsoft_date.xdsoft_weekend')
 		.addClass('xdsoft_disabled');
-	},allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']});
+	},
+	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'],
+	beforeShowDay: function(date) {
+		if (date.getMonth() < new Date().getMonth() && date.getDate() < new Date().getDate()) {
+			return [false, ""]
+		}
+		return [true, ""];
+	}
+	
+	});
 </script>

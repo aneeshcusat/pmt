@@ -27,25 +27,32 @@
             <div class="login-box animated fadeInDown">
                 <div class="login-famstack_logo"><h2 class="text-center">Project scheduler</h2></div>
                 <div class="login-body">
-                    <div class="login-title"><strong>Welcome</strong>, Please login</div>
+                    <div class="login-title"><strong>Reset</strong>, login password</div>
                     <form class="form-horizontal" method="post">
                     <div class="form-group">
                         <div class="col-md-12">
                             <input type="text" class="form-control" placeholder="Email id" id="emailId"/>
                         </div>
                     </div>
+                     <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" placeholder="Current Password" id="currentPassword"/>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input type="password" class="form-control" placeholder="Password" id="password"/>
+                            <input type="password" class="form-control" placeholder="New Password" id="password"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" placeholder="Confirm Password" id="confPassword"/>
                         </div>
                     </div>
                     <span id="invalidLoginSpan" style="color: red;display: none">Invalid credentials</span>
                     <div class="form-group">
-                        <div class="col-md-6">
-                            <a href="#" class="btn btn-link btn-block">Forgot your password?</a>
-                        </div>
-                        <div class="col-md-6">
-                           <a class="btn btn-info btn-block" href="javascript:invokeLoginAjax()">Log In</a>
+                        <div class="col-md-12">
+                           <a class="btn btn-info btn-block" href="javascript:invokeResetAjax()">Reset</a>
                         </div>
                     </div>
                     </form>
@@ -71,18 +78,6 @@
         <!-- END PLUGINS -->  
  <script type="text/javascript">
  
-    
-    $('#emailId').keypress(function(e) {
-        if(e.which == 10 || e.which == 13) {
-        	invokeLoginAjax();
-        }
-    });
-    $('#password').keypress(function(e) {
-        if(e.which == 10 || e.which == 13) {
-        	invokeLoginAjax();
-        }
-    });
-    
     function makeError(fieldSelector){
     	fieldSelector.css("border", "1px solid red");
     }
@@ -96,46 +91,53 @@
     function validation(){
     	var status = false;
     	var emailId = $('#emailId').val();
-    	var password = $('#password').val();
+    	var oldPassword = $('#currentPassword').val();
+    	var newPassword = $('#password').val();
+    	var confPassword = $('#confPassword').val();
     	
     	if (emailId == "") {
     		makeError($('#emailId'));
     		status = true;
     	}
-    	if (password == "") {
+    	if (oldPassword == "") {
+    		makeError($('#currentPassword'));
+    		status = true;
+    	}
+    	if (newPassword == "") {
+    		makeError($('#emailId'));
+    		status = true;
+    	}
+    	if (confPassword == "") {
+    		makeError($('#confPassword'));
+    		status = true;
+    	}
+    	if (confPassword != newPassword) {
     		makeError($('#password'));
     		status = true;
     	}
     	return status;
     }
     
-    function invokeLoginAjax(){
+    function invokeResetAjax(){
     	clearInputTextErrors();
     	if(validation()) {
     		return;
     	}
     	console.log("jello");
-    	var dataString = {"email": $('#emailId').val() , "password": $('#password').val() };
+    	var dataString = {"email": $('#emailId').val(), "oldPassword": $('#currentPassword').val() , "password": $('#password').val(), "confPassword": $('#confPassword').val() };
     	
-		doAjaxRequest("POST", "/bops/dashboard/loginAjax", dataString,
-					function(response) {
-						$("#invalidLoginSpan").hide();
-						var responseJsonObj = JSON.parse(response);
-						if (responseJsonObj.status == true) {
-							var currentUrl = window.location.href;
-							if (currentUrl.indexOf("/dashboard/index") > 0){
-								window.location = "/bops/dashboard/index";
-							} else {
-								window.location.reload(true);
-							}
-						} else if(responseJsonObj.status == false && responseJsonObj.passwordreset == true)  {
-							window.location = "/bops/dashboard/resetpassword?key="+encodeURIComponent(responseJsonObj.key)+"&uid="+responseJsonObj.uid;
-						} else {
-							$("#invalidLoginSpan").show();
-						}
-					}, function(e) {
-						$("#invalidLoginSpan").show();
-					});
+		doAjaxRequest("POST", "/bops/dashboard/changePassword", dataString,
+		function(response) {
+			$("#invalidLoginSpan").hide();
+			var responseJsonObj = JSON.parse(response);
+			if (responseJsonObj.status == true) {
+				window.location = "/bops/dashboard/login";
+			} else {
+				$("#invalidLoginSpan").show();
+			}
+		}, function(e) {
+			$("#invalidLoginSpan").show();
+		});
 		}
 	</script>
         

@@ -170,4 +170,12 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public String getUserTaskActivityJson() {
 		return famstackProjectTaskManager.getUserTaskActivityJson();
 	}
+
+	public boolean isValidKeyForUserReset(String key, int userId) {
+		return userProfileManager.isValidUserResetKey(key, userId);
+	}
+
+	public boolean changePassword(String userName, String oldPassword, String password) {
+		return userProfileManager.changePassword(userName, oldPassword, password);
+	}
 }
