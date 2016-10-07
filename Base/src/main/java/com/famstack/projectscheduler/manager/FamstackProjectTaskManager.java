@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.manager;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +17,7 @@ import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.utils.FamstackUtils;
 
 @Component
 public class FamstackProjectTaskManager extends BaseFamstackManager {
@@ -67,12 +69,20 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 			completionTimeStamp = new Timestamp(completionDate.getTime());
 		}
 
+		taskItem.setAssignee(taskDetails.getAssignee());
+		taskItem.setHelpers(Arrays.toString(taskDetails.getHelper()));
+
+		if (taskDetails.getAssignee() > 0) {
+			taskItem.setStatus(TaskStatus.ASSIGNED);
+		} else {
+			taskItem.setStatus(TaskStatus.NEW);
+		}
 		taskItem.setStartTime(startTimeStamp);
 		taskItem.setCompletionTime(completionTimeStamp);
 		taskItem.setDuration(taskDetails.getDuration());
 
 		famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
-
+		taskDetails.setTaskId(taskItem.getTaskId());
 		updateUserActivity(taskDetails, startDate);
 	}
 
@@ -84,14 +94,14 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 
 		if (taskDetails.getAssignee() > 0) {
 			famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate,
-					taskDetails.getTaskId(), taskDetails.getDuration(), UserTaskType.PROJECT);
+					taskDetails.getTaskId(), taskDetails.getName(), taskDetails.getDuration(), UserTaskType.PROJECT);
 		}
 
 		logDebug("helpers :" + taskDetails.getHelper());
 		if (taskDetails.getHelper() != null && taskDetails.getHelper().length > 0) {
 			for (int helperId : taskDetails.getHelper()) {
 				famstackUserActivityManager.createUserActivityItem(helperId, startDate, taskDetails.getTaskId(),
-						taskDetails.getDuration(), UserTaskType.PROJECT_HELPER);
+						taskDetails.getName(), taskDetails.getDuration(), UserTaskType.PROJECT_HELPER);
 			}
 		}
 	}
@@ -141,10 +151,23 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 			taskDetails.setCreatedDate(taskItem.getCreatedDate());
 			taskDetails.setLastModifiedDate(taskItem.getLastModifiedDate());
 			taskDetails.setTaskId(taskItem.getTaskId());
+			taskDetails.setAssignee(taskItem.getAssignee());
+			taskDetails.setHelpersList(taskItem.getHelpers());
+
 			return taskDetails;
 
 		}
 		return null;
+	}
+
+	public String getUserTaskActivityJson() {
+		return FamstackUtils.getJsonFromObject(famstackUserActivityManager.getAllTaskActivities());
+	}
+
+	public static void main(String[] args) {
+		int[] nums = { 5, 1, 2, 11, 3 };
+		String a = Arrays.toString(nums);
+		System.out.println(a.split(",")[0]);
 	}
 
 }

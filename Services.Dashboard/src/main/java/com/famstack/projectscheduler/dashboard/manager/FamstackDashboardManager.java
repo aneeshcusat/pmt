@@ -153,17 +153,21 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public void deleteProjectTask(int taskId) {
 		famstackProjectTaskManager.deleteTaskItem(taskId);
 	}
-	
+
 	public void createGroup(GroupDetails groupDetails) {
 		groupMessageManager.createGroupItem(groupDetails);
 
 	}
-	
+
 	public void sendMessage(int groupId, String message) {
 		GroupMessageDetails groupMessageDetails = new GroupMessageDetails();
 		groupMessageDetails.setGroup(groupId);
 		groupMessageDetails.setDescription(message);
 		groupMessageManager.createGroupMessageItem(groupMessageDetails);
 
+	}
+
+	public String getUserTaskActivityJson() {
+		return famstackProjectTaskManager.getUserTaskActivityJson();
 	}
 }

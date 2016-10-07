@@ -33,7 +33,11 @@ public class TaskDetails {
 
 	private int[] helper;
 
+	private String helpersList;
+
 	private TaskStatus status;
+
+	private TaskActivityDetails taskActivityDetails;
 
 	public int getTaskId() {
 		return taskId;
@@ -145,6 +149,22 @@ public class TaskDetails {
 
 	public void setHelper(int[] helper) {
 		this.helper = helper;
+	}
+
+	public TaskActivityDetails getTaskActivityDetails() {
+		return taskActivityDetails;
+	}
+
+	public void setTaskActivityDetails(TaskActivityDetails taskActivityDetails) {
+		this.taskActivityDetails = taskActivityDetails;
+	}
+
+	public String getHelpersList() {
+		return helpersList;
+	}
+
+	public void setHelpersList(String helpersList) {
+		this.helpersList = helpersList;
 	}
 
 }

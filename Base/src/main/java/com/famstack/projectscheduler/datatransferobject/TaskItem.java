@@ -36,6 +36,12 @@ public class TaskItem implements FamstackBaseItem {
 	@Column(name = "name")
 	private String name;
 
+	@Column(name = "assignee")
+	private int assignee;
+
+	@Column(name = "helpers")
+	private String helpers;
+
 	@Column(name = "description")
 	@Lob
 	private String description;
@@ -168,6 +174,22 @@ public class TaskItem implements FamstackBaseItem {
 
 	public void setProjectItem(ProjectItem projectItem) {
 		this.projectItem = projectItem;
+	}
+
+	public int getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(int assignee) {
+		this.assignee = assignee;
+	}
+
+	public String getHelpers() {
+		return helpers;
+	}
+
+	public void setHelpers(String helpers) {
+		this.helpers = helpers;
 	}
 
 }

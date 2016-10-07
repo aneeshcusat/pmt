@@ -1,10 +1,12 @@
 package com.famstack.projectscheduler.manager;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -15,6 +17,7 @@ import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
+import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 
@@ -27,10 +30,10 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	@Resource
 	FamstackUserProfileManager famstackUserProfileManager;
 
-	public void createUserActivityItem(int userId, Date startTime, int taskId, int duration,
+	public void createUserActivityItem(int userId, Date startTime, int taskId, String taskName, int duration,
 			UserTaskType userTaskType) {
 		UserItem assigneeUserItem = famstackUserProfileManager.getUserItemById(userId);
-		Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startTime, 0);
+		Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, startTime, 0);
 		Date dayEndDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, startTime, 0);
 
 		Map<String, Object> dataMap = new HashMap<>();
@@ -53,7 +56,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		}
 
 		getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
-		setUserTaskActivity(userActivityItem, taskId, duration, userTaskType);
+		setUserTaskActivity(userActivityItem, taskId, taskName, duration, startTime.getHours(), userTaskType);
 	}
 
 	public void deleteAllUserTaskActivities(int taskId) {
@@ -66,11 +69,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 
 	}
 
-	public UserTaskActivityItem setUserTaskActivity(UserActivityItem userActivityItem, int taskId, int duration,
-			UserTaskType userTaskType) {
+	public UserTaskActivityItem setUserTaskActivity(UserActivityItem userActivityItem, int taskId, String taskName,
+			int duration, int startHour, UserTaskType userTaskType) {
 		UserTaskActivityItem userTaskActivityItem = new UserTaskActivityItem();
 		userTaskActivityItem.setTaskId(taskId);
+		userTaskActivityItem.setTaskName(taskName);
 		userTaskActivityItem.setDuration(duration);
+		userTaskActivityItem.setStartHour(startHour);
 		userTaskActivityItem.setType(userTaskType);
 		userTaskActivityItem.setCreatedDate(new Timestamp(new Date().getTime()));
 		userTaskActivityItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
@@ -78,5 +83,51 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		getFamstackDataAccessObjectManager().saveOrUpdateItem(userTaskActivityItem);
 		return userTaskActivityItem;
 
+	}
+
+	public List<TaskActivityDetails> getAllTaskActivities() {
+		Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -2);
+		List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("calenderDateStart", dayStartDate);
+		logDebug("dayStartDate : " + dayStartDate);
+
+		List<?> userActivityItems = getFamstackDataAccessObjectManager()
+				.executeQuery(HQLStrings.getString("allUserActivityItemsFromToday"), dataMap);
+
+		logDebug("userActivityItems :" + userActivityItems);
+
+		if (!userActivityItems.isEmpty()) {
+			for (Object userActivityItemObj : userActivityItems) {
+
+				UserActivityItem userActivityItem = (UserActivityItem) userActivityItemObj;
+				Set<UserTaskActivityItem> userTaskActivityItems = userActivityItem.getUserTaskActivities();
+				logDebug("userActivityItem.getId() :" + userActivityItem.getId());
+				if (!userActivityItems.isEmpty()) {
+					for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+						TaskActivityDetails taskActivityDetails = getTaskActivityDetailsFromItem(userActivityItem,
+								userTaskActivityItem);
+						taskActivitiesList.add(taskActivityDetails);
+						taskActivityDetails
+								.setDateId(DateUtils.format(userActivityItem.getCalenderDate(), DateUtils.DATE_FORMAT));
+						taskActivityDetails.setUserId(userActivityItem.getUserItem().getId());
+					}
+				}
+
+			}
+		}
+		return taskActivitiesList;
+	}
+
+	private TaskActivityDetails getTaskActivityDetailsFromItem(UserActivityItem userActivityItem,
+			UserTaskActivityItem userTaskActivityItem) {
+		TaskActivityDetails taskActivityDetails = new TaskActivityDetails();
+		taskActivityDetails.setTaskId(userTaskActivityItem.getTaskId());
+		taskActivityDetails.setTaskName(userTaskActivityItem.getTaskName());
+		taskActivityDetails.setDuration(userTaskActivityItem.getDuration());
+		taskActivityDetails.setUserTaskType(userTaskActivityItem.getType());
+		taskActivityDetails.setStartHour(userTaskActivityItem.getStartHour());
+
+		return taskActivityDetails;
 	}
 }

@@ -39,8 +39,14 @@ public class UserTaskActivityItem implements FamstackBaseItem {
 	@Column(name = "task_id")
 	private int taskId;
 
+	@Column(name = "task_name")
+	private String taskName;
+
 	@Column(name = "duration")
 	private int duration;
+
+	@Column(name = "start_hour")
+	private int startHour;
 
 	@Column(name = "created_date")
 	private Timestamp createdDate;
@@ -131,6 +137,22 @@ public class UserTaskActivityItem implements FamstackBaseItem {
 
 	public void setUserActivityItem(UserActivityItem userActivityItem) {
 		this.userActivityItem = userActivityItem;
+	}
+
+	public int getStartHour() {
+		return startHour;
+	}
+
+	public void setStartHour(int startHour) {
+		this.startHour = startHour;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
 }

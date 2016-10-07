@@ -206,7 +206,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.createTask(taskDetails);
 		return "{\"status\": true}";
 	}
-	
+
 	@RequestMapping(value = "/createGroup", method = RequestMethod.POST)
 	@ResponseBody
 	public String createGroup(@ModelAttribute("groupDetails") GroupDetails groupDetails, BindingResult result,
@@ -214,7 +214,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.createGroup(groupDetails);
 		return "{\"status\": true}";
 	}
-	
+
 	@RequestMapping(value = "/updateTask", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
@@ -228,6 +228,12 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String deleteTask(@RequestParam(value = "taskId") int taskId) {
 		famstackDashboardManager.deleteProjectTask(taskId);
 		return "{\"status\": true}";
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/userTaskActivityJson")
+	@ResponseBody
+	public String userTaskActivityJson() {
+		return famstackDashboardManager.getUserTaskActivityJson();
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/uploadfile/{projectCode}")
@@ -283,7 +289,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendMessage(@RequestParam("groupId") int groupId, @RequestParam("message") String message) {
