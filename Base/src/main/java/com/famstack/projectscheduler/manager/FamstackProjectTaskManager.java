@@ -164,11 +164,4 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 	public String getUserTaskActivityJson() {
 		return FamstackUtils.getJsonFromObject(famstackUserActivityManager.getAllTaskActivities());
 	}
-
-	public static void main(String[] args) {
-		int[] nums = { 5, 1, 2, 11, 3 };
-		String a = Arrays.toString(nums);
-		System.out.println(a.split(",")[0]);
-	}
-
 }

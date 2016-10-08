@@ -204,6 +204,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                
                                                 <tr>
                                                     <td><strong>Joli Admin</strong></td>
                                                     <td><span class="label label-danger">Developing</span></td>
@@ -213,6 +214,8 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                
+                                                
                                                 <tr>
                                                     <td><strong>Gemini</strong></td>
                                                     <td><span class="label label-warning">Updating</span></td>
@@ -372,66 +375,16 @@
                                 </div>
                         
                         <div class="panel-body list-group list-group-contacts border-bottom push-down-10 pre-scrollable"  style="min-height: 467px">
-                            <a href="#" class="list-group-item">                                 
-                                <div class="list-group-status status-online"></div>
-                                <img src="${assets}/images/users/user.jpg" class="pull-left" alt="Dmitry Ivaniuk">
-                                <span class="contacts-title">Dmitry Ivaniuk</span>
-                                <p>Availble after 2:00 PM</p>
-                            </a>                                
-                            <a href="#" class="list-group-item">                                    
-                                <div class="list-group-status status-online"></div>
-                                <img src="${assets}/images/users/user3.jpg" class="pull-left" alt="Nadia Ali">
-                                <span class="contacts-title">Nadia Ali</span>
-                                <p>Available resource</p>
-                            </a>                                                                
-                            <a href="#" class="list-group-item active">         
-                                <div class="list-group-status status-online"></div>
-                                <img src="${assets}/images/users/user2.jpg" class="pull-left" alt="John Doe">
-                                <div class="contacts-title">John Doe <span class="label label-danger">5</span></div>
-                                <p>Not Available resource</p>                                       
-                            </a>
-                            <a href="#" class="list-group-item">         
-                                <div class="list-group-status status-away"></div>
-                                <img src="${assets}/images/users/user4.jpg" class="pull-left" alt="Brad Pitt">
-                                <span class="contacts-title">Brad Pitt</span>
-                                <p>Available resource</p>                     
-                            </a>
-                            <a href="#" class="list-group-item">         
-                                <div class="list-group-status status-offline"></div>
-                                <img src="${assets}/images/users/no-image.jpg" class="pull-left" alt="Darth Vader">
-                                <span class="contacts-title">Darth Vader</span>
-                                <p>On leave</p>
-                            </a>
-                            <a href="#" class="list-group-item">         
-                                <div class="list-group-status status-offline"></div>
-                                <img src="${assets}/images/users/no-image.jpg" class="pull-left" alt="Kim Kardashian">
-                                <span class="contacts-title">Kim Kardashian</span>
-                                <p>Available resource</p>
-                            </a>
-                            <a href="#" class="list-group-item">         
-                                <div class="list-group-status status-offline"></div>
-                                <img src="${assets}/images/users/no-image.jpg" class="pull-left" alt="Jason Statham">
-                                <span class="contacts-title">Jason Statham</span>
-                                <p>Available resource</p>
-                            </a>      
-                             <a href="#" class="list-group-item">         
-                                <div class="list-group-status status-offline"></div>
-                                <img src="${assets}/images/users/no-image.jpg" class="pull-left" alt="Darth Vader">
-                                <span class="contacts-title">Darth Vader</span>
-                                <p>On leave</p>
-                            </a>
-                            <a href="#" class="list-group-item">         
-                                <div class="list-group-status status-offline"></div>
-                                <img src="${assets}/images/users/no-image.jpg" class="pull-left" alt="Kim Kardashian">
-                                <span class="contacts-title">Kim Kardashian</span>
-                                <p>Available resource</p>
-                            </a>
-                            <a href="#" class="list-group-item">         
-                                <div class="list-group-status status-offline"></div>
-                                <img src="${assets}/images/users/no-image.jpg" class="pull-left" alt="Jason Statham">
-                                <span class="contacts-title">Jason Statham</span>
-                                <p>Available resource</p>
-                            </a>                              
+                        	<c:if test="${not empty userMap}">
+             					<c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
+		                            <a href="#" class="list-group-item">                                 
+		                                <div class="list-group-status status-online"></div>
+		                                <img class="pull-left" src="${user.filePhoto}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
+		                                <span class="contacts-title">${user.firstName}</span>
+		                                <p>Availble after 2:00 PM</p>
+		                            </a>     
+                            	</c:forEach>
+                            </c:if>                           
                         </div>
                         
                         <div class="block hide">
@@ -509,14 +462,6 @@
                             <!-- END SALES BLOCK -->
                             
                         </div>
-						<div class="common-modal modal fade" id="common-Modal1" tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-content">
-								<ul class="list-inline item-details">
-									<li><a href="http://themifycloud.com/downloads/janux-premium-responsive-bootstrap-admin-dashboard-template/">Admin templates</a></li>
-									<li><a href="http://themescloud.org">Bootstrap themes</a></li>
-								</ul>
-							</div>
-						</div>
                         
                         <div class="col-md-4">
                             
@@ -535,3 +480,11 @@
                <!-- END PAGE CONTENT WRAPPER -->  
 <%@include file="includes/footer.jsp" %>
 <script type="text/javascript" src="${js}/demo_dashboard.js"></script>
+<script type="text/javascript" src="${js}/famstack.plugin.js"></script>
+<jsp:useBean id="date" class="java.util.Date"/>
+${date}
+<fmt:formatDate var="timeHour" value="${date}" pattern="HH"/>
+<fmt:formatDate var="timeMinutes"  value="${date}" pattern="mm"/>
+<script>
+templatePlugins.init(${timeHour},${timeMinutes});
+</script>

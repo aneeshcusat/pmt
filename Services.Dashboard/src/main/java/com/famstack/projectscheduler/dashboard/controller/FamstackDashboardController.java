@@ -123,10 +123,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(value = "/employees", method = RequestMethod.GET)
 	public ModelAndView newEmployee() {
-		List<EmployeeDetails> employeeItemList = getFamstackApplicationConfiguration().getUserList();
-		Map<String, Object> modelViewMap = new HashMap<String, Object>();
-		modelViewMap.put("employeeItemList", employeeItemList);
-		return new ModelAndView("employees", "command", new EmployeeDetails()).addObject("modelViewMap", modelViewMap);
+		return new ModelAndView("employees", "command", new EmployeeDetails());
 	}
 
 	@RequestMapping(value = "/editEmployee", method = RequestMethod.GET)
@@ -176,10 +173,8 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public ModelAndView listProjects() {
 		List<ProjectDetails> projectData = famstackDashboardManager.getProjectsDataList();
-		List<EmployeeDetails> userMap = getFamstackApplicationConfiguration().getUserList();
 		Map<String, Object> modelViewMap = new HashMap<String, Object>();
 		modelViewMap.put("projectDetailsData", projectData);
-		modelViewMap.put("userMap", userMap);
 		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
@@ -201,9 +196,8 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
 	public ModelAndView loadProject(@PathVariable("projectId") int projectId, HttpServletRequest request) {
 		ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId, request);
-		List<EmployeeDetails> userMap = getFamstackApplicationConfiguration().getUserList();
-		return new ModelAndView("projectdetails", "command", new TaskDetails())
-				.addObject("projectDetails", projectDetails).addObject("userMap", userMap);
+		return new ModelAndView("projectdetails", "command", new TaskDetails()).addObject("projectDetails",
+				projectDetails);
 	}
 
 	// ---------- Project Comments ------------//
@@ -221,9 +215,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		int userId = getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId();
 		List<GroupDetails> groupData = famstackDashboardManager.getAllGroups(userId);
 		Map<String, Object> modelViewMap = new HashMap<String, Object>();
-		List<EmployeeDetails> userMap = getFamstackApplicationConfiguration().getUserList();
 		modelViewMap.put("groupData", groupData);
-		modelViewMap.put("userMap", userMap);
 		modelViewMap.put("currentUserId", userId);
 		return new ModelAndView("messages", "command", new GroupDetails()).addObject("modelViewMap", modelViewMap);
 	}

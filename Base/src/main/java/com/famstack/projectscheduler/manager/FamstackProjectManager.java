@@ -82,6 +82,31 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		return (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class);
 	}
 
+	public void createProjectTask(TaskDetails taskDetails) {
+		ProjectItem projectItem = getProjectItemById(taskDetails.getProjectId());
+		famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
+	}
+
+	public void updateProjectTask(TaskDetails taskDetails) {
+		ProjectItem projectItem = getProjectItemById(taskDetails.getProjectId());
+		famstackProjectTaskManager.updateTask(taskDetails, projectItem);
+
+	}
+
+	public void updateProjectStatus(ProjectStatus projectStatus, ProjectItem projectItem) {
+		projectItem.setStatus(projectStatus);
+		getFamstackDataAccessObjectManager().updateItem(projectItem);
+
+	}
+
+	public void deleteProjectTask(int taskId) {
+		famstackProjectTaskManager.deleteTaskItem(taskId);
+	}
+
+	public String getUserTaskActivityJson() {
+		return famstackProjectTaskManager.getUserTaskActivityJson();
+	}
+
 	public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem) {
 
 		if (projectItem != null) {
@@ -103,7 +128,6 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			projectDetails.setStartTime(startDateString);
 			projectDetails.setCompletionTime(completionDateString);
 
-			projectDetails.setStatus(projectItem.getStatus());
 			projectDetails.setTags(projectItem.getTags());
 			projectDetails.setType(projectItem.getType());
 			if (projectItem.getReporter() != null) {
@@ -120,7 +144,11 @@ public class FamstackProjectManager extends BaseFamstackManager {
 					famstackProjectActivityManager.mapProjectActivityDetails(projectItem.getProjectActivityItem()));
 			projectDetails.setProjectTaskDeatils(
 					famstackProjectTaskManager.mapProjectTaskDetails(projectItem.getTaskItems()));
-			projectDetails.setUnAssignedDuration(getUnAssignedDuration(projectDetails));
+
+			int unAssignedDuration = getUnAssignedDuration(projectDetails);
+			projectDetails.setUnAssignedDuration(unAssignedDuration);
+			projectDetails.setStatus(projectItem.getStatus());
+
 			return projectDetails;
 
 		}

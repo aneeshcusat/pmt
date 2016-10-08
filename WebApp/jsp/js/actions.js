@@ -1,9 +1,5 @@
 $(document).ready(function(){        
     
-    /* PROGGRESS START */
-    $.mpb("show",{value: [0,50],speed: 5,state: 'danger'});      
-    /* END PROGGRESS START */
-    
     var html_click_avail = true;
     
     $("html").on("click", function(){
@@ -14,17 +10,7 @@ $(document).ready(function(){
     $(".x-navigation-horizontal .panel").on("click",function(e){
         e.stopPropagation();
     });    
-    
-    /* WIDGETS (DEMO)*/
-    $(".widget-remove").on("click",function(){
-        $(this).parents(".widget").fadeOut(400,function(){
-            $(this).remove();
-            $("body > .tooltip").remove();
-        });
-        return false;
-    });
-    /* END WIDGETS */
-  
+   
     
     /* DROPDOWN TOGGLE */
     $(".dropdown-toggle").on("click",function(){
@@ -32,30 +18,25 @@ $(document).ready(function(){
     });
     /* DROPDOWN TOGGLE */
     
-    /* MESSAGE BOX */
-    $(".mb-control").on("click",function(){
-        var box = $($(this).data("box"));
-        if(box.length > 0){
-            box.toggleClass("open");
-            
-            var sound = box.data("sound");
-            
-            if(sound === 'alert')
-                playAudio('alert');
-            
-            if(sound === 'fail')
-                playAudio('fail');
-            
-        }        
+    
+    /* DATATABLES/CONTENT HEIGHT FIX */
+    $(".dataTables_length select").on("change",function(){
+        onresize();
+    });
+    /* END DATATABLES/CONTENT HEIGHT FIX */
+    
+    /* TOGGLE FUNCTION */
+    $(".toggle").on("click",function(){
+        var elm = $("#"+$(this).data("toggle"));
+        if(elm.is(":visible"))
+            elm.addClass("hidden").removeClass("show");
+        else
+            elm.addClass("show").removeClass("hidden");
+        
         return false;
     });
-    $(".mb-control-close").on("click",function(){
-       $(this).parents(".message-box").removeClass("open");
-       return false;
-    });    
-    /* END MESSAGE BOX */
- 
-    /* PANELS */
+    /* END TOGGLE FUNCTION */
+/* PANELS */
     
     $(".panel-fullscreen").on("click",function(){
         panel_fullscreen($(this).parents(".panel"));
@@ -86,46 +67,22 @@ $(document).ready(function(){
     });
     /* EOF PANELS */
     
-    /* DATATABLES/CONTENT HEIGHT FIX */
-    $(".dataTables_length select").on("change",function(){
-        onresize();
-    });
-    /* END DATATABLES/CONTENT HEIGHT FIX */
     
-    /* TOGGLE FUNCTION */
-    $(".toggle").on("click",function(){
-        var elm = $("#"+$(this).data("toggle"));
-        if(elm.is(":visible"))
-            elm.addClass("hidden").removeClass("show");
-        else
-            elm.addClass("show").removeClass("hidden");
-        
+    /* WIDGETS (DEMO)*/
+    $(".widget-remove").on("click",function(){
+        $(this).parents(".widget").fadeOut(400,function(){
+            $(this).remove();
+            $("body > .tooltip").remove();
+        });
         return false;
     });
-    /* END TOGGLE FUNCTION */
-    
-    /* MESSAGES LOADING */
-    $(".messages .item").each(function(index){
-        var elm = $(this);
-        setInterval(function(){
-            elm.addClass("item-visible");
-        },index*300);              
-    });
-    /* END MESSAGES LOADING */
-    
+    /* END WIDGETS */
+      
     x_navigation();
 });
 
 $(function(){            
     onload();
-
-    /* PROGGRESS COMPLETE */
-    $.mpb("update",{value: 100, speed: 5, complete: function(){            
-        $(".mpb").fadeOut(200,function(){
-            $(this).remove();
-        });
-    }});
-    /* END PROGGRESS COMPLETE */
 });
 
 $(window).resize(function(){

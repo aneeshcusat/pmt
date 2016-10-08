@@ -1,7 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <spring:url value="/jsp/css" var="css" htmlEscape="true"/>
 <spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
 <spring:url value="/jsp/image" var="image" htmlEscape="true"/>
@@ -9,6 +9,7 @@
 <spring:url value="/jsp/audio" var="audio" htmlEscape="true"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
+<c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
 <!DOCTYPE html>
 <html lang="en">
     <head>        

@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
-import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
@@ -25,7 +24,6 @@ import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectFileManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
-import com.famstack.projectscheduler.manager.FamstackProjectTaskManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.utils.FamstackUtils;
@@ -41,9 +39,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackProjectManager projectManager;
-
-	@Resource
-	FamstackProjectTaskManager famstackProjectTaskManager;
 
 	@Resource
 	FamstackProjectCommentManager projectCommentManager;
@@ -127,8 +122,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public void createTask(TaskDetails taskDetails) {
-		ProjectItem projectItem = projectManager.getProjectItemById(taskDetails.getProjectId());
-		famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
+		projectManager.createProjectTask(taskDetails);
 
 	}
 
@@ -146,13 +140,16 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public void updateTask(TaskDetails taskDetails) {
-		ProjectItem projectItem = projectManager.getProjectItemById(taskDetails.getProjectId());
-		famstackProjectTaskManager.updateTask(taskDetails, projectItem);
+		projectManager.updateProjectTask(taskDetails);
 
 	}
 
 	public void deleteProjectTask(int taskId) {
-		famstackProjectTaskManager.deleteTaskItem(taskId);
+		projectManager.deleteProjectTask(taskId);
+	}
+
+	public String getUserTaskActivityJson() {
+		return projectManager.getUserTaskActivityJson();
 	}
 
 	public void createGroup(GroupDetails groupDetails) {
@@ -165,11 +162,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		groupMessageDetails.setGroup(groupId);
 		groupMessageDetails.setDescription(message);
 		groupMessageManager.createGroupMessageItem(groupMessageDetails);
-
-	}
-
-	public String getUserTaskActivityJson() {
-		return famstackProjectTaskManager.getUserTaskActivityJson();
 	}
 
 	public boolean isValidKeyForUserReset(String key, int userId) {
