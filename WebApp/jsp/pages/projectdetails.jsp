@@ -148,7 +148,7 @@ width: 60%;
 
                       </section>
 						<div class="col-md-12">
-						<h4>Comments</h4>
+						<h4>Comments (${projectDetails.projectComments.size()})</h4>
 							<div class="row">
 							  <div class="messages messages-img">
 							  <c:if test="${not empty projectDetails.projectComments}">
