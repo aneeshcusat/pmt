@@ -167,14 +167,18 @@ width: 60%;
 					            </div>
 					         </c:forEach>
 					         </c:if>  
-					         <div class="panel panel-default push-up-10">
-                                    <div class="input-group">
-                                        <textarea class="form-control" placeholder="Enter your comments" id="comment_textarea"></textarea>
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-primary" onclick="addComment()">Add</button>
-                                        </div>
-                                    </div>
-                                </div> 
+                                
+                        <div class="panel-body panel-body-search">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    
+                                </div>
+                               <textarea class="form-control" placeholder="Enter your comments" id="comment_textarea"></textarea>
+                                <div class="input-group-btn" style="padding-left: 5px">
+                                    <button class="btn btn-primary" onclick="addComment()">Add</button>
+                                </div>
+                            </div>
+                        </div>
 					       </div>
 							
 							</div>

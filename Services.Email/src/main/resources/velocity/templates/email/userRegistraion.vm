@@ -1,0 +1,8 @@
+#set( $subject = "${subject}")
+
+#parse("/velocity/templates/email/fragments/header.vm")
+This is an automated notification please do not reply.
+User has been registered, Please login and reset your password to use the system
+Username : ${emailId}
+password : ${password}
+#parse("/velocity/templates/email/fragments/footer.vm")

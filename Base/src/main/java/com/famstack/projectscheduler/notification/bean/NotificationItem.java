@@ -15,7 +15,7 @@ public class NotificationItem {
 
 	public List<String> getToList() {
 		if (toList == null) {
-			return new ArrayList<>();
+			toList = new ArrayList<>();
 		}
 		return toList;
 	}
@@ -26,7 +26,7 @@ public class NotificationItem {
 
 	public Map<String, Object> getData() {
 		if (data == null) {
-			return new HashMap<>();
+			data = new HashMap<>();
 		}
 		return data;
 	}

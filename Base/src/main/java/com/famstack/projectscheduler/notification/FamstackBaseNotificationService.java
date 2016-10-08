@@ -7,4 +7,14 @@ public abstract class FamstackBaseNotificationService extends BaseFamstackServic
 
 	public abstract void notify(NotificationItem notificationItem);
 
+	public boolean enabled;
+
+	public boolean isEnabled() {
+		return getFamstackApplicationConfiguration().isEmailEnabled();
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 }

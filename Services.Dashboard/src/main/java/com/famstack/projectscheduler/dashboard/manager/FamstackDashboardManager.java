@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
@@ -60,14 +61,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.createUserItem(employeeDetails);
-
+		getFamstackNotificationServiceManager().notifyAll(NotificationType.USER_REGISTRAION, employeeDetails);
 		return errorMap;
 	}
 
 	public Map<String, String> updateUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.updateUserItem(employeeDetails);
-
+		getFamstackNotificationServiceManager().notifyAll(NotificationType.USER_UPDATE, employeeDetails);
 		return errorMap;
 	}
 
@@ -176,6 +177,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public boolean changePassword(String userName, String oldPassword, String password) {
-		return userProfileManager.changePassword(userName, oldPassword, password);
+		boolean status = userProfileManager.changePassword(userName, oldPassword, password);
+		getFamstackNotificationServiceManager().notifyAll(NotificationType.USER_UPDATE, userName);
+		return status;
 	}
 }

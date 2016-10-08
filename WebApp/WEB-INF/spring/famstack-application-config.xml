@@ -10,4 +10,12 @@
  
    <context:component-scan base-package="com.famstack.projectscheduler" />
    <bean id="famstackApplicationConfiguration" class="com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration" init-method="initialize"/>
+   
+   <bean id="famstackNotificationServiceManager" class="com.famstack.projectscheduler.notification.FamstackNotificationServiceManager">
+   	<property name="notificationServices">
+	   <list>
+		   <ref bean="famstackEmailNotificationService" />
+		</list>
+	</property>
+	</bean>
 </beans>

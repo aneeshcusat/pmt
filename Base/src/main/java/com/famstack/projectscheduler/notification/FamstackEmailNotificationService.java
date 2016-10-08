@@ -1,4 +1,4 @@
-package com.famstack.email.manager;
+package com.famstack.projectscheduler.notification;
 
 import java.util.Map;
 
@@ -10,18 +10,15 @@ import com.famstack.email.FamstackEmailSender;
 import com.famstack.email.contants.EmailMessages;
 import com.famstack.email.contants.EmailTemplates;
 import com.famstack.email.util.FamstackTemplateEmailInfo;
-import com.famstack.projectscheduler.notification.FamstackBaseNotificationService;
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
 import com.famstack.projectscheduler.util.StringUtils;
 
 @Component
 public class FamstackEmailNotificationService extends FamstackBaseNotificationService {
 
-	/** The delivery interface email sender. */
 	@Resource
 	FamstackEmailSender famstackEmailSender;
 
-	/** The delivery interface template email info. */
 	@Resource
 	FamstackTemplateEmailInfo famstackTemplateEmailInfo;
 

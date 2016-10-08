@@ -149,4 +149,8 @@ public class BaseFamstackService {
 		return famstackUserSessionConfiguration;
 	}
 
+	public FamstackNotificationServiceManager getFamstackNotificationServiceManager() {
+		return famstackNotificationServiceManager;
+	}
+
 }

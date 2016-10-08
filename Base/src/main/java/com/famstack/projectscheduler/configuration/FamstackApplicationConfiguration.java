@@ -20,6 +20,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	private String protocol;
 
+	private final boolean emailEnabled = true;
+
 	public Map<String, String> getConfigSettings() {
 		return null;
 	}
@@ -38,4 +40,37 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	public void setUserList(List<EmployeeDetails> userList) {
 		this.userList = userList;
 	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public int getPortNumber() {
+		return portNumber;
+	}
+
+	public void setPortNumber(int portNumber) {
+		this.portNumber = portNumber;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+
+	public FamstackUserProfileManager getFamstackUserProfileManager() {
+		return famstackUserProfileManager;
+	}
+
+	public boolean isEmailEnabled() {
+		return emailEnabled;
+	}
+
 }

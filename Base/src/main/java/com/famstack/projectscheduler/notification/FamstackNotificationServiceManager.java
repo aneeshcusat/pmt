@@ -18,15 +18,39 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	public void notifyAll(NotificationType notificationType, Object object) {
 		NotificationItem notificationEmailItem = null;
 		if (notificationType == NotificationType.USER_REGISTRAION) {
-			EmployeeDetails employeeDetails = (EmployeeDetails) object;
-			notificationEmailItem.setEmailTemplate(EmailTemplates.USER_REGISTRAION);
-			notificationEmailItem.getToList().add(employeeDetails.getEmail());
-			notificationEmailItem.getData().put("userId", String.valueOf(employeeDetails.getId()));
-			notificationEmailItem.getData().put("emailId", employeeDetails.getEmail());
-			notificationEmailItem.getData().put("password", employeeDetails.getConfirmPassword());
+			notificationEmailItem = getNotificationItemForRegistraion(object);
 		}
-		for (FamstackBaseNotificationService notificationService : notificationServices) {
-			notificationService.notify(notificationEmailItem);
+
+		if (notificationEmailItem != null) {
+			for (FamstackBaseNotificationService notificationService : notificationServices) {
+				if (notificationService.isEnabled()) {
+					notificationService.notify(notificationEmailItem);
+				}
+			}
+		} else {
+			logError("Email type " + notificationType + "has not configured! ");
 		}
 	}
+
+	private NotificationItem getNotificationItemForRegistraion(Object object) {
+		NotificationItem notificationEmailItem;
+		notificationEmailItem = new NotificationItem();
+		EmployeeDetails employeeDetails = (EmployeeDetails) object;
+		notificationEmailItem.setEmailTemplate(EmailTemplates.USER_REGISTRAION);
+		notificationEmailItem.getToList().add(employeeDetails.getEmail());
+		notificationEmailItem.getData().put("userId", String.valueOf(employeeDetails.getId()));
+		notificationEmailItem.getData().put("emailId", employeeDetails.getEmail());
+		notificationEmailItem.getData().put("password", employeeDetails.getPassword());
+		notificationEmailItem.getData().put("phoneNumber", employeeDetails.getMobileNumber());
+		return notificationEmailItem;
+	}
+
+	public List<FamstackBaseNotificationService> getNotificationServices() {
+		return notificationServices;
+	}
+
+	public void setNotificationServices(List<FamstackBaseNotificationService> notificationServices) {
+		this.notificationServices = notificationServices;
+	}
+
 }

@@ -99,6 +99,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 		userItem.setHashkey(hashKey);
 		userItem.setPassword(encryptedPassword);
 		userItem.setNeedPasswordReset(true);
+		employeeDetails.setPassword(password);
 		saveUserItem(employeeDetails, userItem);
 	}
 
