@@ -22,6 +22,7 @@ import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
+import com.famstack.projectscheduler.util.DateUtils;
 
 /**
  * The Class FamstackGroupMessageManager.
@@ -187,6 +188,7 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 			groupMessageDetails.setLastModifiedDate(groupMessageItem.getLastModifiedDate());
 			groupMessageDetails.setGroup(groupMessageItem.getGroupItem().getGroupId());
 			groupMessageDetails.setMessageId(groupMessageItem.getMessageId());
+			groupMessageDetails.setCreatedDateDisplay(DateUtils.getDisplayDate(groupMessageItem.getCreatedDate()));
 			return groupMessageDetails;
 		}
 		return null;

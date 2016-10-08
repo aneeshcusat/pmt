@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.util;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -104,5 +105,14 @@ public final class DateUtils extends BaseFamstackService {
 	 */
 	public static Date getPreviousDate(DateTimePeriod previousTimePeriod) {
 		return getNextPreviousDate(previousTimePeriod, new Date(), -1);
+	}
+	
+	
+	public static String getDisplayDate(Timestamp timestamp) {
+		if (timestamp != null) {
+			SimpleDateFormat formatter = new SimpleDateFormat(DATE_TIME_FORMAT);
+			return formatter.format(new Date(timestamp.getTime()));
+		}
+		return null;
 	}
 }

@@ -25,6 +25,8 @@ public class GroupMessageDetails {
 	private String userFullName;
 
 	private Integer group;
+	
+	private String createdDateDisplay;
 
 	public Integer getMessageId() {
 		return messageId;
@@ -80,6 +82,14 @@ public class GroupMessageDetails {
 
 	public void setUserFullName(String userFullName) {
 		this.userFullName = userFullName;
+	}
+
+	public String getCreatedDateDisplay() {
+		return createdDateDisplay;
+	}
+
+	public void setCreatedDateDisplay(String createdDateDisplay) {
+		this.createdDateDisplay = createdDateDisplay;
 	}
 	
 

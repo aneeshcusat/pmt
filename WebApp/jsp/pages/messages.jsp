@@ -7,6 +7,29 @@
 <style>
     #creategroupmodal .modal-dialog  {width:65%;}
    
+   /* Let's get this party started */
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.02); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0, 0, 0, 0.02); 
+}
+
     
 </style>
 <script type="text/javascript">
@@ -97,7 +120,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
          <div class="panel-body tab-content" style="background-color: #F5F5F5;">
             <c:forEach var="group" items="${modelViewMap.groupData}">
              <div class="tab-pane" id="tabGroup${group.groupId}">
-			                <div class="messages messages-img" style=" overflow: scroll; min-height: 300px; max-height: 300px;" >
+			                <div class="messages messages-img" style=" overflow-y: scroll; min-height: 300px; max-height: 300px;" >
 			                 <input type="hidden" id="lastMessageId_${group.groupId}" value=""/>
 			                <c:forEach var="groupMessage" items="${group.messages}">
 				                <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
@@ -122,7 +145,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
 		                            
 		                                <div class="heading">
 		                                    <a href="#">${groupMessage.userFullName}</a>
-		                                    <span class="date">${groupMessage.createdDate}</span>
+		                                    <span class="date">${groupMessage.createdDateDisplay}</span>
 		                                </div>
 		                                ${groupMessage.description}
 		                            </div>
@@ -137,7 +160,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
                                 <div class="input-group-btn">
                                     
                                 </div>
-                                <input type="text" id="messageTextAreaField_${group.groupId}" class="form-control" placeholder="Your message..."/>
+                                <input type="text" id="${group.groupId}" class="form-control messageTextArea" placeholder="Your message..."/>
                                 <div class="input-group-btn">
                                     <button class="btn btn-default" onclick="sendMessage('${group.groupId}')">Send</button>
                                 </div>
@@ -209,7 +232,7 @@ $('.nav-tabs li:first-child a').trigger( "click" );
 
 function sendMessage(group) {
 	var groupId = group;
-	var message = $('#messageTextAreaField_'+groupId).val();
+	var message = $('#'+groupId).val();
 	var data = {"groupId": groupId , "message": message };
 	doAjaxRequest('POST', '/bops/dashboard/sendMessage', data, 
 	function(response) {
@@ -217,6 +240,7 @@ function sendMessage(group) {
         if (responseJsonObj.status == true) {
         	var lastMessageId = $('#lastMessageId_'+ groupId).val();
         	getMessageAfterId(groupId, lastMessageId);
+        	$('#'+groupId).val('')
         } 
     }, function(e) {
         alert(e)
@@ -284,7 +308,7 @@ function processMessageAfterSave(jsonResponse, groupId) {
         htmlString += '<div class="text" style="background: #F6F6F6;">';
         htmlString += '<div class="heading">';
         htmlString += '<a href="#">'+ messageObject.userFullName +'</a>';
-        htmlString += '<span class="date">'+ messageObject.createdDate +'</span>';
+        htmlString += '<span class="date">'+ messageObject.createdDateDisplay +'</span>';
         htmlString += '</div>';
         htmlString += messageObject.description;
         htmlString += '</div>';
@@ -300,6 +324,17 @@ $(".messages .item").each(function(index){
     var elm = $(this);
     setInterval(function(){
         elm.addClass("item-visible");
-    },index*100);              
+    },index*200);              
 });
+
+
+$('.messageTextArea').keypress(function (e) {
+	 var key = e.which;
+	 if(key == 13)  // the enter key code
+	  {
+		 sendMessage(this.id);
+	    return false;  
+	  }
+	}); 
+
 </script>
