@@ -11,15 +11,15 @@
 					<label class="col-md-3 control-label">Group Name</label>
 					<div class="col-md-9">
 						<input path="name" type="text" value=""
-							name="name" id="name" class="form-control" placeholder="eg:Product Chat Group"
+							name="name" id="groupName" class="form-control" placeholder="eg:Production Chat Group"
 							tabindex="1" />
 					</div>
 				</div>
-				
+				<form:input path="groupId" type="hidden" id="groupId"/>
 				<div class="form-group">
                     <label class="col-md-3 control-label">Description</label>
                     <div class="col-md-9">
-                        <form:textarea class="form-control" rows="5" path="description" id="description"></form:textarea>
+                        <form:textarea class="form-control" rows="5" path="description" id="groupDescription"></form:textarea>
                     </div>
                 </div>
 			</div>
@@ -34,7 +34,7 @@
 					<c:if test="${not empty modelViewMap.userMap}">
 					 <c:forEach var="user" items="${modelViewMap.userMap}">
 					 <div style="margin-top: 10px">
-					 <form:checkbox  id="${user.id}" value="${user.id}" name="subscriberIds" path="subscriberIds" class="icheckbox" tabindex="1"/>&nbsp;<span style="margin-left: 10px; font-weight: bold;">${user.firstName}&nbsp;${user.lastName}</span>
+					 <form:checkbox  id="${user.id}" value="${user.id}" name="subscriberIds" path="subscriberIds" class="icheckbox subscriberCheckBox" tabindex="1"/>&nbsp;<span style="margin-left: 10px; font-weight: bold;">${user.firstName}&nbsp;${user.lastName}</span>
 					 </div>
 					 </c:forEach>
 					 </c:if>

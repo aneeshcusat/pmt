@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 
@@ -29,7 +30,7 @@ public class GroupDetails {
 	
 	private Set<EmployeeDetails> subscribers;
 	
-	private Set<GroupMessageDetails> messages;
+	private List<GroupMessageDetails> messages;
 
 	public Integer getGroupId() {
 		return groupId;
@@ -79,11 +80,11 @@ public class GroupDetails {
 		this.subscribers = subscribers;
 	}
 
-	public Set<GroupMessageDetails> getMessages() {
+	public List<GroupMessageDetails> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(Set<GroupMessageDetails> messages) {
+	public void setMessages(List<GroupMessageDetails> messages) {
 		this.messages = messages;
 	}
 

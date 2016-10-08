@@ -20,7 +20,9 @@ public class GroupMessageDetails {
 
 	private Timestamp lastModifiedDate;
 
-	private EmployeeDetails user;
+	private Integer user;
+	
+	private String userFullName;
 
 	private Integer group;
 
@@ -56,11 +58,11 @@ public class GroupMessageDetails {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public EmployeeDetails getUser() {
+	public Integer getUser() {
 		return user;
 	}
 
-	public void setUser(EmployeeDetails user) {
+	public void setUser(Integer user) {
 		this.user = user;
 	}
 
@@ -70,6 +72,14 @@ public class GroupMessageDetails {
 
 	public void setGroup(Integer group) {
 		this.group = group;
+	}
+
+	public String getUserFullName() {
+		return userFullName;
+	}
+
+	public void setUserFullName(String userFullName) {
+		this.userFullName = userFullName;
 	}
 	
 

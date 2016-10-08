@@ -1,6 +1,10 @@
 package com.famstack.projectscheduler.manager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +43,14 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		groupItem.setCreatedBy(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
 		famstackDataAccessObjectManager.saveOrUpdateItem(groupItem);
 	}
+	
+	public void updateGroupItem(GroupDetails groupDetails) {
+		GroupItem groupItem = (GroupItem) famstackDataAccessObjectManager.getItemById(groupDetails.getGroupId(), GroupItem.class);
+		groupItem.setSubscribers(getSubscriberItems(groupDetails.getSubscriberIds()));
+		groupItem.setDescription(groupDetails.getDescription());
+		groupItem.setName(groupDetails.getName());
+		famstackDataAccessObjectManager.saveOrUpdateItem(groupItem);
+	}
 
 	public Set<UserItem> getSubscriberItems(int[] subscriberIds) {
 		Set<UserItem> userItemSet = new HashSet<UserItem>();
@@ -75,12 +87,20 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 			groupDetails.setLastModifiedDate(groupItem.getLastModifiedDate());
 
 			groupDetails.setGroupId(groupItem.getGroupId());
-			groupDetails.setMessages(mapMessageItems(groupItem.getMessages()));
+			groupDetails.setMessages(sort(mapMessageItems(groupItem.getMessages())));
 			groupDetails.setSubscriberIds(getSubscriberIds(groupItem.getSubscribers()));
 
 			groupDetails.setSubscribers(getSubscriberDetails(groupItem.getSubscribers()));
 			return groupDetails;
 
+		}
+		return null;
+	}
+	
+	public GroupDetails getGroupDetails(int groupId) {
+		if (groupId != 0) {
+			GroupItem groupItem = (GroupItem) famstackDataAccessObjectManager.getItemById(groupId, GroupItem.class);
+			return mapGroupItemToGroupDetails(groupItem);
 		}
 		return null;
 	}
@@ -119,15 +139,15 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		return userItemList;
 	}
 
-	public Set<GroupMessageDetails> mapMessageItems(Set<GroupMessageItem> messages) {
-		Set<GroupMessageDetails> messageDetailsSet = new HashSet<GroupMessageDetails>();
+	public List<GroupMessageDetails> mapMessageItems(Set<GroupMessageItem> messages) {
+		List<GroupMessageDetails> messageDetailsList = new ArrayList<GroupMessageDetails>();
 		if (messages != null) {
 			for (GroupMessageItem messageItem : messages) {
 				GroupMessageDetails messageDetails = mapGroupMessageItemToGroupMessageDetails(messageItem);
-				messageDetailsSet.add(messageDetails);
+				messageDetailsList.add(messageDetails);
 			}
 		}
-		return messageDetailsSet;
+		return messageDetailsList;
 	}
 
 	public int[] getSubscriberIds(Set<UserItem> subscribers) {
@@ -160,7 +180,8 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 			groupMessageDetails.setDescription(groupMessageItem.getDescription());
 			if (groupMessageItem.getUser() != null) {
 				UserItem userItem = userProfileManager.getUserItemById(groupMessageItem.getUser().getId());
-				groupMessageDetails.setUser(userProfileManager.mapEmployeeDetails(userItem));
+				groupMessageDetails.setUser(userItem.getId());
+				groupMessageDetails.setUserFullName(userItem.getFirstName() + " " + userItem.getLastName());
 			}
 			groupMessageDetails.setCreatedDate(groupMessageItem.getCreatedDate());
 			groupMessageDetails.setLastModifiedDate(groupMessageItem.getLastModifiedDate());
@@ -169,5 +190,40 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 			return groupMessageDetails;
 		}
 		return null;
+	}
+	
+	public List<GroupMessageDetails> getGroupMessages(int groupId, int messageId) {
+		String hqlString = null;
+		List<GroupMessageDetails> messageList = new ArrayList<GroupMessageDetails>();
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -3);
+		Date date = calendar.getTime();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("groupId", groupId);
+		dataMap.put("date", date);
+		if (messageId > 0) {
+			hqlString = "getMessagesAfterId";
+			dataMap.put("messageId", messageId);
+		} else {
+			hqlString = "getGroupMessages";
+		}
+		List<?> messageItems = getFamstackDataAccessObjectManager()
+				.executeQuery(HQLStrings.getString(hqlString), dataMap);
+		for (Object messageItem : messageItems) {
+			messageList.add(mapGroupMessageItemToGroupMessageDetails((GroupMessageItem) messageItem));
+		}
+		return sort(messageList);
+	}
+	
+	public List<GroupMessageDetails> sort(List<GroupMessageDetails> groupMessageDetails) {
+		Collections.sort(groupMessageDetails, new Comparator<GroupMessageDetails>() {
+            @Override
+            public int compare(GroupMessageDetails messageDetailsOne, GroupMessageDetails messageDetailsTwo) {
+                return messageDetailsOne.getCreatedDate().getTime() > messageDetailsTwo.getCreatedDate().getTime() ? 1
+                        : -1;
+            }
+        });
+		
+		return  groupMessageDetails;
 	}
 }

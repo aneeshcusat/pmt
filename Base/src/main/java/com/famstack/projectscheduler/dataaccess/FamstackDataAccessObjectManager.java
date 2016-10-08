@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.dataaccess;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.famstack.projectscheduler.datatransferobject.FamstackBaseItem;
+import com.famstack.projectscheduler.datatransferobject.GroupMessageItem;
 
 public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjectManager {
 
@@ -114,4 +116,5 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		tx.commit();
 		session.close();
 	}
+	
 }

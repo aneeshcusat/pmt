@@ -9,6 +9,12 @@
    
     
 </style>
+<script type="text/javascript">
+function setLastMessageId(lastMessageIdField, messageId) {
+    $('#'+lastMessageIdField).val(messageId);
+}
+
+</script>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">                                    
     <!-- START CONTENT FRAME TOP -->
@@ -17,7 +23,7 @@
             <h2><span class="fa fa-comments"></span> Messages</h2>
         </div>                                                    
         <div class="pull-right">                            
-            <a data-toggle="modal" data-target="#creategroupmodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
+            <a data-toggle="modal" data-target="#creategroupmodal" class="btn btn-success btn-block" onclick="clearGroupForm();">
               <span class="fa fa-plus"></span> Create Group</a>
         </div>                           
     </div>
@@ -83,7 +89,7 @@
          <ul class="nav nav-tabs">
          <c:if test="${not empty modelViewMap.groupData}">
          <c:forEach var="group" items="${modelViewMap.groupData}">
-            <li style="border-bottom: 1px dashed; border-color: #DCDCDC;"><a href="#tabGroup${group.groupId}" data-toggle="tab">${group.name}</a></li>
+            <li style="border-bottom: 1px dashed; border-color: #DCDCDC;"><a href="#tabGroup${group.groupId}" data-toggle="tab"><span onclick="editGroup('${group.groupId}');" data-toggle="modal" data-target="#creategroupmodal" class="fa fa-edit" style="margin-right: 5px;"></span>${group.name}</a></li>
          </c:forEach>
              
          </c:if>
@@ -92,33 +98,37 @@
             <c:forEach var="group" items="${modelViewMap.groupData}">
              <div class="tab-pane" id="tabGroup${group.groupId}">
 			                <div class="messages messages-img" style=" overflow: scroll; min-height: 300px; max-height: 300px;" >
+			                 <input type="hidden" id="lastMessageId_${group.groupId}" value=""/>
 			                <c:forEach var="groupMessage" items="${group.messages}">
-			                
-			                <c:if test="${modelViewMap.currentUserId == groupMessage.user.id}">
-			                <div class="item in">
-			                </c:if>
-			                <c:if test="${modelViewMap.currentUserId != groupMessage.user.id}">
-                            <div class="item">
-                            </c:if>
+				                <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
+				                    <div class="item in">
+				                    
+				                </c:if>
+				                <c:if test="${modelViewMap.currentUserId != groupMessage.user}">
+	                                <div class="item">
+	                            </c:if>
 		                            <div class="image">
-		                                <img src="${groupMessage.user.filePhoto }" alt="${groupMessage.user.firstName}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
+		                                <img src="" alt="${groupMessage.userFullName}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
 		                            </div>
-		                            <c:if test="${modelViewMap.currentUserId == groupMessage.user.id}">
+		                            <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
 		                            <div class="text" style="background: #F6F6F6;">
 		                            </c:if>
-		                            <c:if test="${modelViewMap.currentUserId != groupMessage.user.id}">
+		                            <c:if test="${modelViewMap.currentUserId != groupMessage.user}">
 		                            <div class="text">
 		                            </c:if>
+		                            <script type="text/javascript">
+		                            setLastMessageId('lastMessageId_'+${groupMessage.group},'${groupMessage.messageId}' );
+		                            </script>
 		                            
 		                                <div class="heading">
-		                                    <a href="#">${groupMessage.user.firstName}&nbsp;${groupMessage.user.lastName}</a>
+		                                    <a href="#">${groupMessage.userFullName}</a>
 		                                    <span class="date">${groupMessage.createdDate}</span>
 		                                </div>
 		                                ${groupMessage.description}
 		                            </div>
 		                        </div>
 			                </c:forEach>
-			                
+			               
 			                
 			        </div>                        
 			        <div class="panel panel-default push-up-10">
@@ -184,7 +194,6 @@
 
 <script>
 function doAjaxCreateGroupForm(){
-    $('#createGroupFormId').prop("action", "createGroup");
     $('#createGroupFormId').submit();
 }
 
@@ -201,17 +210,96 @@ $('.nav-tabs li:first-child a').trigger( "click" );
 function sendMessage(group) {
 	var groupId = group;
 	var message = $('#messageTextAreaField_'+groupId).val();
-	
 	var data = {"groupId": groupId , "message": message };
-    
 	doAjaxRequest('POST', '/bops/dashboard/sendMessage', data, 
-			function(response) {
-		        var responseJsonObj = JSON.parse(response);
-		        if (responseJsonObj.status == true) {
-		        	window.location.reload(true);
-		        } 
-		    }, function(e) {
-		        alert(e)
-		    });
+	function(response) {
+        var responseJsonObj = JSON.parse(response);
+        if (responseJsonObj.status == true) {
+        	var lastMessageId = $('#lastMessageId_'+ groupId).val();
+        	getMessageAfterId(groupId, lastMessageId);
+        } 
+    }, function(e) {
+        alert(e)
+    });
 }
+
+function clearGroupForm() {
+    $('#groupName').val('');
+    $('#groupId').val('');
+    $('#groupDescription').val('');
+    $('.subscriberCheckBox').removeAttr('checked');
+    $('.icheckbox_minimal-grey').removeClass('checked');
+    $('#createOrUpdateGroupId').click(function () {
+    	$('#createGroupFormId').prop("action", "createGroup");
+    });
+    
+}
+
+function setGroupEditPage(responseJsonObj) {
+    $('#groupName').val(responseJsonObj.name);
+    $('#groupId').val(responseJsonObj.groupId);
+    $('#groupDescription').val(responseJsonObj.description);
+    
+    var subscribers = responseJsonObj.subscriberIds;
+    for (var i=0; i<subscribers.length; i++) {
+    	$('#'+subscribers[i]).next('ins').click();
+    }
+    $('#createGroupFormId').prop("action", "updateGroup");
+}
+
+function editGroup(groupId) {
+	clearGroupForm();
+	doAjaxRequest('GET', '/bops/dashboard/editGroup?groupId='+groupId, null, 
+    function(response) {
+        var responseJsonObj = JSON.parse(response);
+        setGroupEditPage(responseJsonObj);
+    }, function(e) {
+        alert(e)
+    });
+}
+
+function getMessageAfterId(groupId, messageId) {
+	if (messageId == 'undefined' || messageId == null || messageId == '') {
+		messageId = 0;
+	}
+	   doAjaxRequest('GET', '/bops/dashboard/messageAfter?messageId='+messageId+'&groupId='+groupId, null, 
+	    function(response) {
+	        console.log(response);
+	        var responseJsonObj = JSON.parse(response);
+	        processMessageAfterSave(responseJsonObj, groupId);
+	    }, function(e) {
+	        alert(e)
+	    });
+}
+
+function processMessageAfterSave(jsonResponse, groupId) {
+    var htmlString = '';
+    var lastMessageId = '';
+    for (var i = 0; i < jsonResponse.length; i++) {
+        var messageObject = jsonResponse[i];
+        htmlString += '<div class="item in item-visible">';
+        htmlString += '<div class="image">';
+        htmlString += '<img src="'+ messageObject.user+'" alt="'+ messageObject.userFullName +'" onerror="this.src=\'/bops/jsp/assets/images/users/no-image.jpg\'">';
+        htmlString += '</div>';
+        htmlString += '<div class="text" style="background: #F6F6F6;">';
+        htmlString += '<div class="heading">';
+        htmlString += '<a href="#">'+ messageObject.userFullName +'</a>';
+        htmlString += '<span class="date">'+ messageObject.createdDate +'</span>';
+        htmlString += '</div>';
+        htmlString += messageObject.description;
+        htmlString += '</div>';
+        htmlString += '</div>';
+        lastMessageId = messageObject.messageId;
+    }
+    var currentHTML = $('#lastMessageId_'+groupId).parent().html();
+    $('#lastMessageId_'+groupId).parent().html(currentHTML + htmlString);
+    $('#lastMessageId_'+groupId).val(lastMessageId);
+}
+
+$(".messages .item").each(function(index){
+    var elm = $(this);
+    setInterval(function(){
+        elm.addClass("item-visible");
+    },index*100);              
+});
 </script>
