@@ -9,8 +9,17 @@
    <context:property-placeholder location="classpath:properties/famstack-application-default.properties, classpath:properties/famstack-application-${spring.profiles.active}.properties" ignore-unresolvable="true" />
  
    <context:component-scan base-package="com.famstack.projectscheduler" />
+   
    <bean id="famstackApplicationConfiguration" class="com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration" init-method="initialize"/>
    
+   <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
+    <property name="attributes">
+        <map>
+            <entry key="applicationConfiguraion" value-ref="famstackApplicationConfiguration"/>
+        </map>
+    </property>
+	</bean>
+
    <bean id="famstackNotificationServiceManager" class="com.famstack.projectscheduler.notification.FamstackNotificationServiceManager">
    	<property name="notificationServices">
 	   <list>

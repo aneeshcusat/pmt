@@ -1,7 +1,6 @@
 package com.famstack.projectscheduler.configuration;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -21,10 +20,6 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	private String protocol;
 
 	private final boolean emailEnabled = true;
-
-	public Map<String, String> getConfigSettings() {
-		return null;
-	}
 
 	private List<EmployeeDetails> userList;
 

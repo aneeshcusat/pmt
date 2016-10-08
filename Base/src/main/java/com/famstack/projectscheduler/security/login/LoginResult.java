@@ -40,9 +40,6 @@ public class LoginResult implements Serializable {
 	/** The status. */
 	private Status status = Status.FAILED;
 
-	/** The club id. */
-	private String clubId;
-
 	private String hashKey;
 
 	private UserItem userItem;
@@ -53,14 +50,6 @@ public class LoginResult implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
-	}
-
-	public String getClubId() {
-		return clubId;
-	}
-
-	public void setClubId(String clubId) {
-		this.clubId = clubId;
 	}
 
 	public UserItem getUserItem() {
