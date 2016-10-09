@@ -5,21 +5,15 @@
      <li class="active">Messages</li>
  </ul>
 <style>
-    #creategroupmodal .modal-dialog  {width:65%;}
-   
-   /* Let's get this party started */
+#creategroupmodal .modal-dialog  {width:65%;}
 ::-webkit-scrollbar {
     width: 12px;
 }
- 
-/* Track */
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
- 
-/* Handle */
 ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
     border-radius: 10px;
@@ -29,8 +23,6 @@
 ::-webkit-scrollbar-thumb:window-inactive {
     background: rgba(0, 0, 0, 0.02); 
 }
-
-    
 </style>
 <script type="text/javascript">
 function setLastMessageId(lastMessageIdField, messageId) {
@@ -120,15 +112,15 @@ function setLastMessageId(lastMessageIdField, messageId) {
          <div class="panel-body tab-content" style="background-color: #F5F5F5;">
             <c:forEach var="group" items="${modelViewMap.groupData}">
              <div class="tab-pane" id="tabGroup${group.groupId}">
-			                <div class="messages messages-img" style=" overflow-y: scroll; min-height: 300px; max-height: 300px;" >
+			                <div class="messages messages-img messageContainer" style=" overflow-y: scroll; min-height: 300px; max-height: 300px;">
 			                 <input type="hidden" id="lastMessageId_${group.groupId}" value=""/>
 			                <c:forEach var="groupMessage" items="${group.messages}">
 				                <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
-				                    <div class="item in">
+				                    <div class="item in item-visible" >
 				                    
 				                </c:if>
 				                <c:if test="${modelViewMap.currentUserId != groupMessage.user}">
-	                                <div class="item">
+	                                <div class="item item-visible">
 	                            </c:if>
 		                            <div class="image">
 		                                <img src="" alt="${groupMessage.userFullName}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
@@ -167,17 +159,8 @@ function setLastMessageId(lastMessageIdField, messageId) {
                             </div>
                         </div>
                     </div>
-			                     
 			        </div>
 			        </c:forEach>
-             <div class="tab-pane" id="tab23">
-                 <p>Donec tristique eu sem et aliquam. Proin sodales elementum urna et euismod. Quisque nisl nisl, venenatis eget dignissim et, adipiscing eu tellus. Sed nulla massa, luctus id orci sed, elementum consequat est. Proin dictum odio quis diam gravida facilisis. Sed pharetra dolor a tempor tristique. Sed semper sed urna ac dignissim. Aenean fermentum leo at posuere mattis. Etiam vitae quam in magna viverra dictum. Curabitur feugiat ligula in dui luctus, sed aliquet neque posuere.</p>
-                 <p>Nam a nisi et nisi tristique lacinia non sit amet orci. Duis blandit leo odio, eu varius nulla fringilla adipiscing. Praesent posuere blandit diam, sit amet suscipit justo consequat sed. Duis cursus volutpat ante at convallis. Integer posuere a enim eget imperdiet. Nulla consequat dui quis purus molestie fermentum. Donec faucibus sapien eu nisl placerat auctor. Pellentesque quis justo lobortis, tempor sapien vitae, dictum orci.</p>
-             </div>
-             <div class="tab-pane" id="tab24">
-                 <p>Vestibulum cursus augue sed leo tempor, at aliquam orci dictum. Sed mattis metus id velit aliquet, et interdum nulla porta. Etiam euismod pellentesque purus, in fermentum eros venenatis ut. Praesent vitae nibh ac augue gravida lacinia non a ipsum. Aenean vestibulum eu turpis eu posuere. Sed eget lacus lacinia, mollis urna et, interdum dui. Donec sed diam ut metus imperdiet malesuada. Maecenas tincidunt ultricies ipsum, lobortis pretium dolor sodales ut. Donec nec fringilla nulla. In mattis sapien lorem, nec tincidunt elit scelerisque tempus.</p>
-                 <p>Nam a nisi et nisi tristique lacinia non sit amet orci. Duis blandit leo odio, eu varius nulla fringilla adipiscing. Praesent posuere blandit diam, sit amet suscipit justo consequat sed. Duis cursus volutpat ante at convallis. Integer posuere a enim eget imperdiet. Nulla consequat dui quis purus molestie fermentum. Donec faucibus sapien eu nisl placerat auctor. Pellentesque quis justo lobortis, tempor sapien vitae, dictum orci.</p>
-             </div>                        
          </div>
      </div>                        
      <!-- END VERTICAL TABS -->
@@ -315,18 +298,12 @@ function processMessageAfterSave(jsonResponse, groupId) {
         htmlString += '</div>';
         lastMessageId = messageObject.messageId;
     }
+    var messageDiv = $('#lastMessageId_'+groupId).parent();
     var currentHTML = $('#lastMessageId_'+groupId).parent().html();
     $('#lastMessageId_'+groupId).parent().html(currentHTML + htmlString);
+    messageDiv.scrollTop(messageDiv[0].scrollHeight);
     $('#lastMessageId_'+groupId).val(lastMessageId);
 }
-
-$(".messages .item").each(function(index){
-    var elm = $(this);
-    setInterval(function(){
-        elm.addClass("item-visible");
-    },index*200);              
-});
-
 
 $('.messageTextArea').keypress(function (e) {
 	 var key = e.which;
@@ -336,5 +313,7 @@ $('.messageTextArea').keypress(function (e) {
 	    return false;  
 	  }
 	}); 
-
+$('.messageContainer').each(function(){
+	$(this).scrollTop($(this)[0].scrollHeight);
+});
 </script>
