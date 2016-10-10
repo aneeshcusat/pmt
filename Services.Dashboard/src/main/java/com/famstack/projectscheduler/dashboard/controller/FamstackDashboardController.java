@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.PathParam;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -236,7 +235,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.createGroup(groupDetails);
 		return "{\"status\": true}";
 	}
-	
+
 	@RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateGroup(@ModelAttribute("groupDetails") GroupDetails groupDetails, BindingResult result,
@@ -244,13 +243,13 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.updateGroup(groupDetails);
 		return "{\"status\": true}";
 	}
-	
+
 	@RequestMapping(value = "/editGroup", method = RequestMethod.GET)
 	@ResponseBody
 	public String editGroup(@RequestParam("groupId") int groupId) {
 		return famstackDashboardManager.getGroup(groupId);
 	}
-	
+
 	@RequestMapping(value = "/updateTask", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
@@ -261,8 +260,9 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/deletetask")
 	@ResponseBody
-	public String deleteTask(@RequestParam(value = "taskId") int taskId) {
-		famstackDashboardManager.deleteProjectTask(taskId);
+	public String deleteTask(@RequestParam(value = "taskId") int taskId,
+			@RequestParam(value = "projectId") int projectId) {
+		famstackDashboardManager.deleteProjectTask(taskId, projectId);
 		return "{\"status\": true}";
 	}
 
@@ -332,8 +332,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 		famstackDashboardManager.sendMessage(groupId, message);
 		return "{\"status\": true}";
 	}
-	
-	
+
 	@RequestMapping(value = "/messageAfter", method = RequestMethod.GET)
 	@ResponseBody
 	public String getMessageAfter(@RequestParam("groupId") int groupId, @RequestParam("messageId") int messageId) {

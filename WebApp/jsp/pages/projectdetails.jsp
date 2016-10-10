@@ -262,7 +262,7 @@ width: 60%;
                                     			</div>
                                                 </td>
                                                <td  width="10%"><span class="label label-warning">${taskDetails.status}</span></td>
-                                               <td width="10%"><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                                               <td width="10%"><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                                             </tr>
                                             <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
                                             <input id="${taskDetails.taskId}description" type="hidden" value="${taskDetails.description}"/>
@@ -541,14 +541,14 @@ var deleteFile = function(fileName){
 	$("#confirmYesId").prop("href","javascript:doAjaxDeleteFile('"+fileName+"')");
 }
 
-var deleteTask = function(taskName, taskId){
+var deleteTask = function(taskName, taskId, projectId){
 	$(".msgConfirmText").html("Delete task");
 	$(".msgConfirmText1").html(taskName);
-	$("#confirmYesId").prop("href","javascript:doAjaxDeleteTask("+taskId+")");
+	$("#confirmYesId").prop("href","javascript:doAjaxDeleteTask("+taskId+","+projectId+")");
 }
 
-var doAjaxDeleteTask = function(taskId){
-	var dataString = {"taskId" : taskId};
+var doAjaxDeleteTask = function(taskId, projectId){
+	var dataString = {"taskId" : taskId, "projectId":projectId};
 	var url = '${applicationHome}/deletetask';
 	 doAjaxRequest("POST", url, dataString,  function(data) {
 		   var responseJsonObj = JSON.parse(data)

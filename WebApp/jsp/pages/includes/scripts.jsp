@@ -74,6 +74,7 @@ var site_settings = '<div class="ts-button">'
          
          <!--  famstack scripts -->
          <script type="text/javascript" src="${js}/famstack.ajax.js"></script>
+         <script type="text/javascript" src="${js}/famstack.plugin.js"></script>
          <!--  famstack scripts ends -->
     <!-- END SCRIPTS --> 
     

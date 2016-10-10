@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
+import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -85,12 +87,20 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	public void createProjectTask(TaskDetails taskDetails) {
 		ProjectItem projectItem = getProjectItemById(taskDetails.getProjectId());
 		famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
+		updateProjectStatusBasedOnTaskStatus(taskDetails.getProjectId());
+	}
+
+	private void updateProjectStatusBasedOnTaskStatus(int projectId) {
+		ProjectItem projectItem;
+		projectItem = (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class);
+		ProjectStatus projectStatus = getProjectStatus(projectItem);
+		updateProjectStatus(projectStatus, projectItem);
 	}
 
 	public void updateProjectTask(TaskDetails taskDetails) {
 		ProjectItem projectItem = getProjectItemById(taskDetails.getProjectId());
 		famstackProjectTaskManager.updateTask(taskDetails, projectItem);
-
+		updateProjectStatusBasedOnTaskStatus(taskDetails.getProjectId());
 	}
 
 	public void updateProjectStatus(ProjectStatus projectStatus, ProjectItem projectItem) {
@@ -99,8 +109,29 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 	}
 
-	public void deleteProjectTask(int taskId) {
+	public ProjectStatus getProjectStatus(ProjectItem projectItem) {
+
+		List<TaskStatus> taskStatsList = new ArrayList<>();
+		if (projectItem != null) {
+			for (TaskItem taskItem : projectItem.getTaskItems()) {
+				TaskStatus taskStatus = taskItem.getStatus();
+				taskStatsList.add(taskStatus);
+			}
+		}
+
+		if (taskStatsList.contains(TaskStatus.NEW) || taskStatsList.contains(TaskStatus.ASSIGNED)) {
+			return ProjectStatus.UNASSIGNED;
+		} else if (taskStatsList.contains(TaskStatus.INPROGRESS)) {
+			return ProjectStatus.INPROGRESS;
+		} else if (taskStatsList.contains(TaskStatus.COMPLETED)) {
+			return ProjectStatus.COMPLETED;
+		}
+		return ProjectStatus.NEW;
+	}
+
+	public void deleteProjectTask(int taskId, int projectId) {
 		famstackProjectTaskManager.deleteTaskItem(taskId);
+		updateProjectStatusBasedOnTaskStatus(projectId);
 	}
 
 	public String getUserTaskActivityJson() {

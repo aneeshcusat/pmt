@@ -55,7 +55,7 @@
 </style>         
 <!-- PAGE TITLE -->
 <div class="page-title">                    
-    <h2><span class="fa fa-users"></span> Employees <small>${fn:length(modelViewMap.employeeItemList)} contacts</small></h2>
+    <h2><span class="fa fa-users"></span> Employees <small>${fn:length(userMap)} contacts</small></h2>
 </div>
 <!-- END PAGE TITLE -->                
 

@@ -144,8 +144,8 @@
 					<div class="col-md-9">
 						<form:select path="reportingManger" id="reportingManger" class="form-control select" data-live-search="true">
 							<option value="-1">- select -</option>
-							<c:if test="${not empty modelViewMap.employeeItemList}">
-    						<c:forEach var="user" items="${modelViewMap.employeeItemList}">
+							<c:if test="${not empty userMap}">
+    						<c:forEach var="user" items="${userMap}">
     							<option value="${user.id}">${user.firstName}</option>
     						</c:forEach>
     						</c:if>

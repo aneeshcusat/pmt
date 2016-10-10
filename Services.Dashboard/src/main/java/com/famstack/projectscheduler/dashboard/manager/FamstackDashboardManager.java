@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
-import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
@@ -122,12 +121,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public List<GroupDetails> getAllGroups(int userId) {
 		List<GroupDetails> groupDetailsList = groupMessageManager.getGroupsForUser(userId);
 		Collections.sort(groupDetailsList, new Comparator<GroupDetails>() {
-            @Override
-            public int compare(GroupDetails groupDetailsOne, GroupDetails groupDetailsTwo) {
-                return groupDetailsOne.getCreatedDate().getTime() > groupDetailsTwo.getCreatedDate().getTime() ? 1
-                        : -1;
-            }
-        });
+			@Override
+			public int compare(GroupDetails groupDetailsOne, GroupDetails groupDetailsTwo) {
+				return groupDetailsOne.getCreatedDate().getTime() > groupDetailsTwo.getCreatedDate().getTime() ? 1 : -1;
+			}
+		});
 		return groupDetailsList;
 	}
 
@@ -154,8 +152,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	}
 
-	public void deleteProjectTask(int taskId) {
-		projectManager.deleteProjectTask(taskId);
+	public void deleteProjectTask(int taskId, int projectId) {
+		projectManager.deleteProjectTask(taskId, projectId);
 	}
 
 	public String getUserTaskActivityJson() {
@@ -171,19 +169,19 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		groupMessageManager.updateGroupItem(groupDetails);
 
 	}
-	
+
 	public String getGroup(int groupId) {
 		GroupDetails groupDetails = groupMessageManager.getGroupDetails(groupId);
 		return FamstackUtils.getJsonFromObject(groupDetails);
 	}
-	
+
 	public void sendMessage(int groupId, String message) {
 		GroupMessageDetails groupMessageDetails = new GroupMessageDetails();
 		groupMessageDetails.setGroup(groupId);
 		groupMessageDetails.setDescription(message);
 		groupMessageManager.createGroupMessageItem(groupMessageDetails);
 	}
-	
+
 	public boolean isValidKeyForUserReset(String key, int userId) {
 		return userProfileManager.isValidUserResetKey(key, userId);
 	}
@@ -193,7 +191,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		getFamstackNotificationServiceManager().notifyAll(NotificationType.USER_UPDATE, userName);
 		return status;
 	}
-	
+
 	public String getMessageAfter(int groupId, int messageId) {
 		List<GroupMessageDetails> groupMessageDetails = groupMessageManager.getGroupMessages(groupId, messageId);
 		return FamstackUtils.getJsonFromObject(groupMessageDetails);
