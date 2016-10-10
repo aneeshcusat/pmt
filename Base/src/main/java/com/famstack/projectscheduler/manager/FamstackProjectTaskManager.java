@@ -114,6 +114,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		}
 	}
 
+	public void deleteAllTaskActivitiesItem(int taskId) {
+		famstackUserActivityManager.deleteAllUserTaskActivities(taskId);
+	}
+
 	public TaskItem getTaskItemById(int taskId) {
 		return (TaskItem) famstackDataAccessObjectManager.getItemById(taskId, TaskItem.class);
 	}

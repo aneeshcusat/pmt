@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -76,6 +77,12 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		ProjectItem projectItem = (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId,
 				ProjectItem.class);
 		if (projectItem != null) {
+			Set<TaskItem> taskItems = projectItem.getTaskItems();
+			if (!taskItems.isEmpty()) {
+				for (TaskItem taskItem : taskItems) {
+					famstackProjectTaskManager.deleteAllTaskActivitiesItem(taskItem.getTaskId());
+				}
+			}
 			famstackDataAccessObjectManager.deleteItem(projectItem);
 		}
 	}
