@@ -1,3 +1,4 @@
+var uiT ;
 $(function(){
     
     var tasks = function(){
@@ -8,6 +9,8 @@ $(function(){
             handle: ".task-text",            
             receive: function(event, ui) {
             	alert(ui.item);
+            	uiT=ui;
+            	 return;
                 if(this.id == "tasks_completed"){
                    ui.item.addClass("task-complete").find(".task-footer > .pull-right").remove();
                 }

@@ -54,6 +54,9 @@ public class UserTaskActivityItem implements FamstackBaseItem {
 	@Column(name = "last_modified_date")
 	private Timestamp lastModifiedDate;
 
+	@Column(name = "start_time")
+	private Timestamp startTime;
+
 	@Column(name = "actual_start_time")
 	private Timestamp actualStartTime;
 
@@ -153,6 +156,14 @@ public class UserTaskActivityItem implements FamstackBaseItem {
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
 	}
 
 }

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 
@@ -65,6 +66,10 @@ public class FamstackUserSessionConfiguration implements Serializable {
 	 */
 	public void setAutoRefresh(boolean autoRefresh) {
 		this.autoRefresh = autoRefresh;
+	}
+
+	public UserItem getCurrentUser() {
+		return getLoginResult().getUserItem();
 	}
 
 }

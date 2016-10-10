@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -226,5 +227,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	public ProjectDetails getProjectDetails(int projectId) {
 		return mapProjectItemToProjectDetails(
 				(ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class));
+	}
+
+	public Map<String, ArrayList<TaskDetails>> getProjectTasksDataList(int userId) {
+		return famstackProjectTaskManager.getAllProjectTask(userId);
 	}
 }

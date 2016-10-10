@@ -56,7 +56,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		}
 
 		getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
-		setUserTaskActivity(userActivityItem, taskId, taskName, duration, startTime.getHours(), userTaskType);
+		setUserTaskActivity(userActivityItem, taskId, taskName, duration, startTime, userTaskType);
 	}
 
 	public void deleteAllUserTaskActivities(int taskId) {
@@ -70,12 +70,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	}
 
 	public UserTaskActivityItem setUserTaskActivity(UserActivityItem userActivityItem, int taskId, String taskName,
-			int duration, int startHour, UserTaskType userTaskType) {
+			int duration, Date startDate, UserTaskType userTaskType) {
 		UserTaskActivityItem userTaskActivityItem = new UserTaskActivityItem();
 		userTaskActivityItem.setTaskId(taskId);
 		userTaskActivityItem.setTaskName(taskName);
 		userTaskActivityItem.setDuration(duration);
-		userTaskActivityItem.setStartHour(startHour);
+		userTaskActivityItem.setStartHour(startDate.getHours());
+		userTaskActivityItem.setStartTime(new Timestamp(startDate.getTime()));
 		userTaskActivityItem.setType(userTaskType);
 		userTaskActivityItem.setCreatedDate(new Timestamp(new Date().getTime()));
 		userTaskActivityItem.setLastModifiedDate(new Timestamp(new Date().getTime()));

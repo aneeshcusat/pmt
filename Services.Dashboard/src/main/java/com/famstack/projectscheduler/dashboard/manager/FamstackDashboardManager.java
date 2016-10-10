@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.dashboard.manager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -195,5 +196,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public String getMessageAfter(int groupId, int messageId) {
 		List<GroupMessageDetails> groupMessageDetails = groupMessageManager.getGroupMessages(groupId, messageId);
 		return FamstackUtils.getJsonFromObject(groupMessageDetails);
+	}
+
+	public Map<String, ArrayList<TaskDetails>> getProjectTasksDataList(int userId) {
+		return projectManager.getProjectTasksDataList(userId);
 	}
 }

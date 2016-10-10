@@ -7,9 +7,12 @@
 <spring:url value="/jsp/image" var="image" htmlEscape="true"/>
 <spring:url value="/jsp/js" var="js" htmlEscape="true"/>
 <spring:url value="/jsp/audio" var="audio" htmlEscape="true"/>
+
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
+<c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>        

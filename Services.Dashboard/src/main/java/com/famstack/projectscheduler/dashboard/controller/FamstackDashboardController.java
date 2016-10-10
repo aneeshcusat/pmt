@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -338,4 +339,17 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String getMessageAfter(@RequestParam("groupId") int groupId, @RequestParam("messageId") int messageId) {
 		return famstackDashboardManager.getMessageAfter(groupId, messageId);
 	}
+
+	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
+	public ModelAndView listTasks() {
+		UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
+
+		Map<String, ArrayList<TaskDetails>> taskDetailsMap = famstackDashboardManager
+				.getProjectTasksDataList(currentUserItem.getId());
+
+		Map<String, Object> modelViewMap = new HashMap<String, Object>();
+		modelViewMap.put("projectTaskDetailsData", taskDetailsMap);
+		return new ModelAndView("tasks", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
+	}
+
 }

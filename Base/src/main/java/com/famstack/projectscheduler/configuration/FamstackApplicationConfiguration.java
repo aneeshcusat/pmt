@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 
@@ -66,6 +67,10 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	public boolean isEmailEnabled() {
 		return emailEnabled;
+	}
+
+	public UserItem getCurrentUser() {
+		return getFamstackUserSessionConfiguration().getCurrentUser();
 	}
 
 }

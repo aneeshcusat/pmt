@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.employees.bean;
 
+import java.util.Date;
+
 import com.famstack.projectscheduler.contants.UserTaskType;
 
 public class TaskActivityDetails {
@@ -15,6 +17,8 @@ public class TaskActivityDetails {
 	private String taskName;
 
 	private int userId;
+
+	private Date startTime;
 
 	private UserTaskType userTaskType;
 
@@ -72,6 +76,14 @@ public class TaskActivityDetails {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 
 }
