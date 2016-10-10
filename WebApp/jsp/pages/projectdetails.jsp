@@ -527,7 +527,6 @@ $(document).ready(function() {
   				}
   				
   				$("#upladedFilesList").append('<li><a href="${applicationHome}/download/${projectDetails.code}/'+file.name+'?fileName='+file.name+'"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
-  				console.log(file.name);
   			},
   			error : function(file, response) {
   				file.previewElement.classList.add("dz-error");
@@ -590,7 +589,6 @@ function doAjaxCreateTaskForm() {
 }
 
 $('#createTaskFormId').ajaxForm(function(response) {
-	console.log(response);
 	var responseJson = JSON.parse(response);
 	if (responseJson.status) {
 		window.location.reload(true);
@@ -634,18 +632,14 @@ var fillAssignTabledBasedOnDate =function(id){
 }
 
 var markTableFields = function(userId, startTimeHour, duration, color, helper, reset){
-	console.log("userId :"+userId+"startTimeHour :" + startTimeHour +"duration :"+ duration);
 	
 	for (var index = 0; index < duration; index++) {
 		if(startTimeHour ==  breakTime){
 			startTimeHour++;
 		}
-		console.log("index :" + index);
-		console.log("startTimeHour :" + startTimeHour);
 		var getCell = $("#"+userId+"-"+startTimeHour);
 		$("#estStartTime").css("border", "1px solid #D5D5D5");
 		if (reset){
-			console.log("reset");
 			if($(getCell).attr("isassigned") == "true"){
 				return;
 			}
@@ -655,11 +649,9 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 			$(getCell).attr("modified",false);
 			decreaseTotalHours(userId);
 		} else {
-			console.log("helper" + $(getCell).attr("isassigned"));
 			var cellBackGroundColor = $(getCell).css("background-color");
 			if($(getCell).attr("isassigned") == "true"){
 				if (helper){
-					console.log("error- helper");
 					$("#"+userId+"-helper").prop("checked", false);
 					return;
 					//error
@@ -723,10 +715,13 @@ $("#estStartTime").on("change",function(){
 	var startProjectDate = new Date(startProjectTime);
 	resetAssignTable();
 	fillTableFromJson();
+	
 	var startTaskTime = $("#estStartTime").val();
 	var startTaskDate = new Date(startTaskTime);
+	
 	if(startTaskDate < startProjectDate) {
 		$("#estStartTime").css("border", "1px solid red");
+		return;
 	} else {
 		$("#estStartTime").css("border", "1px solid #D5D5D5");
 	}
@@ -735,7 +730,6 @@ $("#estStartTime").on("change",function(){
 	
 	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=assignee]:checked').length > 0) {
 		var id = $('input:radio[name=assignee]:checked').attr('id');
-		console.log("select box id" + id);
 		fillAssignTabledBasedOnDate(id);
 	}
 	
@@ -784,8 +778,6 @@ var checkNextAndPreviousMarked = function(thisVarId, checkOrUnchek){
 	var cellIds  = thisVarId.split("-");
 	var userId = cellIds[0];
 	var time = parseInt(cellIds[1]);
-	console.log("time" + time);
-	console.log("userId" + userId);
 	var nextMarked = false;
 	var preMarked = false;
 	var sameMarked = false;
@@ -797,9 +789,6 @@ var checkNextAndPreviousMarked = function(thisVarId, checkOrUnchek){
 	preMarked = isPreMarked(thisVarId);
 	nextMarked = isNextMarked(thisVarId);
 	
-	console.log("cellSelectCount" + cellSelectCount);
-	console.log("preMarked" + preMarked);
-	console.log("nextMarked" + nextMarked);
 	if (checkOrUnchek) {
 		return (cellSelectCount == 0 || preMarked || nextMarked) && !sameMarked;
 	}
@@ -817,14 +806,12 @@ var isPreMarked = function(thisVarId){
 		if (time == breakTime+1) {
 			tmpTime--;
 		}
-		console.log("pre cell id :" + userId+"-"+tmpTime);
 		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
 		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
 		if (cellmarked == 'true' && celleditable == 'true') {
 			preMarked = true;
 		}
 	}
-	console.log("preMarked" + preMarked);
 	return preMarked;
 }
 
@@ -840,14 +827,12 @@ var isNextMarked = function(thisVarId){
 		if (time == breakTime-1) {
 			tmpTime++;
 		}
-		console.log("next cell id :" + userId+"-"+tmpTime);
 		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
 		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
 		if (cellmarked == 'true' && celleditable == 'true') {
 			nextMarked = true;
 		}
 	}
-	console.log("nextMarked" + nextMarked);
 	return nextMarked;
 }
 
@@ -861,7 +846,6 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	var hourId = cellId.split("-")[1];
 	
 	var cellBackGroundColor = $(this).css("background-color");
-	console.log(cellBackGroundColor);
 	var celleditable = $("#"+userId+"-"+hourId).attr("celleditable");
 	if (cellBackGroundColor == "rgb(0, 0, 255)" || celleditable == "false") {
 		return;
@@ -875,7 +859,6 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	
 	if (cellBackGroundColor == "rgb(255, 255, 0)" && checkNextAndPreviousMarked(this.id, false)) {
 		var cellColor = $(this).attr("cellcolor");
-		console.log(cellColor);
 		$(this).css("background-color", cellColor);
 		decreaseTotalHours(userId);
 		cellSelectCount--;
@@ -895,6 +878,11 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		}
 		
 	} else if (checkNextAndPreviousMarked(this.id, true)){
+		var startProjectDate = new Date(startProjectTime);
+		if(hourId < startProjectDate.getHours()) {
+			return;
+		} 
+		
 		if (maxDuration - 1 == cellSelectCount) {
 			return;
 		}
@@ -954,14 +942,12 @@ var resetAssignTable = function(){
 	});
 	
 	$('table#employeeListForTaskTable td[dynamicvalue="8"]').each(function () {
-		console.log("reset 8");
 		$(this).html("8");
 	});
 }
 
 
 var increaseTotalHours = function(userId){
-	console.log($("#"+userId+"-totalHours").html());
 	var totalHours = parseInt($("#"+userId+"-totalHours").html()) + 1;
 	var availableHours = parseInt($("#"+userId+"-availabeHours").html()) - 1;
 	$("#"+userId+"-totalHours").html(""+totalHours);
@@ -973,11 +959,9 @@ var increaseTotalHours = function(userId){
 	} else {
 		$("#"+userId+"-availabeHours").css("color", "green");
 	}
-	console.log("increase total hours:" +totalHours);
 }
 
 var decreaseTotalHours = function(userId){
-	console.log($("#"+userId+"-totalHours").html());
 	var totalHours = parseInt($("#"+userId+"-totalHours").html()) - 1;
 	var availableHours = parseInt($("#"+userId+"-availabeHours").html()) + 1;
 	$("#"+userId+"-totalHours").html(""+totalHours);
@@ -988,13 +972,11 @@ var decreaseTotalHours = function(userId){
 	} else {
 		$("#"+userId+"-availabeHours").css("color", "green");
 	}
-	console.log("increase total hours:" +totalHours);
 }
 
 var fillTableFromJson = function(){
 	
 	$.each(JSON.parse(jsonAssignData), function(idx, elem){
-		console.log(elem);
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
 			var hour = parseInt(elem.startHour);
 			var duration = elem.duration;
@@ -1005,16 +987,12 @@ var fillTableFromJson = function(){
 					hour++;
 				}
 				var cellId = $("#"+elem.userId+"-"+hour);
-				console.log(cellId);
 				
 				hour++;
 				$(cellId).attr("cellcolor", $(cellId).css("background-color"));
 				if($("#taskId").val() != "" && elem.taskId == $("#taskId").val()) {
-					console.log(elem.taskId);
-					console.log($("#taskId").val());
 				} else {
 					$(cellId).attr("celleditable", false);
-					console.log("$(cellId).attr(celleditable)" + $(cellId).attr("celleditable"));
 					$(cellId).attr("isassigned",true);
 					$(cellId).attr("cellmarked",true);
 					$(cellId).attr("modified",false);

@@ -201,6 +201,11 @@ public class FamstackDashboardController extends BaseFamstackService {
 				projectDetails);
 	}
 
+	@RequestMapping(value = "/taskAllocator", method = RequestMethod.GET)
+	public ModelAndView taskAllocator() {
+		return new ModelAndView("taskAllocator", "command", new TaskDetails());
+	}
+
 	// ---------- Project Comments ------------//
 
 	@RequestMapping(value = "/addComment", method = RequestMethod.POST)

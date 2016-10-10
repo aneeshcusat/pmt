@@ -35,7 +35,7 @@
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
                             <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>
                             <li><a href="${applicationHome}/projects"><span class="fa fa-edit"></span> Projects</a></li>
-                            <li><a href="${applicationHome}/taskallocator"><span class="fa fa-edit"></span> taskscheduler</a></li>
+                            <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-edit"></span> taskscheduler</a></li>
                         </ul>
                     </li>
                 </ul>

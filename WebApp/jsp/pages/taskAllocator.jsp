@@ -27,21 +27,36 @@ width: 60%;
     </div>
     <!-- END CONTENT FRAME TOP -->
     <!-- body-->
+    <form:form id="createTaskFormId" action="${applicationHome}/updateTask" method="POST"
+		role="form" class="form-horizontal">
     <div class="row">
-<form:input type="hidden" id="projectId" path="projectId" value="${projectDetails.id}"/>
-<form:input type="hidden" id="taskId" path="taskId"/>
-	<div class="col-md-12">
+	<div class="col-md-12"  style="margin-top:10px">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<div class="form-group">
-					<label class="col-md-2 control-label">Task Name</label>
+					<label class="col-md-2 control-label">Projects</label>
 					<div class="col-md-9">
-						<form:input type="text" class="autocomplete form-control"
-							id="taskName" path="name" />
+						<select class="form-control select" path="duration" id="projectId"  data-live-search="true">
+                         <option>1</option>
+                         <option>2</option>
+                     	 </select>
+						<span class="help-block">required project name</span>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-md-2 control-label">Task</label>
+					<div class="col-md-9">
+						<select class="form-control select" path="duration" id="taskId"  data-live-search="true">
+                         <option>1</option>
+                         <option>2</option>
+                     	 </select>
 						<span class="help-block">required task name</span>
 					</div>
 				</div>
-				<div class="form-group">
+			</div>
+			<div class="col-md-4">
+			<div class="form-group">
 				<label class="col-md-2 control-label">Description</label>
                      <div class="col-md-9">
                             <form:textarea class="form-control" id="description" path="description"></form:textarea> 
@@ -63,24 +78,21 @@ width: 60%;
                      <b id="taskDuration">1</b> Hrs
                      </div>
 				</div>
-				<div class="form-group">
-				<label class="col-md-2 control-label"></label>
-                     <div class="col-md-9">
-                           <a href="#" onclick="toggleAssignTask()" id="toggleAssignTask">Assign task</a>
-                     </div>
-				</div>
-				
 			</div>
-			<div class="col-md-6">
+			
+			<div class="col-md-4">
+				
 				<div class="form-group">
 				<label class="col-md-3 control-label">Est Start Time</label>
                      <div class="col-md-4">
-                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/> 
+                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime" value="2016/10/11 10:00"/> 
                          <span class="help-block">required estimated start time</span>
                      </div>
 					<label class="col-md-2 control-label">Duration</label>
                      <div class="col-md-3">
                          <form:select class="form-control select" path="duration" id="duration"  data-live-search="true">
+                         <option>1</option>
+                         <option>2</option>
                        	 </form:select>
                          <span class="help-block">required duration</span>
                      </div>
@@ -88,14 +100,25 @@ width: 60%;
 				
 				<div class="form-group">
 				<label class="col-md-3 control-label">Est Completion Time</label>
-                     <div class="col-md-9">
+                     <div class="col-md-4">
                            <h5 id="estCompleteTime">2016/12/02 20:11</h5>
                      </div>
+                     <label class="col-md-2 control-label"></label>
+                     <div class="col-md-5">
+                       <button type="button" class="btn btn-secondary taskWindowCancel"
+						data-dismiss="modal">Cancel</button>
+					<button type="button" onclick=""
+						class="btn btn-primary  pull-right">
+						<span id="taskStart">Update</span>
+					</button>
+                     </div>
 				</div>
+				
 			</div>
 
 		</div>
-		<div class="row" style="display:none" id="assignTableId">
+		
+		<div class="row" id="assignTableId"  style="margin-top:10px">
 		<table id="employeeListForTaskTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr style="height: 20px">
@@ -126,19 +149,19 @@ width: 60%;
              <tr class="editable" id="${user.id}-row"">
             	<td><input name="assignee" type="radio" id="${user.id}-select" value="${user.id}" path="assignee"></input></td>
                 <td class="nonmarkable" id="${user.id}-name">${user.firstName} ${user.lastName}</td>
-                <td class="markable" id="${user.id}-8" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-9" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-17" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-18" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-19" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
-                <td class="markable" id="${user.id}-20" cellcolor="" cellmarked="false" celleditable="true" modified="false" iassigned="false"></td>
+                <td class="markable" id="${user.id}-8" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-9" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-17" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-18" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-19" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-20" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
                 <td class="nonmarkable" dynamicvalue="0" style="font-weight: bold; font-size: 16px;" id="${user.id}-totalHours">0</td>
                 <td class="nonmarkable" dynamicvalue="8" style="font-weight: bold; font-size: 18px; color: green" id="${user.id}-availabeHours">8</td>
                 <td class="nonmarkable"><input path="helper" name="helper" id="${user.id}-helper" type="checkbox" value="${user.id}"></input></td>
@@ -150,16 +173,31 @@ width: 60%;
 		</div>
 	</div>
 </div>
+</form:form>
     <!-- body end -->
     
 </div>               
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>            
+	<script type="text/javascript"
+	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
 
 <script>
 
-var startProjectTime = '${projectDetails.startTime}';
-var completionProjectTime = '${projectDetails.completionTime}';
+var startProjectTime = '2016/10/11 10:00';
+var completionProjectTime = '2016/10/11 16:00';
+
+var jsonAssignData = {};
+
+var getAssignJsonData = function(){
+	doAjaxRequest("GET", "${applicationHome}/userTaskActivityJson", {},  function(jsonData) {
+		jsonAssignData = jsonData;
+		fillTableFromJson();
+	   }, function(e) {
+	   });
+}
+
+getAssignJsonData();
 
 $('input:radio[name=assignee]').on("click", function(){
 	resetAssignTable();
@@ -280,14 +318,14 @@ $('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
 });
 	
 $("#estStartTime").on("change",function(){
-	
-	var startProjectDate = new Date(startProjectTime);
 	resetAssignTable();
 	fillTableFromJson();
+	var startProjectDate = new Date(startProjectTime);
 	var startTaskTime = $("#estStartTime").val();
 	var startTaskDate = new Date(startTaskTime);
 	if(startTaskDate < startProjectDate) {
 		$("#estStartTime").css("border", "1px solid red");
+		return;
 	} else {
 		$("#estStartTime").css("border", "1px solid #D5D5D5");
 	}
@@ -416,7 +454,7 @@ var isNextMarked = function(thisVarId){
 $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", function(){
 	
 	var maxDuration = $('#duration > option').length;
-	
+	console.log("maxDuration" + maxDuration);
 	var cellId = this.id;
 	var userId  = cellId.split("-")[0];
 	var hourId = cellId.split("-")[1];
@@ -456,6 +494,13 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		}
 		
 	} else if (checkNextAndPreviousMarked(this.id, true)){
+		var startProjectDate = new Date(startProjectTime);
+		console.log("housrid:" + hourId);
+		console.log(" startProjectDate.getHours():" +  startProjectDate.getHours());
+		if(hourId < startProjectDate.getHours()) {
+			return;
+		} 
+		
 		if (maxDuration - 1 == cellSelectCount) {
 			return;
 		}

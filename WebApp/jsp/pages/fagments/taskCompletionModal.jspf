@@ -1,0 +1,38 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<div class="row">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="form-group">
+				<label class="col-md-2 control-label">Comments : </label>
+                     <div class="col-md-9">
+                            <textarea class="form-control" id="description" path="comments"></textarea> 
+                         <span class="help-block">required description</span>
+                     </div>
+				</div>
+		
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+				<label class="col-md-2 control-label text-left">Duration</label>
+                     <div class="col-md-9" style="margin-top: 7px;">
+                     <b id="unassignedDuration">1</b> Hrs
+                     </div>
+				</div>
+			</div>
+			<div class="row">
+               <div class="col-md-12">
+               	  <div class="form-group">
+                          <label class="col-md-2 control-label">Attachments</label>
+                          <div class="col-md-12">
+                             <div class="dropzone dropzone-mini dz-clickable" id="my-dropzone">
+	        </div>
+			</div>
+			</div>
+              	</div>
+              </div>
+		</div>
+	</div>
+</div>
