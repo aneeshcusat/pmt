@@ -112,15 +112,20 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	public ProjectStatus getProjectStatus(ProjectItem projectItem) {
 
 		List<TaskStatus> taskStatsList = new ArrayList<>();
+		int projectDuration = projectItem.getDuration();
 		if (projectItem != null) {
 			for (TaskItem taskItem : projectItem.getTaskItems()) {
 				TaskStatus taskStatus = taskItem.getStatus();
 				taskStatsList.add(taskStatus);
+				projectDuration -= taskItem.getDuration();
 			}
 		}
-
-		if (taskStatsList.contains(TaskStatus.NEW) || taskStatsList.contains(TaskStatus.ASSIGNED)) {
+		if (projectDuration != 0) {
 			return ProjectStatus.UNASSIGNED;
+		} else if (taskStatsList.contains(TaskStatus.NEW) && taskStatsList.contains(TaskStatus.ASSIGNED)) {
+			return ProjectStatus.UNASSIGNED;
+		} else if (!taskStatsList.contains(TaskStatus.NEW) && taskStatsList.contains(TaskStatus.ASSIGNED)) {
+			return ProjectStatus.ASSIGNED;
 		} else if (taskStatsList.contains(TaskStatus.INPROGRESS)) {
 			return ProjectStatus.INPROGRESS;
 		} else if (taskStatsList.contains(TaskStatus.COMPLETED)) {
