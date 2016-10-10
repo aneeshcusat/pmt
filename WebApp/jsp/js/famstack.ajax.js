@@ -3,7 +3,7 @@ var doAjaxRequest = function(requestType, requestUrl, requestJsonData, successCa
        type : requestType,
        url : requestUrl ,
        data: requestJsonData,
-       timeout : 1000,
+       timeout : 6000,
        success : function(data) {
         	   successCallBackMethod(data);
        },

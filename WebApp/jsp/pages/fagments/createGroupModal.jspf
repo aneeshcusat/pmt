@@ -31,8 +31,8 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Select Subscribers</label>
 					<div class="col-md-9">
-					<c:if test="${not empty modelViewMap.userMap}">
-					 <c:forEach var="user" items="${modelViewMap.userMap}">
+					<c:if test="${not empty userMap}">
+					 <c:forEach var="user" items="${userMap}">
 					 <div style="margin-top: 10px">
 					 <form:checkbox  id="${user.id}" value="${user.id}" name="subscriberIds" path="subscriberIds" class="icheckbox subscriberCheckBox" tabindex="1"/>&nbsp;<span style="margin-left: 10px; font-weight: bold;">${user.firstName}&nbsp;${user.lastName}</span>
 					 </div>

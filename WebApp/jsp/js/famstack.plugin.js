@@ -1,4 +1,4 @@
- var templatePlugins = function(){
+var templatePlugins = function(){
         
         var tp_clock = function(hour, minutes){
             
@@ -84,4 +84,13 @@
        return false;
     });    
     /* END MESSAGE BOX */
+    
+    /* MESSAGES LOADING */
+    $(".messages .item").each(function(index){
+        var elm = $(this);
+        setInterval(function(){
+            elm.addClass("item-visible");
+        },index*300);              
+    });
+    /* END MESSAGES LOADING */  
  

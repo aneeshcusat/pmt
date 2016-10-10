@@ -44,6 +44,6 @@
             </div>
         </div>
         <!-- END MESSAGE BOX-->
-        
+          <%@include file="scripts.jsp" %>  
     </body>
 </html>
