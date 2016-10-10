@@ -8,7 +8,7 @@
 				<div class="form-group">
 				<label class="col-md-2 control-label">Comments : </label>
                      <div class="col-md-9">
-                            <textarea class="form-control" id="description" path="comments"></textarea> 
+                            <textarea class="form-control" id="taskCompletionComments"></textarea> 
                          <span class="help-block">required description</span>
                      </div>
 				</div>
@@ -18,7 +18,7 @@
 				<div class="form-group">
 				<label class="col-md-2 control-label text-left">Duration</label>
                      <div class="col-md-9" style="margin-top: 7px;">
-                     <b id="unassignedDuration">1</b> Hrs
+                     <b id="totalTimeTaken">1</b> Hrs
                      </div>
 				</div>
 			</div>

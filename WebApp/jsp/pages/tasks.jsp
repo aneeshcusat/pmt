@@ -49,7 +49,9 @@
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}">Show project</a></div>
                         <div class="task-footer">
                             <div class="pull-right"><span class="fa fa-clock-o"></span> ${tasks.duration} Hours</div>     
-                            <div class="pull-left">Start Time : ${tasks.startTime}</div>      
+                            <div class="pull-left">Start Time : ${tasks.startTime}</div>     
+                             <input type="hidden" class="taskId" value="${tasks.taskId}"/>      
+                            <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>  
                         </div>                                    
                     </div>
 			        </c:forEach>
@@ -68,23 +70,20 @@
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}">Show project</a></div>
                         <div class="task-footer">
                             <div class="pull-left"><span class="fa fa-clock-o"></span> Time remaining : 2h 55min</div>
-                            <div class="pull-right"><a href="holdProject"><span class="fa fa-pause"></span></a> 4:51</div>                  
+                            <div class="pull-right"><span class="fa fa-pause"></span><span id="inprogressTime">00:00</span></div> 
+                            <input type="hidden" class="taskId" value="${tasks.taskId}"/>      
+                            <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>         
                         </div>                                    
                     </div>
 			        </c:if>
 			        </c:forEach>
 			        </c:if>
-			        <div class="task-item task-primary">
-                        <div class="task-text">In mauris nunc, blandit a turpis in, vehicula viverra metus. Quisque dictum purus lorem, in rhoncus justo dapibus eget. Aenean pretium non mauris et porttitor.</div>
-                        <div class="task-footer">
-                            <div class="pull-left">Time remaining :  2h 55min</div>
-                            <div class="pull-right"><a href="holdProject"><span class="fa fa-pause"></span></a> 4:51</div>
-                        </div>                                    
-                    </div>  
-                    <div class="task-drop push-down-10">
+			       <c:if test="${empty modelViewMap.projectTaskDetailsData['INPROGRESS']}">
+                    <div class="task-drop push-down-10 inprogressDropDown">
                         <span class="fa fa-cloud"></span>
                         Drag your task here to start it tracking time
                     </div>
+                    </c:if>
                     
                 </div>
             </div>
@@ -104,11 +103,10 @@
 			        </c:if>
 			        </c:forEach>
 			        </c:if>
-                   
                     <div class="task-drop">
                         <span class="fa fa-cloud"></span>
                         Drag your task here to finish it
-                    </div>                                    
+                    </div>  
                 </div>
             </div>
         </div>                        
@@ -136,7 +134,7 @@
 						data-dismiss="modal">Cancel</button>
 					<button type="button" onclick=""
 						class="btn btn-primary">
-						<span id="taskComplete">Complete</span>
+						<span id="taskComplete" onclick="taskComplete()">Complete</span>
 					</button>
 				</div>
 			</div>
@@ -163,7 +161,7 @@
 						data-dismiss="modal">Cancel</button>
 					<button type="button" onclick=""
 						class="btn btn-primary">
-						<span id="taskStart">Start</span>
+						<span id="taskStart" onclick="taskStart()">Start</span>
 					</button>
 				</div>
 			</div>
@@ -190,13 +188,9 @@ $(function(){
             	lastMovedItem=ui;
                 if(this.id == "tasks_completed"){
                 	$(".taskCompletionLink").click();
-                   ui.item.addClass("task-complete").find(".task-footer > .pull-right").remove();
-                   // call complted ajax
                 }
                 if(this.id == "tasks_progreess"){
                 	$(".taskStartLink").click();
-                    ui.item.find(".task-footer").append('<div class="pull-right"><span class="fa fa-play"></span> 00:00</div>');
-                    //call assign task
                 }                
                 page_content_onresize();
             }
@@ -228,10 +222,71 @@ $("#my-dropzone").dropzone({
 		file.previewElement.classList.add("dz-error");
 	}
 });
+var hour = 0;
+var minutes = 0;
+var second =0;
+var inProgress = true;
+function reloadTime() {
+	if (!inProgress) {
+		return;
+	}
+	second+=1;
+	if (second ==60){
+		second =0;
+		minutes+=1;
+	}
+	if (minutes ==60){
+		minutes =0;
+		hour+=1;
+	}
+    $("#inprogressTime").html(hour +" Hr:"+minutes+" Mins:"+second+" Sec");
+}
+window.setInterval(reloadTime, 1000);
+var taskStart = function(){
+	var comments =$("#taskStartComments").val();
+	var taskId = $(lastMovedItem.item).find("input.taskId").val();
+	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
+	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "INPROGRESS","comments":comments}
+	updateTaskStatus(dataString, false);
+	window.setInterval(reloadTime, 1000);
+}
 
-$("#taskStart").click(function(){
-	$(".modal").hide();
-});
+
+var taskComplete = function(){
+	var comments =$("#taskCompletionComments").val();
+	var taskId = $(lastMovedItem.item).find("input.taskId").val();
+	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
+	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "COMPLETED","comments":comments}
+	updateTaskStatus(dataString, true);
+}
+
+
+var updateTaskStatus = function(dataString, isComplete){
+	doAjaxRequest("POST", "${applicationHome}/updateTaskStatus", dataString, function(data) {
+        var responseJson = JSON.parse(data);
+        if (responseJson.status){
+        	$(".modal").hide();
+        	if (!isComplete) {
+        		lastMovedItem.item.find(".task-footer").find(".pull-right").remove();
+        		lastMovedItem.item.find(".task-footer").append('<div class="pull-right"><span class="fa fa-pause"></span><span id="inprogressTime">00:00</span></div>');
+        		$("#inprogressDropDown").hide();
+        	} else {
+        		inProgress = false;
+        		lastMovedItem.item.find(".task-footer").find(".pull-right").remove();
+        		lastMovedItem.item.find(".task-footer").append('<div class="pull-right">'+$("#inprogressTime").val()+'</div>');
+        		$("#inprogressDropDown").show();
+        	}
+        	return true;
+        } else {
+        	$(lastMovedItem.sender).sortable('cancel');
+        	return false;
+        }
+       
+    }, function(e) {
+    	$(lastMovedItem.sender).sortable('cancel');
+    });
+	
+}
 
 $("#taskComplete").click(function(){
 	$(".modal").hide();

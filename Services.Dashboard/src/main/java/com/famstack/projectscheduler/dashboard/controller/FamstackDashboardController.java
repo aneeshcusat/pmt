@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
@@ -261,6 +262,15 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
 			Model model) {
 		famstackDashboardManager.updateTask(taskDetails);
+		return "{\"status\": true}";
+	}
+
+	@RequestMapping(value = "/updateTaskStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateTaskStatus(@RequestParam("taskId") int taskId,
+			@RequestParam("taskActivityId") int taskActivityId, @RequestParam("taskStatus") TaskStatus taskStatus,
+			@RequestParam("comments") String comments) {
+		famstackDashboardManager.updateTaskStatus(taskId, taskActivityId, taskStatus, comments);
 		return "{\"status\": true}";
 	}
 

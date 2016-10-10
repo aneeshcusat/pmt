@@ -131,4 +131,31 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 
 		return taskActivityDetails;
 	}
+
+	public UserTaskActivityItem getUserTaskActivityItem(int taskActivityItemId) {
+		return (UserTaskActivityItem) getFamstackDataAccessObjectManager().getItemById(taskActivityItemId,
+				UserTaskActivityItem.class);
+	}
+
+	public void setProjectTaskActivityActualTime(int taskActivityId, Date date) {
+		UserTaskActivityItem userTaskActivityItem = getUserTaskActivityItem(taskActivityId);
+
+		if (userTaskActivityItem != null) {
+			userTaskActivityItem.setActualStartTime(new Timestamp(date.getTime()));
+		}
+
+		getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
+
+	}
+
+	public void setProjectTaskActivityEndTime(int taskActivityId, Date date) {
+		UserTaskActivityItem userTaskActivityItem = getUserTaskActivityItem(taskActivityId);
+
+		if (userTaskActivityItem != null) {
+			userTaskActivityItem.setActualEndTime(new Timestamp(date.getTime()));
+		}
+
+		getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
+
+	}
 }

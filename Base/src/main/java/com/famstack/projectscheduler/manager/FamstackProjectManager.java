@@ -232,4 +232,10 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	public Map<String, ArrayList<TaskDetails>> getProjectTasksDataList(int userId) {
 		return famstackProjectTaskManager.getAllProjectTask(userId);
 	}
+
+	public void updateTaskStatus(int taskId, int taskActivityId, TaskStatus taskStatus, String comments) {
+		TaskItem taskItem = famstackProjectTaskManager.updateTaskStatus(taskId, taskActivityId, taskStatus, comments);
+		updateProjectStatusBasedOnTaskStatus(taskItem.getProjectItem().getProjectId());
+
+	}
 }

@@ -8,7 +8,7 @@
 				<div class="form-group">
 				<label class="col-md-2 control-label">Comments : </label>
                      <div class="col-md-9">
-                            <textarea class="form-control" id="description" path="comments"></textarea> 
+                            <textarea class="form-control" id="taskStartComments"></textarea> 
                          <span class="help-block">required description</span>
                      </div>
 				</div>

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.NotificationType;
+import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
@@ -200,5 +201,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public Map<String, ArrayList<TaskDetails>> getProjectTasksDataList(int userId) {
 		return projectManager.getProjectTasksDataList(userId);
+	}
+
+	public void updateTaskStatus(int taskId, int taskActivityId, TaskStatus taskStatus, String comments) {
+		projectManager.updateTaskStatus(taskId, taskActivityId, taskStatus, comments);
+
 	}
 }

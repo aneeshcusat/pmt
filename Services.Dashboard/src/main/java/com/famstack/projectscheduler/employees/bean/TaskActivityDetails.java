@@ -6,6 +6,8 @@ import com.famstack.projectscheduler.contants.UserTaskType;
 
 public class TaskActivityDetails {
 
+	private int taskActivityId;
+
 	private int taskId;
 
 	private int startHour;
@@ -84,6 +86,14 @@ public class TaskActivityDetails {
 
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
+	}
+
+	public int getTaskActivityId() {
+		return taskActivityId;
+	}
+
+	public void setTaskActivityId(int taskActivityId) {
+		this.taskActivityId = taskActivityId;
 	}
 
 }

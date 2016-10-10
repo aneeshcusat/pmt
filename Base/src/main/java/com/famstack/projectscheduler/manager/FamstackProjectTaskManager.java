@@ -22,6 +22,7 @@ import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
+import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -210,7 +211,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 							taskItem = getTaskItemById(taskId);
 							taskItemMap.put(taskId, taskItem);
 						}
+						TaskActivityDetails taskActivityDetails = new TaskActivityDetails();
+						taskActivityDetails.setTaskActivityId(userTaskActivityItem.getId());
 						TaskDetails taskDetails = mapProjectItemToProjectDetails(taskItem);
+						taskDetails.setTaskActivityDetails(taskActivityDetails);
 						userTaskActivityItemMap.get(taskItem.getStatus().value()).add(taskDetails);
 					}
 				}
@@ -218,5 +222,21 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		}
 
 		return userTaskActivityItemMap;
+	}
+
+	public TaskItem updateTaskStatus(int taskId, int taskActivityId, TaskStatus taskStatus, String comments) {
+		TaskItem taskItem = getTaskItemById(taskId);
+
+		if (taskItem != null) {
+			taskItem.setStatus(taskStatus);
+			if (taskStatus == TaskStatus.INPROGRESS) {
+				famstackUserActivityManager.setProjectTaskActivityActualTime(taskActivityId, new Date());
+			} else if (taskStatus == TaskStatus.COMPLETED) {
+				famstackUserActivityManager.setProjectTaskActivityEndTime(taskActivityId, new Date());
+			}
+		}
+
+		getFamstackDataAccessObjectManager().updateItem(taskItem);
+		return taskItem;
 	}
 }
