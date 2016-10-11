@@ -754,7 +754,8 @@ var getEstimatedCompletionTime = function(startTime, duration){
 	estimatedCompletionTime.addHours(duration);
 	var completionTimeString = getTodayDate(estimatedCompletionTime);
 	var completionHour = estimatedCompletionTime.getHours();
-	if(completionHour > 13){
+	var startTimeHours =  new Date(startTime).getHours();
+	if(completionHour > 13 && startTimeHours < 13){
 		estimatedCompletionTime.addHours(1);
 	}
 	completionTimeString +=(" " +estimatedCompletionTime.getHours()+":00");

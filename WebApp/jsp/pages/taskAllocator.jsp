@@ -260,7 +260,6 @@ var startProjectTime = '2015/01/01 09:00';
 var completionProjectTime = '2020/01/01 20:00';
 
 var loadTaskDetails = function(taskId, projectId){
-	getAssignJsonData();
 	startProjectTime =$("#"+projectId+"startTime").val();
 	completionProjectTime = $("#"+projectId+"completionTime").val();
 	$("#taskId").val($("#taskSelectId").val());
@@ -282,9 +281,7 @@ var loadTaskDetails = function(taskId, projectId){
     $("#duration").selectpicker('refresh');
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), parseInt($("#"+taskId+"duration").val())));
     $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
-	//resetAssignTable();
-	//$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
-	
+	$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 	
 	if (assigneeId != "" && assigneeId != 0) {
 		 $("#"+assigneeId+"-select").click();
@@ -376,6 +373,7 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 		} else {
 			console.log("helper" + $(getCell).attr("isassigned"));
 			var cellBackGroundColor = $(getCell).css("background-color");
+			console.log("cellBackGroundColor0 :" + cellBackGroundColor);
 			if($(getCell).attr("isassigned") == "true"){
 				if (helper){
 					console.log("error- helper");
@@ -391,6 +389,7 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 				}
 			}
 			increaseTotalHours(userId);
+			console.log("cellBackGroundColor1 :" + cellBackGroundColor);
 			$(getCell).attr("cellcolor", cellBackGroundColor);
 			$(getCell).css("background-color", color);
 			$(getCell).attr("cellmarked",true);
@@ -479,7 +478,8 @@ var getEstimatedCompletionTime = function(startTime, duration){
 	estimatedCompletionTime.addHours(duration);
 	var completionTimeString = getTodayDate(estimatedCompletionTime);
 	var completionHour = estimatedCompletionTime.getHours();
-	if(completionHour > 13){
+	var startTimeHours =  new Date(startTime).getHours();
+	if(completionHour > 13 && startTimeHours < 13){
 		estimatedCompletionTime.addHours(1);
 	}
 	completionTimeString +=(" " +estimatedCompletionTime.getHours()+":00");
