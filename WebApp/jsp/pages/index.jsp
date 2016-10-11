@@ -17,22 +17,22 @@
                                 <div class="owl-carousel" id="owl-example">
                                     <div>                                    
                                         <div class="widget-title">Unassigned Projects</div>                                                                        
-                                        <div class="widget-int">13</div>
+                                        <div class="widget-int">${projectsCount['UNASSIGNED'] }</div>
                                         <div class="widget-subtitle"><a href="#">View details</a></div>
                                     </div>
                                     <div>                                    
                                         <div class="widget-title">Assigned Projects</div>
-                                        <div class="widget-int">20</div>
+                                        <div class="widget-int">${projectsCount['ASSIGNED'] }</div>
                                          <div class="widget-subtitle"><a href="#">View details</a></div>
                                     </div>
                                     <div>                                    
                                         <div class="widget-title">On Hold Projects</div>
-                                        <div class="widget-int">14</div>
+                                        <div class="widget-int">${projectsCount['ONHOLD'] }</div>
                                          <div class="widget-subtitle"><a href="#">View details</a></div>
                                     </div>
                                     <div>                                    
                                         <div class="widget-title">Upcoming Projects</div>
-                                        <div class="widget-int">14</div>
+                                        <div class="widget-int">${projectsCount['NEW'] }</div>
                                          <div class="widget-subtitle"><a href="#">View details</a></div>
                                     </div>
                                 </div>                            
@@ -51,7 +51,7 @@
                                     <span class="fa fa-tasks"></span>
                                 </div>                             
                                 <div class="widget-data">
-                                    <div class="widget-int num-count">48</div>
+                                    <div class="widget-int num-count">${projectsCount['COMPLETED'] }</div>
                                     <div class="widget-title">Completed Projects</div>
                                     <div class="widget-subtitle">Great job!</div>
                                 </div>      
@@ -70,7 +70,7 @@
                                     <span class="fa fa fa-exclamation-triangle"></span>
                                 </div>
                                 <div class="widget-data">
-                                    <div class="widget-int num-count">375</div>
+                                    <div class="widget-int num-count">0</div>
                                     <div class="widget-title">Missed Timeline</div>
                                    <div class="widget-subtitle">Not on track</div>
                                 </div>
@@ -201,144 +201,19 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
-                                                <tr>
-                                                    <td><strong>Joli Admin</strong></td>
-                                                    <td><span class="label label-danger">Developing</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 85%;">85%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                
-                                                
-                                                <tr>
-                                                    <td><strong>Gemini</strong></td>
-                                                    <td><span class="label label-warning">Updating</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">40%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>                                                
-                                                <tr>
-                                                    <td><strong>Taurus</strong></td>
-                                                    <td><span class="label label-warning">Updating</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 72%;">72%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Leo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>                                                
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>      
+                                                <c:if test="${not empty projectDetails}">
+	                        						<c:forEach var="project" items="${projectDetails}">
+	                        						 <tr>
+                                                    	<td><strong>${project.name}</strong></td>
+	                                                    <td><span class="label label-info">${project.status }</span></td>
+	                                                    <td>
+	                                                        <div class="progress progress-small progress-striped active">
+	                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 85%;">85%</div>
+	                                                        </div>
+	                                                    </td>
+                                               		 </tr>
+	                        						</c:forEach>
+	                        						</c:if>
                                             </tbody>
                                         </table>
                                     </div>

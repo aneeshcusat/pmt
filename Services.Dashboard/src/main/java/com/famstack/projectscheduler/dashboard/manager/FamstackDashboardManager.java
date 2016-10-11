@@ -212,4 +212,23 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public List<ProjectDetails> getUnassignedProjects(ProjectStatus unassigned) {
 		return projectManager.getAllProjectDetailsList(unassigned);
 	}
+
+	public Map<String, Long> getProjectsCounts() {
+		Map<String, Long> projectCounts = new HashMap<>();
+		projectCounts.put(ProjectStatus.ASSIGNED.value(),
+				projectManager.getAllProjectDetailsCount(ProjectStatus.ASSIGNED));
+		projectCounts.put(ProjectStatus.UNASSIGNED.value(),
+				projectManager.getAllProjectDetailsCount(ProjectStatus.UNASSIGNED));
+		projectCounts.put(ProjectStatus.INPROGRESS.value(),
+				projectManager.getAllProjectDetailsCount(ProjectStatus.INPROGRESS));
+		projectCounts.put(ProjectStatus.COMPLETED.value(),
+				projectManager.getAllProjectDetailsCount(ProjectStatus.COMPLETED));
+		projectCounts.put(ProjectStatus.NEW.value(), projectManager.getAllProjectDetailsCount(ProjectStatus.NEW));
+
+		return projectCounts;
+	}
+
+	public String getAjaxFullcalendar(String startDate, String endDate) {
+		return projectManager.getUserTaskActivityForCalenderJson(startDate, endDate);
+	}
 }

@@ -86,6 +86,30 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 
 	}
 
+	public List<TaskActivityDetails> getAllTaskActivities(String startDateString, String completionDateString) {
+		List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
+		Date startDate = DateUtils.tryParse(startDateString, DateUtils.DATE_FORMAT_CALENDER);
+		Date completionDate = DateUtils.tryParse(completionDateString, DateUtils.DATE_FORMAT_CALENDER);
+		logDebug("startDateString" + startDateString);
+		logDebug("completionDateString" + completionDateString);
+		logDebug("startDate" + startDate);
+		logDebug("completionDate" + completionDate);
+
+		Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, -1);
+		Date dayEndDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, completionDate, 1);
+
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("calenderDateStart", dayStartDate);
+		dataMap.put("calenderDateEnd", dayEndDate);
+		logDebug("dayStartDate : " + dayStartDate);
+
+		List<?> userActivityItems = getFamstackDataAccessObjectManager()
+				.executeQuery(HQLStrings.getString("allUserActivityItemsFromDatetoDate"), dataMap);
+
+		getAllTaskActivitiesFromUserActivity(taskActivitiesList, userActivityItems);
+		return taskActivitiesList;
+	}
+
 	public List<TaskActivityDetails> getAllTaskActivities() {
 		Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -2);
 		List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
@@ -96,6 +120,12 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		List<?> userActivityItems = getFamstackDataAccessObjectManager()
 				.executeQuery(HQLStrings.getString("allUserActivityItemsFromToday"), dataMap);
 
+		getAllTaskActivitiesFromUserActivity(taskActivitiesList, userActivityItems);
+		return taskActivitiesList;
+	}
+
+	private void getAllTaskActivitiesFromUserActivity(List<TaskActivityDetails> taskActivitiesList,
+			List<?> userActivityItems) {
 		logDebug("userActivityItems :" + userActivityItems);
 
 		if (!userActivityItems.isEmpty()) {
@@ -117,7 +147,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 
 			}
 		}
-		return taskActivitiesList;
 	}
 
 	private TaskActivityDetails getTaskActivityDetailsFromItem(UserActivityItem userActivityItem,
@@ -128,6 +157,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		taskActivityDetails.setDuration(userTaskActivityItem.getDuration());
 		taskActivityDetails.setUserTaskType(userTaskActivityItem.getType());
 		taskActivityDetails.setStartHour(userTaskActivityItem.getStartHour());
+		taskActivityDetails.setStartTime(userTaskActivityItem.getStartTime());
 
 		return taskActivityDetails;
 	}

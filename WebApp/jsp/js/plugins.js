@@ -481,7 +481,7 @@ $(function() {
                     defaultView: 'agendaDay',
                     weekends: false,
                     editable: false,
-                    eventSources: {url: "assets/ajax_fullcalendar.jsp"},
+                    eventSources: {url: "getAjaxFullcalendar"},
                     droppable: false,
                     selectable: false,
                     selectHelper: false,

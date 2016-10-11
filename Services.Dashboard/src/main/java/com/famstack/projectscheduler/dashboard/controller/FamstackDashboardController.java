@@ -135,6 +135,20 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": false, \"error\": \"Bad Credentials\"}";
 	}
 
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public ModelAndView index() {
+		Map<String, Long> projectCountBasedOnStatus = famstackDashboardManager.getProjectsCounts();
+		List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
+		return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
+				.addObject("projectDetails", projectDetails);
+	}
+
+	@RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate) {
+		return famstackDashboardManager.getAjaxFullcalendar(startDate, endDate);
+	}
+
 	@RequestMapping(value = "/employees", method = RequestMethod.GET)
 	public ModelAndView newEmployee() {
 		return new ModelAndView("employees", "command", new EmployeeDetails());

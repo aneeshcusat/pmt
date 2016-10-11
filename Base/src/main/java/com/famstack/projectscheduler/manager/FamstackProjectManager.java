@@ -273,4 +273,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		updateProjectStatusBasedOnTaskStatus(taskItem.getProjectItem().getProjectId());
 
 	}
+
+	public String getUserTaskActivityForCalenderJson(String startDate, String endDate) {
+		return famstackProjectTaskManager.getUserTaskActivityJson(startDate, endDate);
+	}
 }

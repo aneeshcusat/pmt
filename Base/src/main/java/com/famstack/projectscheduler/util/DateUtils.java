@@ -20,6 +20,8 @@ public final class DateUtils extends BaseFamstackService {
 
 	public static final String DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
 	public static final String DATE_FORMAT = "yyyy/MM/dd";
+	public static final String DATE_FORMAT_CALENDER = "yyyy-MM-dd";
+	public static final String DATE_TIME_FORMAT_CALENDER = "yyyy-MM-dd'T'HH:mm:ss";
 
 	/** The logger. */
 	private static Logger logger = getStaticLogger(DateUtils.class);
@@ -106,8 +108,7 @@ public final class DateUtils extends BaseFamstackService {
 	public static Date getPreviousDate(DateTimePeriod previousTimePeriod) {
 		return getNextPreviousDate(previousTimePeriod, new Date(), -1);
 	}
-	
-	
+
 	public static String getDisplayDate(Timestamp timestamp) {
 		if (timestamp != null) {
 			SimpleDateFormat formatter = new SimpleDateFormat(DATE_TIME_FORMAT);

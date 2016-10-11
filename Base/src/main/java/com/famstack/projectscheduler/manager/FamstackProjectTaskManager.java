@@ -12,6 +12,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
@@ -177,6 +179,25 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 
 	public String getUserTaskActivityJson() {
 		return FamstackUtils.getJsonFromObject(famstackUserActivityManager.getAllTaskActivities());
+	}
+
+	public String getUserTaskActivityJson(String startDate, String endDate) {
+		JSONArray jsonArray = new JSONArray();
+		for (TaskActivityDetails taskActivityDetails : famstackUserActivityManager.getAllTaskActivities(startDate,
+				endDate)) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("title", taskActivityDetails.getTaskName());
+			jsonObject.put("start",
+					DateUtils.format(taskActivityDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT_CALENDER));
+			Date completionDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, taskActivityDetails.getStartTime(),
+					taskActivityDetails.getDuration());
+
+			jsonObject.put("end", DateUtils.format(completionDate, DateUtils.DATE_TIME_FORMAT_CALENDER));
+			jsonObject.put("tip", taskActivityDetails.getUserTaskType());
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray.toString();
 	}
 
 	public Map<String, ArrayList<TaskDetails>> getAllProjectTask(int userId) {

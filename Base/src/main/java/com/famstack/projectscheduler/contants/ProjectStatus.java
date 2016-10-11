@@ -2,5 +2,16 @@ package com.famstack.projectscheduler.contants;
 
 public enum ProjectStatus {
 
-	NEW, UNASSIGNED, ASSIGNED, INPROGRESS, REVIEW, COMPLETED, CLOSED
+	NEW("NEW"), UNASSIGNED("UNASSIGNED"), ASSIGNED("ASSIGNED"), INPROGRESS("INPROGRESS"), REVIEW("REVIEW"), COMPLETED(
+			"COMPLETED"), CLOSED("CLOSED");
+
+	private String value;
+
+	ProjectStatus(String value) {
+		this.value = value;
+	}
+
+	public String value() {
+		return value;
+	}
 }
