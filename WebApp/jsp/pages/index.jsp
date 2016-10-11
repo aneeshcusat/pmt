@@ -5,9 +5,6 @@
      <li class="active">Dashboard</li>
  </ul>
  <!-- END BREADCRUMB -->  
-        <style>
-
-        </style>
                 <!-- PAGE CONTENT WRAPPER -->
                 <div class="page-content-wrap">
                     
@@ -480,9 +477,7 @@
                <!-- END PAGE CONTENT WRAPPER -->  
 <%@include file="includes/footer.jsp" %>
 <script type="text/javascript" src="${js}/demo_dashboard.js"></script>
-<script type="text/javascript" src="${js}/famstack.plugin.js"></script>
 <jsp:useBean id="date" class="java.util.Date"/>
-${date}
 <fmt:formatDate var="timeHour" value="${date}" pattern="HH"/>
 <fmt:formatDate var="timeMinutes"  value="${date}" pattern="mm"/>
 <script>

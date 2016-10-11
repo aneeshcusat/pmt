@@ -130,9 +130,13 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		}
 		if (projectDuration != 0) {
 			return ProjectStatus.UNASSIGNED;
-		} else if (taskStatsList.contains(TaskStatus.NEW) && taskStatsList.contains(TaskStatus.ASSIGNED)) {
+		} else if (taskStatsList.contains(TaskStatus.NEW) && (taskStatsList.contains(TaskStatus.ASSIGNED)
+				|| (taskStatsList.contains(TaskStatus.INPROGRESS) || taskStatsList.contains(TaskStatus.COMPLETED)))) {
 			return ProjectStatus.UNASSIGNED;
-		} else if (!taskStatsList.contains(TaskStatus.NEW) && taskStatsList.contains(TaskStatus.ASSIGNED)) {
+		} else if (taskStatsList.contains(TaskStatus.ASSIGNED)
+				&& (taskStatsList.contains(TaskStatus.INPROGRESS) || taskStatsList.contains(TaskStatus.COMPLETED))) {
+			return ProjectStatus.INPROGRESS;
+		} else if (taskStatsList.contains(TaskStatus.ASSIGNED)) {
 			return ProjectStatus.ASSIGNED;
 		} else if (taskStatsList.contains(TaskStatus.INPROGRESS)) {
 			return ProjectStatus.INPROGRESS;

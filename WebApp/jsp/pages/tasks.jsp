@@ -13,6 +13,11 @@
 		width: 75%;
 	}
  </style>
+ <script>
+ var hour = 0;
+ var minutes = 0;
+ var second =0;
+ </script>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">     
     <!-- START CONTENT FRAME TOP -->
@@ -49,8 +54,9 @@
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}">Show project</a></div>
                         <div class="task-footer">
                             <div class="pull-right"><span class="fa fa-clock-o"></span> ${tasks.duration} Hours</div>     
-                            <div class="pull-left">Start Time : ${tasks.startTime}</div>     
-                             <input type="hidden" class="taskId" value="${tasks.taskId}"/>      
+                            <div class="pull-left">Start Time : ${tasks.startTime}</div> 
+                            <input type="hidden" class="duration" value="${tasks.duration}"/>        
+                            <input type="hidden" class="taskId" value="${tasks.taskId}"/>      
                             <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>  
                         </div>                                    
                     </div>
@@ -69,8 +75,14 @@
                         <div class="task-text">${tasks.name}</div>
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}">Show project</a></div>
                         <div class="task-footer">
-                            <div class="pull-left"><span class="fa fa-clock-o"></span> Time remaining : 2h 55min</div>
-                            <div class="pull-right"><span class="fa fa-pause"></span><span id="inprogressTime">00:00</span></div> 
+                            <script>
+                            	hour = ${tasks.taskActivityDetails.timeTakenToCompleteHour};
+                            	minutes = ${tasks.taskActivityDetails.timeTakenToCompleteMinute};
+                            	second = ${tasks.taskActivityDetails.timeTakenToCompleteSecond};
+                            </script>
+                            <div class="pull-left">Start Time : ${tasks.taskActivityDetails.actualStartTime}</div> 
+                            <div class="pull-right"><span class="fa fa-pause"></span> Time remaining : <span id="remainingTime">2h 55min</span></div>
+                           
                             <input type="hidden" class="taskId" value="${tasks.taskId}"/>      
                             <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>         
                         </div>                                    
@@ -78,12 +90,14 @@
 			        </c:if>
 			        </c:forEach>
 			        </c:if>
-			       <c:if test="${empty modelViewMap.projectTaskDetailsData['INPROGRESS']}">
-                    <div class="task-drop push-down-10 inprogressDropDown">
+			      
+                    <div class="task-drop push-down-10 inprogressDropDown" style="display: <c:if test="${not empty modelViewMap.projectTaskDetailsData['INPROGRESS']}">
+                    none;</c:if>
+                    ">
                         <span class="fa fa-cloud"></span>
                         Drag your task here to start it tracking time
                     </div>
-                    </c:if>
+                    
                     
                 </div>
             </div>
@@ -97,7 +111,7 @@
                         <div class="task-text">${tasks.name}</div>
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}">Show project</a></div>
                         <div class="task-footer">
-                             <div class="pull-left"><span class="fa fa-clock-o"></span> 35min</div>                                         
+                             <div class="pull-left"><span class="fa fa-clock-o"></span>${tasks.taskActivityDetails.timeTakenToComplete}</div>                                         
                         </div>                                    
                     </div>
 			        </c:if>
@@ -175,6 +189,79 @@
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js"></script>
 <script>
+var inProgress = true;
+function reloadTime() {
+	if (!inProgress) {
+		return;
+	}
+	second-=1;
+	if (second ==0){
+		second =59;
+		minutes-=1;
+	}
+	if (minutes ==0){
+		minutes =59;
+		hour-=1;
+	}
+    $("#remainingTime").html(hour+":"+minutes+":"+second);
+}
+window.setInterval(reloadTime, 1000);
+
+var taskStart = function(){
+	var comments =$("#taskStartComments").val();
+	var taskId = $(lastMovedItem.item).find("input.taskId").val();
+	var duration = $(lastMovedItem.item).find("input.duration").val();
+	hour = parseInt(duration);
+	second =0;
+	mininute =0;
+	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
+	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "INPROGRESS","comments":comments}
+	updateTaskStatus(dataString, false);
+}
+
+
+var taskComplete = function(){
+	var comments =$("#taskCompletionComments").val();
+	var taskId = $(lastMovedItem.item).find("input.taskId").val();
+	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
+	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "COMPLETED","comments":comments}
+	updateTaskStatus(dataString, true);
+}
+
+
+var updateTaskStatus = function(dataString, isComplete){
+	doAjaxRequest("POST", "${applicationHome}/updateTaskStatus", dataString, function(data) {
+        var responseJson = JSON.parse(data);
+        if (responseJson.status){
+        	$(".modal").hide();
+        	if (!isComplete) {
+        		lastMovedItem.item.find(".task-footer").find(".pull-right").remove();
+        		lastMovedItem.item.find(".task-footer").append('<div class="pull-right"><span class="fa fa-pause"></span><span id="remainingTime">00:00</span></div>');
+        		$(".inprogressDropDown").hide();
+        	} else {
+        		inProgress = false;
+        		var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
+        		lastMovedItem.item.addClass("task-complete").find(".task-footer > .pull-right").remove();
+        		lastMovedItem.item.find(".task-footer").append('<div class="pull-right">completed Time '+completedTime+'</div>');
+        		
+        		$(".inprogressDropDown").show();
+        	}
+        	return true;
+        } else {
+        	$(lastMovedItem.sender).sortable('cancel');
+        	return false;
+        }
+       
+    }, function(e) {
+    	$(lastMovedItem.sender).sortable('cancel');
+    });
+	
+}
+
+$("#taskComplete").click(function(){
+	$(".modal").hide();
+});
+
 
 var lastMovedItem ;
 $(function(){
@@ -222,74 +309,4 @@ $("#my-dropzone").dropzone({
 		file.previewElement.classList.add("dz-error");
 	}
 });
-var hour = 0;
-var minutes = 0;
-var second =0;
-var inProgress = true;
-function reloadTime() {
-	if (!inProgress) {
-		return;
-	}
-	second+=1;
-	if (second ==60){
-		second =0;
-		minutes+=1;
-	}
-	if (minutes ==60){
-		minutes =0;
-		hour+=1;
-	}
-    $("#inprogressTime").html(hour +" Hr:"+minutes+" Mins:"+second+" Sec");
-}
-window.setInterval(reloadTime, 1000);
-var taskStart = function(){
-	var comments =$("#taskStartComments").val();
-	var taskId = $(lastMovedItem.item).find("input.taskId").val();
-	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
-	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "INPROGRESS","comments":comments}
-	updateTaskStatus(dataString, false);
-	window.setInterval(reloadTime, 1000);
-}
-
-
-var taskComplete = function(){
-	var comments =$("#taskCompletionComments").val();
-	var taskId = $(lastMovedItem.item).find("input.taskId").val();
-	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
-	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "COMPLETED","comments":comments}
-	updateTaskStatus(dataString, true);
-}
-
-
-var updateTaskStatus = function(dataString, isComplete){
-	doAjaxRequest("POST", "${applicationHome}/updateTaskStatus", dataString, function(data) {
-        var responseJson = JSON.parse(data);
-        if (responseJson.status){
-        	$(".modal").hide();
-        	if (!isComplete) {
-        		lastMovedItem.item.find(".task-footer").find(".pull-right").remove();
-        		lastMovedItem.item.find(".task-footer").append('<div class="pull-right"><span class="fa fa-pause"></span><span id="inprogressTime">00:00</span></div>');
-        		$("#inprogressDropDown").hide();
-        	} else {
-        		inProgress = false;
-        		lastMovedItem.item.find(".task-footer").find(".pull-right").remove();
-        		lastMovedItem.item.find(".task-footer").append('<div class="pull-right">'+$("#inprogressTime").val()+'</div>');
-        		$("#inprogressDropDown").show();
-        	}
-        	return true;
-        } else {
-        	$(lastMovedItem.sender).sortable('cancel');
-        	return false;
-        }
-       
-    }, function(e) {
-    	$(lastMovedItem.sender).sortable('cancel');
-    });
-	
-}
-
-$("#taskComplete").click(function(){
-	$(".modal").hide();
-});
-
 </script>

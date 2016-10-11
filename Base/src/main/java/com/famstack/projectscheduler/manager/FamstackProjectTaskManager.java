@@ -213,6 +213,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 						}
 						TaskActivityDetails taskActivityDetails = new TaskActivityDetails();
 						taskActivityDetails.setTaskActivityId(userTaskActivityItem.getId());
+						taskActivityDetails.setStartTime(userTaskActivityItem.getStartTime());
+						taskActivityDetails.setActualEndTime(userTaskActivityItem.getActualEndTime());
+						taskActivityDetails.setDuration(userTaskActivityItem.getDuration());
+						taskActivityDetails.setActualStartTime(userTaskActivityItem.getActualStartTime());
 						TaskDetails taskDetails = mapProjectItemToProjectDetails(taskItem);
 						taskDetails.setTaskActivityDetails(taskActivityDetails);
 						userTaskActivityItemMap.get(taskItem.getStatus().value()).add(taskDetails);
