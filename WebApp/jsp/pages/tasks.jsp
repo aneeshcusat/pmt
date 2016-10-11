@@ -213,7 +213,8 @@ var taskStart = function(){
 	var duration = $(lastMovedItem.item).find("input.duration").val();
 	hour = parseInt(duration);
 	second =0;
-	mininute =0;
+	minutes =0;
+	$("#unassignedDuration").val(duration);
 	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
 	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "INPROGRESS","comments":comments}
 	updateTaskStatus(dataString, false);
@@ -225,6 +226,7 @@ var taskComplete = function(){
 	var taskId = $(lastMovedItem.item).find("input.taskId").val();
 	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
 	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "COMPLETED","comments":comments}
+	
 	updateTaskStatus(dataString, true);
 }
 
@@ -273,6 +275,7 @@ $(function(){
             handle: ".task-text",            
             receive: function(event, ui) {
             	lastMovedItem=ui;
+            	$(".unassignedDuration").val($(lastMovedItem.item).find("input.duration").val());
                 if(this.id == "tasks_completed"){
                 	$(".taskCompletionLink").click();
                 }
