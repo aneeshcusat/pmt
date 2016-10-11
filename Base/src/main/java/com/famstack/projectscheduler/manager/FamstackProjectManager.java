@@ -3,6 +3,7 @@ package com.famstack.projectscheduler.manager;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +12,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
+import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
@@ -226,6 +228,35 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			}
 		}
 		return projectDetailsList;
+	}
+
+	public List<ProjectDetails> getAllProjectDetailsList(ProjectStatus projectStatus) {
+		List<ProjectDetails> projectDetailsList = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("status", projectStatus);
+
+		List<?> projectItemList = famstackDataAccessObjectManager
+				.executeQuery(HQLStrings.getString("getProjectItemsByStatus"), dataMap);
+		if (projectItemList != null) {
+			for (Object projectItemObj : projectItemList) {
+				ProjectItem projectItem = (ProjectItem) projectItemObj;
+				ProjectDetails projectDetails = mapProjectItemToProjectDetails(projectItem);
+				if (projectDetails != null) {
+					projectDetailsList.add(projectDetails);
+				}
+			}
+		}
+		return projectDetailsList;
+	}
+
+	public long getAllProjectDetailsCount(ProjectStatus projectStatus) {
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("status", projectStatus);
+
+		long count = famstackDataAccessObjectManager.getCount(HQLStrings.getString("getProjectItemCountByStatus"),
+				dataMap);
+
+		return count;
 	}
 
 	public ProjectDetails getProjectDetails(int projectId) {

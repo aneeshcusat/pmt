@@ -1,9 +1,10 @@
 package com.famstack.projectscheduler.manager;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,8 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 							userItem.getHashkey()));
 				} else {
 					loginResult.setStatus(Status.SUCCESS);
+					getFamstackApplicationConfiguration().getUserMap().get(userItem.getId())
+							.setLastPing(new Timestamp(new Date().getTime()));
 				}
 				loginResult.setUserItem(userItem);
 				return loginResult;

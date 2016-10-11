@@ -83,34 +83,34 @@
                                     </div>
                                 <label class="col-md-2 control-label">Team</label>
                                 <div class="col-md-3">
-                                        <form:select class="form-control select" path="teamId" id="team"  data-live-search="true">
-                                        <option value="-1">- select -</option>
-                                        <option value="1">Team 1</option>
-                                        <option value="1">Team 2</option>
-                                        <option value="1">Team 3</option>
-                                        <option value="1">Team 4</option>
-                                    </form:select>
+                                      <form:select class="selectpicker form-control select" path="teamId" id="teamId"  data-live-search="true">
+                                          <option value="-1">- select -</option>
+										  <optgroup label="Microsoft">
+										    <option value="1">Team 1</option>
+										    <option value="2">Team 2</option>
+										    <option value="3">Team 3</option>
+										  </optgroup>
+										  <optgroup label="Cisco">
+										    <option value="3">Team 4</option>
+										    <option value="3">Team 5</option>
+										    <option value="3">Team 6</option>
+										  </optgroup>
+										</form:select>
                                     <span class="help-block">required team</span>
                                 </div>
                             </div>
-                             <div class="form-group">                                        
-                                <label class="col-md-3 control-label">Client</label>
+                             <div class="form-group">  
+                              <label class="col-md-3 control-label">Client</label>
                                 <div class="col-md-9">
-                                      <form:select class="selectpicker form-control select" path="clientId" id="clientId"  data-live-search="true">
-                                          <option value="-1">- select -</option>
-										  <optgroup label="Microsoft">
-										    <option value="1">Client 1</option>
-										    <option value="2">Client 2</option>
-										    <option value="3">Client 3</option>
-										  </optgroup>
-										  <optgroup label="Cisco">
-										    <option value="3">Client 4</option>
-										    <option value="3">Client 5</option>
-										    <option value="3">Client 6</option>
-										  </optgroup>
-										</form:select>
-                                    <span class="help-block">required client</span>
-                                </div>
+                                        <form:select class="form-control select" path="clientId" id="clientId"  data-live-search="true">
+                                        <option value="-1">- select -</option>
+                                        <option value="1">Client 1</option>
+                                        <option value="1">Client 2</option>
+                                        <option value="1">Client 3</option>
+                                        <option value="1">Client 4</option>
+                                    </form:select>
+                                    <span class="help-block">required team</span>
+                                </div>                                      
                             </div>
                             </div>
                         <div class="col-md-6">

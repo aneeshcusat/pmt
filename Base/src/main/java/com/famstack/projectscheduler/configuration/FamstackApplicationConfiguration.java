@@ -1,6 +1,9 @@
 package com.famstack.projectscheduler.configuration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -22,19 +25,23 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	private final boolean emailEnabled = true;
 
-	private List<EmployeeDetails> userList;
+	private Map<Integer, EmployeeDetails> userMap = new HashMap<>();
 
 	public void initialize() {
+		userMap.clear();
 		logDebug("Initializing FamstackApplicationConfiguration...");
-		userList = famstackUserProfileManager.getEmployeeDataList();
+		userMap = getUserMap(famstackUserProfileManager.getEmployeeDataList());
+	}
+
+	private Map<Integer, EmployeeDetails> getUserMap(List<EmployeeDetails> userList2) {
+		for (EmployeeDetails employeeDetails : userList2) {
+			userMap.put(employeeDetails.getId(), employeeDetails);
+		}
+		return userMap;
 	}
 
 	public List<EmployeeDetails> getUserList() {
-		return userList;
-	}
-
-	public void setUserList(List<EmployeeDetails> userList) {
-		this.userList = userList;
+		return new ArrayList(userMap.values());
 	}
 
 	public String getHostName() {
@@ -71,6 +78,10 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	public UserItem getCurrentUser() {
 		return getFamstackUserSessionConfiguration().getCurrentUser();
+	}
+
+	public Map<Integer, EmployeeDetails> getUserMap() {
+		return userMap;
 	}
 
 }

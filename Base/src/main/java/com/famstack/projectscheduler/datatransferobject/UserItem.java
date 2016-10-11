@@ -1,7 +1,7 @@
 package com.famstack.projectscheduler.datatransferobject;
 
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;

@@ -3,7 +3,10 @@ var templatePlugins = function(){
         var tp_clock = function(hour, minutes){
             
             function tp_clock_time(hour, minutes){
-            	console.log(hour);
+            	
+            	hour = new Date().getHours();
+            	minutes =new Date().getMinutes();
+            	
                 hour = hour < 10 ? '0'+hour : hour;
                 minutes = minutes < 10 ? '0'+minutes : minutes;
                 
@@ -39,7 +42,6 @@ var templatePlugins = function(){
         
         return {
             init: function(hour, minutes){
-            	console.log(hour);
                 tp_clock(hour, minutes);
                 tp_date();
             }

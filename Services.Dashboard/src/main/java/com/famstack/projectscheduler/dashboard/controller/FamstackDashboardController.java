@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
@@ -99,6 +102,15 @@ public class FamstackDashboardController extends BaseFamstackService {
 		userSecurityContextBinder.unbindUserAuthentication();
 		request.getSession().invalidate();
 		return "login";
+	}
+
+	@RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)
+	@ResponseBody
+	public String userPingCheck(@RequestParam("userId") String userId) {
+		UserItem userItem = getFamstackApplicationConfiguration().getCurrentUser();
+		getFamstackApplicationConfiguration().getUserMap().get(userItem.getId())
+				.setLastPing(new Timestamp(new Date().getTime()));
+		return "{\"status\": true}";
 	}
 
 	@RequestMapping(value = "/resetpassword", method = RequestMethod.GET)
@@ -204,7 +216,10 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(value = "/taskAllocator", method = RequestMethod.GET)
 	public ModelAndView taskAllocator() {
-		return new ModelAndView("taskAllocator", "command", new TaskDetails());
+		List<ProjectDetails> unAssignedProjects = famstackDashboardManager
+				.getUnassignedProjects(ProjectStatus.UNASSIGNED);
+		return new ModelAndView("taskAllocator", "command", new TaskDetails()).addObject("unAssignedProjects",
+				unAssignedProjects);
 	}
 
 	// ---------- Project Comments ------------//

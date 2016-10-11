@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.employees.bean;
 
+import java.sql.Timestamp;
+
 import com.famstack.projectscheduler.security.user.UserRole;
 
 public class EmployeeDetails {
@@ -19,6 +21,7 @@ public class EmployeeDetails {
 	private UserRole role;
 	private String dateOfBirth;
 	private int reportingManger;
+	private Timestamp lastPing;
 
 	public String getFirstName() {
 		return firstName;
@@ -173,6 +176,14 @@ public class EmployeeDetails {
 
 	public void setReportingManger(int reportingManger) {
 		this.reportingManger = reportingManger;
+	}
+
+	public Timestamp getLastPing() {
+		return lastPing;
+	}
+
+	public void setLastPing(Timestamp lastPing) {
+		this.lastPing = lastPing;
 	}
 
 }

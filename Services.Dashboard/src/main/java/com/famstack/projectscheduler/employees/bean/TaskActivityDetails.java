@@ -28,6 +28,11 @@ public class TaskActivityDetails {
 
 	private UserTaskType userTaskType;
 
+	private long timeTakenToCompleteHour;
+	private long timeTakenToCompleteMinute;
+	private long timeTakenToCompleteSecond;
+	private String timeTakenToComplete;
+
 	public int getTaskId() {
 		return taskId;
 	}
@@ -117,40 +122,65 @@ public class TaskActivityDetails {
 	}
 
 	public long getTimeTakenToCompleteHour() {
+		long diffHours = duration;
+		if (actualStartTime != null) {
+			long diff = new Date().getTime() - actualStartTime.getTime();
+			diff = (duration * (60 * 60 * 1000)) - diff;
+			diffHours = diff / (60 * 60 * 1000);
+		}
 
-		long diff = new Date().getTime() - actualStartTime.getTime();
-		diff = (duration * (60 * 60 * 1000)) - diff;
-		long diffHours = diff / (60 * 60 * 1000);
-
-		return diffHours;
+		return timeTakenToCompleteHour = diffHours;
 	}
 
 	public long getTimeTakenToCompleteMinute() {
-
-		long diff = new Date().getTime() - actualStartTime.getTime();
-		diff = (duration * (60 * 60 * 1000)) - diff;
-		long diffMinutes = diff / (60 * 1000) % 60;
-
-		return diffMinutes;
+		long diffMinutes = 0;
+		if (actualStartTime != null) {
+			long diff = new Date().getTime() - actualStartTime.getTime();
+			diff = (duration * (60 * 60 * 1000)) - diff;
+			diffMinutes = diff / (60 * 1000) % 60;
+		}
+		return timeTakenToCompleteMinute = diffMinutes;
 	}
 
 	public long getTimeTakenToCompleteSecond() {
 
-		long diff = new Date().getTime() - actualStartTime.getTime();
-		diff = (duration * (60 * 60 * 1000)) - diff;
-		long diffSeconds = diff / 1000 % 60;
-
-		return diffSeconds;
+		long diffSeconds = 0;
+		if (actualStartTime != null) {
+			long diff = new Date().getTime() - actualStartTime.getTime();
+			diff = (duration * (60 * 60 * 1000)) - diff;
+			diffSeconds = diff / 1000 % 60;
+		}
+		return timeTakenToCompleteSecond = diffSeconds;
 	}
 
 	public String getTimeTakenToComplete() {
+		long diffHours = duration;
+		long diffMinutes = 0;
+		long diffSeconds = 0;
+		if (actualStartTime != null && actualEndTime != null) {
+			long diff = actualEndTime.getTime() - actualStartTime.getTime();
+			diffHours = diff / (60 * 60 * 1000);
+			diffMinutes = diff / (60 * 1000) % 60;
+			diffSeconds = diff / 1000 % 60;
+		}
 
-		long diff = actualEndTime.getTime() - actualStartTime.getTime();
-		long diffHours = diff / (60 * 60 * 1000);
-		long diffMinutes = diff / (60 * 1000) % 60;
-		long diffSeconds = diff / 1000 % 60;
+		return timeTakenToComplete = (diffHours + ":" + diffMinutes + ":" + diffSeconds);
+	}
 
-		return diffHours + ":" + diffMinutes + ":" + diffSeconds;
+	public void setTimeTakenToCompleteHour(long timeTakenToCompleteHour) {
+		this.timeTakenToCompleteHour = timeTakenToCompleteHour;
+	}
+
+	public void setTimeTakenToCompleteMinute(long timeTakenToCompleteMinute) {
+		this.timeTakenToCompleteMinute = timeTakenToCompleteMinute;
+	}
+
+	public void setTimeTakenToCompleteSecond(long timeTakenToCompleteSecond) {
+		this.timeTakenToCompleteSecond = timeTakenToCompleteSecond;
+	}
+
+	public void setTimeTakenToComplete(String timeTakenToComplete) {
+		this.timeTakenToComplete = timeTakenToComplete;
 	}
 
 }

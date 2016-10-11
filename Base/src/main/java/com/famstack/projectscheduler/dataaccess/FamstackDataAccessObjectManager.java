@@ -1,7 +1,6 @@
 package com.famstack.projectscheduler.dataaccess;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import com.famstack.projectscheduler.datatransferobject.FamstackBaseItem;
-import com.famstack.projectscheduler.datatransferobject.GroupMessageItem;
 
 public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjectManager {
 
@@ -101,6 +99,23 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		return itemList;
 	}
 
+	public long getCount(String hqlQuery, Map<String, Object> dataMap) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		Query<?> query = session.createQuery(hqlQuery);
+		logDebug("executeQuery :" + hqlQuery);
+		if (dataMap != null) {
+			logDebug("dataMap :" + dataMap.keySet());
+			for (String paramName : dataMap.keySet()) {
+				query.setParameter(paramName, dataMap.get(paramName));
+			}
+		}
+		long count = (long) query.getSingleResult();
+		tx.commit();
+		session.close();
+		return count;
+	}
+
 	@Override
 	public void executeUpdate(String hqlQuery, Map<String, Object> dataMap) {
 		Session session = getSessionFactory().openSession();
@@ -116,5 +131,5 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		tx.commit();
 		session.close();
 	}
-	
+
 }

@@ -36,10 +36,23 @@ width: 60%;
 				<div class="form-group">
 					<label class="col-md-2 control-label">Projects</label>
 					<div class="col-md-9">
-						<select class="form-control select" path="duration" id="projectId"  data-live-search="true">
-                         <option>1</option>
-                         <option>2</option>
-                     	 </select>
+						<form:select class="form-control select" path="projectId" id="projectId"  data-live-search="true">
+                         <option>-select-</option>
+                         <c:if test="${not empty unAssignedProjects}">
+	                        <c:forEach var="project" items="${unAssignedProjects}">
+	                        	<option value="${project.id}">${project.name}</option>
+	                        </c:forEach>
+                         </c:if>
+                     	 </form:select>
+                     	 <c:if test="${not empty unAssignedProjects}">
+	                        <c:forEach var="project" items="${unAssignedProjects}">
+	                        	<input type="hidden" id="${project.id}unAssignedDuration" value="${project.unAssignedDuration}"/>
+	                        	<input type="hidden" id="${project.id}startTime" value="${project.startTime}"/>
+	                        	<input type="hidden" id="${project.id}completionTime" value="${project.completionTime}"/>
+	                        	<input type="hidden" id="${project.id}duration" value="${project.duration}"/>
+	                        	<option value="${project.id}">${project.name}</option>
+	                        </c:forEach>
+                         </c:if>
 						<span class="help-block">required project name</span>
 					</div>
 				</div>
@@ -47,10 +60,44 @@ width: 60%;
 				<div class="form-group">
 					<label class="col-md-2 control-label">Task</label>
 					<div class="col-md-9">
-						<select class="form-control select" path="duration" id="taskId"  data-live-search="true">
-                         <option>1</option>
-                         <option>2</option>
+						<form:input type="hidden" value="" path="taskId" id="taskId"/>
+						<form:input type="hidden" value="" path="startTime" id="startTime"/>
+						<form:input type="hidden" value="" path="assignee" id="assignee"/>
+						<form:input type="hidden" value="" path="helper" id="helper"/>
+						<form:input type="hidden" value="" path="name" id="name"/>
+						
+						
+						<select class="form-control" id="taskSelectId"  data-live-search="true">
+                         <option id="0">-select-</option>
+                         <c:if test="${not empty unAssignedProjects}">
+	                        <c:forEach var="project" items="${unAssignedProjects}">
+	                          	<c:if test="${not empty project.projectTaskDeatils}">
+	                         		<c:forEach var="task" items="${project.projectTaskDeatils}">
+	                         			<c:if test="${task.status != 'INPROGRESS' && task.status != 'COMPLETED'}">
+	                         				<option id="${task.taskId}" projectId="${project.id}" class="taskIdOption" style="display:none" filter="${project.id}-${task.taskId}" value="${task.taskId}">${task.name}</option>
+	                         			</c:if>
+	                         		</c:forEach>
+	                         	</c:if>
+	                        	
+	                        </c:forEach>
+                         </c:if>
                      	 </select>
+                     	 <c:if test="${not empty unAssignedProjects}">
+	                        <c:forEach var="project" items="${unAssignedProjects}">
+	                          	<c:if test="${not empty project.projectTaskDeatils}">
+	                         		<c:forEach var="task" items="${project.projectTaskDeatils}">
+	                         			<c:if test="${task.status != 'INPROGRESS' && task.status != 'COMPLETED'}">
+	                         			<input type="hidden" id="${task.taskId}startTime" value="${task.startTime}"/>
+	                        			<input type="hidden" id="${task.taskId}duration" value="${task.duration}"/>
+	                        			<input type="hidden" id="${task.taskId}description" value="${task.description}"/>
+	                        			<input type="hidden" id="${task.taskId}assignee" value="${task.assignee}"/>
+	                        			<input type="hidden" id="${task.taskId}helper" value="${task.helper}"/>
+	                        			<input type="hidden" id="${task.taskId}name" value="${task.name}"/>
+	                         			</c:if>
+	                         		</c:forEach>
+	                         	</c:if>
+	                        </c:forEach>
+                         </c:if>
 						<span class="help-block">required task name</span>
 					</div>
 				</div>
@@ -109,7 +156,7 @@ width: 60%;
 						data-dismiss="modal">Cancel</button>
 					<button type="button" onclick=""
 						class="btn btn-primary  pull-right">
-						<span id="taskStart">Update</span>
+						<span id="taskStart" onclick="doAjaxCreateTaskForm()">Update</span>
 					</button>
                      </div>
 				</div>
@@ -184,8 +231,81 @@ width: 60%;
 
 <script>
 
-var startProjectTime = '2016/10/11 10:00';
-var completionProjectTime = '2016/10/11 16:00';
+function doAjaxCreateTaskForm() {
+	$('#createTaskFormId').submit();
+}
+
+$('#createTaskFormId').ajaxForm(function(response) {
+	var responseJson = JSON.parse(response);
+	if (responseJson.status) {
+		window.location.reload(true);
+	}
+});
+
+$("#projectId").on("change",function(){
+	$('.taskIdOption').each(function () { $(this).hide(); });
+	$("#taskSelectId").prop("selectedIndex",0);
+	console.log($(this).val());	
+	$('.taskIdOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
+});
+
+$("#taskSelectId").on("change",function(){
+	if ($("#taskSelectId").val() != "0") {
+		var taskId = $("#taskSelectId").val();
+		loadTaskDetails(taskId, $("#"+taskId).attr("projectId"));
+	}
+});
+
+var startProjectTime = '2015/01/01 09:00';
+var completionProjectTime = '2020/01/01 20:00';
+
+var loadTaskDetails = function(taskId, projectId){
+	getAssignJsonData();
+	startProjectTime =$("#"+projectId+"startTime").val();
+	completionProjectTime = $("#"+projectId+"completionTime").val();
+	$("#taskId").val($("#taskSelectId").val());
+    $("#estStartTime").val($("#"+taskId+"startTime").val());
+ 	$("#unassignedDuration").html($("#"+projectId+"unAssignedDuration").val());
+ 	$("#projectDuration").html($("#"+projectId+"duration").val());
+ 	$("#taskDuration").html($("#"+taskId+"duration").val());
+ 	$("#description").val($("#"+taskId+"description").val());
+ 	var assigneeId = $("#"+taskId+"assignee").val();
+	var helpers = $("#"+taskId+"helper").val();
+	
+	$("#startTime").val($("#"+taskId+"startTime").val());
+	$("#assignee").val(assigneeId);
+	$("#helper").val(helpers);
+	$("#name").val($("#"+taskId+"name").val());
+
+	createTaskDurationList(parseInt($("#"+projectId+"unAssignedDuration").val())+parseInt($("#"+taskId+"duration").val()));
+    $("#duration").prop('selectedIndex', parseInt($("#"+taskId+"duration").val()));
+    $("#duration").selectpicker('refresh');
+    $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), parseInt($("#"+taskId+"duration").val())));
+    $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
+	//resetAssignTable();
+	//$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
+	
+	
+	if (assigneeId != "" && assigneeId != 0) {
+		 $("#"+assigneeId+"-select").click();
+		 console.log("helpers" + helpers);
+		 if (helpers != "") {
+			 console.log("inside helper" + helpers);
+			 var helperIds = helpers.replace("[","").replace("]","").split(",");
+			 for (var index = 0; index<helperIds.length; index++) {
+				 console.log("inside ids" + helperIds[index]);
+				 $("#"+helperIds[index].trim()+"-helper").click();
+			 }
+		 }
+	}
+}  
+
+var createTaskDurationList = function(duration){
+	 $("#duration").html("");
+	for (var index = 0; index <= duration; index++) {
+	     $("#duration").append('<option value="'+index+'">'+index+'</option>');
+	 }
+}
 
 var jsonAssignData = {};
 
