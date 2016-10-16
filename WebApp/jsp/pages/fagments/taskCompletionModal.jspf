@@ -16,9 +16,9 @@
 			</div>
 			<div class="col-md-4">
 				<div class="form-group">
-				<label class="col-md-2 control-label text-left">Duration</label>
+				<label class="col-md-2 control-label text-left">Completed At</label>
                      <div class="col-md-9" style="margin-top: 7px;">
-                     <b class="unassignedDuration">1</b> Hrs
+                     <b class="completedTime">0</b> Hrs
                      </div>
 				</div>
 			</div>

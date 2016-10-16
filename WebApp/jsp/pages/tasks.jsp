@@ -214,7 +214,6 @@ var taskStart = function(){
 	hour = parseInt(duration);
 	second =0;
 	minutes =0;
-	$("#unassignedDuration").val(duration);
 	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
 	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "INPROGRESS","comments":comments}
 	updateTaskStatus(dataString, false);
@@ -226,7 +225,6 @@ var taskComplete = function(){
 	var taskId = $(lastMovedItem.item).find("input.taskId").val();
 	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
 	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "COMPLETED","comments":comments}
-	
 	updateTaskStatus(dataString, true);
 }
 
@@ -245,7 +243,6 @@ var updateTaskStatus = function(dataString, isComplete){
         		var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
         		lastMovedItem.item.addClass("task-complete").find(".task-footer > .pull-right").remove();
         		lastMovedItem.item.find(".task-footer").append('<div class="pull-right">completed Time '+completedTime+'</div>');
-        		
         		$(".inprogressDropDown").show();
         	}
         	return true;
@@ -275,8 +272,10 @@ $(function(){
             handle: ".task-text",            
             receive: function(event, ui) {
             	lastMovedItem=ui;
-            	$(".unassignedDuration").val($(lastMovedItem.item).find("input.duration").val());
+            	$(".unassignedDuration").html($(lastMovedItem.item).find("input.duration").val());
                 if(this.id == "tasks_completed"){
+                	var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
+                	$(".completedTime").html(completedTime);
                 	$(".taskCompletionLink").click();
                 }
                 if(this.id == "tasks_progreess"){

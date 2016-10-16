@@ -18,7 +18,7 @@
 				<div class="form-group">
 				<label class="col-md-2 control-label text-left">Duration</label>
                      <div class="col-md-9" style="margin-top: 7px;">
-                     <b class="unassignedDuration">1</b> Hrs
+                     <b class="unassignedDuration">0</b> Hrs
                      </div>
 				</div>
 			</div>
