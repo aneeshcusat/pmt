@@ -210,6 +210,12 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
+	@RequestMapping(value = "/getProjectJson", method = RequestMethod.GET)
+	@ResponseBody
+	public String getProjectJson(@RequestParam("query") String query) {
+		return famstackDashboardManager.getProjectNameJson(query);
+	}
+
 	@RequestMapping(value = "/createProject", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,

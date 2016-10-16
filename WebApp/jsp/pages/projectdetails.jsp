@@ -117,9 +117,9 @@ width: 60%;
                                           <dt>Project Completed:</dt>
                                           <dd>
                                               <div class="progress progress-striped active ">
-                                                  <div style="width: 40%;" class="progress-bar progress-bar-danger"></div>
+                                                  <div style="width: 0%;" class="progress-bar progress-bar-danger"></div>
                                               </div>
-                                              <small>Project completed in <strong>80%</strong>. Remaining close the project, sign a contract and invoice.</small>
+                                              <small>Project completed in <strong>0%</strong>. Remaining close the project, sign a contract and invoice.</small>
                                           </dd>
                                       </dl>
                                   </div>

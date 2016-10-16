@@ -240,4 +240,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public List<AccountDetails> getAccountDataList() {
 		return famstackAccountManager.getAllAccountDetails();
 	}
+
+	public String getProjectNameJson(String query) {
+		return projectManager.getProjectNameJson(query);
+	}
 }

@@ -208,7 +208,7 @@
 	                                                    <td><span class="label label-info">${project.status }</span></td>
 	                                                    <td>
 	                                                        <div class="progress progress-small progress-striped active">
-	                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 85%;">85%</div>
+	                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
 	                                                        </div>
 	                                                    </td>
                                                		 </tr>

@@ -10,6 +10,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
@@ -276,5 +278,25 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 	public String getUserTaskActivityForCalenderJson(String startDate, String endDate) {
 		return famstackProjectTaskManager.getUserTaskActivityJson(startDate, endDate);
+	}
+
+	public String getProjectNameJson(String query) {
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("name", query + "%");
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonProductListObject = new JSONObject();
+		List<?> projectItems = famstackDataAccessObjectManager
+				.executeQuery(HQLStrings.getString("searchForProjectNames"), dataMap);
+
+		for (Object projectItemObj : projectItems) {
+			ProjectItem projectItem = (ProjectItem) projectItemObj;
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("value", projectItem.getName());
+			jsonObject.put("data", projectItem.getCode());
+			jsonArray.put(jsonObject);
+		}
+		jsonProductListObject.put("suggestions", jsonArray);
+		return jsonProductListObject.toString();
 	}
 }

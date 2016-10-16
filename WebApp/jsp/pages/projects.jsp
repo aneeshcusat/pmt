@@ -99,8 +99,8 @@
                 </td>
 				<td class="project_progress">
 					<div class="progress progress-xs">
-						<div style="width: 87%;" class="progress-bar progress-bar-success"></div>
-					</div> <small>87% Complete </small>
+						<div style="width: 0%;" class="progress-bar progress-bar-success"></div>
+					</div> <small>0% Complete </small>
 				</td>
 				<td><span class="label label-info">${project.status}</span></td>
 				<td>
@@ -185,21 +185,21 @@
 	});
 	
 	var projectNames = [ {
-		value : 'Project 1',
+		"value" : 'Project 1',
 		data : 'P100'
 	},
 	{
-		value : 'Project 2',
+		"value" : 'Project 2',
 		data : 'P102'
 	} ];
+	
 
 	$('.autocomplete').autocomplete(
 		{
-			//serviceUrl: '/autocomplete/projects',
-			lookup : projectNames,
+			serviceUrl: '${applicationHome}/getProjectJson',
+			//lookup : projectNames,
 			onSelect : function(suggestion) {
-				alert('You selected: ' + suggestion.value + ', '
-						+ suggestion.data);
+				$("#projectcode").val(suggestion.data);
 			}
 		});
 
