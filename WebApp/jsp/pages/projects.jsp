@@ -71,7 +71,7 @@
 	</div>
 	<div class="page-title">
 		<h4>
-			<span class="fa fa-clock-o"></span>ASSIGNED
+			
 		</h4>
 	</div>
 	<table class="table table-hover p-table datatable">
@@ -251,13 +251,88 @@
 		$(this).find('.xdsoft_date.xdsoft_weekend')
 		.addClass('xdsoft_disabled');
 	},
-	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'],
-	beforeShowDay: function(date) {
-		if (date.getMonth() < new Date().getMonth() && date.getDate() < new Date().getDate()) {
-			return [false, ""]
-		}
-		return [true, ""];
-	}
+	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']
 	
 	});
+	
+	
+	function resetAccount(){
+		$('.accountOption').each(function () { $(this).hide(); });
+		$("#accountId").prop("selectedIndex",0);
+		$('#accountId').selectpicker('refresh');
+	}
+	
+	function resetTeam(){
+		$('.teamOption').each(function () { $(this).hide(); });
+		$("#teamId").prop("selectedIndex",0);
+		$('#teamId').selectpicker('refresh');
+	}
+	
+	function resetClient(){
+		$('.clientOption').each(function () { $(this).hide(); });
+		$("#clientId").prop("selectedIndex",0);
+		$('#clientId').selectpicker('refresh');
+	}
+	
+	$("#billable").on("click",function(){
+		resetAccount();
+		resetTeam();
+		resetClient();
+		$('.accountOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
+		$('#accountId').selectpicker('refresh');
+		$('#teamId').selectpicker('refresh');
+		$('#clientId').selectpicker('refresh');
+	});
+	
+	$("#nonbillable").on("click",function(){
+		resetAccount();
+		resetTeam();
+		resetClient();
+		
+		$('.accountOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
+		$('#accountId').selectpicker('refresh');
+		$('#teamId').selectpicker('refresh');
+		$('#clientId').selectpicker('refresh');
+	});
+	
+	$("#accountId").on("change",function(){
+		console.log("account id change:" + $(this).val());
+		resetTeam();
+		resetClient();
+		$('.teamOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
+		$('#teamId').selectpicker('refresh');
+		$('#clientId').selectpicker('refresh');
+	});
+	
+	$("#teamId").on("change",function(){
+		console.log("team id change:" + $(this).val());
+		resetClient();
+		$('.clientOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
+		$('#clientId').selectpicker('refresh');
+	});
+	
+	$("#clientId").on("change",function(){
+		var subTeam = $(this).children(":selected").attr("subteam");
+		var account = $(this).children(":selected").attr("account");
+		console.log("account" + account);
+		console.log("subTeam" + subTeam);
+		$('#accountId').prop("selectedIndex",$("#"+account).attr("index"));
+		$('#teamId').prop("selectedIndex",$("#"+subTeam).attr("index"));
+		
+		$('#billable').parent().removeClass("active");
+		$('#nonbillable').parent().removeClass("active");
+		
+		if ($(this).children(":selected").attr("accounttype") == 'BILLABLE') {
+			$('#billable').attr("checked", true);
+			$('#billable').parent().addClass("active");
+		} else {
+			$('#nonbillable').attr("checked", true);
+			$('#nonbillable').parent().addClass("active");
+		}
+		
+		$('#accountId').selectpicker('refresh');
+		$('#teamId').selectpicker('refresh');
+		
+	});
+	
 </script>

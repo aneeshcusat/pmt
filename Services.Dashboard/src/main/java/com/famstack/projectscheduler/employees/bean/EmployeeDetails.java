@@ -6,6 +6,9 @@ import com.famstack.projectscheduler.security.user.UserRole;
 
 public class EmployeeDetails {
 
+	private static final int AWAY = 1;
+	private static final int ONLINE = 5;
+	private static final int OFFLINE = 0;
 	private int id;
 	private String firstName;
 	private String lastName;
@@ -184,6 +187,24 @@ public class EmployeeDetails {
 
 	public void setLastPing(Timestamp lastPing) {
 		this.lastPing = lastPing;
+	}
+
+	public int getCheckUserStatus() {
+		if (lastPing == null) {
+			return OFFLINE;
+		}
+		long timeDiff = System.currentTimeMillis() - lastPing.getTime();
+
+		long diffInMinutes = timeDiff / 1000 / 60;
+
+		System.out.println(diffInMinutes);
+
+		if (diffInMinutes < 2) {
+			return ONLINE;
+		} else if (diffInMinutes < 4) {
+			return AWAY;
+		}
+		return OFFLINE;
 	}
 
 }

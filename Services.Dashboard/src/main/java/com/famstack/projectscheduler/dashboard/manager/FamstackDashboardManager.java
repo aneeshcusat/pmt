@@ -20,11 +20,13 @@ import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectFileManager;
@@ -44,6 +46,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackProjectManager projectManager;
+
+	@Resource
+	FamstackAccountManager famstackAccountManager;
 
 	@Resource
 	FamstackProjectCommentManager projectCommentManager;
@@ -230,5 +235,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public String getAjaxFullcalendar(String startDate, String endDate) {
 		return projectManager.getUserTaskActivityForCalenderJson(startDate, endDate);
+	}
+
+	public List<AccountDetails> getAccountDataList() {
+		return famstackAccountManager.getAllAccountDetails();
 	}
 }

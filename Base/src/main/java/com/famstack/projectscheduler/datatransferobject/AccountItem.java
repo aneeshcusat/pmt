@@ -3,14 +3,15 @@ package com.famstack.projectscheduler.datatransferobject;
 import java.sql.Timestamp;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -36,13 +37,19 @@ public class AccountItem implements FamstackBaseItem {
 	@Column(name = "holder")
 	private String holder;
 
+	@Column(name = "type")
+	private String type;
+
 	@Column(name = "created_date")
 	private Timestamp createdDate;
 
 	@Column(name = "last_modified_date")
 	private Timestamp lastModifiedDate;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "accountItem", cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "account_team_multi", joinColumns = {
+			@JoinColumn(name = "account_id", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "team_id", nullable = false, updatable = false) })
 	private Set<ProjectTeamItem> projectTeam;
 
 	public int getAccountId() {
@@ -102,6 +109,14 @@ public class AccountItem implements FamstackBaseItem {
 
 	public void setProjectTeam(Set<ProjectTeamItem> projectTeam) {
 		this.projectTeam = projectTeam;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

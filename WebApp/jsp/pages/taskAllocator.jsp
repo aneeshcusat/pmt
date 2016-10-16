@@ -114,15 +114,15 @@ width: 60%;
 				<label class="col-md-2 control-label" >Duration :</label>
 				<label class="col-md-2 control-label text-left">Unassigned</label>
                      <div class="col-md-2" style="margin-top: 7px;">
-                     <b id="unassignedDuration">1</b> Hrs
+                     <b id="unassignedDuration">0</b> Hrs
                      </div>
                      <label class="col-md-1 control-label">Project</label>
                      <div class="col-md-2" style="margin-top: 7px;">
-                     <b id="projectDuration">1</b> Hrs
+                     <b id="projectDuration">0</b> Hrs
                      </div>
                 <label class="col-md-1 control-label">Task</label>
                      <div class="col-md-2" style="margin-top: 7px;">
-                     <b id="taskDuration">1</b> Hrs
+                     <b id="taskDuration">0</b> Hrs
                      </div>
 				</div>
 			</div>
@@ -132,14 +132,13 @@ width: 60%;
 				<div class="form-group">
 				<label class="col-md-3 control-label">Est Start Time</label>
                      <div class="col-md-4">
-                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime" value="2016/10/11 10:00"/> 
+                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime" value="0000/00/00 00:00"/> 
                          <span class="help-block">required estimated start time</span>
                      </div>
 					<label class="col-md-2 control-label">Duration</label>
                      <div class="col-md-3">
                          <form:select class="form-control select" path="duration" id="duration"  data-live-search="true">
-                         <option>1</option>
-                         <option>2</option>
+                         <option>0</option>
                        	 </form:select>
                          <span class="help-block">required duration</span>
                      </div>
@@ -148,12 +147,10 @@ width: 60%;
 				<div class="form-group">
 				<label class="col-md-3 control-label">Est Completion Time</label>
                      <div class="col-md-4">
-                           <h5 id="estCompleteTime">2016/12/02 20:11</h5>
+                           <h5 id="estCompleteTime">000/00/00 00:00</h5>
                      </div>
                      <label class="col-md-2 control-label"></label>
                      <div class="col-md-5">
-                       <button type="button" class="btn btn-secondary taskWindowCancel"
-						data-dismiss="modal">Cancel</button>
 					<button type="button" onclick=""
 						class="btn btn-primary  pull-right">
 						<span id="taskStart" onclick="doAjaxCreateTaskForm()">Update</span>
@@ -494,7 +491,7 @@ $(document).ready(function() {
     
     });
     
-    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;" id="currentAssignmentDate"></span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
+    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;" id="currentAssignmentDate">0000/00/00 00:00</span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
 } );
 
 var cellSelectCount = 0;

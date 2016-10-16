@@ -11,7 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -47,9 +48,11 @@ public class ProjectTeamItem implements FamstackBaseItem {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectTeamItem", cascade = CascadeType.ALL)
 	private Set<ProjectSubTeamItem> projectSubTeam;
 
-	@ManyToOne
-	@JoinColumn(name = "account_id")
-	private AccountItem accountItem;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "account_team_multi", joinColumns = {
+			@JoinColumn(name = "team_id", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "account_id", nullable = false, updatable = false) })
+	private Set<AccountItem> accountItems;
 
 	public int getTeamId() {
 		return teamId;
@@ -110,12 +113,12 @@ public class ProjectTeamItem implements FamstackBaseItem {
 		this.projectSubTeam = projectSubTeam;
 	}
 
-	public AccountItem getAccountItem() {
-		return accountItem;
+	public Set<AccountItem> getAccountItems() {
+		return accountItems;
 	}
 
-	public void setAccountItem(AccountItem accountItem) {
-		this.accountItem = accountItem;
+	public void setAccountItems(Set<AccountItem> accountItems) {
+		this.accountItems = accountItems;
 	}
 
 }

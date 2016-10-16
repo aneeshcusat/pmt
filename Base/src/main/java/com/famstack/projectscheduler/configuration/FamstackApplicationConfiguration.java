@@ -1,6 +1,8 @@
 package com.famstack.projectscheduler.configuration;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +84,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	public Map<Integer, EmployeeDetails> getUserMap() {
 		return userMap;
+	}
+
+	public void updateLastPing(int userId) {
+		if (!userMap.isEmpty() && userMap.get(userId) != null) {
+			userMap.get(userId).setLastPing(new Timestamp(new Date().getTime()));
+		}
 	}
 
 }

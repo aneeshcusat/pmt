@@ -23,7 +23,7 @@ public class ClientItem implements FamstackBaseItem {
 	@Column(name = "client_id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
 	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-	private int clientID;
+	private int clientId;
 
 	@Column(name = "name")
 	private String name;
@@ -37,14 +37,6 @@ public class ClientItem implements FamstackBaseItem {
 	@ManyToOne
 	@JoinColumn(name = "sub_team_id")
 	private ProjectSubTeamItem projectSubTeamItem;
-
-	public int getClientID() {
-		return clientID;
-	}
-
-	public void setClientID(int clientID) {
-		this.clientID = clientID;
-	}
 
 	public String getName() {
 		return name;
@@ -79,6 +71,14 @@ public class ClientItem implements FamstackBaseItem {
 
 	public void setProjectSubTeamItem(ProjectSubTeamItem projectSubTeamItem) {
 		this.projectSubTeamItem = projectSubTeamItem;
+	}
+
+	public int getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(int clientId) {
+		this.clientId = clientId;
 	}
 
 }

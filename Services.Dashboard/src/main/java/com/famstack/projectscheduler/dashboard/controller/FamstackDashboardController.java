@@ -36,6 +36,7 @@ import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -201,8 +202,11 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public ModelAndView listProjects() {
 		List<ProjectDetails> projectData = famstackDashboardManager.getProjectsDataList();
+		List<AccountDetails> accountData = famstackDashboardManager.getAccountDataList();
+
 		Map<String, Object> modelViewMap = new HashMap<String, Object>();
 		modelViewMap.put("projectDetailsData", projectData);
+		modelViewMap.put("accountData", accountData);
 		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
