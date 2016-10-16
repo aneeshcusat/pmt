@@ -83,7 +83,8 @@
                             <div class="pull-left">Start Time : ${tasks.taskActivityDetails.actualStartTime}</div> 
                             <div class="pull-right"><span class="fa fa-pause"></span> Time remaining : <span id="remainingTime">2h 55min</span></div>
                            
-                            <input type="hidden" class="taskId" value="${tasks.taskId}"/>      
+                            <input type="hidden" class="taskId" value="${tasks.taskId}"/>
+                            <input type="hidden" class="projectCode" value="${tasks.projectId}"/>       
                             <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>         
                         </div>                                    
                     </div>
@@ -272,6 +273,8 @@ $(function(){
             handle: ".task-text",            
             receive: function(event, ui) {
             	lastMovedItem=ui;
+            	var taskId = $(lastMovedItem.item).find("input.taskId").val();
+            	resetFileUploadUrl(taskId);
             	$(".unassignedDuration").html($(lastMovedItem.item).find("input.duration").val());
                 if(this.id == "tasks_completed"){
                 	var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
@@ -294,21 +297,24 @@ $(function(){
 
 Dropzone.autoDiscover = false;
 $("#my-dropzone").dropzone({
-	url : "${applicationHome}/uploadfile/${projectDetails.code}",
+	url : "#",
 	addRemoveLinks : false,
 	success : function(file, response) {
-		var imgName = response;
 		file.previewElement.classList.add("dz-success");
-		var fileIcon = "fa-file-text";
-		if (file.type == "text/xml") {
-			fileIcon = "fa-file-excel-o";
-		}
-		
-		$("#upladedFilesList").append('<li><a href="${applicationHome}/download/${projectDetails.code}/'+file.name+'?fileName='+file.name+'"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
 		console.log(file.name);
 	},
 	error : function(file, response) {
 		file.previewElement.classList.add("dz-error");
 	}
 });
+
+function resetFileUploadUrl(taskId){
+	Dropzone.options.myDropzone = {
+			  init: function() {
+			    this.on("processing", function(file) {
+			      this.options.url = "${applicationHome}/uploadfile/"+taskId;
+			    });
+			  }
+			};
+}
 </script>
