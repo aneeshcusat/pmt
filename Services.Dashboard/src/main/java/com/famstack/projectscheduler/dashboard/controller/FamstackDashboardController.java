@@ -100,6 +100,8 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logOut(HttpServletRequest request) {
+		getFamstackApplicationConfiguration().getUserMap()
+				.get(getFamstackApplicationConfiguration().getCurrentUser().getId()).setLastPing(null);
 		userSecurityContextBinder.unbindUserAuthentication();
 		request.getSession().invalidate();
 		return "login";

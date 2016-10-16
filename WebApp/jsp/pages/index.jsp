@@ -250,7 +250,17 @@
                         	<c:if test="${not empty userMap}">
              					<c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
 		                            <a href="#" class="list-group-item">                                 
-		                                <div class="list-group-status status-online"></div>
+		                                <div class='list-group-status 
+		                                <c:if test="${user.checkUserStatus == 5}">
+		                                status-online
+		                                </c:if>
+		                                <c:if test="${user.checkUserStatus == 1}">
+		                                status-away
+		                                </c:if>
+		                                 <c:if test="${user.checkUserStatus == 0}">
+		                                status-offline
+		                                </c:if>
+		                                '></div>
 		                                <img class="pull-left" src="${user.filePhoto}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
 		                                <span class="contacts-title">${user.firstName}</span>
 		                                <p>Availble after 2:00 PM</p>

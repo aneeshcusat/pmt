@@ -1367,7 +1367,7 @@ a.list-group-item:focus {
   background: #95b75d;
 }
 .list-group-status.status-away:after {
-  background: #1caf9a;
+  background: orange;
 }
 .list-group-status.status-offline:after {
   background: #CCC;

@@ -47,3 +47,32 @@
           <%@include file="scripts.jsp" %>  
     </body>
 </html>
+<script>
+function userPingCheck(){
+	doAjaxRequest("POST", "${applicationHome}/userPingCheck", {userId:${currentUser.id}}, function(data) {
+	    console.log("userPingCheck: ", data);
+	}, function(e) {
+	    console.log("ERROR: ", e);
+	});
+}
+
+var idleTime = 1;
+$(document).ready(function () {
+    var idleInterval = setInterval(timerIncrement, 60000); // 60 seconds
+
+    $(this).mousemove(function (e) {
+        idleTime = 0;
+    });
+    $(this).keypress(function (e) {
+        idleTime = 0;
+    });
+});
+
+function timerIncrement() {
+    if (idleTime < 1) { // 1 minutes
+    	userPingCheck();
+    }
+    idleTime = idleTime + 1;
+}
+
+</script>
