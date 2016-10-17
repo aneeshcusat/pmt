@@ -80,7 +80,7 @@ public class UserItem implements FamstackBaseItem {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@Column(name = "profile_photo", columnDefinition = "blob")
+	@Column(name = "profile_photo", columnDefinition = "LONGBLOB")
 	private byte[] profilePhoto;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userItem", cascade = CascadeType.ALL)
@@ -102,7 +102,7 @@ public class UserItem implements FamstackBaseItem {
 	private boolean needPasswordReset;
 
 	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
-	@JoinColumn(name = "reportertingManager")
+	@JoinColumn(name = "reporterting_manager")
 	private UserItem reportertingManager;
 
 	@ManyToMany(fetch = FetchType.EAGER)

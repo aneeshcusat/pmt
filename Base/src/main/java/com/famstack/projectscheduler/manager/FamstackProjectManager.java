@@ -49,6 +49,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		projectItem.setDescription(projectDetails.getDescription());
 		projectItem.setName(projectDetails.getName());
 		projectItem.setPriority(projectDetails.getPriority());
+		projectItem.setPONumber(projectDetails.getPONumber());
 		projectItem.setComplexity(projectDetails.getComplexity());
 		Date startDate = DateUtils.tryParse(projectDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
 		Date completionDate = DateUtils.tryParse(projectDetails.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
@@ -175,6 +176,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			projectDetails.setName(projectItem.getName());
 			projectDetails.setPriority(projectItem.getPriority());
 			projectDetails.setComplexity(projectItem.getComplexity());
+			projectDetails.setPONumber(projectItem.getPONumber());
 			String startDateString = DateUtils.format(projectItem.getStartTime(), DateUtils.DATE_TIME_FORMAT);
 			String completionDateString = DateUtils.format(projectItem.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
 			projectDetails.setStartTime(startDateString);

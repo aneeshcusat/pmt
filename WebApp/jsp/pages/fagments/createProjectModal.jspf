@@ -90,6 +90,7 @@
                                     </div>
                                 <label class="col-md-2 control-label">Team</label>
                                 <div class="col-md-3">
+                                	<form:input type="hidden" id="PONumber" path="PONumber"/>
                                       <form:select class="selectpicker form-control select" path="teamId" id="teamId"  data-live-search="true">
                                           <option value="-1">- select -</option>
                                           
@@ -101,7 +102,7 @@
                                             	<optgroup class="teamOption" filter="${account.accountId}" label="${projectTeam.name}"">
 	                                           <c:if test="${not empty projectTeam.projectSubTeams}">  
 		                                           <c:forEach var="projectSubTeam" items="${projectTeam.projectSubTeams}">
-		                                           <option index="${teamIndex}" class="teamOption" account="${account.accountId}" accountType="${account.type}" filter="${account.accountId}" id="ST${projectSubTeam.subTeamId}"  value="${projectSubTeam.subTeamId}">${projectSubTeam.name}</option>
+		                                           		<option poid="${projectSubTeam.poId}" index="${teamIndex}" class="teamOption" account="${account.accountId}" accountType="${account.type}" filter="${account.accountId}" id="ST${projectSubTeam.subTeamId}"  value="${projectSubTeam.subTeamId}">${projectSubTeam.name}</option>
 		                                            <c:set var="teamIndex" value="${teamIndex+1}"/>
 		                                           </c:forEach>
 	                                           </c:if>

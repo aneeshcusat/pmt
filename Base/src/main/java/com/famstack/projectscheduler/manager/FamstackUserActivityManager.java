@@ -136,8 +136,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 				logDebug("userActivityItem.getId() :" + userActivityItem.getId());
 				if (!userActivityItems.isEmpty()) {
 					for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
-						TaskActivityDetails taskActivityDetails = getTaskActivityDetailsFromItem(userActivityItem,
-								userTaskActivityItem);
+						TaskActivityDetails taskActivityDetails = mapUserTaskActivityItem(userTaskActivityItem);
 						taskActivitiesList.add(taskActivityDetails);
 						taskActivityDetails
 								.setDateId(DateUtils.format(userActivityItem.getCalenderDate(), DateUtils.DATE_FORMAT));
@@ -149,22 +148,37 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		}
 	}
 
-	private TaskActivityDetails getTaskActivityDetailsFromItem(UserActivityItem userActivityItem,
-			UserTaskActivityItem userTaskActivityItem) {
+	public TaskActivityDetails mapUserTaskActivityItem(UserTaskActivityItem userTaskActivityItem) {
 		TaskActivityDetails taskActivityDetails = new TaskActivityDetails();
-		taskActivityDetails.setTaskId(userTaskActivityItem.getTaskId());
+		taskActivityDetails.setTaskActivityId(userTaskActivityItem.getId());
 		taskActivityDetails.setTaskName(userTaskActivityItem.getTaskName());
+		taskActivityDetails.setTaskId(userTaskActivityItem.getTaskId());
+		taskActivityDetails.setStartTime(userTaskActivityItem.getStartTime());
+		taskActivityDetails.setActualEndTime(userTaskActivityItem.getActualEndTime());
 		taskActivityDetails.setDuration(userTaskActivityItem.getDuration());
 		taskActivityDetails.setUserTaskType(userTaskActivityItem.getType());
 		taskActivityDetails.setStartHour(userTaskActivityItem.getStartHour());
-		taskActivityDetails.setStartTime(userTaskActivityItem.getStartTime());
-
+		taskActivityDetails.setActualStartTime(userTaskActivityItem.getActualStartTime());
 		return taskActivityDetails;
 	}
 
 	public UserTaskActivityItem getUserTaskActivityItem(int taskActivityItemId) {
 		return (UserTaskActivityItem) getFamstackDataAccessObjectManager().getItemById(taskActivityItemId,
 				UserTaskActivityItem.class);
+	}
+
+	public TaskActivityDetails getUserTaskActivityItemByTaskId(int taskId) {
+
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("taskId", taskId);
+
+		List<?> userTaskActivityItems = getFamstackDataAccessObjectManager()
+				.executeQuery(HQLStrings.getString("userTaskActivityItemByTaskId"), dataMap);
+
+		if (!userTaskActivityItems.isEmpty()) {
+			return mapUserTaskActivityItem((UserTaskActivityItem) userTaskActivityItems.get(0));
+		}
+		return null;
 	}
 
 	public void setProjectTaskActivityActualTime(int taskActivityId, Date date) {

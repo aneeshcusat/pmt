@@ -258,10 +258,14 @@ width: 60%;
                                              <td width="5%">1</td>
                                                 <td>${taskDetails.name}<a href="#" id="${taskDetails.taskId}" class="trigger" data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">  Details</a> 
                                                  <div class="progress progress-small progress-striped active">
-                                        			<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                                                 <c:set var="taskHealth" value="info"/>
+                                                 <c:if test="${taskDetails.taskRemainingTime < 1 }">
+                                                  <c:set var="taskHealth" value="danger"/>
+                                                 </c:if>
+                                        			<div class="progress-bar progress-bar-${taskHealth}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: ${taskDetails.percentageOfTaskCompleted}%;">${taskDetails.percentageOfTaskCompleted}%</div>
                                     			</div>
                                                 </td>
-                                               <td  width="10%"><span class="label label-warning">${taskDetails.status}</span></td>
+                                               <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>
                                                <td width="10%"><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                                             </tr>
                                             <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>

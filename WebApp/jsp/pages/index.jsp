@@ -35,6 +35,11 @@
                                         <div class="widget-int">${projectsCount['NEW'] }</div>
                                          <div class="widget-subtitle"><a href="#">View details</a></div>
                                     </div>
+                                     <div>                                    
+                                        <div class="widget-title">Inprogress Projects</div>
+                                        <div class="widget-int">${projectsCount['INPROGRESS'] }</div>
+                                         <div class="widget-subtitle"><a href="#">View details</a></div>
+                                    </div>
                                 </div>                            
                                 <div class="widget-controls">                                
                                     <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>

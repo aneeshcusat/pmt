@@ -100,6 +100,9 @@ public class ProjectItem implements FamstackBaseItem {
 	@Column(name = "team_id")
 	private Integer teamId;
 
+	@Column(name = "po_number")
+	private String PONumber;
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
 	private Set<ProjectCommentItem> projectComments;
 
@@ -294,6 +297,14 @@ public class ProjectItem implements FamstackBaseItem {
 
 	public void setTaskItems(Set<TaskItem> taskItems) {
 		this.taskItems = taskItems;
+	}
+
+	public String getPONumber() {
+		return PONumber;
+	}
+
+	public void setPONumber(String pONumber) {
+		PONumber = pONumber;
 	}
 
 }

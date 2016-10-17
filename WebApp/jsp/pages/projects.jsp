@@ -309,6 +309,9 @@
 		resetClient();
 		$('.clientOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
 		$('#clientId').selectpicker('refresh');
+		var PONumber = $( "#teamId option:selected" ).attr("poid");
+		$("#PONumber").val(PONumber);
+		console.log("PONumber" + PONumber);
 	});
 	
 	$("#clientId").on("change",function(){
@@ -332,6 +335,10 @@
 		
 		$('#accountId').selectpicker('refresh');
 		$('#teamId').selectpicker('refresh');
+		
+		var PONumber = $( "#teamId option:selected" ).attr("poid");
+		$("#PONumber").val(PONumber);
+		console.log("PONumber" + PONumber);
 		
 	});
 	

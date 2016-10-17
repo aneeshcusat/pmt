@@ -170,7 +170,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 			taskDetails.setProjectId(taskItem.getProjectItem().getProjectId());
 			taskDetails.setAssignee(taskItem.getAssignee());
 			taskDetails.setHelpersList(taskItem.getHelpers());
-
+			taskDetails.setTaskActivityDetails(
+					famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItem.getTaskId()));
 			return taskDetails;
 
 		}
@@ -232,12 +233,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 							taskItem = getTaskItemById(taskId);
 							taskItemMap.put(taskId, taskItem);
 						}
-						TaskActivityDetails taskActivityDetails = new TaskActivityDetails();
-						taskActivityDetails.setTaskActivityId(userTaskActivityItem.getId());
-						taskActivityDetails.setStartTime(userTaskActivityItem.getStartTime());
-						taskActivityDetails.setActualEndTime(userTaskActivityItem.getActualEndTime());
-						taskActivityDetails.setDuration(userTaskActivityItem.getDuration());
-						taskActivityDetails.setActualStartTime(userTaskActivityItem.getActualStartTime());
+						TaskActivityDetails taskActivityDetails = famstackUserActivityManager
+								.mapUserTaskActivityItem(userTaskActivityItem);
 						TaskDetails taskDetails = mapProjectItemToProjectDetails(taskItem);
 						taskDetails.setTaskActivityDetails(taskActivityDetails);
 						userTaskActivityItemMap.get(taskItem.getStatus().value()).add(taskDetails);

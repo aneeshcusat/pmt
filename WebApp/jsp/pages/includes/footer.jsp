@@ -58,7 +58,7 @@ function userPingCheck(){
 
 var idleTime = 1;
 $(document).ready(function () {
-    var idleInterval = setInterval(timerIncrement, 60000); // 60 seconds
+    var idleInterval = setInterval(timerIncrement, 30000); // 30 seconds
 
     $(this).mousemove(function (e) {
         idleTime = 0;

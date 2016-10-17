@@ -44,7 +44,7 @@ public class UserActivityItem implements FamstackBaseItem {
 	@Column(name = "calender_date")
 	private Timestamp calenderDate;
 
-	@Column(name = "leave")
+	@Column(name = "isleave")
 	private boolean leave;
 
 	@Column(name = "billable_hours")

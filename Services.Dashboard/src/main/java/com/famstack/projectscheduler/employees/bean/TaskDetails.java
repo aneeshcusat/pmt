@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.TaskStatus;
@@ -165,6 +166,36 @@ public class TaskDetails {
 
 	public void setHelpersList(String helpersList) {
 		this.helpersList = helpersList;
+	}
+
+	public long getPercentageOfTaskCompleted() {
+		if (status == TaskStatus.COMPLETED) {
+			return 100;
+		} else if ((status == TaskStatus.INPROGRESS)) {
+			long durationInMinute = duration * 60 * 1000;
+			long taskRemainingTime = getTaskRemainingTime();
+			long percentageOfWorkCompleted = 100 - (taskRemainingTime / durationInMinute) * 100;
+			return percentageOfWorkCompleted;
+		}
+
+		return 0;
+
+	}
+
+	public long getTaskRemainingTime() {
+		long durationInMinute = duration * 60 * 1000;
+		if (taskActivityDetails == null) {
+			return durationInMinute;
+		}
+		Date actualStartTime = taskActivityDetails.getActualStartTime();
+		long diffInMinute = durationInMinute;
+		if (actualStartTime != null) {
+
+			long diff = new Date().getTime() - actualStartTime.getTime();
+			diff = (durationInMinute * 60) - diff;
+			diffInMinute = diff / (60 * 1000) % 60;
+		}
+		return diffInMinute;
 	}
 
 }

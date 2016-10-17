@@ -65,6 +65,8 @@ public class ProjectDetails {
 
 	private int unAssignedDuration;
 
+	private String PONumber;
+
 	public Integer getId() {
 		return id;
 	}
@@ -275,6 +277,14 @@ public class ProjectDetails {
 
 	public void setUnAssignedDuration(int unAssignedDuration) {
 		this.unAssignedDuration = unAssignedDuration;
+	}
+
+	public String getPONumber() {
+		return PONumber;
+	}
+
+	public void setPONumber(String pONumber) {
+		PONumber = pONumber;
 	}
 
 }
