@@ -101,7 +101,7 @@
             <div class="panel panel-default">
                 <div class="panel-body profile">
                     <div class="profile-image">
-                        <img src="${user.filePhoto}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
+                        <img src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                     </div>
                     <div class="profile-data">
                         <div class="profile-data-name">${user.firstName}</div>

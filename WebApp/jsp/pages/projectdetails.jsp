@@ -104,22 +104,28 @@ width: 60%;
 	                              </ul>
 	                              </div>
 	                              <input type="hidden" id="hdn_project_id" value="${projectDetails.id}">
+	                              <c:if test="${projectDetails.status != 'NEW'}">
                                   <div class="col-md-6">
                                       <p><span class="bold">Assignee </span>:
-                                      <span class="project_team">
-                                         <a href="#"><img alt="image" src=""  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
-                                      </span>
+                                       
+                                        <c:if test="${not empty projectDetails.projectTaskDeatils}">
+                                 			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
+		                                      <span class="project_team">
+		                                         <a href="#"><img alt="image" src="${applicationHome}/image/${taskDetails.assignee}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
+		                                      </span>
+                                      </c:forEach>
+                                      </c:if>
                                       </p>
                                   </div>
-
+									</c:if>
                                   <div class="col-lg-12">
                                       <dl class="dl-horizontal mtop20 p-progress">
                                           <dt>Project Completed:</dt>
                                           <dd>
                                               <div class="progress progress-striped active ">
-                                                  <div style="width: 0%;" class="progress-bar progress-bar-danger"></div>
+                                                  <div style="width: ${projectDetails.projectCompletionPercentage}%;" class="progress-bar progress-bar-danger"></div>
                                               </div>
-                                              <small>Project completed in <strong>0%</strong>. Remaining close the project, sign a contract and invoice.</small>
+                                              <small>Project completed in <strong>${projectDetails.projectCompletionPercentage}%</strong>. Remaining close the project, sign a contract and invoice.</small>
                                           </dd>
                                       </dl>
                                   </div>

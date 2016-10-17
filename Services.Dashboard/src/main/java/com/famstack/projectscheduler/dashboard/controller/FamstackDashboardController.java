@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.PathParam;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -193,14 +194,20 @@ public class FamstackDashboardController extends BaseFamstackService {
 	}
 
 	@RequestMapping("/image/{userId}")
-	@ResponseBody
-	public String getImage(@PathVariable(value = "userId") int userId, HttpServletResponse httpServletResponse) {
+	public void getImage(@PathVariable(value = "userId") int userId, HttpServletResponse httpServletResponse) {
 		logDebug("get image user id " + userId);
 		UserItem userItem = famstackDashboardManager.getUser(userId);
-		if (userItem == null || userItem.getProfilePhoto() == null) {
-			return "";
-		} else {
-			return new String(userItem.getProfilePhoto());
+		if (userItem != null && userItem.getProfilePhoto() != null) {
+			String dataUrl = new String(userItem.getProfilePhoto());
+			String encodingPrefix = "base64,";
+			int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
+			byte[] imageData = Base64.decodeBase64(dataUrl.substring(contentStartIndex));
+			try {
+				OutputStream out = httpServletResponse.getOutputStream();
+				out.write(imageData);
+			} catch (IOException e) {
+				logError("Unable to render profile image");
+			}
 		}
 	}
 

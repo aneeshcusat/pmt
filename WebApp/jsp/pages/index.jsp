@@ -209,7 +209,7 @@
 	                                                    <td><span class="label label-info">${project.status }</span></td>
 	                                                    <td>
 	                                                        <div class="progress progress-small progress-striped active">
-	                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+	                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: ${project.projectCompletionPercentage}%;">${project.projectCompletionPercentage}%</div>
 	                                                        </div>
 	                                                    </td>
                                                		 </tr>
@@ -262,7 +262,7 @@
 		                                status-offline
 		                                </c:if>
 		                                '></div>
-		                                <img class="pull-left" src="${user.filePhoto}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
+		                                <img class="pull-left" src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
 		                                <span class="contacts-title">${user.firstName}</span>
 		                                <p>Availble after 2:00 PM</p>
 		                            </a>     

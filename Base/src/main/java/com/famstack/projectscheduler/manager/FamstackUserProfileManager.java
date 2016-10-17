@@ -205,9 +205,6 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 			employeeDetails.setRole(userItem.getUserRole());
 			employeeDetails.setReportingManger(userItem.getReportertingManager().getId());
 			employeeDetails.setId(userItem.getId());
-			if (userItem.getProfilePhoto() != null) {
-				employeeDetails.setFilePhoto(new String(userItem.getProfilePhoto()));
-			}
 			return employeeDetails;
 		}
 		return null;

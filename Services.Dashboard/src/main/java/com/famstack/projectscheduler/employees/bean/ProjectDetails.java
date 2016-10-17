@@ -287,4 +287,21 @@ public class ProjectDetails {
 		PONumber = pONumber;
 	}
 
+	public long getProjectCompletionPercentage() {
+
+		long projectCompletionPercentage = 0;
+		if (getStatus() == ProjectStatus.COMPLETED || getStatus() == ProjectStatus.CLOSED) {
+			return 100;
+		} else {
+			Set<TaskDetails> taskDetailsList = getProjectTaskDeatils();
+			if (!taskDetailsList.isEmpty()) {
+				for (TaskDetails taskDetails : taskDetailsList) {
+					projectCompletionPercentage += taskDetails.getPercentageOfTaskCompleted();
+				}
+				projectCompletionPercentage = projectCompletionPercentage / taskDetailsList.size();
+			}
+		}
+		return projectCompletionPercentage;
+	}
+
 }
