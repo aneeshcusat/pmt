@@ -113,7 +113,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
             <c:forEach var="group" items="${modelViewMap.groupData}">
              <div class="tab-pane" id="tabGroup${group.groupId}">
 			                <div class="messages messages-img messageContainer" style=" overflow-y: scroll; min-height: 300px; max-height: 300px;">
-			                 <input type="hidden" id="lastMessageId_${group.groupId}" value=""/>
+			                
 			                <c:forEach var="groupMessage" items="${group.messages}">
 				                <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
 				                    <div class="item in item-visible" >
@@ -131,9 +131,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
 		                            <c:if test="${modelViewMap.currentUserId != groupMessage.user}">
 		                            <div class="text">
 		                            </c:if>
-		                            <script type="text/javascript">
-		                            setLastMessageId('lastMessageId_'+${groupMessage.group},'${groupMessage.messageId}' );
-		                            </script>
+		                            <c:set var="lastmsg" value="${groupMessage.messageId}"/>
 		                            
 		                                <div class="heading">
 		                                    <a href="#">${groupMessage.userFullName}</a>
@@ -143,7 +141,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
 		                            </div>
 		                        </div>
 			                </c:forEach>
-			               
+			               <input type="hidden" id="lastMessageId_${group.groupId}" value="${lastmsg}"/>
 			                
 			        </div>                        
 			        <div class="panel panel-default push-up-10">
@@ -152,7 +150,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
                                 <div class="input-group-btn">
                                     
                                 </div>
-                                <input type="text" id="${group.groupId}" class="form-control messageTextArea" placeholder="Your message..."/>
+                                <input type="text" id="${group.groupId}" class="form-control messageTextArea" placeholder="type in your message here and press enter"/>
                                 <div class="input-group-btn">
                                     <button class="btn btn-default" onclick="sendMessage('${group.groupId}')">Send</button>
                                 </div>
@@ -204,7 +202,6 @@ function doAjaxCreateGroupForm(){
 }
 
 $('#createGroupFormId').ajaxForm(function(response) { 
-    console.log(response);
     var responseJson = JSON.parse(response);
     if (responseJson.status){
         window.location.reload(true);
@@ -216,6 +213,9 @@ $('.nav-tabs li:first-child a').trigger( "click" );
 function sendMessage(group) {
 	var groupId = group;
 	var message = $('#'+groupId).val();
+	if (message == null || message == '') {
+		return false;
+	}
 	var data = {"groupId": groupId , "message": message };
 	doAjaxRequest('POST', '/bops/dashboard/sendMessage', data, 
 	function(response) {
@@ -226,7 +226,7 @@ function sendMessage(group) {
         	$('#'+groupId).val('')
         } 
     }, function(e) {
-        alert(e)
+    	console.log(e)
     });
 }
 
@@ -261,7 +261,7 @@ function editGroup(groupId) {
         var responseJsonObj = JSON.parse(response);
         setGroupEditPage(responseJsonObj);
     }, function(e) {
-        alert(e)
+        console.log(e)
     });
 }
 
@@ -271,11 +271,10 @@ function getMessageAfterId(groupId, messageId) {
 	}
 	   doAjaxRequest('GET', '/bops/dashboard/messageAfter?messageId='+messageId+'&groupId='+groupId, null, 
 	    function(response) {
-	        console.log(response);
 	        var responseJsonObj = JSON.parse(response);
 	        processMessageAfterSave(responseJsonObj, groupId);
 	    }, function(e) {
-	        alert(e)
+	    	console.log(e)
 	    });
 }
 
@@ -284,7 +283,7 @@ function processMessageAfterSave(jsonResponse, groupId) {
     var lastMessageId = '';
     for (var i = 0; i < jsonResponse.length; i++) {
         var messageObject = jsonResponse[i];
-        htmlString += '<div class="item in item-visible">';
+        htmlString += '<div class="item item-visible">';
         htmlString += '<div class="image">';
         htmlString += '<img src="'+ messageObject.user+'" alt="'+ messageObject.userFullName +'" onerror="this.src=\'/bops/jsp/assets/images/users/no-image.jpg\'">';
         htmlString += '</div>';
@@ -298,11 +297,13 @@ function processMessageAfterSave(jsonResponse, groupId) {
         htmlString += '</div>';
         lastMessageId = messageObject.messageId;
     }
-    var messageDiv = $('#lastMessageId_'+groupId).parent();
-    var currentHTML = $('#lastMessageId_'+groupId).parent().html();
-    $('#lastMessageId_'+groupId).parent().html(currentHTML + htmlString);
-    messageDiv.scrollTop(messageDiv[0].scrollHeight);
-    $('#lastMessageId_'+groupId).val(lastMessageId);
+    if (htmlString != '') {
+	    var messageDiv = $('#lastMessageId_'+groupId).parent();
+	    var currentHTML = $('#lastMessageId_'+groupId).parent().html();
+	    $('#lastMessageId_'+groupId).parent().html(currentHTML + htmlString);
+	    messageDiv.scrollTop(messageDiv[0].scrollHeight);
+	    $('#lastMessageId_'+groupId).val(lastMessageId);
+    }
 }
 
 $('.messageTextArea').keypress(function (e) {
@@ -316,4 +317,13 @@ $('.messageTextArea').keypress(function (e) {
 $('.messageContainer').each(function(){
 	$(this).scrollTop($(this)[0].scrollHeight);
 });
+
+function refreshMessages() {
+	$('.messageTextArea').each(function(){
+        var groupId = $(this).attr('id');
+        var messageId = $('#lastMessageId_'+ groupId ).val();
+        getMessageAfterId(groupId, messageId);
+    });
+}
+setInterval('refreshMessages()', 3000);
 </script>
