@@ -96,6 +96,7 @@
     <div class="row">
     <c:if test="${not empty userMap}">
     <c:forEach var="user" items="${userMap}">
+    <c:if test="${user.role != 'SUPERADMIN'}">
         <div class="col-md-3 contact-name">
             <!-- CONTACT ITEM -->
             <div class="panel panel-default">
@@ -122,6 +123,7 @@
             </div>
             <!-- END CONTACT ITEM -->
         </div>
+         </c:if>
         </c:forEach>
         </c:if>
         

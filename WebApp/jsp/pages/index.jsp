@@ -267,6 +267,7 @@
                         <div class="panel-body list-group list-group-contacts border-bottom push-down-10 pre-scrollable"  style="min-height: 467px">
                         	<c:if test="${not empty userMap}">
              					<c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
+             					 <c:if test="${user.role != 'SUPERADMIN'}">
 		                            <a href="#" class="list-group-item">                                 
 		                                <div class='list-group-status 
 		                                <c:if test="${user.checkUserStatus == 5}">
@@ -282,7 +283,8 @@
 		                                <img class="pull-left" src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
 		                                <span class="contacts-title">${user.firstName}</span>
 		                                <p>Availble after 2:00 PM</p>
-		                            </a>     
+		                            </a> 
+		                            </c:if>    
                             	</c:forEach>
                             </c:if>                           
                         </div>

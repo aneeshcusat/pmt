@@ -45,6 +45,7 @@ import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
+import com.famstack.projectscheduler.security.user.UserRole;
 
 @Controller
 @SessionAttributes
@@ -144,6 +145,11 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public ModelAndView index() {
+		UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
+		if (userRole != UserRole.SUPERADMIN && userRole != UserRole.ADMIN && userRole != UserRole.MANAGER) {
+			return listTasks();
+		}
+
 		Map<String, Long> projectCountBasedOnStatus = famstackDashboardManager.getProjectsCounts();
 		List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
 		return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
