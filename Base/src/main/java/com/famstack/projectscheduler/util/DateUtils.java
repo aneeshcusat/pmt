@@ -20,6 +20,7 @@ public final class DateUtils extends BaseFamstackService {
 
 	public static final String DATE_TIME_FORMAT = "yyyy/MM/dd HH:mm";
 	public static final String DATE_FORMAT = "yyyy/MM/dd";
+	public static final String DATE_FORMAT_DP = "MM/dd/yyyy";
 	public static final String DATE_FORMAT_CALENDER = "yyyy-MM-dd";
 	public static final String DATE_TIME_FORMAT_CALENDER = "yyyy-MM-dd'T'HH:mm:ss";
 

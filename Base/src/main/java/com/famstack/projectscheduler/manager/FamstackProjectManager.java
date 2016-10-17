@@ -312,4 +312,28 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		jsonProductListObject.put("suggestions", jsonArray);
 		return jsonProductListObject.toString();
 	}
+
+	public List<ProjectDetails> getAllProjectDetailsList(Date startDate, Date endDate) {
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startDate", startDate);
+		dataMap.put("endDate", endDate);
+
+		List<ProjectDetails> projectDetailsList = new ArrayList<>();
+
+		List<?> projectItemList = famstackDataAccessObjectManager
+				.executeQuery(HQLStrings.getString("searchForProjectsForRepoting"), dataMap);
+		logDebug("projectItemList" + projectItemList);
+		logDebug("startDate" + startDate);
+		logDebug("endDate" + endDate);
+		if (projectItemList != null) {
+			for (Object projectItemObj : projectItemList) {
+				ProjectItem projectItem = (ProjectItem) projectItemObj;
+				ProjectDetails projectDetails = mapProjectItemToProjectDetails(projectItem);
+				if (projectDetails != null) {
+					projectDetailsList.add(projectDetails);
+				}
+			}
+		}
+		return projectDetailsList;
+	}
 }

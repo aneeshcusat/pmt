@@ -2,7 +2,7 @@
                 <!-- START X-NAVIGATION -->
                 <ul class="x-navigation">
                     <li class="xn-logo">
-                        <a href="index.jsp">Famstack</a>
+                        <a href="index.jsp">famstack</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     <li class="xn-profile">
@@ -33,6 +33,7 @@
                             <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>
                             <li><a href="${applicationHome}/projects"><span class="fa fa-edit"></span> Projects</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-edit"></span> Task Scheduler</a></li>
+                             <li><a href="${applicationHome}/projectreporting"><span class="fa fa-edit"></span> Project Reporting</a></li>
                         </ul>
                     </li>
                     </c:if>

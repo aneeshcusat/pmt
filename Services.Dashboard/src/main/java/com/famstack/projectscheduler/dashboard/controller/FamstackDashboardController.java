@@ -46,6 +46,8 @@ import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
 import com.famstack.projectscheduler.security.user.UserRole;
+import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.StringUtils;
 
 @Controller
 @SessionAttributes
@@ -226,6 +228,31 @@ public class FamstackDashboardController extends BaseFamstackService {
 		modelViewMap.put("projectDetailsData", projectData);
 		modelViewMap.put("accountData", accountData);
 		return new ModelAndView("projects", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
+	}
+
+	@RequestMapping("/projectreporting")
+	public ModelAndView projectreporting(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
+			Model model) {
+		logDebug(dateRange);
+		String[] dateRanges;
+		Date startDate = null;
+		Date endDate = null;
+		if (StringUtils.isNotBlank(dateRange)) {
+			dateRanges = dateRange.split("-");
+
+			if (dateRanges != null && dateRanges.length > 1) {
+				startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+				endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+			}
+		} else {
+			startDate = DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP),
+					DateUtils.DATE_FORMAT_DP);
+			endDate = startDate;
+		}
+
+		List<ProjectDetails> projectData = famstackDashboardManager.getProjectsReporingDataList(startDate, endDate);
+		return new ModelAndView("projectreporting").addObject("projectData", projectData).addObject("dateRange",
+				dateRange);
 	}
 
 	@RequestMapping(value = "/getProjectJson", method = RequestMethod.GET)
