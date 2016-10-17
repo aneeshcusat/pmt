@@ -35,6 +35,9 @@ width: 40%;
 .dataTables_filter{
 width: 60%;
 }
+.task_progress .progress {
+		height: 10px;
+	}
 	</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
@@ -65,11 +68,18 @@ width: 60%;
                           <div class="panel-body bio-graph-info">
                               <!--<h1>New Dashboard BS3 </h1>-->
                               <div class="row project_details">
+                              <c:set var="projectState" value="info"/>
+			                  <c:if test="${projectDetails.status == 'COMPLETED' }">
+			                   	<c:set var="projectState" value="success"/>
+			                  </c:if>
+			                  <c:if test="${projectDetails.projectMissedTimeLine == true }">
+			                  	<c:set var="projectState" value="danger"/>
+			                  </c:if>
                                   <div class="col-md-6">
                                       <p><span class="bold">Created by </span>: ${projectDetails.reporterName}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p class="text-capitalize"><span class="bold">Status </span>: <span class="label label-primary">${projectDetails.status}</span></p>
+                                      <p class="text-capitalize"><span class="bold">Status </span>: <span class="label label-${projectState}">${projectDetails.status}</span></p>
                                   </div>
                                   <div class="col-md-6">
                                       <p><span class="bold">Created </span>: ${projectDetails.createdDate}</p>
@@ -123,9 +133,10 @@ width: 60%;
                                           <dt>Project Completed:</dt>
                                           <dd>
                                               <div class="progress progress-striped active ">
-                                                  <div style="width: ${projectDetails.projectCompletionPercentage}%;" class="progress-bar progress-bar-danger"></div>
+                                                  <div style="width: ${projectDetails.projectCompletionPercentage}%;" class="progress-bar progress-bar-${projectState}"></div>
+                                                   <small>${projectDetails.projectCompletionPercentage}% Complete</small>
                                               </div>
-                                              <small>Project completed in <strong>${projectDetails.projectCompletionPercentage}%</strong>. Remaining close the project, sign a contract and invoice.</small>
+                                              <small>Project completed in <strong>${100 - projectDetails.projectCompletionPercentage}%</strong>. Remaining close the project, sign a contract and invoice.</small>
                                           </dd>
                                       </dl>
                                   </div>
@@ -262,13 +273,14 @@ width: 60%;
                                  			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
                                  			<tr>
                                              <td width="5%">1</td>
-                                                <td>${taskDetails.name}<a href="#" id="${taskDetails.taskId}" class="trigger" data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">  Details</a> 
+                                                <td class="task_progress">${taskDetails.name}<a href="#" id="${taskDetails.taskId}" class="trigger" data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">  Details</a> 
                                                  <div class="progress progress-small progress-striped active">
                                                  <c:set var="taskHealth" value="info"/>
                                                  <c:if test="${taskDetails.taskRemainingTime < 1 }">
                                                   <c:set var="taskHealth" value="danger"/>
                                                  </c:if>
-                                        			<div class="progress-bar progress-bar-${taskHealth}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: ${taskDetails.percentageOfTaskCompleted}%;">${taskDetails.percentageOfTaskCompleted}%</div>
+                                        			<div class="progress-bar progress-bar-${taskHealth}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: ${taskDetails.percentageOfTaskCompleted}%;"></div>
+                                    				 <small>${taskDetails.percentageOfTaskCompleted}% Complete</small>
                                     			</div>
                                                 </td>
                                                <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>

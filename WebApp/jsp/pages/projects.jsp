@@ -23,7 +23,7 @@
 	}
 	.project_progress .progress {
 		margin-bottom: 5px;
-		height: 8px;
+		height: 10px;
 	}
 }
 
@@ -98,11 +98,21 @@
                    <img alt="" src=""  onerror="this.src='${assets}/images/users/no-image.jpg'">
                 </td>
 				<td class="project_progress">
-					<div class="progress progress-xs">
-						<div style="width: 0%;" class="progress-bar progress-bar-success"></div>
-					</div> <small>0% Complete </small>
+				
+				 <c:set var="projectState" value="info"/>
+                  <c:if test="${project.status == 'COMPLETED' }">
+                   	<c:set var="projectState" value="success"/>
+                  </c:if>
+                  <c:if test="${project.projectMissedTimeLine == true }">
+                  	<c:set var="projectState" value="danger"/>
+                  </c:if>
+                      <div class="progress progress-small">
+                          <div class="progress-bar progress-bar-${projectState}" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: ${project.projectCompletionPercentage}%;"></div>
+                      		 <small>${project.projectCompletionPercentage}% Complete</small>
+                      </div>
+	                                                        
 				</td>
-				<td><span class="label label-info">${project.status}</span></td>
+				<td><span class="label label-${projectState}">${project.status}</span></td>
 				<td>
 					<button class="btn btn-default btn-rounded btn-sm">
 						<span class="fa fa-folder-open-o"></span>

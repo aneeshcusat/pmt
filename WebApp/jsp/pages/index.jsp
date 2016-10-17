@@ -1,4 +1,12 @@
 <%@include file="includes/header.jsp" %>
+<style>
+@media screen and (min-width: 700px) {
+	.project_progress .progress {
+		margin-bottom: 5px;
+		height: 10px;
+	}
+}
+</style>
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
@@ -205,11 +213,20 @@
                                                 <c:if test="${not empty projectDetails}">
 	                        						<c:forEach var="project" items="${projectDetails}">
 	                        						 <tr>
-                                                    	<td><strong>${project.name}</strong></td>
-	                                                    <td><span class="label label-info">${project.status }</span></td>
-	                                                    <td>
+	                        						 <c:set var="projectState" value="info"/>
+	                                                    <c:if test="${project.status == 'COMPLETED' }">
+	                                                     	<c:set var="projectState" value="success"/>
+	                                                    </c:if>
+	                                                    <c:if test="${project.projectMissedTimeLine == 'true' }">
+	                                                    	<c:set var="projectState" value="danger"/>
+	                                                    </c:if>
+                                                    	<td><strong><a href="${applicationHome}/project/${project.id}">${project.name}</a></strong></td>
+	                                                    <td><span class="label label-${projectState}">${project.status }</span></td>
+	                                                    <td  class="project_progress">
+	                                                    
 	                                                        <div class="progress progress-small progress-striped active">
-	                                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: ${project.projectCompletionPercentage}%;">${project.projectCompletionPercentage}%</div>
+	                                                            <div class="progress-bar progress-bar-${projectState}" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: ${project.projectCompletionPercentage}%;"></div>
+	                                                             <small>${project.projectCompletionPercentage}% Complete</small>
 	                                                        </div>
 	                                                    </td>
                                                		 </tr>

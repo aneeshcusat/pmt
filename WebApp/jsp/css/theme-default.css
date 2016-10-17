@@ -7374,3 +7374,13 @@ div.growlUI h3, div.growlUI h4 {
 ::-webkit-scrollbar-thumb:window-inactive {
     background: rgba(0, 0, 0, 0.02); 
 }
+
+a:link {
+	color: #777;
+}
+a:visited {
+	color: #777;
+}
+a:hover {
+	color: #0CF;
+}

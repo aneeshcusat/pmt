@@ -10,6 +10,7 @@ import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.util.DateUtils;
 
 public class ProjectDetails {
 
@@ -304,4 +305,13 @@ public class ProjectDetails {
 		return projectCompletionPercentage;
 	}
 
+	public boolean getProjectMissedTimeLine() {
+		if (getStatus() != ProjectStatus.COMPLETED) {
+			Date compleltionDate = DateUtils.tryParse(completionTime, DateUtils.DATE_TIME_FORMAT);
+			if (compleltionDate.getTime() <= new Date().getTime()) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

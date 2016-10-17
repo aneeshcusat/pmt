@@ -168,32 +168,32 @@ public class TaskDetails {
 		this.helpersList = helpersList;
 	}
 
-	public long getPercentageOfTaskCompleted() {
+	public double getPercentageOfTaskCompleted() {
 		if (status == TaskStatus.COMPLETED) {
 			return 100;
 		} else if ((status == TaskStatus.INPROGRESS)) {
-			long durationInMinute = duration * 60 * 1000;
-			long taskRemainingTime = getTaskRemainingTime();
-			long percentageOfWorkCompleted = 100 - (taskRemainingTime / durationInMinute) * 100;
-			return percentageOfWorkCompleted;
+			double durationInMinute = duration * 60;
+			double taskRemainingTime = getTaskRemainingTime();
+			double percentageOfWorkCompleted = (100 - (taskRemainingTime / durationInMinute) * 100);
+			return Math.round(percentageOfWorkCompleted * 100.0) / 100.0;
 		}
 
 		return 0;
 
 	}
 
-	public long getTaskRemainingTime() {
-		long durationInMinute = duration * 60 * 1000;
+	public double getTaskRemainingTime() {
+		double durationInMinute = duration * 60;
 		if (taskActivityDetails == null) {
 			return durationInMinute;
 		}
 		Date actualStartTime = taskActivityDetails.getActualStartTime();
-		long diffInMinute = durationInMinute;
+		double diffInMinute = durationInMinute;
 		if (actualStartTime != null) {
 
-			long diff = new Date().getTime() - actualStartTime.getTime();
-			diff = (durationInMinute * 60) - diff;
-			diffInMinute = diff / (60 * 1000) % 60;
+			double diff = new Date().getTime() - actualStartTime.getTime();
+			diff = (durationInMinute * 60 * 1000) - diff;
+			diffInMinute = diff / (60 * 1000);
 		}
 		return diffInMinute;
 	}
