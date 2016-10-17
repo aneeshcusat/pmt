@@ -263,6 +263,17 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		return count;
 	}
 
+	public long getAllMissedTimeLineProjectDetailsCount() {
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("status", ProjectStatus.COMPLETED);
+		dataMap.put("completionDate", new Date());
+
+		long count = famstackDataAccessObjectManager
+				.getCount(HQLStrings.getString("getMissedTimeLineProjectItemCountByStatus"), dataMap);
+
+		return count;
+	}
+
 	public ProjectDetails getProjectDetails(int projectId) {
 		return mapProjectItemToProjectDetails(
 				(ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class));

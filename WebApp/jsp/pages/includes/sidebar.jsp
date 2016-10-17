@@ -2,7 +2,7 @@
                 <!-- START X-NAVIGATION -->
                 <ul class="x-navigation">
                     <li class="xn-logo">
-                        <a href="index.jsp">famstack</a>
+                        <a href="index.jsp"></a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     <li class="xn-profile hide">

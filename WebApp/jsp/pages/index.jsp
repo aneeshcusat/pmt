@@ -15,6 +15,11 @@
                             <!-- START WIDGET SLIDER -->
                             <div class="widget widget-default widget-carousel">
                                 <div class="owl-carousel" id="owl-example">
+                                 	<div>                                    
+                                        <div class="widget-title">Upcoming Projects</div>
+                                        <div class="widget-int">${projectsCount['NEW'] }</div>
+                                         <div class="widget-subtitle"><a href="#">View details</a></div>
+                                    </div>
                                     <div>                                    
                                         <div class="widget-title">Unassigned Projects</div>                                                                        
                                         <div class="widget-int">${projectsCount['UNASSIGNED'] }</div>
@@ -25,21 +30,12 @@
                                         <div class="widget-int">${projectsCount['ASSIGNED'] }</div>
                                          <div class="widget-subtitle"><a href="#">View details</a></div>
                                     </div>
-                                    <div>                                    
-                                        <div class="widget-title">On Hold Projects</div>
-                                        <div class="widget-int">${projectsCount['ONHOLD'] }</div>
-                                         <div class="widget-subtitle"><a href="#">View details</a></div>
-                                    </div>
-                                    <div>                                    
-                                        <div class="widget-title">Upcoming Projects</div>
-                                        <div class="widget-int">${projectsCount['NEW'] }</div>
-                                         <div class="widget-subtitle"><a href="#">View details</a></div>
-                                    </div>
-                                     <div>                                    
+                                      <div>                                    
                                         <div class="widget-title">Inprogress Projects</div>
                                         <div class="widget-int">${projectsCount['INPROGRESS'] }</div>
                                          <div class="widget-subtitle"><a href="#">View details</a></div>
                                     </div>
+                                   
                                 </div>                            
                                 <div class="widget-controls">                                
                                     <a href="#" class="widget-control-right widget-remove" data-toggle="tooltip" data-placement="top" title="Remove Widget"><span class="fa fa-times"></span></a>
@@ -75,7 +71,7 @@
                                     <span class="fa fa fa-exclamation-triangle"></span>
                                 </div>
                                 <div class="widget-data">
-                                    <div class="widget-int num-count">0</div>
+                                    <div class="widget-int num-count">${projectsCount['MISSED']}</div>
                                     <div class="widget-title">Missed Timeline</div>
                                    <div class="widget-subtitle">Not on track</div>
                                 </div>

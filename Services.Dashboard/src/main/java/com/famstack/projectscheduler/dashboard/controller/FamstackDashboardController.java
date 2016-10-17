@@ -86,6 +86,9 @@ public class FamstackDashboardController extends BaseFamstackService {
 				.authenticate(token);
 		if (authentication.getLoginResult().getStatus() == Status.SUCCESS) {
 			userSecurityContextBinder.bindUserAuthentication(authentication);
+			getFamstackApplicationConfiguration().getUserMap()
+					.get(getFamstackApplicationConfiguration().getCurrentUser().getId())
+					.setLastPing(new Timestamp(new Date().getTime()));
 			return "{\"status\": true}";
 		} else if (authentication.getLoginResult().getStatus() == Status.NEW_PASSWORD_REQUIRED) {
 			logDebug(authentication.getLoginResult().getHashKey());

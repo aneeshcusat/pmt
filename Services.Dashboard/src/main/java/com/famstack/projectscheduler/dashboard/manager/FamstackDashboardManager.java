@@ -229,6 +229,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		projectCounts.put(ProjectStatus.COMPLETED.value(),
 				projectManager.getAllProjectDetailsCount(ProjectStatus.COMPLETED));
 		projectCounts.put(ProjectStatus.NEW.value(), projectManager.getAllProjectDetailsCount(ProjectStatus.NEW));
+		projectCounts.put("MISSED", projectManager.getAllMissedTimeLineProjectDetailsCount());
 
 		return projectCounts;
 	}
