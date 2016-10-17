@@ -335,4 +335,8 @@
 		
 	});
 	
+	
+	$(".tagsinputWatchers").tagsInput({
+		autocomplete_url:'http://myserver.com/api/autocomplete',
+		width: '100%',height:'auto',defaultText: "Add watchers"});
 </script>
