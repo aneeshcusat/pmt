@@ -20,11 +20,13 @@
     </property>
 	</bean>
 
-   <bean id="famstackNotificationServiceManager" class="com.famstack.projectscheduler.notification.FamstackNotificationServiceManager">
-   	<property name="notificationServices">
+	<bean id="famstackNotificationServiceManager" class="com.famstack.projectscheduler.notification.FamstackNotificationServiceManager">
+	<property name="notificationServices">
 	   <list>
 		   <ref bean="famstackEmailNotificationService" />
 		</list>
 	</property>
+	</bean>
+   <bean id="famstackAccountManager" class="com.famstack.projectscheduler.manager.FamstackAccountManager" init-method="initialize">
 	</bean>
 </beans>

@@ -29,6 +29,7 @@
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/theme-default.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/famstack.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/daterangepicker.css"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/jquery.datetimerangepicker.min.css"/>
         <!-- EOF CSS INCLUDE -->                                    
     </head>
     <body>

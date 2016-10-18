@@ -10,6 +10,7 @@ import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.util.DateUtils;
 
 public class ProjectDetails {
@@ -313,5 +314,24 @@ public class ProjectDetails {
 			}
 		}
 		return false;
+	}
+
+	public String getClientName() {
+		ClientDetails clientDetails = FamstackAccountManager.getClientmap().get(clientId);
+		return clientDetails != null ? clientDetails.getName() : "";
+	}
+
+	public String getTeamName() {
+		ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(teamId);
+		String teamName = "";
+		if (projectSubTeamDetails != null) {
+			teamName = FamstackAccountManager.getTeammap().get(projectSubTeamDetails.getTeamId()).getName();
+		}
+		return teamName;
+	}
+
+	public String getSubTeamName() {
+		ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(teamId);
+		return projectSubTeamDetails != null ? projectSubTeamDetails.getName() : "";
 	}
 }

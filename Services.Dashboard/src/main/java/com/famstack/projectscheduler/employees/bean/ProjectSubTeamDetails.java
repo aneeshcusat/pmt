@@ -6,6 +6,7 @@ import java.util.Set;
 public class ProjectSubTeamDetails {
 
 	private int subTeamId;
+	private int teamId;
 	private String name;
 	private String code;
 	private String poId;
@@ -52,6 +53,14 @@ public class ProjectSubTeamDetails {
 
 	public void setClientItems(Set<ClientDetails> clientItems) {
 		this.clientItems = clientItems;
+	}
+
+	public int getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(int teamId) {
+		this.teamId = teamId;
 	}
 
 }

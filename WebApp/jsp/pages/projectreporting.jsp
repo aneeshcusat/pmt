@@ -80,6 +80,7 @@
                                                 <th>Type</th>
                                                  <th>Category</th>
                                                  <th>Team</th>
+                                                 <th>Sub Team</th>
                                                 <th>Client</th>
                                                 <th>Duration</th>
                                                 <th>Start Time</th>
@@ -96,8 +97,9 @@
                                                 <td>${project.name}</td>
                                                 <td>${project.type}</td>
                                                 <td>${project.category}</td>
-                                                <td>${project.teamId}</td>
-                                                <td>${project.clientId}</td>
+                                                <td>${project.teamName}</td>
+                                                <td>${project.subTeamName}</td>
+                                                <td>${project.clientName}</td>
                                                 <td>${project.duration}</td>
                                                 <td>${project.startTime}</td>
                                                 <td>${project.completionTime}</td>

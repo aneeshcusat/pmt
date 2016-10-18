@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn">
 	<Properties>
-		<Property name="di-log-path">/log/apache-tomcat</Property>
+		<Property name="di-log-path">d:/famstack</Property>
 	</Properties>
 	<Appenders>
 		<Console name="console-log" target="SYSTEM_OUT">
 			<PatternLayout
 				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n" />
 		</Console>
-		<RollingRandomAccessFile name="Rollingdeliveryinterfacelogfile"
-                                 fileName="${di-log-path}/di-log/deliveryinterface.log"
-                                 filePattern="${di-log-path}/di-log/deliveryinterface.log.%d{yyyy-MM-dd-hh-mm}.gz">
+		<RollingRandomAccessFile name="Rollingfamstacklogfile"
+                                 fileName="${di-log-path}/bops-log/bops.log"
+                                 filePattern="${di-log-path}/bops-log/bops.log.%d{yyyy-MM-dd-hh-mm}.gz">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] %c{1} - %msg%n"/>
             <Policies>
                <TimeBasedTriggeringPolicy interval="1440"
@@ -19,15 +19,8 @@
         </RollingRandomAccessFile>
 	</Appenders>
 	<Loggers>
-	    <logger name="org.hibernate.type" level="off" />
-        <logger name="org.hibernate" level="off" />
-
-		<Logger name="com.walmart.*" level="debug" additivity="false">
-			<appender-ref ref="Rollingdeliveryinterfacelogfile" level="all" />
-			<appender-ref ref="console-log" level="all" />
-		</Logger>
 		<Root level="debug" additivity="false">
-			<appender-ref ref="Rollingdeliveryinterfacelogfile" level="all" />
+			<appender-ref ref="Rollingfamstacklogfile" level="all" />
 			<appender-ref ref="console-log" level="all" />
 		</Root>
 	</Loggers>
