@@ -25,6 +25,10 @@
 		margin-bottom: 5px;
 		height: 10px;
 	}
+	
+	div.tagsinputWatchers{
+	background-color: #fff;
+	}
 }
 
 </style>
@@ -185,7 +189,8 @@
 
 <script type="text/javascript"
 	src="${js}/plugins/autocomplete/jquery.autocomplete.js"></script>
-
+ <script type="text/javascript" src="${js}/plugins/typeahead/typeahead.bundle.js"></script>
+ <script type="text/javascript" src="${js}/plugins/tagsinput/mab-jquery-taginput.js"></script>
 <script>
 
 
@@ -353,7 +358,38 @@
 	});
 	
 	
-	$(".tagsinputWatchers").tagsInput({
-		autocomplete_url:'http://myserver.com/api/autocomplete',
-		width: '100%',height:'auto',defaultText: "Add watchers"});
+	var tags = new Bloodhound({
+	    datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.tag); },
+	    queryTokenizer: Bloodhound.tokenizers.whitespace,
+	    local: [
+		<c:if test="${not empty userMap}">
+		 <c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
+	 		<c:if test="${user.role != 'SUPERADMIN'}"> 
+	 		{ tag: '${user.email}' },
+	 		</c:if>
+ 		</c:forEach>
+ 		</c:if>
+	    ]
+	});
+
+	tags.initialize();
+	
+	$('.tagsinputWatchers').tagInput({
+
+		  tagDataSeparator: ',',
+
+		  allowDuplicates: false,
+
+		  typeahead: true,
+
+		  typeaheadOptions: {
+		      highlight: true
+		  },
+
+		  typeaheadDatasetOptions: {
+		    displayKey: 'tag',
+		    source: tags.ttAdapter()
+		  }
+		  
+		});
 </script>

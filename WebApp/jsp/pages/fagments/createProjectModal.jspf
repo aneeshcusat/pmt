@@ -190,7 +190,7 @@
                              <div class="form-group">
                                 <label class="col-md-3 control-label">Watchers</label>
                                 <div class="col-md-9" id="watcher_tag_div">
-                                    <form:input type="text" class="tagsinputWatchers" placeholder="add an email" value="" path="watchers"  id="watchers"/>
+                                    <form:input type="text" class="form-control tagsinputWatchers" placeholder="add emails" value="" path="watchers"  id="watchers"/>
                                     <span class="help-block">who all monitoring this project</span>
                                 </div>
                             </div>

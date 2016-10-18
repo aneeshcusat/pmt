@@ -43,7 +43,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	}
 
 	public List<EmployeeDetails> getUserList() {
-		return new ArrayList(userMap.values());
+		return new ArrayList<EmployeeDetails>(userMap.values());
 	}
 
 	public String getHostName() {

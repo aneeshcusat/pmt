@@ -94,6 +94,9 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.7.1'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.1'
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.7.1'
+	
+	//mysql 
+	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'
 			
 	def tomcatVersion = '7.0.50'
 	
@@ -141,6 +144,7 @@ sourceSets {
 				srcDir 'Services.Email/src/main/java'
 				srcDir 'Services.Scheduling/src/main/java'
 				srcDir 'Services.Dashboard/src/main/java'
+				srcDir 'Services.Notification/src/main/java'
 			}
 			resources {
 				srcDir 'Base/src/main/resources'
