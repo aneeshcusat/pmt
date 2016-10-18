@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.configuration.FamstackUserSessionConfiguration;
-import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 
 /**
  * The Class BaseFamstackService.
@@ -21,9 +20,6 @@ public class BaseFamstackService {
 	/** The famstack user session configuration. */
 	@Resource
 	FamstackUserSessionConfiguration famstackUserSessionConfiguration;
-
-	@Resource
-	FamstackNotificationServiceManager famstackNotificationServiceManager;
 
 	/** The logger. */
 	private Logger logger = null;
@@ -147,10 +143,6 @@ public class BaseFamstackService {
 	 */
 	public FamstackUserSessionConfiguration getFamstackUserSessionConfiguration() {
 		return famstackUserSessionConfiguration;
-	}
-
-	public FamstackNotificationServiceManager getFamstackNotificationServiceManager() {
-		return famstackNotificationServiceManager;
 	}
 
 }

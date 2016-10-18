@@ -33,6 +33,7 @@ import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectFileManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
+import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.utils.FamstackUtils;
 
@@ -60,6 +61,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	@Resource
 	FamstackProjectFileManager famstackProjectFileManager;
 
+	@Resource
+	FamstackNotificationServiceManager famstackNotificationServiceManager;
+
 	public Map<String, Object> getUserData() {
 		return null;
 	}
@@ -67,14 +71,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.createUserItem(employeeDetails);
-		getFamstackNotificationServiceManager().notifyAll(NotificationType.USER_REGISTRAION, employeeDetails);
+		famstackNotificationServiceManager.notifyAll(NotificationType.USER_REGISTRAION, employeeDetails);
 		return errorMap;
 	}
 
 	public Map<String, String> updateUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.updateUserItem(employeeDetails);
-		getFamstackNotificationServiceManager().notifyAll(NotificationType.USER_UPDATE, employeeDetails);
+		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, employeeDetails);
 		return errorMap;
 	}
 
@@ -197,7 +201,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public boolean changePassword(String userName, String oldPassword, String password) {
 		boolean status = userProfileManager.changePassword(userName, oldPassword, password);
-		getFamstackNotificationServiceManager().notifyAll(NotificationType.USER_UPDATE, userName);
+		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, userName);
 		return status;
 	}
 

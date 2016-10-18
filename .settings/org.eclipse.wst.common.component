@@ -11,6 +11,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/Base/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/Rest.Services/src/test/groovy"/>
         <wb-resource deploy-path="/" source-path="/WebApp"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Services.Notification/src/main/java"/>
         <property name="java-output-path" value="/famstack-ps/bin"/>
         <property name="context-root" value="bops"/>
     </wb-module>

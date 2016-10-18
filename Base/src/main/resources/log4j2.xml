@@ -19,6 +19,9 @@
         </RollingRandomAccessFile>
 	</Appenders>
 	<Loggers>
+		<logger name="org.hibernate.type" level="off" />
+        <logger name="org.hibernate" level="off" />
+	
 		<Root level="debug" additivity="false">
 			<appender-ref ref="Rollingfamstacklogfile" level="all" />
 			<appender-ref ref="console-log" level="all" />

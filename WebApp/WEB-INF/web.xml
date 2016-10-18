@@ -14,7 +14,7 @@
   
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/spring/famstack-application-config.xml,/WEB-INF/spring/famstack-security-config.xml,/WEB-INF/spring/famstack-hibernate-config.xml,/WEB-INF/spring/famstack-email-velocity-config.xml,/WEB-INF/spring/famstack-scheduler-config.xml</param-value>
+    <param-value>/WEB-INF/spring/famstack-application-config.xml,/WEB-INF/spring/famstack-notification-config.xml,/WEB-INF/spring/famstack-security-config.xml,/WEB-INF/spring/famstack-hibernate-config.xml,/WEB-INF/spring/famstack-email-velocity-config.xml,/WEB-INF/spring/famstack-scheduler-config.xml</param-value>
     <!--<param-value>/WEB-INF/spring/ApplicationContext.xml</param-value> -->
   </context-param>
   
