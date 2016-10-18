@@ -69,6 +69,8 @@ public class ProjectDetails {
 
 	private String PONumber;
 
+	private List<ProjectDetails> duplicateProjects;
+
 	public Integer getId() {
 		return id;
 	}
@@ -334,4 +336,13 @@ public class ProjectDetails {
 		ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(teamId);
 		return projectSubTeamDetails != null ? projectSubTeamDetails.getName() : "";
 	}
+
+	public List<ProjectDetails> getDuplicateProjects() {
+		return duplicateProjects;
+	}
+
+	public void setDuplicateProjects(List<ProjectDetails> duplicateProjects) {
+		this.duplicateProjects = duplicateProjects;
+	}
+
 }

@@ -317,6 +317,15 @@ width: 60%;
                                  </c:if>
                               </ul>
                               <br>
+                               <c:if test="${not empty projectDetails.duplicateProjects}">
+                               <h5 class="bold">Duplicate Project</h5>
+                               <ul class="list-unstyled p-files" id="duplicateProjects">
+                                 <c:forEach var="duplicateProject" items="${projectDetails.duplicateProjects}" varStatus="fileNameIndex"> 
+                                 	<li><a href="${applicationHome}/project/${duplicateProject.id}">${duplicateProject.name}</a></li> 
+                                 </c:forEach>
+                              </ul>
+                              <br>
+                               </c:if>
 							 <c:if test="${not empty projectDetails.tags}">
 	                             <h5 class="bold">Project Tags</h5>
 	                             <ul class="list-tags">

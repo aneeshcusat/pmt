@@ -317,7 +317,7 @@ function initializeCreateProjectForm(project){
 	
 	$("#category").val(project.category);
 	$('#category').selectpicker('refresh');
-
+	$('.clientOption').each(function () { $(this).show(); });
 	$('#clientId').val(project.clientId);
 	$('#clientId').selectpicker('refresh');
 	$('#clientId').change();
@@ -327,22 +327,11 @@ function initializeCreateProjectForm(project){
 		$("input[type='search']").parent().hide();
 	});
 	
-	var projectNames = [ {
-		"value" : 'Project 1',
-		data : 'P100'
-	},
-	{
-		"value" : 'Project 2',
-		data : 'P102'
-	} ];
-	
-
 	$('.autocomplete').autocomplete(
 		{
 			serviceUrl: '${applicationHome}/getProjectJson',
-			//lookup : projectNames,
 			onSelect : function(suggestion) {
-				$("#projectcode").val(suggestion.data);
+				loadProjectForClone(suggestion.data);
 			}
 		});
 

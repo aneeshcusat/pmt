@@ -226,6 +226,11 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	public List<ProjectDetails> getAllProjectDetailsList() {
 		List<ProjectDetails> projectDetailsList = new ArrayList<>();
 		List<?> projectItemList = famstackDataAccessObjectManager.getAllItems("ProjectItem");
+		getProjectsList(projectDetailsList, projectItemList);
+		return projectDetailsList;
+	}
+
+	private void getProjectsList(List<ProjectDetails> projectDetailsList, List<?> projectItemList) {
 		if (projectItemList != null) {
 			for (Object projectItemObj : projectItemList) {
 				ProjectItem projectItem = (ProjectItem) projectItemObj;
@@ -235,7 +240,6 @@ public class FamstackProjectManager extends BaseFamstackManager {
 				}
 			}
 		}
-		return projectDetailsList;
 	}
 
 	public List<ProjectDetails> getAllProjectDetailsList(ProjectStatus projectStatus) {
@@ -245,15 +249,19 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 		List<?> projectItemList = famstackDataAccessObjectManager
 				.executeQuery(HQLStrings.getString("getProjectItemsByStatus"), dataMap);
-		if (projectItemList != null) {
-			for (Object projectItemObj : projectItemList) {
-				ProjectItem projectItem = (ProjectItem) projectItemObj;
-				ProjectDetails projectDetails = mapProjectItemToProjectDetails(projectItem);
-				if (projectDetails != null) {
-					projectDetailsList.add(projectDetails);
-				}
-			}
-		}
+		getProjectsList(projectDetailsList, projectItemList);
+		return projectDetailsList;
+	}
+
+	public List<ProjectDetails> getAllProjectDetailsList(String projectCode, int projectId) {
+		List<ProjectDetails> projectDetailsList = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("code", projectCode);
+		dataMap.put("projectId", projectId);
+
+		List<?> projectItemList = famstackDataAccessObjectManager
+				.executeQuery(HQLStrings.getString("getProjectItemsByCode"), dataMap);
+		getProjectsList(projectDetailsList, projectItemList);
 		return projectDetailsList;
 	}
 
@@ -279,8 +287,10 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	public ProjectDetails getProjectDetails(int projectId) {
-		return mapProjectItemToProjectDetails(
+		ProjectDetails projectDetails = mapProjectItemToProjectDetails(
 				(ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class));
+		projectDetails.setDuplicateProjects(getAllProjectDetailsList(projectDetails.getCode(), projectDetails.getId()));
+		return projectDetails;
 	}
 
 	public Map<String, ArrayList<TaskDetails>> getProjectTasksDataList(int userId) {
@@ -310,7 +320,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("value", projectItem.getName());
-			jsonObject.put("data", projectItem.getCode());
+			jsonObject.put("data", projectItem.getProjectId());
 			jsonArray.put(jsonObject);
 		}
 		jsonProductListObject.put("suggestions", jsonArray);
@@ -329,15 +339,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		logDebug("projectItemList" + projectItemList);
 		logDebug("startDate" + startDate);
 		logDebug("endDate" + endDate);
-		if (projectItemList != null) {
-			for (Object projectItemObj : projectItemList) {
-				ProjectItem projectItem = (ProjectItem) projectItemObj;
-				ProjectDetails projectDetails = mapProjectItemToProjectDetails(projectItem);
-				if (projectDetails != null) {
-					projectDetailsList.add(projectDetails);
-				}
-			}
-		}
+		getProjectsList(projectDetailsList, projectItemList);
 		return projectDetailsList;
 	}
 
