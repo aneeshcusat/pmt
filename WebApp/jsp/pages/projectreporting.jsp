@@ -9,7 +9,7 @@
     <!-- START CONTENT FRAME TOP -->
     <div class="content-frame-top">                        
         <div class="page-title">                    
-            <h2><span class="fa fa-calendar"></span> Project Reporting</h2>
+            <h2><span class="fa fa-table"></span> Project Reporting</h2>
         </div>  
         <div class="pull-right">
             <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
@@ -77,6 +77,10 @@
                                                 <th>Project code</th>
                                                 <th>PO ID</th>
                                                 <th>Project Name</th>
+                                                <th>Type</th>
+                                                 <th>Category</th>
+                                                 <th>Team</th>
+                                                <th>Client</th>
                                                 <th>Duration</th>
                                                 <th>Start Time</th>
                                                 <th>Completion Time</th>
@@ -90,8 +94,12 @@
                                                 <td>${project.code}</td>
                                                 <td>${project.PONumber}</td>
                                                 <td>${project.name}</td>
+                                                <td>${project.type}</td>
+                                                <td>${project.category}</td>
+                                                <td>${project.teamId}</td>
+                                                <td>${project.clientId}</td>
                                                 <td>${project.duration}</td>
-                                                 <td>${project.startTime}</td>
+                                                <td>${project.startTime}</td>
                                                 <td>${project.completionTime}</td>
                                                 <td>${project.status}</td>
                                             </tr>

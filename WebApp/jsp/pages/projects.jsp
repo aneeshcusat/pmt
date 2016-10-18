@@ -33,7 +33,7 @@
 	<div class="content-frame-top">
 		<div class="page-title">
 			<h2>
-				<span class="fa fa-bars"></span> Projects
+				<span class="fa fa-list-alt"></span> Projects
 			</h2>
 		</div>
 	</div>

@@ -1,7 +1,9 @@
 package com.famstack.projectscheduler.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
@@ -17,6 +19,11 @@ import com.famstack.projectscheduler.employees.bean.ProjectTeamDetails;
 
 @Component
 public class FamstackAccountManager extends BaseFamstackManager {
+
+	private final Map<Integer, AccountDetails> accountMap = new HashMap<>();
+	private final Map<Integer, ProjectTeamDetails> teamMap = new HashMap<>();
+	private final Map<Integer, ProjectSubTeamDetails> subTeamMap = new HashMap<>();
+	private final Map<Integer, ClientDetails> clientMap = new HashMap<>();
 
 	public AccountDetails mapProjectItemToProjectDetails(AccountItem accountItem) {
 		AccountDetails accountDetails = new AccountDetails();

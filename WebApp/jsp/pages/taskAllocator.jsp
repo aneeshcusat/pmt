@@ -19,7 +19,7 @@ width: 60%;
     <!-- START CONTENT FRAME TOP -->
     <div class="content-frame-top">                        
         <div class="page-title">                    
-            <h2><span class="fa fa-calendar"></span> Task allocator</h2>
+            <h2><span class="fa fa-list"></span> Task Scheduler</h2>
         </div>  
         <div class="pull-right">
             <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>

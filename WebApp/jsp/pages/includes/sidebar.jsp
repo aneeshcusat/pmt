@@ -31,9 +31,9 @@
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
                             <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>
-                            <li><a href="${applicationHome}/projects"><span class="fa fa-edit"></span> Projects</a></li>
-                            <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-edit"></span> Task Scheduler</a></li>
-                             <li><a href="${applicationHome}/projectreporting"><span class="fa fa-edit"></span> Project Reporting</a></li>
+                            <li><a href="${applicationHome}/projects"><span class="fa fa-list-alt"></span> Projects</a></li>
+                            <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
+                             <li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span> Project Reporting</a></li>
                         </ul>
                     </li>
                     </c:if>
