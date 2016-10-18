@@ -96,6 +96,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
         
     </div>
     <!-- END CONTENT FRAME RIGHT -->
+    <input type="hidden" id="currentUserId" value="${modelViewMap.currentUserId}">
 
     <!-- START CONTENT FRAME BODY -->
     <div class="content-frame-body content-frame-body-left">
@@ -123,7 +124,7 @@ function setLastMessageId(lastMessageIdField, messageId) {
 	                                <div class="item item-visible">
 	                            </c:if>
 		                            <div class="image">
-		                                <img src="" alt="${groupMessage.userFullName}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
+		                                <img src="${applicationHome}/image/${groupMessage.user}" alt="${groupMessage.userFullName}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
 		                            </div>
 		                            <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
 		                            <div class="text" style="background: #F6F6F6;">
@@ -281,11 +282,18 @@ function getMessageAfterId(groupId, messageId) {
 function processMessageAfterSave(jsonResponse, groupId) {
     var htmlString = '';
     var lastMessageId = '';
+    var currentUser = $('#currentUserId').val();
     for (var i = 0; i < jsonResponse.length; i++) {
         var messageObject = jsonResponse[i];
-        htmlString += '<div class="item item-visible">';
+        if (currentUser == messageObject.user) {
+        	htmlString += '<div class="item in item-visible">';
+        } else {
+        	htmlString += '<div class="item item-visible">';
+        }
+        
         htmlString += '<div class="image">';
-        htmlString += '<img src="'+ messageObject.user+'" alt="'+ messageObject.userFullName +'" onerror="this.src=\'/bops/jsp/assets/images/users/no-image.jpg\'">';
+        
+        htmlString += '<img src="/bops/dashboard/image/' + messageObject.user+'" alt="'+ messageObject.userFullName +'" onerror="this.src=\'/bops/jsp/assets/images/users/no-image.jpg\'">';
         htmlString += '</div>';
         htmlString += '<div class="text" style="background: #F6F6F6;">';
         htmlString += '<div class="heading">';

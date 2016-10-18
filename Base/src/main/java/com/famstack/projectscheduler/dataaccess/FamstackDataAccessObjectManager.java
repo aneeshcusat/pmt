@@ -110,10 +110,10 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 				query.setParameter(paramName, dataMap.get(paramName));
 			}
 		}
-		long count = (long) query.getSingleResult();
+		Long count = (Long) query.getSingleResult();
 		tx.commit();
 		session.close();
-		return count;
+		return count.longValue();
 	}
 
 	@Override

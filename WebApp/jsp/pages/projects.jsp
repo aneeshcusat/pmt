@@ -96,7 +96,7 @@
         
 
 			<tr>
-				<td class="project_name"><a href="${applicationHome}/project/${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
+				<td class="project_name"><a href="${applicationHome}/project/${project.id}">${project.name}</a> <br> <small>created on ${project.createdDate}</small></td>
 				<td><h5>${project.code}</h5></td>
 				<td class="project_team">
 				<c:if test="${not empty project.projectTaskDeatils}">
