@@ -9,6 +9,9 @@
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 </style>
+<form:input type="hidden" id="PONumber" path="PONumber"/>
+<form:input type="hidden" id="projectId" path="id"/>
+
 <div class="row">
         <div class="col-md-12">
                     <div class="row">
@@ -90,7 +93,6 @@
                                     </div>
                                 <label class="col-md-2 control-label">Team</label>
                                 <div class="col-md-3">
-                                	<form:input type="hidden" id="PONumber" path="PONumber"/>
                                       <form:select class="selectpicker form-control select" path="teamId" id="teamId"  data-live-search="true">
                                           <option value="-1">- select -</option>
                                           

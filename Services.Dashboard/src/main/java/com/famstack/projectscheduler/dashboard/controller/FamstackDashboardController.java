@@ -15,7 +15,6 @@ import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.PathParam;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -63,23 +62,6 @@ public class FamstackDashboardController extends BaseFamstackService {
 	/** The user security context binder. */
 	@Resource
 	private UserSecurityContextBinder userSecurityContextBinder;
-
-	/**
-	 * Request response login.
-	 *
-	 * @param request
-	 *            the request
-	 * @param reponses
-	 *            the reponses
-	 * @param model
-	 *            the model
-	 * @return the string
-	 */
-	@RequestMapping("/{path}")
-	public String login(@PathParam("path") String path, Model model) {
-		logDebug("Request path :" + path);
-		return path;
-	}
 
 	@RequestMapping(value = "/loginAjax", method = RequestMethod.POST)
 	@ResponseBody
@@ -156,12 +138,6 @@ public class FamstackDashboardController extends BaseFamstackService {
 		List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
 		return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
 				.addObject("projectDetails", projectDetails);
-	}
-
-	@RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
-	@ResponseBody
-	public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate) {
-		return famstackDashboardManager.getAjaxFullcalendar(startDate, endDate);
 	}
 
 	@RequestMapping(value = "/employees", method = RequestMethod.GET)
@@ -263,9 +239,17 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 	@RequestMapping(value = "/createProject", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,
+	public String createProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,
 			Model model) {
 		famstackDashboardManager.createProject(projectDetails);
+		return "{\"status\": true}";
+	}
+
+	@RequestMapping(value = "/updateProject", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,
+			Model model) {
+		famstackDashboardManager.updateProject(projectDetails);
 		return "{\"status\": true}";
 	}
 
@@ -274,6 +258,12 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public String deleteProject(@RequestParam("projectId") int projectId) {
 		famstackDashboardManager.deleteProject(projectId);
 		return "{\"status\": true}";
+	}
+
+	@RequestMapping(value = "/getProjectDetailsJson", method = RequestMethod.GET)
+	@ResponseBody
+	public String getProjectDetailsJson(@RequestParam("projectId") int projectId) {
+		return famstackDashboardManager.getProjectDetailsJson(projectId);
 	}
 
 	@RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
@@ -291,6 +281,12 @@ public class FamstackDashboardController extends BaseFamstackService {
 				unAssignedProjects);
 	}
 
+	@RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate) {
+		return famstackDashboardManager.getAjaxFullcalendar(startDate, endDate);
+	}
+
 	// ---------- Project Comments ------------//
 
 	@RequestMapping(value = "/addComment", method = RequestMethod.POST)
@@ -301,16 +297,6 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 
-	@RequestMapping(value = "/messages", method = RequestMethod.GET)
-	public ModelAndView getMessages() {
-		int userId = getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId();
-		List<GroupDetails> groupData = famstackDashboardManager.getAllGroups(userId);
-		Map<String, Object> modelViewMap = new HashMap<String, Object>();
-		modelViewMap.put("groupData", groupData);
-		modelViewMap.put("currentUserId", userId);
-		return new ModelAndView("messages", "command", new GroupDetails()).addObject("modelViewMap", modelViewMap);
-	}
-
 	@RequestMapping(value = "/createTask", method = RequestMethod.POST)
 	@ResponseBody
 	public String createTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
@@ -319,34 +305,24 @@ public class FamstackDashboardController extends BaseFamstackService {
 		return "{\"status\": true}";
 	}
 
-	@RequestMapping(value = "/createGroup", method = RequestMethod.POST)
-	@ResponseBody
-	public String createGroup(@ModelAttribute("groupDetails") GroupDetails groupDetails, BindingResult result,
-			Model model) {
-		famstackDashboardManager.createGroup(groupDetails);
-		return "{\"status\": true}";
-	}
-
-	@RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
-	@ResponseBody
-	public String updateGroup(@ModelAttribute("groupDetails") GroupDetails groupDetails, BindingResult result,
-			Model model) {
-		famstackDashboardManager.updateGroup(groupDetails);
-		return "{\"status\": true}";
-	}
-
-	@RequestMapping(value = "/editGroup", method = RequestMethod.GET)
-	@ResponseBody
-	public String editGroup(@RequestParam("groupId") int groupId) {
-		return famstackDashboardManager.getGroup(groupId);
-	}
-
 	@RequestMapping(value = "/updateTask", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
 			Model model) {
 		famstackDashboardManager.updateTask(taskDetails);
 		return "{\"status\": true}";
+	}
+
+	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
+	public ModelAndView listTasks() {
+		UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
+
+		Map<String, ArrayList<TaskDetails>> taskDetailsMap = famstackDashboardManager
+				.getProjectTasksDataList(currentUserItem.getId());
+
+		Map<String, Object> modelViewMap = new HashMap<String, Object>();
+		modelViewMap.put("projectTaskDetailsData", taskDetailsMap);
+		return new ModelAndView("tasks", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
 	@RequestMapping(value = "/updateTaskStatus", method = RequestMethod.POST)
@@ -426,6 +402,38 @@ public class FamstackDashboardController extends BaseFamstackService {
 		}
 	}
 
+	@RequestMapping(value = "/messages", method = RequestMethod.GET)
+	public ModelAndView getMessages() {
+		int userId = getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId();
+		List<GroupDetails> groupData = famstackDashboardManager.getAllGroups(userId);
+		Map<String, Object> modelViewMap = new HashMap<String, Object>();
+		modelViewMap.put("groupData", groupData);
+		modelViewMap.put("currentUserId", userId);
+		return new ModelAndView("messages", "command", new GroupDetails()).addObject("modelViewMap", modelViewMap);
+	}
+
+	@RequestMapping(value = "/createGroup", method = RequestMethod.POST)
+	@ResponseBody
+	public String createGroup(@ModelAttribute("groupDetails") GroupDetails groupDetails, BindingResult result,
+			Model model) {
+		famstackDashboardManager.createGroup(groupDetails);
+		return "{\"status\": true}";
+	}
+
+	@RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateGroup(@ModelAttribute("groupDetails") GroupDetails groupDetails, BindingResult result,
+			Model model) {
+		famstackDashboardManager.updateGroup(groupDetails);
+		return "{\"status\": true}";
+	}
+
+	@RequestMapping(value = "/editGroup", method = RequestMethod.GET)
+	@ResponseBody
+	public String editGroup(@RequestParam("groupId") int groupId) {
+		return famstackDashboardManager.getGroup(groupId);
+	}
+
 	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendMessage(@RequestParam("groupId") int groupId, @RequestParam("message") String message) {
@@ -437,18 +445,6 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@ResponseBody
 	public String getMessageAfter(@RequestParam("groupId") int groupId, @RequestParam("messageId") int messageId) {
 		return famstackDashboardManager.getMessageAfter(groupId, messageId);
-	}
-
-	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
-	public ModelAndView listTasks() {
-		UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
-
-		Map<String, ArrayList<TaskDetails>> taskDetailsMap = famstackDashboardManager
-				.getProjectTasksDataList(currentUserItem.getId());
-
-		Map<String, Object> modelViewMap = new HashMap<String, Object>();
-		modelViewMap.put("projectTaskDetailsData", taskDetailsMap);
-		return new ModelAndView("tasks", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
 }

@@ -131,6 +131,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return projectDetails;
 	}
 
+	public String getProjectDetailsJson(int projectId) {
+		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
+		return FamstackUtils.getJsonFromObject(projectDetails);
+	}
+
 	public List<GroupDetails> getAllGroups(int userId) {
 		List<GroupDetails> groupDetailsList = groupMessageManager.getGroupsForUser(userId);
 		Collections.sort(groupDetailsList, new Comparator<GroupDetails>() {
@@ -254,5 +259,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public List<ProjectDetails> getProjectsReporingDataList(Date startDate, Date endDate) {
 		List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startDate, endDate);
 		return projectDetailsList;
+	}
+
+	public void updateProject(ProjectDetails projectDetails) {
+		projectManager.updateProjectItem(projectDetails);
 	}
 }

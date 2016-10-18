@@ -44,6 +44,12 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 	public void createProjectItem(ProjectDetails projectDetails) {
 		ProjectItem projectItem = new ProjectItem();
+		projectItem.setStatus(ProjectStatus.NEW);
+		saveProjectItem(projectDetails, projectItem);
+		famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
+	}
+
+	private void saveProjectItem(ProjectDetails projectDetails, ProjectItem projectItem) {
 		projectItem.setCategory(projectDetails.getCategory());
 		projectItem.setCode(projectDetails.getCode());
 		projectItem.setDescription(projectDetails.getDescription());
@@ -70,13 +76,11 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		projectItem.setAccountId(projectDetails.getAccountId());
 		projectItem.setTeamId(projectDetails.getTeamId());
 		projectItem.setClientId(projectDetails.getClientId());
-		projectItem.setStatus(ProjectStatus.NEW);
 		projectItem.setTags(projectDetails.getTags());
 		projectItem.setType(projectDetails.getType());
 		projectItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
 		projectItem.setWatchers(projectDetails.getWatchers());
 		famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
-		famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
 	}
 
 	public void deleteProjectItem(int projectId) {
@@ -335,5 +339,14 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			}
 		}
 		return projectDetailsList;
+	}
+
+	public void updateProjectItem(ProjectDetails projectDetails) {
+		ProjectItem projectItem = getProjectItemById(projectDetails.getId());
+		if (projectItem != null) {
+			saveProjectItem(projectDetails, projectItem);
+			famstackProjectActivityManager.createProjectActivityItemItem(projectItem,
+					ProjectActivityType.PROJECT_DETAILS_UPDATED, null);
+		}
 	}
 }

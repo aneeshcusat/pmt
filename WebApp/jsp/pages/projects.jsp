@@ -61,7 +61,7 @@
 								</div>
 							</div>
 							<div class="col-md-4">
-								<a data-toggle="modal" data-target="#createprojectmodal"
+								<a data-toggle="modal" data-target="#createprojectmodal" onclick="clearProjectFormForCreate()"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
 									Create a new Project
 								</a>
@@ -111,6 +111,8 @@
                   <c:if test="${project.status == 'COMPLETED' }">
                    	<c:set var="projectState" value="success"/>
                   </c:if>
+                  <c:if test="${project.status == 'NEW' }">
+                  </c:if>
                   <c:if test="${project.projectMissedTimeLine == true }">
                   	<c:set var="projectState" value="danger"/>
                   </c:if>
@@ -122,13 +124,17 @@
 				</td>
 				<td><span class="label label-${projectState}">${project.status}</span></td>
 				<td>
-					<button class="btn btn-default btn-rounded btn-sm">
-						<span class="fa fa-folder-open-o"></span>
+					<button class="btn btn-default btn-rounded btn-sm" data-toggle="modal" data-target="#createprojectmodal"
+						onclick="loadProjectForClone('${project.id}')">
+						<span class="fa fa-clipboard" ></span>
 					</button>
-					<%-- <button class="btn btn-default btn-rounded btn-sm" data-toggle="modal" data-target="#createprojectmodal"
-						onclick="loadProject('${project.id}')">
+					<button class="btn btn-default btn-rounded btn-sm" data-toggle="modal" data-target="#createprojectmodal" 
+					<c:if test="${project.status != 'NEW' }">
+						disabled="true"
+                  	</c:if>
+						onclick="loadProjectForUpdate('${project.id}')">
 						<span class="fa fa-pencil"></span>
-					</button>--%>
+					</button>
 					<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right btn btn-danger btn-rounded btn-sm" 
 						onclick="deleteProject('${project.id}','${project.name}');">
 						<span class="fa fa-times"></span>
@@ -170,9 +176,9 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">Cancel</button>
-					<button type="button" onclick="doAjaxCreateProjectForm();"
+					<button type="button" id="projectActionButton" onclick="doAjaxCreateProjectForm();"
 						class="btn btn-primary">
-						<span id="userButton">Save</span>
+						<span>Save</span>
 					</button>
 				</div>
 			</div>
@@ -198,6 +204,124 @@
 <script>
 
 
+var clearProjectFormForCreate = function(projectId) {
+	$("#createProjectFormId").prop("action","createProject");
+	$("#myModalLabel").html("Create a Project");
+	$("#projectActionButton span").html("Save");
+	clearCreateProjectForm();
+	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
+	$('#estCompleteTime').val(getTodayDate(new Date()) + " 05:00");
+	
+}
+var loadProjectForUpdate = function(projectId) {
+	$("#createProjectFormId").prop("action","updateProject");
+	$("#myModalLabel").html("Update a Project");
+	$("#projectActionButton span").html("Update");
+
+	loadProject(projectId);
+	$('#estStartTime').val(project.startTime);
+	$('#estCompleteTime').val(project.completionTime);
+	
+	
+}
+
+var loadProjectForClone = function(projectId) {
+	$("#createProjectFormId").prop("action","createProject");
+	$("#myModalLabel").html("Duplicate a Project");
+	$("#projectActionButton span").html("Duplicate");
+	
+	loadProject(projectId);
+	
+	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
+	$('#estCompleteTime').val(getTodayDate(new Date()) + " 05:00");
+}
+
+var loadProject = function(projectId){
+	var dataString = {"projectId" : projectId};
+	doAjaxRequest("GET", "${applicationHome}/getProjectDetailsJson", dataString, function(data) {
+        console.log("SUCCESS: ", data);
+        var responseJson = JSON.parse(data);
+        clearCreateProjectForm();
+        initializeCreateProjectForm(responseJson);
+    }, function(e) {
+        console.log("ERROR: ", e);
+        alert(e);
+    });
+}
+
+function clearCreateProjectForm(){
+	$("#projectName").val("");
+	$("#summary").val("");
+	
+	$("#billable").attr("checked", false);
+	$("#nonbillable").attr("checked", false);
+	$('#billable').parent().removeClass("active");
+	$('#nonbillable').parent().removeClass("active");
+	
+	$("#priority").prop("selectedIndex",0);
+	$('#priority').selectpicker('refresh');
+	
+	$("#duration").prop("selectedIndex",0);
+	$('#duration').selectpicker('refresh');
+	
+	$("#complexity").prop("selectedIndex",0);
+	$('#complexity').selectpicker('refresh');
+	$("#projectcode").val("");
+	$("#projectId").val("");
+	
+	$("#clientId").prop("selectedIndex",0);
+	$('#clientId').selectpicker('refresh');
+	
+	$("#teamId").prop("selectedIndex",0);
+	$('#teamId').selectpicker('refresh');
+	
+	$("#accountId").prop("selectedIndex",0);
+	$('#accountId').selectpicker('refresh');
+	
+	$("#category").prop("selectedIndex",0);
+	$('#category').selectpicker('refresh');
+	$("#PONumber").val("");
+	
+	$("#watchers").val("");
+	
+	$("#tags").val("");
+	
+}
+
+function initializeCreateProjectForm(project){
+	$("#projectName").val(project.name);
+	$("#summary").val(project.description);
+	
+	if (project.type == 'BILLABLE') {
+		$("#billable").attr("checked", true);
+		$('#billable').parent().addClass("active");
+	} else {
+		$("#nonbillable").attr("checked", true);
+		$('#nonbillable').parent().addClass("active");
+	}
+	
+	$("#priority").val(project.priority);
+	$('#priority').selectpicker('refresh');
+	
+	$("#duration").val(project.duration);
+	$('#duration').selectpicker('refresh');
+	
+	$("#complexity").val(project.complexity);
+	$('#complexity').selectpicker('refresh');
+
+	$("#projectcode").val(project.code);
+	
+	$("#projectId").val(project.id);
+	
+	$("#PONumber").val(project.PONumber);
+	
+	$("#category").val(project.category);
+	$('#category').selectpicker('refresh');
+
+	$('#clientId').val(project.clientId);
+	$('#clientId').selectpicker('refresh');
+	$('#clientId').change();
+}
 	
 	$( document ).ready(function(){
 		$("input[type='search']").parent().hide();
@@ -377,23 +501,16 @@
 	});
 
 	tags.initialize();
-	
 	$('.tagsinputWatchers').tagInput({
-
 		  tagDataSeparator: ',',
-
 		  allowDuplicates: false,
-
 		  typeahead: true,
-
 		  typeaheadOptions: {
 		      highlight: true
 		  },
-
 		  typeaheadDatasetOptions: {
 		    displayKey: 'tag',
 		    source: tags.ttAdapter()
 		  }
-		  
 		});
 </script>
