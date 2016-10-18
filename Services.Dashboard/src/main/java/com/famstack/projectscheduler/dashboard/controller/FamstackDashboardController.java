@@ -281,6 +281,11 @@ public class FamstackDashboardController extends BaseFamstackService {
 				unAssignedProjects);
 	}
 
+	@RequestMapping(value = "/calender", method = RequestMethod.GET)
+	public String calender() {
+		return "calender";
+	}
+
 	@RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
 	@ResponseBody
 	public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate) {

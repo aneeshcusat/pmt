@@ -261,13 +261,10 @@ function processUserResponseData(data) {
 	$('#email').val(response.email);
 	$('#id').val(response.id);
 	$('#'+response.gender).click();
-	if (response.filePhoto != "" && response.filePhoto != null ) {
 		$(".cropit-preview").show();
-		$(".cropit-preview-image").prop("src", response.filePhoto);
-	} else {
-		$(".cropit-preview").hide();
-		$(".cropit-preview-image").prop("src", "");
-	}
+		$(".cropit-preview-image").attr("onerror","this.src='${assets}/images/users/no-image.jpg'");
+		$(".cropit-preview-image").prop("src", "${applicationHome}/image/" + response.id);
+		
 	$('#role').val(response.role);
 	$('#reportingManger').val(response.reportingManger);
 	$('#qualification').val(response.qualification);
