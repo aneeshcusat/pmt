@@ -99,8 +99,12 @@
 				<td class="project_name"><a href="${applicationHome}/project/${project.id}">${project.name}</a> <br> <small>Created ${project.createdDate}</small></td>
 				<td><h5>${project.code}</h5></td>
 				<td class="project_team">
-                   <img alt="" src=""  onerror="this.src='${assets}/images/users/no-image.jpg'">
-                </td>
+				<c:if test="${not empty project.projectTaskDeatils}">
+					<c:forEach var="taskDetails" items="${project.projectTaskDeatils}" varStatus="taskIndex"> 
+							<img alt="image" src="${applicationHome}/image/${taskDetails.assignee}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
+					</c:forEach>
+				</c:if>
+				</td>
 				<td class="project_progress">
 				
 				 <c:set var="projectState" value="info"/>
