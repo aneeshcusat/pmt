@@ -1,4 +1,4 @@
-package com.famstack.projectscheduler.notification;
+package com.famstack.projectscheduler.notification.services;
 
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
 
@@ -6,7 +6,6 @@ public class FamstackSMSNotificationService extends FamstackBaseNotificationServ
 
 	@Override
 	public void notify(NotificationItem notificationItem) {
-		// TODO Auto-generated method stub
 
 	}
 

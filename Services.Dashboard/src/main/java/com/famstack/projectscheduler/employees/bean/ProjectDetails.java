@@ -33,6 +33,8 @@ public class ProjectDetails {
 
 	private Integer accountId;
 
+	private String quantity;
+
 	private Integer teamId;
 
 	private UserItem reporter;
@@ -343,6 +345,14 @@ public class ProjectDetails {
 
 	public void setDuplicateProjects(List<ProjectDetails> duplicateProjects) {
 		this.duplicateProjects = duplicateProjects;
+	}
+
+	public String getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
 	}
 
 }

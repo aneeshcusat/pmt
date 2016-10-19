@@ -1,4 +1,4 @@
-package com.famstack.projectscheduler.notification;
+package com.famstack.projectscheduler.notification.services;
 
 import java.util.Map;
 
@@ -10,6 +10,7 @@ import com.famstack.email.FamstackEmailSender;
 import com.famstack.email.contants.EmailMessages;
 import com.famstack.email.contants.EmailTemplates;
 import com.famstack.email.util.FamstackTemplateEmailInfo;
+import com.famstack.projectscheduler.notification.bean.EmailNotificationItem;
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
 import com.famstack.projectscheduler.util.StringUtils;
 
@@ -34,20 +35,25 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
 	 */
 	@Override
 	public void notify(NotificationItem notificationItem) {
-		Map<String, Object> dataMap = notificationItem.getData();
 
-		String templateName = notificationItem.getEmailTemplate().getValue();
+		EmailNotificationItem emailNotificationItem = (EmailNotificationItem) notificationItem;
+		if (!emailNotificationItem.getToList().isEmpty()) {
+			Map<String, Object> dataMap = emailNotificationItem.getData();
 
-		if (!StringUtils.isNotBlank(templateName)) {
-			templateName = EmailTemplates.DEFAULT.getValue();
+			String templateName = emailNotificationItem.getEmailTemplate().getValue();
+
+			if (!StringUtils.isNotBlank(templateName)) {
+				templateName = EmailTemplates.DEFAULT.getValue();
+			}
+
+			String mailSubject = getNotificationSubject(emailNotificationItem.getEmailTemplate());
+
+			famstackTemplateEmailInfo.setMailSubject(mailSubject);
+			famstackTemplateEmailInfo.setVelocityTemplateName(templateName);
+			famstackTemplateEmailInfo.setTemplateParameters(dataMap);
+			famstackEmailSender.sendEmail(famstackTemplateEmailInfo,
+					emailNotificationItem.getToList().toArray(new String[0]));
 		}
-
-		String mailSubject = getNotificationSubject(notificationItem.getEmailTemplate());
-
-		famstackTemplateEmailInfo.setMailSubject(mailSubject);
-		famstackTemplateEmailInfo.setVelocityTemplateName(templateName);
-		famstackTemplateEmailInfo.setTemplateParameters(dataMap);
-		famstackEmailSender.sendEmail(famstackTemplateEmailInfo, notificationItem.getToList().toArray(new String[0]));
 	}
 
 	private String getNotificationSubject(EmailTemplates emailTemplate) {

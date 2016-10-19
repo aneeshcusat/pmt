@@ -9,7 +9,9 @@ import com.famstack.email.contants.EmailTemplates;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.notification.bean.EmailNotificationItem;
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
+import com.famstack.projectscheduler.notification.services.FamstackBaseNotificationService;
 
 @Service
 public class FamstackNotificationServiceManager extends BaseFamstackService {
@@ -20,8 +22,33 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	public void notifyAll(NotificationType notificationType, Object object) {
 		logDebug("notification " + notificationType);
 		NotificationItem notificationEmailItem = null;
-		if (notificationType == NotificationType.USER_REGISTRAION) {
+
+		switch (notificationType) {
+		case USER_REGISTRAION:
 			notificationEmailItem = getNotificationItemForRegistraion(object);
+			break;
+		case RESET_PASSWORD:
+			break;
+		case PROJECT_CREATE:
+			break;
+		case PROJECT_DELETE:
+			break;
+		case PROJECT_UPDATE:
+			break;
+		case TASK_ASSIGNED:
+			break;
+		case TASK_CREATED:
+			break;
+		case TASK_CREATED_ASSIGNED:
+			break;
+		case TASK_DELETED:
+			break;
+		case TASK_UPDATED:
+			break;
+		case USER_UPDATE:
+			break;
+		default:
+			break;
 		}
 
 		if (notificationEmailItem != null) {
@@ -36,9 +63,10 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	}
 
 	private NotificationItem getNotificationItemForRegistraion(Object object) {
-		NotificationItem notificationEmailItem;
-		notificationEmailItem = new NotificationItem();
+		EmailNotificationItem notificationEmailItem;
+		notificationEmailItem = new EmailNotificationItem();
 		EmployeeDetails employeeDetails = (EmployeeDetails) object;
+		notificationEmailItem.setOriginUserId(employeeDetails.getId());
 		notificationEmailItem.setEmailTemplate(EmailTemplates.USER_REGISTRAION);
 		notificationEmailItem.getToList().add(employeeDetails.getEmail());
 		notificationEmailItem.getData().put("userId", String.valueOf(employeeDetails.getId()));

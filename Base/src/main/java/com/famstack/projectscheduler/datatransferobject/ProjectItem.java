@@ -91,6 +91,9 @@ public class ProjectItem implements FamstackBaseItem {
 	@Column(name = "status")
 	private ProjectStatus status;
 
+	@Column(name = "quantity")
+	private String quantity;
+
 	@Column(name = "client_id")
 	private Integer clientId;
 
@@ -305,6 +308,14 @@ public class ProjectItem implements FamstackBaseItem {
 
 	public void setPONumber(String pONumber) {
 		PONumber = pONumber;
+	}
+
+	public String getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
 	}
 
 }

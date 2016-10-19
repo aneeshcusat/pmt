@@ -277,6 +277,7 @@ function clearCreateProjectForm(){
 	$("#category").prop("selectedIndex",0);
 	$('#category').selectpicker('refresh');
 	$("#PONumber").val("");
+	$("#POidSpan").html("");
 	
 	$("#watchers").val("");
 	
@@ -317,6 +318,7 @@ function initializeCreateProjectForm(project){
 	$("#projectId").val(project.id);
 	
 	$("#PONumber").val(project.PONumber);
+	$("#POidSpan").html(project.PONumber);
 	
 	$('#estStartTime').val(project.startTime);
 	$('#estCompleteTime').val(project.completionTime);
@@ -467,6 +469,7 @@ function initializeCreateProjectForm(project){
 		$('#clientId').selectpicker('refresh');
 		var PONumber = $( "#teamId option:selected" ).attr("poid");
 		$("#PONumber").val(PONumber);
+		$("#POidSpan").html(PONumber);
 		console.log("PONumber" + PONumber);
 	});
 	
@@ -494,6 +497,7 @@ function initializeCreateProjectForm(project){
 		
 		var PONumber = $( "#teamId option:selected" ).attr("poid");
 		$("#PONumber").val(PONumber);
+		$("#POidSpan").html(PONumber);
 		console.log("PONumber" + PONumber);
 		
 	});

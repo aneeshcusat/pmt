@@ -118,7 +118,7 @@
                             </div>
                              <div class="form-group">  
                               <label class="col-md-3 control-label">Client</label>
-                                <div class="col-md-9">
+                                <div class="col-md-5">
                                         <form:select class="form-control select" path="clientId" id="clientId"  data-live-search="true">
                                         <option value="-1">- select -</option>
                                         <c:if test="${not empty modelViewMap.accountData}">  
@@ -140,7 +140,10 @@
                                          </c:if>
                                     </form:select>
                                     <span class="help-block">required team</span>
-                                </div>                                      
+                                </div>  
+                                <div class="col-md-4">
+                                    <span id="POidSpan" style="font-weight: bold;">POID</span>
+                                </div>                                    
                             </div>
                             </div>
                         <div class="col-md-6">
@@ -173,6 +176,14 @@
                                 </div>
                                 
                             </div>
+                            
+                            <div class="form-group">
+							<label class="col-md-3 control-label">Quatity</label>
+							<div class="col-md-9">
+								 <form:input type="text" class="form-control" id="quantity" path="quantity"/>
+								 <span class="help-block">required quantity</span>
+							</div>
+							</div>
                             
                             <div class="form-group">
 							<label class="col-md-3 control-label">Est Start Time</label>

@@ -54,6 +54,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		projectItem.setCode(projectDetails.getCode());
 		projectItem.setDescription(projectDetails.getDescription());
 		projectItem.setName(projectDetails.getName());
+		projectItem.setQuantity(projectDetails.getQuantity());
 		projectItem.setPriority(projectDetails.getPriority());
 		projectItem.setPONumber(projectDetails.getPONumber());
 		projectItem.setComplexity(projectDetails.getComplexity());
@@ -173,7 +174,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			projectDetails.setClientId(projectItem.getClientId());
 			projectDetails.setAccountId(projectItem.getAccountId());
 			projectDetails.setTeamId(projectItem.getTeamId());
-
+			projectDetails.setQuantity(projectItem.getQuantity());
 			projectDetails.setCode(projectItem.getCode());
 			projectDetails.setDescription(projectItem.getDescription());
 			projectDetails.setDuration(projectItem.getDuration());

@@ -1,46 +1,69 @@
 package com.famstack.projectscheduler.notification.bean;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.famstack.email.contants.EmailTemplates;
+import com.famstack.projectscheduler.contants.NotificationType;
 
-public class NotificationItem {
+public abstract class NotificationItem {
+	private int messageId;
+	private NotificationType notificationType;
+	private String message;
+	private boolean read;
 
-	private List<String> toList;
-	private Map<String, Object> data;
-	private EmailTemplates emailTemplate;
+	private int originUserId;
+	private List<Integer> subscriberList;
 
-	public List<String> getToList() {
-		if (toList == null) {
-			toList = new ArrayList<>();
+	public int getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(int messageId) {
+		this.messageId = messageId;
+	}
+
+	public NotificationType getNotificationType() {
+		return notificationType;
+	}
+
+	public void setNotificationType(NotificationType notificationType) {
+		this.notificationType = notificationType;
+	}
+
+	public String getMessage() {
+		read = true;
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public int getOriginUserId() {
+		return originUserId;
+	}
+
+	public void setOriginUserId(int originUserId) {
+		this.originUserId = originUserId;
+	}
+
+	public List<Integer> getSubscriberList() {
+		if (subscriberList == null) {
+			subscriberList = new ArrayList<>();
 		}
-		return toList;
+		return subscriberList;
 	}
 
-	public void setToList(List<String> toList) {
-		this.toList = toList;
+	public void setSubscriberList(List<Integer> subscriberList) {
+		this.subscriberList = subscriberList;
 	}
 
-	public Map<String, Object> getData() {
-		if (data == null) {
-			data = new HashMap<>();
-		}
-		return data;
+	public boolean isRead() {
+		return read;
 	}
 
-	public void setData(Map<String, Object> data) {
-		this.data = data;
-	}
-
-	public EmailTemplates getEmailTemplate() {
-		return emailTemplate;
-	}
-
-	public void setEmailTemplate(EmailTemplates emailTemplate) {
-		this.emailTemplate = emailTemplate;
+	public void setRead(boolean read) {
+		this.read = read;
 	}
 
 }

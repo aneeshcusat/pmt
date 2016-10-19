@@ -1,4 +1,4 @@
-package com.famstack.projectscheduler.notification;
+package com.famstack.projectscheduler.notification.services;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.notification.bean.NotificationItem;

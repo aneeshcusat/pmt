@@ -27,19 +27,22 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	private final boolean emailEnabled = true;
 
-	private Map<Integer, EmployeeDetails> userMap = new HashMap<>();
+	private static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
+
+	private static Map<String, Integer> userIdMap = new HashMap<>();
 
 	public void initialize() {
 		userMap.clear();
+		userIdMap.clear();
 		logDebug("Initializing FamstackApplicationConfiguration...");
-		userMap = getUserMap(famstackUserProfileManager.getEmployeeDataList());
+		initializeUserMap(famstackUserProfileManager.getEmployeeDataList());
 	}
 
-	private Map<Integer, EmployeeDetails> getUserMap(List<EmployeeDetails> userList2) {
-		for (EmployeeDetails employeeDetails : userList2) {
+	private void initializeUserMap(List<EmployeeDetails> employeeDetailsList) {
+		for (EmployeeDetails employeeDetails : employeeDetailsList) {
 			userMap.put(employeeDetails.getId(), employeeDetails);
+			userIdMap.put(employeeDetails.getEmail(), employeeDetails.getId());
 		}
-		return userMap;
 	}
 
 	public List<EmployeeDetails> getUserList() {
