@@ -1,0 +1,21 @@
+{  
+   "manifest_version":2,
+   "name":"famstack",
+   "description":"Project Scheduler",
+   "version":"1.0",
+   "icons":{  
+      "128":"famstack.png"
+   },
+   "app":{  
+      "urls":[  
+         "http://localhost:8080/bops/dashboard/index"
+      ],
+      "launch":{  
+         "web_url":"http://localhost:8080/bops/dashboard/index"
+      }
+   },
+   "permissions":[  
+      "unlimitedStorage",
+      "notifications"
+   ]
+}
