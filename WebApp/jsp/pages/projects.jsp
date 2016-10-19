@@ -219,10 +219,6 @@ var loadProjectForUpdate = function(projectId) {
 	$("#projectActionButton span").html("Update");
 
 	loadProject(projectId);
-	$('#estStartTime').val(project.startTime);
-	$('#estCompleteTime').val(project.completionTime);
-	
-	
 }
 
 var loadProjectForClone = function(projectId) {
@@ -286,6 +282,13 @@ function clearCreateProjectForm(){
 	
 	$("#tags").val("");
 	
+	$(".tagsinputWatchers span[data-tag]").each(function(){
+		$(this).remove();
+	});
+	
+	$(".tagsinput span.tag").each(function(){
+		$(this).remove();
+	});
 }
 
 function initializeCreateProjectForm(project){
@@ -315,12 +318,33 @@ function initializeCreateProjectForm(project){
 	
 	$("#PONumber").val(project.PONumber);
 	
+	$('#estStartTime').val(project.startTime);
+	$('#estCompleteTime').val(project.completionTime);
+
 	$("#category").val(project.category);
 	$('#category').selectpicker('refresh');
 	$('.clientOption').each(function () { $(this).show(); });
 	$('#clientId').val(project.clientId);
 	$('#clientId').selectpicker('refresh');
 	$('#clientId').change();
+	
+	$("#watchers").val(project.watchers);
+	
+	if (project.watchers != "") {
+		var watchersArray = project.watchers.split(",");
+		console.log(watchersArray);
+		for (var index=0; index < watchersArray.length; index++) {
+			$(".tagsinputWatchers").prepend('<span class="label label-primary" data-tag="'+watchersArray[index]+'">'+watchersArray[index]+'<span class="glyphicon glyphicon-remove"></span></span>');
+		}
+		$(".twitter-typeahead input.mab-jquery-taginput-input").attr("placeholder","");
+	}
+	
+	if (project.tags != "") {
+		var tagsArray = project.tags.split(",");
+		for (var index=0; index < tagsArray.length; index++) {
+			$(".tagsinput").addTag(tagsArray[index]);
+		}
+	}
 }
 	
 	$( document ).ready(function(){

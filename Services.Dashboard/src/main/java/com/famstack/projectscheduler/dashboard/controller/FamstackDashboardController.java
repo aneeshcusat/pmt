@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.PathParam;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -62,6 +63,12 @@ public class FamstackDashboardController extends BaseFamstackService {
 	/** The user security context binder. */
 	@Resource
 	private UserSecurityContextBinder userSecurityContextBinder;
+
+	@RequestMapping("/{path}")
+	public String login(@PathParam("path") String path, Model model) {
+		logDebug("Request path :" + path);
+		return path;
+	}
 
 	@RequestMapping(value = "/loginAjax", method = RequestMethod.POST)
 	@ResponseBody
@@ -279,11 +286,6 @@ public class FamstackDashboardController extends BaseFamstackService {
 				.getUnassignedProjects(ProjectStatus.UNASSIGNED);
 		return new ModelAndView("taskAllocator", "command", new TaskDetails()).addObject("unAssignedProjects",
 				unAssignedProjects);
-	}
-
-	@RequestMapping(value = "/calender", method = RequestMethod.GET)
-	public String calender() {
-		return "calender";
 	}
 
 	@RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
