@@ -71,14 +71,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.createUserItem(employeeDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.USER_REGISTRAION, employeeDetails);
+		famstackNotificationServiceManager.notifyAll(NotificationType.USER_REGISTRAION, 0, employeeDetails);
 		return errorMap;
 	}
 
 	public Map<String, String> updateUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.updateUserItem(employeeDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, employeeDetails);
+		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, 0, employeeDetails);
 		return errorMap;
 	}
 
@@ -206,7 +206,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public boolean changePassword(String userName, String oldPassword, String password) {
 		boolean status = userProfileManager.changePassword(userName, oldPassword, password);
-		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, userName);
+		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, 0, userName);
 		return status;
 	}
 

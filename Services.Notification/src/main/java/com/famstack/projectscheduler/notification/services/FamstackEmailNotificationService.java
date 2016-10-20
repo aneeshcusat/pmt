@@ -40,10 +40,10 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
 		if (!emailNotificationItem.getToList().isEmpty()) {
 			Map<String, Object> dataMap = emailNotificationItem.getData();
 
-			String templateName = emailNotificationItem.getEmailTemplate().getValue();
+			String templateName = emailNotificationItem.getEmailTemplate().getTemplate();
 
 			if (!StringUtils.isNotBlank(templateName)) {
-				templateName = EmailTemplates.DEFAULT.getValue();
+				templateName = EmailTemplates.DEFAULT.getTemplate();
 			}
 
 			String mailSubject = getNotificationSubject(emailNotificationItem.getEmailTemplate());
@@ -57,7 +57,7 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
 	}
 
 	private String getNotificationSubject(EmailTemplates emailTemplate) {
-		return EmailMessages.getString(emailTemplate.getValue());
+		return EmailMessages.getString(emailTemplate.getSubjectkey());
 	}
 
 }

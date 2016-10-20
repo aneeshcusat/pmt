@@ -7,7 +7,7 @@ import javax.mail.internet.MimeMessage;
 import com.famstack.projectscheduler.BaseFamstackService;
 
 /**
- * The Class DeliveryInterfaceTemplateEmailInfo.
+ * The Class famstackTemplateEmailInfo.
  * 
  * @author Aneeshkumar
  * @version 1.0

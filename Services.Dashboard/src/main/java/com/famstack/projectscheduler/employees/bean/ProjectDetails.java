@@ -320,6 +320,11 @@ public class ProjectDetails {
 		return false;
 	}
 
+	public String getAccountName() {
+		AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(accountId);
+		return accountDetails != null ? accountDetails.getName() : "";
+	}
+
 	public String getClientName() {
 		ClientDetails clientDetails = FamstackAccountManager.getClientmap().get(clientId);
 		return clientDetails != null ? clientDetails.getName() : "";

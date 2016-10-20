@@ -203,7 +203,9 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 			employeeDetails.setMobileNumber(userItem.getMobileNumber());
 			employeeDetails.setQualification(userItem.getQualification());
 			employeeDetails.setRole(userItem.getUserRole());
-			employeeDetails.setReportingManger(userItem.getReportertingManager().getId());
+			if (userItem.getReportertingManager() != null) {
+				employeeDetails.setReportingManger(userItem.getReportertingManager().getId());
+			}
 			employeeDetails.setId(userItem.getId());
 			return employeeDetails;
 		}

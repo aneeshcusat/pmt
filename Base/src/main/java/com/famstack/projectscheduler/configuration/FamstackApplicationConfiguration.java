@@ -95,4 +95,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		}
 	}
 
+	public String getUrl() {
+		return protocol + "://" + hostName + ":" + portNumber;
+	}
+
 }

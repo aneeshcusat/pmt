@@ -16,7 +16,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.util.StringUtils;
 
 /**
- * The Class DeliveryInterfaceEmailTemplateRendererService.
+ * The Class famstackEmailTemplateRendererService.
  * 
  * @author Aneeshkumar
  * @version 1.0

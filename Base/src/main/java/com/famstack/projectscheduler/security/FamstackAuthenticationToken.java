@@ -5,7 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import com.famstack.projectscheduler.security.login.LoginResult;
 
 /**
- * The Class DeliveryInterfaceAuthenticationToken.
+ * The Class famstackAuthenticationToken.
  * 
  * @author Aneeshkumar
  * @version 1.0

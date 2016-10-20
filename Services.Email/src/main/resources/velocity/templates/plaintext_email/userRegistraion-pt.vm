@@ -2,3 +2,4 @@ This is an automated notification please do not reply.
 User has been registered, Please login and reset your password to use the system
 Username : ${emailId}
 password : ${password}
+Url : ${url}/login

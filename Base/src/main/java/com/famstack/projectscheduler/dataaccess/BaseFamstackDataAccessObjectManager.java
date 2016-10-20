@@ -9,7 +9,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.datatransferobject.FamstackBaseItem;
 
 /**
- * The Class BaseDeliveryInterfaceDataAccessObjectManager.
+ * The Class BasefamstackDataAccessObjectManager.
  * 
  * @author Aneeshkumar
  * @version 1.0

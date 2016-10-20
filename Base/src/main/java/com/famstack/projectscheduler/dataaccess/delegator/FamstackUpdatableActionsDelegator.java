@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.famstack.projectscheduler.BaseFamstackService;
 
 /**
- * The Class DeliveryInterfaceUpdatableActionsDelegator.
+ * The Class famstackUpdatableActionsDelegator.
  *
  * @param <T> the generic type
  * 

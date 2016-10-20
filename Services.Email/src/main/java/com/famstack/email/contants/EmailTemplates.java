@@ -1,17 +1,55 @@
 package com.famstack.email.contants;
 
+/**
+ * The Enum EmailTemplates.
+ */
 public enum EmailTemplates {
-	DEFAULT("default"),
 
-	USER_REGISTRAION("userRegistraion");
+	/** The default. */
+	DEFAULT("default", "default"),
 
-	private String value;
+	/** The user registraion. */
+	USER_REGISTRAION("userRegistraion",
+			"userRegistraion"), /** The reset password. */
+	RESET_PASSWORD("resetPassword", "resetPassword"), /** The user update. */
+	USER_UPDATE("userStatus", "userDetailsUpdate"), /** The project create. */
+	PROJECT_CREATE("projectStatus",
+			"projectCreated"), /** The project update. */
+	PROJECT_UPDATE("projectStatus",
+			"projectDetailsUpdate"), /** The project delete. */
+	PROJECT_DELETE("projectStatus", "projectDelete"), /** The task created. */
+	TASK_CREATED("projectTaskStatus",
+			"projectTaskCreated"), /** The task updated. */
+	TASK_UPDATED("projectTaskStatus",
+			"projectTaskDetailsUpdate"), /** The task deleted. */
+	TASK_DELETED("projectTaskStatus",
+			"projectTaskDelete"), /** The task created assigned. */
+	TASK_CREATED_ASSIGNED("projectTaskStatus",
+			"projectTaskCreateAssigned"), /** The task assigned. */
+	TASK_ASSIGNED("projectTaskStatus", "projectTaskAssigned");
 
-	EmailTemplates(String value) {
-		this.value = value;
+	/** The value. */
+	private String subjectkey;
+
+	private String template;
+
+	/**
+	 * Instantiates a new email templates.
+	 *
+	 * @param value
+	 *            the value
+	 */
+	EmailTemplates(String template, String subjectKey) {
+		this.template = template;
+		this.subjectkey = subjectKey;
 	}
 
-	public String getValue() {
-		return value;
+	public String getSubjectkey() {
+		return subjectkey;
 	}
+
+	public String getTemplate() {
+		return template;
+	}
+
 }

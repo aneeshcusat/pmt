@@ -1,8 +1,72 @@
 #set( $subject = "${subject}")
 
 #parse("/velocity/templates/email/fragments/header.vm")
-This is an automated notification please do not reply.
-User has been registered, Please login and reset your password to use the system
-Username : ${emailId}
-password : ${password}
+
+ <tr>
+        <td style="border-bottom:1px solid #e7e7e7;">
+
+          <center>
+            <table cellpadding="0" cellspacing="0" width="600" class="w320">
+            	<tr>
+                      <td style="padding-top:8px;padding-bottom:10px">
+                        <h4>Hi ${firstName},</h4>
+                      </td>
+                </tr>
+              <tr>
+                <td align="left" class="mobile-padding" style="padding:20px 20px 0">
+
+                  <br class="mobile-hide" />
+
+                  <h1>Welcome to famstack</h1>
+
+                  <br>
+                  We're excited you're here! please activate your new account by clicking the link below!<br>
+                  <br>
+					Email id : ${emailId}
+					 <br>
+					Password : ${password}
+					 <br>
+                  <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff">
+                    <tr>
+                      <td style="width:130px;background:#D84A38;">
+                        <div>
+                          <!--[if mso]>
+                          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${url}/login" style="height:33px;v-text-anchor:middle;width:130px;" stroke="f" fillcolor="#D84A38">
+                            <w:anchorlock/>
+                            <center>
+                          <![endif]-->
+                              <a href="${url}/login"
+                        style="background-color:#D84A38;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:33px;text-align:center;text-decoration:none;width:130px;-webkit-text-size-adjust:none;">Activate!</a>
+                          <!--[if mso]>
+                            </center>
+                          </v:rect>
+                          <![endif]-->
+                        </div>
+                      </td>
+                      <td width="316" style="background-color:#ffffff; font-size:0; line-height:0;">&nbsp;</td>
+                    </tr>
+                  </table>
+                  <br><br>
+                </td>
+                <td class="mobile-hide" style="padding-top:20px;padding-bottom:0;vertical-align:bottom">
+                  <table cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                      <td align="right" valign="bottom" width="220" style="padding-right:20px; padding-bottom:0; vertical-align:bottom;">
+                      <img  style="display:block" src="https://www.filepicker.io/api/file/AvB8yENR7OdiUqonW05y"  width="174" height="294" alt="iphone"/>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </center>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:#f8f8f8;border-bottom:1px solid #e7e7e7;" valign="top">
+          <center>
+			This is an automated notification please do not reply.
+			</center>
+        </td>
+      </tr>
 #parse("/velocity/templates/email/fragments/footer.vm")

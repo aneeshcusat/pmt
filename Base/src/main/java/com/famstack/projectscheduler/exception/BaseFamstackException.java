@@ -1,7 +1,7 @@
 package com.famstack.projectscheduler.exception;
 
 /**
- * The Class DeliveryInterfaceException.
+ * The Class famstackException.
  * 
  * @author Aneeshkumar
  * @version 1.0

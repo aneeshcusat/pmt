@@ -18,6 +18,7 @@
         
         <!-- CSS INCLUDE -->        
         <link rel="stylesheet" type="text/css" id="theme" href="${css}/theme-white.css"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/waitme/waitMe.min.css"/>
         <!-- EOF CSS INCLUDE -->                                    
     </head>
     <body>
@@ -67,6 +68,7 @@
         <script type="text/javascript" src="${js}/plugins/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script>
+        <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js"></script>
         <script type="text/javascript" src="${js}/famstack.ajax.js"></script>   
         <!-- END PLUGINS -->  
  <script type="text/javascript">

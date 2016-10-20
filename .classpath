@@ -112,8 +112,7 @@
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/cglib-nodep-2.1_3.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/objenesis-2.4.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/commons-io-2.5.jar"/>
-	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/deliveryinterface.schemas.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junfamstackR/4"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>

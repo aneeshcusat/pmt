@@ -12,7 +12,7 @@ import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 
 /**
- * The Class DeliveryInterfaceAuthenticationProvider.
+ * The Class famstackAuthenticationProvider.
  * 
  * @author Aneeshkumar
  * @version 1.0

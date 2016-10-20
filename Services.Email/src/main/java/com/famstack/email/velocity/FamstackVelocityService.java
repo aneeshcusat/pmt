@@ -10,7 +10,7 @@ import org.apache.velocity.app.Velocity;
 import com.famstack.projectscheduler.BaseFamstackService;
 
 /**
- * The Class DeliveryInterfaceVelocityService.
+ * The Class famstackVelocityService.
  * 
  * @author Aneeshkumar
  * @version 1.0

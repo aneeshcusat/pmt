@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.util.StringUtils;
 
 public class TaskDetails {
 
@@ -161,6 +162,9 @@ public class TaskDetails {
 	}
 
 	public String getHelpersList() {
+		if (!StringUtils.isNotBlank(helpersList)) {
+			helpersList = helpersList.replace("[", "").replaceAll("]", "");
+		}
 		return helpersList;
 	}
 
