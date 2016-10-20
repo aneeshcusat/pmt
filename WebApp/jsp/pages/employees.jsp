@@ -336,7 +336,7 @@ $('#employeeSearch').keyup(function(){
 $.datetimepicker.setLocale('en');
 
 $('.dateTimePicker').datetimepicker({
-	yearOffset:-50,
+	yearOffset:-30,
 	lang:'en',
 	timepicker:false,
 	format:'Y-m-d',

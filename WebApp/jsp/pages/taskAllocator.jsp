@@ -190,26 +190,28 @@ width: 60%;
         
          	 <c:if test="${not empty userMap}">
              <c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
-             <tr class="editable" id="${user.id}-row"">
-            	<td><input name="assignee" type="radio" id="${user.id}-select" value="${user.id}" path="assignee"></input></td>
-                <td class="nonmarkable" id="${user.id}-name">${user.firstName} ${user.lastName}</td>
-                <td class="markable" id="${user.id}-8" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-9" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-17" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-18" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-19" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="markable" id="${user.id}-20" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="nonmarkable" dynamicvalue="0" style="font-weight: bold; font-size: 16px;" id="${user.id}-totalHours">0</td>
-                <td class="nonmarkable" dynamicvalue="8" style="font-weight: bold; font-size: 18px; color: green" id="${user.id}-availabeHours">8</td>
-                <td class="nonmarkable"><input path="helper" name="helper" id="${user.id}-helper" type="checkbox" value="${user.id}"></input></td>
-            </tr>
+             	<c:if test="${user.role != 'SUPERADMIN'}">
+		             <tr class="editable" id="${user.id}-row"">
+		            	<td><input name="assignee" type="radio" id="${user.id}-select" value="${user.id}" path="assignee"></input></td>
+		                <td class="nonmarkable" id="${user.id}-name">${user.firstName} ${user.lastName}</td>
+		                <td class="markable" id="${user.id}-8" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-9" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-17" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-18" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-19" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="markable" id="${user.id}-20" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+		                <td class="nonmarkable" dynamicvalue="0" style="font-weight: bold; font-size: 16px;" id="${user.id}-totalHours">0</td>
+		                <td class="nonmarkable" dynamicvalue="8" style="font-weight: bold; font-size: 18px; color: green" id="${user.id}-availabeHours">8</td>
+		                <td class="nonmarkable"><input path="helper" name="helper" id="${user.id}-helper" type="checkbox" value="${user.id}"></input></td>
+		            </tr>
+            	</c:if>
              </c:forEach>
              </c:if>
         </tbody>

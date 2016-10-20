@@ -589,7 +589,8 @@
                     url: serviceUrl,
                     data: params,
                     type: options.type,
-                    dataType: options.dataType
+                    dataType: options.dataType,
+                    global:false
                 };
 
                 $.extend(ajaxSettings, options.ajaxSettings);

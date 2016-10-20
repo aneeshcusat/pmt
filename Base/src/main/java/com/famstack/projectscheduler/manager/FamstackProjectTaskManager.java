@@ -118,7 +118,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 	}
 
 	public void deleteTaskItem(int taskId) {
-		TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager.getItemById(taskId, TaskItem.class);
+		TaskItem taskItem = getTaskItemById(taskId);
 		if (taskItem != null) {
 			famstackUserActivityManager.deleteAllUserTaskActivities(taskItem.getTaskId());
 			famstackDataAccessObjectManager.deleteItem(taskItem);
@@ -133,11 +133,15 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		return (TaskItem) famstackDataAccessObjectManager.getItemById(taskId, TaskItem.class);
 	}
 
+	public TaskDetails getTaskDetailsById(int taskId) {
+		return mapTask(getTaskItemById(taskId));
+	}
+
 	public Set<TaskDetails> mapProjectTaskDetails(Set<TaskItem> taskItems) {
 		Set<TaskDetails> taskDetails = new HashSet<TaskDetails>();
 		if (taskItems != null) {
 			for (TaskItem taskItem : taskItems) {
-				TaskDetails taskDetail = mapProjectItemToProjectDetails(taskItem);
+				TaskDetails taskDetail = mapTask(taskItem);
 				taskDetails.add(taskDetail);
 			}
 		}
@@ -145,7 +149,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		return taskDetails;
 	}
 
-	public TaskDetails mapProjectItemToProjectDetails(TaskItem taskItem) {
+	public TaskDetails mapTask(TaskItem taskItem) {
 
 		if (taskItem != null) {
 			TaskDetails taskDetails = new TaskDetails();
@@ -235,7 +239,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 						}
 						TaskActivityDetails taskActivityDetails = famstackUserActivityManager
 								.mapUserTaskActivityItem(userTaskActivityItem);
-						TaskDetails taskDetails = mapProjectItemToProjectDetails(taskItem);
+						TaskDetails taskDetails = mapTask(taskItem);
 						taskDetails.setTaskActivityDetails(taskActivityDetails);
 						userTaskActivityItemMap.get(taskItem.getStatus().value()).add(taskDetails);
 					}

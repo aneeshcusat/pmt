@@ -1,9 +1,10 @@
-var doAjaxRequest = function(requestType, requestUrl, requestJsonData, successCallBackMethod, errorCallBackMethod) {
+var doAjaxRequestWithGlobal = function(requestType, requestUrl, requestJsonData, successCallBackMethod, errorCallBackMethod, global) {
    $.ajax({
        type : requestType,
        url : requestUrl ,
        data: requestJsonData,
        timeout : 6000,
+       global:global,
        success : function(data) {
         	   successCallBackMethod(data);
         	   $(".page-container").waitMe('hide');
@@ -19,6 +20,11 @@ var doAjaxRequest = function(requestType, requestUrl, requestJsonData, successCa
        }
    });
 }
+
+var doAjaxRequest = function(requestType, requestUrl, requestJsonData, successCallBackMethod, errorCallBackMethod) {
+	doAjaxRequestWithGlobal(requestType, requestUrl, requestJsonData, successCallBackMethod, errorCallBackMethod, true);
+}
+
 
 
 $( document ).ajaxStart(function() {

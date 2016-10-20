@@ -352,4 +352,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 					ProjectActivityType.PROJECT_DETAILS_UPDATED, null);
 		}
 	}
+
+	public TaskDetails getProjectTaskById(int taskId) {
+		return famstackProjectTaskManager.getTaskDetailsById(taskId);
+	}
 }

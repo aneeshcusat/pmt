@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.famstack.email.contants.EmailTemplates;
@@ -25,7 +24,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 
 	private List<FamstackBaseNotificationService> notificationServices;
 
-	@Async
+	// @Async
 	public void notifyAll(NotificationType notificationType, Object object) {
 		logDebug("notification " + notificationType);
 		NotificationItem notificationEmailItem = null;
@@ -196,7 +195,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	private List<String> getToListForTaskUpdate(TaskDetails taskDetails) {
 		List<String> toList = new ArrayList<>();
 		String helpers = taskDetails.getHelpersList();
-		if (!StringUtils.isNotBlank(helpers)) {
+		if (StringUtils.isNotBlank(helpers)) {
 			String[] helperArray = helpers.split(",");
 			for (String helper : helperArray) {
 				EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getUserMap()
@@ -222,7 +221,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		List<String> toList = new ArrayList<>();
 		String reporterEmail = projectDetails.getReporter().getUserId();
 		String watchers = projectDetails.getWatchers();
-		if (!StringUtils.isNotBlank(watchers)) {
+		if (StringUtils.isNotBlank(watchers)) {
 			String[] watchersArray = watchers.split(",");
 			toList.addAll(Arrays.asList(watchersArray));
 		}
@@ -235,7 +234,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		List<Integer> toList = new ArrayList<>();
 		int reporterId = projectDetails.getReporter().getId();
 		String watchers = projectDetails.getWatchers();
-		if (!StringUtils.isNotBlank(watchers)) {
+		if (StringUtils.isNotBlank(watchers)) {
 			String[] watchersArray = watchers.split(",");
 			for (String watcher : watchersArray) {
 				Integer watcherId = FamstackApplicationConfiguration.getUserIdMap().get(watcher);
@@ -253,7 +252,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	private List<Integer> getSubscribersIdForProjectUpdates(TaskDetails taskDetails) {
 		List<Integer> toList = new ArrayList<>();
 		String helpers = taskDetails.getHelpersList();
-		if (!StringUtils.isNotBlank(helpers)) {
+		if (StringUtils.isNotBlank(helpers)) {
 			String[] helperArray = helpers.split(",");
 			for (String helper : helperArray) {
 				toList.add(Integer.parseInt(helper));

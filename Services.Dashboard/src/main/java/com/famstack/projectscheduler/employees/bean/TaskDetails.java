@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.util.StringUtils;
 
 public class TaskDetails {
@@ -38,6 +39,8 @@ public class TaskDetails {
 	private String helpersList;
 
 	private TaskStatus status;
+
+	private UserItem reporter;
 
 	private TaskActivityDetails taskActivityDetails;
 
@@ -162,8 +165,8 @@ public class TaskDetails {
 	}
 
 	public String getHelpersList() {
-		if (!StringUtils.isNotBlank(helpersList)) {
-			helpersList = helpersList.replace("[", "").replaceAll("]", "");
+		if (StringUtils.isNotBlank(helpersList)) {
+			helpersList = helpersList.replace("[", "").replaceAll("]", "").replace("null", "");
 		}
 		return helpersList;
 	}
@@ -200,6 +203,14 @@ public class TaskDetails {
 			diffInMinute = diff / (60 * 1000);
 		}
 		return diffInMinute;
+	}
+
+	public UserItem getReporter() {
+		return reporter;
+	}
+
+	public void setReporter(UserItem reporter) {
+		this.reporter = reporter;
 	}
 
 }

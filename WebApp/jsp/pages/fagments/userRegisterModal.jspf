@@ -50,11 +50,16 @@
                     <div class="col-md-9">
                         <form:select path="designation" id="designation" class="form-control select" data-live-search="true">
                               <option value="-1">- select -</option>
-                            <option>Designation 1</option>
-                            <option>Designation 2</option>
-                            <option>Designation 3</option>
-                            <option>Designation 4</option>
-                            <option>Designation 5</option>
+                            <option>Vice President</option>
+                            <option>Associate Vice President</option>
+                            <option>Senior Director</option>
+                            <option>Director</option>
+                            <option>Senior Manager</option>
+                            <option>Manager</option>
+                            <option>Associate Manager</option>
+                            <option>Senior Analyst</option>
+                            <option>Analyst</option>
+                            <option>Junior Analyst</option>
                         </form:select>
                     </div>
                 </div>
@@ -101,11 +106,22 @@
 					<div class="col-md-9">
 						<form:select path="team" id="team" class="form-control select" data-live-search="true" name="group">
 							  <option value="-1">- select -</option>
-							<option>Team 1</option>
-							<option>Team 2</option>
-							<option>Team 3</option>
-							<option>Team 4</option>
-							<option>Team 5</option>
+							<c:if test="${not empty accountData}">  
+                                <c:forEach var="account" items="${accountData}">
+                                <c:if test="${not empty account.projectTeams}">  
+                                <c:set var="teamIndex" value="1"/>
+                                  <c:forEach var="projectTeam" items="${account.projectTeams}">
+                                   	<optgroup class="teamOption" label="${projectTeam.name}"">
+                                   <c:if test="${not empty projectTeam.projectSubTeams}">  
+                                    <c:forEach var="projectSubTeam" items="${projectTeam.projectSubTeams}">
+                                    	<option>${projectSubTeam.name}</option>
+                                     <c:set var="teamIndex" value="${teamIndex+1}"/>
+                                    </c:forEach>
+                                   </c:if>
+                                  </c:forEach>
+                                </c:if>
+                   			  </c:forEach>
+                   			</c:if>
 						</form:select>
 					</div>
 				</div>
@@ -115,11 +131,10 @@
 					<div class="col-md-9">
 						<form:select path="qualification" id="qualification" class="form-control select" data-live-search="true">
 							  <option value="-1">- select -</option>
-							<option>Qualification 1</option>
-							<option>Qualification 2</option>
-							<option>Qualification 3</option>
-							<option>Qualification 4</option>
-							<option>Qualification 5</option>
+							<option>Doctorate</option>
+							<option>Masters</option>
+							<option>Bachelors</option>
+							<option>Diploma</option>
 						</form:select>
 					</div>
 				</div>
@@ -131,11 +146,13 @@
 					<div class="col-md-9">
 						<form:select path="role" id="role" class="form-control select" data-live-search="true">
 							<option value="-1">- select -</option>
-							<option>SUPERADMIN</option>
-							<option>ADMIN</option>
-							<option>MANAGER</option>
-							<option>CORDINATOR</option>
-							<option>PRODUCTION</option>
+							<c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+								<option value="SUPERADMIN">Admin</option>
+							</c:if>
+							<option value="ADMIN">Sr Manager</option>
+							<option value="MANAGER">Manager</option>
+							<option value="CORDINATOR">Cordinator</option>
+							<option value="PRODUCTION">Production</option>
 						</form:select>
 					</div>
 				</div>
@@ -146,7 +163,9 @@
 							<option value="-1">- select -</option>
 							<c:if test="${not empty userMap}">
     						<c:forEach var="user" items="${userMap}">
-    							<option value="${user.id}">${user.firstName}</option>
+    						 	<c:if test="${user.role == 'ADMIN' || user.role == 'MANAGER'}">
+    								<option value="${user.id}">${user.firstName}</option>
+    							</c:if>
     						</c:forEach>
     						</c:if>
 						</form:select>
