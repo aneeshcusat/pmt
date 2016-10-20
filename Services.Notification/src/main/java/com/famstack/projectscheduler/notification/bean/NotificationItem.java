@@ -12,6 +12,7 @@ public abstract class NotificationItem {
 	private boolean read;
 
 	private int originUserId;
+
 	private List<Integer> subscriberList;
 
 	public int getMessageId() {

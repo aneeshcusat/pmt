@@ -49,12 +49,24 @@
 </html>
 <script>
 function userPingCheck(){
-	doAjaxRequest("POST", "${applicationHome}/userPingCheck", {userId:${currentUser.id}}, function(data) {
-	    console.log("userPingCheck: ", data);
-	}, function(e) {
-	    console.log("ERROR: ", e);
+	$.ajax({
+	    type : "POST",
+	    url : "${applicationHome}/userPingCheck" ,
+	    data: {userId:${currentUser.id}},
+	    timeout : 6000,
+	    global:false,
+	    success : function(data) {
+	    	console.log("userPingCheck: ", data);
+	    },
+	    error : function(error) {
+	    	console.log("ERROR: ", e);
+	    },
+	    done : function(e) {
+	    }
 	});
 }
+
+
 
 var idleTime = 1;
 $(document).ready(function () {

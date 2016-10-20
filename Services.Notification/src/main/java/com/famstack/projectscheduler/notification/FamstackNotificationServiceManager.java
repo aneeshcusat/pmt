@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.famstack.email.contants.EmailTemplates;
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -25,7 +26,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	private List<FamstackBaseNotificationService> notificationServices;
 
 	@Async
-	public void notifyAll(NotificationType notificationType, int currentUserId, Object object) {
+	public void notifyAll(NotificationType notificationType, Object object) {
 		logDebug("notification " + notificationType);
 		NotificationItem notificationEmailItem = null;
 
@@ -68,9 +69,11 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		}
 
 		if (notificationEmailItem != null) {
-			notificationEmailItem.setOriginUserId(currentUserId);
+			notificationEmailItem.setOriginUserId(0);
 			for (FamstackBaseNotificationService notificationService : notificationServices) {
+
 				if (notificationService.isEnabled()) {
+					logDebug("Sending notification...");
 					notificationService.notify(notificationEmailItem);
 				}
 			}
@@ -133,7 +136,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		ProjectDetails projectDetails = (ProjectDetails) object;
 		notificationEmailItem.getData().put("url", getFamstackApplicationConfiguration().getUrl());
 		notificationEmailItem.setToList(getToListForProjectUpdates(projectDetails));
-
+		notificationEmailItem.setSubscriberList(getSubscribersIdForProjectUpdates(projectDetails));
 		notificationEmailItem.getData().put("id", projectDetails.getId());
 		notificationEmailItem.getData().put("name", projectDetails.getName());
 		notificationEmailItem.getData().put("code", projectDetails.getCode());
@@ -162,15 +165,18 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	private EmailNotificationItem getProjectTaskStatusNotificationItem(Object object) {
 		EmailNotificationItem notificationEmailItem = null;
 		Map<String, Object> dataMap = (Map<String, Object>) object;
-		notificationEmailItem.getData().put("url", getFamstackApplicationConfiguration().getUrl());
+
 		if (dataMap != null && !dataMap.isEmpty()) {
 			notificationEmailItem = new EmailNotificationItem();
+			notificationEmailItem.getData().put("url", getFamstackApplicationConfiguration().getUrl());
 			TaskDetails taskDetails = (TaskDetails) dataMap.get("taskDetails");
 			ProjectDetails projectDetails = (ProjectDetails) dataMap.get("projectDetails");
 
 			notificationEmailItem.setToList(getToListForProjectUpdates(projectDetails));
-
 			notificationEmailItem.getToList().addAll(getToListForTaskUpdate(taskDetails));
+
+			notificationEmailItem.setSubscriberList(getSubscribersIdForProjectUpdates(projectDetails));
+			notificationEmailItem.getSubscriberList().addAll(getSubscribersIdForProjectUpdates(taskDetails));
 
 			notificationEmailItem.getData().put("id", taskDetails.getTaskId());
 			notificationEmailItem.getData().put("projectId", taskDetails.getProjectId());
@@ -208,6 +214,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 				toList.add(employeeDetails.getEmail());
 			}
 		}
+		logDebug("getToListForTaskUpdate" + toList);
 		return toList;
 	}
 
@@ -220,6 +227,40 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 			toList.addAll(Arrays.asList(watchersArray));
 		}
 		toList.add(reporterEmail);
+		logDebug("getToListForProjectUpdates" + toList);
+		return toList;
+	}
+
+	private List<Integer> getSubscribersIdForProjectUpdates(ProjectDetails projectDetails) {
+		List<Integer> toList = new ArrayList<>();
+		int reporterId = projectDetails.getReporter().getId();
+		String watchers = projectDetails.getWatchers();
+		if (!StringUtils.isNotBlank(watchers)) {
+			String[] watchersArray = watchers.split(",");
+			for (String watcher : watchersArray) {
+				Integer watcherId = FamstackApplicationConfiguration.getUserIdMap().get(watcher);
+
+				if (watcherId != null) {
+					toList.add(watcherId);
+				}
+			}
+		}
+		toList.add(reporterId);
+		logDebug("getSubscribersIdForProjectUpdates" + toList);
+		return toList;
+	}
+
+	private List<Integer> getSubscribersIdForProjectUpdates(TaskDetails taskDetails) {
+		List<Integer> toList = new ArrayList<>();
+		String helpers = taskDetails.getHelpersList();
+		if (!StringUtils.isNotBlank(helpers)) {
+			String[] helperArray = helpers.split(",");
+			for (String helper : helperArray) {
+				toList.add(Integer.parseInt(helper));
+			}
+			toList.add(taskDetails.getAssignee());
+		}
+		logDebug("getSubscribersIdForProjectUpdates" + toList);
 		return toList;
 	}
 
@@ -242,6 +283,9 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	}
 
 	private EmailNotificationItem getUserNotificationItem(Object object) {
+		if (object == null) {
+			return null;
+		}
 		EmailNotificationItem notificationEmailItem;
 		notificationEmailItem = new EmailNotificationItem();
 		EmployeeDetails employeeDetails = (EmployeeDetails) object;

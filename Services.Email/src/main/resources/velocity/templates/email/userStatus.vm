@@ -9,7 +9,7 @@
               <tbody><tr>
                 <td class="mobile-padding" style="padding:20px 20px 0" align="left">
 
-                  <h1>Your account password have been updated!</h1>
+                  <h1>Your account details have been updated!</h1>
 
                   <table width="100%" cellspacing="0" cellpadding="0">
                     <tbody><tr>
@@ -20,7 +20,7 @@
                   </tbody></table>
 
                   <div class="textdark">
-                    Your account settings have been updated. If you did not update your settings, please <a href="${url}/login">contact support</a>.
+                      Your account settings have been updated. If you did not update your settings, please <a href="${url}/login">contact support</a>.
                   </div>
                   <br>
                   <div>

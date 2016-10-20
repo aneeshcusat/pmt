@@ -32,17 +32,23 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	private static Map<String, Integer> userIdMap = new HashMap<>();
 
 	public void initialize() {
-		userMap.clear();
-		userIdMap.clear();
+
 		logDebug("Initializing FamstackApplicationConfiguration...");
 		initializeUserMap(famstackUserProfileManager.getEmployeeDataList());
 	}
 
 	private void initializeUserMap(List<EmployeeDetails> employeeDetailsList) {
+		Map<Integer, EmployeeDetails> userMapTemp = new HashMap<>();
+		Map<String, Integer> userIdMapTemp = new HashMap<>();
+
 		for (EmployeeDetails employeeDetails : employeeDetailsList) {
-			userMap.put(employeeDetails.getId(), employeeDetails);
-			userIdMap.put(employeeDetails.getEmail(), employeeDetails.getId());
+			userMapTemp.put(employeeDetails.getId(), employeeDetails);
+			userIdMapTemp.put(employeeDetails.getEmail(), employeeDetails.getId());
 		}
+		userMap.clear();
+		userIdMap.clear();
+		userMap.putAll(userMapTemp);
+		userIdMap.putAll(userIdMapTemp);
 	}
 
 	public List<EmployeeDetails> getUserList() {
@@ -96,7 +102,19 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	}
 
 	public String getUrl() {
-		return protocol + "://" + hostName + ":" + portNumber;
+		return protocol + "://" + hostName + ":" + portNumber + "/" + "bops/dashboard";
+	}
+
+	public int getCurrentUserId() {
+		int userId = 0;
+		if (getCurrentUser() == null) {
+			userId = getCurrentUser().getId();
+		}
+		return userId;
+	}
+
+	public static Map<String, Integer> getUserIdMap() {
+		return userIdMap;
 	}
 
 }

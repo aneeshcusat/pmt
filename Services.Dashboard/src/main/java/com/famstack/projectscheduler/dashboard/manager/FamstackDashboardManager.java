@@ -71,14 +71,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.createUserItem(employeeDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.USER_REGISTRAION, 0, employeeDetails);
+		famstackNotificationServiceManager.notifyAll(NotificationType.USER_REGISTRAION, employeeDetails);
 		return errorMap;
 	}
 
 	public Map<String, String> updateUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.updateUserItem(employeeDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, 0, employeeDetails);
+		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, employeeDetails);
 		return errorMap;
 	}
 
@@ -206,7 +206,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public boolean changePassword(String userName, String oldPassword, String password) {
 		boolean status = userProfileManager.changePassword(userName, oldPassword, password);
-		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, 0, userName);
+		Integer userId = getFamstackApplicationConfiguration().getUserIdMap().get(userName);
+		EmployeeDetails employeeDetails = null;
+
+		if (userId != null) {
+			employeeDetails = getFamstackApplicationConfiguration().getUserMap().get(userId);
+		}
+
+		famstackNotificationServiceManager.notifyAll(NotificationType.RESET_PASSWORD, employeeDetails);
 		return status;
 	}
 

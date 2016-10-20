@@ -6,25 +6,28 @@ var doAjaxRequest = function(requestType, requestUrl, requestJsonData, successCa
        timeout : 6000,
        success : function(data) {
         	   successCallBackMethod(data);
+        	   $(".page-container").waitMe('hide');
        },
        error : function(error) {
            console.log("ERROR: ", error);
            errorCallBackMethod(error);
+           $(".page-container").waitMe('hide');
        },
        done : function(e) {
            console.log("DONE");
+           $(".page-container").waitMe('hide');
        }
    });
 }
 
 
 $( document ).ajaxStart(function() {
-	$(".page-container").waitMe({
-		effect : "bounce",
-		text : "",
-		bg : 'rgba(255,255,255,0.7)',
-		color : "#000"
-		});
+	 $(".page-container").waitMe({
+			effect : "bounce",
+			text : "",
+			bg : 'rgba(255,255,255,0.7)',
+			color : "#000"
+			});
 	}).ajaxStop(function() {
 		$(".page-container").waitMe('hide');
 	});
