@@ -34,6 +34,9 @@ import com.famstack.projectscheduler.manager.FamstackProjectFileManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
+import com.famstack.projectscheduler.notification.bean.NotificationItem;
+import com.famstack.projectscheduler.notification.services.FamstackDesktopNotificationService;
+import com.famstack.projectscheduler.util.LimitedQueue;
 import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.utils.FamstackUtils;
 
@@ -63,6 +66,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackNotificationServiceManager famstackNotificationServiceManager;
+
+	@Resource
+	FamstackDesktopNotificationService famstackDesktopNotificationService;
 
 	public Map<String, Object> getUserData() {
 		return null;
@@ -303,5 +309,16 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		projectManager.updateProjectItem(projectDetails);
 		setCurrentUser(projectDetails);
 		famstackNotificationServiceManager.notifyAll(NotificationType.PROJECT_UPDATE, projectDetails);
+	}
+
+	public String getNotifications(int userId) {
+
+		LimitedQueue<NotificationItem> notificationItemList = famstackDesktopNotificationService
+				.getNotificatioItems(userId);
+		if (notificationItemList != null) {
+			return FamstackUtils.getJsonFromObject(notificationItemList);
+		}
+
+		return "{}";
 	}
 }

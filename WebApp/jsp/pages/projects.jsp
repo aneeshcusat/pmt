@@ -317,6 +317,8 @@ function initializeCreateProjectForm(project){
 	
 	$("#projectId").val(project.id);
 	
+	$("#quantity").val(project.quantity);
+	
 	$("#PONumber").val(project.PONumber);
 	$("#POidSpan").html(project.PONumber);
 	

@@ -2,13 +2,14 @@
                 <!-- START X-NAVIGATION -->
                 <ul class="x-navigation">
                     <li class="xn-logo">
-                        <a href="index.jsp">famstack</a>
+                        <a href="index">famstack</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     <li class="xn-profile">
-                        <a href="#" class="profile-mini">
-                            <img src="" alt=""/>
+                        <a href="${applicationHome}/profile/${currentUser.id}" class="profile-mini">
+                          <img src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                         </a>
+                        <a href="${applicationHome}/profile/${currentUser.id}">
                         <div class="profile" >
                             <div class="profile-image">
                                <img src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
@@ -17,7 +18,8 @@
                                 <div class="profile-data-name">${currentUser.firstName}</div>
                                 <div class="profile-data-title">${currentUser.designation}</div>
                             </div>
-                        </div>                                                                        
+                        </div>      
+                        </a>                                                                  
                     </li>
                     <li class="xn-title">Navigation</li>
                     <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">

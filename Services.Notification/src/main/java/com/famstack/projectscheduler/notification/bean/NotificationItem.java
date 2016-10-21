@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.notification.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.famstack.projectscheduler.contants.NotificationType;
@@ -8,8 +9,9 @@ import com.famstack.projectscheduler.contants.NotificationType;
 public abstract class NotificationItem {
 	private int messageId;
 	private NotificationType notificationType;
+	private boolean read = false;
 	private String message;
-	private boolean read;
+	private Date createdTme;
 
 	private int originUserId;
 
@@ -65,6 +67,14 @@ public abstract class NotificationItem {
 
 	public void setRead(boolean read) {
 		this.read = read;
+	}
+
+	public Date getCreatedTme() {
+		return createdTme;
+	}
+
+	public void setCreatedTme(Date createdTme) {
+		this.createdTme = createdTme;
 	}
 
 }

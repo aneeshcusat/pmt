@@ -17,12 +17,14 @@ public class FamstackDesktopNotificationService extends FamstackBaseNotification
 
 	@Override
 	public void notify(NotificationItem notificationItem) {
-
 		if (notificationItem != null) {
+			logDebug("adding desktop notification for " + notificationItem.getNotificationType());
 			for (Integer userId : notificationItem.getSubscriberList()) {
 				LimitedQueue<NotificationItem> notificationQueue = userNotificationMap.get(userId);
 				if (notificationQueue == null) {
-					notificationQueue = new LimitedQueue(notificatioSize);
+					logDebug("creating a new map for the user" + userId);
+					notificationQueue = new LimitedQueue<NotificationItem>(notificatioSize);
+					userNotificationMap.put(userId, notificationQueue);
 				}
 				notificationQueue.add(notificationItem);
 			}
@@ -30,11 +32,11 @@ public class FamstackDesktopNotificationService extends FamstackBaseNotification
 	}
 
 	public LimitedQueue<NotificationItem> getNotificatioItems(int userId) {
+		logDebug("getting notification for user " + userId);
 		LimitedQueue<NotificationItem> notificationQueue = userNotificationMap.get(userId);
 		if (notificationQueue != null) {
 			return notificationQueue;
 		}
 		return null;
 	}
-
 }

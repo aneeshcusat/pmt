@@ -49,12 +49,45 @@
 </html>
 <script>
 function userPingCheck(){
-	doAjaxRequestWithGlobal("POST", "${applicationHome}/userPingCheck",  {userId:${currentUser.id}},function(data) {
+	doAjaxRequestWithGlobal("POST", "${applicationHome}/userPingCheck",  {},function(data) {
     	console.log("userPingCheck: ", data);
     },function(error) {
-    	console.log("ERROR: ", e);
+    	console.log("ERROR: ", error);
     },false);
 }
+
+function userNotifications(){
+	doAjaxRequestWithGlobal("GET", "${applicationHome}/getNotifications",  {},function(data) {
+    	var notifications = JSON.parse(data);
+    	processNotification(notifications);
+		console.log("notifications: ", notifications);
+    },function(error) {
+    	console.log("ERROR: ", error);
+    },false);
+}
+
+function processNotification(notification){
+	$("#mCSB_2_container").html("");
+	$("#notificationPageDiv").html("");
+	var newMessages = parseInt($("#newNotification").html());
+	$.each(notification, function(idx, elem){
+		if (elem.read == false) {
+			newMessages++;
+		}
+		console.log(newMessages);
+		var noficationType = elem.notificationType;
+		var message = elem.data.name + "has been created";
+		var notificationMessage = '<a id="projectLink" target="_new" href="${applicationHome}/project/'+elem.data.id+'" class="list-group-item"><span class="contacts-title">'+noficationType+'</span><p>'+message+'</p></a>'
+		$("#mCSB_2_container").prepend(notificationMessage);
+		$(".newNotification").html(newMessages);
+		
+		if ($.isFunction(fillNotificationPage)) {
+			fillNotificationPage(elem);
+		}
+	});
+}
+
+userNotifications();
 
 var idleTime = 1;
 $(document).ready(function () {
@@ -69,8 +102,9 @@ $(document).ready(function () {
 });
 
 function timerIncrement() {
-    if (idleTime < 1) { // 1 minutes
+    if (idleTime < 2) { // 1 minutes
     	userPingCheck();
+    	userNotifications();
     }
     idleTime = idleTime + 1;
 }

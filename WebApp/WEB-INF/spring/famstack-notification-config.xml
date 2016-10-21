@@ -19,7 +19,8 @@
 	<bean id="famstackNotificationServiceManager" class="com.famstack.projectscheduler.notification.FamstackNotificationServiceManager">
 	<property name="notificationServices">
 	   <list>
-		   <ref bean="famstackEmailNotificationService" />
+		   <!-- <ref bean="famstackEmailNotificationService" /> -->
+		   <ref bean="famstackDesktopNotificationService" />
 		</list>
 	</property>
 	</bean>

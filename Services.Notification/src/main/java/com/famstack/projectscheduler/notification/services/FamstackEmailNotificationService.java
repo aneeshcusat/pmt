@@ -37,7 +37,7 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
 	public void notify(NotificationItem notificationItem) {
 
 		EmailNotificationItem emailNotificationItem = (EmailNotificationItem) notificationItem;
-		if (!emailNotificationItem.getToList().isEmpty()) {
+		if (!emailNotificationItem.getToList().isEmpty() && emailNotificationItem.isEmailEnabled()) {
 			Map<String, Object> dataMap = emailNotificationItem.getData();
 
 			String templateName = emailNotificationItem.getEmailTemplate().getTemplate();

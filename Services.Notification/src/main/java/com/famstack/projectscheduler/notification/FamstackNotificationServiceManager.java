@@ -69,6 +69,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 
 		if (notificationEmailItem != null) {
 			notificationEmailItem.setOriginUserId(0);
+			notificationEmailItem.setNotificationType(notificationType);
 			for (FamstackBaseNotificationService notificationService : notificationServices) {
 
 				if (notificationService.isEnabled()) {
