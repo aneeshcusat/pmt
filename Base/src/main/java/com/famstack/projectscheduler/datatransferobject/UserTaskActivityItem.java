@@ -63,6 +63,12 @@ public class UserTaskActivityItem implements FamstackBaseItem {
 	@Column(name = "actual_end_time")
 	private Timestamp actualEndTime;
 
+	@Column(name = "inprogress_comment")
+	private String inprogressComment;
+
+	@Column(name = "completion_comment")
+	private String completionComment;
+
 	@ManyToOne
 	@JoinColumn(name = "user_act_id")
 	private UserActivityItem userActivityItem;
@@ -164,6 +170,22 @@ public class UserTaskActivityItem implements FamstackBaseItem {
 
 	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
+	}
+
+	public String getInprogressComment() {
+		return inprogressComment;
+	}
+
+	public void setInprogressComment(String inprogressComment) {
+		this.inprogressComment = inprogressComment;
+	}
+
+	public String getCompletionComment() {
+		return completionComment;
+	}
+
+	public void setCompletionComment(String completionComment) {
+		this.completionComment = completionComment;
 	}
 
 }

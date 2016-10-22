@@ -39,7 +39,7 @@ public class FamstackDashboardController extends BaseFamstackService {
 	public ModelAndView index() {
 		UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
 		if (userRole != UserRole.SUPERADMIN && userRole != UserRole.ADMIN && userRole != UserRole.MANAGER) {
-			return new ModelAndView("tasks");
+			return new ModelAndView("redirect:tasks");
 		}
 
 		Map<String, Long> projectCountBasedOnStatus = famstackDashboardManager.getProjectsCounts();

@@ -255,10 +255,11 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 
 		if (taskItem != null) {
 			taskItem.setStatus(taskStatus);
+
 			if (taskStatus == TaskStatus.INPROGRESS) {
-				famstackUserActivityManager.setProjectTaskActivityActualTime(taskActivityId, new Date());
+				famstackUserActivityManager.setProjectTaskActivityActualTime(taskActivityId, new Date(), comments);
 			} else if (taskStatus == TaskStatus.COMPLETED) {
-				famstackUserActivityManager.setProjectTaskActivityEndTime(taskActivityId, new Date());
+				famstackUserActivityManager.setProjectTaskActivityEndTime(taskActivityId, new Date(), comments);
 			}
 		}
 

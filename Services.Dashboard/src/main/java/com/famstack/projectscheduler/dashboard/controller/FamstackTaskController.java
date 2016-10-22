@@ -75,6 +75,14 @@ public class FamstackTaskController extends BaseFamstackService {
 		return new ModelAndView("tasks", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
 	}
 
+	@RequestMapping(value = "/listTaskListJson", method = RequestMethod.GET)
+	@ResponseBody
+	public String listTaskListJson() {
+		UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
+
+		return famstackDashboardManager.getProjectTasksDataListJson(currentUserItem.getId());
+	}
+
 	@RequestMapping(value = "/updateTaskStatus", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateTaskStatus(@RequestParam("taskId") int taskId,

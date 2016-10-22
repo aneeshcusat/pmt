@@ -262,10 +262,34 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return projectManager.getProjectTasksDataList(userId);
 	}
 
+	public String getProjectTasksDataListJson(int userId) {
+		Map<String, ArrayList<TaskDetails>> taskMap = projectManager.getProjectTasksDataList(userId);
+		return FamstackUtils.getJsonFromObject(taskMap);
+	}
+
 	public void updateTaskStatus(int taskId, int taskActivityId, TaskStatus taskStatus, String comments) {
 		projectManager.updateTaskStatus(taskId, taskActivityId, taskStatus, comments);
 		TaskDetails taskDetails = projectManager.getProjectTaskById(taskId);
-		triggerTaskNotification(NotificationType.TASK_UPDATED, taskDetails);
+		switch (taskStatus) {
+		case ASSIGNED:
+			triggerTaskNotification(NotificationType.TASK_ASSIGNED, taskDetails);
+			break;
+		case CLOSED:
+			triggerTaskNotification(NotificationType.TASK_CLOSED, taskDetails);
+			break;
+		case COMPLETED:
+			triggerTaskNotification(NotificationType.TASK_COMPLETED, taskDetails);
+			break;
+		case INPROGRESS:
+			triggerTaskNotification(NotificationType.TASK_INPROGRESS, taskDetails);
+			break;
+		case NEW:
+			triggerTaskNotification(NotificationType.TASK_CREATED, taskDetails);
+			break;
+		default:
+			break;
+		}
+
 	}
 
 	public List<ProjectDetails> getUnassignedProjects(ProjectStatus unassigned) {

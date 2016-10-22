@@ -3,6 +3,7 @@ package com.famstack.projectscheduler.notification.services;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
@@ -15,6 +16,7 @@ public class FamstackDesktopNotificationService extends FamstackBaseNotification
 
 	private final int notificatioSize = 20;
 
+	@Async
 	@Override
 	public void notify(NotificationItem notificationItem) {
 		if (notificationItem != null) {

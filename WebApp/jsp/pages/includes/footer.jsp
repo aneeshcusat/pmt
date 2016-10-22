@@ -66,6 +66,43 @@ function userNotifications(){
     },false);
 }
 
+var tasksCount = 0;
+
+function updateTaskNotification(){
+	tasksCount = 0
+	$("#mCSB_3_container").html("");
+	doAjaxRequestWithGlobal("GET", "${applicationHome}/listTaskListJson",  {},function(data) {
+    	var notifications = JSON.parse(data);
+    	processTaskNotification(notifications.COMPLETED);
+    	processTaskNotification(notifications.ASSIGNED);
+    	processTaskNotification(notifications.INPROGRESS);
+		console.log("task notification: ", notifications);
+		$(".taskNotification").html(tasksCount);
+    },function(error) {
+    	console.log("ERROR: ", error);
+    },false);
+}
+
+function processTaskNotification(notifications){
+	$.each(notifications, function(idx, elem){
+		console.log(tasksCount);
+		var taskName = elem.name;
+		var taskPercentage=elem.percentageOfTaskCompleted;
+		
+		var actualStartTime=elem.taskActivityDetails.actualStartTime; 
+		if (actualStartTime != null) {
+			taskDate=getTodayDateTime(new Date(actualStartTime));
+		}
+		
+		if (taskDate == null) {
+			taskDate=elem.startTime;
+		}
+		var notificationMessage =  '<a class="list-group-item"  target="_new" href="${applicationHome}/tasks"><strong>'+taskName+'</strong><div class="progress progress-small progress-striped active"><div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: '+taskPercentage+'%;">'+taskPercentage+'%</div></div><small class="text-muted">'+taskDate+' / '+taskPercentage+'%</small></a>';
+		$("#mCSB_3_container").prepend(notificationMessage);
+		tasksCount++;
+	});
+}
+
 function processNotification(notification){
 	$("#mCSB_2_container").html("");
 	$("#notificationPageDiv").html("");
@@ -76,18 +113,19 @@ function processNotification(notification){
 		}
 		console.log(newMessages);
 		var noficationType = elem.notificationType;
-		var message = elem.data.name + "has been created";
+		var message = elem.data.name ;
 		var notificationMessage = '<a id="projectLink" target="_new" href="${applicationHome}/project/'+elem.data.id+'" class="list-group-item"><span class="contacts-title">'+noficationType+'</span><p>'+message+'</p></a>'
 		$("#mCSB_2_container").prepend(notificationMessage);
-		$(".newNotification").html(newMessages);
 		
-		if ($.isFunction(fillNotificationPage)) {
+		if (typeof fillNotificationPage !== 'undefined' && $.isFunction(fillNotificationPage)) {
 			fillNotificationPage(elem);
 		}
 	});
+	$(".newNotification").html(newMessages);
 }
 
 userNotifications();
+updateTaskNotification();
 
 var idleTime = 1;
 $(document).ready(function () {

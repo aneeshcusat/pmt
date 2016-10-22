@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.famstack.email.FamstackEmailSender;
@@ -33,6 +34,7 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
 	 * @param deliveryOrderItem
 	 *            the delivery order item
 	 */
+	@Async
 	@Override
 	public void notify(NotificationItem notificationItem) {
 

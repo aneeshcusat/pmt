@@ -158,6 +158,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		taskActivityDetails.setDuration(userTaskActivityItem.getDuration());
 		taskActivityDetails.setUserTaskType(userTaskActivityItem.getType());
 		taskActivityDetails.setStartHour(userTaskActivityItem.getStartHour());
+		taskActivityDetails.setInprogressComment((userTaskActivityItem.getInprogressComment()));
+		taskActivityDetails.setCompletionComment(userTaskActivityItem.getCompletionComment());
 		taskActivityDetails.setActualStartTime(userTaskActivityItem.getActualStartTime());
 		return taskActivityDetails;
 	}
@@ -181,10 +183,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		return null;
 	}
 
-	public void setProjectTaskActivityActualTime(int taskActivityId, Date date) {
+	public void setProjectTaskActivityActualTime(int taskActivityId, Date date, String comment) {
 		UserTaskActivityItem userTaskActivityItem = getUserTaskActivityItem(taskActivityId);
 
 		if (userTaskActivityItem != null) {
+			userTaskActivityItem.setInprogressComment(comment);
 			userTaskActivityItem.setActualStartTime(new Timestamp(date.getTime()));
 		}
 
@@ -192,10 +195,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 
 	}
 
-	public void setProjectTaskActivityEndTime(int taskActivityId, Date date) {
+	public void setProjectTaskActivityEndTime(int taskActivityId, Date date, String comment) {
 		UserTaskActivityItem userTaskActivityItem = getUserTaskActivityItem(taskActivityId);
 
 		if (userTaskActivityItem != null) {
+			userTaskActivityItem.setCompletionComment(comment);
 			userTaskActivityItem.setActualEndTime(new Timestamp(date.getTime()));
 		}
 

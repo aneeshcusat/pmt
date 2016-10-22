@@ -28,6 +28,10 @@ public class TaskActivityDetails {
 
 	private UserTaskType userTaskType;
 
+	private String inprogressComment;
+
+	private String completionComment;
+
 	private long timeTakenToCompleteHour;
 	private long timeTakenToCompleteMinute;
 	private long timeTakenToCompleteSecond;
@@ -181,6 +185,22 @@ public class TaskActivityDetails {
 
 	public void setTimeTakenToComplete(String timeTakenToComplete) {
 		this.timeTakenToComplete = timeTakenToComplete;
+	}
+
+	public String getInprogressComment() {
+		return inprogressComment;
+	}
+
+	public void setInprogressComment(String inprogressComment) {
+		this.inprogressComment = inprogressComment;
+	}
+
+	public String getCompletionComment() {
+		return completionComment;
+	}
+
+	public void setCompletionComment(String completionComment) {
+		this.completionComment = completionComment;
 	}
 
 }

@@ -63,6 +63,15 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		case TASK_DELETED:
 			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
 			break;
+		case TASK_COMPLETED:
+			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
+			break;
+		case TASK_INPROGRESS:
+			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
+			break;
+		case TASK_CLOSED:
+			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
+			break;
 		default:
 			break;
 		}
