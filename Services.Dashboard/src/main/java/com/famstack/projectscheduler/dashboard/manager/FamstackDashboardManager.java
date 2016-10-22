@@ -77,14 +77,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.createUserItem(employeeDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.USER_REGISTRAION, employeeDetails);
+		notifyAll(NotificationType.USER_REGISTRAION, employeeDetails);
 		return errorMap;
 	}
 
 	public Map<String, String> updateUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
 		userProfileManager.updateUserItem(employeeDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.USER_UPDATE, employeeDetails);
+		notifyAll(NotificationType.USER_UPDATE, employeeDetails);
 		return errorMap;
 	}
 
@@ -115,7 +115,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public void createProject(ProjectDetails projectDetails) {
 		projectManager.createProjectItem(projectDetails);
 		setCurrentUser(projectDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.PROJECT_CREATE, projectDetails);
+		notifyAll(NotificationType.PROJECT_CREATE, projectDetails);
 	}
 
 	public List<ProjectDetails> getProjectsDataList() {
@@ -127,7 +127,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
 		projectManager.deleteProjectItem(projectId);
 		setCurrentUser(projectDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.PROJECT_DELETE, projectDetails);
+		notifyAll(NotificationType.PROJECT_DELETE, projectDetails);
 	}
 
 	public void createComment(String projectComments, int projectId) {
@@ -164,17 +164,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	private void triggerTaskNotification(NotificationType type, TaskDetails taskDetails) {
 		ProjectDetails projectDetails = projectManager.getProjectDetails(taskDetails.getProjectId());
-		setCurrentUser(taskDetails);
-		setCurrentUser(projectDetails);
 		Map<String, Object> projectTaskMap = new HashMap<>();
 		projectTaskMap.put("taskDetails", taskDetails);
 		projectTaskMap.put("projectDetails", projectDetails);
-		famstackNotificationServiceManager.notifyAll(type, projectTaskMap);
+		notifyAll(type, projectTaskMap);
 
-	}
-
-	private void setCurrentUser(TaskDetails taskDetails) {
-		taskDetails.setReporter(getFamstackApplicationConfiguration().getCurrentUser());
 	}
 
 	private void setCurrentUser(ProjectDetails projectDetails) {
@@ -249,7 +243,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			employeeDetails = getFamstackApplicationConfiguration().getUserMap().get(userId);
 		}
 
-		famstackNotificationServiceManager.notifyAll(NotificationType.RESET_PASSWORD, employeeDetails);
+		notifyAll(NotificationType.RESET_PASSWORD, employeeDetails);
 		return status;
 	}
 
@@ -332,7 +326,12 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public void updateProject(ProjectDetails projectDetails) {
 		projectManager.updateProjectItem(projectDetails);
 		setCurrentUser(projectDetails);
-		famstackNotificationServiceManager.notifyAll(NotificationType.PROJECT_UPDATE, projectDetails);
+		notifyAll(NotificationType.PROJECT_UPDATE, projectDetails);
+	}
+
+	private void notifyAll(NotificationType notificationType, Object detailsObject) {
+		UserItem currentUser = getFamstackApplicationConfiguration().getCurrentUser();
+		famstackNotificationServiceManager.notifyAll(notificationType, detailsObject, currentUser);
 	}
 
 	public String getNotifications(int userId) {

@@ -1,9 +1,10 @@
 package com.famstack.projectscheduler.notification;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import com.famstack.email.contants.EmailTemplates;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.NotificationType;
+import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
@@ -25,7 +27,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	private List<FamstackBaseNotificationService> notificationServices;
 
 	// @Async
-	public void notifyAll(NotificationType notificationType, Object object) {
+	public void notifyAll(NotificationType notificationType, Object object, UserItem currentUserItem) {
 		logDebug("notification " + notificationType);
 		NotificationItem notificationEmailItem = null;
 
@@ -64,20 +66,20 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
 			break;
 		case TASK_COMPLETED:
-			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
+			notificationEmailItem = getNotificationItemForProjectTaskCompleted(object);
 			break;
 		case TASK_INPROGRESS:
-			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
+			notificationEmailItem = getNotificationItemForProjectTaskInprogress(object);
 			break;
 		case TASK_CLOSED:
-			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
+			notificationEmailItem = getNotificationItemForProjectTaskClosed(object);
 			break;
 		default:
 			break;
 		}
 
 		if (notificationEmailItem != null) {
-			notificationEmailItem.setOriginUserId(0);
+			notificationEmailItem.setOriginUserId(currentUserItem.getId());
 			notificationEmailItem.setNotificationType(notificationType);
 			for (FamstackBaseNotificationService notificationService : notificationServices) {
 
@@ -136,6 +138,24 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	private NotificationItem getNotificationItemForProjectTaskDeleted(Object object) {
 		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
 		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_DELETED);
+		return notificationEmailItem;
+	}
+
+	private NotificationItem getNotificationItemForProjectTaskClosed(Object object) {
+		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_CLOSED);
+		return notificationEmailItem;
+	}
+
+	private NotificationItem getNotificationItemForProjectTaskInprogress(Object object) {
+		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_INPROGRESS);
+		return notificationEmailItem;
+	}
+
+	private NotificationItem getNotificationItemForProjectTaskCompleted(Object object) {
+		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_COMPLETED);
 		return notificationEmailItem;
 	}
 
@@ -202,8 +222,8 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		return notificationEmailItem;
 	}
 
-	private List<String> getToListForTaskUpdate(TaskDetails taskDetails) {
-		List<String> toList = new ArrayList<>();
+	private Set<String> getToListForTaskUpdate(TaskDetails taskDetails) {
+		Set<String> toList = new HashSet<>();
 		String helpers = taskDetails.getHelpersList();
 		if (StringUtils.isNotBlank(helpers)) {
 			String[] helperArray = helpers.split(",");
@@ -215,20 +235,21 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 					toList.add(employeeDetails.getEmail());
 				}
 			}
-
-			EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getUserMap()
-					.get(taskDetails.getAssignee());
-
-			if (employeeDetails != null) {
-				toList.add(employeeDetails.getEmail());
-			}
 		}
+
+		EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getUserMap()
+				.get(taskDetails.getAssignee());
+
+		if (employeeDetails != null) {
+			toList.add(employeeDetails.getEmail());
+		}
+
 		logDebug("getToListForTaskUpdate" + toList);
 		return toList;
 	}
 
-	private List<String> getToListForProjectUpdates(ProjectDetails projectDetails) {
-		List<String> toList = new ArrayList<>();
+	private Set<String> getToListForProjectUpdates(ProjectDetails projectDetails) {
+		Set<String> toList = new HashSet<>();
 		String reporterEmail = projectDetails.getReporter().getUserId();
 		String watchers = projectDetails.getWatchers();
 		if (StringUtils.isNotBlank(watchers)) {
@@ -240,8 +261,8 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		return toList;
 	}
 
-	private List<Integer> getSubscribersIdForProjectUpdates(ProjectDetails projectDetails) {
-		List<Integer> toList = new ArrayList<>();
+	private Set<Integer> getSubscribersIdForProjectUpdates(ProjectDetails projectDetails) {
+		Set<Integer> toList = new HashSet<>();
 		int reporterId = projectDetails.getReporter().getId();
 		String watchers = projectDetails.getWatchers();
 		if (StringUtils.isNotBlank(watchers)) {
@@ -259,8 +280,8 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		return toList;
 	}
 
-	private List<Integer> getSubscribersIdForProjectUpdates(TaskDetails taskDetails) {
-		List<Integer> toList = new ArrayList<>();
+	private Set<Integer> getSubscribersIdForProjectUpdates(TaskDetails taskDetails) {
+		Set<Integer> toList = new HashSet<>();
 		String helpers = taskDetails.getHelpersList();
 		if (StringUtils.isNotBlank(helpers)) {
 			String[] helperArray = helpers.split(",");

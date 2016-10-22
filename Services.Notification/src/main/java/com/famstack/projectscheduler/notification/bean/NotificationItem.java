@@ -1,8 +1,8 @@
 package com.famstack.projectscheduler.notification.bean;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.famstack.projectscheduler.contants.NotificationType;
 
@@ -15,7 +15,7 @@ public abstract class NotificationItem {
 
 	private int originUserId;
 
-	private List<Integer> subscriberList;
+	private Set<Integer> subscriberList;
 
 	public int getMessageId() {
 		return messageId;
@@ -50,14 +50,14 @@ public abstract class NotificationItem {
 		this.originUserId = originUserId;
 	}
 
-	public List<Integer> getSubscriberList() {
+	public Set<Integer> getSubscriberList() {
 		if (subscriberList == null) {
-			subscriberList = new ArrayList<>();
+			subscriberList = new HashSet<>();
 		}
 		return subscriberList;
 	}
 
-	public void setSubscriberList(List<Integer> subscriberList) {
+	public void setSubscriberList(Set<Integer> subscriberList) {
 		this.subscriberList = subscriberList;
 	}
 

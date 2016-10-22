@@ -1,16 +1,16 @@
 package com.famstack.projectscheduler.notification.bean;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.famstack.email.contants.EmailTemplates;
 
 public class EmailNotificationItem extends NotificationItem {
 
-	private List<String> toList;
+	private Set<String> toList;
 	private Map<String, Object> data;
 	private EmailTemplates emailTemplate;
 	private final boolean emailEnabled = true;
@@ -19,14 +19,14 @@ public class EmailNotificationItem extends NotificationItem {
 		setCreatedTme(new Date());
 	}
 
-	public List<String> getToList() {
+	public Set<String> getToList() {
 		if (toList == null) {
-			toList = new ArrayList<>();
+			toList = new HashSet<>();
 		}
 		return toList;
 	}
 
-	public void setToList(List<String> toList) {
+	public void setToList(Set<String> toList) {
 		this.toList = toList;
 	}
 
