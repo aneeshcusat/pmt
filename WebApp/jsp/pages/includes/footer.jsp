@@ -108,12 +108,15 @@ function processNotification(notification){
 	$("#notificationPageDiv").html("");
 	var newMessages = parseInt($("#newNotification").html());
 	$.each(notification, function(idx, elem){
-		if (elem.read == false) {
-			newMessages++;
-		}
 		console.log(newMessages);
 		var noficationType = elem.notificationType;
 		var message = elem.data.name ;
+		if (elem.read == false) {
+			newMessages++;
+			 $.notify(message, {
+			        title: "famstack notificaion" + noficationType
+			 });
+		}
 		var notificationMessage = '<a id="projectLink" target="_new" href="${applicationHome}/project/'+elem.data.id+'" class="list-group-item"><span class="contacts-title">'+noficationType+'</span><p>'+message+'</p></a>'
 		$("#mCSB_2_container").prepend(notificationMessage);
 		

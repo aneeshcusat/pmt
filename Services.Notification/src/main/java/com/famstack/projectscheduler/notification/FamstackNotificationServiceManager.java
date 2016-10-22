@@ -29,56 +29,72 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 	// @Async
 	public void notifyAll(NotificationType notificationType, Object object, UserItem currentUserItem) {
 		logDebug("notification " + notificationType);
-		NotificationItem notificationEmailItem = null;
+		EmailNotificationItem notificationEmailItem = null;
 
 		switch (notificationType) {
 		case USER_REGISTRAION:
-			notificationEmailItem = getNotificationItemForRegistraion(object);
+			notificationEmailItem = getUserNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.USER_REGISTRAION);
 			break;
 		case RESET_PASSWORD:
-			notificationEmailItem = getNotificationItemForResetPassword(object);
+			notificationEmailItem = getUserNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.RESET_PASSWORD);
 			break;
 		case USER_UPDATE:
-			notificationEmailItem = getNotificationItemForUserUpdate(object);
+			notificationEmailItem = getUserNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.USER_UPDATE);
 			break;
 		case PROJECT_CREATE:
-			notificationEmailItem = getNotificationItemForProjectCreate(object);
+			notificationEmailItem = getProjectStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.PROJECT_CREATE);
 			break;
 		case PROJECT_UPDATE:
-			notificationEmailItem = getNotificationItemForProjectUpdate(object);
+			notificationEmailItem = getProjectStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.PROJECT_UPDATE);
 			break;
 		case PROJECT_DELETE:
-			notificationEmailItem = getNotificationItemForProjectDelete(object);
+			notificationEmailItem = getProjectStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.PROJECT_DELETE);
 			break;
 		case TASK_CREATED:
-			notificationEmailItem = getNotificationItemForProjectTaskCreated(object);
+			notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_CREATED);
 			break;
 		case TASK_CREATED_ASSIGNED:
-			notificationEmailItem = getNotificationItemForProjectTaskCreatedAssigned(object);
+			notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_CREATED_ASSIGNED);
 			break;
 		case TASK_UPDATED:
-			notificationEmailItem = getNotificationItemForProjectTaskUpdated(object);
+			notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_UPDATED);
 			break;
 		case TASK_ASSIGNED:
-			notificationEmailItem = getNotificationItemForProjectTaskAssigned(object);
+			notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_ASSIGNED);
 			break;
 		case TASK_DELETED:
-			notificationEmailItem = getNotificationItemForProjectTaskDeleted(object);
+			notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_DELETED);
 			break;
 		case TASK_COMPLETED:
-			notificationEmailItem = getNotificationItemForProjectTaskCompleted(object);
+			notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_COMPLETED);
 			break;
 		case TASK_INPROGRESS:
-			notificationEmailItem = getNotificationItemForProjectTaskInprogress(object);
+			notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_INPROGRESS);
 			break;
 		case TASK_CLOSED:
-			notificationEmailItem = getNotificationItemForProjectTaskClosed(object);
+			notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_CLOSED);
 			break;
 		default:
 			break;
 		}
 
 		if (notificationEmailItem != null) {
+			notificationEmailItem.getToList().add(currentUserItem.getUserId());
+			notificationEmailItem.getSubscriberList().add(currentUserItem.getId());
 			notificationEmailItem.setOriginUserId(currentUserItem.getId());
 			notificationEmailItem.setNotificationType(notificationType);
 			for (FamstackBaseNotificationService notificationService : notificationServices) {
@@ -91,72 +107,6 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		} else {
 			logError("Email type " + notificationType + "has not configured! ");
 		}
-	}
-
-	private NotificationItem getNotificationItemForProjectCreate(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.PROJECT_CREATE);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectUpdate(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.PROJECT_UPDATE);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectDelete(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.PROJECT_DELETE);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectTaskCreated(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_CREATED);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectTaskCreatedAssigned(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_CREATED_ASSIGNED);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectTaskAssigned(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_ASSIGNED);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectTaskUpdated(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_UPDATED);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectTaskDeleted(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_DELETED);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectTaskClosed(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_CLOSED);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectTaskInprogress(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_INPROGRESS);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForProjectTaskCompleted(Object object) {
-		EmailNotificationItem notificationEmailItem = getProjectTaskStatusNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.TASK_COMPLETED);
-		return notificationEmailItem;
 	}
 
 	private EmailNotificationItem getProjectStatusNotificationItem(Object object) {
@@ -290,7 +240,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 			}
 			toList.add(taskDetails.getAssignee());
 		}
-		logDebug("getSubscribersIdForProjectUpdates" + toList);
+		logDebug("getSubscribersIdForProjecttaskUpdates" + toList);
 		return toList;
 	}
 

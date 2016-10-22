@@ -28,7 +28,7 @@ public class FamstackDesktopNotificationService extends FamstackBaseNotification
 					notificationQueue = new LimitedQueue<NotificationItem>(notificatioSize);
 					userNotificationMap.put(userId, notificationQueue);
 				}
-				notificationQueue.add(notificationItem);
+				notificationQueue.add((NotificationItem) notificationItem.clone());
 			}
 		}
 	}

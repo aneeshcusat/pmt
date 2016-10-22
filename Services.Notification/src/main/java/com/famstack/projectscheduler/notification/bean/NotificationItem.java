@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.famstack.projectscheduler.contants.NotificationType;
 
-public abstract class NotificationItem {
+public abstract class NotificationItem implements Cloneable {
 	private int messageId;
 	private NotificationType notificationType;
 	private boolean read = false;
@@ -75,6 +75,15 @@ public abstract class NotificationItem {
 
 	public void setCreatedTme(Date createdTme) {
 		this.createdTme = createdTme;
+	}
+
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+		}
+		return this;
 	}
 
 }
