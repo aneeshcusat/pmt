@@ -114,8 +114,10 @@ function processNotification(notification){
 		if (elem.read == false) {
 			newMessages++;
 			 $.notify(message, {
-			        title: "famstack notificaion" + noficationType
-			 });
+			        title: "famstack notificaion " + noficationType
+			 }).click(function(){
+			        location.href = "${applicationHome}/project/"+elem.data.id;
+		      });
 		}
 		var notificationMessage = '<a id="projectLink" target="_new" href="${applicationHome}/project/'+elem.data.id+'" class="list-group-item"><span class="contacts-title">'+noficationType+'</span><p>'+message+'</p></a>'
 		$("#mCSB_2_container").prepend(notificationMessage);
