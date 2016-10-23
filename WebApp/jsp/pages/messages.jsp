@@ -245,13 +245,13 @@ function getMessageAfterId(groupId, messageId) {
     if (messageId == 'undefined' || messageId == null || messageId == '') {
         messageId = 0;
     }
-       doAjaxRequest('GET', '/bops/dashboard/messageAfter?messageId='+messageId+'&groupId='+groupId, null,
+    doAjaxRequestWithGlobal('GET', '/bops/dashboard/messageAfter?messageId='+messageId+'&groupId='+groupId, null,
         function(response) {
             var responseJsonObj = JSON.parse(response);
             processMessageAfterSave(responseJsonObj, groupId);
         }, function(e) {
             console.log(e)
-        });
+        }, false);
 }
 
 function processMessageAfterSave(jsonResponse, groupId) {
@@ -308,5 +308,5 @@ function refreshMessages() {
         getMessageAfterId(groupId, messageId);
     });
 }
-//setInterval('refreshMessages()', 3000);
+setInterval('refreshMessages()', 3000);
 </script>
