@@ -23,17 +23,26 @@
 	}
 	.project_progress .progress {
 		margin-bottom: 5px;
-		height: 10px;
+		height: 15px;
 	}
 	
 	div.tagsinputWatchers{
 	background-color: #fff;
 	}
+	
+	.table thead tr th {
+	   font-size:10pt;
+	}
+	
+	.margin5 {
+	   margin: 0px 5px 0px 5px;
+	}
+	
 }
 
 </style>
 <!-- START CONTENT FRAME -->
-<div class="content-frame">
+<div class="content-frame margin5">
 	<div class="content-frame-top">
 		<div class="page-title">
 			<h2>
@@ -78,7 +87,7 @@
 			
 		</h4>
 	</div>
-	<table class="table table-hover p-table datatable">
+	<table class="table table-hover p-table datatable ">
 		<thead>
 			<tr>
 				<th>Project Name</th>
@@ -96,7 +105,7 @@
         
 
 			<tr>
-				<td class="project_name"><a href="${applicationHome}/project/${project.id}">${project.name}</a> <br> <small>created on ${project.createdDate}</small></td>
+				<td class="project_name"><a href="${applicationHome}/project/${project.id}"><span style="font-size: 10pt">${project.name}</span></a> <br> <small>created on ${project.createdDate}</small></td>
 				<td><h5>${project.code}</h5></td>
 				<td class="project_team">
 				<c:if test="${not empty project.projectTaskDeatils}">
