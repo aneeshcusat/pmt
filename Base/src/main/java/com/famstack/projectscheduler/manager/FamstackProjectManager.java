@@ -138,10 +138,11 @@ public class FamstackProjectManager extends BaseFamstackManager {
 				projectDuration -= taskItem.getDuration();
 			}
 		}
-		if (projectDuration != 0) {
+		if (taskStatsList.isEmpty()) {
+			return ProjectStatus.NEW;
+		} else if (projectDuration != 0) {
 			return ProjectStatus.UNASSIGNED;
-		} else if (taskStatsList.contains(TaskStatus.NEW) && (taskStatsList.contains(TaskStatus.ASSIGNED)
-				|| (taskStatsList.contains(TaskStatus.INPROGRESS) || taskStatsList.contains(TaskStatus.COMPLETED)))) {
+		} else if (taskStatsList.contains(TaskStatus.NEW)) {
 			return ProjectStatus.UNASSIGNED;
 		} else if (taskStatsList.contains(TaskStatus.ASSIGNED)
 				&& (taskStatsList.contains(TaskStatus.INPROGRESS) || taskStatsList.contains(TaskStatus.COMPLETED))) {
