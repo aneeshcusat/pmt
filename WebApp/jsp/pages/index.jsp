@@ -26,22 +26,22 @@
                                  	<div>                                    
                                         <div class="widget-title">Upcoming Projects</div>
                                         <div class="widget-int">${projectsCount['NEW'] }</div>
-                                         <div class="widget-subtitle"><a href="#">View details</a></div>
+                                         <div class="widget-subtitle"><a href="projects/NEW">View details</a></div>
                                     </div>
                                     <div>                                    
                                         <div class="widget-title">Unassigned Projects</div>                                                                        
                                         <div class="widget-int">${projectsCount['UNASSIGNED'] }</div>
-                                        <div class="widget-subtitle"><a href="#">View details</a></div>
+                                        <div class="widget-subtitle"><a href="projects/UNASSIGNED">View details</a></div>
                                     </div>
                                     <div>                                    
                                         <div class="widget-title">Assigned Projects</div>
                                         <div class="widget-int">${projectsCount['ASSIGNED'] }</div>
-                                         <div class="widget-subtitle"><a href="#">View details</a></div>
+                                         <div class="widget-subtitle"><a href="projects/ASSIGNED">View details</a></div>
                                     </div>
                                       <div>                                    
                                         <div class="widget-title">Inprogress Projects</div>
                                         <div class="widget-int">${projectsCount['INPROGRESS'] }</div>
-                                         <div class="widget-subtitle"><a href="#">View details</a></div>
+                                         <div class="widget-subtitle"><a href="projects/INPROGRESS">View details</a></div>
                                     </div>
                                    
                                 </div>                            
@@ -55,7 +55,7 @@
                         <div class="col-md-3">
                             
                             <!-- START WIDGET MESSAGES -->
-                            <div class="widget widget-default widget-item-icon" onclick="location.href='projects';">
+                            <div class="widget widget-default widget-item-icon" onclick="location.href='projects/COMPLETED';">
                                 <div class="widget-item-left">
                                     <span class="fa fa-tasks"></span>
                                 </div>                             
@@ -74,7 +74,7 @@
                         <div class="col-md-3">
                             
                             <!-- START WIDGET REGISTRED -->
-                            <div class="widget widget-default widget-item-icon" onclick="location.href='projects';">
+                            <div class="widget widget-default widget-item-icon" onclick="location.href='projects/MISSED';">
                                 <div class="widget-item-left">
                                     <span class="fa fa fa-exclamation-triangle"></span>
                                 </div>

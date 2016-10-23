@@ -36,6 +36,8 @@ import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
 import com.famstack.projectscheduler.notification.services.FamstackDesktopNotificationService;
+import com.famstack.projectscheduler.util.DateTimePeriod;
+import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.LimitedQueue;
 import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.utils.FamstackUtils;
@@ -119,7 +121,16 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public List<ProjectDetails> getProjectsDataList() {
-		List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList();
+		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(),
+				getFamstackUserSessionConfiguration().getDashboardViewDays());
+		List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime);
+		return projectDetailsList;
+	}
+
+	public List<ProjectDetails> getProjects() {
+		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(),
+				getFamstackUserSessionConfiguration().getProjectViewLimit());
+		List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime);
 		return projectDetailsList;
 	}
 
@@ -286,22 +297,30 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	}
 
-	public List<ProjectDetails> getUnassignedProjects(ProjectStatus unassigned) {
-		return projectManager.getAllProjectDetailsList(unassigned);
+	public List<ProjectDetails> getProjectDetails(ProjectStatus projectStatus) {
+		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(),
+				getFamstackUserSessionConfiguration().getDashboardViewDays());
+		if (projectStatus == ProjectStatus.MISSED) {
+			return projectManager.getAllMissedTimeLineProjectDetails(startTime);
+		}
+		return projectManager.getAllProjectDetailsList(projectStatus, startTime);
 	}
 
 	public Map<String, Long> getProjectsCounts() {
+		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(),
+				getFamstackUserSessionConfiguration().getDashboardViewDays());
 		Map<String, Long> projectCounts = new HashMap<>();
 		projectCounts.put(ProjectStatus.ASSIGNED.value(),
-				projectManager.getAllProjectDetailsCount(ProjectStatus.ASSIGNED));
+				projectManager.getAllProjectDetailsCount(ProjectStatus.ASSIGNED, startTime));
 		projectCounts.put(ProjectStatus.UNASSIGNED.value(),
-				projectManager.getAllProjectDetailsCount(ProjectStatus.UNASSIGNED));
+				projectManager.getAllProjectDetailsCount(ProjectStatus.UNASSIGNED, startTime));
 		projectCounts.put(ProjectStatus.INPROGRESS.value(),
-				projectManager.getAllProjectDetailsCount(ProjectStatus.INPROGRESS));
+				projectManager.getAllProjectDetailsCount(ProjectStatus.INPROGRESS, startTime));
 		projectCounts.put(ProjectStatus.COMPLETED.value(),
-				projectManager.getAllProjectDetailsCount(ProjectStatus.COMPLETED));
-		projectCounts.put(ProjectStatus.NEW.value(), projectManager.getAllProjectDetailsCount(ProjectStatus.NEW));
-		projectCounts.put("MISSED", projectManager.getAllMissedTimeLineProjectDetailsCount());
+				projectManager.getAllProjectDetailsCount(ProjectStatus.COMPLETED, startTime));
+		projectCounts.put(ProjectStatus.NEW.value(),
+				projectManager.getAllProjectDetailsCount(ProjectStatus.NEW, startTime));
+		projectCounts.put("MISSED", projectManager.getAllMissedTimeLineProjectDetailsCount(startTime));
 
 		return projectCounts;
 	}

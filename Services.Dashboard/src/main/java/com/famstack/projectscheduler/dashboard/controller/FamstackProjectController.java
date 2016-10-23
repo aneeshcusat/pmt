@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -44,7 +45,18 @@ public class FamstackProjectController extends BaseFamstackService {
 
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public ModelAndView listProjects() {
-		List<ProjectDetails> projectData = famstackDashboardManager.getProjectsDataList();
+		List<ProjectDetails> projectData = famstackDashboardManager.getProjects();
+		return getProjectPageModelView(projectData);
+	}
+
+	@RequestMapping(value = "/projects/{projectStatus}", method = RequestMethod.GET)
+	public ModelAndView listProjectsByStatus(@PathVariable("projectStatus") ProjectStatus projectStatus) {
+		List<ProjectDetails> projectData = famstackDashboardManager.getProjectDetails(projectStatus);
+
+		return getProjectPageModelView(projectData);
+	}
+
+	private ModelAndView getProjectPageModelView(List<ProjectDetails> projectData) {
 		List<AccountDetails> accountData = famstackDashboardManager.getAccountDataList();
 
 		Map<String, Object> modelViewMap = new HashMap<String, Object>();

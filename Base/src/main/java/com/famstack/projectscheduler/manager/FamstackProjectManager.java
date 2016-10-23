@@ -225,9 +225,15 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		return unassignedCount;
 	}
 
-	public List<ProjectDetails> getAllProjectDetailsList() {
+	public List<ProjectDetails> getAllProjectDetailsList(Date startTime) {
 		List<ProjectDetails> projectDetailsList = new ArrayList<>();
-		List<?> projectItemList = famstackDataAccessObjectManager.getAllItems("ProjectItem");
+
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startTime", startTime);
+
+		List<?> projectItemList = famstackDataAccessObjectManager
+				.executeQuery(HQLStrings.getString("getAllProjectItems"), dataMap);
+
 		getProjectsList(projectDetailsList, projectItemList);
 		return projectDetailsList;
 	}
@@ -244,14 +250,30 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		}
 	}
 
-	public List<ProjectDetails> getAllProjectDetailsList(ProjectStatus projectStatus) {
+	public List<ProjectDetails> getAllProjectDetailsList(ProjectStatus projectStatus, Date startTime) {
 		List<ProjectDetails> projectDetailsList = new ArrayList<>();
+
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("status", projectStatus);
+		dataMap.put("startTime", startTime);
 
 		List<?> projectItemList = famstackDataAccessObjectManager
 				.executeQuery(HQLStrings.getString("getProjectItemsByStatus"), dataMap);
 		getProjectsList(projectDetailsList, projectItemList);
+		return projectDetailsList;
+	}
+
+	public List<ProjectDetails> getAllMissedTimeLineProjectDetails(Date startTime) {
+		Map<String, Object> dataMap = new HashMap<>();
+		List<ProjectDetails> projectDetailsList = new ArrayList<>();
+		dataMap.put("status", ProjectStatus.COMPLETED);
+		dataMap.put("completionDate", new Date());
+		dataMap.put("startTime", startTime);
+
+		List<?> projectItemList = famstackDataAccessObjectManager
+				.executeQuery(HQLStrings.getString("getMissedTimeLineProjectItems"), dataMap);
+		getProjectsList(projectDetailsList, projectItemList);
+
 		return projectDetailsList;
 	}
 
@@ -267,8 +289,10 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		return projectDetailsList;
 	}
 
-	public long getAllProjectDetailsCount(ProjectStatus projectStatus) {
+	public long getAllProjectDetailsCount(ProjectStatus projectStatus, Date startTime) {
 		Map<String, Object> dataMap = new HashMap<>();
+
+		dataMap.put("startTime", startTime);
 		dataMap.put("status", projectStatus);
 
 		long count = famstackDataAccessObjectManager.getCount(HQLStrings.getString("getProjectItemCountByStatus"),
@@ -277,10 +301,11 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		return count;
 	}
 
-	public long getAllMissedTimeLineProjectDetailsCount() {
+	public long getAllMissedTimeLineProjectDetailsCount(Date startTime) {
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("status", ProjectStatus.COMPLETED);
 		dataMap.put("completionDate", new Date());
+		dataMap.put("startTime", startTime);
 
 		long count = famstackDataAccessObjectManager
 				.getCount(HQLStrings.getString("getMissedTimeLineProjectItemCountByStatus"), dataMap);

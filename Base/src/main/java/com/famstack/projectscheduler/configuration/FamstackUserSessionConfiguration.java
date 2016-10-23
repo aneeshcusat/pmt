@@ -20,6 +20,10 @@ public class FamstackUserSessionConfiguration implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2779591617048681125L;
 
+	private static final int CURRENT_DAY = 0;
+
+	private static final int PROJECT_VIEW_LIMIT_DAYS = -30;
+
 	/** The login result. */
 	private LoginResult loginResult;
 
@@ -70,6 +74,14 @@ public class FamstackUserSessionConfiguration implements Serializable {
 
 	public UserItem getCurrentUser() {
 		return getLoginResult().getUserItem();
+	}
+
+	public int getDashboardViewDays() {
+		return CURRENT_DAY;
+	}
+
+	public int getProjectViewLimit() {
+		return PROJECT_VIEW_LIMIT_DAYS;
 	}
 
 }

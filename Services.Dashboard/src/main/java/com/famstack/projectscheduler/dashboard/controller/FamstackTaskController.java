@@ -35,8 +35,7 @@ public class FamstackTaskController extends BaseFamstackService {
 
 	@RequestMapping(value = "/taskAllocator", method = RequestMethod.GET)
 	public ModelAndView taskAllocator() {
-		List<ProjectDetails> unAssignedProjects = famstackDashboardManager
-				.getUnassignedProjects(ProjectStatus.UNASSIGNED);
+		List<ProjectDetails> unAssignedProjects = famstackDashboardManager.getProjectDetails(ProjectStatus.UNASSIGNED);
 		return new ModelAndView("taskAllocator", "command", new TaskDetails()).addObject("unAssignedProjects",
 				unAssignedProjects);
 	}
