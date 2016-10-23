@@ -29,15 +29,15 @@
                 <div class="login-famstack_logo"><h2 class="text-center">Project scheduler</h2></div>
                 <div class="login-body">
                     <div class="login-title"><strong>Welcome</strong>, Please login</div>
-                    <form class="form-horizontal" method="post">
+                    <form class="form-horizontal" method="post" id="loginForm">
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input type="text" class="form-control" placeholder="Email id" id="emailId"/>
+                            <input type="text" class="form-control" placeholder="Email id" id="emailId" name="email"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input type="password" class="form-control" placeholder="Password" id="password"/>
+                            <input type="password" class="form-control" placeholder="Password" id="password" name="password"/>
                         </div>
                     </div>
                     <span id="invalidLoginSpan" style="color: red;display: none">Invalid credentials</span>
@@ -69,10 +69,24 @@
         <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script>
         <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js"></script>
-        <script type="text/javascript" src="${js}/famstack.ajax.js"></script>   
+        <script type="text/javascript" src="${js}/famstack.ajax.js"></script>  
+        <script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.min.js'></script> 
         <!-- END PLUGINS -->  
  <script type="text/javascript">
- 
+ var jvalidate = $("#loginForm").validate({
+     ignore: [],
+     rules: {                                            
+    	 email: {
+                     required: true,
+                     email: true
+             },
+             password: {
+                     required: true,
+                     minlength: 5,
+                     maxlength: 10
+             }  
+     	}
+     });
     
     $('#emailId').keypress(function(e) {
         if(e.which == 10 || e.which == 13) {
@@ -85,38 +99,10 @@
         }
     });
     
-    function makeError(fieldSelector){
-    	fieldSelector.css("border", "1px solid red");
-    }
-    
-    function clearInputTextErrors(){
-    	$('#emailId').css("border","");
-    	$('#password').css("border","");
-    	$("#invalidLoginSpan").hide();
-    }
-    
-    function validation(){
-    	var status = false;
-    	var emailId = $('#emailId').val();
-    	var password = $('#password').val();
-    	
-    	if (emailId == "") {
-    		makeError($('#emailId'));
-    		status = true;
-    	}
-    	if (password == "") {
-    		makeError($('#password'));
-    		status = true;
-    	}
-    	return status;
-    }
-    
     function invokeLoginAjax(){
-    	clearInputTextErrors();
-    	if(validation()) {
+    	if(!$("#loginForm").valid()) {
     		return;
     	}
-    	console.log("jello");
     	var dataString = {"email": $('#emailId').val() , "password": $('#password').val() };
     	
 		doAjaxRequest("POST", "/bops/dashboard/loginAjax", dataString,

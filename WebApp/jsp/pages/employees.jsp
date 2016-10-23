@@ -168,15 +168,55 @@
 
 <script>
 
+var jvalidate = $("#createUserFormId").validate({
+	 ignore: ".ignorevalidation",
+    rules: {                                            
+   	 email: {
+             required: true,
+             email: true
+     },
+     firstName: {
+             required: true
+     },
+     mobileNumber: {
+             required: true
+     },
+     dateOfBirth: {
+         required: true
+ 	 },
+ 	designation: {
+        required: true
+	 },
+	 lastName: {
+	        required: true
+	},
+	team: {
+	       required: true
+	},
+	qualification: {
+	       required: true
+	 },
+	role: {
+	       required: true
+	},
+	file: {
+	       required: false
+	},
+	range: {
+	       required: false
+	},
+	reportingManger: {
+	       required: true
+	 }   
+   }
+});
 
 $('#createUserFormId').ajaxForm(function(response) { 
 	console.log(response);
 	var responseJson = JSON.parse(response);
     if (responseJson.status){
-    	//$.growlUI('User has been created!', 'Have a nice day!'); 
         window.location.reload(true);
     }
-   //$.unblockUI();
 }); 
 
 function createEmployeeDetails(){
@@ -186,7 +226,6 @@ function createEmployeeDetails(){
 }
 
 function doAjaxUpdateUserForm(){
-	//$.blockUI();
 	var imageData = $('.image-editor').cropit('export');
 	$('#filePhoto').val(imageData);
 	console.log(imageData);
@@ -195,7 +234,6 @@ function doAjaxUpdateUserForm(){
 }
 
 function doAjaxCreateUserForm(){
-	//$.blockUI();
 	$('#createUserFormId').prop("action", "createEmployee");
 	var imageData = $('.image-editor').cropit('export');
 	$('#filePhoto').val(imageData);

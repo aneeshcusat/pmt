@@ -111,6 +111,9 @@ function processNotification(notification){
 		console.log(newMessages);
 		var noficationType = elem.notificationType;
 		var message = elem.data.name ;
+		if (typeof message !== 'undefined') {
+			message = "Notification";
+		}
 		if (elem.read == false) {
 			newMessages++;
 			 $.notify(message, {

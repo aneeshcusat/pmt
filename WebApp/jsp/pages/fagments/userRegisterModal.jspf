@@ -35,7 +35,7 @@
 					<label class="col-md-3 control-label">Mobile Number:</label>
 					<div class="col-md-9">
 						<form:input path="mobileNumber" id="mobileNumber" type="text" value=""
-							name="mobile" class="form-control"
+							name="mobileNumber" class="form-control"
 							placeholder="eg:+919686301304" />
 					</div>
 				</div>
@@ -49,7 +49,7 @@
                     <label class="col-md-3 control-label">Designation</label>
                     <div class="col-md-9">
                         <form:select path="designation" id="designation" class="form-control select" data-live-search="true">
-                              <option value="-1">- select -</option>
+                              <option value="">- select -</option>
                             <option>Vice President</option>
                             <option>Associate Vice President</option>
                             <option>Senior Director</option>
@@ -70,13 +70,13 @@
 							id="filePhoto" name="filephoto" path="filePhoto"/>
 							
 							<div class="image-editor">
-						      <input type="file" name="file" id="file" class="cropit-image-input inputfile" onchange="$('.cropit-preview').show();$('.cropit-image-zoom-input').show();$('.image-size-label').show();">
+						      <input type="file" name="file" id="file" class="cropit-image-input inputfile ignorevalidation" onchange="$('.cropit-preview').show();$('.cropit-image-zoom-input').show();$('.image-size-label').show();">
 						      <label  class="btn btn-default" for="file"><i class="fa fa-upload fa-2x" style="color: red"></i></label>
 						      <div class="cropit-preview" style="display: none"></div>
 						      <div class="image-size-label" style="display: none">
 						        Resize image
 						      </div>
-						      <input type="range" class="cropit-image-zoom-input"  style="display: none">
+						      <input type="range" name="range" class="cropit-image-zoom-input ignorevalidation"  style="display: none">
 						    </div>
     					</div>
 				</div>
@@ -104,8 +104,8 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Team</label>
 					<div class="col-md-9">
-						<form:select path="team" id="team" class="form-control select" data-live-search="true" name="group">
-							  <option value="-1">- select -</option>
+						<form:select path="team" id="team" class="form-control select" data-live-search="true" name="team">
+							  <option value="">- select -</option>
 							<c:if test="${not empty accountData}">  
                                 <c:forEach var="account" items="${accountData}">
                                 <c:if test="${not empty account.projectTeams}">  
@@ -129,8 +129,8 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Qualification</label>
 					<div class="col-md-9">
-						<form:select path="qualification" id="qualification" class="form-control select" data-live-search="true">
-							  <option value="-1">- select -</option>
+						<form:select path="qualification" id="qualification" name="qualification" class="form-control select" data-live-search="true">
+							  <option value="">- select -</option>
 							<option>Doctorate</option>
 							<option>Masters</option>
 							<option>Bachelors</option>
@@ -144,8 +144,8 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Role</label>
 					<div class="col-md-9">
-						<form:select path="role" id="role" class="form-control select" data-live-search="true">
-							<option value="-1">- select -</option>
+						<form:select path="role" id="role" name="role" class="form-control select" data-live-search="true">
+							<option value="">- select -</option>
 							<c:if test="${currentUser.userRole == 'SUPERADMIN'}">
 								<option value="SUPERADMIN">Admin</option>
 							</c:if>
@@ -159,8 +159,8 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Reporting Manager</label>
 					<div class="col-md-9">
-						<form:select path="reportingManger" id="reportingManger" class="form-control select" data-live-search="true">
-							<option value="-1">- select -</option>
+						<form:select path="reportingManger" id="reportingManger" name="reportingManger" class="form-control select" data-live-search="true">
+							<option value="">- select -</option>
 							<c:if test="${not empty userMap}">
     						<c:forEach var="user" items="${userMap}">
     						 	<c:if test="${user.role == 'ADMIN' || user.role == 'MANAGER'}">
