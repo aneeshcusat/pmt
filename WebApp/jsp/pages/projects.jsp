@@ -198,7 +198,7 @@
 
 <%@include file="includes/footer.jsp"%>
 <script type='text/javascript'
-	src='${js}/plugins/jquery-validation/jquery.validate.js'></script>
+	src='${js}/plugins/jquery-validation/jquery.validate.min.js'></script>
 <script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
 <script type="text/javascript"
