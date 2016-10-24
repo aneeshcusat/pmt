@@ -11,7 +11,17 @@
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Dashboard</li>
+   
  </ul>
+ <div class="col-md-12">
+ <ul style="float:right;margin-bottom: 3px;">
+   <li>
+        <div id="reportrange" class="dtrange">                                            
+            <span></span><b class="caret"></b>
+        </div>                                     
+    </li>    
+</ul>
+</div>
  <!-- END BREADCRUMB -->  
                 <!-- PAGE CONTENT WRAPPER -->
                 <div class="page-content-wrap">
@@ -126,7 +136,7 @@
                                 <div class="panel-heading">
                                     <div class="panel-title-box">
                                         <h3>Employee Utilization</h3>
-                                        <span>Average vs today</span>
+                                        <span>Billable/NonBillable</span>
                                     </div>                                    
                                     <ul class="panel-controls" style="margin-top: 2px;">
                                         <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
@@ -141,7 +151,7 @@
                                     </ul>                                    
                                 </div>                                
                                 <div class="panel-body padding-0">
-                                    <div class="chart-holder" id="dashboard-bar-1" style="height: 200px;"></div>
+                                    <div class="chart-holder" id="dashboard-bar-emp" style="height: 200px;"></div>
                                 </div>                                    
                             </div>
                         </div>
@@ -301,10 +311,64 @@
                     </div>
                         </div>
                     </div>
+                     <div class="row">
+                        <div class="col-md-12">
+                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="panel-title-box">
+                                        <h3>Team Utilization</h3>
+                                        <span>Billable/NonBillable</span>
+                                    </div>                                    
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                            </ul>                                        
+                                        </li>                                        
+                                    </ul>                                    
+                                </div>                                
+                                <div class="panel-body padding-0">
+                                    <div class="chart-holder" id="dashboard-bar-team" style="height: 200px;"></div>
+                                </div>                                    
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="panel-title-box">
+                                        <h3>Type of Work</h3>
+                                        <span></span>
+                                    </div>                                    
+                                    <ul class="panel-controls" style="margin-top: 2px;">
+                                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                            </ul>                                        
+                                        </li>                                        
+                                    </ul>                                    
+                                </div>                                
+                                <div class="panel-body padding-0">
+                                    <div class="chart-holder" id="dashboard-bar-work" style="height: 200px;"></div>
+                                </div>                                    
+                            </div>
+                        </div>
+                        </div>
+                     </div>
+                        </div>
+                    
                     <!-- END CONTENT FRAME RIGHT -->
                     <div class="row">
 						<div class="col-md-12">
-                            
                             <!-- START SALES BLOCK -->
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -312,15 +376,6 @@
                                         <h3>Clients</h3>
                                         <span>Project completion status</span>
                                     </div>                                     
-                                    <ul class="panel-controls panel-controls-title">                                        
-                                        <li>
-                                            <div id="reportrange" class="dtrange">                                            
-                                                <span></span><b class="caret"></b>
-                                            </div>                                     
-                                        </li>                                
-                                        <li><a href="#" class="panel-fullscreen rounded"><span class="fa fa-expand"></span></a></li>
-                                    </ul>                                    
-                                    
                                 </div>
                                 <div class="panel-body">                                    
                                     <div class="row stacked">
@@ -381,10 +436,148 @@
                 </div>
                <!-- END PAGE CONTENT WRAPPER -->  
 <%@include file="includes/footer.jsp" %>
-<script type="text/javascript" src="${js}/demo_dashboard.js"></script>
 <jsp:useBean id="date" class="java.util.Date"/>
 <fmt:formatDate var="timeHour" value="${date}" pattern="HH"/>
 <fmt:formatDate var="timeMinutes"  value="${date}" pattern="mm"/>
 <script>
 templatePlugins.init(${timeHour},${timeMinutes});
+
+$(function(){        
+    /* reportrange */
+    if($("#reportrange").length > 0){   
+        $("#reportrange").daterangepicker({                    
+            ranges: {
+               'Today': [moment(), moment()],
+               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+               'This Month': [moment().startOf('month'), moment().endOf('month')],
+               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            opens: 'left',
+            buttonClasses: ['btn btn-default'],
+            applyClass: 'btn-small btn-primary',
+            cancelClass: 'btn-small',
+            format: 'MM.DD.YYYY',
+            separator: ' to ',
+            startDate: moment().subtract('days', 0),
+            endDate: moment()            
+          },function(start, end) {
+              $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        });
+        
+        $("#reportrange span").html(moment().subtract('days', 0).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+    }
+ 
+    
+    /* Donut dashboard chart */
+    Morris.Donut({
+        element: 'dashboard-donut-1',
+        data: [
+            {label: "BILLABLE", value: 12},
+            {label: "NONBILLABLE", value: 1}
+        ],
+        colors: ['#5cb85c',
+                 '#f0ad4e'],
+        resize: true
+    });
+    /* END Donut dashboard chart */
+	
+	
+    /* Bar dashboard chart emp */
+    Morris.Bar({
+        element: 'dashboard-bar-emp',
+        data: [
+            { y: 'User A', a: 75, b: 35 },
+            { y: 'User B', a: 64, b: 26 },
+            { y: 'User C', a: 78, b: 39 },
+            { y: 'User D', a: 82, b: 34 },
+            { y: 'User E', a: 86, b: 39 },
+            { y: 'User F', a: 94, b: 40 },
+            { y: 'User G', a: 96, b: 41 }
+        ],
+        xkey: 'y',
+        ykeys: ['a', 'b'],
+        labels: ['Average', 'Current'],
+        barColors: ['#33414E', '#1caf9a'],
+        gridTextSize: '10px',
+        hideHover: true,
+        resize: true,
+        gridLineColor: '#E5E5E5'
+    });
+    
+    /* Bar dashboard chart emp */
+    Morris.Bar({
+        element: 'dashboard-bar-team',
+        data: [
+            { y: 'Team A', a: 75, b: 35 },
+            { y: 'Team B', a: 64, b: 26 },
+            { y: 'Team C', a: 78, b: 39 },
+            { y: 'Team D', a: 82, b: 34 },
+            { y: 'Team E', a: 86, b: 39 },
+            { y: 'Team F', a: 94, b: 40 },
+            { y: 'Team G', a: 96, b: 41 }
+        ],
+        xkey: 'y',
+        ykeys: ['a', 'b'],
+        labels: ['Billable', 'NonBillable'],
+        barColors: ['#33414E', '#1caf9a'],
+        gridTextSize: '10px',
+        hideHover: true,
+        resize: true,
+        gridLineColor: '#E5E5E5'
+    });
+    
+    /* Bar dashboard chart emp */
+    Morris.Bar({
+        element: 'dashboard-bar-work',
+        data: [
+            { y: 'work A', a: 75},
+            { y: 'work B', a: 64},
+            { y: 'work C', a: 78},
+            { y: 'work D', a: 82},
+            { y: 'work E', a: 86},
+            { y: 'work F', a: 94},
+            { y: 'work G', a: 96}
+        ],
+        xkey: 'y',
+        ykeys: ['a'],
+        labels: ['Work'],
+        barColors: ['#33414E', '#1caf9a'],
+        gridTextSize: '10px',
+        hideHover: true,
+        resize: true,
+        gridLineColor: '#E5E5E5'
+    });
+    var jvm_wm = new jvm.WorldMap({container: $('#dashboard-map-seles'),
+        map: 'world_mill_en', 
+        backgroundColor: '#FFFFFF',                                      
+        regionsSelectable: true,
+        regionStyle: {selected: {fill: '#B64645'},
+                        initial: {fill: '#33414E'}},
+        markerStyle: {initial: {fill: '#1caf9a',
+                       stroke: '#1caf9a'}},
+        markers: [{latLng: [50.27, 30.31], name: 'Kyiv - 1'},                                              
+                  {latLng: [52.52, 13.40], name: 'Berlin - 2'},
+                  {latLng: [48.85, 2.35], name: 'Paris - 1'},                                            
+                  {latLng: [51.51, -0.13], name: 'London - 3'},                                                                                                      
+                  {latLng: [40.71, -74.00], name: 'New York - 5'},
+                  {latLng: [35.38, 139.69], name: 'Tokyo - 12'},
+                  {latLng: [37.78, -122.41], name: 'San Francisco - 8'},
+                  {latLng: [28.61, 77.20], name: 'New Delhi - 4'},
+                  {latLng: [39.91, 116.39], name: 'Beijing - 3'}]
+    });    
+    /* END Vector Map */
+
+    
+    $(".x-navigation-minimize").on("click",function(){
+        setTimeout(function(){
+            rdc_resize();
+        },200);    
+    });
+    
+    
+});
+
+
 </script>

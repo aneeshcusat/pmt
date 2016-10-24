@@ -16,13 +16,13 @@ $(function(){
             cancelClass: 'btn-small',
             format: 'MM.DD.YYYY',
             separator: ' to ',
-            startDate: moment().subtract('days', 29),
+            startDate: moment().subtract('days', 0),
             endDate: moment()            
           },function(start, end) {
               $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         });
         
-        $("#reportrange span").html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+        $("#reportrange span").html(moment().subtract('days', 0).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
     }
  
     
