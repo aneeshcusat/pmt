@@ -410,8 +410,24 @@ width: 60%;
 	src="${js}/plugins/dropzone/dropzone.min.js"></script>
 	<script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+	<script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.js'></script>   
        <script>
    	
+       var jvalidate = $("#createTaskFormId").validate({
+    		 ignore: ".ignorevalidation",
+    	   rules: {                                            
+    		name: {
+    	            required: true,
+    	    },
+    	    description: {
+    	        required: true
+    	    },
+    	    startTime: {
+    	    	 required: true
+    	    }
+    	  }
+    	});
+       
      $(function() {
     	   var moveLeft = 0;
     	   var moveDown = 0;
