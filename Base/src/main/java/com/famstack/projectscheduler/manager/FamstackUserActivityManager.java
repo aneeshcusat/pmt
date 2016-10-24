@@ -13,11 +13,13 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
+import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 
@@ -31,7 +33,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	FamstackUserProfileManager famstackUserProfileManager;
 
 	public void createUserActivityItem(int userId, Date startTime, int taskId, String taskName, int duration,
-			UserTaskType userTaskType) {
+			UserTaskType userTaskType, ProjectType projectType) {
 		UserItem assigneeUserItem = famstackUserProfileManager.getUserItemById(userId);
 		Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, startTime, 0);
 		Date dayEndDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, startTime, 0);
@@ -55,6 +57,15 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 			userActivityItem.setUserItem(assigneeUserItem);
 		}
 
+		int productiveHours = userActivityItem.getProductiveHousrs();
+		int billableHours = userActivityItem.getBillableHours();
+		if (projectType == ProjectType.BILLABLE) {
+			billableHours += duration;
+		}
+
+		productiveHours += duration;
+		userActivityItem.setProductiveHousrs(productiveHours);
+		userActivityItem.setBillableHours(billableHours);
 		getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
 		setUserTaskActivity(userActivityItem, taskId, taskName, duration, startTime, userTaskType);
 	}
@@ -205,5 +216,32 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 
 		getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
 
+	}
+
+	public Map<Object, UserWorkDetails> getUserBillableProductiveHours(Date startTime, Date endTime) {
+
+		Map<Object, UserWorkDetails> userWorkDetailsMap = new HashMap<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("calenderDateStart", startTime);
+		dataMap.put("calenderDateEnd", endTime);
+
+		List<Object[]> result = getFamstackDataAccessObjectManager()
+				.executeSQLQuery(HQLStrings.getString("userBillableProductiveHoursSQL"), dataMap);
+
+		for (int i = 0; i < result.size(); i++) {
+			UserWorkDetails userWorkDetails = new UserWorkDetails();
+			Object[] data = result.get(i);
+			userWorkDetails.setBillableHours(data[2]);
+			userWorkDetails.setCount(data[0]);
+			userWorkDetails.setProductiveHours(data[3]);
+			userWorkDetails.setUserId(data[1]);
+
+			logDebug("day count " + data[0]);
+			logDebug("User ID " + data[1]);
+			logDebug("billableHrs " + data[2]);
+			logDebug("Productive hours " + data[3]);
+			userWorkDetailsMap.put(data[1], userWorkDetails);
+		}
+		return userWorkDetailsMap;
 	}
 }

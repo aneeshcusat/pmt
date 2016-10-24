@@ -40,7 +40,6 @@ $(document).ready(function(){
     
     $(".panel-fullscreen").on("click",function(){
         panel_fullscreen($(this).parents(".panel"));
-        alert(1);
         return false;
     });
     

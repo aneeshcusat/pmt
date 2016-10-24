@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
@@ -94,10 +95,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 
 		famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
 		taskDetails.setTaskId(taskItem.getTaskId());
-		updateUserActivity(taskDetails, startDate);
+		updateUserActivity(taskDetails, startDate, projectItem.getType());
 	}
 
-	private void updateUserActivity(TaskDetails taskDetails, Date startDate) {
+	private void updateUserActivity(TaskDetails taskDetails, Date startDate, ProjectType projectType) {
 
 		logDebug("task assignee :" + taskDetails.getAssignee());
 
@@ -105,14 +106,15 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 
 		if (taskDetails.getAssignee() > 0) {
 			famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate,
-					taskDetails.getTaskId(), taskDetails.getName(), taskDetails.getDuration(), UserTaskType.PROJECT);
+					taskDetails.getTaskId(), taskDetails.getName(), taskDetails.getDuration(), UserTaskType.PROJECT,
+					projectType);
 		}
 
 		logDebug("helpers :" + taskDetails.getHelper());
 		if (taskDetails.getHelper() != null && taskDetails.getHelper().length > 0) {
 			for (int helperId : taskDetails.getHelper()) {
 				famstackUserActivityManager.createUserActivityItem(helperId, startDate, taskDetails.getTaskId(),
-						taskDetails.getName(), taskDetails.getDuration(), UserTaskType.PROJECT_HELPER);
+						taskDetails.getName(), taskDetails.getDuration(), UserTaskType.PROJECT_HELPER, projectType);
 			}
 		}
 	}

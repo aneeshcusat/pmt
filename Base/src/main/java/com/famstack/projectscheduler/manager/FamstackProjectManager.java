@@ -358,7 +358,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		return jsonProductListObject.toString();
 	}
 
-	public List<ProjectDetails> getAllProjectDetailsList(Date startDate, Date endDate) {
+	public List<ProjectDetails> getAllProjectDetailsReportingList(Date startDate, Date endDate) {
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("startDate", startDate);
 		dataMap.put("endDate", endDate);

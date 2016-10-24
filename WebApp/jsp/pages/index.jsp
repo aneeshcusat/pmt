@@ -439,6 +439,7 @@
 <jsp:useBean id="date" class="java.util.Date"/>
 <fmt:formatDate var="timeHour" value="${date}" pattern="HH"/>
 <fmt:formatDate var="timeMinutes"  value="${date}" pattern="mm"/>
+
 <script>
 templatePlugins.init(${timeHour},${timeMinutes});
 
@@ -487,18 +488,10 @@ $(function(){
     /* Bar dashboard chart emp */
     Morris.Bar({
         element: 'dashboard-bar-emp',
-        data: [
-            { y: 'User A', a: 75, b: 35 },
-            { y: 'User B', a: 64, b: 26 },
-            { y: 'User C', a: 78, b: 39 },
-            { y: 'User D', a: 82, b: 34 },
-            { y: 'User E', a: 86, b: 39 },
-            { y: 'User F', a: 94, b: 40 },
-            { y: 'User G', a: 96, b: 41 }
-        ],
-        xkey: 'y',
-        ykeys: ['a', 'b'],
-        labels: ['Average', 'Current'],
+        data: ${employeeUtilization},
+        xkey: 'userId',
+        ykeys: ['billableHours', 'productiveHours'],
+        labels: ['Billable', 'Productive'],
         barColors: ['#33414E', '#1caf9a'],
         gridTextSize: '10px',
         hideHover: true,

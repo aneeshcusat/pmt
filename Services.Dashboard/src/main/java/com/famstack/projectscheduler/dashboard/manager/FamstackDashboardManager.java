@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
@@ -27,15 +28,18 @@ import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectFileManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
+import com.famstack.projectscheduler.manager.FamstackUserActivityManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
 import com.famstack.projectscheduler.notification.services.FamstackDesktopNotificationService;
+import com.famstack.projectscheduler.security.user.UserRole;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.LimitedQueue;
@@ -71,6 +75,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackDesktopNotificationService famstackDesktopNotificationService;
+
+	@Resource
+	FamstackUserActivityManager famstackUserActivityManager;
 
 	public Map<String, Object> getUserData() {
 		return null;
@@ -121,8 +128,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public List<ProjectDetails> getProjectsDataList() {
-		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(),
-				getFamstackUserSessionConfiguration().getDashboardViewDays());
+		Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
 		List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime);
 		return projectDetailsList;
 	}
@@ -300,8 +306,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public List<ProjectDetails> getProjectDetails(ProjectStatus projectStatus) {
-		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(),
-				getFamstackUserSessionConfiguration().getDashboardViewDays());
+		Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
+
 		if (projectStatus == ProjectStatus.MISSED) {
 			return projectManager.getAllMissedTimeLineProjectDetails(startTime);
 		}
@@ -309,8 +315,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public Map<String, Long> getProjectsCounts() {
-		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(),
-				getFamstackUserSessionConfiguration().getDashboardViewDays());
+		Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
 		Map<String, Long> projectCounts = new HashMap<>();
 		projectCounts.put(ProjectStatus.ASSIGNED.value(),
 				projectManager.getAllProjectDetailsCount(ProjectStatus.ASSIGNED, startTime));
@@ -340,7 +345,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public List<ProjectDetails> getProjectsReporingDataList(Date startDate, Date endDate) {
-		List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startDate, endDate);
+		List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsReportingList(startDate, endDate);
 		return projectDetailsList;
 	}
 
@@ -373,5 +378,31 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			notifyAll(NotificationType.FORGOT_PASSWORD, employeeDetails);
 		}
 
+	}
+
+	public String getUserBillableProductiveJson() {
+		Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
+		Date endTime = getFamstackUserSessionConfiguration().getDashboardViewEndDate();
+		Map<Object, UserWorkDetails> userWorkDetailsMap = famstackUserActivityManager
+				.getUserBillableProductiveHours(startTime, endTime);
+
+		Map<Integer, EmployeeDetails> empMap = FamstackApplicationConfiguration.userMap;
+
+		for (int userId : empMap.keySet()) {
+			UserWorkDetails userDetails = userWorkDetailsMap.get(userId);
+			if (userWorkDetailsMap.get(userId) == null && empMap.get(userId).getRole() != UserRole.SUPERADMIN) {
+				userDetails = new UserWorkDetails();
+				userDetails.setBillableHours(0);
+				userDetails.setCount(0);
+				userDetails.setProductiveHours(0);
+				userWorkDetailsMap.put(userId, userDetails);
+			}
+
+			if (userDetails != null) {
+				userDetails.setUserId(empMap.get(userId).getFirstName());
+			}
+		}
+
+		return FamstackUtils.getJsonFromObject(userWorkDetailsMap.values()).trim();
 	}
 }

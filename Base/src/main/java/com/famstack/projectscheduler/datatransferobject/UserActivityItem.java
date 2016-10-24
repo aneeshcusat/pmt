@@ -48,10 +48,10 @@ public class UserActivityItem implements FamstackBaseItem {
 	private boolean leave;
 
 	@Column(name = "billable_hours")
-	private boolean billableHours;
+	private int billableHours;
 
-	@Column(name = "productive_housrs")
-	private boolean productiveHousrs;
+	@Column(name = "productive_hours")
+	private int productiveHousrs;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id")
@@ -108,28 +108,28 @@ public class UserActivityItem implements FamstackBaseItem {
 		this.leave = leave;
 	}
 
-	public boolean isBillableHours() {
-		return billableHours;
-	}
-
-	public void setBillableHours(boolean billableHours) {
-		this.billableHours = billableHours;
-	}
-
-	public boolean isProductiveHousrs() {
-		return productiveHousrs;
-	}
-
-	public void setProductiveHousrs(boolean productiveHousrs) {
-		this.productiveHousrs = productiveHousrs;
-	}
-
 	public UserItem getUserItem() {
 		return userItem;
 	}
 
 	public void setUserItem(UserItem userItem) {
 		this.userItem = userItem;
+	}
+
+	public int getBillableHours() {
+		return billableHours;
+	}
+
+	public void setBillableHours(int billableHours) {
+		this.billableHours = billableHours;
+	}
+
+	public int getProductiveHousrs() {
+		return productiveHousrs;
+	}
+
+	public void setProductiveHousrs(int productiveHousrs) {
+		this.productiveHousrs = productiveHousrs;
 	}
 
 }

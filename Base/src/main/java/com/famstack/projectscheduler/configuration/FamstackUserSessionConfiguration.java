@@ -1,14 +1,18 @@
 package com.famstack.projectscheduler.configuration;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import com.famstack.projectscheduler.contants.DashBoardDateRange;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
+import com.famstack.projectscheduler.util.DateTimePeriod;
+import com.famstack.projectscheduler.util.DateUtils;
 
 /**
  * The Class FamstackUserSessionConfiguration.
@@ -29,6 +33,8 @@ public class FamstackUserSessionConfiguration implements Serializable {
 
 	/** The auto refresh. */
 	private boolean autoRefresh = true;
+
+	private DashBoardDateRange dashBoardDateRange;
 
 	/**
 	 * Gets the login result.
@@ -76,12 +82,24 @@ public class FamstackUserSessionConfiguration implements Serializable {
 		return getLoginResult().getUserItem();
 	}
 
-	public int getDashboardViewDays() {
-		return CURRENT_DAY;
-	}
-
 	public int getProjectViewLimit() {
 		return PROJECT_VIEW_LIMIT_DAYS;
+	}
+
+	public DashBoardDateRange getDashBoardDateRange() {
+		return dashBoardDateRange;
+	}
+
+	public void setDashBoardDateRange(DashBoardDateRange dashBoardDateRange) {
+		this.dashBoardDateRange = dashBoardDateRange;
+	}
+
+	public Date getDashboardViewStartDate() {
+		return DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), CURRENT_DAY);
+	}
+
+	public Date getDashboardViewEndDate() {
+		return DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), CURRENT_DAY);
 	}
 
 }

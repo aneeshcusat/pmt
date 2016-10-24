@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -89,11 +90,32 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		logDebug("executeQuery :" + hqlQuery);
 		if (dataMap != null) {
 			logDebug("dataMap :" + dataMap.keySet());
+			logDebug("dataMap values :" + dataMap.values());
 			for (String paramName : dataMap.keySet()) {
 				query.setParameter(paramName, dataMap.get(paramName));
 			}
 		}
 		List<?> itemList = query.list();
+		tx.commit();
+		session.close();
+		return itemList;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public List<Object[]> executeSQLQuery(String sqlQuery, Map<String, Object> dataMap) {
+		Session session = getSessionFactory().openSession();
+		Transaction tx = session.beginTransaction();
+		SQLQuery query = session.createSQLQuery(sqlQuery);
+		logDebug("executeSQLQuery :" + sqlQuery);
+		if (dataMap != null) {
+			logDebug("dataMap :" + dataMap.keySet());
+			logDebug("dataMap values :" + dataMap.values());
+			for (String paramName : dataMap.keySet()) {
+				query.setParameter(paramName, dataMap.get(paramName));
+			}
+		}
+		List<Object[]> itemList = query.list();
 		tx.commit();
 		session.close();
 		return itemList;
@@ -106,6 +128,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		logDebug("executeQuery :" + hqlQuery);
 		if (dataMap != null) {
 			logDebug("dataMap :" + dataMap.keySet());
+			logDebug("dataMap values :" + dataMap.values());
 			for (String paramName : dataMap.keySet()) {
 				query.setParameter(paramName, dataMap.get(paramName));
 			}
@@ -123,6 +146,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
 		Query query = session.createQuery(hqlQuery);
 		if (dataMap != null) {
 			logDebug("dataMap :" + dataMap.keySet());
+			logDebug("dataMap values :" + dataMap.values());
 			for (String paramName : dataMap.keySet()) {
 				query.setParameter(paramName, dataMap.get(paramName));
 			}
