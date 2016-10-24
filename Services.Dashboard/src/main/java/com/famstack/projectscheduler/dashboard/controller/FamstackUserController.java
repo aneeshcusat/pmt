@@ -85,12 +85,19 @@ public class FamstackUserController extends BaseFamstackService {
 	}
 
 	@RequestMapping(value = "/resetpassword", method = RequestMethod.GET)
-	public String resetPasswordValidation(@RequestParam("key") String key, @RequestParam("uid") int userId) {
+	public String resetPassword(@RequestParam("key") String key, @RequestParam("uid") int userId) {
 		if (famstackDashboardManager.isValidKeyForUserReset(key, userId)) {
 			return "passwordreset";
 		} else {
 			return "login";
 		}
+	}
+
+	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
+	@ResponseBody
+	public String forgotPassword(@RequestParam("email") String username) {
+		famstackDashboardManager.forgotPassword(username);
+		return "{\"status\": true}";
 	}
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)

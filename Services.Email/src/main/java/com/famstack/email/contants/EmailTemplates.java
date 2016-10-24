@@ -27,8 +27,8 @@ public enum EmailTemplates {
 	TASK_CREATED_ASSIGNED("projectTaskStatus",
 			"projectTaskCreateAssigned"), /** The task assigned. */
 	TASK_ASSIGNED("projectTaskStatus", "projectTaskAssigned"), TASK_CLOSED("projectTaskStatus",
-			"projectTaskClosed"), TASK_INPROGRESS("projectTaskStatus",
-					"projectTaskInProgress"), TASK_COMPLETED("projectTaskStatus", "projectTaskCompleted");
+			"projectTaskClosed"), TASK_INPROGRESS("projectTaskStatus", "projectTaskInProgress"), TASK_COMPLETED(
+					"projectTaskStatus", "projectTaskCompleted"), FORGOT_PASSWORD("userRegistraion", "forgotPassword");
 
 	/** The value. */
 	private String subjectkey;

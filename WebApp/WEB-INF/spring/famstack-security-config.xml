@@ -18,6 +18,8 @@
 	<sec:http use-expressions="true" auto-config="false" entry-point-ref="CustomAuthenticationEntryPoint">
 	    <sec:intercept-url pattern="/dashboard/login*" access="isAnonymous()" />
 	    <sec:intercept-url pattern="/dashboard/resetpassword*" access="isAnonymous()" />
+	     <sec:intercept-url pattern="/dashboard/forgotpassword*" access="isAnonymous()" />
+	     <sec:intercept-url pattern="/dashboard/forgotPassword*" access="isAnonymous()" />
 	     <sec:intercept-url pattern="/dashboard/changePassword*" access="isAnonymous()" />
         <sec:intercept-url pattern="/dashboard/**" access="isAuthenticated()"/>
 		<sec:custom-filter position="CHANNEL_FILTER" ref="channelProcessingFilter" />

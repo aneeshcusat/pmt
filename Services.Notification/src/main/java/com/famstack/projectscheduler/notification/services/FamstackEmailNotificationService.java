@@ -55,6 +55,8 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
 			famstackTemplateEmailInfo.setTemplateParameters(dataMap);
 			famstackEmailSender.sendEmail(famstackTemplateEmailInfo,
 					emailNotificationItem.getToList().toArray(new String[0]));
+		} else {
+			logDebug("Unable to send emails" + emailNotificationItem.getToList());
 		}
 	}
 

@@ -43,7 +43,7 @@
                     <span id="invalidLoginSpan" style="color: red;display: none">Invalid credentials</span>
                     <div class="form-group">
                         <div class="col-md-6">
-                            <a href="#" class="btn btn-link btn-block">Forgot your password?</a>
+                            <a href="forgotpassword" class="btn btn-link btn-block">Forgot your password?</a>
                         </div>
                         <div class="col-md-6">
                            <a class="btn btn-info btn-block" href="javascript:invokeLoginAjax()">Log In</a>

@@ -106,6 +106,27 @@ public class FamstackUserProfileManager extends BaseFamstackManager {
 		saveUserItem(employeeDetails, userItem);
 	}
 
+	public EmployeeDetails updateUserPasswordForReset(String userName) {
+		UserItem userItem = getUserItem(userName);
+		EmployeeDetails employeeDetails = new EmployeeDetails();
+		if (userItem != null) {
+			String hashKey = passwordTokenGenerator.generate(32);
+			String password = passwordTokenGenerator.generate(8);
+			String encryptedPassword = FamstackSecurityTokenManager.encryptString(password, hashKey);
+			userItem.setHashkey(hashKey);
+			userItem.setPassword(encryptedPassword);
+			userItem.setNeedPasswordReset(true);
+			getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
+			employeeDetails.setPassword(password);
+			employeeDetails.setEmail(userName);
+			employeeDetails.setFirstName(userItem.getFirstName());
+			employeeDetails.setId(userItem.getId());
+			employeeDetails.setMobileNumber(userItem.getMobileNumber());
+			return employeeDetails;
+		}
+		return null;
+	}
+
 	public void updateUserItem(EmployeeDetails employeeDetails) {
 		UserItem userItem = getUserItem(employeeDetails.getEmail());
 		if (userItem != null) {

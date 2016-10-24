@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.famstack.email.contants.EmailTemplates;
@@ -25,7 +26,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 
 	private List<FamstackBaseNotificationService> notificationServices;
 
-	// @Async
+	@Async
 	public void notifyAll(NotificationType notificationType, Object object, UserItem currentUserItem) {
 		logDebug("notification " + notificationType);
 		EmailNotificationItem notificationEmailItem = null;
@@ -42,6 +43,10 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		case USER_UPDATE:
 			notificationEmailItem = getUserNotificationItem(object);
 			notificationEmailItem.setEmailTemplate(EmailTemplates.USER_UPDATE);
+			break;
+		case FORGOT_PASSWORD:
+			notificationEmailItem = getUserNotificationItem(object);
+			notificationEmailItem.setEmailTemplate(EmailTemplates.FORGOT_PASSWORD);
 			break;
 		case PROJECT_CREATE:
 			notificationEmailItem = getProjectStatusNotificationItem(object);
@@ -92,9 +97,11 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		}
 
 		if (notificationEmailItem != null) {
-			notificationEmailItem.getToList().add(currentUserItem.getUserId());
-			notificationEmailItem.getSubscriberList().add(currentUserItem.getId());
-			notificationEmailItem.setOriginUserId(currentUserItem.getId());
+			if (currentUserItem != null) {
+				notificationEmailItem.getToList().add(currentUserItem.getUserId());
+				notificationEmailItem.getSubscriberList().add(currentUserItem.getId());
+				notificationEmailItem.setOriginUserId(currentUserItem.getId());
+			}
 			notificationEmailItem.setNotificationType(notificationType);
 			for (FamstackBaseNotificationService notificationService : notificationServices) {
 
