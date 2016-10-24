@@ -200,7 +200,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 
 	private Set<String> getToListForProjectUpdates(ProjectDetails projectDetails) {
 		Set<String> toList = new HashSet<>();
-		String reporterEmail = projectDetails.getReporter().getUserId();
+		String reporterEmail = projectDetails.getEmployeeDetails().getEmail();
 		String watchers = projectDetails.getWatchers();
 		if (StringUtils.isNotBlank(watchers)) {
 			String[] watchersArray = watchers.split(",");
@@ -213,7 +213,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 
 	private Set<Integer> getSubscribersIdForProjectUpdates(ProjectDetails projectDetails) {
 		Set<Integer> toList = new HashSet<>();
-		int reporterId = projectDetails.getReporter().getId();
+		int reporterId = projectDetails.getEmployeeDetails().getId();
 		String watchers = projectDetails.getWatchers();
 		if (StringUtils.isNotBlank(watchers)) {
 			String[] watchersArray = watchers.split(",");

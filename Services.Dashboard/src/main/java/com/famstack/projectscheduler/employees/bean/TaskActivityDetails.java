@@ -32,11 +32,6 @@ public class TaskActivityDetails {
 
 	private String completionComment;
 
-	private long timeTakenToCompleteHour;
-	private long timeTakenToCompleteMinute;
-	private long timeTakenToCompleteSecond;
-	private String timeTakenToComplete;
-
 	public int getTaskId() {
 		return taskId;
 	}
@@ -133,7 +128,7 @@ public class TaskActivityDetails {
 			diffHours = diff / (60 * 60 * 1000);
 		}
 
-		return timeTakenToCompleteHour = diffHours;
+		return diffHours;
 	}
 
 	public long getTimeTakenToCompleteMinute() {
@@ -143,7 +138,7 @@ public class TaskActivityDetails {
 			diff = (duration * (60 * 60 * 1000)) - diff;
 			diffMinutes = diff / (60 * 1000) % 60;
 		}
-		return timeTakenToCompleteMinute = diffMinutes;
+		return diffMinutes;
 	}
 
 	public long getTimeTakenToCompleteSecond() {
@@ -154,7 +149,7 @@ public class TaskActivityDetails {
 			diff = (duration * (60 * 60 * 1000)) - diff;
 			diffSeconds = diff / 1000 % 60;
 		}
-		return timeTakenToCompleteSecond = diffSeconds;
+		return diffSeconds;
 	}
 
 	public String getTimeTakenToComplete() {
@@ -168,23 +163,7 @@ public class TaskActivityDetails {
 			diffSeconds = diff / 1000 % 60;
 		}
 
-		return timeTakenToComplete = (diffHours + ":" + diffMinutes + ":" + diffSeconds);
-	}
-
-	public void setTimeTakenToCompleteHour(long timeTakenToCompleteHour) {
-		this.timeTakenToCompleteHour = timeTakenToCompleteHour;
-	}
-
-	public void setTimeTakenToCompleteMinute(long timeTakenToCompleteMinute) {
-		this.timeTakenToCompleteMinute = timeTakenToCompleteMinute;
-	}
-
-	public void setTimeTakenToCompleteSecond(long timeTakenToCompleteSecond) {
-		this.timeTakenToCompleteSecond = timeTakenToCompleteSecond;
-	}
-
-	public void setTimeTakenToComplete(String timeTakenToComplete) {
-		this.timeTakenToComplete = timeTakenToComplete;
+		return (diffHours + ":" + diffMinutes + ":" + diffSeconds);
 	}
 
 	public String getInprogressComment() {

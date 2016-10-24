@@ -40,6 +40,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	FamstackProjectActivityManager famstackProjectActivityManager;
 
 	@Resource
+	FamstackUserProfileManager famstackUserProfileManager;
+
+	@Resource
 	FamstackProjectTaskManager famstackProjectTaskManager;
 
 	public void createProjectItem(ProjectDetails projectDetails) {
@@ -194,7 +197,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 				projectDetails.setReporterName(
 						projectItem.getReporter().getFirstName() + " " + projectItem.getReporter().getLastName());
 			}
-			projectDetails.setReporter(projectItem.getReporter());
+			projectDetails.setEmployeeDetails(famstackUserProfileManager.mapEmployeeDetails(projectItem.getReporter()));
 			projectDetails.setWatchers(projectItem.getWatchers());
 			projectDetails.setCreatedDate(projectItem.getCreatedDate());
 			projectDetails.setLastModifiedDate(projectItem.getLastModifiedDate());

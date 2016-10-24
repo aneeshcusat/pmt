@@ -9,7 +9,6 @@ import com.famstack.projectscheduler.contants.ProjectComplexity;
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
-import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.util.DateUtils;
 
@@ -37,7 +36,7 @@ public class ProjectDetails {
 
 	private Integer teamId;
 
-	private UserItem reporter;
+	private EmployeeDetails employeeDetails;
 
 	private String category;
 
@@ -183,14 +182,6 @@ public class ProjectDetails {
 
 	public void setLastModifiedDate(Timestamp lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public UserItem getReporter() {
-		return reporter;
-	}
-
-	public void setReporter(UserItem reporter) {
-		this.reporter = reporter;
 	}
 
 	public String getCompletionTime() {
@@ -358,6 +349,14 @@ public class ProjectDetails {
 
 	public void setQuantity(String quantity) {
 		this.quantity = quantity;
+	}
+
+	public EmployeeDetails getEmployeeDetails() {
+		return employeeDetails;
+	}
+
+	public void setEmployeeDetails(EmployeeDetails employeeDetails) {
+		this.employeeDetails = employeeDetails;
 	}
 
 }

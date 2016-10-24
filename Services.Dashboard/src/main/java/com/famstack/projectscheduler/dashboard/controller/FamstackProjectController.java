@@ -92,7 +92,7 @@ public class FamstackProjectController extends BaseFamstackService {
 
 	@RequestMapping(value = "/getProjectJson", method = RequestMethod.GET)
 	@ResponseBody
-	public String getProjectJson(@RequestParam("query") String query) {
+	public String getProjectNameJson(@RequestParam("query") String query) {
 		return famstackDashboardManager.getProjectNameJson(query);
 	}
 

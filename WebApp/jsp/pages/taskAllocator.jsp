@@ -36,24 +36,22 @@ width: 60%;
 				<div class="form-group">
 					<label class="col-md-2 control-label">Projects</label>
 					<div class="col-md-9">
-						<form:select class="form-control select" path="projectId" id="projectId"  data-live-search="true">
-                         <option>-select-</option>
+						<select class="form-control select" name="projectId" id="projectId"  data-live-search="true">
+                         <option value="">-select-</option>
                          <c:if test="${not empty unAssignedProjects}">
 	                        <c:forEach var="project" items="${unAssignedProjects}">
 	                        	<option value="${project.id}">${project.name}</option>
 	                        </c:forEach>
                          </c:if>
-                     	 </form:select>
+                     	 </select>
                      	 <c:if test="${not empty unAssignedProjects}">
 	                        <c:forEach var="project" items="${unAssignedProjects}">
 	                        	<input type="hidden" id="${project.id}unAssignedDuration" value="${project.unAssignedDuration}"/>
 	                        	<input type="hidden" id="${project.id}startTime" value="${project.startTime}"/>
 	                        	<input type="hidden" id="${project.id}completionTime" value="${project.completionTime}"/>
 	                        	<input type="hidden" id="${project.id}duration" value="${project.duration}"/>
-	                        	<option value="${project.id}">${project.name}</option>
 	                        </c:forEach>
                          </c:if>
-						<span class="help-block">required project name</span>
 					</div>
 				</div>
 				
@@ -62,13 +60,13 @@ width: 60%;
 					<div class="col-md-9">
 						<form:input type="hidden" value="" path="taskId" id="taskId"/>
 						<form:input type="hidden" value="" path="startTime" id="startTime"/>
-						<form:input type="hidden" value="" path="assignee" id="assignee"/>
-						<form:input type="hidden" value="" path="helper" id="helper"/>
+						<%-- <form:input type="hidden" value="" path="assignee" id="assignee"/>
+						<form:input type="hidden" value="" path="helper" id="helper"/> --%>
 						<form:input type="hidden" value="" path="name" id="name"/>
 						
 						
-						<select class="form-control" id="taskSelectId"  data-live-search="true">
-                         <option id="0">-select-</option>
+						<select class="form-control" id="taskSelectId" name="taskId"  data-live-search="true">
+                         <option value="">-select-</option>
                          <c:if test="${not empty unAssignedProjects}">
 	                        <c:forEach var="project" items="${unAssignedProjects}">
 	                          	<c:if test="${not empty project.projectTaskDeatils}">
@@ -98,7 +96,6 @@ width: 60%;
 	                         	</c:if>
 	                        </c:forEach>
                          </c:if>
-						<span class="help-block">required task name</span>
 					</div>
 				</div>
 			</div>
@@ -106,7 +103,7 @@ width: 60%;
 			<div class="form-group">
 				<label class="col-md-2 control-label">Description</label>
                      <div class="col-md-9">
-                            <form:textarea class="form-control" id="description" path="description"></form:textarea> 
+                            <form:textarea class="form-control" id="description" path="description" name="description"></form:textarea> 
                          <span class="help-block">required description</span>
                      </div>
 				</div>
@@ -132,12 +129,12 @@ width: 60%;
 				<div class="form-group">
 				<label class="col-md-3 control-label">Est Start Time</label>
                      <div class="col-md-4">
-                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime" value="0000/00/00 00:00"/> 
+                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/> 
                          <span class="help-block">required estimated start time</span>
                      </div>
 					<label class="col-md-2 control-label">Duration</label>
                      <div class="col-md-3">
-                         <form:select class="form-control select" path="duration" id="duration"  data-live-search="true">
+                         <form:select class="form-control select" path="duration" name="duration" id="duration"  data-live-search="true">
                          <option>0</option>
                        	 </form:select>
                          <span class="help-block">required duration</span>
@@ -227,8 +224,23 @@ width: 60%;
  <%@include file="includes/footer.jsp" %>            
 	<script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
-
+<script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.js'></script>   
 <script>
+
+var jvalidate = $("#createTaskFormId").validate({
+	 ignore: ".ignorevalidation",
+   rules: {                                            
+	taskSelectId: {
+            required: true,
+    },
+    projectId: {
+        required: true
+    },
+    description: {
+    	 required: true
+    }
+  }
+});
 
 function doAjaxCreateTaskForm() {
 	$('#createTaskFormId').submit();
@@ -428,6 +440,8 @@ $('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
 	$(this).find('.xdsoft_date.xdsoft_weekend')
 	.addClass('xdsoft_disabled');
 	},
+	dateFormat: 'yyyy-mm-dd HH:mm',
+	defaultDate: new Date(),
 	minDate:startProjectTime, // yesterday is minimum date
 	maxDate:completionProjectTime,
 	allowTimes:['08:00','09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'],
@@ -461,6 +475,8 @@ $("#estStartTime").on("change",function(){
 
 });
 
+$("#estStartTime").val(getTodayDateTime(new Date()));
+
 $("#duration").on("change",function(){
 	resetAssignTable();
 	fillTableFromJson();
@@ -493,8 +509,9 @@ $(document).ready(function() {
     
     });
     
-    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;" id="currentAssignmentDate">0000/00/00 00:00</span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
-} );
+    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;" id="currentAssignmentDate"></span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
+	$("#currentAssignmentDate").html(getTodayDate(new Date()));
+	} );
 
 var cellSelectCount = 0;
 var breakTime = 13;

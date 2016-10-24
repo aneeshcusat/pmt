@@ -183,7 +183,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	private void setCurrentUser(ProjectDetails projectDetails) {
-		projectDetails.setReporter(getFamstackApplicationConfiguration().getCurrentUser());
+		EmployeeDetails employeeDetails = userProfileManager
+				.mapEmployeeDetails(getFamstackApplicationConfiguration().getCurrentUser());
+		projectDetails.setEmployeeDetails(employeeDetails);
 	}
 
 	public void uploadProjectFile(MultipartFile file, String projectCode, HttpServletRequest request) {

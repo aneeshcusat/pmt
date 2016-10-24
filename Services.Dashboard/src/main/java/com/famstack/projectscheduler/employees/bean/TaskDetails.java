@@ -5,7 +5,6 @@ import java.util.Date;
 
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.TaskStatus;
-import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.util.StringUtils;
 
 public class TaskDetails {
@@ -40,7 +39,7 @@ public class TaskDetails {
 
 	private TaskStatus status;
 
-	private UserItem reporter;
+	private EmployeeDetails employeeDetails;
 
 	private TaskActivityDetails taskActivityDetails;
 
@@ -205,12 +204,11 @@ public class TaskDetails {
 		return diffInMinute;
 	}
 
-	public UserItem getReporter() {
-		return reporter;
+	public EmployeeDetails getEmployeeDetails() {
+		return employeeDetails;
 	}
 
-	public void setReporter(UserItem reporter) {
-		this.reporter = reporter;
+	public void setEmployeeDetails(EmployeeDetails employeeDetails) {
+		this.employeeDetails = employeeDetails;
 	}
-
 }
