@@ -65,7 +65,7 @@ width: 60%;
 						<form:input type="hidden" value="" path="name" id="name"/>
 						
 						
-						<select class="form-control" id="taskSelectId" name="taskId"  data-live-search="true">
+						<select class="form-control" id="taskSelectId" name="taskSelectId"  data-live-search="true">
                          <option value="">-select-</option>
                          <c:if test="${not empty unAssignedProjects}">
 	                        <c:forEach var="project" items="${unAssignedProjects}">

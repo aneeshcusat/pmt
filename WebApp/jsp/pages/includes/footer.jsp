@@ -88,7 +88,7 @@ function processTaskNotification(notifications){
 		console.log(tasksCount);
 		var taskName = elem.name;
 		var taskPercentage=elem.percentageOfTaskCompleted;
-		
+		var taskDate = null;
 		var actualStartTime=elem.taskActivityDetails.actualStartTime; 
 		if (actualStartTime != null) {
 			taskDate=getTodayDateTime(new Date(actualStartTime));

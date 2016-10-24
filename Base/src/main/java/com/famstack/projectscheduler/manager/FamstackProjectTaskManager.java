@@ -69,7 +69,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		taskItem.setPriority(taskDetails.getPriority());
 		taskItem.setProjectItem(projectItem);
 		Date startDate = DateUtils.tryParse(taskDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
-		Date completionDate = DateUtils.tryParse(taskDetails.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
+		Date completionDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startDate, taskDetails.getDuration());
 		Timestamp startTimeStamp = null;
 		if (startDate != null) {
 			startTimeStamp = new Timestamp(startDate.getTime());

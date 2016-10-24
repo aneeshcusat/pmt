@@ -3,6 +3,7 @@ package com.famstack.projectscheduler.employees.bean;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.util.StringUtils;
@@ -211,4 +212,19 @@ public class TaskDetails {
 	public void setEmployeeDetails(EmployeeDetails employeeDetails) {
 		this.employeeDetails = employeeDetails;
 	}
+
+	public String getHelperNames() {
+		Integer helperId = 0;
+		String hleperNames = "";
+		if (StringUtils.isNotBlank(helpersList)) {
+			String[] helpers = helpersList.split(",");
+			for (String helper : helpers) {
+				helper = helper.trim();
+				helperId = Integer.parseInt(helper);
+				hleperNames = hleperNames + " " + FamstackApplicationConfiguration.userMap.get(helperId).getFirstName();
+			}
+		}
+		return hleperNames.trim();
+	}
+
 }

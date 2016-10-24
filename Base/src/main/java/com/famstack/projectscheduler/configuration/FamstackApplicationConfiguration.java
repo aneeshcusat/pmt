@@ -27,7 +27,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	private final boolean emailEnabled = true;
 
-	private static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
+	public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
 
 	private static Map<String, Integer> userIdMap = new HashMap<>();
 

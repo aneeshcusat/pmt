@@ -17,7 +17,6 @@ import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.notification.bean.EmailNotificationItem;
-import com.famstack.projectscheduler.notification.bean.NotificationItem;
 import com.famstack.projectscheduler.notification.services.FamstackBaseNotificationService;
 import com.famstack.projectscheduler.util.StringUtils;
 
@@ -179,7 +178,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 			String[] helperArray = helpers.split(",");
 			for (String helper : helperArray) {
 				EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getUserMap()
-						.get(Integer.parseInt(helper));
+						.get(Integer.parseInt(helper.trim()));
 
 				if (employeeDetails != null) {
 					toList.add(employeeDetails.getEmail());
@@ -236,30 +235,12 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 		if (StringUtils.isNotBlank(helpers)) {
 			String[] helperArray = helpers.split(",");
 			for (String helper : helperArray) {
-				toList.add(Integer.parseInt(helper));
+				toList.add(Integer.parseInt(helper.trim()));
 			}
 			toList.add(taskDetails.getAssignee());
 		}
 		logDebug("getSubscribersIdForProjecttaskUpdates" + toList);
 		return toList;
-	}
-
-	private NotificationItem getNotificationItemForRegistraion(Object object) {
-		EmailNotificationItem notificationEmailItem = getUserNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.USER_REGISTRAION);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForResetPassword(Object object) {
-		EmailNotificationItem notificationEmailItem = getUserNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.RESET_PASSWORD);
-		return notificationEmailItem;
-	}
-
-	private NotificationItem getNotificationItemForUserUpdate(Object object) {
-		EmailNotificationItem notificationEmailItem = getUserNotificationItem(object);
-		notificationEmailItem.setEmailTemplate(EmailTemplates.USER_UPDATE);
-		return notificationEmailItem;
 	}
 
 	private EmailNotificationItem getUserNotificationItem(Object object) {

@@ -1,5 +1,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
@@ -293,7 +295,10 @@ width: 60%;
                                             <input id="${taskDetails.taskId}duration" type="hidden" value="${taskDetails.duration}"/>
                                             <input id="${taskDetails.taskId}priority" type="hidden" value="${taskDetails.priority}"/>
                                             <input id="${taskDetails.taskId}assignee" type="hidden" value="${taskDetails.assignee}"/>
+                                            <input id="${taskDetails.taskId}assigneeName" type="hidden" value="${userDetailsMap[taskDetails.assignee].firstName}"/>
                                             <input id="${taskDetails.taskId}helper" type="hidden" value="${taskDetails.helpersList}"/>
+                                            <c:set var="helpersNames" value=""/>
+                                            <input id="${taskDetails.taskId}helperNames" type="hidden" value="${taskDetails.helperNames}"/>
                                  			</c:forEach>
                                  		</c:if>
                                        </tbody>
@@ -363,6 +368,9 @@ width: 60%;
 	        <li>Estimated completion time:<b><span id="popup-completionTime"></span></b></li>
 	        <li>Duration : <b><span id="popup-duration"></span> hours</b></li>
 	        <li>Priority : <b><span id="popup-priority"></span></b></li>
+	        <li>Assignee : <b><span id="popup-assigneeName"></span></b></li>
+	        <li>Helpers : <b><span id="popup-HelperName"></span></b></li>
+	       
 	    </ul>
     </div>
 <!-- task pop up window end -->
@@ -416,6 +424,8 @@ width: 60%;
    		 	$("#popup-duration").html($("#"+taskId+"duration").val());
    		 	$("#popup-taskname").html($("#"+taskId+"name").val());
    		 	$("#popup-description").html($("#"+taskId+"description").val());
+   			$("#popup-assigneeName").html($("#"+taskId+"assigneeName").val());
+   			$("#popup-HelperName").html($("#"+taskId+"helperNames").val());
     		 	
     	     $('div#task-pop-up').show()
     	     .css('top', e.pageY + moveDown)
