@@ -211,6 +211,50 @@
  <script type="text/javascript" src="${js}/plugins/typeahead/typeahead.bundle.js"></script>
  <script type="text/javascript" src="${js}/plugins/tagsinput/mab-jquery-taginput.js"></script>
 <script>
+var jvalidate = $("#createProjectFormId").validate({
+	 ignore: ".ignorevalidation",
+  rules: {                                            
+	name: {
+           required: true,
+   },
+   description: {
+       required: true
+   },
+   priority: {
+   	 required: true
+   },
+   complexity: {
+	   	 required: true
+   },
+   accountId: {
+	   	 required: true
+	},
+	teamId: {
+	   	 required: true
+	},
+	clientId: {
+	   	 required: true
+	},
+	code: {
+	   	 required: true
+	},
+	quantity: {
+	   	 required: true
+	},
+	startTime: {
+	   	 required: true
+	},
+	completionTime: {
+	   	 required: true
+	},
+	quantity: {
+	   	 required: true
+	},
+	category: {
+	   	 required: true
+	}
+ }
+});
 
 
 var clearProjectFormForCreate = function(projectId) {

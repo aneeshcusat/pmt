@@ -47,7 +47,7 @@
 							<label class="col-md-1 control-label">Priority</label>
                                 <div class="col-md-3">
                                         <form:select class="form-control select" path="priority" id="priority"  data-live-search="true">
-                                        <option value="-1">- select -</option>
+                                        <option value="">- select -</option>
                                         <option>URGENT</option>
                                         <option>HIGH</option>
                                         <option>MEDIUM</option>
@@ -69,7 +69,7 @@
                                 <label class="col-md-2 control-label">Complexity</label>
                                 <div class="col-md-3">
                                         <form:select class="form-control select" id="complexity" path="complexity" data-live-search="true">
-                                        <option value="-1">- select -</option>
+                                        <option value="">- select -</option>
                                         <option>BASIC</option>
                                         <option>MEDIUM</option>
                                         <option>COMPLEX</option>
@@ -82,7 +82,7 @@
                               <label class="col-md-3 control-label">Account</label>
                                 <div class="col-md-4">
                                         <form:select class="form-control select" id="accountId" path="accountId" data-live-search="true">
-                                        <option value="-1">- select -</option>
+                                        <option value="">- select -</option>
                                         <c:if test="${not empty modelViewMap.accountData}">  
                                          <c:forEach var="account" items="${modelViewMap.accountData}"  varStatus="accountStatus">
                             			  <option index="${accountStatus.index + 1}" class="accountOption" id="A${account.accountId}" filter="${account.type}" value="${account.accountId}">${account.name}</option>
@@ -94,7 +94,7 @@
                                 <label class="col-md-2 control-label">Team</label>
                                 <div class="col-md-3">
                                       <form:select class="selectpicker form-control select" path="teamId" id="teamId"  data-live-search="true">
-                                          <option value="-1">- select -</option>
+                                          <option value="">- select -</option>
                                           
                                          <c:if test="${not empty modelViewMap.accountData}">  
                                          <c:forEach var="account" items="${modelViewMap.accountData}">
@@ -120,7 +120,7 @@
                               <label class="col-md-3 control-label">Client</label>
                                 <div class="col-md-5">
                                         <form:select class="form-control select" path="clientId" id="clientId"  data-live-search="true">
-                                        <option value="-1">- select -</option>
+                                        <option value="">- select -</option>
                                         <c:if test="${not empty modelViewMap.accountData}">  
                                          <c:forEach var="account" items="${modelViewMap.accountData}">
                                          <c:if test="${not empty account.projectTeams}">  
@@ -158,7 +158,7 @@
                                 <label class="col-md-3 control-label">Project Category</label>
                                  <div class="col-md-9">                                                                                            
                                     <form:select class="form-control select" id="category" path="category"  data-live-search="true">
-                                        <option value="-1">- select -</option>
+                                        <option value="">- select -</option>
                                         <optgroup label="Presentation Design"">
                                         <option>Reporting (Data population)</option>
                                         <option>Template creation</option>
