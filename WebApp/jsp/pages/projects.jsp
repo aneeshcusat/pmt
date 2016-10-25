@@ -490,27 +490,27 @@ function initializeCreateProjectForm(project){
 		$('#clientId').selectpicker('refresh');
 	}
 	
-	$("#billable").on("click",function(){
+	var clickBillableType = function(){
 		resetAccount();
 		resetTeam();
 		resetClient();
-		$('.accountOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
+		$('.accountOption[filter^=BILLABLE]').each(function () { $(this).show(); });
 		$('#accountId').selectpicker('refresh');
 		$('#teamId').selectpicker('refresh');
 		$('#clientId').selectpicker('refresh');
 		$("#projectType").val("BILLABLE");
-	});
+	};
 	
-	$("#nonbillable").on("click",function(){
+	var clickNonBillableType =  function(){
 		resetAccount();
 		resetTeam();
 		resetClient();
 		$("#projectType").val("NON_BILLABLE");
-		$('.accountOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
+		$('.accountOption[filter^=NONBILLABLE]').each(function () { $(this).show(); });
 		$('#accountId').selectpicker('refresh');
 		$('#teamId').selectpicker('refresh');
 		$('#clientId').selectpicker('refresh');
-	});
+	};
 	
 	$("#accountId").on("change",function(){
 		console.log("account id change:" + $(this).val());

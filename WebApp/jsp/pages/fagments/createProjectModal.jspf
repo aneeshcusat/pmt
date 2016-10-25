@@ -36,10 +36,10 @@
 							<form:input type="hidden" path="type" id="projectType"/>
 							<div class="col-xs-5">
 								<div class="btn-group" data-toggle="buttons">
-									<label class="btn btn-default" > <input type="radio"
-										value="BILLABLE" id="billable"  /> Billable
+									<label class="btn btn-default" onclick="clickBillableType()"> <input type="radio"
+										value="BILLABLE"  /> Billable
 									</label> 
-									<label class="btn btn-default"> <input type="radio"
+									<label class="btn btn-default" onclick="clickNonBillableType()"> <input type="radio"
 										value="NON_BILLABLE" id="nonbillable" /> Non Billable
 									</label>
 								</div>
