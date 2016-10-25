@@ -70,10 +70,12 @@
 								</div>
 							</div>
 							<div class="col-md-4">
+								  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
 								<a data-toggle="modal" data-target="#createprojectmodal" onclick="clearProjectFormForCreate()"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
 									Create a new Project
 								</a>
+								</c:if>
 							</div>
 						</div>
 					</form>
@@ -95,7 +97,9 @@
 				<th>Assignees</th>
 				<th>Project Progress</th>
 				<th>Project Status</th>
+				 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
 				<th>Actions</th>
+				</c:if>
 			</tr>
 		</thead> 
 
@@ -132,7 +136,9 @@
 	                                                        
 				</td>
 				<td><span class="label label-${projectState}">${project.status}</span></td>
+				  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
 				<td>
+				
 					<button class="btn btn-default btn-rounded btn-sm" data-toggle="modal" data-target="#createprojectmodal"
 						onclick="loadProjectForClone('${project.id}')">
 						<span class="fa fa-clipboard" ></span>
@@ -149,6 +155,7 @@
 						<span class="fa fa-times"></span>
 					</a>
 				</td>
+					</c:if>
 			</tr>
 		</c:forEach>
 	</tbody>

@@ -42,11 +42,11 @@ public class FamstackUtils extends BaseFamstackService {
 		try {
 			jsonString = objectMapper.writeValueAsString(dataObject);
 		} catch (JsonGenerationException e) {
-			getStaticLogger(FamstackUtils.class).error(e.getMessage());
+			getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
 		} catch (JsonMappingException e) {
-			getStaticLogger(FamstackUtils.class).error(e.getMessage());
+			getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
 		} catch (IOException e) {
-			getStaticLogger(FamstackUtils.class).error(e.getMessage());
+			getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
 		}
 		return jsonString;
 	}

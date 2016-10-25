@@ -66,6 +66,8 @@ public class ProjectDetails {
 
 	private List<String> filesNames;
 
+	private List<String> completedFilesNames;
+
 	private int unAssignedDuration;
 
 	private String PONumber;
@@ -357,6 +359,14 @@ public class ProjectDetails {
 
 	public void setEmployeeDetails(EmployeeDetails employeeDetails) {
 		this.employeeDetails = employeeDetails;
+	}
+
+	public List<String> getCompletedFilesNames() {
+		return completedFilesNames;
+	}
+
+	public void setCompletedFilesNames(List<String> completedFilesNames) {
+		this.completedFilesNames = completedFilesNames;
 	}
 
 }

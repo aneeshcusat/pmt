@@ -48,12 +48,12 @@ width: 60%;
                   <div class="col-md-7">                      
             <h4><span class="fa ">${projectDetails.code}</span> - <span class="editableFieldText">${projectDetails.name}</span></h4>
             </div>
-            <div class="col-md-5 text-right">               
+          <!--   <div class="col-md-5 text-right">               
            <span style="background-color: lightgray;" class="btn  btn-default" disabled=disabled>To Do</span>       
            <span style="background-color: lightblue;"  class="btn  btn-default" disabled=disabled>Assign</span>
            <a href="#" class="btn  btn-default">Reviewed</a>
            <a href="#" class="btn  btn-default">Completed</a>
-            </div>
+            </div> -->
             </div>
 	</div>        
 	      <div class="row">
@@ -260,12 +260,14 @@ width: 60%;
                            <h5 class="bold">Tasks</h5>
                           </div>
                            <div class="col-md-5 text-right">
+                            <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
                             <a data-toggle="modal" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
                             <c:if test="${projectDetails.unAssignedDuration == 0}">
                             disabled="true"
                             </c:if>
                             >
                                <span class="fa fa-plus"></span> Create a Task</a>
+                               </c:if>
                             </div>
                           </div>
                               <table class="table">
@@ -317,7 +319,21 @@ width: 60%;
                               <ul class="list-unstyled p-files" id="upladedFilesList">
                                 <c:if test="${not empty projectDetails.filesNames}">
                                  <c:forEach var="fileName" items="${projectDetails.filesNames}" varStatus="fileNameIndex"> 
-                                 	<li><a href="${applicationHome}/download/${projectDetails.code}/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-trash-o" style="color:red" aria-hidden="true"></i></a></li> 
+                                 	<li><a href="${applicationHome}/download/${projectDetails.code}/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a>
+                                 	 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                                 	<a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-trash-o" style="color:red" aria-hidden="true"></i></a>
+                                 	</c:if>
+                                 	</li> 
+                                 </c:forEach>
+                                 </c:if>
+                                  <c:if test="${not empty projectDetails.completedFilesNames}">
+                                   <br>
+                                 <c:forEach var="fileName" items="${projectDetails.completedFilesNames}" varStatus="fileNameIndex"> 
+                                 	<li><a href="${applicationHome}/download/${projectDetails.code}/completed/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a>
+                                 	 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                                 	<a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-trash-o" style="color:red" aria-hidden="true"></i></a>
+                                 	</c:if>
+                                 	</li> 
                                  </c:forEach>
                                  </c:if>
                               </ul>

@@ -221,7 +221,10 @@ public class TaskDetails {
 			for (String helper : helpers) {
 				helper = helper.trim();
 				helperId = Integer.parseInt(helper);
-				hleperNames = hleperNames + " " + FamstackApplicationConfiguration.userMap.get(helperId).getFirstName();
+				EmployeeDetails employeeDetails = FamstackApplicationConfiguration.userMap.get(helperId);
+				if (employeeDetails != null) {
+					hleperNames = hleperNames + " " + employeeDetails.getFirstName();
+				}
 			}
 		}
 		return hleperNames.trim();

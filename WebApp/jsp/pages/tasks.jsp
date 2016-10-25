@@ -275,7 +275,7 @@ $(function(){
             	lastMovedItem=ui;
             	var taskId = $(lastMovedItem.item).find("input.taskId").val();
             	var projectCode = $(lastMovedItem.item).find("input.projectCode").val();
-            	resetFileUploadUrl(projectCode+"/"+taskId);
+            	resetFileUploadUrl(projectCode+"-completed");
             	$(".unassignedDuration").html($(lastMovedItem.item).find("input.duration").val());
                 if(this.id == "tasks_completed"){
                 	var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
@@ -298,7 +298,7 @@ $(function(){
 
 Dropzone.autoDiscover = false;
 $("#my-dropzone").dropzone({
-	url : "#",
+	url : "${applicationHome}/uploadfile/completed",
 	addRemoveLinks : false,
 	success : function(file, response) {
 		file.previewElement.classList.add("dz-success");

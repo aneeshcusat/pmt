@@ -20,6 +20,7 @@ import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
+import com.famstack.projectscheduler.security.user.UserRole;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 
@@ -114,8 +115,18 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		dataMap.put("calenderDateEnd", dayEndDate);
 		logDebug("dayStartDate : " + dayStartDate);
 
-		List<?> userActivityItems = getFamstackDataAccessObjectManager()
-				.executeQuery(HQLStrings.getString("allUserActivityItemsFromDatetoDate"), dataMap);
+		int currentUserId = getFamstackApplicationConfiguration().getCurrentUserId();
+		UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
+
+		String queryKey = "userActivityItemsFromDatetoDate";
+		if (userRole == UserRole.ADMIN || userRole == UserRole.SUPERADMIN || userRole == UserRole.MANAGER) {
+			queryKey = "allUserActivityItemsFromDatetoDate";
+		} else {
+			dataMap.put("userId", currentUserId);
+		}
+
+		List<?> userActivityItems = getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString(queryKey),
+				dataMap);
 
 		getAllTaskActivitiesFromUserActivity(taskActivitiesList, userActivityItems);
 		return taskActivitiesList;

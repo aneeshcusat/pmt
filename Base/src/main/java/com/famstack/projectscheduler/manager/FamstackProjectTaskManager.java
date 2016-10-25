@@ -196,6 +196,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 			jsonObject.put("title", taskActivityDetails.getTaskName());
 			jsonObject.put("start",
 					DateUtils.format(taskActivityDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT_CALENDER));
+
 			Date completionDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, taskActivityDetails.getStartTime(),
 					taskActivityDetails.getDuration());
 
