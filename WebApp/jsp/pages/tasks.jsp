@@ -274,7 +274,8 @@ $(function(){
             receive: function(event, ui) {
             	lastMovedItem=ui;
             	var taskId = $(lastMovedItem.item).find("input.taskId").val();
-            	resetFileUploadUrl(taskId);
+            	var projectCode = $(lastMovedItem.item).find("input.projectCode").val();
+            	resetFileUploadUrl(projectCode+"/"+taskId);
             	$(".unassignedDuration").html($(lastMovedItem.item).find("input.duration").val());
                 if(this.id == "tasks_completed"){
                 	var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();

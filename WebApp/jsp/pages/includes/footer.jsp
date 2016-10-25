@@ -129,7 +129,8 @@ function processNotification(notification){
 		if (elem.read == false) {
 			newMessages++;
 			 $.notify(message, {
-			        title: "famstack notificaion " + noficationType
+			        title: "famstack notificaion " + noficationType,
+			        icon:'${fn:escapeXml(image)}/favicon.ico'
 			 }).click(function(){
 			        location.href = "${applicationHome}/project/"+elem.data.id;
 		      });
