@@ -18,12 +18,15 @@ import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
+import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.util.DateUtils;
 
@@ -423,9 +426,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			logDebug("team Name " + data[0]);
 			logDebug("billable " + data[2]);
 			logDebug("non billable " + data[3]);
-			AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(data[0]);
-			if (accountDetails != null) {
-				teamUtilizatioDetails.setName(accountDetails.getName());
+			ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(data[0]);
+			if (projectSubTeamDetails != null) {
+				teamUtilizatioDetails.setName(projectSubTeamDetails.getName());
 			} else {
 				teamUtilizatioDetails.setName(data[0]);
 			}
@@ -437,5 +440,54 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		}
 
 		return teamUtilizatioDetailsList;
+	}
+
+	public List<ProjectCategoryDetails> getProjectCategoryJson(Date startTime, Date endTime) {
+		List<ProjectCategoryDetails> projectCategoryDetailsList = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startTime", startTime);
+		List<Object[]> result = getFamstackDataAccessObjectManager()
+				.executeSQLQuery(HQLStrings.getString("projectCategorySQL"), dataMap);
+
+		for (int i = 0; i < result.size(); i++) {
+			ProjectCategoryDetails projectCategoryDetails = new ProjectCategoryDetails();
+			Object[] data = result.get(i);
+			logDebug("category Name " + data[0]);
+			logDebug("coutn " + data[1]);
+
+			projectCategoryDetails.setCategoryName(data[0]);
+			projectCategoryDetails.setCount(data[1]);
+			projectCategoryDetailsList.add(projectCategoryDetails);
+		}
+
+		return projectCategoryDetailsList;
+	}
+
+	public List<ClientProjectDetails> getClientProject(Date startTime, Date endTime) {
+		List<ClientProjectDetails> clientProjectDetailsList = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startTime", startTime);
+		List<Object[]> result = getFamstackDataAccessObjectManager()
+				.executeSQLQuery(HQLStrings.getString("clientProjectStatusSQL"), dataMap);
+
+		for (int i = 0; i < result.size(); i++) {
+			ClientProjectDetails clientProjectDetails = new ClientProjectDetails();
+			Object[] data = result.get(i);
+			logDebug("account Name " + data[0]);
+			logDebug("completed " + data[2]);
+			logDebug("not ocmpleted " + data[1]);
+
+			AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(data[0]);
+			if (accountDetails != null) {
+				clientProjectDetails.setClientName(accountDetails.getName());
+			} else {
+				clientProjectDetails.setClientName(data[0]);
+			}
+			clientProjectDetails.setCompletedCount(data[2]);
+			clientProjectDetails.setNoCompletedCount(data[1]);
+			clientProjectDetailsList.add(clientProjectDetails);
+		}
+
+		return clientProjectDetailsList;
 	}
 }

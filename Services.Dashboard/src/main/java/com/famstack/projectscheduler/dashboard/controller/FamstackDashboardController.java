@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -50,12 +51,17 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 		String teamUtilizationJson = famstackDashboardManager.getTeamUtilizationJson();
 
+		String projectCategoryJson = famstackDashboardManager.getProjectCategoryJson();
+
+		List<ClientProjectDetails> clientProject = famstackDashboardManager.getClientProject();
+
 		List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
 
 		return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
 				.addObject("projectDetails", projectDetails)
 				.addObject("employeeUtilization", userBillableProductiveJson)
-				.addObject("projectTypeJson", projectTypeJson).addObject("teamUtilizationJson", teamUtilizationJson);
+				.addObject("projectTypeJson", projectTypeJson).addObject("teamUtilizationJson", teamUtilizationJson)
+				.addObject("projectCategoryJson", projectCategoryJson).addObject("clientProject", clientProject);
 	}
 
 	@RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)

@@ -378,35 +378,18 @@
                                 </div>
                                 <div class="panel-body">                                    
                                     <div class="row stacked">
-                                        <div class="col-md-4">                                            
-                                            <div class="progress-list">                                               
-                                                <div class="pull-left"><strong>Microsoft : 3 out of 4 completed</strong></div>
-                                                <div class="pull-right">75%</div>                                                
-                                                <div class="progress progress-small progress-striped active">
-                                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>
-                                                </div>
-                                            </div>
-                                            <div class="progress-list">                                               
-                                                <div class="pull-left"><strong>client 2 : 2 out of 4 completed</strong></div>
-                                                <div class="pull-right">50%</div>                                                
-                                                <div class="progress progress-small progress-striped active">
-                                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">90%</div>
-                                                </div>
-                                            </div>
-                                            <div class="progress-list">                                               
-                                                <div class="pull-left"><strong class="text-danger">client 3 : 1 out of 4 completed</strong></div>
-                                                <div class="pull-right">25%</div>                                                
-                                                <div class="progress progress-small progress-striped active">
-                                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 5%;">5%</div>
-                                                </div>
-                                            </div>
-                                            <div class="progress-list">                                               
-                                                <div class="pull-left"><strong class="text-warning">client 4t: 5 Progress Today</strong></div>
-                                                <div class="pull-right">4%</div>                                                
-                                                <div class="progress progress-small progress-striped active">
-                                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
-                                                </div>
-                                            </div>
+                                        <div class="col-md-4">  
+                                        	<c:if test="${not empty clientProject }">
+                                        		<c:forEach var="clientProject" items="${clientProject}">
+		                                        	<div class="progress-list">                                               
+		                                                <div class="pull-left"><strong>${clientProject.clientName}: ${clientProject.completedCount} out of ${clientProject.noCompletedCount} completed</strong></div>
+		                                                <div class="pull-right">${clientProject.percentageOfCompletion}%</div>                                                
+		                                                <div class="progress progress-small progress-striped active">
+		                                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="${clientProject.percentageOfCompletion}" aria-valuemin="0" aria-valuemax="100" style="width:${clientProject.percentageOfCompletion}%;">${clientProject.percentageOfCompletion}%</div>
+		                                                </div>
+                                            		</div>
+                                        		</c:forEach>
+                                        	</c:if>
                                             <p><span class="fa fa-warning"></span> Data update in end of each hour. You can update it manual by pressign update button</p>
                                         </div>
                                         <div class="col-md-8">
@@ -512,18 +495,10 @@ $(function(){
     /* Bar dashboard chart emp */
     Morris.Bar({
         element: 'dashboard-bar-work',
-        data: [
-            { y: 'work A', a: 75},
-            { y: 'work B', a: 64},
-            { y: 'work C', a: 78},
-            { y: 'work D', a: 82},
-            { y: 'work E', a: 86},
-            { y: 'work F', a: 94},
-            { y: 'work G', a: 96}
-        ],
-        xkey: 'y',
-        ykeys: ['a'],
-        labels: ['Work'],
+        data: ${projectCategoryJson},
+        xkey: 'categoryName',
+        ykeys: ['count'],
+        labels: ['Project Type'],
         barColors: ['#33414E', '#1caf9a'],
         gridTextSize: '10px',
         hideHover: true,
@@ -538,15 +513,10 @@ $(function(){
                         initial: {fill: '#33414E'}},
         markerStyle: {initial: {fill: '#1caf9a',
                        stroke: '#1caf9a'}},
-        markers: [{latLng: [50.27, 30.31], name: 'Kyiv - 1'},                                              
-                  {latLng: [52.52, 13.40], name: 'Berlin - 2'},
-                  {latLng: [48.85, 2.35], name: 'Paris - 1'},                                            
-                  {latLng: [51.51, -0.13], name: 'London - 3'},                                                                                                      
-                  {latLng: [40.71, -74.00], name: 'New York - 5'},
-                  {latLng: [35.38, 139.69], name: 'Tokyo - 12'},
-                  {latLng: [37.78, -122.41], name: 'San Francisco - 8'},
-                  {latLng: [28.61, 77.20], name: 'New Delhi - 4'},
-                  {latLng: [39.91, 116.39], name: 'Beijing - 3'}]
+        markers: [{latLng: [50.27, 30.31], name: 'Microsoft'},                                              
+                  {latLng: [52.52, 13.40], name: 'Google'},
+                  {latLng: [48.85, 2.35], name: 'Cisco'},                                            
+                  {latLng: [51.51, -0.13], name: 'HP'}]
     });    
     /* END Vector Map */
 

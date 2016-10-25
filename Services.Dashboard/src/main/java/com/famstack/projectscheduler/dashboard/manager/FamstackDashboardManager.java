@@ -20,6 +20,8 @@ import com.famstack.projectscheduler.configuration.FamstackApplicationConfigurat
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
+import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
@@ -425,5 +427,24 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				endTime);
 
 		return FamstackUtils.getJsonFromObject(teamUtilizationDetailsList).trim();
+	}
+
+	public String getProjectCategoryJson() {
+		Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
+		Date endTime = getFamstackUserSessionConfiguration().getDashboardViewEndDate();
+
+		List<ProjectCategoryDetails> projectCategoryDetailsList = projectManager.getProjectCategoryJson(startTime,
+				endTime);
+
+		return FamstackUtils.getJsonFromObject(projectCategoryDetailsList).trim();
+	}
+
+	public List<ClientProjectDetails> getClientProject() {
+		Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
+		Date endTime = getFamstackUserSessionConfiguration().getDashboardViewEndDate();
+
+		List<ClientProjectDetails> clientProjectDetailsList = projectManager.getClientProject(startTime, endTime);
+
+		return clientProjectDetailsList;
 	}
 }
