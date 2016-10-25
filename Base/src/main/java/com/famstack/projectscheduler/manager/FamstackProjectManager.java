@@ -19,8 +19,10 @@ import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
+import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
+import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -406,5 +408,34 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		}
 
 		return projectStatusDetailsList;
+	}
+
+	public List<TeamUtilizatioDetails> getTeamUtilizationJson(Date startTime, Date endTime) {
+		List<TeamUtilizatioDetails> teamUtilizatioDetailsList = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startTime", startTime);
+		List<Object[]> result = getFamstackDataAccessObjectManager()
+				.executeSQLQuery(HQLStrings.getString("teamUtilizationSQL"), dataMap);
+
+		for (int i = 0; i < result.size(); i++) {
+			TeamUtilizatioDetails teamUtilizatioDetails = new TeamUtilizatioDetails();
+			Object[] data = result.get(i);
+			logDebug("team Name " + data[0]);
+			logDebug("billable " + data[2]);
+			logDebug("non billable " + data[3]);
+			AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(data[0]);
+			if (accountDetails != null) {
+				teamUtilizatioDetails.setName(accountDetails.getName());
+			} else {
+				teamUtilizatioDetails.setName(data[0]);
+			}
+
+			teamUtilizatioDetails.setBillable(data[2]);
+			teamUtilizatioDetails.setNonBillable(data[3]);
+
+			teamUtilizatioDetailsList.add(teamUtilizatioDetails);
+		}
+
+		return teamUtilizatioDetailsList;
 	}
 }

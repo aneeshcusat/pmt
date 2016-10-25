@@ -48,12 +48,14 @@ public class FamstackDashboardController extends BaseFamstackService {
 
 		String projectTypeJson = famstackDashboardManager.getProjectTypeJson();
 
+		String teamUtilizationJson = famstackDashboardManager.getTeamUtilizationJson();
+
 		List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
 
 		return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
 				.addObject("projectDetails", projectDetails)
 				.addObject("employeeUtilization", userBillableProductiveJson)
-				.addObject("projectTypeJson", projectTypeJson);
+				.addObject("projectTypeJson", projectTypeJson).addObject("teamUtilizationJson", teamUtilizationJson);
 	}
 
 	@RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)

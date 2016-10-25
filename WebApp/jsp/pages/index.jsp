@@ -498,17 +498,9 @@ $(function(){
     /* Bar dashboard chart emp */
     Morris.Bar({
         element: 'dashboard-bar-team',
-        data: [
-            { y: 'Team A', a: 75, b: 35 },
-            { y: 'Team B', a: 64, b: 26 },
-            { y: 'Team C', a: 78, b: 39 },
-            { y: 'Team D', a: 82, b: 34 },
-            { y: 'Team E', a: 86, b: 39 },
-            { y: 'Team F', a: 94, b: 40 },
-            { y: 'Team G', a: 96, b: 41 }
-        ],
-        xkey: 'y',
-        ykeys: ['a', 'b'],
+        data:${teamUtilizationJson},
+        xkey: 'name',
+        ykeys: ['billable', 'nonBillable'],
         labels: ['Billable', 'NonBillable'],
         barColors: ['#33414E', '#1caf9a'],
         gridTextSize: '10px',
