@@ -12,7 +12,6 @@
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>        

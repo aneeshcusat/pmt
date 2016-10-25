@@ -32,6 +32,7 @@ import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.employees.bean.UserStatus;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
@@ -446,5 +447,21 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		List<ClientProjectDetails> clientProjectDetailsList = projectManager.getClientProject(startTime, endTime);
 
 		return clientProjectDetailsList;
+	}
+
+	public String getUserStatusJson() {
+
+		List<UserStatus> userStatusList = new ArrayList<UserStatus>();
+
+		Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getUserMap();
+		for (Integer userId : empMap.keySet()) {
+			EmployeeDetails employeeDetails = empMap.get(userId);
+			UserStatus userStatus = new UserStatus();
+			userStatus.setStatus(employeeDetails.getCheckUserStatus());
+			userStatus.setUserId(userId);
+			userStatusList.add(userStatus);
+		}
+
+		return FamstackUtils.getJsonFromObject(userStatusList);
 	}
 }

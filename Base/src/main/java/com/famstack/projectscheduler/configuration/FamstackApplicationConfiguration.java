@@ -95,9 +95,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		return userMap;
 	}
 
-	public void updateLastPing(int userId) {
+	public void updateLastPing() {
+		int userId = getCurrentUserId();
+		logDebug("updating user ping check" + userId);
 		if (!userMap.isEmpty() && userMap.get(userId) != null) {
 			userMap.get(userId).setLastPing(new Timestamp(new Date().getTime()));
+			logDebug("updated user ping check" + userId);
 		}
 	}
 
@@ -107,7 +110,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	public int getCurrentUserId() {
 		int userId = 0;
-		if (getCurrentUser() == null) {
+		if (getCurrentUser() != null) {
 			userId = getCurrentUser().getId();
 		}
 		return userId;

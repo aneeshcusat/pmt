@@ -278,7 +278,7 @@
              					<c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
              					 <c:if test="${user.role != 'SUPERADMIN'}">
 		                            <a href="#" class="list-group-item">                                 
-		                                <div class='list-group-status 
+		                                <div id="userOnline${user.id}" class='list-group-status  
 		                                <c:if test="${user.checkUserStatus == 5}">
 		                                status-online
 		                                </c:if>

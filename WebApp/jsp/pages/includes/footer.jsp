@@ -50,7 +50,19 @@
 <script>
 function userPingCheck(){
 	doAjaxRequestWithGlobal("POST", "${applicationHome}/userPingCheck",  {},function(data) {
-    	console.log("userPingCheck: ", data);
+    	var userStatus = JSON.parse(data);
+    	$.each(userStatus, function(idx, elem){
+    		$("#userOnline"+elem.userId).removeClass("status-online");
+    		$("#userOnline"+elem.userId).removeClass("status-away");
+    		$("#userOnline"+elem.userId).removeClass("status-offline");
+    		if (elem.status == 0) {
+    			$("#userOnline"+elem.userId).addClass("status-offline");
+    		} else if (elem.status == 1) {
+    			$("#userOnline"+elem.userId).addClass("status-away");
+    		} else if (elem.status == 5) {
+    			$("#userOnline"+elem.userId).addClass("status-online");
+    		}
+    	});
     },function(error) {
     	console.log("ERROR: ", error);
     },false);
@@ -132,6 +144,7 @@ function processNotification(notification){
 	$(".newNotification").html(newMessages);
 }
 
+userPingCheck();
 userNotifications();
 updateTaskNotification();
 

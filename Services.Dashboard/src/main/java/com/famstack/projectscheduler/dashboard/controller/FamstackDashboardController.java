@@ -1,7 +1,5 @@
 package com.famstack.projectscheduler.dashboard.controller;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -67,10 +65,8 @@ public class FamstackDashboardController extends BaseFamstackService {
 	@RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)
 	@ResponseBody
 	public String userPingCheck() {
-		UserItem userItem = getFamstackApplicationConfiguration().getCurrentUser();
-		getFamstackApplicationConfiguration().getUserMap().get(userItem.getId())
-				.setLastPing(new Timestamp(new Date().getTime()));
-		return "{\"status\": true}";
+		getFamstackApplicationConfiguration().updateLastPing();
+		return famstackDashboardManager.getUserStatusJson();
 	}
 
 	@RequestMapping(value = "/getNotifications", method = RequestMethod.GET)
