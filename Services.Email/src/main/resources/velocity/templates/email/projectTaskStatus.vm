@@ -17,10 +17,15 @@
 
                   <br class="mobile-hide">
 
-                  <h1>Project task has been created!</h1>
-
-                  <br>
-                  Your account has successfully been updated! Click below to review or update changes!<br>
+                  <h1>Project task status!</h1>
+                 	<br>Name : $!name
+					<br>Description :$!description
+					<br>createdDate : $!createdDate
+					<br>lastModifiedDate :$!lastModifiedDate
+					<br>reporterName : $!reporterName
+					<br>startTime :$!startTime
+					<br>completionTime : $!completionTime
+					<br>duration :$!duration
                   <br>
 
                   <table width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
@@ -47,11 +52,35 @@
                   <table width="100%" cellspacing="0" cellpadding="0">
                     <tbody><tr>
                       <td width="108" height="294">
-                         <table width="100%" cellspacing="0" cellpadding="0">
+                       <table width="100%" cellspacing="0" cellpadding="0">
+                          <tbody><tr>
+                            <td style="text-align:right;" height="73.5">
+                              Created
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="text-align:right;" height="73.5">
+                              Assign
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="text-align:right;" height="73.5">
+                              InProgress
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="text-align:right;" height="73.5">
+                              <b>Completed!</b>
+                            </td>
+                          </tr>
+                        </tbody></table>
+                      </td>
+                      <td style="padding-bottom:0; vertical-align:bottom;" width="66" valign="bottom" align="right">
+                        <table width="100%" cellspacing="0" cellpadding="0">
                           <tbody><tr>
                             <td>
                             	#if ($status == "NEW")
-    								<img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/rwgZkvWUSrm7LGsKSV0T" alt="four" width="66" height="75">
+    								<img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">
 								#else
 								   <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/Tx80P9chTO4ZXm5CCbII" alt="one" width="66" height="73">
 								#end
@@ -81,33 +110,9 @@
                               #if ($status == "COMPLETED")
 							    <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">             
 							#else
-							  <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/bqtHmppHTy6nOA7NZjow" alt="three" width="66" height="73">
+							  <img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/rwgZkvWUSrm7LGsKSV0T" alt="three" width="66" height="73">
                            
 							#end   </td>
-                          </tr>
-                        </tbody></table>
-                      </td>
-                      <td style="padding-bottom:0; vertical-align:bottom;" width="66" valign="bottom" align="right">
-                        <table width="100%" cellspacing="0" cellpadding="0">
-                          <tbody><tr>
-                            <td>
-                              <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/Tx80P9chTO4ZXm5CCbII" alt="one" width="66" height="73">
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/dvCbXRL1Tmu8lp8oSImm" alt="two" width="66" height="73">
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/bqtHmppHTy6nOA7NZjow" alt="three" width="66" height="73">
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">
-                            </td>
                           </tr>
                         </tbody></table>
                       </td>

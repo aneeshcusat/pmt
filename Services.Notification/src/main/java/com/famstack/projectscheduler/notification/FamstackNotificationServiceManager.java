@@ -101,6 +101,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService {
 				notificationEmailItem.getToList().add(currentUserItem.getUserId());
 				notificationEmailItem.getSubscriberList().add(currentUserItem.getId());
 				notificationEmailItem.setOriginUserId(currentUserItem.getId());
+				notificationEmailItem.getData().put("firstName", currentUserItem.getFirstName());
 			}
 			notificationEmailItem.setNotificationType(notificationType);
 			for (FamstackBaseNotificationService notificationService : notificationServices) {

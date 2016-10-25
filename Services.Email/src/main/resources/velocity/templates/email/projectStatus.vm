@@ -17,10 +17,27 @@
 
                   <br class="mobile-hide">
 
-                  <h1>Project has been created!</h1>
+                  <h1>Project status!</h1>
 
-                  <br>
-                  Your account has successfully been updated! Click below to review or update changes!<br>
+                  <br>Name : $!name
+                 	<br>Code : $!code
+					<br>Description :$!description
+					<br>createdDate : $!createdDate
+					<br>lastModifiedDate :$!lastModifiedDate
+					<br>projectType: $!projectType
+					<br>complexity: $!complexity
+					<br>accountName: $!accountName
+					<br>quantity : $!quantity
+					<br>reporterName : $!reporterName
+					<br>category : $!category
+					<br>priority :$!priority
+					<br>startTime :$!startTime
+					<br>completionTime : $!completionTime
+					<br>duration :$!duration
+					<br>PONumber: $!PONumber
+					<br>clientName :$!clientName
+					<br>teamName : $!teamName
+					<br>subTeamName : $!subTeamName
                   <br>
 
                   <table width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
@@ -75,7 +92,7 @@
                           <tbody><tr>
                             <td>
                             	#if ($status == "NEW")
-    								<img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/rwgZkvWUSrm7LGsKSV0T" alt="four" width="66" height="75">
+    								<img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">
 								#else
 								   <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/Tx80P9chTO4ZXm5CCbII" alt="one" width="66" height="73">
 								#end
@@ -105,7 +122,7 @@
                               #if ($status == "COMPLETED")
 							    <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">             
 							#else
-							  <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/bqtHmppHTy6nOA7NZjow" alt="three" width="66" height="73">
+							  <img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/rwgZkvWUSrm7LGsKSV0T" alt="three" width="66" height="73">
                            
 							#end   </td>
                           </tr>
