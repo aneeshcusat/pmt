@@ -303,6 +303,7 @@ function clearCreateProjectForm(){
 	$("#summary").val("");
 	
 	$("#billable").attr("checked", false);
+	$("#projectType").val("");
 	$("#nonbillable").attr("checked", false);
 	$('#billable').parent().removeClass("active");
 	$('#nonbillable').parent().removeClass("active");
@@ -356,6 +357,8 @@ function initializeCreateProjectForm(project){
 		$("#nonbillable").attr("checked", true);
 		$('#nonbillable').parent().addClass("active");
 	}
+	
+	$("#projectType").val(project.type);
 	
 	$("#priority").val(project.priority);
 	$('#priority').selectpicker('refresh');
@@ -495,13 +498,14 @@ function initializeCreateProjectForm(project){
 		$('#accountId').selectpicker('refresh');
 		$('#teamId').selectpicker('refresh');
 		$('#clientId').selectpicker('refresh');
+		$("#projectType").val("BILLABLE");
 	});
 	
 	$("#nonbillable").on("click",function(){
 		resetAccount();
 		resetTeam();
 		resetClient();
-		
+		$("#projectType").val("NON_BILLABLE");
 		$('.accountOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
 		$('#accountId').selectpicker('refresh');
 		$('#teamId').selectpicker('refresh');

@@ -11,7 +11,6 @@
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Dashboard</li>
-   
  </ul>
  <div class="col-md-12">
  <ul style="float:right;margin-bottom: 3px;">
@@ -474,10 +473,7 @@ $(function(){
     /* Donut dashboard chart */
     Morris.Donut({
         element: 'dashboard-donut-1',
-        data: [
-            {label: "BILLABLE", value: 12},
-            {label: "NONBILLABLE", value: 1}
-        ],
+        data:  ${projectTypeJson},
         colors: ['#5cb85c',
                  '#f0ad4e'],
         resize: true

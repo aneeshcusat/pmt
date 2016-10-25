@@ -18,6 +18,7 @@ import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -385,5 +386,25 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 	public TaskDetails getProjectTaskById(int taskId) {
 		return famstackProjectTaskManager.getTaskDetailsById(taskId);
+	}
+
+	public List<ProjectStatusDetails> getProjectItemByTypeCount(Date startTime, Date endTime) {
+		List<ProjectStatusDetails> projectStatusDetailsList = new ArrayList<>();
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startTime", startTime);
+		List<Object[]> result = getFamstackDataAccessObjectManager()
+				.executeSQLQuery(HQLStrings.getString("projectItemByTypeCountSQL"), dataMap);
+
+		for (int i = 0; i < result.size(); i++) {
+			ProjectStatusDetails projectStatusDetails = new ProjectStatusDetails();
+			Object[] data = result.get(i);
+			logDebug("project count " + data[1]);
+			logDebug("Project type " + data[0]);
+			projectStatusDetails.setLabel((String) data[0]);
+			projectStatusDetails.setValue(data[1]);
+			projectStatusDetailsList.add(projectStatusDetails);
+		}
+
+		return projectStatusDetailsList;
 	}
 }

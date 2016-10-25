@@ -20,6 +20,7 @@ import com.famstack.projectscheduler.configuration.FamstackApplicationConfigurat
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
@@ -404,5 +405,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		}
 
 		return FamstackUtils.getJsonFromObject(userWorkDetailsMap.values()).trim();
+	}
+
+	public String getProjectTypeJson() {
+		Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
+		Date endTime = getFamstackUserSessionConfiguration().getDashboardViewEndDate();
+
+		List<ProjectStatusDetails> projectTypeCountList = projectManager.getProjectItemByTypeCount(startTime, endTime);
+
+		return FamstackUtils.getJsonFromObject(projectTypeCountList).trim();
 	}
 }

@@ -33,13 +33,14 @@
                             </div>
                          <div class="form-group">
 							<label class="col-xs-3 control-label">Project Type</label>
+							<form:input type="hidden" path="type" id="projectType"/>
 							<div class="col-xs-5">
 								<div class="btn-group" data-toggle="buttons">
 									<label class="btn btn-default" > <input type="radio"
-										name="type" value="BILLABLE" id="billable"  /> Billable
+										value="BILLABLE" id="billable"  /> Billable
 									</label> 
 									<label class="btn btn-default"> <input type="radio"
-										name="type" value="NON_BILLABLE" id="nonbillable" /> Non Billable
+										value="NON_BILLABLE" id="nonbillable" /> Non Billable
 									</label>
 								</div>
 							</div>
