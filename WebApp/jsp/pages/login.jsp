@@ -82,8 +82,7 @@
              },
              password: {
                      required: true,
-                     minlength: 5,
-                     maxlength: 10
+                     minlength: 5
              }  
      	}
      });

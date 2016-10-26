@@ -86,3 +86,6 @@ Insert into bops.ACCOUNT_TEAM_MULTI (TEAM_ID,ACCOUNT_ID) values (1009,1027);
 Insert into bops.ACCOUNT_TEAM_MULTI (TEAM_ID,ACCOUNT_ID) values (1009,1028);
 Insert into bops.ACCOUNT_TEAM_MULTI (TEAM_ID,ACCOUNT_ID) values (1009,1029);
 Insert into bops.ACCOUNT_TEAM_MULTI (TEAM_ID,ACCOUNT_ID) values (1009,1030);
+
+flush query cache;
+reset query cache;
