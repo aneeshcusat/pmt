@@ -1072,6 +1072,9 @@ var fillTableFromJson = function(){
 					$(cellId).attr("modified",false);
 					$(cellId).css("background-color", "blue");
 					increaseTotalHours(elem.userId);
+					if (elem.userTaskType == "PROJECT") {
+						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
+					}
 				}
 				
 			}

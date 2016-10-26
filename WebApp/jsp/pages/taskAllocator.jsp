@@ -688,7 +688,7 @@ var resetAssignTable = function(){
 		$(this).attr("modified",false);
 		$(this).attr("celleditable", true);
 		$(this).attr("isassigned",false);
-		
+		$(this).html("");
 	});
 	
 	$('table#employeeListForTaskTable td[dynamicvalue="0"]').each(function () {
@@ -761,6 +761,10 @@ var fillTableFromJson = function(){
 					$(cellId).attr("cellmarked",true);
 					$(cellId).attr("modified",false);
 					$(cellId).css("background-color", "blue");
+					$(cellId).css("text-align", "center");
+					if (elem.userTaskType == "PROJECT") {
+						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
+					}
 					increaseTotalHours(elem.userId);
 				}
 				
