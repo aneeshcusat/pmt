@@ -122,13 +122,29 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 	public void deleteTaskItem(int taskId) {
 		TaskItem taskItem = getTaskItemById(taskId);
 		if (taskItem != null) {
-			famstackUserActivityManager.deleteAllUserTaskActivities(taskItem.getTaskId());
+			deleteAllTaskActivitiesItem(taskItem.getTaskId());
 			famstackDataAccessObjectManager.deleteItem(taskItem);
 		}
 	}
 
 	public void deleteAllTaskActivitiesItem(int taskId) {
+		resetProjectProductiveAndBillableTime(taskId);
+
 		famstackUserActivityManager.deleteAllUserTaskActivities(taskId);
+	}
+
+	private void resetProjectProductiveAndBillableTime(int taskId) {
+		UserTaskActivityItem userTaskActivityItem = famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskId);
+		UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
+
+		int duration = userTaskActivityItem.getDuration();
+		int billableHours = userActivityItem.getBillableHours();
+		int productiveHours = userActivityItem.getProductiveHousrs();
+		userActivityItem.setBillableHours(billableHours - duration);
+		userActivityItem.setProductiveHousrs(productiveHours - duration);
+
+		famstackDataAccessObjectManager.updateItem(userActivityItem);
+
 	}
 
 	public TaskItem getTaskItemById(int taskId) {
@@ -177,7 +193,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 			taskDetails.setAssignee(taskItem.getAssignee());
 			taskDetails.setHelpersList(taskItem.getHelpers());
 			taskDetails.setTaskActivityDetails(
-					famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItem.getTaskId()));
+					famstackUserActivityManager.getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
 			return taskDetails;
 
 		}

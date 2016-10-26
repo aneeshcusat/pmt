@@ -458,10 +458,23 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 		Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getUserMap();
 		for (Integer userId : empMap.keySet()) {
+			String availableMessage = "Available";
 			EmployeeDetails employeeDetails = empMap.get(userId);
 			UserStatus userStatus = new UserStatus();
 			userStatus.setStatus(employeeDetails.getCheckUserStatus());
 			userStatus.setUserId(userId);
+			Date userAvailableTime = employeeDetails.getUserAvailableTime();
+			if (userAvailableTime != null) {
+				availableMessage += " After "
+						+ (userAvailableTime.getHours() < 10 ? "0" + userAvailableTime.getHours()
+								: userAvailableTime.getHours())
+						+ ":" + (userAvailableTime.getMinutes() < 10 ? "0" + userAvailableTime.getMinutes()
+								: userAvailableTime.getMinutes());
+			}
+			if (employeeDetails.isLeave()) {
+				availableMessage = "Leave";
+			}
+			userStatus.setUserAvailableMsg(availableMessage);
 			userStatusList.add(userStatus);
 		}
 

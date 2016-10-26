@@ -26,4 +26,7 @@
 
    <bean id="famstackAccountManager" class="com.famstack.projectscheduler.manager.FamstackAccountManager" init-method="initialize">
 	</bean>
+	
+	 <bean id="famstackUserActivityManager" class="com.famstack.projectscheduler.manager.FamstackUserActivityManager" init-method="initialize">
+	</bean>
 </beans>

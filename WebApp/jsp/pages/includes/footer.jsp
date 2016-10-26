@@ -51,6 +51,7 @@
 function userPingCheck(){
 	doAjaxRequestWithGlobal("POST", "${applicationHome}/userPingCheck",  {},function(data) {
     	var userStatus = JSON.parse(data);
+    	
     	$.each(userStatus, function(idx, elem){
     		$("#userOnline"+elem.userId).removeClass("status-online");
     		$("#userOnline"+elem.userId).removeClass("status-away");
@@ -62,6 +63,7 @@ function userPingCheck(){
     		} else if (elem.status == 5) {
     			$("#userOnline"+elem.userId).addClass("status-online");
     		}
+    		$("#availableAfter"+elem.userId).html(elem.userAvailableMsg);
     	});
     },function(error) {
     	console.log("ERROR: ", error);

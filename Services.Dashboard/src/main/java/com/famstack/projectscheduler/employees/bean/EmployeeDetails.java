@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import com.famstack.projectscheduler.security.user.UserRole;
 
@@ -25,6 +26,8 @@ public class EmployeeDetails {
 	private String dateOfBirth;
 	private int reportingManger;
 	private Timestamp lastPing;
+	private Date userAvailableTime;
+	private boolean leave;
 
 	public String getFirstName() {
 		return firstName;
@@ -205,6 +208,22 @@ public class EmployeeDetails {
 			return AWAY;
 		}
 		return OFFLINE;
+	}
+
+	public Date getUserAvailableTime() {
+		return userAvailableTime;
+	}
+
+	public void setUserAvailableTime(Date userAvailableTime) {
+		this.userAvailableTime = userAvailableTime;
+	}
+
+	public boolean isLeave() {
+		return leave;
+	}
+
+	public void setLeave(boolean leave) {
+		this.leave = leave;
 	}
 
 }

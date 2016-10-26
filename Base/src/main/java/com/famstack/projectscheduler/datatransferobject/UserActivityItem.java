@@ -100,7 +100,7 @@ public class UserActivityItem implements FamstackBaseItem {
 		this.calenderDate = calenderDate;
 	}
 
-	public boolean isLeave() {
+	public boolean getLeave() {
 		return leave;
 	}
 

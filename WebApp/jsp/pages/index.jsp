@@ -291,7 +291,7 @@
 		                                '></div>
 		                                <img class="pull-left" src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
 		                                <span class="contacts-title">${user.firstName}</span>
-		                                <p>Availble after 2:00 PM</p>
+		                                <p id="availableAfter${user.id}"></p>
 		                            </a> 
 		                            </c:if>    
                             	</c:forEach>

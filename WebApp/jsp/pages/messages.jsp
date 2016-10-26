@@ -29,13 +29,7 @@
         ::-webkit-scrollbar-thumb:window-inactive {
             background: rgba(0, 0, 0, 0.02);
         }
-</style>
-<script type="text/javascript">
-function setLastMessageId(lastMessageIdField, messageId) {
-    $('#'+lastMessageIdField).val(messageId);
-}
-
-</script>
+        </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">
     <!-- START CONTENT FRAME TOP -->
