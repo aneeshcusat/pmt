@@ -55,9 +55,11 @@ list .nav-header {
             <h2><span class="fa fa-comments"></span>Messages</h2>
         </div>  
         <div class="pull-right">
+          <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
             <a data-toggle="modal" data-target="#creategroupmodal" class="btn btn-success btn-block" onclick="clearGroupForm();">
                 <span class="fa fa-plus"></span> Create Group
             </a>
+          </c:if>
         </div>                                                                               
     </div>
     <!-- END CONTENT FRAME TOP -->
@@ -97,10 +99,12 @@ list .nav-header {
 	            	</c:if>
                 ' id="tab${group.groupId}">
               		 <div class="col-md-9" style="box-shadow: 5px 5px 20px #888888;">
-	              		 <div class="row col-md-12 margin10">
-		                 	<span style="font-size: 2.0em; font-weight: bold">Group : ${group.name}</span>
-		                 	<a href="#" data-box="#confirmationbox" class="mb-control" style="float:right" onclick="javascript:deleteGroup('${group.groupId}','${group.name}')"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a>
-			                <a data-toggle="modal" data-target="#creategroupmodal" onclick="editGroup(${group.groupId})" style="float:right"><i class="fa fa-pencil fa-2x" style="padding-right:5px;" aria-hidden="true"></i></a>
+	              		 <div class="row col-md-12 margin10" style="border-bottom:1px solid lightgray">
+		                 	<span style="font-size: 1.4em; font-weight: bold">Group :</span> <span style="font-size: 1.4em;">${group.name}</span>
+		                 	<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+		                 		<a href="#" data-box="#confirmationbox" class="mb-control" style="float:right" onclick="javascript:deleteGroup('${group.groupId}','${group.name}')"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a>
+			                	<a data-toggle="modal" data-target="#creategroupmodal" onclick="editGroup(${group.groupId})" style="float:right"><i class="fa fa-pencil fa-2x" style="padding-right:5px;" aria-hidden="true"></i></a>
+		               		</c:if>
 		               	</div>
               		 	<div class="messages messages-img margin10"  style="overflow-y: scroll;min-height: 430px;max-height: 430px;" id="messageDiv${group.groupId}">
               		 	   <c:forEach var="groupMessage" items="${group.messages}">
@@ -383,14 +387,14 @@ function deleteGroup(groupId, groupName){
 
 function doAjaxDeleteGroup(groupId) {
 	  doAjaxRequest('GET', '/bops/dashboard/deleteGroup?groupId='+groupId, null,
-			    function(response) {
-			        var responseJsonObj = JSON.parse(response);
-			        if (responseJsonObj.status){
-			            window.location.reload(true);
-			        }
-			    }, function(e) {
-			        console.log(e)
-			    });
+	    function(response) {
+	        var responseJsonObj = JSON.parse(response);
+	        if (responseJsonObj.status){
+	            window.location.reload(true);
+	        }
+	    }, function(e) {
+	        console.log(e)
+	    });
 }
 
 setInterval('refreshMessages()', 3000);

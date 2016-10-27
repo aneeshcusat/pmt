@@ -2,7 +2,6 @@ package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
 
-
 /**
  * The Class GroupMessageDetails.
  * 
@@ -21,12 +20,14 @@ public class GroupMessageDetails {
 	private Timestamp lastModifiedDate;
 
 	private Integer user;
-	
+
 	private String userFullName;
 
 	private Integer group;
-	
+
 	private String createdDateDisplay;
+
+	private boolean read = false;
 
 	public Integer getMessageId() {
 		return messageId;
@@ -41,6 +42,7 @@ public class GroupMessageDetails {
 	}
 
 	public void setDescription(String description) {
+		read = true;
 		this.description = description;
 	}
 
@@ -91,6 +93,9 @@ public class GroupMessageDetails {
 	public void setCreatedDateDisplay(String createdDateDisplay) {
 		this.createdDateDisplay = createdDateDisplay;
 	}
-	
+
+	public boolean getRead() {
+		return read;
+	}
 
 }

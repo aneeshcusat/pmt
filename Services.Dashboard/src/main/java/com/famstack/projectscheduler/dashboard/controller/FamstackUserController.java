@@ -177,7 +177,7 @@ public class FamstackUserController extends BaseFamstackService {
 
 	@RequestMapping(value = "/messages", method = RequestMethod.GET)
 	public ModelAndView getMessages() {
-		int userId = getFamstackUserSessionConfiguration().getLoginResult().getUserItem().getId();
+		int userId = getFamstackUserSessionConfiguration().getCurrentUser().getId();
 		List<GroupDetails> groupData = famstackDashboardManager.getAllGroups(userId);
 		Map<String, Object> modelViewMap = new HashMap<String, Object>();
 		modelViewMap.put("groupData", groupData);

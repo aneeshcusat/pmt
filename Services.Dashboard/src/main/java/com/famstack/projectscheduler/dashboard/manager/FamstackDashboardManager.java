@@ -154,6 +154,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public void createComment(String projectComments, int projectId) {
 		projectCommentManager.createProjectCommentItem(projectComments, projectId);
+
+		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
+		setCurrentUser(projectDetails);
+		notifyAll(NotificationType.PROJECT_COMMENT_ADDED, projectDetails);
 	}
 
 	public ProjectDetails getProjectDetails(int projectId, HttpServletRequest request) {
@@ -202,8 +206,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		projectDetails.setEmployeeDetails(employeeDetails);
 	}
 
-	public void uploadProjectFile(MultipartFile file, String projectCode, HttpServletRequest request) {
-		famstackProjectFileManager.uploadFile(file, projectCode, request);
+	public void uploadProjectFile(MultipartFile file, String projectId, HttpServletRequest request) {
+		famstackProjectFileManager.uploadFile(file, projectId, request);
 	}
 
 	public void deleteProjectFile(String fileName, String projectCode, HttpServletRequest request) {

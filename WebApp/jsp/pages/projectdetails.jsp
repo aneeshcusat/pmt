@@ -1071,10 +1071,19 @@ var fillTableFromJson = function(){
 					$(cellId).attr("isassigned",true);
 					$(cellId).attr("cellmarked",true);
 					$(cellId).attr("modified",false);
-					$(cellId).css("background-color", "blue");
 					increaseTotalHours(elem.userId);
 					if (elem.userTaskType == "PROJECT") {
+						$(cellId).css("background-color", "blue");
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
+					} else if (elem.userTaskType == "PROJECT_HELPER") {
+						$(cellId).css("background-color", "lightblue");
+						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
+					} else if (elem.userTaskType == "LEAVE") {
+						$(cellId).css("background-color", "gray");
+						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">L</span>');
+					} else if (elem.userTaskType == "OTHER") {
+						$(cellId).css("background-color", "lightyellow");
+						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">O</span>');
 					}
 				}
 				
