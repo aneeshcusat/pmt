@@ -85,9 +85,8 @@ public class FamstackTaskController extends BaseFamstackService {
 	@RequestMapping(value = "/updateTaskStatus", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateTaskStatus(@RequestParam("taskId") int taskId,
-			@RequestParam("taskActivityId") int taskActivityId, @RequestParam("taskStatus") TaskStatus taskStatus,
-			@RequestParam("comments") String comments) {
-		famstackDashboardManager.updateTaskStatus(taskId, taskActivityId, taskStatus, comments);
+			@RequestParam("taskStatus") TaskStatus taskStatus, @RequestParam("comments") String comments) {
+		famstackDashboardManager.updateTaskStatus(taskId, taskStatus, comments);
 		return "{\"status\": true}";
 	}
 

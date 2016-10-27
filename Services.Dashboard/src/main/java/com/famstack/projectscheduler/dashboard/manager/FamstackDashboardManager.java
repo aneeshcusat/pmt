@@ -158,9 +158,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public ProjectDetails getProjectDetails(int projectId, HttpServletRequest request) {
 		ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
-		List<String> filesNames = famstackProjectFileManager.getProjectFiles(projectDetails.getCode(), request);
+		List<String> filesNames = famstackProjectFileManager.getProjectFiles("" + projectDetails.getId(), request);
 		List<String> completedFilesNames = famstackProjectFileManager
-				.getProjectFiles(projectDetails.getCode() + "/completed", request);
+				.getProjectFiles(projectDetails.getId() + "-completed", request);
 		projectDetails.setFilesNames(filesNames);
 		projectDetails.setCompletedFilesNames(completedFilesNames);
 		return projectDetails;
@@ -288,8 +288,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return FamstackUtils.getJsonFromObject(taskMap);
 	}
 
-	public void updateTaskStatus(int taskId, int taskActivityId, TaskStatus taskStatus, String comments) {
-		projectManager.updateTaskStatus(taskId, taskActivityId, taskStatus, comments);
+	public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments) {
+		projectManager.updateTaskStatus(taskId, taskStatus, comments);
 		TaskDetails taskDetails = projectManager.getProjectTaskById(taskId);
 		switch (taskStatus) {
 		case ASSIGNED:
@@ -479,5 +479,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		}
 
 		return FamstackUtils.getJsonFromObject(userStatusList);
+	}
+
+	public void deleteGroup(int groupId) {
+		groupMessageManager.deleteGroup(groupId);
 	}
 }

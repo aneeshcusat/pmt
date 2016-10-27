@@ -46,7 +46,7 @@
 					<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['ASSIGNED']}" varStatus="taskIndex">
 			        <div class='task-item task-danger 
-			          <c:if test="${taskIndex.index == 0 && empty modelViewMap.projectTaskDetailsData['INPROGRESS']}">
+			          <c:if test="${taskIndex.index == 0 && empty modelViewMap.projectTaskDetailsData['INPROGRESS'] && tasks.assignee == currentUser.id}">
 			        	task-primary
 			         </c:if>
 			        '>                                    
@@ -84,7 +84,7 @@
                             <div class="pull-right"><span class="fa fa-pause"></span> Time remaining : <span id="remainingTime">2h 55min</span></div>
                            
                             <input type="hidden" class="taskId" value="${tasks.taskId}"/>
-                            <input type="hidden" class="projectCode" value="${tasks.projectId}"/>       
+                            <input type="hidden" class="projectId" value="${tasks.projectId}"/>       
                             <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>         
                         </div>                                    
                     </div>
@@ -215,8 +215,7 @@ var taskStart = function(){
 	hour = parseInt(duration);
 	second =0;
 	minutes =0;
-	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
-	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "INPROGRESS","comments":comments}
+	var dataString = {"taskId":taskId,"taskStatus": "INPROGRESS","comments":comments}
 	updateTaskStatus(dataString, false);
 }
 
@@ -224,8 +223,7 @@ var taskStart = function(){
 var taskComplete = function(){
 	var comments =$("#taskCompletionComments").val();
 	var taskId = $(lastMovedItem.item).find("input.taskId").val();
-	var taskActivityId = $(lastMovedItem.item).find("input.taskActivityId").val();
-	var dataString = {"taskActivityId":taskActivityId, "taskId":taskId,"taskStatus": "COMPLETED","comments":comments}
+	var dataString = {"taskId":taskId,"taskStatus": "COMPLETED","comments":comments}
 	updateTaskStatus(dataString, true);
 }
 
@@ -274,8 +272,8 @@ $(function(){
             receive: function(event, ui) {
             	lastMovedItem=ui;
             	var taskId = $(lastMovedItem.item).find("input.taskId").val();
-            	var projectCode = $(lastMovedItem.item).find("input.projectCode").val();
-            	resetFileUploadUrl(projectCode+"-completed");
+            	var projectId = $(lastMovedItem.item).find("input.projectId").val();
+            	resetFileUploadUrl(projectId+"-completed");
             	$(".unassignedDuration").html($(lastMovedItem.item).find("input.duration").val());
                 if(this.id == "tasks_completed"){
                 	var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
@@ -295,9 +293,9 @@ $(function(){
     	$(lastMovedItem.sender).sortable('cancel');
     });
 });
-
+var fileLocation = "";
 Dropzone.autoDiscover = false;
-$("#my-dropzone").dropzone({
+var myDropZone = $("#my-dropzone").dropzone({
 	url : "${applicationHome}/uploadfile/completed",
 	addRemoveLinks : false,
 	success : function(file, response) {
@@ -306,16 +304,15 @@ $("#my-dropzone").dropzone({
 	},
 	error : function(file, response) {
 		file.previewElement.classList.add("dz-error");
-	}
+	},init: function() {
+	    this.on("processing", function(file) {
+		      this.options.url = "${applicationHome}/uploadfile/"+fileLocation;
+		      console.log("new file upload location");
+		    });
+		  }
 });
 
-function resetFileUploadUrl(taskId){
-	Dropzone.options.myDropzone = {
-			  init: function() {
-			    this.on("processing", function(file) {
-			      this.options.url = "${applicationHome}/uploadfile/"+taskId;
-			    });
-			  }
-			};
+function resetFileUploadUrl(location){
+	fileLocation = location;
 }
 </script>

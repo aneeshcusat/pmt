@@ -207,6 +207,13 @@ public class FamstackUserController extends BaseFamstackService {
 		return famstackDashboardManager.getGroup(groupId);
 	}
 
+	@RequestMapping(value = "/deleteGroup", method = RequestMethod.GET)
+	@ResponseBody
+	public String deleteGroup(@RequestParam("groupId") int groupId) {
+		famstackDashboardManager.deleteGroup(groupId);
+		return "{\"status\": true}";
+	}
+
 	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendMessage(@RequestParam("groupId") int groupId, @RequestParam("message") String message) {

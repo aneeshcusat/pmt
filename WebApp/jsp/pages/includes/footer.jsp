@@ -53,15 +53,15 @@ function userPingCheck(){
     	var userStatus = JSON.parse(data);
     	
     	$.each(userStatus, function(idx, elem){
-    		$("#userOnline"+elem.userId).removeClass("status-online");
-    		$("#userOnline"+elem.userId).removeClass("status-away");
-    		$("#userOnline"+elem.userId).removeClass("status-offline");
+    		$(".userOnline"+elem.userId).removeClass("status-online");
+    		$(".userOnline"+elem.userId).removeClass("status-away");
+    		$(".userOnline"+elem.userId).removeClass("status-offline");
     		if (elem.status == 0) {
-    			$("#userOnline"+elem.userId).addClass("status-offline");
+    			$(".userOnline"+elem.userId).addClass("status-offline");
     		} else if (elem.status == 1) {
-    			$("#userOnline"+elem.userId).addClass("status-away");
+    			$(".userOnline"+elem.userId).addClass("status-away");
     		} else if (elem.status == 5) {
-    			$("#userOnline"+elem.userId).addClass("status-online");
+    			$(".userOnline"+elem.userId).addClass("status-online");
     		}
     		$("#availableAfter"+elem.userId).html(elem.userAvailableMsg);
     	});

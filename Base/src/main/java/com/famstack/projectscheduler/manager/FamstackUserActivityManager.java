@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectType;
+import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
@@ -36,7 +37,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	public void createUserActivityItem(int userId, Date startTime, int taskId, String taskName, int duration,
 			UserTaskType userTaskType, ProjectType projectType) {
 		UserItem assigneeUserItem = famstackUserProfileManager.getUserItemById(userId);
-		Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, startTime, 0);
+		Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startTime, 0);
 		Date dayEndDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, startTime, 0);
 
 		Map<String, Object> dataMap = new HashMap<>();
@@ -271,50 +272,41 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 				UserTaskActivityItem.class);
 	}
 
-	public UserTaskActivityItem getUserTaskActivityItemByTaskId(int taskId) {
+	public List<?> getUserTaskActivityItemByTaskId(int taskId) {
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("taskId", taskId);
 
 		List<?> userTaskActivityItems = getFamstackDataAccessObjectManager()
 				.executeQuery(HQLStrings.getString("userTaskActivityItemByTaskId"), dataMap);
 
-		if (!userTaskActivityItems.isEmpty()) {
-			return (UserTaskActivityItem) userTaskActivityItems.get(0);
-		}
-		return null;
+		return userTaskActivityItems;
 	}
 
 	public TaskActivityDetails getUserTaskActivityDetailsByTaskId(int taskId) {
 
-		UserTaskActivityItem userTaskActivityItem = getUserTaskActivityItemByTaskId(taskId);
+		List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
 
-		if (userTaskActivityItem != null) {
-			return mapUserTaskActivityItem(userTaskActivityItem);
+		if (!userTaskActivityItems.isEmpty()) {
+			return mapUserTaskActivityItem((UserTaskActivityItem) userTaskActivityItems.get(0));
 		}
 		return null;
 	}
 
-	public void setProjectTaskActivityActualTime(int taskActivityId, Date date, String comment) {
-		UserTaskActivityItem userTaskActivityItem = getUserTaskActivityItem(taskActivityId);
+	public void setProjectTaskActivityActualTime(int taskId, Date date, String comment, TaskStatus taskStatus) {
+		List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
 
-		if (userTaskActivityItem != null) {
-			userTaskActivityItem.setInprogressComment(comment);
-			userTaskActivityItem.setActualStartTime(new Timestamp(date.getTime()));
+		for (Object userTaskActivityItemObj : userTaskActivityItems) {
+			UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
+			if (taskStatus == TaskStatus.INPROGRESS) {
+				userTaskActivityItem.setInprogressComment(comment);
+				userTaskActivityItem.setActualStartTime(new Timestamp(date.getTime()));
+			} else if (taskStatus == TaskStatus.COMPLETED) {
+				userTaskActivityItem.setCompletionComment(comment);
+				userTaskActivityItem.setActualEndTime(new Timestamp(date.getTime()));
+			}
+
+			getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
 		}
-
-		getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
-
-	}
-
-	public void setProjectTaskActivityEndTime(int taskActivityId, Date date, String comment) {
-		UserTaskActivityItem userTaskActivityItem = getUserTaskActivityItem(taskActivityId);
-
-		if (userTaskActivityItem != null) {
-			userTaskActivityItem.setCompletionComment(comment);
-			userTaskActivityItem.setActualEndTime(new Timestamp(date.getTime()));
-		}
-
-		getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
 
 	}
 

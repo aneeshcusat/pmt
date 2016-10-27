@@ -319,7 +319,7 @@ width: 60%;
                               <ul class="list-unstyled p-files" id="upladedFilesList">
                                 <c:if test="${not empty projectDetails.filesNames}">
                                  <c:forEach var="fileName" items="${projectDetails.filesNames}" varStatus="fileNameIndex"> 
-                                 	<li><a href="${applicationHome}/download/${projectDetails.code}/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a>
+                                 	<li><a href="${applicationHome}/download/${projectDetails.id}/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a>
                                  	 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
                                  	<a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-trash-o" style="color:red" aria-hidden="true"></i></a>
                                  	</c:if>
@@ -328,8 +328,9 @@ width: 60%;
                                  </c:if>
                                   <c:if test="${not empty projectDetails.completedFilesNames}">
                                    <br>
+                                  <h6 class="bold">Completed files</h6>
                                  <c:forEach var="fileName" items="${projectDetails.completedFilesNames}" varStatus="fileNameIndex"> 
-                                 	<li><a href="${applicationHome}/download/${projectDetails.code}/completed/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a>
+                                 	<li><a href="${applicationHome}/download/${projectDetails.id}-completed/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a>
                                  	 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
                                  	<a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-trash-o" style="color:red" aria-hidden="true"></i></a>
                                  	</c:if>
@@ -589,7 +590,7 @@ $(document).ready(function() {
     
 	Dropzone.autoDiscover = false;
   		$("#my-dropzone").dropzone({
-  			url : "${applicationHome}/uploadfile/${projectDetails.code}",
+  			url : "${applicationHome}/uploadfile/${projectDetails.id}",
   			addRemoveLinks : false,
   			success : function(file, response) {
   				var imgName = response;
@@ -599,7 +600,7 @@ $(document).ready(function() {
   					fileIcon = "fa-file-excel-o";
   				}
   				
-  				$("#upladedFilesList").append('<li><a href="${applicationHome}/download/${projectDetails.code}/'+file.name+'?fileName='+file.name+'"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
+  				$("#upladedFilesList").append('<li><a href="${applicationHome}/download/${projectDetails.id}/'+file.name+'?fileName='+file.name+'"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
   			},
   			error : function(file, response) {
   				file.previewElement.classList.add("dz-error");
@@ -634,7 +635,7 @@ var doAjaxDeleteTask = function(taskId, projectId){
 
 var doAjaxDeleteFile = function(fileName){
 	var dataString = {"fileName" : fileName};
-	var url = '${applicationHome}/deletefile/${projectDetails.code}';
+	var url = '${applicationHome}/deletefile/${projectDetails.id}';
 	 doAjaxRequest("POST", url, dataString,  function(data) {
 		   var responseJsonObj = JSON.parse(data)
 	       if (responseJsonObj.status){

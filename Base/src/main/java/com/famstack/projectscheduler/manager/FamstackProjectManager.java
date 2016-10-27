@@ -334,8 +334,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		return famstackProjectTaskManager.getAllProjectTask(userId);
 	}
 
-	public void updateTaskStatus(int taskId, int taskActivityId, TaskStatus taskStatus, String comments) {
-		TaskItem taskItem = famstackProjectTaskManager.updateTaskStatus(taskId, taskActivityId, taskStatus, comments);
+	public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments) {
+		TaskItem taskItem = famstackProjectTaskManager.updateTaskStatus(taskId, taskStatus, comments);
 		updateProjectStatusBasedOnTaskStatus(taskItem.getProjectItem().getProjectId());
 
 	}

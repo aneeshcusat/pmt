@@ -8,133 +8,176 @@
     #creategroupmodal .modal-dialog {
         width: 65%;
     }
-
-    ::-webkit-scrollbar {
-        width: 12px;
+    
+    .margin10{
+    	    margin-top: 10px;
     }
+    
+    .nav-list {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 0;
+}
 
-    ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-        -webkit-border-radius: 10px;
-        border-radius: 10px;
-    }
+list .nav-header {
+    margin-left: -15px;
+    margin-right: -15px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.nav-header {
+    display: block;
+    padding: 3px 15px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 20px;
+    color: #999999;
+    text-transform: uppercase;
+}
 
-    ::-webkit-scrollbar-thumb {
-        -webkit-border-radius: 10px;
-        border-radius: 10px;
-        background: rgba(0, 0, 0, 0.02);
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-    }
 
-        ::-webkit-scrollbar-thumb:window-inactive {
-            background: rgba(0, 0, 0, 0.02);
-        }
-        </style>
+.messageGroupLink a:hover {
+    background-color: lightblue;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.messageGroupLinkLightblue {
+    background-color: lightblue;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+</style>
 <!-- START CONTENT FRAME -->
-<div class="content-frame">
+<div class="content-frame">            
     <!-- START CONTENT FRAME TOP -->
-    <div class="content-frame-top">
-        <div class="page-title">
-            <h2><span class="fa fa-comments"></span> Messages</h2>
-        </div>
+    <div class="content-frame-top">                        
+        <div class="page-title">                    
+            <h2><span class="fa fa-comments"></span>Messages</h2>
+        </div>  
         <div class="pull-right">
             <a data-toggle="modal" data-target="#creategroupmodal" class="btn btn-success btn-block" onclick="clearGroupForm();">
                 <span class="fa fa-plus"></span> Create Group
             </a>
-        </div>
+        </div>                                                                               
     </div>
     <!-- END CONTENT FRAME TOP -->
-
-
-    <input type="hidden" id="currentUserId" value="${modelViewMap.currentUserId}">
-
+    
     <!-- START CONTENT FRAME BODY -->
-    <div class="row">
-        <div class="col-md-12">
-
-            <form class="" style="margin-top: 10px;">
-    <!-- START VERTICAL TABS -->
-    <div class="panel panel-default nav-tabs-vertical">
-        <ul class="nav nav-tabs">
-            <c:if test="${not empty modelViewMap.groupData}">
-                <c:forEach var="group" items="${modelViewMap.groupData}">
-                    <li style="border-bottom: 1px dashed; border-color: #DCDCDC;"><a href="#tabGroup${group.groupId}" data-toggle="tab"><span onclick="editGroup('${group.groupId}');" data-toggle="modal" data-target="#creategroupmodal" class="fa fa-edit" style="margin-right: 5px;"></span>${group.name}</a></li>
+    <div class=" padding-bottom-0">
+        
+        <div class="row">
+            
+            <div class="sidebar-nav col-md-3 margin10">
+			    <div class="well" style=" padding: 8px 0;">
+					<ul class="nav nav-list" id="groupLeftNavHolder"> 
+					  <li class="nav-header">Message Groups</li>        
+					  <c:if test="${not empty modelViewMap.groupData}">
+                <c:forEach var="group" items="${modelViewMap.groupData}" varStatus="status">
+                <li
+                <c:if test="${status.index==0}">
+	            	class='active'
+	            	</c:if>>
+	            	<a href="#tab${group.groupId}" data-toggle="tab" onclick='resetScrollMessageDiv(${group.groupId}, this)' style="font-size: 14px" class="messageGroupLink"> <i class="icon-envelope"></i> ${group.name} 
+	            	<span class="badge badge-info" style="border-radius:10px; float:right; display:none" id="newMessageCount${group.groupId}">0</span>  
+	            	 </a>                           
+	                 </li>
                 </c:forEach>
-
-            </c:if>
-        </ul>
-        <div class="panel-body tab-content" style="background-color: #F5F5F5;">
-            <c:forEach var="group" items="${modelViewMap.groupData}">
-                <div class="tab-pane" id="tabGroup${group.groupId}">
-                <div class="content-frame-right">
-                            <h3>Group Members</h3>
-                            <div class="list-group list-group-contacts border-bottom ">
+                </c:if>
+					</ul>
+				</div>
+			</div>
+            <div class="col-md-9">
+            <!-- message section -->
+             <div class="tab-content">
+              <c:if test="${not empty modelViewMap.groupData}">
+              <c:forEach var="group" items="${modelViewMap.groupData}"  varStatus="status">
+                <div class='row tab-pane
+                <c:if test="${status.index==0}">
+	            	active
+	            	</c:if>
+                ' id="tab${group.groupId}">
+              		 <div class="col-md-9" style="box-shadow: 5px 5px 20px #888888;">
+	              		 <div class="row col-md-12 margin10">
+		                 	<span style="font-size: 2.0em; font-weight: bold">Group : ${group.name}</span>
+		                 	<a href="#" data-box="#confirmationbox" class="mb-control" style="float:right" onclick="javascript:deleteGroup('${group.groupId}','${group.name}')"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a>
+			                <a data-toggle="modal" data-target="#creategroupmodal" onclick="editGroup(${group.groupId})" style="float:right"><i class="fa fa-pencil fa-2x" style="padding-right:5px;" aria-hidden="true"></i></a>
+		               	</div>
+              		 	<div class="messages messages-img margin10"  style="overflow-y: scroll;min-height: 430px;max-height: 430px;" id="messageDiv${group.groupId}">
+              		 	   <c:forEach var="groupMessage" items="${group.messages}">
+                            <div class='item 
+							<c:if test="${modelViewMap.currentUserId != groupMessage.user}">
+							in
+							</c:if>
+							 item-visible'>
+                                <div class="image">
+                                    <img src="${applicationHome}/image/${groupMessage.user}" alt="${groupMessage.userFullName}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
+                                </div>
+                                <div class="text" 
+                                <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
+							 style="background: #F6F6F6;"
+								</c:if>
+                               >
+	                               <div class="heading">
+	                                <a href="#">${groupMessage.userFullName}</a>
+	                                <span class="date">${groupMessage.createdDateDisplay}</span>
+	                            </div>
+	                            ${groupMessage.description}
+	                            </div>
+	                            </div>
+                             <c:set var="lastmsg" value="${groupMessage.messageId}" />
+                            </c:forEach>
+                              <input type="hidden" id="lastMessageId_${group.groupId}" value="${lastmsg}" />
+                        </div>
+                        
+                         <div class="panel panel-default push-up-10">
+				            <div class="panel-body panel-body-search">
+				                <div class="input-group">
+				                    <div class="input-group-btn">
+				
+				                    </div>
+				                    <textArea id="${group.groupId}" class="form-control messageTextArea" style="height: 60px;" placeholder="Type in your message here and press enter"></textArea>
+				                    <div class="input-group-btn">
+				                        <button class="btn btn-info" onclick="sendMessage('${group.groupId}')" style="height: 60px;width: 80px;">Send</button>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>
+              		 </div>
+              		 <div class="col-md-3 margin10">
+              		  <h4>Group Members</h4>
+              		 	<div class="list-group list-group-contacts border-bottom margin10" style="box-shadow: -7px -4px 10px #888888">
                             <c:forEach var="subscriber" items="${group.subscribers}">
                                  <a href="#" class="list-group-item">
-                                    <div class="list-group-status status-online"></div>
-                                    <img src='/bops/dashboard/image/${subscriber.id}' class="pull-left" alt="Dmitry Ivaniuk">
+                                      <div id="userOnline${subscriber.id}" class='list-group-status userOnline${subscriber.id} 
+		                                <c:if test="${subscriber.checkUserStatus == 5}">
+		                                status-online
+		                                </c:if>
+		                                <c:if test="${subscriber.checkUserStatus == 1}">
+		                                status-away
+		                                </c:if>
+		                                 <c:if test="${subscriber.checkUserStatus == 0}">
+		                                status-offline
+		                                </c:if>
+		                                '></div>
+                                    <img src="${applicationHome}/image//${subscriber.id}" class="pull-left" alt="${subscriber.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                                     <span class="contacts-title">${subscriber.firstName}&nbsp; ${subscriber.lastName}</span>
                                     <p>${subscriber.designation}</p>
                                 </a>
-                            </c:forEach>
-                            </div>
+                            </c:forEach>                           
                         </div>
-                      <div class="messages messages-img messageContainer content-frame-body-left" style="width:66%; overflow-y: scroll; min-height: 300px; max-height: 350px;">
-
-                        <c:forEach var="groupMessage" items="${group.messages}">
-                            <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
-                                <div class="item in item-visible">
-
-                            </c:if>
-                            <c:if test="${modelViewMap.currentUserId != groupMessage.user}">
-                                <div class="item item-visible">
-                            </c:if>
-                            <div class="image">
-                                <img src="${applicationHome}/image/${groupMessage.user}" alt="${groupMessage.userFullName}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
-                            </div>
-                            <c:if test="${modelViewMap.currentUserId == groupMessage.user}">
-                                <div class="text" style="background: #F6F6F6;">
-                            </c:if>
-                            <c:if test="${modelViewMap.currentUserId != groupMessage.user}">
-                                <div class="text">
-                            </c:if>
-                            <c:set var="lastmsg" value="${groupMessage.messageId}" />
-
-                            <div class="heading">
-                                <a href="#">${groupMessage.userFullName}</a>
-                                <span class="date">${groupMessage.createdDateDisplay}</span>
-                            </div>
-                            ${groupMessage.description}
-                    </div>
-                </div>
-            </c:forEach>
-            <input type="hidden" id="lastMessageId_${group.groupId}" value="${lastmsg}" />
-
-        </div>
-        <div class="panel panel-default push-up-10" style="width: 66%;">
-            <div class="panel-body panel-body-search">
-                <div class="input-group">
-                    <div class="input-group-btn">
-
-                    </div>
-                    <input type="text" id="${group.groupId}" class="form-control messageTextArea" placeholder="type in your message here and press enter" />
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" onclick="sendMessage('${group.groupId}')">Send</button>
-                    </div>
-                </div>
+              		 </div>
+               </div>
+               <!-- message section end-->
+               </c:forEach>
+               </c:if>
+               </div>
             </div>
         </div>
-    </div>
-    </c:forEach>
-</div>
-<!-- END VERTICAL TABS -->
-    </div>
-<!-- END CONTENT FRAME BODY -->
- </div>
-    </form>
-
-</div>
-<!-- END PAGE CONTENT FRAME -->
+        
+    </div>                    
+    <!-- END CONTENT FRAME BODY -->
+    
+</div>                
 
 <div class="modal fade" id="creategroupmodal" tabindex="-1"
      role="dialog" aria-labelledby="reprocessConfirmation"
@@ -178,8 +221,6 @@ $('#createGroupFormId').ajaxForm(function(response) {
     }
 });
 
-$('.nav-tabs li:first-child a').trigger( "click" );
-
 function sendMessage(group) {
     var groupId = group;
     var message = $('#'+groupId).val();
@@ -187,28 +228,26 @@ function sendMessage(group) {
         return false;
     }
     var data = {"groupId": groupId , "message": message };
-    doAjaxRequest('POST', '/bops/dashboard/sendMessage', data,
+    doAjaxRequestWithGlobal('POST', '/bops/dashboard/sendMessage', data,
     function(response) {
         var responseJsonObj = JSON.parse(response);
         if (responseJsonObj.status == true) {
             var lastMessageId = $('#lastMessageId_'+ groupId).val();
-            getMessageAfterId(groupId, lastMessageId);
+           getMessageAfterId(groupId, lastMessageId);
             $('#'+groupId).val('')
         }
     }, function(e) {
         console.log(e)
-    });
+    }, false);
 }
 
 function clearGroupForm() {
     $('#groupName').val('');
     $('#groupId').val('');
     $('#groupDescription').val('');
-    $('.subscriberCheckBox').removeAttr('checked');
-    $('.icheckbox_minimal-grey').removeClass('checked');
-    $('#createOrUpdateGroupId').click(function () {
-        $('#createGroupFormId').prop("action", "createGroup");
-    });
+    $('.subCheckBox').prop("checked",false);
+    $('#createOrUpdateGroupId span').html("Save");
+    $('#createGroupFormId').prop("action", "createGroup");
 
 }
 
@@ -219,13 +258,16 @@ function setGroupEditPage(responseJsonObj) {
 
     var subscribers = responseJsonObj.subscriberIds;
     for (var i=0; i<subscribers.length; i++) {
-        $('#'+subscribers[i]).next('ins').click();
+    	console.log(subscribers[i]);
+        $('#sub'+subscribers[i]).prop("checked",true);
     }
     $('#createGroupFormId').prop("action", "updateGroup");
+  
 }
 
 function editGroup(groupId) {
     clearGroupForm();
+    $('#createOrUpdateGroupId span').html("Update");
     doAjaxRequest('GET', '/bops/dashboard/editGroup?groupId='+groupId, null,
     function(response) {
         var responseJsonObj = JSON.parse(response);
@@ -251,20 +293,30 @@ function getMessageAfterId(groupId, messageId) {
 function processMessageAfterSave(jsonResponse, groupId) {
     var htmlString = '';
     var lastMessageId = '';
-    var currentUser = $('#currentUserId').val();
+    var currentUser = ${currentUser.id};
+    var messageCount = $("#newMessageCount"+groupId).html();
+    
     for (var i = 0; i < jsonResponse.length; i++) {
         var messageObject = jsonResponse[i];
         if (currentUser == messageObject.user) {
-            htmlString += '<div class="item in item-visible">';
-        } else {
             htmlString += '<div class="item item-visible">';
+        } else {
+            htmlString += '<div class="item in item-visible">';
+            
+            if (messageCount != "") {
+            	messageCount = parseInt(messageCount) + 1;
+            }
         }
 
         htmlString += '<div class="image">';
 
         htmlString += '<img src="/bops/dashboard/image/' + messageObject.user+'" alt="'+ messageObject.userFullName +'" onerror="this.src=\'/bops/jsp/assets/images/users/no-image.jpg\'">';
         htmlString += '</div>';
-        htmlString += '<div class="text" style="background: #F6F6F6;">';
+        htmlString += '<div class="text" ';
+        if (currentUser == messageObject.user) {
+       	 htmlString += 'style="background: #F6F6F6;"';
+        }
+        htmlString += '>';
         htmlString += '<div class="heading">';
         htmlString += '<a href="#">'+ messageObject.userFullName +'</a>';
         htmlString += '<span class="date">'+ messageObject.createdDateDisplay +'</span>';
@@ -274,11 +326,16 @@ function processMessageAfterSave(jsonResponse, groupId) {
         htmlString += '</div>';
         lastMessageId = messageObject.messageId;
     }
+
+    if (messageCount > 0) {
+        $("#newMessageCount"+groupId).html(messageCount);
+    	$("#newMessageCount"+groupId).show();
+    } else {
+    	$("#newMessageCount"+groupId).hide();
+    }
     if (htmlString != '') {
-        var messageDiv = $('#lastMessageId_'+groupId).parent();
-        var currentHTML = $('#lastMessageId_'+groupId).parent().html();
-        $('#lastMessageId_'+groupId).parent().html(currentHTML + htmlString);
-        messageDiv.scrollTop(messageDiv[0].scrollHeight);
+        $('#messageDiv'+groupId).append(htmlString);
+        scrollMessageDiv(groupId);
         $('#lastMessageId_'+groupId).val(lastMessageId);
     }
 }
@@ -302,5 +359,40 @@ function refreshMessages() {
         getMessageAfterId(groupId, messageId);
     });
 }
+
+function resetScrollMessageDiv(groupId, thisVar) {
+	$("#newMessageCount"+groupId).hide();
+	$("#newMessageCount"+groupId).html("");
+	$(".messageGroupLink").each(function(){
+		$(this).removeClass("messageGroupLinkLightblue");
+	});
+	$(thisVar).addClass("messageGroupLinkLightblue");
+	scrollMessageDiv(groupId);
+}
+function scrollMessageDiv(groupId) {
+    $('#messageDiv'+groupId).scrollTop($('#messageDiv'+groupId)[0].scrollHeight);
+}
+
+$("#groupLeftNavHolder a").first().click();
+
+function deleteGroup(groupId, groupName){
+	$(".msgConfirmText").html("Delete group");
+	$(".msgConfirmText1").html(groupName);
+	$("#confirmYesId").prop("href","javascript:doAjaxDeleteGroup('"+groupId+"')");
+}
+
+function doAjaxDeleteGroup(groupId) {
+	  doAjaxRequest('GET', '/bops/dashboard/deleteGroup?groupId='+groupId, null,
+			    function(response) {
+			        var responseJsonObj = JSON.parse(response);
+			        if (responseJsonObj.status){
+			            window.location.reload(true);
+			        }
+			    }, function(e) {
+			        console.log(e)
+			    });
+}
+
 setInterval('refreshMessages()', 3000);
+
 </script>

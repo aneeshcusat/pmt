@@ -134,16 +134,21 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 	}
 
 	private void resetProjectProductiveAndBillableTime(int taskId) {
-		UserTaskActivityItem userTaskActivityItem = famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskId);
-		UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
+		List<?> userTaskActivityItems = famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskId);
 
-		int duration = userTaskActivityItem.getDuration();
-		int billableHours = userActivityItem.getBillableHours();
-		int productiveHours = userActivityItem.getProductiveHousrs();
-		userActivityItem.setBillableHours(billableHours - duration);
-		userActivityItem.setProductiveHousrs(productiveHours - duration);
+		for (Object userTaskActivityItemObj : userTaskActivityItems) {
+			UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
 
-		famstackDataAccessObjectManager.updateItem(userActivityItem);
+			UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
+
+			int duration = userTaskActivityItem.getDuration();
+			int billableHours = userActivityItem.getBillableHours();
+			int productiveHours = userActivityItem.getProductiveHousrs();
+			userActivityItem.setBillableHours(billableHours - duration);
+			userActivityItem.setProductiveHousrs(productiveHours - duration);
+
+			famstackDataAccessObjectManager.updateItem(userActivityItem);
+		}
 
 	}
 
@@ -269,17 +274,14 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		return userTaskActivityItemMap;
 	}
 
-	public TaskItem updateTaskStatus(int taskId, int taskActivityId, TaskStatus taskStatus, String comments) {
+	public TaskItem updateTaskStatus(int taskId, TaskStatus taskStatus, String comments) {
 		TaskItem taskItem = getTaskItemById(taskId);
 
 		if (taskItem != null) {
 			taskItem.setStatus(taskStatus);
 
-			if (taskStatus == TaskStatus.INPROGRESS) {
-				famstackUserActivityManager.setProjectTaskActivityActualTime(taskActivityId, new Date(), comments);
-			} else if (taskStatus == TaskStatus.COMPLETED) {
-				famstackUserActivityManager.setProjectTaskActivityEndTime(taskActivityId, new Date(), comments);
-			}
+			famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments,
+					TaskStatus.INPROGRESS);
 		}
 
 		getFamstackDataAccessObjectManager().updateItem(taskItem);

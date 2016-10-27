@@ -34,7 +34,7 @@
 					<c:if test="${not empty userMap}">
 					 <c:forEach var="user" items="${userMap}">
 					 <div style="margin-top: 10px">
-					 <form:checkbox  id="${user.id}" value="${user.id}" name="subscriberIds" path="subscriberIds" class="icheckbox subscriberCheckBox" tabindex="1"/>&nbsp;<span style="margin-left: 10px; font-weight: bold;">${user.firstName}&nbsp;${user.lastName}</span>
+					 <form:checkbox  id="sub${user.id}" value="${user.id}" name="subscriberIds" path="subscriberIds" class="subCheckBox" tabindex="1"/>&nbsp;<span style="margin-left: 10px; font-weight: bold;">${user.firstName}&nbsp;${user.lastName}</span>
 					 </div>
 					 </c:forEach>
 					 </c:if>
