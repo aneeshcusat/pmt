@@ -452,59 +452,64 @@ $(function(){
         $("#reportrange span").html(moment().subtract('days', 0).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
     }
  
+    if ('${projectTypeJson}' != "[]") {
+	    /* Donut dashboard chart */
+	    Morris.Donut({
+	        element: 'dashboard-donut-1',
+	        data:  ${projectTypeJson},
+	        colors: ['#5cb85c',
+	                 '#f0ad4e'],
+	        resize: true
+	    });
+	    /* END Donut dashboard chart */
+    }
+    if ('${employeeUtilization}' != "[]") {
+	    /* Bar dashboard chart emp */
+	    Morris.Bar({
+	        element: 'dashboard-bar-emp',
+	        data: ${employeeUtilization},
+	        xkey: 'userId',
+	        ykeys: ['billableHours', 'productiveHours'],
+	        labels: ['Billable', 'Productive'],
+	        barColors: ['#33414E', '#1caf9a'],
+	        gridTextSize: '10px',
+	        hideHover: true,
+	        resize: true,
+	        gridLineColor: '#E5E5E5'
+	    });
+	}
     
-    /* Donut dashboard chart */
-    Morris.Donut({
-        element: 'dashboard-donut-1',
-        data:  ${projectTypeJson},
-        colors: ['#5cb85c',
-                 '#f0ad4e'],
-        resize: true
-    });
-    /* END Donut dashboard chart */
-	
-	
-    /* Bar dashboard chart emp */
-    Morris.Bar({
-        element: 'dashboard-bar-emp',
-        data: ${employeeUtilization},
-        xkey: 'userId',
-        ykeys: ['billableHours', 'productiveHours'],
-        labels: ['Billable', 'Productive'],
-        barColors: ['#33414E', '#1caf9a'],
-        gridTextSize: '10px',
-        hideHover: true,
-        resize: true,
-        gridLineColor: '#E5E5E5'
-    });
+    if ('${teamUtilizationJson}' != "[]") {
+	    /* Bar dashboard chart emp */
+	    Morris.Bar({
+	        element: 'dashboard-bar-team',
+	        data:${teamUtilizationJson},
+	        xkey: 'name',
+	        ykeys: ['billable', 'nonBillable'],
+	        labels: ['Billable', 'NonBillable'],
+	        barColors: ['#33414E', '#1caf9a'],
+	        gridTextSize: '10px',
+	        hideHover: true,
+	        resize: true,
+	        gridLineColor: '#E5E5E5'
+	    });
+    }
     
-    /* Bar dashboard chart emp */
-    Morris.Bar({
-        element: 'dashboard-bar-team',
-        data:${teamUtilizationJson},
-        xkey: 'name',
-        ykeys: ['billable', 'nonBillable'],
-        labels: ['Billable', 'NonBillable'],
-        barColors: ['#33414E', '#1caf9a'],
-        gridTextSize: '10px',
-        hideHover: true,
-        resize: true,
-        gridLineColor: '#E5E5E5'
-    });
-    
-    /* Bar dashboard chart emp */
-    Morris.Bar({
-        element: 'dashboard-bar-work',
-        data: ${projectCategoryJson},
-        xkey: 'categoryName',
-        ykeys: ['count'],
-        labels: ['Project Type'],
-        barColors: ['#33414E', '#1caf9a'],
-        gridTextSize: '10px',
-        hideHover: true,
-        resize: true,
-        gridLineColor: '#E5E5E5'
-    });
+    if ('${projectCategoryJson}' != "[]") {
+	    /* Bar dashboard chart emp */
+	    Morris.Bar({
+	        element: 'dashboard-bar-work',
+	        data: ${projectCategoryJson},
+	        xkey: 'categoryName',
+	        ykeys: ['count'],
+	        labels: ['Project Type'],
+	        barColors: ['#33414E', '#1caf9a'],
+	        gridTextSize: '10px',
+	        hideHover: true,
+	        resize: true,
+	        gridLineColor: '#E5E5E5'
+	    });
+    }
     var jvm_wm = new jvm.WorldMap({container: $('#dashboard-map-seles'),
         map: 'world_mill_en', 
         backgroundColor: '#FFFFFF',                                      

@@ -280,8 +280,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		if (taskItem != null) {
 			taskItem.setStatus(taskStatus);
 
-			famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments,
-					TaskStatus.INPROGRESS);
+			famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments, taskStatus);
 		}
 
 		getFamstackDataAccessObjectManager().updateItem(taskItem);
