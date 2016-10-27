@@ -369,4 +369,26 @@ public class ProjectDetails {
 		this.completedFilesNames = completedFilesNames;
 	}
 
+	public double getActualDuration() {
+
+		double actualDuration = 0;
+		if (getStatus() == ProjectStatus.COMPLETED || getStatus() == ProjectStatus.CLOSED) {
+			Set<TaskDetails> taskDetailsList = getProjectTaskDeatils();
+			if (!taskDetailsList.isEmpty()) {
+				for (TaskDetails taskDetails : taskDetailsList) {
+
+					TaskActivityDetails taskActivityDetails = taskDetails.getTaskActivityDetails();
+					Date completionTime = taskActivityDetails.getActualEndTime();
+					Date startTime = taskActivityDetails.getActualStartTime();
+
+					if (completionTime != null && startTime != null) {
+						actualDuration += completionTime.getTime() - startTime.getTime();
+					}
+				}
+			}
+		}
+		System.out.println("actual duration " + actualDuration);
+		return actualDuration > 0 ? Math.round((actualDuration / 60 / 1000) * 100.0) / 100.0 : 0;
+	}
+
 }
