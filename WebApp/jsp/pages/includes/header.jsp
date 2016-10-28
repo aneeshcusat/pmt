@@ -64,13 +64,34 @@
                         <a href="#" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span></a>                        
                     </li> 
                     <!-- END SIGN OUT -->
+                    
                     <!-- MESSAGES -->
                     <li class="xn-icon-button pull-right">
-                        <a href="#" onclick="$('.newNotification').html(0);"><span class="fa fa-comments"></span></a>
+                        <a href="#" onclick="$('.newMessageNotification').html(0);"><span class="fa fa-comments"></span></a>
+                        <div class="informer informer-info"><span class="newMessageNotification" id="newMessageNotification">0</span></div>
+                        <div class="panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><span class="fa fa-comments"></span> Messages</h3>                                
+                                <div class="pull-right">
+                                    <span class="label label-danger"><span class="newMessageNotification">0</span> new</span>
+                                </div>
+                            </div>
+                            <div class="panel-body list-group list-group-contacts scroll" style="height: 200px;" id="notificationsPanel">
+                            </div>     
+                            <div class="panel-footer text-center">
+                                <a href="messages">Show all messages</a>
+                            </div>                            
+                        </div>                        
+                    </li>
+                    <!-- END MESSAGES -->
+                    
+                    <!-- Notificaiton -->
+                    <li class="xn-icon-button pull-right">
+                        <a href="#" onclick="$('.newNotification').html(0);"><span class="fa fa-bell-o"></span></a>
                         <div class="informer informer-danger"><span class="newNotification" id="newNotification">0</span></div>
                         <div class="panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><span class="fa fa-comments"></span> Notifications</h3>                                
+                                <h3 class="panel-title"><span class="fa fa-bell-o"></span> Notifications</h3>                                
                                 <div class="pull-right">
                                     <span class="label label-danger"><span class="newNotification">0</span> new</span>
                                 </div>
@@ -78,11 +99,11 @@
                             <div class="panel-body list-group list-group-contacts scroll" style="height: 200px;" id="notificationsPanel">
                             </div>     
                             <div class="panel-footer text-center">
-                                <a href="notifications">Show all messages</a>
+                                <a href="notifications">Show all notifications</a>
                             </div>                            
                         </div>                        
                     </li>
-                    <!-- END MESSAGES -->
+                    <!-- END Notification -->
                     <!-- TASKS -->
                     <li class="xn-icon-button pull-right">
                         <a href="#"><span class="fa fa-tasks"></span></a>

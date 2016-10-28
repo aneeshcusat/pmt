@@ -226,4 +226,12 @@ public class FamstackUserController extends BaseFamstackService {
 	public String getMessageAfter(@RequestParam("groupId") int groupId, @RequestParam("messageId") int messageId) {
 		return famstackDashboardManager.getMessageAfter(groupId, messageId);
 	}
+
+	@RequestMapping(value = "/getMessageNotifications", method = RequestMethod.GET)
+	@ResponseBody
+	public String getMessageNotifications() {
+		int userId = getFamstackApplicationConfiguration().getCurrentUserId();
+		return famstackDashboardManager.getMessageNotifications(userId);
+	}
+
 }

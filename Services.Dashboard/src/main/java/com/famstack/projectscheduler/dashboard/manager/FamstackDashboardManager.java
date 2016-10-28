@@ -267,7 +267,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public boolean changePassword(String userName, String oldPassword, String password) {
 		boolean status = userProfileManager.changePassword(userName, oldPassword, password);
-		Integer userId = getFamstackApplicationConfiguration().getUserIdMap().get(userName);
+		Integer userId = FamstackApplicationConfiguration.getUserIdMap().get(userName);
 		EmployeeDetails employeeDetails = null;
 
 		if (userId != null) {
@@ -368,7 +368,12 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	private void notifyAll(NotificationType notificationType, Object detailsObject) {
-		UserItem currentUser = getFamstackApplicationConfiguration().getCurrentUser();
+		UserItem currentUser = null;
+		if (notificationType != NotificationType.RESET_PASSWORD && notificationType != NotificationType.FORGOT_PASSWORD
+				&& notificationType != NotificationType.USER_REGISTRAION
+				&& notificationType != NotificationType.USER_UPDATE) {
+			currentUser = getFamstackApplicationConfiguration().getCurrentUser();
+		}
 		famstackNotificationServiceManager.notifyAll(notificationType, detailsObject, currentUser);
 	}
 
@@ -487,5 +492,25 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public void deleteGroup(int groupId) {
 		groupMessageManager.deleteGroup(groupId);
+	}
+
+	public String getMessageNotifications(int userId) {
+		List<GroupDetails> groupDetailsList = groupMessageManager.getGroupsForUser(userId);
+		Map<Integer, ArrayList<GroupMessageDetails>> groupUserMessageMap = new HashMap<>();
+
+		for (GroupDetails groupDetails : groupDetailsList) {
+			LimitedQueue<GroupMessageDetails> groupMessageList = famstackDesktopNotificationService
+					.getMessageNotificatioItems(userId, groupDetails.getGroupId());
+			if (groupMessageList != null) {
+				groupUserMessageMap.put(groupDetails.getGroupId(), new ArrayList<GroupMessageDetails>());
+				for (GroupMessageDetails groupMessageDetails : groupMessageList) {
+					if (!groupMessageDetails.getRead()) {
+						groupUserMessageMap.get(groupDetails.getGroupId()).add(groupMessageDetails);
+					}
+				}
+			}
+		}
+
+		return FamstackUtils.getJsonFromObject(groupUserMessageMap);
 	}
 }

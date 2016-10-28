@@ -9,7 +9,9 @@ import java.sql.Timestamp;
  * @version 1.0
  */
 
-public class GroupMessageDetails {
+public class GroupMessageDetails implements Cloneable {
+
+	private boolean read = false;
 
 	private Integer messageId;
 
@@ -23,11 +25,11 @@ public class GroupMessageDetails {
 
 	private String userFullName;
 
+	private String groupName;
+
 	private Integer group;
 
 	private String createdDateDisplay;
-
-	private boolean read = false;
 
 	public Integer getMessageId() {
 		return messageId;
@@ -38,11 +40,11 @@ public class GroupMessageDetails {
 	}
 
 	public String getDescription() {
+		read = true;
 		return description;
 	}
 
 	public void setDescription(String description) {
-		read = true;
 		this.description = description;
 	}
 
@@ -96,6 +98,27 @@ public class GroupMessageDetails {
 
 	public boolean getRead() {
 		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+		}
+		return this;
 	}
 
 }

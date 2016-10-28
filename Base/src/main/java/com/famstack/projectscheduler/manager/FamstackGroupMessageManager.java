@@ -1,7 +1,6 @@
 package com.famstack.projectscheduler.manager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -22,6 +21,8 @@ import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
+import com.famstack.projectscheduler.notification.services.FamstackDesktopNotificationService;
+import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 
 /**
@@ -36,6 +37,11 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 	@Resource
 	FamstackUserProfileManager userProfileManager;
 
+	@Resource
+	FamstackDesktopNotificationService famstackDesktopNotificationService;
+
+	private final Map<Integer, GroupDetails> groupDetailsCache = new HashMap<>();
+
 	public void createGroupItem(GroupDetails groupDetails) {
 		GroupItem groupItem = new GroupItem();
 		groupItem.setSubscribers(getSubscriberItems(groupDetails.getSubscriberIds()));
@@ -44,9 +50,10 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		groupItem.setCreatedBy(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
 		famstackDataAccessObjectManager.saveOrUpdateItem(groupItem);
 	}
-	
+
 	public void updateGroupItem(GroupDetails groupDetails) {
-		GroupItem groupItem = (GroupItem) famstackDataAccessObjectManager.getItemById(groupDetails.getGroupId(), GroupItem.class);
+		GroupItem groupItem = (GroupItem) famstackDataAccessObjectManager.getItemById(groupDetails.getGroupId(),
+				GroupItem.class);
 		groupItem.setSubscribers(getSubscriberItems(groupDetails.getSubscriberIds()));
 		groupItem.setDescription(groupDetails.getDescription());
 		groupItem.setName(groupDetails.getName());
@@ -97,11 +104,16 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		}
 		return null;
 	}
-	
+
 	public GroupDetails getGroupDetails(int groupId) {
 		if (groupId != 0) {
-			GroupItem groupItem = (GroupItem) famstackDataAccessObjectManager.getItemById(groupId, GroupItem.class);
-			return mapGroupItemToGroupDetails(groupItem);
+			GroupDetails groupDetails = groupDetailsCache.get(groupId);
+			if (groupDetails == null) {
+				GroupItem groupItem = (GroupItem) famstackDataAccessObjectManager.getItemById(groupId, GroupItem.class);
+				groupDetails = mapGroupItemToGroupDetails(groupItem);
+				groupDetailsCache.put(groupId, groupDetails);
+			}
+			return groupDetails;
 		}
 		return null;
 	}
@@ -170,8 +182,16 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		GroupItem groupItem = new GroupItem();
 		groupItem.setGroupId(groupMessageDetails.getGroup());
 		groupMessage.setGroupItem(groupItem);
-		groupMessage.setUser(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
+		UserItem userItem = getFamstackUserSessionConfiguration().getCurrentUser();
+		groupMessage.setUser(userItem);
 		famstackDataAccessObjectManager.saveOrUpdateItem(groupMessage);
+
+		GroupDetails groupDetails = getGroupDetails(groupMessageDetails.getGroup());
+		groupMessageDetails.setUser(userItem.getId());
+		groupMessageDetails.setUserFullName(userItem.getFirstName());
+		groupMessageDetails.setGroupName(groupDetails.getName());
+
+		famstackDesktopNotificationService.notifyMessage(groupMessageDetails, groupDetails.getSubscriberIds());
 	}
 
 	public GroupMessageDetails mapGroupMessageItemToGroupMessageDetails(GroupMessageItem groupMessageItem) {
@@ -193,13 +213,11 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		}
 		return null;
 	}
-	
+
 	public List<GroupMessageDetails> getGroupMessages(int groupId, int messageId) {
 		String hqlString = null;
 		List<GroupMessageDetails> messageList = new ArrayList<GroupMessageDetails>();
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_YEAR, -3);
-		Date date = calendar.getTime();
+		Date date = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -1);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("groupId", groupId);
 		dataMap.put("date", date);
@@ -209,23 +227,23 @@ public class FamstackGroupMessageManager extends BaseFamstackManager {
 		} else {
 			hqlString = "getGroupMessages";
 		}
-		List<?> messageItems = getFamstackDataAccessObjectManager()
-				.executeQuery(HQLStrings.getString(hqlString), dataMap);
+		List<?> messageItems = getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString(hqlString),
+				dataMap);
 		for (Object messageItem : messageItems) {
 			messageList.add(mapGroupMessageItemToGroupMessageDetails((GroupMessageItem) messageItem));
 		}
 		return sort(messageList);
 	}
-	
+
 	public List<GroupMessageDetails> sort(List<GroupMessageDetails> groupMessageDetails) {
 		Collections.sort(groupMessageDetails, new Comparator<GroupMessageDetails>() {
-            @Override
-            public int compare(GroupMessageDetails messageDetailsOne, GroupMessageDetails messageDetailsTwo) {
-                return messageDetailsOne.getCreatedDate().getTime() > messageDetailsTwo.getCreatedDate().getTime() ? 1
-                        : -1;
-            }
-        });
-		
-		return  groupMessageDetails;
+			@Override
+			public int compare(GroupMessageDetails messageDetailsOne, GroupMessageDetails messageDetailsTwo) {
+				return messageDetailsOne.getCreatedDate().getTime() > messageDetailsTwo.getCreatedDate().getTime() ? 1
+						: -1;
+			}
+		});
+
+		return groupMessageDetails;
 	}
 }
