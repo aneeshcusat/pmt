@@ -397,6 +397,6 @@ function doAjaxDeleteGroup(groupId) {
 	    });
 }
 
-setInterval('refreshMessages()', 10000);
+setInterval('refreshMessages()', 7000);
 
 </script>

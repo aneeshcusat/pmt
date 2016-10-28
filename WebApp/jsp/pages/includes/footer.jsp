@@ -210,7 +210,7 @@ $(document).ready(function () {
 });
 
 function timerIncrement() {
-    if (idleTime > 2) { // 1 minutes
+    if (idleTime < 2) { // 1 minutes
     	userPingCheck();
     	userNotifications();
     	userMessageNotifications();
