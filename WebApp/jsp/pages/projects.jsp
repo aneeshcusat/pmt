@@ -269,6 +269,7 @@ var clearProjectFormForCreate = function(projectId) {
 	$("#myModalLabel").html("Create a Project");
 	$("#projectActionButton span").html("Save");
 	clearCreateProjectForm();
+	$("#projectcode").val("PRJ" + Math.floor(Date.now() / 1000));
 	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
 	$('#estCompleteTime').val(getTodayDate(new Date()) + " 05:00");
 	

@@ -150,7 +150,7 @@
                         <div class="col-md-6">
                         <div class="form-group">
                                 <label class="col-md-3 control-label">Project code</label>
-                                <div class="col-md-9">                                            
+                                <div class="col-md-9">
                                         <form:input type="text" class="autocomplete form-control" id="projectcode" path="code"/>
                                     <span class="help-block">required project code</span>
                                 </div>
