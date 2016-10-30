@@ -133,27 +133,48 @@ background-color: #F1F1F1;
        </div>
    <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
 	<div class="row panel">
-
-        <div class="col-md-8  col-xs-12">
-           <img src="${applicationHome}/image/${userProile.id}" class="img-thumbnail picture hidden-xs" />
-           <img src="http://lorempixel.com/output/people-q-c-100-100-1.jpg" class="img-thumbnail visible-xs picture_mob" />
+        <div class="col-md-8  col-xs-10">
+           <img src="${applicationHome}/image/${userProile.id}" class="img-thumbnail picture hidden-xs" alt="${userProile.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
            <div class="header">
                 <h2>${userProile.firstName} ${userProile.lastName}</h2>
-                <h5><p>Designation 	: <b>${userProile.designation}</b></p></h5>
-                <h5><p>Gender 		: <b>${userProile.gender}</b></p></h5>
-                <h5><p>Mob No 		: <b>${userProile.mobileNumber}</b></p></h5>
-                <h5><p>Email 		: <b>${userProile.userId}</b></p></h5>
-                <h5><p>Manager 		: <b>${userProile.reportertingManager.firstName}</b></p></h5>
+                 <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                        <td>Designation:</td>
+                        <td>${userProile.designation}</td>
+                      </tr>
+                       <tr>
+                        <td>Gender</td>
+                        <td>${userProile.gender}</td>
+                      </tr>
+                      <tr>
+                        <td>Mobile Number</td>
+                        <td>${userProile.mobileNumber}</td>
+                      </tr>
+                      <tr>
+                        <td>Email</td>
+                        <td>${userProile.userId}</td>
+                      </tr>
+                      <tr>
+                        <td>Reporting Manager</td>
+                        <td>${userProile.reportertingManager.firstName}</td>
+                      </tr>
+                    </tbody>
+                  </table>
            </div>
+        
         </div>
+           <div  class="col-md-2  col-xs-2">
+               <img src='${assets}/images/empofmonth.png'/>
+           </div>
     </div>   
     
 	<div class="row nav">    
         <div class="col-md-1"></div>
         <div class="col-md-11 col-xs-12" style="margin: 0px;padding: 0px;">
-            <div class="col-md-4 col-xs-4 well"><i class="fa fa-star fa-lg"></i> 0</div>
-            <div class="col-md-4 col-xs-4 well"><i class="fa fa-heart-o fa-lg"></i> 0</div>
-            <div class="col-md-4 col-xs-4 well"><i class="fa fa-thumbs-o-up fa-lg"></i> 0</div>
+            <div class="col-md-4 col-xs-4 well"><i class="fa fa-star fa-lg" style="color: gold;"></i> 0</div>
+            <div class="col-md-4 col-xs-4 well"><i class="fa fa-heart-o fa-lg" style="color: red;"></i> 0</div>
+            <div class="col-md-4 col-xs-4 well"><i class="fa fa-thumbs-o-up fa-lg" style="color: blue;"></i> 0</div>
         </div>
     </div>
 </div>
