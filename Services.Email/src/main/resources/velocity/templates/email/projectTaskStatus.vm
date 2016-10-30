@@ -76,11 +76,11 @@
                         </tbody></table>
                       </td>
                       <td style="padding-bottom:0; vertical-align:bottom;" width="66" valign="bottom" align="right">
-                        <table width="100%" cellspacing="0" cellpadding="0">
+                         <table width="100%" cellspacing="0" cellpadding="0">
                           <tbody><tr>
                             <td>
                             	#if ($status == "NEW")
-    								<img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">
+    								<img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/6snTy2wPRyKFRp46iFWh" alt="completed first" width="66" height="75">
 								#else
 								   <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/Tx80P9chTO4ZXm5CCbII" alt="one" width="66" height="73">
 								#end
@@ -89,7 +89,7 @@
                           <tr>
                             <td>
                             #if ($status == "ASSIGNED")
-							    <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">                  
+							    <img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/7juFl5wqRReNvfanxSwd" alt="completed m" width="66" height="75">                  
 							#else
 							   <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/dvCbXRL1Tmu8lp8oSImm" alt="two" width="66" height="73">
 							#end
@@ -98,7 +98,7 @@
                           <tr>
                             <td>
                             #if ($status == "INPROGRESS")
-							    <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">             
+							    <img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/7juFl5wqRReNvfanxSwd" alt="completed m" width="66" height="75">             
 							#else
 							  <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/bqtHmppHTy6nOA7NZjow" alt="three" width="66" height="73">
                            
@@ -108,9 +108,9 @@
                           <tr>
                             <td>
                               #if ($status == "COMPLETED")
-							    <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="four" width="66" height="75">             
+							    <img style="vertical-align:bottom;" src="https://www.filepicker.io/api/file/DVbJaNYyQpK7EwWP245d" alt="completed last" width="66" height="75">             
 							#else
-							  <img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/rwgZkvWUSrm7LGsKSV0T" alt="three" width="66" height="73">
+							  <img style="vertical-align:bottom;" src="https://cdn.filestackcontent.com/RMjuc6qaSMWO1wVYaeaz" alt="four" width="66" height="73">
                            
 							#end   </td>
                           </tr>

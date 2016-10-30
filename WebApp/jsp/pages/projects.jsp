@@ -428,7 +428,9 @@ function initializeCreateProjectForm(project){
 		});
 
 	function doAjaxCreateProjectForm() {
-		$('#createProjectFormId').submit();
+		if (validateEstimatedEndTime()) {
+			$('#createProjectFormId').submit();
+		}
 	}
 
 	$('#createProjectFormId').ajaxForm(function(response) {
@@ -597,4 +599,43 @@ function initializeCreateProjectForm(project){
 		    source: tags.ttAdapter()
 		  }
 		});
+	
+	
+	$('#estStartTime').on("change", function(){
+		validateEstimatedStartTime();
+		validateEstimatedEndTime();
+	});
+	$('#estCompleteTime').on("change", function(){
+		validateEstimatedStartTime();
+		validateEstimatedEndTime();
+	});
+	
+	function validateEstimatedStartTime(){
+		var estimatedTimeVal = $('#estStartTime').val();
+		if (estimatedTimeVal != "") {
+			var estimatedStartTimeDate = new Date(estimatedTimeVal);
+			if(estimatedStartTimeDate < new Date()) {
+				$("#estStartTime").css("border", "1px solid red");
+				return false;
+			} else {
+				$("#estStartTime").css("border", "1px solid #D5D5D5");
+			}
+		}
+		return true;
+	}
+	
+	function validateEstimatedEndTime(){
+		var estCompleteTimeVal = $('#estCompleteTime').val();
+		if (estCompleteTimeVal != "") {
+			var estCompleteTimeDate = new Date(estCompleteTimeVal);
+			var estimatedStartTimeDate = new Date($("#estStartTime").val());
+			if(estCompleteTimeDate < estimatedStartTimeDate) {
+				$("#estCompleteTime").css("border", "1px solid red");
+				return false;
+			} else {
+				$("#estCompleteTime").css("border", "1px solid #D5D5D5");
+			}
+		}
+		return true;
+	}
 </script>
