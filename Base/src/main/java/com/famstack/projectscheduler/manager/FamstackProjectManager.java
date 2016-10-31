@@ -490,4 +490,36 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 		return clientProjectDetailsList;
 	}
+
+	public List<ProjectDetails> getAllProjectDetailsWithIn(Date startDate, Date startDate2) {
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startDate", startDate);
+		dataMap.put("startDate2", startDate2);
+
+		List<ProjectDetails> projectDetailsList = new ArrayList<>();
+
+		List<?> projectItemList = famstackDataAccessObjectManager
+				.executeQuery(HQLStrings.getString("searchForProjectsWithIn"), dataMap);
+		logDebug("projectItemList" + projectItemList);
+		logDebug("startDate" + startDate);
+		logDebug("startDate 2" + startDate2);
+		getProjectsList(projectDetailsList, projectItemList);
+		return projectDetailsList;
+	}
+
+	public List<ProjectDetails> getAllProjectDetailsEndTimeWithIn(Date endDate, Date endDate2) {
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("endDate", endDate);
+		dataMap.put("endDate2", endDate2);
+
+		List<ProjectDetails> projectDetailsList = new ArrayList<>();
+
+		List<?> projectItemList = famstackDataAccessObjectManager
+				.executeQuery(HQLStrings.getString("searchForProjectsEndWithIn"), dataMap);
+		logDebug("projectItemList" + projectItemList);
+		logDebug("endDate" + endDate);
+		logDebug("endDate 2" + endDate2);
+		getProjectsList(projectDetailsList, projectItemList);
+		return projectDetailsList;
+	}
 }

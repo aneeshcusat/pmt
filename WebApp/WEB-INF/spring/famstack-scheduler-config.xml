@@ -21,4 +21,29 @@
     <task:scheduled ref="" method="" cron="10 */15 * * * *"/>
 </task:scheduled-tasks>
  -->
+ 
+ <!-- Start the Triggers -->
+<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+        <list>
+            <ref bean="scheduleTrigger"/>
+        </list>
+    </property>
+</bean>
+
+<!-- Cron Triggers -->
+<bean id="scheduleTrigger"
+    class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="scheduleJob"/>
+    <property name="cronExpression" value="50 */15 * * * ?"/>
+</bean>
+
+<!-- Begin Jobs -->
+ <bean id="scheduleJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="famstackProjectScheduler" />
+        <property name="targetMethod" value="scheduleJob" />
+ </bean>
+ 
+<bean id="famstackSchedulerInitializer" class="com.famstack.projectscheduler.scheduling.FamstackSchedulerInitializer" init-method="reInitializeAllSchedulers"/>
+ 
 </beans>

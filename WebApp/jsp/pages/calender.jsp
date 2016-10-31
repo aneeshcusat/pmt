@@ -24,7 +24,10 @@
             <h2><span class="fa fa-calendar"></span> Calendar</h2>
         </div>  
         <div class="pull-right">
-            <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
+        <a data-toggle="modal" data-target="#createprojectmodal" onclick="clearProjectFormForCreate()"
+									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
+									Record Unbillable Time.
+		</a>
         </div>                                                                                
     </div>
     <!-- END CONTENT FRAME TOP -->
@@ -48,24 +51,3 @@
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>            
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js"></script>
- <script type="text/javascript" src="${js}/plugins/autocomplete/jquery.autocomplete.js"></script>
-
-<script>
-var countries = [
-                 { value: 'Andorra', data: 'AD' },
-                 // ...
-                 { value: 'Zimbabwe', data: 'ZZ' }
-             ];
-
-$('.autocomplete').autocomplete({
-    //serviceUrl: '/autocomplete/countries',
-     lookup: countries,
-    onSelect: function (suggestion) {
-        alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-    }
-});      
-</script>
-
-
-
-

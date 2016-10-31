@@ -286,4 +286,60 @@ public class FamstackProjectTaskManager extends BaseFamstackManager {
 		getFamstackDataAccessObjectManager().updateItem(taskItem);
 		return taskItem;
 	}
+
+	public List<TaskDetails> getAllTaskStartWithin(Date startDate, Date startDate2) {
+
+		Map<String, Object> dataMap = new HashMap<>();
+		List<TaskDetails> taskDetailsList = new ArrayList<>();
+		dataMap.put("startTime", startDate);
+		dataMap.put("startTime2", startDate2);
+
+		List<?> projectTaskList = getFamstackDataAccessObjectManager()
+				.executeQuery(HQLStrings.getString("getAllProjectTaskStartWithIn"), dataMap);
+
+		for (Object taskItemObj : projectTaskList) {
+			TaskItem taskItem = (TaskItem) taskItemObj;
+			TaskDetails taskDetails = mapTask(taskItem);
+			taskDetailsList.add(taskDetails);
+		}
+		return taskDetailsList;
+
+	}
+
+	public List<TaskDetails> getAllTaskEndWithin(Date endDate, Date endDate2) {
+
+		Map<String, Object> dataMap = new HashMap<>();
+		List<TaskDetails> taskDetailsList = new ArrayList<>();
+		dataMap.put("endDate", endDate);
+		dataMap.put("endDate2", endDate2);
+
+		List<?> projectTaskList = getFamstackDataAccessObjectManager()
+				.executeQuery(HQLStrings.getString("getAllProjectTaskEndWithIn"), dataMap);
+
+		for (Object taskItemObj : projectTaskList) {
+			TaskItem taskItem = (TaskItem) taskItemObj;
+			TaskDetails taskDetails = mapTask(taskItem);
+			taskDetailsList.add(taskDetails);
+		}
+		return taskDetailsList;
+
+	}
+
+	public List<TaskDetails> getAllProjectTaskMissedDeadLine(Date currentTime) {
+
+		Map<String, Object> dataMap = new HashMap<>();
+		List<TaskDetails> taskDetailsList = new ArrayList<>();
+		dataMap.put("completionTime", currentTime);
+
+		List<?> projectTaskList = getFamstackDataAccessObjectManager()
+				.executeQuery(HQLStrings.getString("getAllProjectTaskMissedDeadLine"), dataMap);
+
+		for (Object taskItemObj : projectTaskList) {
+			TaskItem taskItem = (TaskItem) taskItemObj;
+			TaskDetails taskDetails = mapTask(taskItem);
+			taskDetailsList.add(taskDetails);
+		}
+		return taskDetailsList;
+
+	}
 }

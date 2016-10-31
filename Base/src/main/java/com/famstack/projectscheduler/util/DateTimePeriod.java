@@ -21,5 +21,5 @@ public enum DateTimePeriod {
 	DAY,
 
 	/** The hour. */
-	HOUR, DAY_START, DAY_END
+	HOUR, DAY_START, DAY_END, MINUTE
 }

@@ -1,7 +1,7 @@
 $(function() {
 
     var formElements = function(){                
-        // Bootstrap datepicker
+        /*// Bootstrap datepicker
         var feDatepicker = function(){                        
             if($(".datepicker").length > 0){
                 $(".datepicker").datepicker({format: 'yyyy-mm-dd'});                
@@ -28,8 +28,8 @@ $(function() {
                $(".daterange").daterangepicker({format: 'YYYY-MM-DD',startDate: '2013-01-01',endDate: '2013-12-31'});
         }
         // END Daterangepicker
-        
-        //Bootstrap colopicker        
+*/        
+       /* //Bootstrap colopicker        
         var feColorpicker = function(){
             // Default colorpicker hex
             if($(".colorpicker").length > 0)
@@ -44,7 +44,7 @@ $(function() {
                 $("#colorpicker").colorpicker();
             
         }// END Bootstrap colorpicker
-        
+*/        
         //Bootstrap select
         var feSelect = function(){
             if($(".select").length > 0){
@@ -62,7 +62,7 @@ $(function() {
         }//END Bootstrap select
         
         
-        //Validation Engine
+       /* //Validation Engine
         var feValidation = function(){
             if($("form[id^='validate']").length > 0){
                 
@@ -84,8 +84,8 @@ $(function() {
                                                                      });              
             }
         }//END Validation Engine
-        
-        //Masked Inputs
+*/        
+        /*//Masked Inputs
         var feMasked = function(){            
             if($("input[class^='mask_']").length > 0){
                 $("input.mask_tin").mask('99-9999999');
@@ -98,7 +98,7 @@ $(function() {
                 $("input.mask_percent").mask('99%');
             }            
         }//END Masked Inputs
-        
+*/        
         //Bootstrap tooltip
         var feTooltips = function(){            
             $("body").tooltip({selector:'[data-toggle="tooltip"]',container:"body"});
@@ -145,18 +145,18 @@ $(function() {
         
         return {// Init all form element features
 		init: function(){                    
-                    feDatepicker();                    
-                    feTimepicker();
-                    feColorpicker();
+                   // feDatepicker();                    
+                    //feTimepicker();
+                   // feColorpicker();
                     feSelect();
-                    feValidation();
-                    feMasked();
-                    feTooltips();
-                    fePopover();
+                   // feValidation();
+                   // feMasked();
+                    //feTooltips();
+                   // fePopover();
                     feTagsinput();
-                    feiCheckbox();
-                    feBsFileInput();
-                    feDaterangepicker();
+                   // feiCheckbox();
+                   // feBsFileInput();
+                    //feDaterangepicker();
                 }
         }
     }();
@@ -434,13 +434,7 @@ $(function() {
     }();
 
     
-    var events_array = [
-                        {
-                        title: 'Prj10002',
-                        start: moment('2016-09-26T05:00:00'),
-                        end : moment('2016-09-26T12'),
-                        tip: 'Create a logo'},
-                    ];
+    var events_array = [];
     
     var fullCalendar = function(){
             
@@ -488,6 +482,12 @@ $(function() {
                     maxTime: "22:00:00",
                     minTime: "09:00:00",
                     events:events_array,
+                    eventRender: function(event, element) {
+                        element.prepend( "<span class='closeon' style='float: right;'>X</span>" );
+                        element.find(".closeon").click(function() {
+                           $('#calendar').fullCalendar('removeEvents',event._id);
+                        });
+                    },
                     select: function(start, end, allDay) {
                        /* var title = prompt('Event Title:');
                         if (title) {

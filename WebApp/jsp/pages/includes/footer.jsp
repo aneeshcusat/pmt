@@ -135,6 +135,45 @@ function processTaskNotification(notifications){
 	});
 }
 
+
+var messagesMap = [
+{key:"default",value:"famstack notification!"},
+{key:"userRegistraion",value:"You have been registered in famstack"},
+{key:"resetPassword",value:"Your account password has been reset!"},
+{key:"forgotPassword",value:"Your account password has been reset!"},
+{key:"userDetailsUpdate",value:"Your account details have been updated!"},
+{key:"projectCreated",value:"Project has been created!"},
+{key:"projectDetailsUpdate",value:"Project has been updated!"},
+{key:"projectDelete",value:"Project has been deleted!"},
+{key:"projectTaskCreated",value:"Project task has been created!"},
+{key:"projectTaskDetailsUpdate",value:"Project task has been updated!"},
+{key:"projectTaskDelete",value:"Project task has been deleted!"},
+{key:"projectTaskCreateAssigned",value:"Project task has been created and assigned!"},
+{key:"projectTaskAssigned",value:"Project task has been assigned!"},
+{key:"projectTaskClosed",value:"Project task has been closed!"},
+{key:"projectTaskInProgress",value:"Project task has been in progress!"},
+{key:"projectTaskCompleted",value:"Project task has been completed!"},
+{key:"projectCommentAdded",value:"Project comments added!"},
+{key:"projectEndReminder",value:"Project should be completed in 5 mins!"},
+{key:"projectStartReminder",value:"Project should start in 5 mins!"},
+{key:"projectDeadLineMissed",value:"Project has missed the deadline!"},
+{key:"projectTaskDeadLineMissed",value:"Project task has missed the deadline!"},
+{key:"projectTaskEndReminder",value:"Project task should be completed in 5 mins!"},
+{key:"projectTaskStartReminder",value:"Project task should start in 5 mins!"},
+];
+
+function getMessageFromKey(key){
+	var message ="";
+	$.each(messagesMap, function(idx, elem){
+
+		if(""+elem.key === key) {
+			message = elem.value;
+		}
+	});
+	
+	return message;
+}
+
 function processNotification(notification){
 	$("#mCSB_3_container").html("");
 	$("#notificationPageDiv").html("");
@@ -143,19 +182,20 @@ function processNotification(notification){
 		console.log(newMessages);
 		var noficationType = elem.notificationType;
 		var message = elem.data.name ;
-		if (typeof message !== 'undefined') {
+		var titileMsg = getMessageFromKey(elem.data.notificationKey);
+		if (typeof message == 'undefined') {
 			message = "Notification";
 		}
 		if (elem.read == false) {
 			newMessages++;
 			 $.notify(message, {
-			        title: "famstack notificaion " + noficationType,
+			        title: titileMsg,
 			        icon:'${fn:escapeXml(image)}/favicon.ico'
 			 }).click(function(){
 			        location.href = "${applicationHome}/project/"+elem.data.id;
 		      });
 		}
-		var notificationMessage = '<a id="projectLink" target="_new" href="${applicationHome}/project/'+elem.data.id+'" class="list-group-item"><span class="contacts-title">'+noficationType+'</span><p>'+message+'</p></a>'
+		var notificationMessage = '<a id="projectLink" target="_new" href="${applicationHome}/project/'+elem.data.id+'" class="list-group-item"><span class="contacts-title">'+titileMsg+'</span><p>'+message+'</p></a>'
 		$("#mCSB_3_container").prepend(notificationMessage);
 		
 		if (typeof fillNotificationPage !== 'undefined' && $.isFunction(fillNotificationPage)) {

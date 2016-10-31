@@ -6,51 +6,63 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.famstack.email.contants.EmailTemplates;
+import com.famstack.email.contants.Templates;
 
-public class EmailNotificationItem extends NotificationItem {
+public class EmailNotificationItem extends NotificationItem
+{
 
-	private Set<String> toList;
-	private Map<String, Object> data;
-	private EmailTemplates emailTemplate;
-	private final boolean emailEnabled = true;
+    private Set<String> toList;
 
-	public EmailNotificationItem() {
-		setCreatedTme(new Date());
-	}
+    private Map<String, Object> data;
 
-	public Set<String> getToList() {
-		if (toList == null) {
-			toList = new HashSet<>();
-		}
-		return toList;
-	}
+    private Templates templates;
 
-	public void setToList(Set<String> toList) {
-		this.toList = toList;
-	}
+    private final boolean emailEnabled = true;
 
-	public Map<String, Object> getData() {
-		if (data == null) {
-			data = new HashMap<>();
-		}
-		return data;
-	}
+    public EmailNotificationItem()
+    {
+        setCreatedTme(new Date());
+    }
 
-	public void setData(Map<String, Object> data) {
-		this.data = data;
-	}
+    public Set<String> getToList()
+    {
+        if (toList == null) {
+            toList = new HashSet<>();
+        }
+        return toList;
+    }
 
-	public EmailTemplates getEmailTemplate() {
-		return emailTemplate;
-	}
+    public void setToList(Set<String> toList)
+    {
+        this.toList = toList;
+    }
 
-	public void setEmailTemplate(EmailTemplates emailTemplate) {
-		this.emailTemplate = emailTemplate;
-	}
+    public Map<String, Object> getData()
+    {
+        if (data == null) {
+            data = new HashMap<>();
+        }
+        return data;
+    }
 
-	public boolean isEmailEnabled() {
-		return emailEnabled;
-	}
+    public void setData(Map<String, Object> data)
+    {
+        this.data = data;
+    }
+
+    public boolean isEmailEnabled()
+    {
+        return emailEnabled;
+    }
+
+    public Templates getTemplates()
+    {
+        return templates;
+    }
+
+    public void setTemplates(Templates templates)
+    {
+        this.templates = templates;
+    }
 
 }

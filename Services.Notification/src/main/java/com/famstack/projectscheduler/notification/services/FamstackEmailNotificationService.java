@@ -9,59 +9,59 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.email.FamstackEmailSender;
 import com.famstack.email.contants.EmailMessages;
-import com.famstack.email.contants.EmailTemplates;
+import com.famstack.email.contants.Templates;
 import com.famstack.email.util.FamstackTemplateEmailInfo;
 import com.famstack.projectscheduler.notification.bean.EmailNotificationItem;
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
 import com.famstack.projectscheduler.util.StringUtils;
 
 @Component
-public class FamstackEmailNotificationService extends FamstackBaseNotificationService {
+public class FamstackEmailNotificationService extends FamstackBaseNotificationService
+{
 
-	@Resource
-	FamstackEmailSender famstackEmailSender;
+    @Resource
+    FamstackEmailSender famstackEmailSender;
 
-	@Resource
-	FamstackTemplateEmailInfo famstackTemplateEmailInfo;
+    @Resource
+    FamstackTemplateEmailInfo famstackTemplateEmailInfo;
 
-	/**
-	 * Send email notification for error.
-	 *
-	 * @param orderExceptionState
-	 *            the order exception state
-	 * @param dataObjMap
-	 *            the data map
-	 * @param deliveryOrderItem
-	 *            the delivery order item
-	 */
-	@Async
-	@Override
-	public void notify(NotificationItem notificationItem) {
+    /**
+     * Send email notification for error.
+     *
+     * @param orderExceptionState the order exception state
+     * @param dataObjMap the data map
+     * @param deliveryOrderItem the delivery order item
+     */
+    @Async
+    @Override
+    public void notify(NotificationItem notificationItem)
+    {
 
-		EmailNotificationItem emailNotificationItem = (EmailNotificationItem) notificationItem;
-		if (!emailNotificationItem.getToList().isEmpty() && emailNotificationItem.isEmailEnabled()) {
-			Map<String, Object> dataMap = emailNotificationItem.getData();
+        EmailNotificationItem emailNotificationItem = (EmailNotificationItem) notificationItem;
+        if (!emailNotificationItem.getToList().isEmpty() && emailNotificationItem.isEmailEnabled()) {
+            Map<String, Object> dataMap = emailNotificationItem.getData();
 
-			String templateName = emailNotificationItem.getEmailTemplate().getTemplate();
+            String templateName = emailNotificationItem.getTemplates().getTemplate();
 
-			if (!StringUtils.isNotBlank(templateName)) {
-				templateName = EmailTemplates.DEFAULT.getTemplate();
-			}
+            if (!StringUtils.isNotBlank(templateName)) {
+                templateName = Templates.DEFAULT.getTemplate();
+            }
 
-			String mailSubject = getNotificationSubject(emailNotificationItem.getEmailTemplate());
+            String mailSubject = getNotificationSubject(emailNotificationItem.getTemplates());
 
-			famstackTemplateEmailInfo.setMailSubject(mailSubject);
-			famstackTemplateEmailInfo.setVelocityTemplateName(templateName);
-			famstackTemplateEmailInfo.setTemplateParameters(dataMap);
-			famstackEmailSender.sendEmail(famstackTemplateEmailInfo,
-					emailNotificationItem.getToList().toArray(new String[0]));
-		} else {
-			logDebug("Unable to send emails" + emailNotificationItem.getToList());
-		}
-	}
+            famstackTemplateEmailInfo.setMailSubject(mailSubject);
+            famstackTemplateEmailInfo.setVelocityTemplateName(templateName);
+            famstackTemplateEmailInfo.setTemplateParameters(dataMap);
+            famstackEmailSender.sendEmail(famstackTemplateEmailInfo,
+                emailNotificationItem.getToList().toArray(new String[0]));
+        } else {
+            logDebug("Unable to send emails" + emailNotificationItem.getToList());
+        }
+    }
 
-	private String getNotificationSubject(EmailTemplates emailTemplate) {
-		return EmailMessages.getString(emailTemplate.getSubjectkey());
-	}
+    private String getNotificationSubject(Templates emailTemplate)
+    {
+        return EmailMessages.getString(emailTemplate.getSubjectkey());
+    }
 
 }

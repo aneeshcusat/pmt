@@ -95,6 +95,10 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.1'
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.7.1'
 	
+	//scheduler quartz
+	compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.2.1'
+	
+	
 	//mysql 
 	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'
 			
