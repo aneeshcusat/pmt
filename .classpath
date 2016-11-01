@@ -96,10 +96,8 @@
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/jms-2.0.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/json-20140107.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/messaging-jms-client-5.0.7.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/metrics-core-2.2.0.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/metrics-core-3.0.1.jar"/>
-	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/platform-logging-client-2.5.2.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/scala-library-2.8.0.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/slf4j-api-1.6.2.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/snappy-java-1.1.0.1.jar"/>
