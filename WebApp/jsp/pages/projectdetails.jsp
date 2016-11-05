@@ -99,16 +99,16 @@ width: 60%;
                                       <p><span class="bold">Category </span>: ${projectDetails.category}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Account </span>: ${projectDetails.accountId}</p>
+                                      <p><span class="bold">Account </span>: ${projectDetails.accountName}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Team </span>: ${projectDetails.teamId}</p>
+                                      <p><span class="bold">Team </span>: ${projectDetails.teamName}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Sub Team </span>: ${projectDetails.teamId}</p>
+                                      <p><span class="bold">Sub Team </span>: ${projectDetails.subTeamName}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p><span class="bold">Client </span>: ${projectDetails.clientId}</p>
+                                      <p><span class="bold">Client </span>: ${projectDetails.clientName}</p>
                                   </div>
                                    <div class="col-md-6">
                                    	<ul class="nav nav-pills nav-stacked labels-info ">

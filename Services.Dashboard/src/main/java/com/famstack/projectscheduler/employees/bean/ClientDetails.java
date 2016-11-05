@@ -1,24 +1,42 @@
 package com.famstack.projectscheduler.employees.bean;
 
-public class ClientDetails {
+public class ClientDetails
+{
 
-	private int clientId;
-	private String name;
+    private int clientId;
 
-	public String getName() {
-		return name;
-	}
+    private String name;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String email;
 
-	public int getClientId() {
-		return clientId;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setClientId(int clientId) {
-		this.clientId = clientId;
-	}
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public int getClientId()
+    {
+        return clientId;
+    }
+
+    public void setClientId(int clientId)
+    {
+        this.clientId = clientId;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
 
 }

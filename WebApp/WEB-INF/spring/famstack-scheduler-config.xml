@@ -18,7 +18,7 @@
 <task:scheduler id="taskScheduler" pool-size="10" />
 <!-- 
 <task:scheduled-tasks>
-    <task:scheduled ref="" method="" cron="10 */15 * * * *"/>
+    <task:scheduled ref="" method="" cron="10 */5 * * * *"/>
 </task:scheduled-tasks>
  -->
  
@@ -35,7 +35,7 @@
 <bean id="scheduleTrigger"
     class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail" ref="scheduleJob"/>
-    <property name="cronExpression" value="50 * * * * ?"/>
+    <property name="cronExpression" value="30 */5 * * * ?"/>
 </bean>
 
 <!-- Begin Jobs -->

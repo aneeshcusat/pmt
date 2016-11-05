@@ -36,6 +36,7 @@
                             <li><a href="${applicationHome}/projects"><span class="fa fa-list-alt"></span> Projects</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
                              <li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span> Project Reporting</a></li>
+                               <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
                         </ul>
                     </li>
                     </c:if>

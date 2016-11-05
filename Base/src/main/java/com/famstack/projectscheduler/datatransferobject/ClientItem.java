@@ -14,71 +14,95 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "client_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "client_id" }) })
-public class ClientItem implements FamstackBaseItem {
+@Table(name = "client_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"client_id"})})
+public class ClientItem implements FamstackBaseItem
+{
 
-	private static final long serialVersionUID = -5628656638213113049L;
+    private static final long serialVersionUID = -5628656638213113049L;
 
-	@Id
-	@Column(name = "client_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
-	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-	private int clientId;
+    @Id
+    @Column(name = "client_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
+    @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
+    private int clientId;
 
-	@Column(name = "name")
-	private String name;
+    @Column(name = "name")
+    private String name;
 
-	@Column(name = "created_date")
-	private Timestamp createdDate;
+    @Column(name = "email")
+    private String email;
 
-	@Column(name = "last_modified_date")
-	private Timestamp lastModifiedDate;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
 
-	@ManyToOne
-	@JoinColumn(name = "sub_team_id")
-	private ProjectSubTeamItem projectSubTeamItem;
+    @Column(name = "last_modified_date")
+    private Timestamp lastModifiedDate;
 
-	public String getName() {
-		return name;
-	}
+    @ManyToOne
+    @JoinColumn(name = "sub_team_id")
+    private ProjectSubTeamItem projectSubTeamItem;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	@Override
-	public Timestamp getCreatedDate() {
-		return createdDate;
-	}
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
-	@Override
-	public void setCreatedDate(Timestamp createdDate) {
-		this.createdDate = createdDate;
-	}
+    @Override
+    public Timestamp getCreatedDate()
+    {
+        return createdDate;
+    }
 
-	public Timestamp getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    @Override
+    public void setCreatedDate(Timestamp createdDate)
+    {
+        this.createdDate = createdDate;
+    }
 
-	@Override
-	public void setLastModifiedDate(Timestamp lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    public Timestamp getLastModifiedDate()
+    {
+        return lastModifiedDate;
+    }
 
-	public ProjectSubTeamItem getProjectSubTeamItem() {
-		return projectSubTeamItem;
-	}
+    @Override
+    public void setLastModifiedDate(Timestamp lastModifiedDate)
+    {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public void setProjectSubTeamItem(ProjectSubTeamItem projectSubTeamItem) {
-		this.projectSubTeamItem = projectSubTeamItem;
-	}
+    public ProjectSubTeamItem getProjectSubTeamItem()
+    {
+        return projectSubTeamItem;
+    }
 
-	public int getClientId() {
-		return clientId;
-	}
+    public void setProjectSubTeamItem(ProjectSubTeamItem projectSubTeamItem)
+    {
+        this.projectSubTeamItem = projectSubTeamItem;
+    }
 
-	public void setClientId(int clientId) {
-		this.clientId = clientId;
-	}
+    public int getClientId()
+    {
+        return clientId;
+    }
+
+    public void setClientId(int clientId)
+    {
+        this.clientId = clientId;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
 
 }
