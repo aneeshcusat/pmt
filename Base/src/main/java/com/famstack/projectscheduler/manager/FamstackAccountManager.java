@@ -186,4 +186,36 @@ public class FamstackAccountManager extends BaseFamstackManager
 
     }
 
+    public void deleteAccount(int id)
+    {
+        AccountItem accountItem = (AccountItem) famstackDataAccessObjectManager.getItemById(id, AccountItem.class);
+        famstackDataAccessObjectManager.deleteItem(accountItem);
+        initialize();
+    }
+
+    public void deleteTeam(int id)
+    {
+        ProjectTeamItem projectTeamItem =
+            (ProjectTeamItem) famstackDataAccessObjectManager.getItemById(id, ProjectTeamItem.class);
+        famstackDataAccessObjectManager.deleteItem(projectTeamItem);
+        initialize();
+
+    }
+
+    public void deleteSubTeam(int id)
+    {
+        ProjectSubTeamItem projectSubTeamItem =
+            (ProjectSubTeamItem) famstackDataAccessObjectManager.getItemById(id, ProjectSubTeamItem.class);
+        famstackDataAccessObjectManager.deleteItem(projectSubTeamItem);
+        initialize();
+    }
+
+    public void deleteClient(int id)
+    {
+        ClientItem clientItem = (ClientItem) famstackDataAccessObjectManager.getItemById(id, ClientItem.class);
+        famstackDataAccessObjectManager.deleteItem(clientItem);
+        initialize();
+
+    }
+
 }

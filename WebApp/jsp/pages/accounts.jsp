@@ -47,7 +47,9 @@ tr.clickable:hover {
                       	<td>${account.name}</td>
                       	<td>${account.type}</td>
                       	<td>${account.holder}</td>
-                      	<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;<a href="#"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                      	<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
+                      	<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteAccount(${account.accountId},'${account.name}', 'ACCOUNT')">
+                      	<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
 							<span class="hide accountInfo" accountId="${account.accountId}">
 							<span>${account.name}</span>
 							<span>${account.type}</span>
@@ -77,7 +79,9 @@ tr.clickable:hover {
                          <tr account="${account.accountId}" class="clickable" teamId="${projectTeam.teamId}">
                     		<td>${projectTeam.name}</td>
                    			<td>${projectTeam.poc}</td>
-                   				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;<a href="#"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                   				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
+                   					<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteTeam(${projectTeam.teamId},'${projectTeam.name}', 'TEAM')">
+                   				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                    		 </tr>
                        </c:forEach>
                      
@@ -106,7 +110,9 @@ tr.clickable:hover {
                          <tr account="${account.accountId}" team="${projectTeam.teamId}" subTeamId="${projectSubTeam.subTeamId}" class="clickable">
                          		<td>${projectSubTeam.name}</td>
                       			<td>${projectSubTeam.poId}</td>
-                      				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;<a href="#"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                      				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
+                      				<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteSubTeam(${projectSubTeam.subTeamId},'${projectSubTeam.name}', 'SUBTEAM')">
+                      				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                       			</tr>
                          </c:forEach>
                         </c:if>
@@ -140,7 +146,9 @@ tr.clickable:hover {
                          			<tr account="${account.accountId}" team="${projectTeam.teamId}" subteam="${projectSubTeam.subTeamId}">
                          				<td>${client.name}</td>
                          				<td>${client.email}</td>
-                         				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;<a href="#"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                         				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
+                         				<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteClient(${client.clientId},'${client.name}', 'CLIENT')">
+                         				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                          			</tr>
                          			</c:forEach>
                           </c:if>
@@ -225,6 +233,38 @@ tr.clickable:hover {
  function clickNonBillableType(){
 	 $("#billableType").val("NONBILLABLE");
  }
+ function deleteAccount(accountId, accountName,  action) {
+		$(".msgConfirmText").html("Delete Account");
+		$(".msgConfirmText1").html(accountName);
+		$("#confirmYesId").prop("href","javascript:doAjaxDelete("+accountId+", '"+action+"')");
+ }
+ 
+ function deleteTeam(teamId, teamName,  action) {
+		$(".msgConfirmText").html("Delete Team");
+		$(".msgConfirmText1").html(teamName);
+		$("#confirmYesId").prop("href","javascript:doAjaxDelete("+teamId+", '"+action+"')");
+}
+ 
+ function deleteSubTeam(subTeamId, subTeamName,  action) {
+		$(".msgConfirmText").html("Delete Sub Team");
+		$(".msgConfirmText1").html(subTeamName);
+		$("#confirmYesId").prop("href","javascript:doAjaxDelete("+subTeamId+", '"+action+"')");
+}
+ 
+ function deleteClient(clientId, clientName, action) {
+		$(".msgConfirmText").html("Delete Sub Team");
+		$(".msgConfirmText1").html(clientName);
+		$("#confirmYesId").prop("href","javascript:doAjaxDelete("+clientId+", '"+action+"')");
+}
+
+ function doAjaxDelete(id, action){
+	 
+	 doAjaxRequest("POST", "${applicationHome}/deleteAccountConfig",  {id:id, action:action},function(data) {
+		 window.location.reload(true);
+	 	},function(error) {
+	    	console.log("ERROR: ", error);
+	    });
+ }
  
  function doAjaxCreateForm(thisVar){
 	 var action = $(thisVar).attr("action");
@@ -233,11 +273,11 @@ tr.clickable:hover {
 	 var input2 = $("#secondInputId").val();
 	 var type = $("#billableType").val();
 	 
-	 doAjaxRequestWithGlobal("POST", "${applicationHome}/accountConfig",  {input1: input1, input2: input2,type: type, action:action, parentId:parentid},function(data) {
+	 doAjaxRequest("POST", "${applicationHome}/accountConfig",  {input1: input1, input2: input2,type: type, action:action, parentId:parentid},function(data) {
 		 window.location.reload(true);
 	    },function(error) {
 	    	console.log("ERROR: ", error);
-	    },false);
+	    });
  }
  
  $(document).ready(function() {

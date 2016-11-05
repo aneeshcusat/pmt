@@ -582,4 +582,18 @@ public class FamstackDashboardManager extends BaseFamstackService
         }
         return "success";
     }
+
+    public void delteAccountConfig(String action, int id)
+    {
+        if ("ACCOUNT".equals(action)) {
+            famstackAccountManager.deleteAccount(id);
+        } else if ("TEAM".equals(action)) {
+            famstackAccountManager.deleteTeam(id);
+        } else if ("SUBTEAM".equals(action)) {
+            famstackAccountManager.deleteSubTeam(id);
+        } else if ("CLIENT".equals(action)) {
+            famstackAccountManager.deleteClient(id);
+        }
+
+    }
 }

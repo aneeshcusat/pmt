@@ -229,4 +229,13 @@ public class FamstackProjectController extends BaseFamstackService
         famstackDashboardManager.createAccountConfig(input1, input2, type, action, parentId);
         return "{\"status\": true}";
     }
+
+    @RequestMapping(value = "/deleteAccountConfig", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteAccountConfig(@RequestParam("action") String action, @RequestParam("id") int id)
+    {
+        logDebug(" id : " + id + " action : " + action);
+        famstackDashboardManager.delteAccountConfig(action, id);
+        return "{\"status\": true}";
+    }
 }
