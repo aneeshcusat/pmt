@@ -47,7 +47,7 @@ tr.clickable:hover {
                       	<td>${account.name}</td>
                       	<td>${account.type}</td>
                       	<td>${account.holder}</td>
-                      	<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
+                      	<td><a parentid="0" onclick="initializeWidget('account', this);initializeData('${account.name}', '${account.holder}','${account.type}', ${account.accountId});" data-toggle="modal" data-target="#createaccountmodal"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
                       	<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteAccount(${account.accountId},'${account.name}', 'ACCOUNT')">
                       	<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
 							<span class="hide accountInfo" accountId="${account.accountId}">
@@ -79,7 +79,7 @@ tr.clickable:hover {
                          <tr account="${account.accountId}" class="clickable" teamId="${projectTeam.teamId}">
                     		<td>${projectTeam.name}</td>
                    			<td>${projectTeam.poc}</td>
-                   				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
+                   				<td><a parentid="${account.accountId}"  onclick="initializeWidget('team', this);initializeData('${projectTeam.name}', '${projectTeam.poc}','', ${projectTeam.teamId});" data-toggle="modal" data-target="#createaccountmodal"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
                    					<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteTeam(${projectTeam.teamId},'${projectTeam.name}', 'TEAM')">
                    				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                    		 </tr>
@@ -110,7 +110,8 @@ tr.clickable:hover {
                          <tr account="${account.accountId}" team="${projectTeam.teamId}" subTeamId="${projectSubTeam.subTeamId}" class="clickable">
                          		<td>${projectSubTeam.name}</td>
                       			<td>${projectSubTeam.poId}</td>
-                      				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
+                      				<td><a parentid="${projectTeam.teamId}" onclick="initializeWidget('subTeam', this);initializeData('${projectSubTeam.name}', '${projectSubTeam.poId}','', ${projectSubTeam.subTeamId});" data-toggle="modal" data-target="#createaccountmodal">
+                      				<i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
                       				<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteSubTeam(${projectSubTeam.subTeamId},'${projectSubTeam.name}', 'SUBTEAM')">
                       				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                       			</tr>
@@ -146,7 +147,7 @@ tr.clickable:hover {
                          			<tr account="${account.accountId}" team="${projectTeam.teamId}" subteam="${projectSubTeam.subTeamId}">
                          				<td>${client.name}</td>
                          				<td>${client.email}</td>
-                         				<td><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
+                         				<td><a parentid="${projectSubTeam.subTeamId}" onclick="initializeWidget('client', this);initializeData('${client.name}', '${client.email}','', ${client.clientId});" data-toggle="modal" data-target="#createaccountmodal"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
                          				<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteClient(${client.clientId},'${client.name}', 'CLIENT')">
                          				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                          			</tr>
@@ -186,7 +187,7 @@ tr.clickable:hover {
                          data-dismiss="modal">
                      Cancel
                  </button>
-                 <a id="createOrUpdateId" href="#" onclick="doAjaxCreateForm(this)" class="btn btn-primary"><span id="userButton">Save</span></a>
+                 <a id="createOrUpdateId" href="#" onclick="doAjaxCreateForm(this)" class="btn btn-primary"><span id="saveButton">Save</span></a>
              </div>
          </div>
      </div>
@@ -197,9 +198,28 @@ tr.clickable:hover {
  
  <script type="text/javascript">
  
+ function initializeData(input1, input2, type, id) {
+	$("#firstInputId").val(input1);
+	$("#secondInputId").val(input2);
+	$("#thirdInputDivId").hide();
+	if (type != '') {
+		$("#thirdInputDivId").show();
+		if(type == 'BILLABLE') {
+			$("#billable").click();
+		} else if(type == 'NONBILLABLE') {
+			$("#nonbillable").click();
+		}
+	}
+	 $("#billableType").val(type);
+	 $("#id").val(id);
+	 $("#saveButton").html("Update");
+ }
+ 
  function initializeWidget(type, thisVar){
 	 $("#thirdInputDivId").hide();
 	 var parentid = $(thisVar).attr("parentid");
+	 $("#saveButton").html("Save");
+	 $("#id").val(0);
 	 if(type == 'account') {
 		 $("#myModalLabel").html("Create Account");
 		 $("#createOrUpdateId").attr("action", "ACCOUNT");
@@ -272,8 +292,9 @@ tr.clickable:hover {
 	 var input1 = $("#firstInputId").val();
 	 var input2 = $("#secondInputId").val();
 	 var type = $("#billableType").val();
+	 var id = $("#id").val();
 	 
-	 doAjaxRequest("POST", "${applicationHome}/accountConfig",  {input1: input1, input2: input2,type: type, action:action, parentId:parentid},function(data) {
+	 doAjaxRequest("POST", "${applicationHome}/accountConfig",  {input1: input1, input2: input2,type: type, action:action, parentId:parentid, id:id},function(data) {
 		 window.location.reload(true);
 	    },function(error) {
 	    	console.log("ERROR: ", error);

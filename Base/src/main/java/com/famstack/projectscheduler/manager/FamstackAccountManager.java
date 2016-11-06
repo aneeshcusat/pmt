@@ -134,9 +134,12 @@ public class FamstackAccountManager extends BaseFamstackManager
         return accountDetailsList;
     }
 
-    public void createAccount(String name, String holder, String type)
+    public void createAccount(String name, String holder, String type, int id)
     {
-        AccountItem accountItem = new AccountItem();
+        AccountItem accountItem = (AccountItem) famstackDataAccessObjectManager.getItemById(id, AccountItem.class);
+        if (accountItem == null) {
+            accountItem = new AccountItem();
+        }
         accountItem.setName(name);
         accountItem.setHolder(holder);
         accountItem.setType(type);
@@ -145,13 +148,19 @@ public class FamstackAccountManager extends BaseFamstackManager
         initialize();
     }
 
-    public void createTeam(String name, String poc, int accountId)
+    public void createTeam(String name, String poc, int accountId, int id)
     {
+        ProjectTeamItem projectTeamItem =
+            (ProjectTeamItem) famstackDataAccessObjectManager.getItemById(id, ProjectTeamItem.class);
+
         Set<AccountItem> accountSet = new HashSet<>();
         AccountItem accountItem =
             (AccountItem) famstackDataAccessObjectManager.getItemById(accountId, AccountItem.class);
         accountSet.add(accountItem);
-        ProjectTeamItem projectTeamItem = new ProjectTeamItem();
+        if (projectTeamItem == null) {
+            projectTeamItem = new ProjectTeamItem();
+        }
+
         projectTeamItem.setName(name);
         projectTeamItem.setPoc(poc);
         projectTeamItem.setAccountItems(accountSet);
@@ -159,12 +168,16 @@ public class FamstackAccountManager extends BaseFamstackManager
         initialize();
     }
 
-    public void createSubTeam(String name, String poId, int teamId)
+    public void createSubTeam(String name, String poId, int teamId, int id)
     {
+        ProjectSubTeamItem projectSubTeamItem =
+            (ProjectSubTeamItem) famstackDataAccessObjectManager.getItemById(id, ProjectSubTeamItem.class);
 
         ProjectTeamItem projectTeamItem =
             (ProjectTeamItem) famstackDataAccessObjectManager.getItemById(teamId, ProjectTeamItem.class);
-        ProjectSubTeamItem projectSubTeamItem = new ProjectSubTeamItem();
+        if (projectSubTeamItem == null) {
+            projectSubTeamItem = new ProjectSubTeamItem();
+        }
         projectSubTeamItem.setName(name);
         projectSubTeamItem.setPoId(poId);
         projectSubTeamItem.setProjectTeamItem(projectTeamItem);
@@ -173,11 +186,15 @@ public class FamstackAccountManager extends BaseFamstackManager
         initialize();
     }
 
-    public void createClient(String name, String email, int subTeamId)
+    public void createClient(String name, String email, int subTeamId, int id)
     {
+        ClientItem clientItem = (ClientItem) famstackDataAccessObjectManager.getItemById(id, ClientItem.class);
+
         ProjectSubTeamItem projectSubTeamItem =
             (ProjectSubTeamItem) famstackDataAccessObjectManager.getItemById(subTeamId, ProjectSubTeamItem.class);
-        ClientItem clientItem = new ClientItem();
+        if (clientItem == null) {
+            clientItem = new ClientItem();
+        }
         clientItem.setName(name);
         clientItem.setEmail(email);
         clientItem.setProjectSubTeamItem(projectSubTeamItem);

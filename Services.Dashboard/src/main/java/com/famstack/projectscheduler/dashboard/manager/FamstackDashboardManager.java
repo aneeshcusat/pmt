@@ -569,16 +569,16 @@ public class FamstackDashboardManager extends BaseFamstackService
         return FamstackUtils.getJsonFromObject(groupUserMessageMap);
     }
 
-    public String createAccountConfig(String input1, String input2, String type, String action, int id)
+    public String createAccountConfig(String input1, String input2, String type, String action, int parentId, int id)
     {
         if ("ACCOUNT".equals(action)) {
-            famstackAccountManager.createAccount(input1, input2, type);
+            famstackAccountManager.createAccount(input1, input2, type, id);
         } else if ("TEAM".equals(action)) {
-            famstackAccountManager.createTeam(input1, input2, id);
+            famstackAccountManager.createTeam(input1, input2, parentId, id);
         } else if ("SUBTEAM".equals(action)) {
-            famstackAccountManager.createSubTeam(input1, input2, id);
+            famstackAccountManager.createSubTeam(input1, input2, parentId, id);
         } else if ("CLIENT".equals(action)) {
-            famstackAccountManager.createClient(input1, input2, id);
+            famstackAccountManager.createClient(input1, input2, parentId, id);
         }
         return "success";
     }

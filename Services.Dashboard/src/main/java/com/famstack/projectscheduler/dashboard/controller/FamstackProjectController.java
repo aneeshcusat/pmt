@@ -222,11 +222,11 @@ public class FamstackProjectController extends BaseFamstackService
     @ResponseBody
     public String accountConfig(@RequestParam("input1") String input1, @RequestParam("input2") String input2,
         @RequestParam("type") String type, @RequestParam("action") String action,
-        @RequestParam("parentId") int parentId)
+        @RequestParam("parentId") int parentId, @RequestParam("id") int id)
     {
         logDebug("input1 : " + input1 + " input2 : " + input2 + " type : " + type + " action : " + action
-            + " parentId : " + parentId);
-        famstackDashboardManager.createAccountConfig(input1, input2, type, action, parentId);
+            + " parentId : " + parentId + " id : " + id);
+        famstackDashboardManager.createAccountConfig(input1, input2, type, action, parentId, id);
         return "{\"status\": true}";
     }
 
