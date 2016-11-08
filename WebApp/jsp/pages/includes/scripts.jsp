@@ -38,27 +38,58 @@
         <script type="text/javascript" src=" ${js}/plugins/desktopnotification/push_notification.min.js"></script>
         <!-- END THIS PAGE PLUGINS-->        
 
+<div id="settingsId" class="hide">
+	<div class="ts-button">
+        <span class="fa fa-cogs fa-spin"></span>
+    </div>
+    <div class="ts-body">
+	    <div class="ts-title">Themes</div>
+        <div class="ts-themes">
+            <a href="#" class="active" data-theme="${css}/theme-default.css"><img src="${image}/themes/default.jpg"/></a>            
+        </div>
+		<div class="ts-title">Layout</div>
+        <div class="ts-row">
+            <label class="check"><input type="radio" class="iradio" name="st_layout_boxed" value="0" checked/> Full Width</label>
+        </div>
+        <div class="ts-row">
+            <label class="check"><input type="radio" class="iradio" name="st_layout_boxed" value="1"/> Boxed</label>
+        </div>
+        <div class="ts-title">Options</div>
+        <div class="ts-row">
+            <label class="check"><input type="checkbox" class="icheckbox" name="autoRefresh"
+               <c:if test="${applicationScope.applicationConfiguraion.autoRefresh == true}">
+             	checked
+             </c:if> />
+             Auto refresh</label>
+        </div>
+        <div class="ts-row">
+            <label class="check"><input type="checkbox" class="icheckbox" name="enableEmail" id="enableEmail"
+               <c:if test="${applicationScope.applicationConfiguraion.emailEnabled == true}">
+             	checked
+             </c:if> />
+            Enable Email</label>
+        </div>
+          <div class="ts-row">
+            <label class="check"><input type="checkbox" class="icheckbox" name="logDebug"  id="logDebug"
+            <c:if test="${applicationScope.applicationConfiguraion.logDebug == true}">
+             	checked
+             </c:if> />
+            Enable Logs</label>
+        </div>
+         <div class="ts-row">
+            <label class="check"><input type="checkbox" class="icheckbox" name="desktopNotification"  id="desktopNotification"
+            <c:if test="${applicationScope.applicationConfiguraion.desktopNotificationEnabled == true}">
+             	checked
+             </c:if> />
+            Enable Desktop Notification</label>
+        </div>
+    </div>
+</div>
 <script>
-var site_settings = '<div class="ts-button">'
-        +'<span class="fa fa-cogs fa-spin"></span>'
-    +'</div>'
-    +'<div class="ts-body">'
-	    +'<div class="ts-title">Themes</div>'
-        +'<div class="ts-themes">'
-            +'<a href="#" class="active" data-theme="${css}/theme-default.css"><img src="${image}/themes/default.jpg"/></a>'            
-        +'</div>'
-		+'<div class="ts-title">Layout</div>'
-        +'<div class="ts-row">'
-            +'<label class="check"><input type="radio" class="iradio" name="st_layout_boxed" value="0" checked/> Full Width</label>'
-        +'</div>'
-        +'<div class="ts-row">'
-            +'<label class="check"><input type="radio" class="iradio" name="st_layout_boxed" value="1"/> Boxed</label>'
-        +'</div>'
-        +'<div class="ts-title">Options</div>'
-        +'<div class="ts-row">'
-            +'<label class="check"><input type="checkbox" class="icheckbox" name="st_head_fixed" value="1"/> Auto refresh</label>'
-        +'</div>'
-    +'</div>';
+var site_settings = "";
+<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER')}">
+site_settings = $("#settingsId").html();
+</c:if>
 
     </script>
 
@@ -75,4 +106,20 @@ var site_settings = '<div class="ts-button">'
          <script type="text/javascript" src="${js}/famstack.plugin.js"></script>
          <!--  famstack scripts ends -->
     <!-- END SCRIPTS --> 
+    <script>
     
+    $('input[type="checkbox"]').change(function () {
+        var name = $(this).prop('name');
+        var check = $(this).prop('checked');
+        doAjaxEnableSettings(name,check);
+    });
+    
+    function doAjaxEnableSettings(name,value) {
+	    doAjaxRequest("POST", "${applicationHome}/setConfiguration",  {propertyName:name,propertyValue:value},function(data) {
+	    	 
+			console.log("data: ", data);
+	    },function(error) {
+	    	console.log("ERROR: ", error);
+	    },false);
+	 }
+    </script>

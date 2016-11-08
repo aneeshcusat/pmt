@@ -64,4 +64,10 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
         return EmailMessages.getString(emailTemplate.getSubjectkey());
     }
 
+    @Override
+    public boolean isEnabled()
+    {
+        return getFamstackApplicationConfiguration().isEmailEnabled();
+    }
+
 }

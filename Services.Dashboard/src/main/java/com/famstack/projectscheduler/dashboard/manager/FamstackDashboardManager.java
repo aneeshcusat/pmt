@@ -25,6 +25,7 @@ import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
+import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
@@ -594,6 +595,17 @@ public class FamstackDashboardManager extends BaseFamstackService
         } else if ("CLIENT".equals(action)) {
             famstackAccountManager.deleteClient(id);
         }
+
+    }
+
+    public void setConfiguration(String propertyName, String propertyValue)
+    {
+        ConfigurationSettingsItem configurationSettingsItem = new ConfigurationSettingsItem();
+        configurationSettingsItem.setPropertyValue(propertyValue);
+        configurationSettingsItem.setPropertyName(propertyName);
+        famstackDataAccessObjectManager.saveOrUpdateItem(configurationSettingsItem);
+
+        getFamstackApplicationConfiguration().initializeConfigurations();
 
     }
 }

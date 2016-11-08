@@ -2,7 +2,7 @@
                 <!-- START X-NAVIGATION -->
                 <ul class="x-navigation">
                     <li class="xn-logo">
-                        <a href="index"></a>
+                        <a href="index">famstack</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     <li class="xn-profile">
@@ -35,8 +35,8 @@
                             <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>
                             <li><a href="${applicationHome}/projects"><span class="fa fa-list-alt"></span> Projects</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
-                             <li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span> Project Reporting</a></li>
-                               <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
+                            <li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span> Project Reporting</a></li>
+                            <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
                         </ul>
                     </li>
                     </c:if>

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,56 +24,69 @@ import com.famstack.projectscheduler.security.user.UserRole;
 
 @Controller
 @SessionAttributes
-public class FamstackDashboardController extends BaseFamstackService {
+public class FamstackDashboardController extends BaseFamstackService
+{
 
-	@Resource
-	FamstackDashboardManager famstackDashboardManager;
+    @Resource
+    FamstackDashboardManager famstackDashboardManager;
 
-	@RequestMapping("/{path}")
-	public String login(@PathParam("path") String path, Model model) {
-		logDebug("Request path :" + path);
-		return path;
-	}
+    @RequestMapping("/{path}")
+    public String login(@PathParam("path") String path, Model model)
+    {
+        logDebug("Request path :" + path);
+        return path;
+    }
 
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public ModelAndView index() {
-		UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
-		if (userRole != UserRole.SUPERADMIN && userRole != UserRole.ADMIN && userRole != UserRole.MANAGER) {
-			return new ModelAndView("redirect:tasks");
-		}
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public ModelAndView index()
+    {
+        UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
+        if (userRole != UserRole.SUPERADMIN && userRole != UserRole.ADMIN && userRole != UserRole.MANAGER) {
+            return new ModelAndView("redirect:tasks");
+        }
 
-		Map<String, Long> projectCountBasedOnStatus = famstackDashboardManager.getProjectsCounts();
+        Map<String, Long> projectCountBasedOnStatus = famstackDashboardManager.getProjectsCounts();
 
-		String userBillableProductiveJson = famstackDashboardManager.getUserBillableProductiveJson();
+        String userBillableProductiveJson = famstackDashboardManager.getUserBillableProductiveJson();
 
-		String projectTypeJson = famstackDashboardManager.getProjectTypeJson();
+        String projectTypeJson = famstackDashboardManager.getProjectTypeJson();
 
-		String teamUtilizationJson = famstackDashboardManager.getTeamUtilizationJson();
+        String teamUtilizationJson = famstackDashboardManager.getTeamUtilizationJson();
 
-		String projectCategoryJson = famstackDashboardManager.getProjectCategoryJson();
+        String projectCategoryJson = famstackDashboardManager.getProjectCategoryJson();
 
-		List<ClientProjectDetails> clientProject = famstackDashboardManager.getClientProject();
+        List<ClientProjectDetails> clientProject = famstackDashboardManager.getClientProject();
 
-		List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
+        List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
 
-		return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
-				.addObject("projectDetails", projectDetails)
-				.addObject("employeeUtilization", userBillableProductiveJson)
-				.addObject("projectTypeJson", projectTypeJson).addObject("teamUtilizationJson", teamUtilizationJson)
-				.addObject("projectCategoryJson", projectCategoryJson).addObject("clientProject", clientProject);
-	}
+        return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
+            .addObject("projectDetails", projectDetails).addObject("employeeUtilization", userBillableProductiveJson)
+            .addObject("projectTypeJson", projectTypeJson).addObject("teamUtilizationJson", teamUtilizationJson)
+            .addObject("projectCategoryJson", projectCategoryJson).addObject("clientProject", clientProject);
+    }
 
-	@RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)
-	@ResponseBody
-	public String userPingCheck() {
-		getFamstackApplicationConfiguration().updateLastPing();
-		return famstackDashboardManager.getUserStatusJson();
-	}
+    @RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)
+    @ResponseBody
+    public String userPingCheck()
+    {
+        getFamstackApplicationConfiguration().updateLastPing();
+        return famstackDashboardManager.getUserStatusJson();
+    }
 
-	@RequestMapping(value = "/getNotifications", method = RequestMethod.GET)
-	@ResponseBody
-	public String getNotifications() {
-		UserItem userItem = getFamstackApplicationConfiguration().getCurrentUser();
-		return famstackDashboardManager.getNotifications(userItem.getId());
-	}
+    @RequestMapping(value = "/getNotifications", method = RequestMethod.GET)
+    @ResponseBody
+    public String getNotifications()
+    {
+        UserItem userItem = getFamstackApplicationConfiguration().getCurrentUser();
+        return famstackDashboardManager.getNotifications(userItem.getId());
+    }
+
+    @RequestMapping(value = "/setConfiguration", method = RequestMethod.POST)
+    @ResponseBody
+    public String setConfiguration(@RequestParam("propertyName") String propertyName,
+        @RequestParam("propertyValue") String propertyValue)
+    {
+        famstackDashboardManager.setConfiguration(propertyName, propertyValue);
+        return "{\"status\": true}";
+    }
 }

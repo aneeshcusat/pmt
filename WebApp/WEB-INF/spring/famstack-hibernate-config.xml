@@ -42,6 +42,8 @@
 				
 				<value>com.famstack.projectscheduler.datatransferobject.GroupItem</value>
 				<value>com.famstack.projectscheduler.datatransferobject.GroupMessageItem</value>
+				
+				<value>com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
