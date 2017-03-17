@@ -6,20 +6,25 @@ package com.famstack.projectscheduler.util;
  * @author Aneeshkumar
  * @version 1.0
  */
-public enum DateTimePeriod {
+public enum DateTimePeriod
+{
 
-	/** The year. */
-	YEAR,
+    /** The year. */
+    YEAR,
 
-	/** The month. */
-	MONTH,
+    /** The month. */
+    MONTH,
 
-	/** The week. */
-	WEEK,
+    /** The week. */
+    WEEK,
 
-	/** The day. */
-	DAY,
+    /** The day. */
+    DAY,
 
-	/** The hour. */
-	HOUR, DAY_START, DAY_END, MINUTE
+    /** The hour. */
+    HOUR,
+    DAY_START,
+    DAY_END,
+    MINUTE,
+    CALENDER_DAY_START
 }

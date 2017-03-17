@@ -157,14 +157,14 @@ function panel_fullscreen(panel){
         panel.removeClass("panel-fullscreened").unwrap();
         panel.find(".panel-body,.chart-holder").css("height","");
         panel.find(".panel-fullscreen .fa").removeClass("fa-compress").addClass("fa-expand");        
-        
+        $(".panelHideTD").hide();
         $(window).resize();
     }else{
         var head    = panel.find(".panel-heading");
         var body    = panel.find(".panel-body");
         var footer  = panel.find(".panel-footer");
         var hplus   = 30;
-        
+        $(".panelHideTD").show();
         if(body.hasClass("panel-body-table") || body.hasClass("padding-0")){
             hplus = 0;
         }

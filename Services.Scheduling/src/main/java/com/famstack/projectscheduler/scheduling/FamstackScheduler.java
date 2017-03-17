@@ -64,8 +64,9 @@ public class FamstackScheduler extends BaseFamstackService
     {
         logDebug("Running scheduler - checkProjectDeadlineMissed");
         try {
-            List<ProjectDetails> projectDetailsList = famstackProjectManager.getAllMissedTimeLineProjectDetails(
-                DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), -5));
+            List<ProjectDetails> projectDetailsList =
+                famstackProjectManager.getAllMissedTimeLineProjectDetails(DateUtils.getNextPreviousDate(
+                    DateTimePeriod.MINUTE, new Date(), -5));
 
             for (ProjectDetails prodDetails : projectDetailsList) {
                 famstackNotificationServiceManager.notifyAll(NotificationType.PROJECT_DEADLINE_MISSED, prodDetails,
@@ -78,16 +79,18 @@ public class FamstackScheduler extends BaseFamstackService
         logDebug("Running scheduler completed- checkProjectStartTimeReminder");
     }
 
+    @Async
     public void checkProjectStartTimeReminder()
     {
         logDebug("Running scheduler - checkProjectStartTimeReminder");
         try {
-            List<ProjectDetails> projectDetailsList = famstackProjectManager.getAllProjectDetailsWithIn(new Date(),
-                DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), 5));
+            List<ProjectDetails> projectDetailsList =
+                famstackProjectManager.getAllProjectDetailsWithIn(new Date(),
+                    DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), 5));
 
             for (ProjectDetails prodDetails : projectDetailsList) {
-                famstackNotificationServiceManager.notifyAll(NotificationType.PROJECT_START_REMINDER, prodDetails,
-                    null);
+                famstackNotificationServiceManager
+                    .notifyAll(NotificationType.PROJECT_START_REMINDER, prodDetails, null);
             }
         } catch (Exception e) {
             logError(e.getMessage(), e);
@@ -99,8 +102,9 @@ public class FamstackScheduler extends BaseFamstackService
     {
         logDebug("Running scheduler - checkProjectEndTimeReminder");
         try {
-            List<ProjectDetails> projectDetailsList = famstackProjectManager.getAllProjectDetailsEndTimeWithIn(
-                new Date(), DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), 5));
+            List<ProjectDetails> projectDetailsList =
+                famstackProjectManager.getAllProjectDetailsEndTimeWithIn(new Date(),
+                    DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), 5));
 
             for (ProjectDetails prodDetails : projectDetailsList) {
                 famstackNotificationServiceManager.notifyAll(NotificationType.PROJECT_END_REMINDER, prodDetails, null);
@@ -114,8 +118,9 @@ public class FamstackScheduler extends BaseFamstackService
     {
         logDebug("Running scheduler - checkTaskStartTimeReminder");
         try {
-            List<TaskDetails> taskDetailsList = famstackProjectTaskManager.getAllTaskStartWithin(new Date(),
-                DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), 5));
+            List<TaskDetails> taskDetailsList =
+                famstackProjectTaskManager.getAllTaskStartWithin(new Date(),
+                    DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), 5));
 
             for (TaskDetails taskDetails : taskDetailsList) {
                 Map<String, Object> dataMap = new HashMap<>();
@@ -132,8 +137,9 @@ public class FamstackScheduler extends BaseFamstackService
     {
         logDebug("Running scheduler - checkTaskEndTimeReminder");
         try {
-            List<TaskDetails> taskDetailsList = famstackProjectTaskManager.getAllTaskEndWithin(new Date(),
-                DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), 5));
+            List<TaskDetails> taskDetailsList =
+                famstackProjectTaskManager.getAllTaskEndWithin(new Date(),
+                    DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), 5));
 
             for (TaskDetails taskDetails : taskDetailsList) {
                 Map<String, Object> dataMap = new HashMap<>();
@@ -150,8 +156,9 @@ public class FamstackScheduler extends BaseFamstackService
     {
         logDebug("Running scheduler - checkTaskDeadlineMissed");
         try {
-            List<TaskDetails> taskDetailsList = famstackProjectTaskManager
-                .getAllProjectTaskMissedDeadLine(DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, new Date(), -5));
+            List<TaskDetails> taskDetailsList =
+                famstackProjectTaskManager.getAllProjectTaskMissedDeadLine(DateUtils.getNextPreviousDate(
+                    DateTimePeriod.MINUTE, new Date(), -5));
 
             for (TaskDetails taskDetails : taskDetailsList) {
                 Map<String, Object> dataMap = new HashMap<>();

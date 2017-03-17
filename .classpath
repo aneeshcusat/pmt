@@ -13,7 +13,7 @@
 			<attribute name="owner.project.facets" value="jst.web;#system#"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_74"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/activation-1.1.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/commons-beanutils-1.8.0.jar"/>

@@ -11,6 +11,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
+<c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <!DOCTYPE html>
 <html lang="en">

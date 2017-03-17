@@ -291,6 +291,7 @@ width: 60%;
                                                <td width="10%"><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                                             </tr>
                                             <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
+                                             <input id="${taskDetails.taskId}isReviewTask" type="hidden" value="${taskDetails.reviewTask}"/>
                                             <input id="${taskDetails.taskId}description" type="hidden" value="${taskDetails.description}"/>
                                             <input id="${taskDetails.taskId}startTime" type="hidden" value="${taskDetails.startTime}"/>
                                             <input id="${taskDetails.taskId}completionTime" type="hidden" value="${taskDetails.completionTime}"/>
@@ -384,10 +385,9 @@ width: 60%;
 	        <li>Estimated start time:<b><span id="popup-startTime"></span></b></li>
 	        <li>Estimated completion time:<b><span id="popup-completionTime"></span></b></li>
 	        <li>Duration : <b><span id="popup-duration"></span> hours</b></li>
-	        <li>Priority : <b><span id="popup-priority"></span></b></li>
 	        <li>Assignee : <b><span id="popup-assigneeName"></span></b></li>
 	        <li>Helpers : <b><span id="popup-HelperName"></span></b></li>
-	       
+	        <li>Is review task : <b><span id="popup-isReviewTask"></span></b></li>
 	    </ul>
     </div>
 <!-- task pop up window end -->
@@ -436,9 +436,6 @@ width: 60%;
     		name: {
     	            required: true,
     	    },
-    	    description: {
-    	        required: true
-    	    },
     	    startTime: {
     	    	 required: true
     	    }
@@ -459,6 +456,7 @@ width: 60%;
    		 	$("#popup-description").html($("#"+taskId+"description").val());
    			$("#popup-assigneeName").html($("#"+taskId+"assigneeName").val());
    			$("#popup-HelperName").html($("#"+taskId+"helperNames").val());
+   			$("#popup-isReviewTask").html($("#"+taskId+"isReviewTask").val());
     		 	
     	     $('div#task-pop-up').show()
     	     .css('top', e.pageY + moveDown)
@@ -483,6 +481,7 @@ var clearTaskDetails = function(){
  	$("#taskDuration").html(${projectDetails.unAssignedDuration});
 	$("#taskName").val("");
 	$("#description").val("");
+	$("#reviewTask").prop("selectedIndex", 0);
 	$("#priority").prop("selectedIndex", 0);
 	$("#createOrUpdateTaskId span").html("Save");
     $('#createTaskFormId').prop("action", "${applicationHome}/createTask");
@@ -521,6 +520,13 @@ var loadTaskDetails = function(taskId){
     $("#estStartTime").val($("#"+taskId+"startTime").val());
  	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
  	$("#taskName").val($("#"+taskId+"name").val());
+ 	var isReviewTask = $("#"+taskId+"isReviewTask").val();
+ 	$("#reviewTask").val("0");
+ 	console.log("isReviewTask" + isReviewTask);
+ 	if (isReviewTask == 'true') {
+ 		$("#reviewTask").val("1");
+ 	}
+ 	$('#reviewTask').selectpicker('refresh');
  	$("#projectDuration").html(${projectDetails.duration});
  	$("#taskDuration").html($("#"+taskId+"duration").val());
  	$("#taskName").val($("#"+taskId+"name").val());
@@ -844,7 +850,7 @@ $(document).ready(function() {
     
     });
     
-    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle-double-left fa-2x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;" id="currentAssignmentDate"></span> <a hre="#"><i class="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a></span>');
+    $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle1-double-left fa-x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;" id="currentAssignmentDate"></span> <a hre="#"><i class="fa fa-angle1-double-right fa-x" aria-hidden="true"></i></a></span>');
 } );
 
 var cellSelectCount = 0;

@@ -22,174 +22,216 @@ import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.TaskStatus;
 
 @Entity
-@Table(name = "task_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "task_id" }) })
-public class TaskItem implements FamstackBaseItem {
+@Table(name = "task_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"task_id"})})
+public class TaskItem implements FamstackBaseItem
+{
 
-	private static final long serialVersionUID = -5628656638213113049L;
+    private static final long serialVersionUID = -5628656638213113049L;
 
-	@Id
-	@Column(name = "task_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
-	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-	private int taskId;
+    @Id
+    @Column(name = "task_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
+    @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
+    private int taskId;
 
-	@Column(name = "name")
-	private String name;
+    @Column(name = "name")
+    private String name;
 
-	@Column(name = "assignee")
-	private int assignee;
+    @Column(name = "assignee")
+    private int assignee;
 
-	@Column(name = "helpers")
-	private String helpers;
+    @Column(name = "helpers")
+    private String helpers;
 
-	@Column(name = "description")
-	@Lob
-	private String description;
+    @Column(name = "description")
+    @Lob
+    private String description;
 
-	@Column(name = "created_date")
-	private Timestamp createdDate;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
 
-	@Column(name = "last_modified_date")
-	private Timestamp lastModifiedDate;
+    @Column(name = "last_modified_date")
+    private Timestamp lastModifiedDate;
 
-	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
-	@JoinColumn(name = "reporter")
-	private UserItem reporter;
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
+    @JoinColumn(name = "reporter")
+    private UserItem reporter;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "priority")
-	private ProjectPriority priority;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "priority")
+    private ProjectPriority priority;
 
-	@Column(name = "start_time")
-	private Timestamp startTime;
+    @Column(name = "start_time")
+    private Timestamp startTime;
 
-	@Column(name = "completion_time")
-	private Timestamp completionTime;
+    @Column(name = "completion_time")
+    private Timestamp completionTime;
 
-	@Column(name = "duration")
-	private Integer duration;
+    @Column(name = "duration")
+    private Integer duration;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "status")
-	private TaskStatus status;
+    @Column(name = "review_task")
+    private Boolean reviewTask;
 
-	@ManyToOne
-	@JoinColumn(name = "project_id")
-	private ProjectItem projectItem;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private TaskStatus status;
 
-	public int getTaskId() {
-		return taskId;
-	}
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private ProjectItem projectItem;
 
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
-	}
+    public int getTaskId()
+    {
+        return taskId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setTaskId(int taskId)
+    {
+        this.taskId = taskId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription()
+    {
+        return description;
+    }
 
-	@Override
-	public Timestamp getCreatedDate() {
-		return createdDate;
-	}
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 
-	@Override
-	public void setCreatedDate(Timestamp createdDate) {
-		this.createdDate = createdDate;
-	}
+    @Override
+    public Timestamp getCreatedDate()
+    {
+        return createdDate;
+    }
 
-	public Timestamp getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    @Override
+    public void setCreatedDate(Timestamp createdDate)
+    {
+        this.createdDate = createdDate;
+    }
 
-	@Override
-	public void setLastModifiedDate(Timestamp lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    public Timestamp getLastModifiedDate()
+    {
+        return lastModifiedDate;
+    }
 
-	public UserItem getReporter() {
-		return reporter;
-	}
+    @Override
+    public void setLastModifiedDate(Timestamp lastModifiedDate)
+    {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public void setReporter(UserItem reporter) {
-		this.reporter = reporter;
-	}
+    public UserItem getReporter()
+    {
+        return reporter;
+    }
 
-	public ProjectPriority getPriority() {
-		return priority;
-	}
+    public void setReporter(UserItem reporter)
+    {
+        this.reporter = reporter;
+    }
 
-	public void setPriority(ProjectPriority priority) {
-		this.priority = priority;
-	}
+    public ProjectPriority getPriority()
+    {
+        return priority;
+    }
 
-	public Timestamp getStartTime() {
-		return startTime;
-	}
+    public void setPriority(ProjectPriority priority)
+    {
+        this.priority = priority;
+    }
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
-	}
+    public Timestamp getStartTime()
+    {
+        return startTime;
+    }
 
-	public Timestamp getCompletionTime() {
-		return completionTime;
-	}
+    public void setStartTime(Timestamp startTime)
+    {
+        this.startTime = startTime;
+    }
 
-	public void setCompletionTime(Timestamp completionTime) {
-		this.completionTime = completionTime;
-	}
+    public Timestamp getCompletionTime()
+    {
+        return completionTime;
+    }
 
-	public Integer getDuration() {
-		return duration;
-	}
+    public void setCompletionTime(Timestamp completionTime)
+    {
+        this.completionTime = completionTime;
+    }
 
-	public void setDuration(Integer duration) {
-		this.duration = duration;
-	}
+    public Integer getDuration()
+    {
+        return duration;
+    }
 
-	public TaskStatus getStatus() {
-		return status;
-	}
+    public void setDuration(Integer duration)
+    {
+        this.duration = duration;
+    }
 
-	public void setStatus(TaskStatus status) {
-		this.status = status;
-	}
+    public TaskStatus getStatus()
+    {
+        return status;
+    }
 
-	public ProjectItem getProjectItem() {
-		return projectItem;
-	}
+    public void setStatus(TaskStatus status)
+    {
+        this.status = status;
+    }
 
-	public void setProjectItem(ProjectItem projectItem) {
-		this.projectItem = projectItem;
-	}
+    public ProjectItem getProjectItem()
+    {
+        return projectItem;
+    }
 
-	public int getAssignee() {
-		return assignee;
-	}
+    public void setProjectItem(ProjectItem projectItem)
+    {
+        this.projectItem = projectItem;
+    }
 
-	public void setAssignee(int assignee) {
-		this.assignee = assignee;
-	}
+    public int getAssignee()
+    {
+        return assignee;
+    }
 
-	public String getHelpers() {
-		return helpers;
-	}
+    public void setAssignee(int assignee)
+    {
+        this.assignee = assignee;
+    }
 
-	public void setHelpers(String helpers) {
-		this.helpers = helpers;
-	}
+    public String getHelpers()
+    {
+        return helpers;
+    }
+
+    public void setHelpers(String helpers)
+    {
+        this.helpers = helpers;
+    }
+
+    public Boolean getReviewTask()
+    {
+        return reviewTask;
+    }
+
+    public void setReviewTask(Boolean reviewTask)
+    {
+        this.reviewTask = reviewTask;
+    }
 
 }

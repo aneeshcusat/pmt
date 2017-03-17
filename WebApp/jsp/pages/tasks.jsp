@@ -46,7 +46,7 @@
 					<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['ASSIGNED']}" varStatus="taskIndex">
 			        <div class='task-item task-danger 
-			          <c:if test="${taskIndex.index == 0 && empty modelViewMap.projectTaskDetailsData['INPROGRESS'] && tasks.assignee == currentUser.id}">
+			          <c:if test="${taskIndex.index == 0 && empty modelViewMap.projectTaskDetailsData['INPROGRESS'] && tasks.assignee == currentUser.id && not tasks.disableTask}">
 			        	task-primary
 			         </c:if>
 			        '>                                    
@@ -195,7 +195,7 @@ function reloadTime() {
 	if (!inProgress) {
 		return;
 	}
-	second-=1;
+	second = second-1;
 	if (second ==0){
 		second =59;
 		minutes-=1;

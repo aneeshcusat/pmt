@@ -144,9 +144,6 @@
 						<span class="fa fa-clipboard" ></span>
 					</button>
 					<button class="btn btn-default btn-rounded btn-sm" data-toggle="modal" data-target="#createprojectmodal" 
-					<c:if test="${project.status != 'NEW' }">
-						disabled="true"
-                  	</c:if>
 						onclick="loadProjectForUpdate('${project.id}')">
 						<span class="fa fa-pencil"></span>
 					</button>
@@ -223,9 +220,6 @@ var jvalidate = $("#createProjectFormId").validate({
   rules: {                                            
 	name: {
            required: true,
-   },
-   description: {
-       required: true
    },
    priority: {
    	 required: true
@@ -604,13 +598,23 @@ function initializeCreateProjectForm(project){
 	$('#estStartTime').on("change", function(){
 		validateEstimatedStartTime();
 		validateEstimatedEndTime();
+		validateProjectDuration();
 	});
+	
 	$('#estCompleteTime').on("change", function(){
 		validateEstimatedStartTime();
 		validateEstimatedEndTime();
+		validateProjectDuration();
+	});
+	
+	$('#duration').on("change", function(){
+		validateEstimatedStartTime();
+		validateEstimatedEndTime();
+		validateProjectDuration();
 	});
 	
 	function validateEstimatedStartTime(){
+		console.log("validating project validateEstimatedStartTime");
 		var estimatedTimeVal = $('#estStartTime').val();
 		if (estimatedTimeVal != "") {
 			var estimatedStartTimeDate = new Date(estimatedTimeVal);
@@ -625,6 +629,7 @@ function initializeCreateProjectForm(project){
 	}
 	
 	function validateEstimatedEndTime(){
+		console.log("validating project validateEstimatedEndTime");
 		var estCompleteTimeVal = $('#estCompleteTime').val();
 		if (estCompleteTimeVal != "") {
 			var estCompleteTimeDate = new Date(estCompleteTimeVal);
@@ -634,6 +639,26 @@ function initializeCreateProjectForm(project){
 				return false;
 			} else {
 				$("#estCompleteTime").css("border", "1px solid #D5D5D5");
+			}
+		}
+		return true;
+	}
+	
+	function validateProjectDuration(){
+		console.log("validating project duration");
+		var estCompleteTimeVal = $('#estCompleteTime').val();
+		if (estCompleteTimeVal != "") {
+			var estCompleteTimeDate = new Date(estCompleteTimeVal);
+			var estimatedStartTimeDate = new Date($("#estStartTime").val());
+			
+			var diffTime = (estCompleteTimeDate - estimatedStartTimeDate) /(60*60*1000);
+			var projectDuration =  $('#duration').val();
+			
+			if(diffTime < projectDuration) {
+				$("#duration").closest('div').find('button').css("border", "1px solid red");
+				return false;
+			} else {
+				$("#duration").closest('div').find('button').css("border", "1px solid #D5D5D5");
 			}
 		}
 		return true;

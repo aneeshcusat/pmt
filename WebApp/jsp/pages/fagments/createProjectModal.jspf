@@ -161,17 +161,16 @@
                                     <form:select class="form-control select" id="category" path="category"  data-live-search="true">
                                         <option value="">- select -</option>
                                         <optgroup label="Presentation Design"">
-                                        <option>Reporting (Data population)</option>
-                                        <option>Template creation</option>
-                                        <option>Storytelling</option>
+                                        <option>Formatting/Templatizing Document</option>
+                                        <option>Conceptualization/High-end</option>
+                                        <option>Reporting</option>
                                         </optgroup>
+                                        <option>Collaterals</option>
+                                        <option>Dashboard</option>
                                         <option>Infographics</option>
                                         <option>Motion Graphics</option>
-                                        <option>Infographics</option>
                                         <option>UI/UX</option>
-                                        <option>Dashboard</option>
                                         <option>Document support (Ms Word/MS Excel)</option>
-                                        <option>Marketing Collaterals</option>
                                     </form:select>
                                     <span class="help-block">required project category</span>
                                 </div>

@@ -108,7 +108,7 @@ site_settings = $("#settingsId").html();
     <!-- END SCRIPTS --> 
     <script>
     
-    $('input[type="checkbox"]').change(function () {
+    $('input[type="checkbox"].icheckbox').change(function () {
         var name = $(this).prop('name');
         var check = $(this).prop('checked');
         doAjaxEnableSettings(name,check);

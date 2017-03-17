@@ -151,8 +151,9 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     public List<ProjectDetails> getProjects()
     {
-        Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(),
-            getFamstackUserSessionConfiguration().getProjectViewLimit());
+        Date startTime =
+            DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), getFamstackUserSessionConfiguration()
+                .getProjectViewLimit());
         List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime);
         return projectDetailsList;
     }
@@ -208,7 +209,13 @@ public class FamstackDashboardManager extends BaseFamstackService
     public void createTask(TaskDetails taskDetails)
     {
         projectManager.createProjectTask(taskDetails);
-        triggerTaskNotification(NotificationType.TASK_CREATED, taskDetails);
+
+        if (taskDetails.getAssignee() != 0) {
+            triggerTaskNotification(NotificationType.TASK_CREATED_ASSIGNED, taskDetails);
+        } else {
+            triggerTaskNotification(NotificationType.TASK_CREATED, taskDetails);
+        }
+
     }
 
     private void triggerTaskNotification(NotificationType type, TaskDetails taskDetails)
@@ -528,11 +535,13 @@ public class FamstackDashboardManager extends BaseFamstackService
             userStatus.setUserId(userId);
             Date userAvailableTime = employeeDetails.getUserAvailableTime();
             if (userAvailableTime != null) {
-                availableMessage += " After "
-                    + (userAvailableTime.getHours() < 10 ? "0" + userAvailableTime.getHours()
-                        : userAvailableTime.getHours())
-                    + ":" + (userAvailableTime.getMinutes() < 10 ? "0" + userAvailableTime.getMinutes()
-                        : userAvailableTime.getMinutes());
+                availableMessage +=
+                    " After "
+                        + (userAvailableTime.getHours() < 10 ? "0" + userAvailableTime.getHours() : userAvailableTime
+                            .getHours())
+                        + ":"
+                        + (userAvailableTime.getMinutes() < 10 ? "0" + userAvailableTime.getMinutes()
+                            : userAvailableTime.getMinutes());
             }
             if (employeeDetails.isLeave()) {
                 availableMessage = "Leave";

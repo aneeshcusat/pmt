@@ -82,8 +82,8 @@
                                                  <th>Team</th>
                                                  <th>Sub Team</th>
                                                 <th>Client</th>
-                                                <th>Est Duration (Mins)</th>
-                                                <th>Actual Duration (Mins)</th>
+                                                <th>Est Duration (Hrs)</th>
+                                                <th>Actual Duration (Hrs)</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
@@ -99,7 +99,7 @@
                                                 <td>${project.teamName}</td>
                                                 <td>${project.subTeamName}</td>
                                                 <td>${project.clientName}</td>
-                                                <td>${project.duration * 60}</td>
+                                                <td>${project.duration}</td>
                                                 <td>${project.actualDuration}</td>
                                                 <td>${project.status}</td>
                                             </tr>

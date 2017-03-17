@@ -106,7 +106,8 @@
 					<div class="col-md-9">
 						<form:select path="team" id="team" class="form-control select" data-live-search="true" name="team">
 							  <option value="">- select -</option>
-							<c:if test="${not empty accountData}">  
+							  <option>Visual Services</option>
+							<%-- <c:if test="${not empty accountData}">  
                                 <c:forEach var="account" items="${accountData}">
                                 <c:if test="${not empty account.projectTeams}">  
                                 <c:set var="teamIndex" value="1"/>
@@ -121,7 +122,7 @@
                                   </c:forEach>
                                 </c:if>
                    			  </c:forEach>
-                   			</c:if>
+                   			</c:if> --%>
 						</form:select>
 					</div>
 				</div>

@@ -22,9 +22,9 @@
                   <br>
                   We're excited you're here! please activate your new account by clicking the link below!<br>
                   <br>
-					Email id : ${emailId}
+					Email id : <span>${emailId}</span>
 					 <br>
-					Password : ${password}
+					Password : <span>${password}</span>
 					 <br>
                   <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff">
                     <tr>

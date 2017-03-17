@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
+import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
@@ -73,6 +74,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         taskItem.setName(taskDetails.getName());
         taskItem.setPriority(taskDetails.getPriority());
         taskItem.setProjectItem(projectItem);
+        taskItem.setReviewTask(taskDetails.getReviewTask());
         Date startDate = DateUtils.tryParse(taskDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
         Date completionDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startDate, taskDetails.getDuration());
         Timestamp startTimeStamp = null;
@@ -192,6 +194,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setDescription(taskItem.getDescription());
             taskDetails.setDuration(taskItem.getDuration());
             taskDetails.setName(taskItem.getName());
+            taskDetails.setReviewTask(taskItem.getReviewTask());
             taskDetails.setPriority(taskItem.getPriority());
             String startDateString = DateUtils.format(taskItem.getStartTime(), DateUtils.DATE_TIME_FORMAT);
             String completionDateString = DateUtils.format(taskItem.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
@@ -200,8 +203,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
             taskDetails.setStatus(taskItem.getStatus());
             if (taskItem.getReporter() != null) {
-                taskDetails.setReporterName(
-                    taskItem.getReporter().getFirstName() + " " + taskItem.getReporter().getLastName());
+                taskDetails.setReporterName(taskItem.getReporter().getFirstName() + " "
+                    + taskItem.getReporter().getLastName());
             }
             taskDetails.setCreatedDate(taskItem.getCreatedDate());
             taskDetails.setLastModifiedDate(taskItem.getLastModifiedDate());
@@ -209,8 +212,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setProjectId(taskItem.getProjectItem().getProjectId());
             taskDetails.setAssignee(taskItem.getAssignee());
             taskDetails.setHelpersList(taskItem.getHelpers());
-            taskDetails.setTaskActivityDetails(
-                famstackUserActivityManager.getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
+            taskDetails.setTaskActivityDetails(famstackUserActivityManager.getUserTaskActivityDetailsByTaskId(taskItem
+                .getTaskId()));
             return taskDetails;
 
         }
@@ -232,8 +235,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             jsonObject.put("start",
                 DateUtils.format(taskActivityDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT_CALENDER));
 
-            Date completionDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, taskActivityDetails.getStartTime(),
-                taskActivityDetails.getDuration());
+            Date completionDate =
+                DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, taskActivityDetails.getStartTime(),
+                    taskActivityDetails.getDuration());
 
             jsonObject.put("end", DateUtils.format(completionDate, DateUtils.DATE_TIME_FORMAT_CALENDER));
             jsonObject.put("tip", taskActivityDetails.getUserTaskType());
@@ -276,17 +280,39 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                             taskItem = getTaskItemById(taskId);
                             taskItemMap.put(taskId, taskItem);
                         }
+
                         TaskActivityDetails taskActivityDetails =
                             famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
                         TaskDetails taskDetails = mapTask(taskItem);
                         taskDetails.setTaskActivityDetails(taskActivityDetails);
+
                         userTaskActivityItemMap.get(taskItem.getStatus().value()).add(taskDetails);
+
+                        if (taskItem.getStatus() == TaskStatus.ASSIGNED) {
+                            checkTaskIsDisabled(taskItem, taskDetails);
+                        }
+
                     }
                 }
             }
         }
 
         return userTaskActivityItemMap;
+    }
+
+    private void checkTaskIsDisabled(TaskItem taskItem, TaskDetails taskDetails)
+    {
+        if (taskItem.getReviewTask()) {
+            ProjectItem projectItem = taskItem.getProjectItem();
+            Set<TaskItem> taskItems = projectItem.getTaskItems();
+
+            for (TaskItem tItem : taskItems) {
+                if (taskItem.getTaskId() != tItem.getTaskId() && tItem.getStatus() != TaskStatus.COMPLETED
+                    && projectItem.getStatus() != ProjectStatus.UNASSIGNED) {
+                    taskDetails.setDisableTask(true);
+                }
+            }
+        }
     }
 
     public TaskItem updateTaskStatus(int taskId, TaskStatus taskStatus, String comments)
@@ -311,8 +337,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         dataMap.put("startTime", startDate);
         dataMap.put("startTime2", startDate2);
 
-        List<?> projectTaskList = getFamstackDataAccessObjectManager()
-            .executeQuery(HQLStrings.getString("getAllProjectTaskStartWithIn"), dataMap);
+        List<?> projectTaskList =
+            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getAllProjectTaskStartWithIn"),
+                dataMap);
 
         for (Object taskItemObj : projectTaskList) {
             TaskItem taskItem = (TaskItem) taskItemObj;
@@ -331,8 +358,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         dataMap.put("endDate", endDate);
         dataMap.put("endDate2", endDate2);
 
-        List<?> projectTaskList = getFamstackDataAccessObjectManager()
-            .executeQuery(HQLStrings.getString("getAllProjectTaskEndWithIn"), dataMap);
+        List<?> projectTaskList =
+            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getAllProjectTaskEndWithIn"),
+                dataMap);
 
         for (Object taskItemObj : projectTaskList) {
             TaskItem taskItem = (TaskItem) taskItemObj;
@@ -351,8 +379,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         dataMap.put("currentTime", new Date());
         dataMap.put("startTime", startTime);
 
-        List<?> projectTaskList = getFamstackDataAccessObjectManager()
-            .executeQuery(HQLStrings.getString("getAllProjectTaskMissedDeadLine"), dataMap);
+        List<?> projectTaskList =
+            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getAllProjectTaskMissedDeadLine"),
+                dataMap);
 
         for (Object taskItemObj : projectTaskList) {
             TaskItem taskItem = (TaskItem) taskItemObj;

@@ -8,226 +8,288 @@ import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.util.StringUtils;
 
-public class TaskDetails {
+public class TaskDetails
+{
 
-	private int taskId;
+    private int taskId;
 
-	private int projectId;
+    private int projectId;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private Timestamp createdDate;
+    private Timestamp createdDate;
 
-	private Timestamp lastModifiedDate;
+    private Timestamp lastModifiedDate;
 
-	private String reporterName;
+    private String reporterName;
 
-	private ProjectPriority priority;
+    private ProjectPriority priority;
 
-	private String startTime;
+    private String startTime;
 
-	private String completionTime;
+    private String completionTime;
 
-	private Integer duration;
+    private Integer duration;
 
-	private int assignee;
+    private int assignee;
 
-	private int[] helper;
+    private int[] helper;
 
-	private String helpersList;
+    private Boolean reviewTask;
 
-	private TaskStatus status;
+    private String helpersList;
 
-	private EmployeeDetails employeeDetails;
+    private TaskStatus status;
 
-	private TaskActivityDetails taskActivityDetails;
+    private EmployeeDetails employeeDetails;
 
-	public int getTaskId() {
-		return taskId;
-	}
+    private TaskActivityDetails taskActivityDetails;
 
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
-	}
+    private Boolean disableTask;
 
-	public String getName() {
-		return name;
-	}
+    public int getTaskId()
+    {
+        return taskId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setTaskId(int taskId)
+    {
+        this.taskId = taskId;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
-	public Timestamp getCreatedDate() {
-		return createdDate;
-	}
+    public String getDescription()
+    {
+        return description;
+    }
 
-	public void setCreatedDate(Timestamp createdDate) {
-		this.createdDate = createdDate;
-	}
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 
-	public Timestamp getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    public Timestamp getCreatedDate()
+    {
+        return createdDate;
+    }
 
-	public void setLastModifiedDate(Timestamp lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    public void setCreatedDate(Timestamp createdDate)
+    {
+        this.createdDate = createdDate;
+    }
 
-	public ProjectPriority getPriority() {
-		return priority;
-	}
+    public Timestamp getLastModifiedDate()
+    {
+        return lastModifiedDate;
+    }
 
-	public void setPriority(ProjectPriority priority) {
-		this.priority = priority;
-	}
+    public void setLastModifiedDate(Timestamp lastModifiedDate)
+    {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public String getStartTime() {
-		return startTime;
-	}
+    public ProjectPriority getPriority()
+    {
+        return priority;
+    }
 
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
+    public void setPriority(ProjectPriority priority)
+    {
+        this.priority = priority;
+    }
 
-	public String getCompletionTime() {
-		return completionTime;
-	}
+    public String getStartTime()
+    {
+        return startTime;
+    }
 
-	public void setCompletionTime(String completionTime) {
-		this.completionTime = completionTime;
-	}
+    public void setStartTime(String startTime)
+    {
+        this.startTime = startTime;
+    }
 
-	public Integer getDuration() {
-		return duration;
-	}
+    public String getCompletionTime()
+    {
+        return completionTime;
+    }
 
-	public void setDuration(Integer duration) {
-		this.duration = duration;
-	}
+    public void setCompletionTime(String completionTime)
+    {
+        this.completionTime = completionTime;
+    }
 
-	public TaskStatus getStatus() {
-		return status;
-	}
+    public Integer getDuration()
+    {
+        return duration;
+    }
 
-	public void setStatus(TaskStatus status) {
-		this.status = status;
-	}
+    public void setDuration(Integer duration)
+    {
+        this.duration = duration;
+    }
 
-	public String getReporterName() {
-		return reporterName;
-	}
+    public TaskStatus getStatus()
+    {
+        return status;
+    }
 
-	public void setReporterName(String reporterName) {
-		this.reporterName = reporterName;
-	}
+    public void setStatus(TaskStatus status)
+    {
+        this.status = status;
+    }
 
-	public int getProjectId() {
-		return projectId;
-	}
+    public String getReporterName()
+    {
+        return reporterName;
+    }
 
-	public void setProjectId(int projectId) {
-		this.projectId = projectId;
-	}
+    public void setReporterName(String reporterName)
+    {
+        this.reporterName = reporterName;
+    }
 
-	public int getAssignee() {
-		return assignee;
-	}
+    public int getProjectId()
+    {
+        return projectId;
+    }
 
-	public void setAssignee(int assignee) {
-		this.assignee = assignee;
-	}
+    public void setProjectId(int projectId)
+    {
+        this.projectId = projectId;
+    }
 
-	public int[] getHelper() {
-		return helper;
-	}
+    public int getAssignee()
+    {
+        return assignee;
+    }
 
-	public void setHelper(int[] helper) {
-		this.helper = helper;
-	}
+    public void setAssignee(int assignee)
+    {
+        this.assignee = assignee;
+    }
 
-	public TaskActivityDetails getTaskActivityDetails() {
-		return taskActivityDetails;
-	}
+    public int[] getHelper()
+    {
+        return helper;
+    }
 
-	public void setTaskActivityDetails(TaskActivityDetails taskActivityDetails) {
-		this.taskActivityDetails = taskActivityDetails;
-	}
+    public void setHelper(int[] helper)
+    {
+        this.helper = helper;
+    }
 
-	public String getHelpersList() {
-		if (StringUtils.isNotBlank(helpersList)) {
-			helpersList = helpersList.replace("[", "").replaceAll("]", "").replace("null", "");
-		}
-		return helpersList;
-	}
+    public TaskActivityDetails getTaskActivityDetails()
+    {
+        return taskActivityDetails;
+    }
 
-	public void setHelpersList(String helpersList) {
-		this.helpersList = helpersList;
-	}
+    public void setTaskActivityDetails(TaskActivityDetails taskActivityDetails)
+    {
+        this.taskActivityDetails = taskActivityDetails;
+    }
 
-	public double getPercentageOfTaskCompleted() {
-		if (status == TaskStatus.COMPLETED) {
-			return 100;
-		} else if ((status == TaskStatus.INPROGRESS)) {
-			double durationInMinute = duration * 60;
-			double taskRemainingTime = getTaskRemainingTime();
-			double percentageOfWorkCompleted = (100 - (taskRemainingTime / durationInMinute) * 100);
-			return Math.round(percentageOfWorkCompleted * 100.0) / 100.0;
-		}
+    public String getHelpersList()
+    {
+        if (StringUtils.isNotBlank(helpersList)) {
+            helpersList = helpersList.replace("[", "").replaceAll("]", "").replace("null", "");
+        }
+        return helpersList;
+    }
 
-		return 0;
+    public void setHelpersList(String helpersList)
+    {
+        this.helpersList = helpersList;
+    }
 
-	}
+    public double getPercentageOfTaskCompleted()
+    {
+        if (status == TaskStatus.COMPLETED) {
+            return 100;
+        } else if ((status == TaskStatus.INPROGRESS)) {
+            double durationInMinute = duration * 60;
+            double taskRemainingTime = getTaskRemainingTime();
+            double percentageOfWorkCompleted = (100 - (taskRemainingTime / durationInMinute) * 100);
+            return Math.round(percentageOfWorkCompleted * 100.0) / 100.0;
+        }
 
-	public double getTaskRemainingTime() {
-		double durationInMinute = duration * 60;
-		if (taskActivityDetails == null) {
-			return durationInMinute;
-		}
-		Date actualStartTime = taskActivityDetails.getActualStartTime();
-		double diffInMinute = durationInMinute;
-		if (actualStartTime != null) {
+        return 0;
 
-			double diff = new Date().getTime() - actualStartTime.getTime();
-			diff = (durationInMinute * 60 * 1000) - diff;
-			diffInMinute = diff / (60 * 1000);
-		}
-		return diffInMinute;
-	}
+    }
 
-	public EmployeeDetails getEmployeeDetails() {
-		return employeeDetails;
-	}
+    public double getTaskRemainingTime()
+    {
+        double durationInMinute = duration * 60;
+        if (taskActivityDetails == null) {
+            return durationInMinute;
+        }
+        Date actualStartTime = taskActivityDetails.getActualStartTime();
+        double diffInMinute = durationInMinute;
+        if (actualStartTime != null) {
 
-	public void setEmployeeDetails(EmployeeDetails employeeDetails) {
-		this.employeeDetails = employeeDetails;
-	}
+            double diff = new Date().getTime() - actualStartTime.getTime();
+            diff = (durationInMinute * 60 * 1000) - diff;
+            diffInMinute = diff / (60 * 1000);
+        }
+        return diffInMinute;
+    }
 
-	public String getHelperNames() {
-		Integer helperId = 0;
-		String hleperNames = "";
-		if (StringUtils.isNotBlank(helpersList)) {
-			String[] helpers = helpersList.split(",");
-			for (String helper : helpers) {
-				helper = helper.trim();
-				helperId = Integer.parseInt(helper);
-				EmployeeDetails employeeDetails = FamstackApplicationConfiguration.userMap.get(helperId);
-				if (employeeDetails != null) {
-					hleperNames = hleperNames + " " + employeeDetails.getFirstName();
-				}
-			}
-		}
-		return hleperNames.trim();
-	}
+    public EmployeeDetails getEmployeeDetails()
+    {
+        return employeeDetails;
+    }
+
+    public void setEmployeeDetails(EmployeeDetails employeeDetails)
+    {
+        this.employeeDetails = employeeDetails;
+    }
+
+    public String getHelperNames()
+    {
+        Integer helperId = 0;
+        String hleperNames = "";
+        if (StringUtils.isNotBlank(helpersList)) {
+            String[] helpers = helpersList.split(",");
+            for (String helper : helpers) {
+                helper = helper.trim();
+                helperId = Integer.parseInt(helper);
+                EmployeeDetails employeeDetails = FamstackApplicationConfiguration.userMap.get(helperId);
+                if (employeeDetails != null) {
+                    hleperNames = hleperNames + " " + employeeDetails.getFirstName();
+                }
+            }
+        }
+        return hleperNames.trim();
+    }
+
+    public Boolean getReviewTask()
+    {
+        return reviewTask;
+    }
+
+    public void setReviewTask(Boolean reviewTask)
+    {
+        this.reviewTask = reviewTask;
+    }
+
+    public Boolean getDisableTask()
+    {
+        return disableTask;
+    }
+
+    public void setDisableTask(Boolean disableTask)
+    {
+        this.disableTask = disableTask;
+    }
 
 }

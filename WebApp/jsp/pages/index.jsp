@@ -214,6 +214,8 @@
                                             <thead>
                                                 <tr>
                                                     <th width="50%">Project</th>
+                                                    <th width="20%" class="panelHideTD" style="display: none">Assignees</th>
+                                                    <th width="20%" class="panelHideTD" style="display: none">Assignee Names</th>
                                                     <th width="20%">Status</th>
                                                     <th width="30%">Activity</th>
                                                 </tr>
@@ -230,6 +232,23 @@
 	                                                    	<c:set var="projectState" value="danger"/>
 	                                                    </c:if>
                                                     	<td><strong><a href="${applicationHome}/project/${project.id}">${project.name}</a></strong></td>
+	                                                    <td class="panelHideTD" style="display: none">
+					 										<c:if test="${not empty project.projectTaskDeatils}">
+					                                 			<c:forEach var="taskDetails" items="${project.projectTaskDeatils}" varStatus="taskIndex"> 
+							                                      <span class="project_team">
+							                                         <a href="#"><img  style="width:20px" alt="image" src="${applicationHome}/image/${taskDetails.assignee}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
+							                                      </span>
+					                                      </c:forEach>
+					                                      </c:if>
+														</td>
+														<td  class="panelHideTD" style="display: none">
+														<c:if test="${not empty project.projectTaskDeatils}">
+					                                 			<c:forEach var="taskDetails" items="${project.projectTaskDeatils}" varStatus="taskIndex"> 
+														${employeeMap[taskDetails.assignee].firstName }
+														</c:forEach>
+					                                      </c:if>
+														
+														</td>
 	                                                    <td><span class="label label-${projectState}">${project.status }</span></td>
 	                                                    <td  class="project_progress">
 	                                                    

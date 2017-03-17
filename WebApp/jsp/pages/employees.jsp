@@ -167,13 +167,17 @@
 <script type="text/javascript" src="${js}/plugins/fileinput/fileinput.min.js"></script> 
 
 <script>
+  
+jQuery.validator.addMethod("validEmail", function(value, element) {
+	  return this.optional( element ) || /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test( value );
+}, 'Please enter a valid email address.');
 
 var jvalidate = $("#createUserFormId").validate({
 	 ignore: ".ignorevalidation",
     rules: {                                            
    	 email: {
-             required: true,
-             email: true
+        required: true,
+        validEmail: true
      },
      firstName: {
              required: true
