@@ -438,7 +438,7 @@ public class ProjectDetails
         this.completedFilesNames = completedFilesNames;
     }
 
-    public double getActualDuration()
+    public int getActualDuration()
     {
 
         double actualDuration = 0;
@@ -458,15 +458,34 @@ public class ProjectDetails
             }
         }
         System.out.println("actual duration " + actualDuration);
-        return actualDuration > 0 ? Math.round((actualDuration / 60 / 1000) * 100.0) / 100.0 : 0;
+        return (int) (actualDuration > 0 ? Math.round(actualDuration / 60 / 1000) : 0);
     }
 
     public String getActualDurationInHrs()
     {
-        double actualDurationInMins = getActualDuration();
-        String actualDurationString = "0";
+        int actualDurationInMins = getActualDuration();
+        String actualDurationString = "00";
         if (actualDurationInMins > 0) {
-            actualDurationString = "" + actualDurationInMins / 60;
+            int actualTimeInHrs = actualDurationInMins / 60;
+            int actualTimeInMin = actualDurationInMins % 60;
+            if (actualTimeInHrs < 10) {
+                actualDurationString = "0" + actualTimeInHrs;
+            } else {
+                actualDurationString = "" + actualTimeInHrs;
+            }
+
+            if (actualTimeInMin > 59) {
+                actualTimeInMin = actualTimeInMin / 10;
+            }
+
+            if (actualTimeInMin < 10) {
+                actualDurationString += ":0" + actualTimeInMin;
+            } else {
+                actualDurationString += ":" + actualTimeInMin;
+            }
+
+        } else {
+            actualDurationString += ":00";
         }
 
         return actualDurationString;

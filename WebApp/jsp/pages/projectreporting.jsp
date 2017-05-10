@@ -91,7 +91,7 @@
 										<tbody>
         								<c:forEach var="project" items="${projectData}">
                                             <tr>
-                                                <td>${project.code}</td>
+                                                <td><a href="${applicationHome}/project/${project.id}" target="_new">${project.code}</a></td>
                                                 <td>${project.PONumber}</td>
                                                 <td>${project.name}</td>
                                                 <td>${project.type}</td>
@@ -100,8 +100,18 @@
                                                 <td>${project.subTeamName}</td>
                                                 <td>${project.clientName}</td>
                                                 <td>${project.duration}</td>
-                                                <td>${project.actualDuration}</td>
-                                                <td>${project.status}</td>
+                                                <td>${project.actualDurationInHrs}</td>
+                                                
+                                                <c:set var="projectState" value="info"/>
+							                    <c:if test="${project.status == 'COMPLETED' }">
+							                   	  	<c:set var="projectState" value="success"/>
+							                    </c:if>
+							                    <c:if test="${project.projectMissedTimeLine == true }">
+							                  		<c:set var="projectState" value="danger"/>
+							                    </c:if>
+				                              <td> <span class="label label-${projectState}">${project.status}</span></td>
+                                            
+                                            
                                             </tr>
                                            </c:forEach>
                                         </tbody>

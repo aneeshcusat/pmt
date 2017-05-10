@@ -96,7 +96,7 @@
                     none;</c:if>
                     ">
                         <span class="fa fa-cloud"></span>
-                        Drag your task here to start it tracking time
+                        Drag your task here to start tracking time
                     </div>
                     
                     
@@ -105,6 +105,10 @@
             <div class="col-md-4">
                 <h3>Completed</h3>
                 <div class="tasks" id="tasks_completed">
+                <div class="task-drop">
+                        <span class="fa fa-cloud"></span>
+                        Drag your task here to finish it
+                 </div>  
                   <c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['COMPLETED']}">
 			        <c:if test='${tasks.status == "COMPLETED"}'>
@@ -118,10 +122,7 @@
 			        </c:if>
 			        </c:forEach>
 			        </c:if>
-                    <div class="task-drop">
-                        <span class="fa fa-cloud"></span>
-                        Drag your task here to finish it
-                    </div>  
+                    
                 </div>
             </div>
         </div>                        

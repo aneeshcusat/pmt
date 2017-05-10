@@ -541,8 +541,8 @@ function initializeCreateProjectForm(project){
 		var account = $(this).children(":selected").attr("account");
 		console.log("account" + account);
 		console.log("subTeam" + subTeam);
-		$('#accountId').prop("selectedIndex",$("#"+account).attr("index"));
-		$('#teamId').prop("selectedIndex",$("#"+subTeam).attr("index"));
+		$('#accountId').prop("selectedIndex",$("#"+account).prop("index"));
+		$('#teamId').prop("selectedIndex",$("#"+subTeam).prop("index"));
 		
 		$('#billable').parent().removeClass("active");
 		$('#nonbillable').parent().removeClass("active");
