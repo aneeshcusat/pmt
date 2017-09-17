@@ -1,5 +1,6 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>
+<c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Project Reporting</li>
@@ -84,6 +85,7 @@
                                                 <th>Client</th>
                                                 <th>Est Duration (Hrs)</th>
                                                 <th>Actual Duration (Hrs)</th>
+                                                <th>Assignee</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
@@ -101,7 +103,16 @@
                                                 <td>${project.clientName}</td>
                                                 <td>${project.duration}</td>
                                                 <td>${project.actualDurationInHrs}</td>
-                                                
+                                                <td>
+                                                <c:if test="${not empty project.projectTaskDeatils}">
+				                                 <c:forEach var="projectTaskDetails" items="${project.projectTaskDeatils}" varStatus="projectTaskDetailsIndex"> 
+				                                	 ${userDetailsMap[projectTaskDetails.assignee].firstName}
+				                                	 <c:if test="${projectTaskDetailsIndex.index < project.projectTaskDeatils.size() - 1}">
+				                                	 ,
+				                                	 </c:if>
+				                                 </c:forEach>
+				                                 </c:if>
+                                                </td>
                                                 <c:set var="projectState" value="info"/>
 							                    <c:if test="${project.status == 'COMPLETED' }">
 							                   	  	<c:set var="projectState" value="success"/>

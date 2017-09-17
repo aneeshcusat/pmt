@@ -709,7 +709,7 @@ var increaseTotalHours = function(userId){
 	$("#"+userId+"-totalHours").html(""+totalHours);
 	$("#"+userId+"-availabeHours").html(""+availableHours);
 	
-	if (availableHours <= 0){
+	if (availableHours < 0){
 		$("#"+userId+"-availabeHours").css("color", "red");
 		$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 	} else {

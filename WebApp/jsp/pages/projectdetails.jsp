@@ -714,6 +714,7 @@ var fillAssignTabledBasedOnDate =function(id){
 var markTableFields = function(userId, startTimeHour, duration, color, helper, reset){
 	
 	for (var index = 0; index < duration; index++) {
+		console.log("duration :" + duration);
 		if(startTimeHour ==  breakTime){
 			startTimeHour++;
 		}
@@ -1034,7 +1035,7 @@ var increaseTotalHours = function(userId){
 	$("#"+userId+"-totalHours").html(""+totalHours);
 	$("#"+userId+"-availabeHours").html(""+availableHours);
 	
-	if (availableHours <= 0){
+	if (availableHours < 0){
 		$("#"+userId+"-availabeHours").css("color", "red");
 		$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 	} else {
