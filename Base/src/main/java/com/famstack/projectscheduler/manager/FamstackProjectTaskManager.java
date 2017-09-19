@@ -285,9 +285,11 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                             famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
                         TaskDetails taskDetails = mapTask(taskItem);
                         taskDetails.setTaskActivityDetails(taskActivityDetails);
-
-                        userTaskActivityItemMap.get(taskItem.getStatus().value()).add(taskDetails);
-
+                        if (taskItem.getStatus() == TaskStatus.ASSIGNED
+                            || taskItem.getStatus() == TaskStatus.INPROGRESS
+                            || taskItem.getStatus() == TaskStatus.COMPLETED) {
+                            userTaskActivityItemMap.get(taskItem.getStatus().value()).add(taskDetails);
+                        }
                         if (taskItem.getStatus() == TaskStatus.ASSIGNED) {
                             checkTaskIsDisabled(taskItem, taskDetails);
                         }
