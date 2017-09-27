@@ -112,16 +112,17 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         famstackUserActivityManager.deleteAllUserTaskActivities(taskDetails.getTaskId());
 
         if (taskDetails.getAssignee() > 0) {
-            famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate,
-                taskDetails.getTaskId(), taskDetails.getName(), taskDetails.getDuration(), UserTaskType.PROJECT,
-                projectType);
+            famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate, taskDetails
+                .getTaskId(), taskDetails.getName(), taskDetails.getDuration(), taskDetails.getReviewTask()
+                ? UserTaskType.PROJECT_REVIEW : UserTaskType.PROJECT, projectType);
         }
 
         logDebug("helpers :" + taskDetails.getHelper());
         if (taskDetails.getHelper() != null && taskDetails.getHelper().length > 0) {
             for (int helperId : taskDetails.getHelper()) {
                 famstackUserActivityManager.createUserActivityItem(helperId, startDate, taskDetails.getTaskId(),
-                    taskDetails.getName(), taskDetails.getDuration(), UserTaskType.PROJECT_HELPER, projectType);
+                    taskDetails.getName(), taskDetails.getDuration(), taskDetails.getReviewTask()
+                        ? UserTaskType.PROJECT_HELPER_REVIEW : UserTaskType.PROJECT_HELPER, projectType);
             }
         }
     }

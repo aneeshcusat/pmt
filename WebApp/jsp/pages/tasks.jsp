@@ -12,6 +12,16 @@
 	#taskStartModal  .modal-dialog {
 		width: 75%;
 	}
+	
+	.taskLabel {
+		float: right; 
+		border: 1px solid blue; 
+		width: 30px; 
+		height: 28px; 
+		text-align: center; 
+		font-weight: bold; 
+		font-size: 20px;color: wheat; 
+	}
  </style>
  <script>
  var hour = 0;
@@ -46,11 +56,22 @@
 					<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['ASSIGNED']}" varStatus="taskIndex">
 			        <div class='task-item task-danger 
-			          <c:if test="${taskIndex.index == 0 && empty modelViewMap.projectTaskDetailsData['INPROGRESS'] && tasks.assignee == currentUser.id && not tasks.disableTask}">
+			          <c:if test="${taskIndex.index == 0 && empty modelViewMap.projectTaskDetailsData['INPROGRESS'] && tasks.assignee == currentUser.id}">
 			        	task-primary
 			         </c:if>
 			        '>                                    
-                        <div class="task-text">${tasks.name}</div>
+                        <div class="task-text">${tasks.name}
+                        
+                        <span style="background-color: blue " class="taskLabel">
+                        <c:if test="${tasks.reviewTask}">
+                        R
+                        </c:if>
+                        <c:if test="${!tasks.reviewTask}">
+                        P
+                        </c:if>
+                        </span>
+                        
+                        </div>
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}">Show project</a></div>
                         <div class="task-footer">
                             <div class="pull-right"><span class="fa fa-clock-o"></span> ${tasks.duration} Hours</div>     
@@ -72,7 +93,17 @@
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['INPROGRESS']}">
 			        <c:if test='${tasks.status == "INPROGRESS"}'>
 			        <div class="task-item task-primary">                                    
-                        <div class="task-text">${tasks.name}</div>
+                        <div class="task-text">${tasks.name}
+                        <span style="background-color: blue " class="taskLabel">
+                        <c:if test="${tasks.reviewTask}">
+                        R
+                        </c:if>
+                        <c:if test="${!tasks.reviewTask}">
+                        P
+                        </c:if>
+                        </span>
+                        
+                        </div>
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}">Show project</a></div>
                         <div class="task-footer">
                             <script>

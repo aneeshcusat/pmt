@@ -1083,7 +1083,7 @@ var fillTableFromJson = function(){
 						$(cellId).css("background-color", "blue");
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
 					} else if (elem.userTaskType == "PROJECT_HELPER") {
-						$(cellId).css("background-color", "lightblue");
+						$(cellId).css("background-color", "blueviolet");
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
 					} else if (elem.userTaskType == "LEAVE") {
 						$(cellId).css("background-color", "gray");
@@ -1091,6 +1091,12 @@ var fillTableFromJson = function(){
 					} else if (elem.userTaskType == "OTHER") {
 						$(cellId).css("background-color", "lightyellow");
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">O</span>');
+					}else if (elem.userTaskType == "PROJECT_HELPER_REVIEW") {
+						$(cellId).css("background-color", "blueviolet");
+						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRH</span>');
+					}else if (elem.userTaskType == "PROJECT_REVIEW") {
+						$(cellId).css("background-color", "blue");
+						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PR</span>');
 					}
 				}
 				

@@ -274,7 +274,7 @@ public class TaskDetails
 
     public Boolean getReviewTask()
     {
-        return reviewTask == null ? false : true;
+        return reviewTask == null ? false : reviewTask;
     }
 
     public void setReviewTask(Boolean reviewTask)
