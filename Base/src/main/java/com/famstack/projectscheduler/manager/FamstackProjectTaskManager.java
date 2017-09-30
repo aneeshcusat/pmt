@@ -379,10 +379,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
                 logDebug("userProjectTasklist : " + userActivityItem.getUserTaskActivities());
 
-                if (!userActivityItem.getUserTaskActivities().isEmpty()) {
+                if (userActivityItem.getUserTaskActivities() != null) {
                     for (UserTaskActivityItem userTaskActivityItem : userActivityItem.getUserTaskActivities()) {
 
-                        if (userTaskActivityItem.getActualEndTime() != null) {
+                        if (userTaskActivityItem.getActualEndTime() == null) {
                             int taskId = userTaskActivityItem.getTaskId();
                             if (taskId == 0) {
                                 continue;
@@ -391,10 +391,6 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                             if (taskItem == null) {
                                 taskItem = getTaskItemById(taskId);
                                 taskItemMap.put(taskId, taskItem);
-                            }
-                            if (userTaskActivityItem.getActualEndTime() != null
-                                && taskItem.getStatus() != TaskStatus.COMPLETED) {
-                                continue;
                             }
 
                             if (taskItem.getStatus() != TaskStatus.CLOSED

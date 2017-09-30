@@ -341,7 +341,7 @@ h2
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
-     <li class="active">My Activities</li>
+     <li class="active">Task Activities</li>
  </ul>
  <!-- END BREADCRUMB -->  
 

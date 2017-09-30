@@ -116,7 +116,7 @@
         <div class="row ">
             <div class="col-md-12" style="background-color: #f5f5f5">
             <div class="col-md-1" style="background-color: #f5f5f5">
-            	<span style="vertical-align: middle;text-align: left;float:left; margin-top: 5px;font-weight: bold; font-size: 11px;line-height: 20px;">Task Filters :</span>
+            	<span style="vertical-align: middle;text-align: left;float:left; margin-top: 5px;font-weight: bold; font-size: 15px;line-height: 20px;">Task Filters :</span>
             </div>
             <div class="col-md-11" style="background-color: #f5f5f5">
 			<div class="list-group list-group-horizontal">
@@ -135,7 +135,7 @@
                 <div class="tasks" id="tasks">
                 	<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['BACKLOG']}" varStatus="taskIndex">
-			        <div class='task-item task-danger task-primary userId${tasks.taskActivityDetails.userId} task-item${tasks.taskId}'>                                    
+			        <div class='task-item task-danger task-primary userId${tasks.taskActivityDetails[0].userId} task-item${tasks.taskId}'>                                    
                         <div class="task-text col-md-12">
                         <div class="col-md-10">
                         <span class="taskName clearfix"><b>${tasks.name}</b></span>
@@ -159,18 +159,18 @@
 						</div>
 						<div class="task-footer">
                             <div class="pull-right"><span class="fa fa-clock-o"></span><span class="durationDiv ${tasks.taskId}">${tasks.duration} Hours</span>
-                            	<span class="${tasks.taskId} taskRemainingDiv" style="display: none"><span class="taskHour">${tasks.taskActivityDetails.timeTakenToCompleteHour}</span>:<span class="taskMinutes">${tasks.taskActivityDetails.timeTakenToCompleteMinute}</span>:<span class="taskSeconds">${tasks.taskActivityDetails.timeTakenToCompleteSecond}</span></span>
+                            	<span class="${tasks.taskId} taskRemainingDiv" style="display: none"><span class="taskHour">${tasks.taskActivityDetails[0].timeTakenToCompleteHour}</span>:<span class="taskMinutes">${tasks.taskActivityDetails[0].timeTakenToCompleteMinute}</span>:<span class="taskSeconds">${tasks.taskActivityDetails[0].timeTakenToCompleteSecond}</span></span>
                             </div>     
                             <div class="pull-left"><span class="startDateTimeDiv">Est Start Time : ${tasks.startTime}</span></div> 
                         </div>    
                          <input type="hidden" class="estStartTime" value="${tasks.startTime}"/>                                
-						<input type="hidden" class="startTime" value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails.actualStartTime}"/>'/>
+						<input type="hidden" class="startTime" value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails[0].actualStartTime}"/>'/>
                         <input type="hidden" class="duration" value="${tasks.duration}"/>
-                        <input type="hidden" class="assignee" value="${tasks.taskActivityDetails.userId}"/> 
+                        <input type="hidden" class="assignee" value="${tasks.taskActivityDetails[0].userId}"/> 
                          <input type="hidden" class="taskStatus" value="${tasks.status}"/>         
                         <input type="hidden" class="taskId" value="${tasks.taskId}"/>  
                         <input type="hidden" class="projectId" value="${tasks.projectId}"/>       
-                        <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>  
+                        <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails[0].taskActivityId}"/>  
                     </div>
                     </c:forEach>
                     </c:if>
@@ -181,7 +181,7 @@
                 <div class="tasks" id="tasks">
 			       <c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['ASSIGNED']}" varStatus="taskIndex">
-			        <div class='task-item task-info task-primary userId${tasks.taskActivityDetails.userId} task-item${tasks.taskId}'>                                    
+			        <div class='task-item task-info task-primary userId${tasks.taskActivityDetails[0].userId} task-item${tasks.taskId}'>                                    
                         <div class="task-text col-md-12">
                         <div class="col-md-10">
                         <span class="taskName clearfix"><b>${tasks.name}</b></span>
@@ -205,17 +205,17 @@
 						</div>
                         <div class="task-footer">
                             <div class="pull-right"><span class="fa fa-clock-o"></span><span class="durationDiv ${tasks.taskId}"> ${tasks.duration} Hours</span>
-                              <span class="${tasks.taskId} taskRemainingDiv" style="display: none"><span class="taskHour">${tasks.taskActivityDetails.timeTakenToCompleteHour}</span>:<span class="taskMinutes">${tasks.taskActivityDetails.timeTakenToCompleteMinute}</span>:<span class="taskSeconds">${tasks.taskActivityDetails.timeTakenToCompleteSecond}</span></span>
+                              <span class="${tasks.taskId} taskRemainingDiv" style="display: none"><span class="taskHour">${tasks.taskActivityDetails[0].timeTakenToCompleteHour}</span>:<span class="taskMinutes">${tasks.taskActivityDetails[0].timeTakenToCompleteMinute}</span>:<span class="taskSeconds">${tasks.taskActivityDetails[0].timeTakenToCompleteSecond}</span></span>
                             </div>     
                             <div class="pull-left"><span class="startDateTimeDiv">Est Start Time : ${tasks.startTime}</span></div> 
                          <input type="hidden" class="estStartTime" value="${tasks.startTime}"/>
                         <input type="hidden" class="startTime" value=""/>
                         <input type="hidden" class="duration" value="${tasks.duration}"/>     
-                        <input type="hidden" class="assignee" value="${tasks.taskActivityDetails.userId}"/>       
+                        <input type="hidden" class="assignee" value="${tasks.taskActivityDetails[0].userId}"/>       
 						<input type="hidden" class="projectId" value="${tasks.projectId}"/>    
 						 <input type="hidden" class="taskStatus" value="${tasks.status}"/>        
                         <input type="hidden" class="taskId" value="${tasks.taskId}"/>      
-                        <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>  
+                        <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails[0].taskActivityId}"/>  
                     </div>
                     </div>
                     </c:forEach>
@@ -227,7 +227,7 @@
                 <div class="tasks" id="tasks_progreess">
 			         <c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['INPROGRESS']}" varStatus="taskIndex">
-			        <div class='task-item task-warning task-primary userId${tasks.taskActivityDetails.userId} task-item${tasks.taskId}'>                                    
+			        <div class='task-item task-warning task-primary userId${tasks.taskActivityDetails[0].userId} task-item${tasks.taskId}'>                                    
                         <div class="task-text col-md-12">
                         <div class="col-md-10">
                         <span class="taskName clearfix"><b>${tasks.name}</b></span>
@@ -251,18 +251,18 @@
 						</div>
 						<div class="task-footer">
                             <div class="pull-right"><span class="fa fa-pause"></span><span class="durationDiv ${tasks.taskId}"></span>
-                            <span class="${tasks.taskId} taskRemainingDiv" style="display: none"><span class="taskHour">${tasks.taskActivityDetails.timeTakenToCompleteHour}</span>:<span class="taskMinutes">${tasks.taskActivityDetails.timeTakenToCompleteMinute}</span>:<span class="taskSeconds">${tasks.taskActivityDetails.timeTakenToCompleteSecond}</span></span>
+                            <span class="${tasks.taskId} taskRemainingDiv" style="display: none"><span class="taskHour">${tasks.taskActivityDetails[0].timeTakenToCompleteHour}</span>:<span class="taskMinutes">${tasks.taskActivityDetails[0].timeTakenToCompleteMinute}</span>:<span class="taskSeconds">${tasks.taskActivityDetails[0].timeTakenToCompleteSecond}</span></span>
                             </div>     
-                            <div class="pull-left"><span class="startDateTimeDiv">Started at : <fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails.actualStartTime}" /></span></div> 
+                            <div class="pull-left"><span class="startDateTimeDiv">Started at : <fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails[0].actualStartTime}" /></span></div> 
                         </div>   
                          <input type="hidden" class="estStartTime" value="${tasks.startTime}"/>
-                        <input type="hidden" class="startTime" value="<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails.actualStartTime}" />"/>
+                        <input type="hidden" class="startTime" value="<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails[0].actualStartTime}" />"/>
                         <input type="hidden" class="duration" value="${tasks.duration}"/> 
-                        <input type="hidden" class="assignee" value="${tasks.taskActivityDetails.userId}"/>        
+                        <input type="hidden" class="assignee" value="${tasks.taskActivityDetails[0].userId}"/>        
                         <input type="hidden" class="taskId" value="${tasks.taskId}"/>
                          <input type="hidden" class="taskStatus" value="${tasks.status}"/>     
                         <input type="hidden" class="projectId" value="${tasks.projectId}"/>       
-                        <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/> 
+                        <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails[0].taskActivityId}"/> 
                         <script>
                         taskTimerMap["${tasks.taskId}"] = window.setInterval(function(){
                 			getRemaining("${tasks.taskId}");
@@ -286,7 +286,7 @@
                  </div>  
 			       <c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 			        <c:forEach var="tasks" items="${modelViewMap.projectTaskDetailsData['COMPLETED']}" varStatus="taskIndex">
-			        <div class='task-item task-complete task-success userId${tasks.taskActivityDetails.userId}'>                                    
+			        <div class='task-item task-complete task-success userId${tasks.taskActivityDetails[0].userId}'>                                    
                         <div class="task-text col-md-12">
                         <div class="col-md-10">
                         <span class="taskName clearfix"><b>${tasks.name}</b></span>
@@ -308,7 +308,7 @@
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}" style="float: left">Show project</a>
 						</div>
 						<div class="task-footer">
-                           <div class="pull-left"><span class="fa fa-clock-o"></span>${tasks.taskActivityDetails.timeTakenToComplete}</div> 
+                           <div class="pull-left"><span class="fa fa-clock-o"></span>${tasks.taskActivityDetails[0].timeTakenToComplete}</div> 
                         </div>                                    
                     </div>
                     </c:forEach>
