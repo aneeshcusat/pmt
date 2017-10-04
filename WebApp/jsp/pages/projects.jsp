@@ -550,9 +550,11 @@ function initializeCreateProjectForm(project){
 		if ($(this).children(":selected").attr("accounttype") == 'BILLABLE') {
 			$('#billable').attr("checked", true);
 			$('#billable').parent().addClass("active");
+			$("#projectType").val("BILLABLE");
 		} else {
 			$('#nonbillable').attr("checked", true);
 			$('#nonbillable').parent().addClass("active");
+			$("#projectType").val("NON_BILLABLE");
 		}
 		
 		$('#accountId').selectpicker('refresh');
