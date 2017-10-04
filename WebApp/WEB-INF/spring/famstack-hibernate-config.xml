@@ -17,6 +17,9 @@
         <property name="url" value="${hibernate.url}"/>
         <property name="username" value="${hibernate.username}"/>
         <property name="password" value="${hibernate.password}"/>
+        <property name="validationQuery" value="SELECT 1"/>
+		<property name="testOnBorrow" value="true"/>
+		<property name="testWhileIdle" value="true"/>
 	</bean>
 
 
