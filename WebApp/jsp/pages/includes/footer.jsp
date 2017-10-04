@@ -56,6 +56,7 @@ function userPingCheck(){
     		$(".userOnline"+elem.userId).removeClass("status-online");
     		$(".userOnline"+elem.userId).removeClass("status-away");
     		$(".userOnline"+elem.userId).removeClass("status-offline");
+    		$("#sortDivData"+elem.userId).attr("data-sort", elem.status);
     		if (elem.status == 0) {
     			$(".userOnline"+elem.userId).addClass("status-offline");
     		} else if (elem.status == 1) {
@@ -65,6 +66,7 @@ function userPingCheck(){
     		}
     		$("#availableAfter"+elem.userId).html(elem.userAvailableMsg);
     	});
+    	sortOnlineStatus();
     },function(error) {
     	console.log("ERROR: ", error);
     },false);
@@ -257,6 +259,15 @@ function timerIncrement() {
     	updateTaskNotification();
     }
     idleTime = idleTime + 1;
+}
+
+function sortOnlineStatus(){
+	$('.sortDiv').html($('.sortDiv .sortDivData').sort(function (a, b) {
+
+	      var contentA =parseInt( $(a).attr('data-sort'));
+	      var contentB =parseInt( $(b).attr('data-sort'));
+	      return (contentA > contentB) ? -1 : (contentA < contentB) ? 1 : 0;
+	   }));
 }
 
 </script>

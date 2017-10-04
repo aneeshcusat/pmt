@@ -292,10 +292,11 @@
                                     </ul>
                                 </div>
                         
-                        <div class="panel-body list-group list-group-contacts border-bottom push-down-10 pre-scrollable"  style="min-height: 467px">
+                        <div class="sortDiv panel-body list-group list-group-contacts border-bottom push-down-10 pre-scrollable"  style="min-height: 467px">
                         	<c:if test="${not empty userMap}">
              					<c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
              					 <c:if test="${user.role != 'SUPERADMIN'}">
+		                            <div class="sortDivData" id="sortDivData${user.id}" data-sort="${user.checkUserStatus}">
 		                            <a href="#" class="list-group-item">                                 
 		                                <div id="userOnline${user.id}" class='list-group-status userOnline${subscriber.id} 
 		                                <c:if test="${user.checkUserStatus == 5}">
@@ -312,6 +313,7 @@
 		                                <span class="contacts-title">${user.firstName}</span>
 		                                <p id="availableAfter${user.id}"></p>
 		                            </a> 
+		                            </div>
 		                            </c:if>    
                             	</c:forEach>
                             </c:if>                           
@@ -554,5 +556,5 @@ $(function(){
     
 });
 
-
+sortOnlineStatus();
 </script>

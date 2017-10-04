@@ -149,8 +149,9 @@ list .nav-header {
               		 </div>
               		 <div class="col-md-3 margin10">
               		  <h4>Group Members</h4>
-              		 	<div class="list-group list-group-contacts border-bottom margin10" style="box-shadow: -7px -4px 10px #888888">
+              		 	<div class="sortDiv list-group list-group-contacts border-bottom margin10" style="box-shadow: -7px -4px 10px #888888">
                             <c:forEach var="subscriber" items="${group.subscribers}">
+                            	 <div class="sortDivData" id="sortDivData${subscriber.id}" data-sort="${subscriber.checkUserStatus}">
                                  <a href="#" class="list-group-item">
                                       <div id="userOnline${subscriber.id}" class='list-group-status userOnline${subscriber.id} 
 		                                <c:if test="${subscriber.checkUserStatus == 5}">
@@ -167,6 +168,7 @@ list .nav-header {
                                     <span class="contacts-title">${subscriber.firstName}&nbsp; ${subscriber.lastName}</span>
                                     <p>${subscriber.designation}</p>
                                 </a>
+                                </div>
                             </c:forEach>                           
                         </div>
               		 </div>
