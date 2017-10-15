@@ -187,51 +187,56 @@ public class FamstackProjectManager extends BaseFamstackManager
         return famstackProjectTaskManager.getUserTaskActivityJson();
     }
 
-    public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem)
+    public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem) {
+        return mapProjectItemToProjectDetails( projectItem, true);
+    }
+    
+    public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem, boolean isFullLoad)
     {
-
         if (projectItem != null) {
             ProjectDetails projectDetails = new ProjectDetails();
-
-            projectDetails.setCategory(projectItem.getCategory());
-            projectDetails.setClientId(projectItem.getClientId());
-            projectDetails.setAccountId(projectItem.getAccountId());
-            projectDetails.setTeamId(projectItem.getTeamId());
-            projectDetails.setQuantity(projectItem.getQuantity());
             projectDetails.setCode(projectItem.getCode());
-            projectDetails.setDescription(projectItem.getDescription());
-            projectDetails.setDuration(projectItem.getDuration());
+            projectDetails.setId(projectItem.getProjectId());
             projectDetails.setName(projectItem.getName());
-            projectDetails.setPriority(projectItem.getPriority());
-            projectDetails.setComplexity(projectItem.getComplexity());
-            projectDetails.setPONumber(projectItem.getPONumber());
+            projectDetails.setProjectTaskDeatils(famstackProjectTaskManager.mapProjectTaskDetails(
+                projectItem.getTaskItems(), false));
+            projectDetails.setDuration(projectItem.getDuration());
+            int unAssignedDuration = getUnAssignedDuration(projectDetails);
+            projectDetails.setUnAssignedDuration(unAssignedDuration);
             String startDateString = DateUtils.format(projectItem.getStartTime(), DateUtils.DATE_TIME_FORMAT);
             String completionDateString = DateUtils.format(projectItem.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
             projectDetails.setStartTime(startDateString);
             projectDetails.setCompletionTime(completionDateString);
-
-            projectDetails.setTags(projectItem.getTags());
-            projectDetails.setType(projectItem.getType());
-            if (projectItem.getReporter() != null) {
-                projectDetails.setReporterName(
-                    projectItem.getReporter().getFirstName() + " " + projectItem.getReporter().getLastName());
-            }
-            projectDetails.setEmployeeDetails(famstackUserProfileManager.mapEmployeeDetails(projectItem.getReporter()));
-            projectDetails.setWatchers(projectItem.getWatchers());
-            projectDetails.setCreatedDate(projectItem.getCreatedDate());
-            projectDetails.setLastModifiedDate(projectItem.getLastModifiedDate());
-            projectDetails.setId(projectItem.getProjectId());
-            projectDetails.setProjectComments(
-                famstackProjectCommentManager.mapProjectCommentDetails(projectItem.getProjectComments()));
-            projectDetails.setProjectActivityItem(
-                famstackProjectActivityManager.mapProjectActivityDetails(projectItem.getProjectActivityItem()));
-            projectDetails
-                .setProjectTaskDeatils(famstackProjectTaskManager.mapProjectTaskDetails(projectItem.getTaskItems()));
-
-            int unAssignedDuration = getUnAssignedDuration(projectDetails);
-            projectDetails.setUnAssignedDuration(unAssignedDuration);
             projectDetails.setStatus(projectItem.getStatus());
 
+            if (isFullLoad) {
+                projectDetails.setCategory(projectItem.getCategory());
+                projectDetails.setClientId(projectItem.getClientId());
+                projectDetails.setAccountId(projectItem.getAccountId());
+                projectDetails.setTeamId(projectItem.getTeamId());
+                projectDetails.setQuantity(projectItem.getQuantity());
+                projectDetails.setDescription(projectItem.getDescription());
+                projectDetails.setPriority(projectItem.getPriority());
+                projectDetails.setComplexity(projectItem.getComplexity());
+                projectDetails.setPONumber(projectItem.getPONumber());
+
+                projectDetails.setTags(projectItem.getTags());
+                projectDetails.setType(projectItem.getType());
+                if (projectItem.getReporter() != null) {
+                    projectDetails.setReporterName(projectItem.getReporter().getFirstName() + " "
+                        + projectItem.getReporter().getLastName());
+                }
+                projectDetails.setEmployeeDetails(famstackUserProfileManager.mapEmployeeDetails(projectItem
+                    .getReporter()));
+                projectDetails.setWatchers(projectItem.getWatchers());
+                projectDetails.setCreatedDate(projectItem.getCreatedDate());
+                projectDetails.setLastModifiedDate(projectItem.getLastModifiedDate());
+
+                projectDetails.setProjectComments(famstackProjectCommentManager.mapProjectCommentDetails(projectItem
+                    .getProjectComments()));
+                projectDetails.setProjectActivityItem(famstackProjectActivityManager
+                    .mapProjectActivityDetails(projectItem.getProjectActivityItem()));
+            }
             return projectDetails;
 
         }
@@ -249,7 +254,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         return unassignedCount;
     }
 
-    public List<ProjectDetails> getAllProjectDetailsList(Date startTime)
+    public List<ProjectDetails> getAllProjectDetailsList(Date startTime, boolean isFullLoad)
     {
         List<ProjectDetails> projectDetailsList = new ArrayList<>();
 
@@ -259,16 +264,16 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<?> projectItemList =
             famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getAllProjectItems"), dataMap);
 
-        getProjectsList(projectDetailsList, projectItemList);
+        getProjectsList(projectDetailsList, projectItemList, isFullLoad);
         return projectDetailsList;
     }
 
-    private void getProjectsList(List<ProjectDetails> projectDetailsList, List<?> projectItemList)
+    private void getProjectsList(List<ProjectDetails> projectDetailsList, List<?> projectItemList, boolean isFullLoad)
     {
         if (projectItemList != null) {
             for (Object projectItemObj : projectItemList) {
                 ProjectItem projectItem = (ProjectItem) projectItemObj;
-                ProjectDetails projectDetails = mapProjectItemToProjectDetails(projectItem);
+                ProjectDetails projectDetails = mapProjectItemToProjectDetails(projectItem, isFullLoad);
                 if (projectDetails != null) {
                     projectDetailsList.add(projectDetails);
                 }
@@ -286,7 +291,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
         List<?> projectItemList =
             famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getProjectItemsByStatus"), dataMap);
-        getProjectsList(projectDetailsList, projectItemList);
+        getProjectsList(projectDetailsList, projectItemList, false);
         return projectDetailsList;
     }
 
@@ -298,9 +303,10 @@ public class FamstackProjectManager extends BaseFamstackManager
         dataMap.put("completionDate", new Date());
         dataMap.put("startTime", startTime);
 
-        List<?> projectItemList = famstackDataAccessObjectManager
-            .executeQuery(HQLStrings.getString("getMissedTimeLineProjectItems"), dataMap);
-        getProjectsList(projectDetailsList, projectItemList);
+        List<?> projectItemList =
+            famstackDataAccessObjectManager
+                .executeQuery(HQLStrings.getString("getMissedTimeLineProjectItems"), dataMap);
+        getProjectsList(projectDetailsList, projectItemList, false);
 
         return projectDetailsList;
     }
@@ -314,7 +320,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
         List<?> projectItemList =
             famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getProjectItemsByCode"), dataMap);
-        getProjectsList(projectDetailsList, projectItemList);
+        getProjectsList(projectDetailsList, projectItemList, true);
         return projectDetailsList;
     }
 
@@ -338,16 +344,18 @@ public class FamstackProjectManager extends BaseFamstackManager
         dataMap.put("completionDate", new Date());
         dataMap.put("startTime", startTime);
 
-        long count = famstackDataAccessObjectManager
-            .getCount(HQLStrings.getString("getMissedTimeLineProjectItemCountByStatus"), dataMap);
+        long count =
+            famstackDataAccessObjectManager.getCount(HQLStrings.getString("getMissedTimeLineProjectItemCountByStatus"),
+                dataMap);
 
         return count;
     }
 
     public ProjectDetails getProjectDetails(int projectId)
     {
-        ProjectDetails projectDetails = mapProjectItemToProjectDetails(
-            (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class));
+        ProjectDetails projectDetails =
+            mapProjectItemToProjectDetails(
+                (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class));
         projectDetails.setDuplicateProjects(getAllProjectDetailsList(projectDetails.getCode(), projectDetails.getId()));
         return projectDetails;
     }
@@ -403,7 +411,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("projectItemList" + projectItemList);
         logDebug("startDate" + startDate);
         logDebug("endDate" + endDate);
-        getProjectsList(projectDetailsList, projectItemList);
+        getProjectsList(projectDetailsList, projectItemList, true);
         return projectDetailsList;
     }
 
@@ -427,8 +435,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<ProjectStatusDetails> projectStatusDetailsList = new ArrayList<>();
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startTime", startTime);
-        List<Object[]> result = getFamstackDataAccessObjectManager()
-            .executeSQLQuery(HQLStrings.getString("projectItemByTypeCountSQL"), dataMap);
+        List<Object[]> result =
+            getFamstackDataAccessObjectManager().executeSQLQuery(HQLStrings.getString("projectItemByTypeCountSQL"),
+                dataMap);
 
         for (int i = 0; i < result.size(); i++) {
             ProjectStatusDetails projectStatusDetails = new ProjectStatusDetails();
@@ -500,8 +509,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<ClientProjectDetails> clientProjectDetailsList = new ArrayList<>();
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startTime", startTime);
-        List<Object[]> result = getFamstackDataAccessObjectManager()
-            .executeSQLQuery(HQLStrings.getString("clientProjectStatusSQL"), dataMap);
+        List<Object[]> result =
+            getFamstackDataAccessObjectManager().executeSQLQuery(HQLStrings.getString("clientProjectStatusSQL"),
+                dataMap);
 
         for (int i = 0; i < result.size(); i++) {
             ClientProjectDetails clientProjectDetails = new ClientProjectDetails();
@@ -537,7 +547,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("projectItemList" + projectItemList);
         logDebug("startDate" + startDate);
         logDebug("startDate 2" + startDate2);
-        getProjectsList(projectDetailsList, projectItemList);
+        getProjectsList(projectDetailsList, projectItemList, true);
         return projectDetailsList;
     }
 
@@ -554,7 +564,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("projectItemList" + projectItemList);
         logDebug("endDate" + endDate);
         logDebug("endDate 2" + endDate2);
-        getProjectsList(projectDetailsList, projectItemList);
+        getProjectsList(projectDetailsList, projectItemList, true);
         return projectDetailsList;
     }
 }

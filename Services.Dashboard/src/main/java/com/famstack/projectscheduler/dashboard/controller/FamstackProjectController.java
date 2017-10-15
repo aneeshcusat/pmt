@@ -47,7 +47,7 @@ public class FamstackProjectController extends BaseFamstackService
     @RequestMapping(value = "/projects", method = RequestMethod.GET)
     public ModelAndView listProjects()
     {
-        List<ProjectDetails> projectData = famstackDashboardManager.getProjects();
+        List<ProjectDetails> projectData = famstackDashboardManager.getProjects(false);
         return getProjectPageModelView(projectData);
     }
 

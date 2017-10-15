@@ -440,19 +440,20 @@ public class ProjectDetails
 
     public int getActualDuration()
     {
-
         double actualDuration = 0;
         if (getStatus() == ProjectStatus.COMPLETED || getStatus() == ProjectStatus.CLOSED) {
             Set<TaskDetails> taskDetailsList = getProjectTaskDeatils();
-            if (!taskDetailsList.isEmpty()) {
+            if (taskDetailsList != null && !taskDetailsList.isEmpty()) {
                 for (TaskDetails taskDetails : taskDetailsList) {
 
                     TaskActivityDetails taskActivityDetails = taskDetails.getTaskActivityDetails();
-                    Date completionTime = taskActivityDetails.getActualEndTime();
-                    Date startTime = taskActivityDetails.getActualStartTime();
+                    if (taskActivityDetails != null) {
+                        Date completionTime = taskActivityDetails.getActualEndTime();
+                        Date startTime = taskActivityDetails.getActualStartTime();
 
-                    if (completionTime != null && startTime != null) {
-                        actualDuration += completionTime.getTime() - startTime.getTime();
+                        if (completionTime != null && startTime != null) {
+                            actualDuration += completionTime.getTime() - startTime.getTime();
+                        }
                     }
                 }
             }

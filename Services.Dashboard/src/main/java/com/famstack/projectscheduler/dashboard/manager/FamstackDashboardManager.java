@@ -145,16 +145,16 @@ public class FamstackDashboardManager extends BaseFamstackService
     public List<ProjectDetails> getProjectsDataList()
     {
         Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
-        List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime);
+        List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime, true);
         return projectDetailsList;
     }
 
-    public List<ProjectDetails> getProjects()
+    public List<ProjectDetails> getProjects(boolean isFullLoad)
     {
         Date startTime =
             DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), getFamstackUserSessionConfiguration()
                 .getProjectViewLimit());
-        List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime);
+        List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime, isFullLoad);
         return projectDetailsList;
     }
 

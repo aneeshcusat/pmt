@@ -227,12 +227,13 @@ function reloadTime() {
 	if (!inProgress) {
 		return;
 	}
-	second = second-1;
-	if (second ==0){
+	if (second <= 0){
 		second =59;
 		minutes-=1;
 	}
-	if (minutes ==0){
+	second = second-1;
+	
+	if (minutes <=0){
 		minutes =59;
 		hour-=1;
 	}

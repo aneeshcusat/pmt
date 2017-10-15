@@ -175,10 +175,15 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     public Set<TaskDetails> mapProjectTaskDetails(Set<TaskItem> taskItems)
     {
+        return mapProjectTaskDetails(taskItems, true);
+    }
+
+    public Set<TaskDetails> mapProjectTaskDetails(Set<TaskItem> taskItems, boolean isFullLoad)
+    {
         Set<TaskDetails> taskDetails = new HashSet<TaskDetails>();
         if (taskItems != null) {
             for (TaskItem taskItem : taskItems) {
-                TaskDetails taskDetail = mapTask(taskItem);
+                TaskDetails taskDetail = mapTask(taskItem, isFullLoad);
                 taskDetails.add(taskDetail);
             }
         }
@@ -188,33 +193,40 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     public TaskDetails mapTask(TaskItem taskItem)
     {
+        return mapTask(taskItem, true);
+    }
+
+    public TaskDetails mapTask(TaskItem taskItem, boolean isFullLoad)
+    {
 
         if (taskItem != null) {
             TaskDetails taskDetails = new TaskDetails();
-
-            taskDetails.setDescription(taskItem.getDescription());
-            taskDetails.setDuration(taskItem.getDuration());
+            taskDetails.setAssignee(taskItem.getAssignee());
+            taskDetails.setTaskId(taskItem.getTaskId());
             taskDetails.setName(taskItem.getName());
-            taskDetails.setReviewTask(taskItem.getReviewTask());
-            taskDetails.setPriority(taskItem.getPriority());
+            taskDetails.setDuration(taskItem.getDuration());
             String startDateString = DateUtils.format(taskItem.getStartTime(), DateUtils.DATE_TIME_FORMAT);
             String completionDateString = DateUtils.format(taskItem.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
             taskDetails.setStartTime(startDateString);
             taskDetails.setCompletionTime(completionDateString);
-
             taskDetails.setStatus(taskItem.getStatus());
-            if (taskItem.getReporter() != null) {
-                taskDetails.setReporterName(taskItem.getReporter().getFirstName() + " "
-                    + taskItem.getReporter().getLastName());
+
+            if (isFullLoad) {
+                taskDetails.setDescription(taskItem.getDescription());
+                taskDetails.setReviewTask(taskItem.getReviewTask());
+                taskDetails.setPriority(taskItem.getPriority());
+
+                if (taskItem.getReporter() != null) {
+                    taskDetails.setReporterName(taskItem.getReporter().getFirstName() + " "
+                        + taskItem.getReporter().getLastName());
+                }
+                taskDetails.setCreatedDate(taskItem.getCreatedDate());
+                taskDetails.setLastModifiedDate(taskItem.getLastModifiedDate());
+                taskDetails.setProjectId(taskItem.getProjectItem().getProjectId());
+                taskDetails.setHelpersList(taskItem.getHelpers());
+                taskDetails.setTaskActivityDetails(famstackUserActivityManager
+                    .getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
             }
-            taskDetails.setCreatedDate(taskItem.getCreatedDate());
-            taskDetails.setLastModifiedDate(taskItem.getLastModifiedDate());
-            taskDetails.setTaskId(taskItem.getTaskId());
-            taskDetails.setProjectId(taskItem.getProjectItem().getProjectId());
-            taskDetails.setAssignee(taskItem.getAssignee());
-            taskDetails.setHelpersList(taskItem.getHelpers());
-            taskDetails.setTaskActivityDetails(famstackUserActivityManager.getUserTaskActivityDetailsByTaskId(taskItem
-                .getTaskId()));
             return taskDetails;
 
         }
