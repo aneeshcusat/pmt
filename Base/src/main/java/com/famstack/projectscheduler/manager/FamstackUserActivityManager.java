@@ -275,6 +275,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         taskActivityDetails.setInprogressComment((userTaskActivityItem.getInprogressComment()));
         taskActivityDetails.setCompletionComment(userTaskActivityItem.getCompletionComment());
         taskActivityDetails.setActualStartTime(userTaskActivityItem.getActualStartTime());
+        taskActivityDetails.setRecordedStartTime(userTaskActivityItem.getRecordedStartTime());
+        taskActivityDetails.setRecordedEndTime(userTaskActivityItem.getRecordedEndTime());
         return taskActivityDetails;
     }
 
@@ -307,18 +309,24 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return null;
     }
 
-    public void setProjectTaskActivityActualTime(int taskId, Date date, String comment, TaskStatus taskStatus)
+    public void setProjectTaskActivityActualTime(int taskId, Date date, String comment, TaskStatus taskStatus,
+        Date adjustTime)
     {
         List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
 
+        if (adjustTime == null) {
+            adjustTime = date;
+        }
         for (Object userTaskActivityItemObj : userTaskActivityItems) {
             UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
             if (taskStatus == TaskStatus.INPROGRESS) {
                 userTaskActivityItem.setInprogressComment(comment);
-                userTaskActivityItem.setActualStartTime(new Timestamp(date.getTime()));
+                userTaskActivityItem.setActualStartTime(new Timestamp(adjustTime.getTime()));
+                userTaskActivityItem.setRecordedStartTime(new Timestamp(date.getTime()));
             } else if (taskStatus == TaskStatus.COMPLETED) {
                 userTaskActivityItem.setCompletionComment(comment);
-                userTaskActivityItem.setActualEndTime(new Timestamp(date.getTime()));
+                userTaskActivityItem.setActualEndTime(new Timestamp(adjustTime.getTime()));
+                userTaskActivityItem.setRecordedEndTime(new Timestamp(date.getTime()));
             }
 
             getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);

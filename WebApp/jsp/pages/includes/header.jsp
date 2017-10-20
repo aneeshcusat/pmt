@@ -32,6 +32,7 @@
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/jquery.datetimerangepicker.min.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/taginput/mab-jquery-taginput.css"/>
          <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/waitme/waitMe.min.css"/>
+         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/bootstrap-datetimepicker.css"/>
         <!-- EOF CSS INCLUDE -->                                    
     </head>
     <body>

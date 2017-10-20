@@ -330,14 +330,15 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
     }
 
-    public TaskItem updateTaskStatus(int taskId, TaskStatus taskStatus, String comments)
+    public TaskItem updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, Date adjustTime)
     {
         TaskItem taskItem = getTaskItemById(taskId);
 
         if (taskItem != null) {
             taskItem.setStatus(taskStatus);
 
-            famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments, taskStatus);
+            famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments, taskStatus,
+                adjustTime);
         }
 
         getFamstackDataAccessObjectManager().updateItem(taskItem);

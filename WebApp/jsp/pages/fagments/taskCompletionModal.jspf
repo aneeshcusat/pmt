@@ -8,17 +8,30 @@
 				<div class="form-group">
 				<label class="col-md-2 control-label">Comments : </label>
                      <div class="col-md-9">
-                            <textarea class="form-control" id="taskCompletionComments"></textarea> 
+                            <textarea class="form-control" id="taskCompletionComments" style="height: 100px"></textarea> 
                          <span class="help-block">required description</span>
                      </div>
 				</div>
 		
 			</div>
 			<div class="col-md-5">
-				<div class="form-group">
-				<label class="col-md-3 control-label text-left">Completed At</label>
-                     <div class="col-md-8" style="margin-top: 7px;">
-                     <b class="completedTime">0</b> Hrs
+				<div class="">
+				<label class="col-md-5 control-label text-left">Time Taken </label>
+                     <div class="col-md-7" style="margin-top: 7px;">
+                      	<b class="completedTimeHrs">0</b>
+                     </div>
+				</div>
+				<div class="">
+				<label class="col-md-5 control-label text-left">Recored Completion Time </label>
+                     <div class="col-md-7" style="margin-top: 7px;">
+                     <b class="completedTime">0</b>
+                     </div>
+				</div>
+				
+				<div class="">
+				<label class="col-md-5 control-label text-left">Adjust Completion Time </label>
+                     <div class="col-md-7" style="margin-top: 7px;">
+                     	 <input type='text' class="form-control" id='adjustCompletionTime' />
                      </div>
 				</div>
 			</div>

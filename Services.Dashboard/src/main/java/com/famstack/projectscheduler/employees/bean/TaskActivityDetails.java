@@ -4,182 +4,237 @@ import java.util.Date;
 
 import com.famstack.projectscheduler.contants.UserTaskType;
 
-public class TaskActivityDetails {
+public class TaskActivityDetails
+{
 
-	private int taskActivityId;
+    private int taskActivityId;
 
-	private int taskId;
+    private int taskId;
 
-	private int startHour;
+    private int startHour;
 
-	private int duration;
+    private int duration;
 
-	private String dateId;
+    private String dateId;
 
-	private String taskName;
+    private String taskName;
 
-	private int userId;
+    private int userId;
 
-	private Date startTime;
+    private Date startTime;
 
-	private Date actualStartTime;
+    private Date actualStartTime;
 
-	private Date actualEndTime;
+    private Date actualEndTime;
 
-	private UserTaskType userTaskType;
+    private Date recordedStartTime;
 
-	private String inprogressComment;
+    private Date recordedEndTime;
 
-	private String completionComment;
+    private UserTaskType userTaskType;
 
-	public int getTaskId() {
-		return taskId;
-	}
+    private String inprogressComment;
 
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
-	}
+    private String completionComment;
 
-	public int getDuration() {
-		return duration;
-	}
+    public int getTaskId()
+    {
+        return taskId;
+    }
 
-	public void setDuration(int duration) {
-		this.duration = duration;
-	}
+    public void setTaskId(int taskId)
+    {
+        this.taskId = taskId;
+    }
 
-	public String getDateId() {
-		return dateId;
-	}
+    public int getDuration()
+    {
+        return duration;
+    }
 
-	public void setDateId(String dateId) {
-		this.dateId = dateId;
-	}
+    public void setDuration(int duration)
+    {
+        this.duration = duration;
+    }
 
-	public String getTaskName() {
-		return taskName;
-	}
+    public String getDateId()
+    {
+        return dateId;
+    }
 
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
+    public void setDateId(String dateId)
+    {
+        this.dateId = dateId;
+    }
 
-	public UserTaskType getUserTaskType() {
-		return userTaskType;
-	}
+    public String getTaskName()
+    {
+        return taskName;
+    }
 
-	public void setUserTaskType(UserTaskType userTaskType) {
-		this.userTaskType = userTaskType;
-	}
+    public void setTaskName(String taskName)
+    {
+        this.taskName = taskName;
+    }
 
-	public int getStartHour() {
-		return startHour;
-	}
+    public UserTaskType getUserTaskType()
+    {
+        return userTaskType;
+    }
 
-	public void setStartHour(int startHour) {
-		this.startHour = startHour;
-	}
+    public void setUserTaskType(UserTaskType userTaskType)
+    {
+        this.userTaskType = userTaskType;
+    }
 
-	public int getUserId() {
-		return userId;
-	}
+    public int getStartHour()
+    {
+        return startHour;
+    }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+    public void setStartHour(int startHour)
+    {
+        this.startHour = startHour;
+    }
 
-	public Date getStartTime() {
-		return startTime;
-	}
+    public int getUserId()
+    {
+        return userId;
+    }
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
+    public void setUserId(int userId)
+    {
+        this.userId = userId;
+    }
 
-	public int getTaskActivityId() {
-		return taskActivityId;
-	}
+    public Date getStartTime()
+    {
+        return startTime;
+    }
 
-	public void setTaskActivityId(int taskActivityId) {
-		this.taskActivityId = taskActivityId;
-	}
+    public void setStartTime(Date startTime)
+    {
+        this.startTime = startTime;
+    }
 
-	public Date getActualStartTime() {
-		return actualStartTime;
-	}
+    public int getTaskActivityId()
+    {
+        return taskActivityId;
+    }
 
-	public void setActualStartTime(Date actualStartTime) {
-		this.actualStartTime = actualStartTime;
-	}
+    public void setTaskActivityId(int taskActivityId)
+    {
+        this.taskActivityId = taskActivityId;
+    }
 
-	public Date getActualEndTime() {
-		return actualEndTime;
-	}
+    public Date getActualStartTime()
+    {
+        return actualStartTime;
+    }
 
-	public void setActualEndTime(Date actualEndTime) {
-		this.actualEndTime = actualEndTime;
-	}
+    public void setActualStartTime(Date actualStartTime)
+    {
+        this.actualStartTime = actualStartTime;
+    }
 
-	public long getTimeTakenToCompleteHour() {
-		long diffHours = duration;
-		if (actualStartTime != null) {
-			long diff = new Date().getTime() - actualStartTime.getTime();
-			diff = (duration * (60 * 60 * 1000)) - diff;
-			diffHours = diff / (60 * 60 * 1000);
-		}
+    public Date getActualEndTime()
+    {
+        return actualEndTime;
+    }
 
-		return diffHours;
-	}
+    public void setActualEndTime(Date actualEndTime)
+    {
+        this.actualEndTime = actualEndTime;
+    }
 
-	public long getTimeTakenToCompleteMinute() {
-		long diffMinutes = 0;
-		if (actualStartTime != null) {
-			long diff = new Date().getTime() - actualStartTime.getTime();
-			diff = (duration * (60 * 60 * 1000)) - diff;
-			diffMinutes = diff / (60 * 1000) % 60;
-		}
-		return diffMinutes;
-	}
+    public long getTimeTakenToCompleteHour()
+    {
+        long diffHours = duration;
+        if (actualStartTime != null) {
+            long diff = new Date().getTime() - actualStartTime.getTime();
+            diff = (duration * (60 * 60 * 1000)) - diff;
+            diffHours = diff / (60 * 60 * 1000);
+        }
 
-	public long getTimeTakenToCompleteSecond() {
+        return diffHours;
+    }
 
-		long diffSeconds = 0;
-		if (actualStartTime != null) {
-			long diff = new Date().getTime() - actualStartTime.getTime();
-			diff = (duration * (60 * 60 * 1000)) - diff;
-			diffSeconds = diff / 1000 % 60;
-		}
-		return diffSeconds;
-	}
+    public long getTimeTakenToCompleteMinute()
+    {
+        long diffMinutes = 0;
+        if (actualStartTime != null) {
+            long diff = new Date().getTime() - actualStartTime.getTime();
+            diff = (duration * (60 * 60 * 1000)) - diff;
+            diffMinutes = diff / (60 * 1000) % 60;
+        }
+        return diffMinutes;
+    }
 
-	public String getTimeTakenToComplete() {
-		long diffHours = duration;
-		long diffMinutes = 0;
-		long diffSeconds = 0;
-		if (actualStartTime != null && actualEndTime != null) {
-			long diff = actualEndTime.getTime() - actualStartTime.getTime();
-			diffHours = diff / (60 * 60 * 1000);
-			diffMinutes = diff / (60 * 1000) % 60;
-			diffSeconds = diff / 1000 % 60;
-		}
+    public long getTimeTakenToCompleteSecond()
+    {
 
-		return (diffHours + ":" + diffMinutes + ":" + diffSeconds);
-	}
+        long diffSeconds = 0;
+        if (actualStartTime != null) {
+            long diff = new Date().getTime() - actualStartTime.getTime();
+            diff = (duration * (60 * 60 * 1000)) - diff;
+            diffSeconds = diff / 1000 % 60;
+        }
+        return diffSeconds;
+    }
 
-	public String getInprogressComment() {
-		return inprogressComment;
-	}
+    public String getTimeTakenToComplete()
+    {
+        long diffHours = duration;
+        long diffMinutes = 0;
+        long diffSeconds = 0;
+        if (actualStartTime != null && actualEndTime != null) {
+            long diff = actualEndTime.getTime() - actualStartTime.getTime();
+            diffHours = diff / (60 * 60 * 1000);
+            diffMinutes = diff / (60 * 1000) % 60;
+            diffSeconds = diff / 1000 % 60;
+        }
 
-	public void setInprogressComment(String inprogressComment) {
-		this.inprogressComment = inprogressComment;
-	}
+        return (diffHours + ":" + diffMinutes + ":" + diffSeconds);
+    }
 
-	public String getCompletionComment() {
-		return completionComment;
-	}
+    public String getInprogressComment()
+    {
+        return inprogressComment;
+    }
 
-	public void setCompletionComment(String completionComment) {
-		this.completionComment = completionComment;
-	}
+    public void setInprogressComment(String inprogressComment)
+    {
+        this.inprogressComment = inprogressComment;
+    }
+
+    public String getCompletionComment()
+    {
+        return completionComment;
+    }
+
+    public void setCompletionComment(String completionComment)
+    {
+        this.completionComment = completionComment;
+    }
+
+    public Date getRecordedStartTime()
+    {
+        return recordedStartTime;
+    }
+
+    public void setRecordedStartTime(Date recordedStartTime)
+    {
+        this.recordedStartTime = recordedStartTime;
+    }
+
+    public Date getRecordedEndTime()
+    {
+        return recordedEndTime;
+    }
+
+    public void setRecordedEndTime(Date recordedEndTime)
+    {
+        this.recordedEndTime = recordedEndTime;
+    }
 
 }

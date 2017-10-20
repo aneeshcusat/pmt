@@ -28,79 +28,88 @@ import com.famstack.projectscheduler.employees.bean.TaskDetails;
 
 @Controller
 @SessionAttributes
-public class FamstackTaskController extends BaseFamstackService {
+public class FamstackTaskController extends BaseFamstackService
+{
 
-	@Resource
-	FamstackDashboardManager famstackDashboardManager;
+    @Resource
+    FamstackDashboardManager famstackDashboardManager;
 
-	@RequestMapping(value = "/taskAllocator", method = RequestMethod.GET)
-	public ModelAndView taskAllocator() {
-		List<ProjectDetails> unAssignedProjects = famstackDashboardManager.getProjectDetails(ProjectStatus.UNASSIGNED);
-		return new ModelAndView("taskAllocator", "command", new TaskDetails()).addObject("unAssignedProjects",
-				unAssignedProjects);
-	}
+    @RequestMapping(value = "/taskAllocator", method = RequestMethod.GET)
+    public ModelAndView taskAllocator()
+    {
+        List<ProjectDetails> unAssignedProjects = famstackDashboardManager.getProjectDetails(ProjectStatus.UNASSIGNED);
+        return new ModelAndView("taskAllocator", "command", new TaskDetails()).addObject("unAssignedProjects",
+            unAssignedProjects);
+    }
 
-	@RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
-	@ResponseBody
-	public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate) {
-		return famstackDashboardManager.getAjaxFullcalendar(startDate, endDate);
-	}
+    @RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
+    @ResponseBody
+    public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate)
+    {
+        return famstackDashboardManager.getAjaxFullcalendar(startDate, endDate);
+    }
 
-	@RequestMapping(value = "/createTask", method = RequestMethod.POST)
-	@ResponseBody
-	public String createTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
-			Model model) {
-		famstackDashboardManager.createTask(taskDetails);
-		return "{\"status\": true}";
-	}
+    @RequestMapping(value = "/createTask", method = RequestMethod.POST)
+    @ResponseBody
+    public String createTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result, Model model)
+    {
+        famstackDashboardManager.createTask(taskDetails);
+        return "{\"status\": true}";
+    }
 
-	@RequestMapping(value = "/updateTask", method = RequestMethod.POST)
-	@ResponseBody
-	public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
-			Model model) {
-		famstackDashboardManager.updateTask(taskDetails);
-		return "{\"status\": true}";
-	}
+    @RequestMapping(value = "/updateTask", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result, Model model)
+    {
+        famstackDashboardManager.updateTask(taskDetails);
+        return "{\"status\": true}";
+    }
 
-	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
-	public ModelAndView listTasks() {
-		UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
+    @RequestMapping(value = "/tasks", method = RequestMethod.GET)
+    public ModelAndView listTasks()
+    {
+        UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
 
-		Map<String, ArrayList<TaskDetails>> taskDetailsMap = famstackDashboardManager
-				.getProjectTasksDataList(currentUserItem.getId());
+        Map<String, ArrayList<TaskDetails>> taskDetailsMap =
+            famstackDashboardManager.getProjectTasksDataList(currentUserItem.getId());
 
-		Map<String, Object> modelViewMap = new HashMap<String, Object>();
-		modelViewMap.put("projectTaskDetailsData", taskDetailsMap);
-		return new ModelAndView("tasks", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
-	}
+        Map<String, Object> modelViewMap = new HashMap<String, Object>();
+        modelViewMap.put("projectTaskDetailsData", taskDetailsMap);
+        return new ModelAndView("tasks", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
+    }
 
-	@RequestMapping(value = "/listTaskListJson", method = RequestMethod.GET)
-	@ResponseBody
-	public String listTaskListJson() {
-		UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
+    @RequestMapping(value = "/listTaskListJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String listTaskListJson()
+    {
+        UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
 
-		return famstackDashboardManager.getProjectTasksDataListJson(currentUserItem.getId());
-	}
+        return famstackDashboardManager.getProjectTasksDataListJson(currentUserItem.getId());
+    }
 
-	@RequestMapping(value = "/updateTaskStatus", method = RequestMethod.POST)
-	@ResponseBody
-	public String updateTaskStatus(@RequestParam("taskId") int taskId,
-			@RequestParam("taskStatus") TaskStatus taskStatus, @RequestParam("comments") String comments) {
-		famstackDashboardManager.updateTaskStatus(taskId, taskStatus, comments);
-		return "{\"status\": true}";
-	}
+    @RequestMapping(value = "/updateTaskStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateTaskStatus(@RequestParam("taskId") int taskId,
+        @RequestParam("taskStatus") TaskStatus taskStatus, @RequestParam("comments") String comments,
+        @RequestParam("adjustTime") String adjustTime)
+    {
+        famstackDashboardManager.updateTaskStatus(taskId, taskStatus, comments, adjustTime);
+        return "{\"status\": true}";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, value = "/deletetask")
-	@ResponseBody
-	public String deleteTask(@RequestParam(value = "taskId") int taskId,
-			@RequestParam(value = "projectId") int projectId) {
-		famstackDashboardManager.deleteProjectTask(taskId, projectId);
-		return "{\"status\": true}";
-	}
+    @RequestMapping(method = RequestMethod.POST, value = "/deletetask")
+    @ResponseBody
+    public String deleteTask(@RequestParam(value = "taskId") int taskId,
+        @RequestParam(value = "projectId") int projectId)
+    {
+        famstackDashboardManager.deleteProjectTask(taskId, projectId);
+        return "{\"status\": true}";
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/userTaskActivityJson")
-	@ResponseBody
-	public String userTaskActivityJson() {
-		return famstackDashboardManager.getUserTaskActivityJson();
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/userTaskActivityJson")
+    @ResponseBody
+    public String userTaskActivityJson()
+    {
+        return famstackDashboardManager.getUserTaskActivityJson();
+    }
 }

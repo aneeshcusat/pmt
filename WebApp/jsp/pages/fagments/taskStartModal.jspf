@@ -4,21 +4,33 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-7">
 				<div class="form-group">
 				<label class="col-md-2 control-label">Comments : </label>
                      <div class="col-md-9">
-                            <textarea class="form-control" id="taskStartComments"></textarea> 
+                            <textarea class="form-control" id="taskStartComments"  style="height: 100px"></textarea> 
                          <span class="help-block">required description</span>
                      </div>
 				</div>
 		
 			</div>
-			<div class="col-md-4">
-				<div class="form-group">
-				<label class="col-md-2 control-label text-left">Duration</label>
-                     <div class="col-md-9" style="margin-top: 7px;">
+			<div class="col-md-5">
+				<div class="">
+				<label class="col-md-5 control-label text-left">Duration</label>
+                     <div class="col-md-7" style="margin-top: 7px;">
                      <b class="unassignedDuration">0</b> Hrs
+                     </div>
+				</div>
+				<div class="">
+				<label class="col-md-5 control-label text-left">Recorded Start Time </label>
+                     <div class="col-md-7" style="margin-top: 7px;">
+                     	 <b class="recordedStartTime">0</b>
+                     </div>
+				</div>
+				<div class="">
+				<label class="col-md-5 control-label text-left">Adjust Start Time </label>
+                     <div class="col-md-7" style="margin-top: 7px;">
+                     	 <input type='text' class="form-control" id='adjustStartTime' />
                      </div>
 				</div>
 			</div>

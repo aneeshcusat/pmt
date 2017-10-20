@@ -75,7 +75,7 @@
                         <div class="task-text"><a target="_new" href="${applicationHome}/project/${tasks.projectId}">Show project</a></div>
                         <div class="task-footer">
                             <div class="pull-right"><span class="fa fa-clock-o"></span> ${tasks.duration} Hours</div>     
-                            <div class="pull-left">Start Time : ${tasks.startTime}</div> 
+                            <div class="pull-left">Est Start Time : ${tasks.startTime}</div> 
                             <input type="hidden" class="duration" value="${tasks.duration}"/>        
                             <input type="hidden" class="taskId" value="${tasks.taskId}"/>      
                             <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>  
@@ -111,9 +111,10 @@
                             	minutes = ${tasks.taskActivityDetails.timeTakenToCompleteMinute};
                             	second = ${tasks.taskActivityDetails.timeTakenToCompleteSecond};
                             </script>
-                            <div class="pull-left">Start Time : ${tasks.taskActivityDetails.actualStartTime}</div> 
-                            <div class="pull-right"><span class="fa fa-pause"></span> Time remaining : <span id="remainingTime">2h 55min</span></div>
-                           
+                            
+                            <div class="pull-left">Started at : <fmt:formatDate pattern = "yyyy/MM/dd hh:mm" value = "${tasks.taskActivityDetails.actualStartTime}" /></div> 
+                            <div class="pull-right"><span class="fa fa-clock-o"></span> Remaining :<span id="remainingTime"></span></div>
+                            <input type="hidden" class="duration" value="${tasks.duration}"/>     
                             <input type="hidden" class="taskId" value="${tasks.taskId}"/>
                             <input type="hidden" class="projectId" value="${tasks.projectId}"/>       
                             <input type="hidden" class="taskActivityId" value="${tasks.taskActivityDetails.taskActivityId}"/>         
@@ -219,6 +220,7 @@
      
 <!-- END MODALS -->
 <%@include file="includes/footer.jsp" %>  
+<script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js"></script>
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js"></script>
 <script>
@@ -238,17 +240,29 @@ function reloadTime() {
 		hour-=1;
 	}
     $("#remainingTime").html(hour+":"+minutes+":"+second);
+    
+    var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
+	$(".completedTime").html(completedTime);
+	$(".recordedStartTime").html(completedTime);
+	try{
+	var duration = $(lastMovedItem.item).find("input.duration").val();
+	}catch(err){}
+	var durationInHrs = parseInt(duration);
+	var completedTimeInHours = durationInHrs - hour - 1;
+	var completedTimeInHoursMins = 60 - minutes;
+	$(".completedTimeHrs").html(completedTimeInHours +" Hrs "+completedTimeInHoursMins + " Mins");
 }
 window.setInterval(reloadTime, 1000);
 
 var taskStart = function(){
 	var comments =$("#taskStartComments").val();
+	var adjustStartTime =$("#adjustStartTime").val();
 	var taskId = $(lastMovedItem.item).find("input.taskId").val();
 	var duration = $(lastMovedItem.item).find("input.duration").val();
 	hour = parseInt(duration);
 	second =0;
 	minutes =0;
-	var dataString = {"taskId":taskId,"taskStatus": "INPROGRESS","comments":comments}
+	var dataString = {"taskId":taskId,"taskStatus": "INPROGRESS","comments":comments, "adjustTime":adjustStartTime}
 	updateTaskStatus(dataString, false);
 }
 
@@ -256,7 +270,13 @@ var taskStart = function(){
 var taskComplete = function(){
 	var comments =$("#taskCompletionComments").val();
 	var taskId = $(lastMovedItem.item).find("input.taskId").val();
-	var dataString = {"taskId":taskId,"taskStatus": "COMPLETED","comments":comments}
+	var adjustCompletionTime =$("#adjustCompletionTime").val();
+	var dataString = {"taskId":taskId,"taskStatus": "COMPLETED","comments":comments, "adjustTime":adjustCompletionTime}
+	/* var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
+	if (adjustCompletionTime != "") {
+		completedTime = adjustCompletionTime;
+	}
+	lastMovedItem.item.find(".task-footer").append('<div class="pull-right">completed Time '+completedTime+'</div>'); */
 	updateTaskStatus(dataString, true);
 }
 
@@ -272,9 +292,7 @@ var updateTaskStatus = function(dataString, isComplete){
         		$(".inprogressDropDown").hide();
         	} else {
         		inProgress = false;
-        		var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
         		lastMovedItem.item.addClass("task-complete").find(".task-footer > .pull-right").remove();
-        		lastMovedItem.item.find(".task-footer").append('<div class="pull-right">completed Time '+completedTime+'</div>');
         		$(".inprogressDropDown").show();
         	}
         	return true;
@@ -308,9 +326,7 @@ $(function(){
             	var projectId = $(lastMovedItem.item).find("input.projectId").val();
             	resetFileUploadUrl(projectId+"-completed");
             	$(".unassignedDuration").html($(lastMovedItem.item).find("input.duration").val());
-                if(this.id == "tasks_completed"){
-                	var completedTime = getTodayDate(new Date()) + " " + new Date().getHours()+":"+new Date().getMinutes();
-                	$(".completedTime").html(completedTime);
+            	 if(this.id == "tasks_completed"){
                 	$(".taskCompletionLink").click();
                 }
                 if(this.id == "tasks_progreess"){
@@ -348,4 +364,7 @@ var myDropZone = $("#my-dropzone").dropzone({
 function resetFileUploadUrl(location){
 	fileLocation = location;
 }
+
+$('#adjustCompletionTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+$('#adjustStartTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 </script>

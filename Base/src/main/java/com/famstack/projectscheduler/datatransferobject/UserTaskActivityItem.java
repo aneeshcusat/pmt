@@ -18,174 +18,229 @@ import javax.persistence.UniqueConstraint;
 import com.famstack.projectscheduler.contants.UserTaskType;
 
 @Entity
-@Table(name = "user_task_activity_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_tsk_act_id" }) })
-public class UserTaskActivityItem implements FamstackBaseItem {
+@Table(name = "user_task_activity_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_tsk_act_id"})})
+public class UserTaskActivityItem implements FamstackBaseItem
+{
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = 5388442861793363726L;
+    private static final long serialVersionUID = 5388442861793363726L;
 
-	@Id
-	@Column(name = "user_tsk_act_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
-	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-	private int id;
+    @Id
+    @Column(name = "user_tsk_act_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
+    @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
+    private int id;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "type")
-	private UserTaskType type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private UserTaskType type;
 
-	@Column(name = "task_id")
-	private int taskId;
+    @Column(name = "task_id")
+    private int taskId;
 
-	@Column(name = "task_name")
-	private String taskName;
+    @Column(name = "task_name")
+    private String taskName;
 
-	@Column(name = "duration")
-	private int duration;
+    @Column(name = "duration")
+    private int duration;
 
-	@Column(name = "start_hour")
-	private int startHour;
+    @Column(name = "start_hour")
+    private int startHour;
 
-	@Column(name = "created_date")
-	private Timestamp createdDate;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
 
-	@Column(name = "last_modified_date")
-	private Timestamp lastModifiedDate;
+    @Column(name = "last_modified_date")
+    private Timestamp lastModifiedDate;
 
-	@Column(name = "start_time")
-	private Timestamp startTime;
+    @Column(name = "start_time")
+    private Timestamp startTime;
 
-	@Column(name = "actual_start_time")
-	private Timestamp actualStartTime;
+    @Column(name = "actual_start_time")
+    private Timestamp actualStartTime;
 
-	@Column(name = "actual_end_time")
-	private Timestamp actualEndTime;
+    @Column(name = "actual_end_time")
+    private Timestamp actualEndTime;
 
-	@Column(name = "inprogress_comment")
-	private String inprogressComment;
+    @Column(name = "recorded_start_time")
+    private Timestamp recordedStartTime;
 
-	@Column(name = "completion_comment")
-	private String completionComment;
+    @Column(name = "recorded_end_time")
+    private Timestamp recordedEndTime;
 
-	@ManyToOne
-	@JoinColumn(name = "user_act_id")
-	private UserActivityItem userActivityItem;
+    @Column(name = "inprogress_comment")
+    private String inprogressComment;
 
-	public int getId() {
-		return id;
-	}
+    @Column(name = "completion_comment")
+    private String completionComment;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @ManyToOne
+    @JoinColumn(name = "user_act_id")
+    private UserActivityItem userActivityItem;
 
-	public UserTaskType getType() {
-		return type;
-	}
+    public int getId()
+    {
+        return id;
+    }
 
-	public void setType(UserTaskType type) {
-		this.type = type;
-	}
+    public void setId(int id)
+    {
+        this.id = id;
+    }
 
-	@Override
-	public Timestamp getCreatedDate() {
-		return createdDate;
-	}
+    public UserTaskType getType()
+    {
+        return type;
+    }
 
-	@Override
-	public void setCreatedDate(Timestamp createdDate) {
-		this.createdDate = createdDate;
-	}
+    public void setType(UserTaskType type)
+    {
+        this.type = type;
+    }
 
-	public Timestamp getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    @Override
+    public Timestamp getCreatedDate()
+    {
+        return createdDate;
+    }
 
-	@Override
-	public void setLastModifiedDate(Timestamp lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    @Override
+    public void setCreatedDate(Timestamp createdDate)
+    {
+        this.createdDate = createdDate;
+    }
 
-	public Timestamp getActualStartTime() {
-		return actualStartTime;
-	}
+    public Timestamp getLastModifiedDate()
+    {
+        return lastModifiedDate;
+    }
 
-	public void setActualStartTime(Timestamp actualStartTime) {
-		this.actualStartTime = actualStartTime;
-	}
+    @Override
+    public void setLastModifiedDate(Timestamp lastModifiedDate)
+    {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public Timestamp getActualEndTime() {
-		return actualEndTime;
-	}
+    public Timestamp getActualStartTime()
+    {
+        return actualStartTime;
+    }
 
-	public void setActualEndTime(Timestamp actualEndTime) {
-		this.actualEndTime = actualEndTime;
-	}
+    public void setActualStartTime(Timestamp actualStartTime)
+    {
+        this.actualStartTime = actualStartTime;
+    }
 
-	public int getTaskId() {
-		return taskId;
-	}
+    public Timestamp getActualEndTime()
+    {
+        return actualEndTime;
+    }
 
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
-	}
+    public void setActualEndTime(Timestamp actualEndTime)
+    {
+        this.actualEndTime = actualEndTime;
+    }
 
-	public int getDuration() {
-		return duration;
-	}
+    public int getTaskId()
+    {
+        return taskId;
+    }
 
-	public void setDuration(int duration) {
-		this.duration = duration;
-	}
+    public void setTaskId(int taskId)
+    {
+        this.taskId = taskId;
+    }
 
-	public UserActivityItem getUserActivityItem() {
-		return userActivityItem;
-	}
+    public int getDuration()
+    {
+        return duration;
+    }
 
-	public void setUserActivityItem(UserActivityItem userActivityItem) {
-		this.userActivityItem = userActivityItem;
-	}
+    public void setDuration(int duration)
+    {
+        this.duration = duration;
+    }
 
-	public int getStartHour() {
-		return startHour;
-	}
+    public UserActivityItem getUserActivityItem()
+    {
+        return userActivityItem;
+    }
 
-	public void setStartHour(int startHour) {
-		this.startHour = startHour;
-	}
+    public void setUserActivityItem(UserActivityItem userActivityItem)
+    {
+        this.userActivityItem = userActivityItem;
+    }
 
-	public String getTaskName() {
-		return taskName;
-	}
+    public int getStartHour()
+    {
+        return startHour;
+    }
 
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
+    public void setStartHour(int startHour)
+    {
+        this.startHour = startHour;
+    }
 
-	public Timestamp getStartTime() {
-		return startTime;
-	}
+    public String getTaskName()
+    {
+        return taskName;
+    }
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
-	}
+    public void setTaskName(String taskName)
+    {
+        this.taskName = taskName;
+    }
 
-	public String getInprogressComment() {
-		return inprogressComment;
-	}
+    public Timestamp getStartTime()
+    {
+        return startTime;
+    }
 
-	public void setInprogressComment(String inprogressComment) {
-		this.inprogressComment = inprogressComment;
-	}
+    public void setStartTime(Timestamp startTime)
+    {
+        this.startTime = startTime;
+    }
 
-	public String getCompletionComment() {
-		return completionComment;
-	}
+    public String getInprogressComment()
+    {
+        return inprogressComment;
+    }
 
-	public void setCompletionComment(String completionComment) {
-		this.completionComment = completionComment;
-	}
+    public void setInprogressComment(String inprogressComment)
+    {
+        this.inprogressComment = inprogressComment;
+    }
+
+    public String getCompletionComment()
+    {
+        return completionComment;
+    }
+
+    public void setCompletionComment(String completionComment)
+    {
+        this.completionComment = completionComment;
+    }
+
+    public Timestamp getRecordedStartTime()
+    {
+        return recordedStartTime;
+    }
+
+    public void setRecordedStartTime(Timestamp recordedStartTime)
+    {
+        this.recordedStartTime = recordedStartTime;
+    }
+
+    public Timestamp getRecordedEndTime()
+    {
+        return recordedEndTime;
+    }
+
+    public void setRecordedEndTime(Timestamp recordedEndTime)
+    {
+        this.recordedEndTime = recordedEndTime;
+    }
 
 }

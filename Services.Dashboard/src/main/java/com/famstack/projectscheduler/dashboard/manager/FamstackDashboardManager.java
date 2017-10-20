@@ -336,9 +336,13 @@ public class FamstackDashboardManager extends BaseFamstackService
         return FamstackUtils.getJsonFromObject(taskMap);
     }
 
-    public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments)
+    public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, String adjustTime)
     {
-        projectManager.updateTaskStatus(taskId, taskStatus, comments);
+        Date adjustDate = null;
+        if (StringUtils.isNotBlank(adjustTime)) {
+            adjustDate = DateUtils.tryParse(adjustTime, DateUtils.DATE_TIME_FORMAT);
+        }
+        projectManager.updateTaskStatus(taskId, taskStatus, comments, adjustDate);
         TaskDetails taskDetails = projectManager.getProjectTaskById(taskId);
         switch (taskStatus) {
             case ASSIGNED:

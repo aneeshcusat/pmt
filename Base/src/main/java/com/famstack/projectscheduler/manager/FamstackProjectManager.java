@@ -187,10 +187,11 @@ public class FamstackProjectManager extends BaseFamstackManager
         return famstackProjectTaskManager.getUserTaskActivityJson();
     }
 
-    public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem) {
-        return mapProjectItemToProjectDetails( projectItem, true);
+    public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem)
+    {
+        return mapProjectItemToProjectDetails(projectItem, true);
     }
-    
+
     public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem, boolean isFullLoad)
     {
         if (projectItem != null) {
@@ -354,8 +355,8 @@ public class FamstackProjectManager extends BaseFamstackManager
     public ProjectDetails getProjectDetails(int projectId)
     {
         ProjectDetails projectDetails =
-            mapProjectItemToProjectDetails(
-                (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class));
+            mapProjectItemToProjectDetails((ProjectItem) famstackDataAccessObjectManager.getItemById(projectId,
+                ProjectItem.class));
         projectDetails.setDuplicateProjects(getAllProjectDetailsList(projectDetails.getCode(), projectDetails.getId()));
         return projectDetails;
     }
@@ -365,9 +366,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         return famstackProjectTaskManager.getAllProjectTask(userId);
     }
 
-    public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments)
+    public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, Date adjustTime)
     {
-        TaskItem taskItem = famstackProjectTaskManager.updateTaskStatus(taskId, taskStatus, comments);
+        TaskItem taskItem = famstackProjectTaskManager.updateTaskStatus(taskId, taskStatus, comments, adjustTime);
         updateProjectStatusBasedOnTaskStatus(taskItem.getProjectItem().getProjectId());
 
     }
