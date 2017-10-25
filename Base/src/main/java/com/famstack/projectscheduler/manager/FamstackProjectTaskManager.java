@@ -104,6 +104,32 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         updateUserActivity(taskDetails, startDate, projectItem.getType());
     }
 
+    public void reAssignTask(TaskDetails taskDetails, int newUserId, int userTaskActivityId, TaskStatus taskStatus)
+    {
+        TaskItem taskItem =
+            (TaskItem) famstackDataAccessObjectManager.getItemById(taskDetails.getTaskId(), TaskItem.class);
+        UserTaskActivityItem currentUserTaskActivityItem =
+            famstackUserActivityManager.getUserTaskActivityItem(userTaskActivityId);
+        Date startDate = DateUtils.tryParse(taskDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
+        int durationInMinutes = currentUserTaskActivityItem.getDurationInMinutes();
+        if (taskStatus == TaskStatus.ASSIGNED) {
+            famstackUserActivityManager.deleteAllUserTaskActivities(taskDetails.getTaskId());
+        } else if (taskStatus == TaskStatus.INPROGRESS) {
+            famstackUserActivityManager.setProjectTaskActivityActualTime(taskDetails.getTaskId(), new Date(),
+                "re assigned", TaskStatus.COMPLETED, null, null);
+            startDate = new Date();
+            durationInMinutes =
+                (int) ((new Date().getTime() - currentUserTaskActivityItem.getActualStartTime().getTime()) / (1000 * 60));
+        }
+
+        famstackUserActivityManager.createUserActivityItem(newUserId, startDate, taskDetails.getTaskId(), taskDetails
+            .getName(), durationInMinutes, currentUserTaskActivityItem.getType(), taskItem.getProjectItem().getType());
+
+        taskItem.setStatus(TaskStatus.ASSIGNED);
+        taskItem.setAssignee(newUserId);
+        famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+    }
+
     private void updateUserActivity(TaskDetails taskDetails, Date startDate, ProjectType projectType)
     {
 
@@ -112,16 +138,16 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         famstackUserActivityManager.deleteAllUserTaskActivities(taskDetails.getTaskId());
 
         if (taskDetails.getAssignee() > 0) {
-            famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate, taskDetails
-                .getTaskId(), taskDetails.getName(), taskDetails.getDuration(), taskDetails.getReviewTask()
-                ? UserTaskType.PROJECT_REVIEW : UserTaskType.PROJECT, projectType);
+            famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate,
+                taskDetails.getTaskId(), taskDetails.getName(), taskDetails.getDuration() * 60,
+                taskDetails.getReviewTask() ? UserTaskType.PROJECT_REVIEW : UserTaskType.PROJECT, projectType);
         }
 
         logDebug("helpers :" + taskDetails.getHelper());
         if (taskDetails.getHelper() != null && taskDetails.getHelper().length > 0) {
             for (int helperId : taskDetails.getHelper()) {
                 famstackUserActivityManager.createUserActivityItem(helperId, startDate, taskDetails.getTaskId(),
-                    taskDetails.getName(), taskDetails.getDuration(), taskDetails.getReviewTask()
+                    taskDetails.getName(), taskDetails.getDuration() * 60, taskDetails.getReviewTask()
                         ? UserTaskType.PROJECT_HELPER_REVIEW : UserTaskType.PROJECT_HELPER, projectType);
             }
         }
@@ -139,11 +165,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     public void deleteAllTaskActivitiesItem(int taskId)
     {
         resetProjectProductiveAndBillableTime(taskId);
-
         famstackUserActivityManager.deleteAllUserTaskActivities(taskId);
     }
 
-    private void resetProjectProductiveAndBillableTime(int taskId)
+    public void resetProjectProductiveAndBillableTime(int taskId)
     {
         List<?> userTaskActivityItems = famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskId);
 
@@ -152,11 +177,12 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
             UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
 
-            int duration = userTaskActivityItem.getDuration();
+            int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
+
             int billableHours = userActivityItem.getBillableHours();
             int productiveHours = userActivityItem.getProductiveHousrs();
-            userActivityItem.setBillableHours(billableHours - duration);
-            userActivityItem.setProductiveHousrs(productiveHours - duration);
+            userActivityItem.setBillableHours(billableHours - durationInMinutes / 60);
+            userActivityItem.setProductiveHousrs(productiveHours - durationInMinutes / 60);
 
             famstackDataAccessObjectManager.updateItem(userActivityItem);
         }
@@ -198,7 +224,6 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     public TaskDetails mapTask(TaskItem taskItem, boolean isFullLoad)
     {
-
         if (taskItem != null) {
             TaskDetails taskDetails = new TaskDetails();
             taskDetails.setAssignee(taskItem.getAssignee());
@@ -210,7 +235,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setStartTime(startDateString);
             taskDetails.setCompletionTime(completionDateString);
             taskDetails.setStatus(taskItem.getStatus());
-
+            taskDetails.setTaskActivityDetails(famstackUserActivityManager.getUserTaskActivityDetailsByTaskId(taskItem
+                .getTaskId()));
             if (isFullLoad) {
                 taskDetails.setDescription(taskItem.getDescription());
                 taskDetails.setReviewTask(taskItem.getReviewTask());
@@ -224,8 +250,6 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                 taskDetails.setLastModifiedDate(taskItem.getLastModifiedDate());
                 taskDetails.setProjectId(taskItem.getProjectItem().getProjectId());
                 taskDetails.setHelpersList(taskItem.getHelpers());
-                taskDetails.setTaskActivityDetails(famstackUserActivityManager
-                    .getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
             }
             return taskDetails;
 
@@ -250,7 +274,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
             Date completionDate =
                 DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, taskActivityDetails.getStartTime(),
-                    taskActivityDetails.getDuration());
+                    taskActivityDetails.getDurationInMinutes() / 60);
 
             jsonObject.put("end", DateUtils.format(completionDate, DateUtils.DATE_TIME_FORMAT_CALENDER));
             jsonObject.put("tip", taskActivityDetails.getUserTaskType());
@@ -260,10 +284,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return jsonArray.toString();
     }
 
-    public Map<String, ArrayList<TaskDetails>> getAllProjectTask(int userId)
+    public Map<String, List<TaskDetails>> getAllProjectTask(Integer userId)
     {
         Map<Integer, TaskItem> taskItemMap = new HashMap<>();
-        Map<String, ArrayList<TaskDetails>> userTaskActivityItemMap = new HashMap<>();
+        Map<String, List<TaskDetails>> userTaskActivityItemMap = new HashMap<>();
 
         userTaskActivityItemMap.put(TaskStatus.ASSIGNED.value(), new ArrayList<TaskDetails>());
         userTaskActivityItemMap.put(TaskStatus.INPROGRESS.value(), new ArrayList<TaskDetails>());
@@ -271,22 +295,26 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
         Map<String, Object> dataMap = new HashMap<>();
 
-        dataMap.put("userId", userId);
-        dataMap.put("startTime", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -2));
+        String queryTobeExecuted = "getAllUserActivities";
+        if (userId != null) {
+            dataMap.put("userId", userId);
+            queryTobeExecuted = "getUserActivities";
+        }
+        dataMap.put("startTime", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), 0));
 
         List<?> userActivityItemlist =
-            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getUserActivities"), dataMap);
+            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString(queryTobeExecuted), dataMap);
 
         logDebug("userActivityItemlist : " + userActivityItemlist);
 
         if (!userActivityItemlist.isEmpty()) {
             for (Object userActivityItemObj : userActivityItemlist) {
                 UserActivityItem userActivityItem = (UserActivityItem) userActivityItemObj;
-
                 logDebug("userProjectTasklist : " + userActivityItem.getUserTaskActivities());
 
                 if (!userActivityItem.getUserTaskActivities().isEmpty()) {
                     for (UserTaskActivityItem userTaskActivityItem : userActivityItem.getUserTaskActivities()) {
+
                         int taskId = userTaskActivityItem.getTaskId();
                         TaskItem taskItem = taskItemMap.get(taskId);
                         if (taskItem == null) {
@@ -294,6 +322,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                             taskItemMap.put(taskId, taskItem);
                         }
 
+                        if (userTaskActivityItem.getActualEndTime() != null
+                            && taskItem.getStatus() != TaskStatus.COMPLETED) {
+                            continue;
+                        }
                         TaskActivityDetails taskActivityDetails =
                             famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
                         TaskDetails taskDetails = mapTask(taskItem);
@@ -315,6 +347,61 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return userTaskActivityItemMap;
     }
 
+    public List<TaskDetails> getBaklogProjectTasks(Integer userId)
+    {
+        Map<Integer, TaskItem> taskItemMap = new HashMap<>();
+        List<TaskDetails> userTaskActivityList = new ArrayList<>();
+        Map<String, Object> dataMap = new HashMap<>();
+        String queryTobeExecuted = "getAllBackLogUserActivities";
+        if (userId != null) {
+            dataMap.put("userId", userId);
+            queryTobeExecuted = "getBackLogUserActivities";
+        }
+        dataMap.put("startTime", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -15));
+        dataMap.put("endTime", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), -1));
+
+        List<?> userActivityItemlist =
+            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString(queryTobeExecuted), dataMap);
+
+        logDebug("userActivityItemlist : " + userActivityItemlist);
+
+        if (!userActivityItemlist.isEmpty()) {
+            for (Object userActivityItemObj : userActivityItemlist) {
+                UserActivityItem userActivityItem = (UserActivityItem) userActivityItemObj;
+
+                logDebug("userProjectTasklist : " + userActivityItem.getUserTaskActivities());
+
+                if (!userActivityItem.getUserTaskActivities().isEmpty()) {
+                    for (UserTaskActivityItem userTaskActivityItem : userActivityItem.getUserTaskActivities()) {
+
+                        if (userTaskActivityItem.getActualEndTime() != null) {
+                            int taskId = userTaskActivityItem.getTaskId();
+                            TaskItem taskItem = taskItemMap.get(taskId);
+                            if (taskItem == null) {
+                                taskItem = getTaskItemById(taskId);
+                                taskItemMap.put(taskId, taskItem);
+                            }
+                            if (userTaskActivityItem.getActualEndTime() != null
+                                && taskItem.getStatus() != TaskStatus.COMPLETED) {
+                                continue;
+                            }
+                            if (taskItem.getStatus() != TaskStatus.CLOSED
+                                && taskItem.getStatus() != TaskStatus.COMPLETED) {
+                                TaskActivityDetails taskActivityDetails =
+                                    famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
+                                TaskDetails taskDetails = mapTask(taskItem);
+                                taskDetails.setTaskActivityDetails(taskActivityDetails);
+                                userTaskActivityList.add(taskDetails);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        return userTaskActivityList;
+    }
+
     private void checkTaskIsDisabled(TaskItem taskItem, TaskDetails taskDetails)
     {
         if (taskItem.getReviewTask()) {
@@ -330,15 +417,15 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
     }
 
-    public TaskItem updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, Date adjustTime)
+    public TaskItem updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, Date adjustStartTime,
+        Date adjustCompletionTimeDate)
     {
         TaskItem taskItem = getTaskItemById(taskId);
 
         if (taskItem != null) {
             taskItem.setStatus(taskStatus);
-
             famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments, taskStatus,
-                adjustTime);
+                adjustStartTime, adjustCompletionTimeDate);
         }
 
         getFamstackDataAccessObjectManager().updateItem(taskItem);

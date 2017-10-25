@@ -10,6 +10,7 @@ import com.famstack.projectscheduler.contants.ProjectComplexity;
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
+import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.util.DateUtils;
 
@@ -304,6 +305,36 @@ public class ProjectDetails
     public Set<TaskDetails> getProjectTaskDeatils()
     {
         return projectTaskDeatils;
+    }
+
+    public int getCompletionInDays()
+    {
+        Date completionDate = DateUtils.tryParse(getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
+        return (int) ((completionDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+    public int getNoOfTasks()
+    {
+        Set<TaskDetails> taskDetailsSet = getProjectTaskDeatils();
+        if (taskDetailsSet != null) {
+            return taskDetailsSet.size();
+        }
+        return 0;
+    }
+
+    public int getNoOfOpenTasks()
+    {
+        int openTasks = 0;
+        Set<TaskDetails> taskDetailsSet = getProjectTaskDeatils();
+        if (taskDetailsSet != null) {
+            for (TaskDetails taskDetails : taskDetailsSet) {
+                if (taskDetails.getStatus() != TaskStatus.COMPLETED && taskDetails.getStatus() != TaskStatus.CLOSED) {
+                    openTasks++;
+                }
+            }
+        }
+
+        return openTasks;
     }
 
     public void setProjectTaskDeatils(Set<TaskDetails> projectTaskDeatils)

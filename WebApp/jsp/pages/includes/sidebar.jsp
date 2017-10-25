@@ -34,6 +34,7 @@
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
                             <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>
                             <li><a href="${applicationHome}/projects"><span class="fa fa-list-alt"></span> Projects</a></li>
+                            <li><a href="${applicationHome}/mileStones"><span class="fa fa-flag"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
                             <li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span> Project Reporting</a></li>
                             <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>

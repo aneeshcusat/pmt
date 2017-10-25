@@ -59,6 +59,15 @@ var getTodayDate = function(today){
 
 var getTodayDateTime = function (today){
 	var dateString = getTodayDate(today);
-	dateString += " " + today.getHours() +":"+ today.getMinutes();
+	var hour = today.getHours();
+	var minutes = today.getMinutes();
+	if(hour<10){
+		hour='0'+hour
+	} 
+	if(minutes<10){
+		minutes='0'+minutes
+	} 
+	
+	dateString += " " + hour +":"+ minutes;
 	return dateString;
 }

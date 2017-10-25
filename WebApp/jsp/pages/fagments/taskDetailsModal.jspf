@@ -1,0 +1,55 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<div class="row">
+				<div class="col-md-12">
+				<label class="col-md-12 control-label "><b class="taskDetailsTaskName"></b> </label>
+				</div>
+				<div class="col-md-12">
+				<label class="col-md-12 control-label"><i class="taskDetailsTaskDescription"></i></label>
+				</div>
+		
+				<div class="col-md-12">
+				<label class="col-md-5 control-label text-left">Duration</label>
+                     <div class="col-md-7">
+                     <b class="taskDetailsDuration">0</b> Hrs
+                     </div>
+				</div>
+				<div class="col-md-12">
+				<label class="col-md-5 control-label text-left">Est Start time</label>
+                     <div class="col-md-7">
+                     <b class="taskDetailsEstStartTimet"></b>
+                     </div>
+				</div>
+				<div class="col-md-12">
+				<label class="col-md-5 control-label text-left">Started at</label>
+                     <div class="col-md-7">
+                     <b class="taskDetailsStartedAt"></b>
+                     </div>
+				</div>
+				<div class="col-md-12">
+				<label class="col-md-5 control-label text-left">Duration</label>
+                     <div class="col-md-7">
+                     <b class="taskDetailsDuration">0</b> Hrs
+                     </div>
+				</div>
+				<div class="col-md-12">
+				<label class="col-md-5 control-label text-left">Task assignee </label>
+                     <div class="col-md-7">
+                     	<input id="taskAssigneeHidden" type="hidden"/>
+                     	<input id="taskIdHidden" type="hidden"/>
+                     	<input id="taskActivityIdHidden" type="hidden"/>
+                     	<input id="taskStatusHidden" type="hidden"/>
+                     	 <select path="taskAssignee" id="taskAssignee" name="taskAssignee" class="form-control" data-live-search="true">
+							<option value="">- select -</option>
+							<c:if test="${not empty userMap}">
+    						<c:forEach var="user" items="${userMap}">
+    						 	<c:if test="${user.role != 'ADMIN' && user.role != 'MANAGER'}">
+    								<option value="${user.id}">${user.firstName}</option>
+    							</c:if>
+    						</c:forEach>
+    						</c:if>
+						</select>
+                     </div>
+			</div>
+</div>

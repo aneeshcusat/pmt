@@ -6,8 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,7 @@ import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.employees.bean.UserStatus;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
@@ -155,6 +158,16 @@ public class FamstackDashboardManager extends BaseFamstackService
             DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), getFamstackUserSessionConfiguration()
                 .getProjectViewLimit());
         List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime, isFullLoad);
+
+        Collections.sort(projectDetailsList, new Comparator<ProjectDetails>()
+        {
+            @Override
+            public int compare(ProjectDetails projectDetails1, ProjectDetails projectDetails2)
+            {
+                return DateUtils.tryParse(projectDetails1.getCompletionTime(), DateUtils.DATE_TIME_FORMAT).before(
+                    DateUtils.tryParse(projectDetails2.getCompletionTime(), DateUtils.DATE_TIME_FORMAT)) ? -1 : 1;
+            }
+        });
         return projectDetailsList;
     }
 
@@ -325,24 +338,61 @@ public class FamstackDashboardManager extends BaseFamstackService
         return FamstackUtils.getJsonFromObject(groupMessageDetails);
     }
 
-    public Map<String, ArrayList<TaskDetails>> getProjectTasksDataList(int userId)
+    public Map<String, List<TaskDetails>> getProjectTasksDataList(Integer userId)
     {
-        return projectManager.getProjectTasksDataList(userId);
+        Map<String, List<TaskDetails>> taskDetailsMap = projectManager.getProjectTasksDataList(userId);
+        sortTaskDeailsList(taskDetailsMap);
+        return taskDetailsMap;
+    }
+
+    private void sortTaskDeailsList(Map<String, List<TaskDetails>> taskDetailsMap)
+    {
+        for (String key : taskDetailsMap.keySet()) {
+
+            List<TaskDetails> taskDeatilsList = taskDetailsMap.get(key);
+            if (taskDeatilsList != null) {
+                Collections.sort(taskDeatilsList, new Comparator<TaskDetails>()
+                {
+                    @Override
+                    public int compare(TaskDetails taskDetails1, TaskDetails taskDetails2)
+                    {
+                        return DateUtils.tryParse(taskDetails1.getStartTime(), DateUtils.DATE_TIME_FORMAT).before(
+                            DateUtils.tryParse(taskDetails2.getStartTime(), DateUtils.DATE_TIME_FORMAT)) ? -1 : 1;
+                    }
+
+                });
+            }
+        }
     }
 
     public String getProjectTasksDataListJson(int userId)
     {
-        Map<String, ArrayList<TaskDetails>> taskMap = projectManager.getProjectTasksDataList(userId);
+        Map<String, List<TaskDetails>> taskMap = projectManager.getProjectTasksDataList(userId);
         return FamstackUtils.getJsonFromObject(taskMap);
     }
 
-    public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, String adjustTime)
+    public void reAssignTask(int taskId, int newUserId, int taskActivityId, TaskStatus taskStatus)
     {
-        Date adjustDate = null;
-        if (StringUtils.isNotBlank(adjustTime)) {
-            adjustDate = DateUtils.tryParse(adjustTime, DateUtils.DATE_TIME_FORMAT);
+        TaskDetails taskDetails = projectManager.getProjectTaskById(taskId);
+        projectManager.reAssignTask(taskDetails, newUserId, taskActivityId, taskStatus);
+        triggerTaskNotification(NotificationType.TASK_RE_ASSIGNED, taskDetails);
+
+    }
+
+    public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, String adjustStartTime,
+        String adjustCompletionTime)
+    {
+        Date adjustStartTimeDate = null;
+        if (StringUtils.isNotBlank(adjustStartTime)) {
+            adjustStartTimeDate = DateUtils.tryParse(adjustStartTime, DateUtils.DATE_TIME_FORMAT);
         }
-        projectManager.updateTaskStatus(taskId, taskStatus, comments, adjustDate);
+
+        Date adjustCompletionTimeDate = null;
+        if (StringUtils.isNotBlank(adjustCompletionTime)) {
+            adjustCompletionTimeDate = DateUtils.tryParse(adjustCompletionTime, DateUtils.DATE_TIME_FORMAT);
+        }
+
+        projectManager.updateTaskStatus(taskId, taskStatus, comments, adjustStartTimeDate, adjustCompletionTimeDate);
         TaskDetails taskDetails = projectManager.getProjectTaskById(taskId);
         switch (taskStatus) {
             case ASSIGNED:
@@ -621,4 +671,27 @@ public class FamstackDashboardManager extends BaseFamstackService
         getFamstackApplicationConfiguration().initializeConfigurations();
 
     }
+
+    public Set<Integer> getTaskOwners(Map<String, List<TaskDetails>> taskDetailsMap)
+    {
+        Set<Integer> taskOwners = new HashSet<>();
+
+        if (taskDetailsMap != null) {
+            for (String key : taskDetailsMap.keySet()) {
+                List<TaskDetails> taskDetailsList = taskDetailsMap.get(key);
+
+                if (taskDetailsList != null) {
+                    for (TaskDetails taskDetails : taskDetailsList) {
+                        TaskActivityDetails activityDetails = taskDetails.getTaskActivityDetails();
+
+                        if (activityDetails != null) {
+                            taskOwners.add(activityDetails.getUserId());
+                        }
+                    }
+                }
+            }
+        }
+        return taskOwners;
+    }
+
 }

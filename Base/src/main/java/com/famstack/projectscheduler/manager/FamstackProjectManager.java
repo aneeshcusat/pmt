@@ -123,6 +123,11 @@ public class FamstackProjectManager extends BaseFamstackManager
         updateProjectStatusBasedOnTaskStatus(taskDetails.getProjectId());
     }
 
+    public void reAssignTask(TaskDetails taskDetails, int newUserId, int taskActivityId, TaskStatus taskStatus)
+    {
+        famstackProjectTaskManager.reAssignTask(taskDetails, newUserId, taskActivityId, taskStatus);
+    }
+
     private void updateProjectStatusBasedOnTaskStatus(int projectId)
     {
         ProjectItem projectItem;
@@ -200,7 +205,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectDetails.setId(projectItem.getProjectId());
             projectDetails.setName(projectItem.getName());
             projectDetails.setProjectTaskDeatils(famstackProjectTaskManager.mapProjectTaskDetails(
-                projectItem.getTaskItems(), false));
+                projectItem.getTaskItems(), isFullLoad));
             projectDetails.setDuration(projectItem.getDuration());
             int unAssignedDuration = getUnAssignedDuration(projectDetails);
             projectDetails.setUnAssignedDuration(unAssignedDuration);
@@ -361,14 +366,20 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetails;
     }
 
-    public Map<String, ArrayList<TaskDetails>> getProjectTasksDataList(int userId)
+    public Map<String, List<TaskDetails>> getProjectTasksDataList(Integer userId)
     {
-        return famstackProjectTaskManager.getAllProjectTask(userId);
+        Map<String, List<TaskDetails>> projectTaskDetailsMap = famstackProjectTaskManager.getAllProjectTask(userId);
+        List<TaskDetails> backLogTasks = famstackProjectTaskManager.getBaklogProjectTasks(userId);
+        projectTaskDetailsMap.put("BACKLOG", backLogTasks);
+        return projectTaskDetailsMap;
     }
 
-    public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, Date adjustTime)
+    public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, Date adjustStartTime,
+        Date adjustCompletionTimeDate)
     {
-        TaskItem taskItem = famstackProjectTaskManager.updateTaskStatus(taskId, taskStatus, comments, adjustTime);
+        TaskItem taskItem =
+            famstackProjectTaskManager.updateTaskStatus(taskId, taskStatus, comments, adjustStartTime,
+                adjustCompletionTimeDate);
         updateProjectStatusBasedOnTaskStatus(taskItem.getProjectItem().getProjectId());
 
     }

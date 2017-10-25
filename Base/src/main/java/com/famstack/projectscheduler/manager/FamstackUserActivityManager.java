@@ -33,7 +33,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     @Resource
     FamstackUserProfileManager famstackUserProfileManager;
 
-    public void createUserActivityItem(int userId, Date startTime, int taskId, String taskName, int duration,
+    public void createUserActivityItem(int userId, Date startTime, int taskId, String taskName, int durationInMinutes,
         UserTaskType userTaskType, ProjectType projectType)
     {
         UserItem assigneeUserItem = famstackUserProfileManager.getUserItemById(userId);
@@ -62,14 +62,14 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         int productiveHours = userActivityItem.getProductiveHousrs();
         int billableHours = userActivityItem.getBillableHours();
         if (projectType == ProjectType.BILLABLE) {
-            billableHours += duration;
+            billableHours += (durationInMinutes / 60);
         }
 
-        productiveHours += duration;
+        productiveHours += (durationInMinutes / 60);
         userActivityItem.setProductiveHousrs(productiveHours);
         userActivityItem.setBillableHours(billableHours);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
-        setUserTaskActivity(userActivityItem, taskId, taskName, duration, startTime, userTaskType);
+        setUserTaskActivity(userActivityItem, taskId, taskName, durationInMinutes, startTime, userTaskType);
     }
 
     public List<?> getTodaysUserActivity()
@@ -133,8 +133,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     {
         Timestamp actualEndTime = userTaskActivityItem.getActualEndTime();
         Timestamp startTime = userTaskActivityItem.getStartTime();
-        int duration = userTaskActivityItem.getDuration();
-        startTime.setTime(startTime.getTime() + (duration * 60 * 60 * 1000));
+        int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
+        startTime.setTime(startTime.getTime() + (durationInMinutes * 60 * 1000));
         if (actualEndTime != null) {
             if (userAvailableTime != null) {
                 if (userAvailableTime.getTime() < actualEndTime.getTime()) {
@@ -168,12 +168,12 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     }
 
     public UserTaskActivityItem setUserTaskActivity(UserActivityItem userActivityItem, int taskId, String taskName,
-        int duration, Date startDate, UserTaskType userTaskType)
+        int durationInMinutes, Date startDate, UserTaskType userTaskType)
     {
         UserTaskActivityItem userTaskActivityItem = new UserTaskActivityItem();
         userTaskActivityItem.setTaskId(taskId);
         userTaskActivityItem.setTaskName(taskName);
-        userTaskActivityItem.setDuration(duration);
+        userTaskActivityItem.setDurationInMinutes(durationInMinutes);
         userTaskActivityItem.setStartHour(startDate.getHours());
         userTaskActivityItem.setStartTime(new Timestamp(startDate.getTime()));
         userTaskActivityItem.setType(userTaskType);
@@ -269,7 +269,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         taskActivityDetails.setTaskId(userTaskActivityItem.getTaskId());
         taskActivityDetails.setStartTime(userTaskActivityItem.getStartTime());
         taskActivityDetails.setActualEndTime(userTaskActivityItem.getActualEndTime());
-        taskActivityDetails.setDuration(userTaskActivityItem.getDuration());
+        taskActivityDetails.setDurationInMinutes(userTaskActivityItem.getDurationInMinutes());
         taskActivityDetails.setUserTaskType(userTaskActivityItem.getType());
         taskActivityDetails.setStartHour(userTaskActivityItem.getStartHour());
         taskActivityDetails.setInprogressComment((userTaskActivityItem.getInprogressComment()));
@@ -277,6 +277,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         taskActivityDetails.setActualStartTime(userTaskActivityItem.getActualStartTime());
         taskActivityDetails.setRecordedStartTime(userTaskActivityItem.getRecordedStartTime());
         taskActivityDetails.setRecordedEndTime(userTaskActivityItem.getRecordedEndTime());
+        taskActivityDetails.setUserId(userTaskActivityItem.getUserActivityItem().getUserItem().getId());
         return taskActivityDetails;
     }
 
@@ -310,22 +311,26 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     }
 
     public void setProjectTaskActivityActualTime(int taskId, Date date, String comment, TaskStatus taskStatus,
-        Date adjustTime)
+        Date adjustStartTime, Date adjustCompletionTimeDate)
     {
         List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
 
-        if (adjustTime == null) {
-            adjustTime = date;
+        if (adjustStartTime == null) {
+            adjustStartTime = date;
+        }
+        if (adjustCompletionTimeDate == null) {
+            adjustCompletionTimeDate = date;
         }
         for (Object userTaskActivityItemObj : userTaskActivityItems) {
             UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
             if (taskStatus == TaskStatus.INPROGRESS) {
                 userTaskActivityItem.setInprogressComment(comment);
-                userTaskActivityItem.setActualStartTime(new Timestamp(adjustTime.getTime()));
+                userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
                 userTaskActivityItem.setRecordedStartTime(new Timestamp(date.getTime()));
             } else if (taskStatus == TaskStatus.COMPLETED) {
                 userTaskActivityItem.setCompletionComment(comment);
-                userTaskActivityItem.setActualEndTime(new Timestamp(adjustTime.getTime()));
+                userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
+                userTaskActivityItem.setActualEndTime(new Timestamp(adjustCompletionTimeDate.getTime()));
                 userTaskActivityItem.setRecordedEndTime(new Timestamp(date.getTime()));
             }
 

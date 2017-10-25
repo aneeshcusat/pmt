@@ -51,6 +51,15 @@ public class FamstackProjectController extends BaseFamstackService
         return getProjectPageModelView(projectData);
     }
 
+    @RequestMapping(value = "/mileStones", method = RequestMethod.GET)
+    public ModelAndView getMilestones()
+    {
+        Map<String, Object> modelViewMap = new HashMap<String, Object>();
+        List<ProjectDetails> projectData = famstackDashboardManager.getProjects(false);
+        modelViewMap.put("projectDetailsData", projectData);
+        return new ModelAndView("mileStones", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
+    }
+
     @RequestMapping(value = "/projects/{projectStatus}", method = RequestMethod.GET)
     public ModelAndView listProjectsByStatus(@PathVariable("projectStatus") ProjectStatus projectStatus)
     {

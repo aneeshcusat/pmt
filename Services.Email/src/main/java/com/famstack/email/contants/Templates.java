@@ -73,7 +73,9 @@ public enum Templates
     TASK_END_REMINDER("projectTaskStatus", "projectTaskEndReminder"),
 
     /** The task start reminder. */
-    TASK_START_REMINDER("projectTaskStatus", "projectTaskStartReminder");
+    TASK_START_REMINDER("projectTaskStatus", "projectTaskStartReminder"),
+
+    TASK_RE_ASSIGNED("projectTaskStatus", "projectTaskAssigned");
 
     /** The subjectkey. */
     private String subjectkey;
@@ -83,7 +85,7 @@ public enum Templates
 
     /**
      * Instantiates a new email templates.
-     *
+     * 
      * @param template the template
      * @param subjectKey the subject key
      */
@@ -95,7 +97,7 @@ public enum Templates
 
     /**
      * Gets the subjectkey.
-     *
+     * 
      * @return the subjectkey
      */
     public String getSubjectkey()
@@ -105,7 +107,7 @@ public enum Templates
 
     /**
      * Gets the template.
-     *
+     * 
      * @return the template
      */
     public String getTemplate()

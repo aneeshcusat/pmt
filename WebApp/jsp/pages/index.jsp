@@ -252,7 +252,14 @@
 	                                                    <td><span class="label label-${projectState}">${project.status }</span></td>
 	                                                    <td  class="project_progress">
 	                                                    
-	                                                        <div class="progress progress-small progress-striped active">
+			                                                    <c:set var="progressState" value="striped"/>
+							                  				<c:if test="${project.status == 'INPROGRESS' }">
+							                   					<c:set var="progressState" value="striped active"/>
+							                  				</c:if>
+							                  				<c:if test="${project.status == 'COMPLETED' }">
+							                   					<c:set var="progressState" value=""/>
+							                  				</c:if>
+	                                                        <div class="progress progress-small progress-${progressState}">
 	                                                            <div class="progress-bar progress-bar-${projectState}" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: ${project.projectCompletionPercentage}%;"></div>
 	                                                             <small>${project.projectCompletionPercentage}% Complete</small>
 	                                                        </div>

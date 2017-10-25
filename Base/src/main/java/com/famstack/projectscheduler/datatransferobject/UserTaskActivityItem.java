@@ -44,7 +44,7 @@ public class UserTaskActivityItem implements FamstackBaseItem
     private String taskName;
 
     @Column(name = "duration")
-    private int duration;
+    private int durationInMinutes;
 
     @Column(name = "start_hour")
     private int startHour;
@@ -153,16 +153,6 @@ public class UserTaskActivityItem implements FamstackBaseItem
         this.taskId = taskId;
     }
 
-    public int getDuration()
-    {
-        return duration;
-    }
-
-    public void setDuration(int duration)
-    {
-        this.duration = duration;
-    }
-
     public UserActivityItem getUserActivityItem()
     {
         return userActivityItem;
@@ -241,6 +231,16 @@ public class UserTaskActivityItem implements FamstackBaseItem
     public void setRecordedEndTime(Timestamp recordedEndTime)
     {
         this.recordedEndTime = recordedEndTime;
+    }
+
+    public int getDurationInMinutes()
+    {
+        return durationInMinutes;
+    }
+
+    public void setDurationInMinutes(int durationInMinutes)
+    {
+        this.durationInMinutes = durationInMinutes;
     }
 
 }

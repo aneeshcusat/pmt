@@ -13,7 +13,7 @@ public class TaskActivityDetails
 
     private int startHour;
 
-    private int duration;
+    private int durationInMinutes;
 
     private String dateId;
 
@@ -45,16 +45,6 @@ public class TaskActivityDetails
     public void setTaskId(int taskId)
     {
         this.taskId = taskId;
-    }
-
-    public int getDuration()
-    {
-        return duration;
-    }
-
-    public void setDuration(int duration)
-    {
-        this.duration = duration;
     }
 
     public String getDateId()
@@ -147,45 +137,45 @@ public class TaskActivityDetails
         this.actualEndTime = actualEndTime;
     }
 
-    public long getTimeTakenToCompleteHour()
+    public int getTimeTakenToCompleteHour()
     {
-        long diffHours = duration;
+        long diffHours = durationInMinutes / 60;
         if (actualStartTime != null) {
             long diff = new Date().getTime() - actualStartTime.getTime();
-            diff = (duration * (60 * 60 * 1000)) - diff;
+            diff = (durationInMinutes * (60 * 1000)) - diff;
             diffHours = diff / (60 * 60 * 1000);
         }
 
-        return diffHours;
+        return (int) diffHours;
     }
 
-    public long getTimeTakenToCompleteMinute()
+    public int getTimeTakenToCompleteMinute()
     {
-        long diffMinutes = 0;
+        long diffMinutes = durationInMinutes % 60;
         if (actualStartTime != null) {
             long diff = new Date().getTime() - actualStartTime.getTime();
-            diff = (duration * (60 * 60 * 1000)) - diff;
+            diff = (durationInMinutes * (60 * 1000)) - diff;
             diffMinutes = diff / (60 * 1000) % 60;
         }
-        return diffMinutes;
+        return (int) diffMinutes;
     }
 
-    public long getTimeTakenToCompleteSecond()
+    public int getTimeTakenToCompleteSecond()
     {
 
         long diffSeconds = 0;
         if (actualStartTime != null) {
             long diff = new Date().getTime() - actualStartTime.getTime();
-            diff = (duration * (60 * 60 * 1000)) - diff;
+            diff = (durationInMinutes * (60 * 1000)) - diff;
             diffSeconds = diff / 1000 % 60;
         }
-        return diffSeconds;
+        return (int) diffSeconds;
     }
 
     public String getTimeTakenToComplete()
     {
-        long diffHours = duration;
-        long diffMinutes = 0;
+        long diffHours = durationInMinutes / 60;
+        long diffMinutes = durationInMinutes % 60;
         long diffSeconds = 0;
         if (actualStartTime != null && actualEndTime != null) {
             long diff = actualEndTime.getTime() - actualStartTime.getTime();
@@ -235,6 +225,16 @@ public class TaskActivityDetails
     public void setRecordedEndTime(Date recordedEndTime)
     {
         this.recordedEndTime = recordedEndTime;
+    }
+
+    public int getDurationInMinutes()
+    {
+        return durationInMinutes;
+    }
+
+    public void setDurationInMinutes(int durationInMinutes)
+    {
+        this.durationInMinutes = durationInMinutes;
     }
 
 }

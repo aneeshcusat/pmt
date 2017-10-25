@@ -94,6 +94,10 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
                 notificationEmailItem = getProjectTaskStatusNotificationItem(object);
                 notificationEmailItem.setTemplates(Templates.TASK_ASSIGNED);
                 break;
+            case TASK_RE_ASSIGNED:
+                notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+                notificationEmailItem.setTemplates(Templates.TASK_RE_ASSIGNED);
+                break;
             case TASK_DELETED:
                 notificationEmailItem = getProjectTaskStatusNotificationItem(object);
                 notificationEmailItem.setTemplates(Templates.TASK_DELETED);
@@ -133,8 +137,8 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
                 notificationEmailItem.setOriginUserId(currentUserItem.getId());
                 notificationEmailItem.getData().put("firstName", currentUserItem.getFirstName());
             }
-            notificationEmailItem.getData().put("notificationKey",
-                notificationEmailItem.getTemplates().getSubjectkey());
+            notificationEmailItem.getData()
+                .put("notificationKey", notificationEmailItem.getTemplates().getSubjectkey());
             notificationEmailItem.setNotificationType(notificationType);
             for (FamstackBaseNotificationService notificationService : notificationServices) {
 

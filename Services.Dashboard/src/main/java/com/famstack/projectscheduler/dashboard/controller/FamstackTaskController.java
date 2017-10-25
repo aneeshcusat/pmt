@@ -1,9 +1,9 @@
 package com.famstack.projectscheduler.dashboard.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -25,6 +25,7 @@ import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.security.user.UserRole;
 
 @Controller
 @SessionAttributes
@@ -68,13 +69,20 @@ public class FamstackTaskController extends BaseFamstackService
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     public ModelAndView listTasks()
     {
+
         UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
-
-        Map<String, ArrayList<TaskDetails>> taskDetailsMap =
-            famstackDashboardManager.getProjectTasksDataList(currentUserItem.getId());
-
+        Integer userId = currentUserItem.getId();
+        if (currentUserItem.getUserRole() == UserRole.ADMIN || currentUserItem.getUserRole() == UserRole.SUPERADMIN
+            || currentUserItem.getUserRole() == UserRole.MANAGER) {
+            userId = null;
+        }
+        Map<String, List<TaskDetails>> taskDetailsMap = famstackDashboardManager.getProjectTasksDataList(userId);
         Map<String, Object> modelViewMap = new HashMap<String, Object>();
         modelViewMap.put("projectTaskDetailsData", taskDetailsMap);
+        if (userId == null) {
+            Set<Integer> taskOwners = famstackDashboardManager.getTaskOwners(taskDetailsMap);
+            modelViewMap.put("taskOwners", taskOwners);
+        }
         return new ModelAndView("tasks", "command", new ProjectDetails()).addObject("modelViewMap", modelViewMap);
     }
 
@@ -91,9 +99,19 @@ public class FamstackTaskController extends BaseFamstackService
     @ResponseBody
     public String updateTaskStatus(@RequestParam("taskId") int taskId,
         @RequestParam("taskStatus") TaskStatus taskStatus, @RequestParam("comments") String comments,
-        @RequestParam("adjustTime") String adjustTime)
+        @RequestParam("adjustCompletionTime") String adjustCompletionTime,
+        @RequestParam("adjustStartTime") String adjustStartTime)
     {
-        famstackDashboardManager.updateTaskStatus(taskId, taskStatus, comments, adjustTime);
+        famstackDashboardManager.updateTaskStatus(taskId, taskStatus, comments, adjustStartTime, adjustCompletionTime);
+        return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/reAssignTask", method = RequestMethod.POST)
+    @ResponseBody
+    public String reAssignTask(@RequestParam("taskId") int taskId, @RequestParam("newUserId") int newUserId,
+        @RequestParam("taskActivityId") int taskActivityId, @RequestParam("taskStatus") TaskStatus taskStatus)
+    {
+        famstackDashboardManager.reAssignTask(taskId, newUserId, taskActivityId, taskStatus);
         return "{\"status\": true}";
     }
 

@@ -134,7 +134,14 @@ width: 60%;
                                       <dl class="dl-horizontal mtop20 p-progress">
                                           <dt>Project Completed:</dt>
                                           <dd>
-                                              <div class="progress progress-striped active ">
+                                          <c:set var="progressState" value="striped"/>
+			                  				<c:if test="${projectDetails.status == 'INPROGRESS' }">
+			                   					<c:set var="progressState" value="striped active"/>
+			                  				</c:if>
+			                  				<c:if test="${projectDetails.status == 'COMPLETED' }">
+			                   					<c:set var="progressState" value=""/>
+			                  				</c:if>
+                                              <div class="progress progress-${progressState}">
                                                   <div style="width: ${projectDetails.projectCompletionPercentage}%;" class="progress-bar progress-bar-${projectState}"></div>
                                                    <small>${projectDetails.projectCompletionPercentage}% Complete</small>
                                               </div>
@@ -277,8 +284,21 @@ width: 60%;
                                  			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
                                  			<tr>
                                              <td width="5%">1</td>
-                                                <td class="task_progress">${taskDetails.name}<a href="#" id="${taskDetails.taskId}" class="trigger" data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');">  Details</a> 
-                                                 <div class="progress progress-small progress-striped active">
+                                                <td class="task_progress">${taskDetails.name}<a href="#" id="${taskDetails.taskId}" class="trigger" 
+                                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                                                data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');"
+                                                </c:if>
+                                                >  Details</a> 
+                                                 
+                                                 <c:set var="progressTaskState" value="striped"/>
+					                  				<c:if test="${taskDetails.status == 'INPROGRESS' }">
+					                   					<c:set var="progressTaskState" value="striped active"/>
+					                  				</c:if>
+					                  				<c:if test="${taskDetails.status == 'COMPLETED' }">
+					                   					<c:set var="progressTaskState" value=""/>
+					                  				</c:if>
+			                  				
+                                                 <div class="progress progress-small progress-${progressTaskState}">
                                                  <c:set var="taskHealth" value="info"/>
                                                  <c:if test="${taskDetails.taskRemainingTime < 1 }">
                                                   <c:set var="taskHealth" value="danger"/>
@@ -288,7 +308,9 @@ width: 60%;
                                     			</div>
                                                 </td>
                                                <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>
+                                                <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
                                                <td width="10%"><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                                            	</c:if>
                                             </tr>
                                             <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
                                              <input id="${taskDetails.taskId}isReviewTask" type="hidden" value="${taskDetails.reviewTask}"/>
