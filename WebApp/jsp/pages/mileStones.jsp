@@ -178,7 +178,7 @@
 
 <!-- PAGE TITLE -->
 <div class="page-title">                    
-    <h2><span class="fa fa-flag"></span> Milestones</h2>
+    <h2><span class="fa fa-trophy"></span> Milestones</h2>
 </div>
 <!-- END PAGE TITLE -->                
 

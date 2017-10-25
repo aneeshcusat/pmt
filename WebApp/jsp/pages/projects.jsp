@@ -84,11 +84,6 @@
 
 		</div>
 	</div>
-	<div class="page-title">
-		<h4>
-			
-		</h4>
-	</div>
 	<table class="table table-hover p-table datatable ">
 		<thead>
 			<tr>

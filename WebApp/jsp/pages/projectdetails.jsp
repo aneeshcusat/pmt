@@ -1122,13 +1122,13 @@ var fillTableFromJson = function(){
 						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PR</span>');
 					}
 
-					if ($(cellId).css("background-color") == cellStausColor) {
-						$(cellId).css("background-color", "rgb(255, 0, 0)");
-					} else {
+					if ($(cellId).css("background-color") == "rgb(248, 250, 252)" || $(cellId).css("background-color") == "rgba(0, 0, 0, 0)") {
 						$(cellId).attr("cellcolor", $(cellId).css("background-color"));
 						$(cellId).css("background-color", cellStausColor);
+					} else {
+						$(cellId).css("background-color", "rgb(255, 0, 0)");
 					}
-	
+					
 					increaseTotalHours(elem.userId);
 				}
 				

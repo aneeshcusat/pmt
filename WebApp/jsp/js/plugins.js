@@ -166,7 +166,7 @@ $(function() {
         //Datatables
         var uiDatatable = function(){
             if($(".datatable").length > 0){                
-                $(".datatable").dataTable({"ordering": false, "info": false});
+                $(".datatable").dataTable({"ordering": true, "info": false});
                 $(".datatable").on('page.dt',function () {
                     onresize(100);
                 });
