@@ -213,9 +213,16 @@
                                         <table class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th width="50%">Project</th>
+                                                    <th width="30%">Project</th>
+                                                    <th width="15%" class="panelHideTD" style="display: none">PO ID</th>
+                                                    <th width="10%" class="panelHideTD" style="display: none">Type</th>
+                                                    <th width="15%" class="panelHideTD" style="display: none">category</th>
+                                                    <th width="15%" class="panelHideTD" style="display: none">team</th>
+                                                    <th width="20%" class="panelHideTD" style="display: none">client</th>
                                                     <th width="20%" class="panelHideTD" style="display: none">Assignees</th>
                                                     <th width="20%" class="panelHideTD" style="display: none">Assignee Names</th>
+                                                    <th width="10%" class="panelHideTD" style="display: none">Estimated Duration</th>
+                                                    <th width="10%" class="panelHideTD" style="display: none">Actual Duration</th>
                                                     <th width="20%">Status</th>
                                                     <th width="30%">Activity</th>
                                                 </tr>
@@ -232,6 +239,11 @@
 	                                                    	<c:set var="projectState" value="danger"/>
 	                                                    </c:if>
                                                     	<td><strong><a href="${applicationHome}/project/${project.id}">${project.name}</a></strong></td>
+                                                    	<td class="panelHideTD" style="display: none">${project.PONumber}</td>
+		                                                <td class="panelHideTD" style="display: none">${project.type}</td>
+        		                                        <td class="panelHideTD" style="display: none">${project.category}</td>
+                		                                <td class="panelHideTD" style="display: none">${project.teamName}</td>
+                        		                        <td class="panelHideTD" style="display: none">${project.clientName}</td>
 	                                                    <td class="panelHideTD" style="display: none">
 					 										<c:if test="${not empty project.projectTaskDeatils}">
 					                                 			<c:forEach var="taskDetails" items="${project.projectTaskDeatils}" varStatus="taskIndex"> 
@@ -244,10 +256,15 @@
 														<td  class="panelHideTD" style="display: none">
 														<c:if test="${not empty project.projectTaskDeatils}">
 					                                 			<c:forEach var="taskDetails" items="${project.projectTaskDeatils}" varStatus="taskIndex"> 
-														${employeeMap[taskDetails.assignee].firstName }
-														</c:forEach>
+																	${employeeMap[taskDetails.assignee].firstName }
+																</c:forEach>
 					                                      </c:if>
-														
+														</td>
+														<td  class="panelHideTD" style="display: none">
+															${project.duration}
+														</td>
+														<td class="panelHideTD" style="display: none">
+															${project.actualDurationInHrs}
 														</td>
 	                                                    <td><span class="label label-${projectState}">${project.status }</span></td>
 	                                                    <td  class="project_progress">

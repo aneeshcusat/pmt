@@ -29,7 +29,6 @@
         <script type="text/javascript" src="${js}/plugins/moment.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/daterangepicker/daterangepicker.js"></script>
         <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-timepicker.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js"></script>  
         <script type="text/javascript" src="${js}/plugins/jquery/jquery.form.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/blockui/jquery.blockUI.js"></script>
         <script type="text/javascript" src="${js}/plugins/jeditable/jquery.jeditable.js"></script>

@@ -1,6 +1,20 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>
 <c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
+
+<style>
+.dt-buttons a{
+    width: 65px;
+    height: 34px;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: red;
+}
+.dt-buttons{
+    float: right;
+    margin-left: 25px;
+}
+</style>
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Project Reporting</li>
@@ -27,55 +41,17 @@
                                 <div class="col-md-8" >
                                    <form action="" method="post">
 					                 Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-					                 <input type="text" name="daterange" style="width: 175px;height: 33px;margin-left: 5px;padding-left: 7px;" value="${dateRange}" /> 
+					                 <input type="text" name="daterange" id="daterangeText" style="width: 175px;height: 33px;margin-left: 5px;padding-left: 7px;" value="${dateRange}" /> 
 					                 <input class="btn btn-default" type="submit" value="Search"></button>
 					             	</form>
 					             	</div>
-                                    <div class="pull-right" class="col-md-4">
-                                        <button class="btn btn-danger toggle" data-toggle="exportTable"><i class="fa fa-bars"></i> Export Data</button>
-                                    </div>
-                                </div>
-                                <div class="panel-body" id="exportTable" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="list-group border-bottom">
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'json',escape:'false'});"><img src='${image}/icons/json.png' width="24"/> JSON</a>
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'json',escape:'false',ignoreColumn:'[2,3]'});"><img src='${image}/icons/json.png' width="24"/> JSON (ignoreColumn)</a>
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'json',escape:'true'});"><img src='${image}/icons/json.png' width="24"/> JSON (with Escape)</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="list-group border-bottom">
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'xml',escape:'false'});"><img src='${image}/icons/xml.png' width="24"/> XML</a>
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'sql'});"><img src='${image}/icons/sql.png' width="24"/> SQL</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="list-group border-bottom">
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'csv',escape:'false'});"><img src='${image}/icons/csv.png' width="24"/> CSV</a>
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'txt',escape:'false'});"><img src='${image}/icons/txt.png' width="24"/> TXT</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="list-group border-bottom">
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'excel',escape:'false'});"><img src='${image}/icons/xls.png' width="24"/> XLS</a>
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'doc',escape:'false'});"><img src='${image}/icons/word.png' width="24"/> Word</a>
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'powerpoint',escape:'false'});"><img src='${image}/icons/ppt.png' width="24"/> PowerPoint</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="list-group border-bottom">
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'png',escape:'false'});"><img src='${image}/icons/png.png' width="24"/> PNG</a>
-                                                <a href="#" class="list-group-item" onClick ="$('#projectsTable').tableExport({type:'pdf',escape:'false'});"><img src='${image}/icons/pdf.png' width="24"/> PDF</a>
-                                            </div>
-                                        </div>
-                                    </div>                               
                                 </div>
                                 <div class="panel-body panel-body-table">
                                     <table id="projectsTable" class="table table-striped">
                                         <thead>			
                                             <tr>
                                                 <th>Project code</th>
+                                                <th>ID</th>
                                                 <th>PO ID</th>
                                                 <th>Project Name</th>
                                                 <th>Type</th>
@@ -86,14 +62,28 @@
                                                 <th>Est Duration (Hrs)</th>
                                                 <th>Actual Duration (Hrs)</th>
                                                 <th>Assignee</th>
+                                                <th>Contributers</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
                                         <c:if test="${not empty projectData}">
 										<tbody>
         								<c:forEach var="project" items="${projectData}">
-                                            <tr>
+	        								 <c:set var="projectState" value="info"/>
+								             <c:if test="${project.status == 'COMPLETED' }">
+								             	<c:set var="projectState" value="success"/>
+								              </c:if>
+								              <c:if test="${project.projectMissedTimeLine == true }">
+								              	<c:set var="projectState" value="danger"/>
+								              </c:if>
+        								<c:if test="${not empty project.projectTaskDeatils}">
+        									<c:forEach var="projectTaskDetails" items="${project.projectTaskDeatils}" varStatus="projectTaskDetailsIndex"> 
+				                              <tr
+				                              <c:if test="${projectTaskDetailsIndex.index > 0}">
+				                              </c:if>
+				                              >
                                                 <td><a href="${applicationHome}/project/${project.id}" target="_new">${project.code}</a></td>
+                                                <td>${project.id}</td>
                                                 <td>${project.PONumber}</td>
                                                 <td>${project.name}</td>
                                                 <td>${project.type}</td>
@@ -103,27 +93,32 @@
                                                 <td>${project.clientName}</td>
                                                 <td>${project.duration}</td>
                                                 <td>${project.actualDurationInHrs}</td>
-                                                <td>
-                                                <c:if test="${not empty project.projectTaskDeatils}">
-				                                 <c:forEach var="projectTaskDetails" items="${project.projectTaskDeatils}" varStatus="projectTaskDetailsIndex"> 
-				                                	 ${userDetailsMap[projectTaskDetails.assignee].firstName}
-				                                	 <c:if test="${projectTaskDetailsIndex.index < project.projectTaskDeatils.size() - 1}">
-				                                	 ,
-				                                	 </c:if>
-				                                 </c:forEach>
-				                                 </c:if>
-                                                </td>
-                                                <c:set var="projectState" value="info"/>
-							                    <c:if test="${project.status == 'COMPLETED' }">
-							                   	  	<c:set var="projectState" value="success"/>
-							                    </c:if>
-							                    <c:if test="${project.projectMissedTimeLine == true }">
-							                  		<c:set var="projectState" value="danger"/>
-							                    </c:if>
+                                                <td>${userDetailsMap[projectTaskDetails.assignee].firstName} </td>
+                                                <td><c:forEach var="projectTaskDetails" items="${project.projectTaskDeatils}" varStatus="projectTaskDetailsIndex">${userDetailsMap[projectTaskDetails.assignee].firstName}<c:if test="${projectTaskDetailsIndex.index < project.projectTaskDeatils.size() - 1}">,</c:if></c:forEach><c:if test="${not empty projectTaskDetails.helpersList}">,${projectTaskDetails.helpersList}</c:if></td>
+
+				                              	<td> <span class="label label-${projectState}">${project.status}</span></td>
+                                            </tr>  
+				                                
+				                             </c:forEach>
+				                            </c:if>    
+				                        <c:if test="${empty project.projectTaskDeatils}">
+                                        <tr>
+                                                <td><a href="${applicationHome}/project/${project.id}" target="_new">${project.code}</a></td>
+                                                <td>${project.id}</td>
+                                                <td>${project.PONumber}</td>
+                                                <td>${project.name}</td>
+                                                <td>${project.type}</td>
+                                                <td>${project.category}</td>
+                                                <td>${project.teamName}</td>
+                                                <td>${project.subTeamName}</td>
+                                                <td>${project.clientName}</td>
+                                                <td>${project.duration}</td>
+                                                <td>${project.actualDurationInHrs}</td>
+                                                <td> </td>
+                                                <td></td>
 				                              <td> <span class="label label-${projectState}">${project.status}</span></td>
-                                            
-                                            
                                             </tr>
+                                            </c:if>
                                            </c:forEach>
                                         </tbody>
                                         </c:if>
@@ -140,12 +135,14 @@
 </div>               
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>
- <script type="text/javascript" src="${js}/plugins/tableexport/tableExport.js"></script>            
- <script type="text/javascript" src="${js}/plugins/tableexport/jquery.base64.js"></script>
-<script type="text/javascript" src="${js}/plugins/tableexport/html2canvas.js"></script>
-<script type="text/javascript" src="${js}/plugins/tableexport/jspdf/libs/sprintf.js"></script>
-<script type="text/javascript" src="${js}/plugins/tableexport/jspdf/jspdf.js"></script>
-<script type="text/javascript" src="${js}/plugins/tableexport/jspdf/libs/base64.js"></script>   
+  <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js"></script> 
+<script type="text/javascript" src="${js}/plugins/datatables/buttons.print.min.js"></script>    
+<script type="text/javascript" src="${js}/plugins/datatables/buttons.html5.min.js"></script>    
+<script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js"></script>    
+<script type="text/javascript" src="${js}/plugins/datatables/jszip.min.js"></script>    
+<script type="text/javascript" src="${js}/plugins/datatables/pdfmake.min.js"></script>  
+<script type="text/javascript" src="${js}/plugins/datatables/vfs_fonts.js"></script>    
+
 <script type="text/javascript">
         
 $(function() {
@@ -153,10 +150,13 @@ $(function() {
    
 });
 
-$('#projectsTable').DataTable({ 
-	responsive: true,
-    "lengthMenu": [[50, 100, -1], [50, 100, "All"]],
-    "ordering": true,
-
+$('#projectsTable').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+         'copy', 'csv', 'excel', 'pdf', 'print'
+    ]
+});
+$(document).ready(function(){
+	document.title = "Export_" + $("#daterangeText").val();
 });
 </script>

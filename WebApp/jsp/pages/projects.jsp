@@ -204,6 +204,7 @@
 <!-- project create modal end -->
 
 <%@include file="includes/footer.jsp"%>
+ <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js"></script> 
 <script type='text/javascript'
 	src='${js}/plugins/jquery-validation/jquery.validate.min.js'></script>
 <script type="text/javascript"

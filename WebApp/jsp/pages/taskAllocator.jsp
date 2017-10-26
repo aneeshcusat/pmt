@@ -221,7 +221,8 @@ width: 60%;
     
 </div>               
 <!-- END CONTENT FRAME -->                                
- <%@include file="includes/footer.jsp" %>            
+ <%@include file="includes/footer.jsp" %> 
+  <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js"></script> 
 	<script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
 <script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.js'></script>   

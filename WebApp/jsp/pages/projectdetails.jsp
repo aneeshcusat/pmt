@@ -444,7 +444,8 @@ width: 60%;
 	</form:form>
 </div>
                          
- <%@include file="includes/footer.jsp" %>            
+ <%@include file="includes/footer.jsp" %>  
+  <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js"></script> 
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js"></script>
 	<script type="text/javascript"
