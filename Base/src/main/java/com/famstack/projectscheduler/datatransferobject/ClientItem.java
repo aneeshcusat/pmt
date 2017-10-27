@@ -13,8 +13,12 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 @Entity
 @Table(name = "client_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"client_id"})})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
 public class ClientItem implements FamstackBaseItem
 {
 

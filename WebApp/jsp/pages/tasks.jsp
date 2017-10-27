@@ -498,6 +498,13 @@ $("#taskComplete").click(function(){
 });
 
 
+$("#adjustCompletionTime").on("change", function(){
+	var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
+	var adjustStartTimeDate = new Date(adjustStartTime);
+	var diffTime = (new Date() - adjustStartTimeDate) /(60*1000);
+	$(".completedTimeHrs").val(diffTime);
+});
+
 var lastMovedItem ;
 $(function(){
     var tasks = function(){
@@ -516,6 +523,10 @@ $(function(){
             	if(this.id == "tasks_completed"){
             		var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
                 	$("#adjustStartTime1").val(adjustStartTime);
+                	var adjustStartTimeDate = new Date(adjustStartTime);
+                	var diffTime = (new Date() - adjustStartTimeDate) /(60*1000);
+                	console.log(diffTime);
+                	$("#completedTimeHrs").html(Math.round(diffTime));
                 	$(".taskCompletionLink").click();
                 }
                 if(this.id == "tasks_progreess"){

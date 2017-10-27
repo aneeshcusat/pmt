@@ -1083,7 +1083,7 @@ var fillTableFromJson = function(){
 	$.each(JSON.parse(jsonAssignData), function(idx, elem){
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
 			var hour = parseInt(elem.startHour);
-			var duration = elem.duration;
+			var duration = elem.durationInMinutes/60;
 			
 			for (var index = 0; index < duration; index++) {
 				

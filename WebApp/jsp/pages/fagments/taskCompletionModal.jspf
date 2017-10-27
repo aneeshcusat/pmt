@@ -31,7 +31,7 @@
 				<div class="">
 				<label class="col-md-5 control-label text-left">Time Taken </label>
                      <div class="col-md-7" style="margin-top: 7px;">
-                      	<b class="completedTimeHrs">0</b>
+                      	<b id="completedTimeHrs">0</b> Mins
                      </div>
 				</div>
 				<div class="">

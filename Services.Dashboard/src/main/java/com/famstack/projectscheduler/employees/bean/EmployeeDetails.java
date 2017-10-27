@@ -5,225 +5,276 @@ import java.util.Date;
 
 import com.famstack.projectscheduler.security.user.UserRole;
 
-public class EmployeeDetails {
+public class EmployeeDetails
+{
 
-	private static final int AWAY = 1;
-	private static final int ONLINE = 5;
-	private static final int OFFLINE = 0;
-	private int id;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private String password;
-	private String confirmPassword;
-	private String team;
-	private String mobileNumber;
-	private String filePhoto;
-	private String gender;
-	private String qualification;
-	private String designation;
-	private UserRole role;
-	private String dateOfBirth;
-	private int reportingManger;
-	private Timestamp lastPing;
-	private Date userAvailableTime;
-	private boolean leave;
+    private static final int AWAY = 1;
 
-	public String getFirstName() {
-		return firstName;
-	}
+    private static final int ONLINE = 5;
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    private static final int OFFLINE = 0;
 
-	public String getLastName() {
-		return lastName;
-	}
+    private int id;
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    private String firstName;
 
-	public String getEmail() {
-		return email;
-	}
+    private String lastName;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    private String email;
 
-	public String getPassword() {
-		return password;
-	}
+    private String password;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    private String confirmPassword;
 
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
+    private String team;
 
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
+    private String mobileNumber;
 
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
+    private String filePhoto;
 
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
+    private String gender;
 
-	public String getDateOfBirth() {
-		return dateOfBirth;
-	}
+    private String qualification;
 
-	public void setDateOfBirth(String dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+    private String designation;
 
-	public String getFilePhoto() {
-		return filePhoto;
-	}
+    private UserRole role;
 
-	public void setFilePhoto(String filePhoto) {
-		this.filePhoto = filePhoto;
-	}
+    private String dateOfBirth;
 
-	/**
-	 * @return the gender
-	 */
-	public String getGender() {
-		return gender;
-	}
+    private int reportingManger;
 
-	/**
-	 * @param gender
-	 *            the gender to set
-	 */
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+    private Timestamp lastPing;
 
-	/**
-	 * @return the qualification
-	 */
-	public String getQualification() {
-		return qualification;
-	}
+    private Date userAvailableTime;
 
-	/**
-	 * @param qualification
-	 *            the qualification to set
-	 */
-	public void setQualification(String qualification) {
-		this.qualification = qualification;
-	}
+    private boolean leave;
 
-	/**
-	 * @return the designation
-	 */
-	public String getDesignation() {
-		return designation;
-	}
+    public String getFirstName()
+    {
+        return firstName;
+    }
 
-	/**
-	 * @param designation
-	 *            the designation to set
-	 */
-	public void setDesignation(String designation) {
-		this.designation = designation;
-	}
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
 
-	/**
-	 * @return the role
-	 */
-	public UserRole getRole() {
-		return role;
-	}
+    public String getLastName()
+    {
+        return lastName;
+    }
 
-	/**
-	 * @param role
-	 *            the role to set
-	 */
-	public void setRole(UserRole role) {
-		this.role = role;
-	}
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
 
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
+    public String getEmail()
+    {
+        return email;
+    }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
 
-	public String getTeam() {
-		return team;
-	}
+    public String getPassword()
+    {
+        return password;
+    }
 
-	public void setTeam(String team) {
-		this.team = team;
-	}
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
 
-	public int getReportingManger() {
-		return reportingManger;
-	}
+    public String getConfirmPassword()
+    {
+        return confirmPassword;
+    }
 
-	public void setReportingManger(int reportingManger) {
-		this.reportingManger = reportingManger;
-	}
+    public void setConfirmPassword(String confirmPassword)
+    {
+        this.confirmPassword = confirmPassword;
+    }
 
-	public Timestamp getLastPing() {
-		return lastPing;
-	}
+    public String getMobileNumber()
+    {
+        return mobileNumber;
+    }
 
-	public void setLastPing(Timestamp lastPing) {
-		this.lastPing = lastPing;
-	}
+    public void setMobileNumber(String mobileNumber)
+    {
+        this.mobileNumber = mobileNumber;
+    }
 
-	public int getCheckUserStatus() {
-		if (lastPing == null) {
-			return OFFLINE;
-		}
-		long timeDiff = System.currentTimeMillis() - lastPing.getTime();
+    public String getDateOfBirth()
+    {
+        return dateOfBirth;
+    }
 
-		long diffInMinutes = timeDiff / 1000 / 60;
+    public void setDateOfBirth(String dateOfBirth)
+    {
+        this.dateOfBirth = dateOfBirth;
+    }
 
-		System.out.println(diffInMinutes);
+    public String getFilePhoto()
+    {
+        return filePhoto;
+    }
 
-		if (diffInMinutes < 2) {
-			return ONLINE;
-		} else if (diffInMinutes < 4) {
-			return AWAY;
-		}
-		return OFFLINE;
-	}
+    public void setFilePhoto(String filePhoto)
+    {
+        this.filePhoto = filePhoto;
+    }
 
-	public Date getUserAvailableTime() {
-		return userAvailableTime;
-	}
+    /**
+     * @return the gender
+     */
+    public String getGender()
+    {
+        return gender;
+    }
 
-	public void setUserAvailableTime(Date userAvailableTime) {
-		this.userAvailableTime = userAvailableTime;
-	}
+    /**
+     * @param gender the gender to set
+     */
+    public void setGender(String gender)
+    {
+        this.gender = gender;
+    }
 
-	public boolean isLeave() {
-		return leave;
-	}
+    /**
+     * @return the qualification
+     */
+    public String getQualification()
+    {
+        return qualification;
+    }
 
-	public void setLeave(boolean leave) {
-		this.leave = leave;
-	}
+    /**
+     * @param qualification the qualification to set
+     */
+    public void setQualification(String qualification)
+    {
+        this.qualification = qualification;
+    }
+
+    /**
+     * @return the designation
+     */
+    public String getDesignation()
+    {
+        return designation;
+    }
+
+    /**
+     * @param designation the designation to set
+     */
+    public void setDesignation(String designation)
+    {
+        this.designation = designation;
+    }
+
+    /**
+     * @return the role
+     */
+    public UserRole getRole()
+    {
+        return role;
+    }
+
+    /**
+     * @param role the role to set
+     */
+    public void setRole(UserRole role)
+    {
+        this.role = role;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId()
+    {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
+    public String getTeam()
+    {
+        return team;
+    }
+
+    public void setTeam(String team)
+    {
+        this.team = team;
+    }
+
+    public int getReportingManger()
+    {
+        return reportingManger;
+    }
+
+    public void setReportingManger(int reportingManger)
+    {
+        this.reportingManger = reportingManger;
+    }
+
+    public Timestamp getLastPing()
+    {
+        return lastPing;
+    }
+
+    public void setLastPing(Timestamp lastPing)
+    {
+        this.lastPing = lastPing;
+    }
+
+    public int getCheckUserStatus()
+    {
+        if (lastPing == null) {
+            return OFFLINE;
+        }
+        long timeDiff = System.currentTimeMillis() - lastPing.getTime();
+
+        long diffInMinutes = timeDiff / 1000 / 60;
+
+        if (diffInMinutes < 2) {
+            return ONLINE;
+        } else if (diffInMinutes < 4) {
+            return AWAY;
+        }
+        return OFFLINE;
+    }
+
+    public Date getUserAvailableTime()
+    {
+        return userAvailableTime;
+    }
+
+    public void setUserAvailableTime(Date userAvailableTime)
+    {
+        this.userAvailableTime = userAvailableTime;
+    }
+
+    public boolean isLeave()
+    {
+        return leave;
+    }
+
+    public void setLeave(boolean leave)
+    {
+        this.leave = leave;
+    }
 
 }

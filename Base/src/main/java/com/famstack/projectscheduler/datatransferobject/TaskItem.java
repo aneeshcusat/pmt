@@ -18,11 +18,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.TaskStatus;
 
 @Entity
 @Table(name = "task_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"task_id"})})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
 public class TaskItem implements FamstackBaseItem
 {
 
@@ -53,7 +57,7 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
 
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
     @JoinColumn(name = "reporter")
     private UserItem reporter;
 

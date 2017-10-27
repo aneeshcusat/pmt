@@ -56,9 +56,13 @@
 				<prop key="hibernate.show_sql">${hibernate.debug}</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 				<prop key="hibernate.format_sql">${hibernate.debug}</prop>
-				<prop key="hibernate.generate_statistics">${hibernate.debug}</prop>
 				<prop key="hibernate.use_sql_comments">${hibernate.debug}</prop>
 				<prop key="hibernate.jdbc.batch_size">10</prop>
+				<prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+        		<prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+                <prop key="net.sf.ehcache.configurationResourceName">ehcache.xml</prop>  
 			</props>
 		</property>
 	</bean>

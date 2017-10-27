@@ -8,63 +8,76 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-@Entity
-@Table(name = "configuration_settings", uniqueConstraints = { @UniqueConstraint(columnNames = { "property_name" }) })
-public class ConfigurationSettingsItem implements FamstackBaseItem {
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-	/**
+@Entity
+@Table(name = "configuration_settings", uniqueConstraints = {@UniqueConstraint(columnNames = {"property_name"})})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
+public class ConfigurationSettingsItem implements FamstackBaseItem
+{
+
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = 5059476925286547023L;
+    private static final long serialVersionUID = 5059476925286547023L;
 
-	/** The property name. */
-	@Id
-	@Column(name = "property_name", nullable = false)
-	private String propertyName;
+    /** The property name. */
+    @Id
+    @Column(name = "property_name", nullable = false)
+    private String propertyName;
 
-	@Column(name = "created_date")
-	private Timestamp createdDate;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
 
-	@Column(name = "last_modified_date")
-	private Timestamp lastModifiedDate;
+    @Column(name = "last_modified_date")
+    private Timestamp lastModifiedDate;
 
-	/** The property value. */
-	@Column(name = "property_value")
-	private String propertyValue;
+    /** The property value. */
+    @Column(name = "property_value")
+    private String propertyValue;
 
-	public String getPropertyName() {
-		return propertyName;
-	}
+    public String getPropertyName()
+    {
+        return propertyName;
+    }
 
-	public void setPropertyName(String propertyName) {
-		this.propertyName = propertyName;
-	}
+    public void setPropertyName(String propertyName)
+    {
+        this.propertyName = propertyName;
+    }
 
-	@Override
-	public Timestamp getCreatedDate() {
-		return createdDate;
-	}
+    @Override
+    public Timestamp getCreatedDate()
+    {
+        return createdDate;
+    }
 
-	@Override
-	public void setCreatedDate(Timestamp createdDate) {
-		this.createdDate = createdDate;
-	}
+    @Override
+    public void setCreatedDate(Timestamp createdDate)
+    {
+        this.createdDate = createdDate;
+    }
 
-	public Timestamp getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    public Timestamp getLastModifiedDate()
+    {
+        return lastModifiedDate;
+    }
 
-	@Override
-	public void setLastModifiedDate(Timestamp lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    @Override
+    public void setLastModifiedDate(Timestamp lastModifiedDate)
+    {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public String getPropertyValue() {
-		return propertyValue;
-	}
+    public String getPropertyValue()
+    {
+        return propertyValue;
+    }
 
-	public void setPropertyValue(String propertyValue) {
-		this.propertyValue = propertyValue;
-	}
+    public void setPropertyValue(String propertyValue)
+    {
+        this.propertyValue = propertyValue;
+    }
 
 }

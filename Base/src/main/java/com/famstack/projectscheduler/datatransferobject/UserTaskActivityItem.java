@@ -15,10 +15,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.famstack.projectscheduler.contants.UserTaskType;
 
 @Entity
 @Table(name = "user_task_activity_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_tsk_act_id"})})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
 public class UserTaskActivityItem implements FamstackBaseItem
 {
 

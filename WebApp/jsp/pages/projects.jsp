@@ -109,7 +109,10 @@
         
 
 			<tr>
-				<td class="project_name"><a href="${applicationHome}/project/${project.id}"><span style="font-size: 10pt">${project.name}</span></a> <br> <small>created on ${project.createdDate}</small></td>
+				<td class="project_name"><a href="${applicationHome}/project/${project.id}"><span style="font-size: 10pt">${project.name}</span></a> <br> 
+				<small>created at <fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${project.createdDate}"/></small>
+				<br> <small>Completed at ${project.completionTime}</small>
+				</td>
 				<td><h5>${project.code}</h5></td>
 				<td class="project_team">
 				<c:if test="${not empty project.projectTaskDeatils}">

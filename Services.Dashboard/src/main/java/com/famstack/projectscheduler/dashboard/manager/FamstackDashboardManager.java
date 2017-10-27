@@ -164,8 +164,15 @@ public class FamstackDashboardManager extends BaseFamstackService
             @Override
             public int compare(ProjectDetails projectDetails1, ProjectDetails projectDetails2)
             {
-                return DateUtils.tryParse(projectDetails1.getCompletionTime(), DateUtils.DATE_TIME_FORMAT).before(
-                    DateUtils.tryParse(projectDetails2.getCompletionTime(), DateUtils.DATE_TIME_FORMAT)) ? -1 : 1;
+                Date date1 = DateUtils.tryParse(projectDetails1.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
+                Date date2 = DateUtils.tryParse(projectDetails2.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
+
+                if (date1.before(date2)) {
+                    return -1;
+                } else if (date1.after(date2)) {
+                    return 1;
+                }
+                return 0;
             }
         });
         return projectDetailsList;
@@ -213,7 +220,15 @@ public class FamstackDashboardManager extends BaseFamstackService
             @Override
             public int compare(GroupDetails groupDetailsOne, GroupDetails groupDetailsTwo)
             {
-                return groupDetailsOne.getCreatedDate().getTime() > groupDetailsTwo.getCreatedDate().getTime() ? 1 : -1;
+                Date date1 = groupDetailsOne.getCreatedDate();
+                Date date2 = groupDetailsTwo.getCreatedDate();
+
+                if (date1.before(date2)) {
+                    return -1;
+                } else if (date1.after(date2)) {
+                    return 1;
+                }
+                return 0;
             }
         });
         return groupDetailsList;
@@ -356,8 +371,16 @@ public class FamstackDashboardManager extends BaseFamstackService
                     @Override
                     public int compare(TaskDetails taskDetails1, TaskDetails taskDetails2)
                     {
-                        return DateUtils.tryParse(taskDetails1.getStartTime(), DateUtils.DATE_TIME_FORMAT).before(
-                            DateUtils.tryParse(taskDetails2.getStartTime(), DateUtils.DATE_TIME_FORMAT)) ? -1 : 1;
+
+                        Date date1 = DateUtils.tryParse(taskDetails1.getStartTime(), DateUtils.DATE_TIME_FORMAT);
+                        Date date2 = DateUtils.tryParse(taskDetails2.getStartTime(), DateUtils.DATE_TIME_FORMAT);
+
+                        if (date1.before(date2)) {
+                            return -1;
+                        } else if (date1.after(date2)) {
+                            return 1;
+                        }
+                        return 0;
                     }
 
                 });

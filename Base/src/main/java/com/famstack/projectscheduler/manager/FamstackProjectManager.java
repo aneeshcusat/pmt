@@ -214,6 +214,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectDetails.setStartTime(startDateString);
             projectDetails.setCompletionTime(completionDateString);
             projectDetails.setStatus(projectItem.getStatus());
+            projectDetails.setCreatedDate(projectItem.getCreatedDate());
 
             if (isFullLoad) {
                 projectDetails.setCategory(projectItem.getCategory());
@@ -235,7 +236,6 @@ public class FamstackProjectManager extends BaseFamstackManager
                 projectDetails.setEmployeeDetails(famstackUserProfileManager.mapEmployeeDetails(projectItem
                     .getReporter()));
                 projectDetails.setWatchers(projectItem.getWatchers());
-                projectDetails.setCreatedDate(projectItem.getCreatedDate());
                 projectDetails.setLastModifiedDate(projectItem.getLastModifiedDate());
 
                 projectDetails.setProjectComments(famstackProjectCommentManager.mapProjectCommentDetails(projectItem

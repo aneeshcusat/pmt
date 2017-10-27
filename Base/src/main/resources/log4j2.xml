@@ -21,6 +21,8 @@
 	<Loggers>
 		<logger name="org.hibernate.type" level="off" />
         <logger name="org.hibernate" level="off" />
+        <logger name="org.hibernate.stat" level="debug" />
+      
 	
 		<Root level="debug" additivity="false">
 			<appender-ref ref="Rollingfamstacklogfile" level="all" />

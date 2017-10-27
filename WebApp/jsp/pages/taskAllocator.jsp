@@ -739,7 +739,9 @@ var fillTableFromJson = function(){
 		console.log(elem);
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
 			var hour = parseInt(elem.startHour);
-			var duration = elem.duration;
+			var duration = elem.durationInMinutes/60;
+			var isCompleted = elem.recordedEndTime == null ?false:true;
+			var isInprogress = elem.recordedStartTime == null?false:true;
 			
 			for (var index = 0; index < duration; index++) {
 				
@@ -761,11 +763,15 @@ var fillTableFromJson = function(){
 					$(cellId).attr("cellmarked",true);
 					$(cellId).attr("modified",false);
 					$(cellId).css("text-align", "center");
+					
+					var cellStausColor = isCompleted ? "green" : "blue";
+					cellStausColor = isInprogress ? "salmon" : cellStausColor;
+					
 					if (elem.userTaskType == "PROJECT") {
-						$(cellId).css("background-color", "blue");
+						$(cellId).css("background-color", cellStausColor);
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
 					} else if (elem.userTaskType == "PROJECT_HELPER") {
-						$(cellId).css("background-color", "blueviolet");
+						$(cellId).css("background-color", cellStausColor);
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
 					} else if (elem.userTaskType == "LEAVE") {
 						$(cellId).css("background-color", "gray");
@@ -774,10 +780,10 @@ var fillTableFromJson = function(){
 						$(cellId).css("background-color", "lightyellow");
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">O</span>');
 					}else if (elem.userTaskType == "PROJECT_HELPER_REVIEW") {
-						$(cellId).css("background-color", "blueviolet");
+						$(cellId).css("background-color", cellStausColor);
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">RH</span>');
 					}else if (elem.userTaskType == "PROJECT_REVIEW") {
-						$(cellId).css("background-color", "blue");
+						$(cellId).css("background-color", cellStausColor);
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">R</span>');
 					}
 					increaseTotalHours(elem.userId);

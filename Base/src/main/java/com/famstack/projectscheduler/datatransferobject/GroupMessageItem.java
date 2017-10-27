@@ -15,85 +15,102 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 @Entity
-@Table(name = "group_message_info", uniqueConstraints = { @UniqueConstraint(columnNames = { "message_id" }) })
-public class GroupMessageItem implements FamstackBaseItem {
+@Table(name = "group_message_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"message_id"})})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
+public class GroupMessageItem implements FamstackBaseItem
+{
 
-	private static final long serialVersionUID = -5628656638213113049L;
-	
-	@Id
-	@Column(name = "message_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
-	@SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-	private int messageId;
+    private static final long serialVersionUID = -5628656638213113049L;
 
-	@Column(name = "description")
-	@Lob
-	private String description;
+    @Id
+    @Column(name = "message_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
+    @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
+    private int messageId;
 
-	@Column(name = "created_date")
-	private Timestamp createdDate;
+    @Column(name = "description")
+    @Lob
+    private String description;
 
-	@Column(name = "last_modified_date")
-	private Timestamp lastModifiedDate;
-	
-	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
-	@JoinColumn(name = "user_id")
-	private UserItem user;
-	
-	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
-	@JoinColumn(name = "group_id")
-	private GroupItem groupItem;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
 
+    @Column(name = "last_modified_date")
+    private Timestamp lastModifiedDate;
 
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
+    @JoinColumn(name = "user_id")
+    private UserItem user;
 
-	public GroupItem getGroupItem() {
-		return groupItem;
-	}
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
+    @JoinColumn(name = "group_id")
+    private GroupItem groupItem;
 
-	public void setGroupItem(GroupItem groupItem) {
-		this.groupItem = groupItem;
-	}
+    public GroupItem getGroupItem()
+    {
+        return groupItem;
+    }
 
-	public int getMessageId() {
-		return messageId;
-	}
+    public void setGroupItem(GroupItem groupItem)
+    {
+        this.groupItem = groupItem;
+    }
 
-	public void setMessageId(int messageId) {
-		this.messageId = messageId;
-	}
+    public int getMessageId()
+    {
+        return messageId;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setMessageId(int messageId)
+    {
+        this.messageId = messageId;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription()
+    {
+        return description;
+    }
 
-	public Timestamp getCreatedDate() {
-		return createdDate;
-	}
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 
-	public void setCreatedDate(Timestamp createdDate) {
-		this.createdDate = createdDate;
-	}
+    @Override
+    public Timestamp getCreatedDate()
+    {
+        return createdDate;
+    }
 
-	public Timestamp getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    @Override
+    public void setCreatedDate(Timestamp createdDate)
+    {
+        this.createdDate = createdDate;
+    }
 
-	public void setLastModifiedDate(Timestamp lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    public Timestamp getLastModifiedDate()
+    {
+        return lastModifiedDate;
+    }
 
-	public UserItem getUser() {
-		return user;
-	}
+    @Override
+    public void setLastModifiedDate(Timestamp lastModifiedDate)
+    {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public void setUser(UserItem user) {
-		this.user = user;
-	}
+    public UserItem getUser()
+    {
+        return user;
+    }
 
-		
+    public void setUser(UserItem user)
+    {
+        this.user = user;
+    }
+
 }

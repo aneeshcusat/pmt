@@ -489,7 +489,6 @@ public class ProjectDetails
                 }
             }
         }
-        System.out.println("actual duration " + actualDuration);
         return (int) (actualDuration > 0 ? Math.round(actualDuration / 60 / 1000) : 0);
     }
 
