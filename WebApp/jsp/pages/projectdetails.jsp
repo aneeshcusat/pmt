@@ -145,7 +145,7 @@ width: 60%;
                                                   <div style="width: ${projectDetails.projectCompletionPercentage}%;" class="progress-bar progress-bar-${projectState}"></div>
                                                    <small>${projectDetails.projectCompletionPercentage}% Complete</small>
                                               </div>
-                                              <small>Project completed in <strong>${100 - projectDetails.projectCompletionPercentage}%</strong>. Remaining close the project, sign a contract and invoice.</small>
+                                              <small>Project complition <strong>${100 - projectDetails.projectCompletionPercentage}%</strong> Remaining</small>
                                           </dd>
                                       </dl>
                                   </div>
@@ -1084,7 +1084,9 @@ var fillTableFromJson = function(){
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
 			var hour = parseInt(elem.startHour);
 			var duration = elem.durationInMinutes/60;
-			
+			var isCompleted = elem.actualEndTime == null ?false:true;
+			var isInprogress = elem.actualStartTime == null?false:true;
+	
 			for (var index = 0; index < duration; index++) {
 				
 				if (hour == breakTime) {
@@ -1101,11 +1103,14 @@ var fillTableFromJson = function(){
 					$(cellId).attr("cellmarked",true);
 					$(cellId).attr("modified",false);
 					increaseTotalHours(elem.userId);
+					var cellStausColor = isInprogress ? "salmon" :  "blue"; 
+					cellStausColor = isCompleted ? "green" :cellStausColor;
+					
 					if (elem.userTaskType == "PROJECT") {
-						$(cellId).css("background-color", "blue");
+						$(cellId).css("background-color", cellStausColor);
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
 					} else if (elem.userTaskType == "PROJECT_HELPER") {
-						$(cellId).css("background-color", "blueviolet");
+						$(cellId).css("background-color", cellStausColor);
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
 					} else if (elem.userTaskType == "LEAVE") {
 						$(cellId).css("background-color", "gray");
@@ -1114,10 +1119,10 @@ var fillTableFromJson = function(){
 						$(cellId).css("background-color", "lightyellow");
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">O</span>');
 					}else if (elem.userTaskType == "PROJECT_HELPER_REVIEW") {
-						$(cellId).css("background-color", "blueviolet");
+						$(cellId).css("background-color", cellStausColor);
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRH</span>');
 					}else if (elem.userTaskType == "PROJECT_REVIEW") {
-						$(cellId).css("background-color", "blue");
+						$(cellId).css("background-color", cellStausColor);
 						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PR</span>');
 					}
 				}

@@ -736,12 +736,11 @@ var decreaseTotalHours = function(userId){
 var fillTableFromJson = function(){
 	
 	$.each(JSON.parse(jsonAssignData), function(idx, elem){
-		console.log(elem);
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
 			var hour = parseInt(elem.startHour);
 			var duration = elem.durationInMinutes/60;
-			var isCompleted = elem.recordedEndTime == null ?false:true;
-			var isInprogress = elem.recordedStartTime == null?false:true;
+			var isCompleted = elem.actualEndTime == null ?false:true;
+			var isInprogress = elem.actualStartTime == null?false:true;
 			
 			for (var index = 0; index < duration; index++) {
 				
@@ -764,8 +763,9 @@ var fillTableFromJson = function(){
 					$(cellId).attr("modified",false);
 					$(cellId).css("text-align", "center");
 					
-					var cellStausColor = isCompleted ? "green" : "blue";
-					cellStausColor = isInprogress ? "salmon" : cellStausColor;
+					var cellStausColor = isInprogress ? "salmon" :  "blue"; 
+					cellStausColor = isCompleted ? "green" :cellStausColor;
+					
 					
 					if (elem.userTaskType == "PROJECT") {
 						$(cellId).css("background-color", cellStausColor);

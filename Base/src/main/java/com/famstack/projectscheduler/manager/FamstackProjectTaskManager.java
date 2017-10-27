@@ -235,8 +235,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setStartTime(startDateString);
             taskDetails.setCompletionTime(completionDateString);
             taskDetails.setStatus(taskItem.getStatus());
-            taskDetails.setTaskActivityDetails(famstackUserActivityManager.getUserTaskActivityDetailsByTaskId(taskItem
-                .getTaskId()));
+            if (taskItem.getStatus() == TaskStatus.INPROGRESS) {
+                taskDetails.setTaskActivityDetails(famstackUserActivityManager
+                    .getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
+            }
             if (isFullLoad) {
                 taskDetails.setDescription(taskItem.getDescription());
                 taskDetails.setReviewTask(taskItem.getReviewTask());

@@ -230,7 +230,9 @@ public class TaskDetails
     public double getTaskRemainingTime()
     {
         double durationInMinute = duration * 60;
-        if (taskActivityDetails == null) {
+        if (status == TaskStatus.COMPLETED) {
+            return 0;
+        } else if (taskActivityDetails == null) {
             return durationInMinute;
         }
         Date actualStartTime = taskActivityDetails.getActualStartTime();

@@ -222,7 +222,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
     public List<TaskActivityDetails> getAllTaskActivities()
     {
-        Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -15);
+        Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -30);
         List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("calenderDateStart", dayStartDate);
