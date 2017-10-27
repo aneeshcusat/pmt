@@ -3,6 +3,7 @@ package com.famstack.projectscheduler.employees.bean;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.famstack.projectscheduler.contants.LeaveType;
 import com.famstack.projectscheduler.security.user.UserRole;
 
 public class EmployeeDetails
@@ -48,7 +49,7 @@ public class EmployeeDetails
 
     private Date userAvailableTime;
 
-    private boolean leave;
+    private LeaveType leave;
 
     public String getFirstName()
     {
@@ -267,12 +268,12 @@ public class EmployeeDetails
         this.userAvailableTime = userAvailableTime;
     }
 
-    public boolean isLeave()
+    public LeaveType isLeave()
     {
         return leave;
     }
 
-    public void setLeave(boolean leave)
+    public void setLeave(LeaveType leave)
     {
         this.leave = leave;
     }

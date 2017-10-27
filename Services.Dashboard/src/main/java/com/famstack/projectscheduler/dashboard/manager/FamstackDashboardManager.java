@@ -19,9 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
+import com.famstack.projectscheduler.contants.LeaveType;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
@@ -605,7 +608,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 
         Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getUserMap();
         for (Integer userId : empMap.keySet()) {
-            String availableMessage = "Available";
+            String availableMessage = "Busy till";
             EmployeeDetails employeeDetails = empMap.get(userId);
             UserStatus userStatus = new UserStatus();
             userStatus.setStatus(employeeDetails.getCheckUserStatus());
@@ -613,16 +616,21 @@ public class FamstackDashboardManager extends BaseFamstackService
             Date userAvailableTime = employeeDetails.getUserAvailableTime();
             if (userAvailableTime != null) {
                 availableMessage +=
-                    " After "
+                    " "
                         + (userAvailableTime.getHours() < 10 ? "0" + userAvailableTime.getHours() : userAvailableTime
                             .getHours())
                         + ":"
                         + (userAvailableTime.getMinutes() < 10 ? "0" + userAvailableTime.getMinutes()
                             : userAvailableTime.getMinutes());
             }
-            if (employeeDetails.isLeave()) {
-                availableMessage = "Leave";
+            if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.FIRST) {
+                availableMessage = "First Half of the Day Leave";
+            } else if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.SECOND) {
+                availableMessage = "Second Half of the Day Leave";
+            } else if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.FULL) {
+                availableMessage = "Full Day Leave";
             }
+
             userStatus.setUserAvailableMsg(availableMessage);
             userStatusList.add(userStatus);
         }
@@ -717,4 +725,40 @@ public class FamstackDashboardManager extends BaseFamstackService
         return taskOwners;
     }
 
+    public void createNonBillableTask(int userId, String type, String startDateString, String endDateString,
+        String comments)
+    {
+        Date startTime = null;
+        int duration = 0;
+        String taskName = "";
+        if ("LEAVE".equalsIgnoreCase(type)) {
+            startTime = DateUtils.tryParse(startDateString + " 08:00", DateUtils.DATE_TIME_FORMAT);
+            switch (endDateString) {
+                case "FIRST":
+                    duration = 5;
+                    break;
+                case "SECOND":
+                    startTime = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startTime, 6);
+                    duration = 7;
+                    break;
+                case "FULL":
+                    duration = 12;
+                    break;
+            }
+
+            taskName = endDateString + " half day ";
+
+        } else if ("MEETING".equalsIgnoreCase(type)) {
+            startTime = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
+            Date endTime = DateUtils.tryParse(endDateString, DateUtils.DATE_TIME_FORMAT);
+            duration = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60));
+
+            taskName = duration + " hours ";
+        }
+
+        taskName += type;
+
+        famstackUserActivityManager.createNonBillableUserActivityItem(userId, startTime, 0, taskName, duration,
+            UserTaskType.valueOf(type), ProjectType.NON_BILLABLE, comments);
+    }
 }

@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +21,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.famstack.projectscheduler.contants.LeaveType;
 
 @Entity
 @Table(name = "user_activity_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_act_id"})})
@@ -49,8 +53,9 @@ public class UserActivityItem implements FamstackBaseItem
     @Column(name = "calender_date")
     private Timestamp calenderDate;
 
-    @Column(name = "isleave")
-    private boolean leave;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "leaType")
+    private LeaveType leave;
 
     @Column(name = "billable_hours")
     private int billableHours;
@@ -115,16 +120,6 @@ public class UserActivityItem implements FamstackBaseItem
         this.calenderDate = calenderDate;
     }
 
-    public boolean getLeave()
-    {
-        return leave;
-    }
-
-    public void setLeave(boolean leave)
-    {
-        this.leave = leave;
-    }
-
     public UserItem getUserItem()
     {
         return userItem;
@@ -153,6 +148,16 @@ public class UserActivityItem implements FamstackBaseItem
     public void setProductiveHousrs(int productiveHousrs)
     {
         this.productiveHousrs = productiveHousrs;
+    }
+
+    public LeaveType getLeave()
+    {
+        return leave;
+    }
+
+    public void setLeave(LeaveType leave)
+    {
+        this.leave = leave;
     }
 
 }

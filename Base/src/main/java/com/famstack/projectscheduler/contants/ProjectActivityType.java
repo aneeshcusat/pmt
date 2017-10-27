@@ -8,5 +8,8 @@ public enum ProjectActivityType
     TASK_ADDED,
     TASK_UPDTED,
     COMMENT_ADDED,
-    TASK_ASSIGNED
+    TASK_ASSIGNED,
+    TASK_REASSIGNED,
+    TASK_DELETED,
+    FILE_UPLOADED
 }

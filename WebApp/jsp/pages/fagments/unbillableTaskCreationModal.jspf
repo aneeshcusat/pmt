@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<div class="row">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-6">
+			  <c:choose>
+  				<c:when  test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+			<div class="form-group">
+				<label class="col-md-3 control-label">On Behalf of</label>
+                     <div class="col-md-9">
+                         <select path="userId" id="userId" name="userId" class="form-control" data-live-search="true">
+							<option value="">- select -</option>
+    							<c:if test="${not empty userMap}">
+    						<c:forEach var="user" items="${userMap}">
+    						 	<c:if test="${user.role != 'ADMIN' && user.role != 'MANAGER'}">
+    								<option value="${user.id}">${user.firstName}</option>
+    							</c:if>
+    						</c:forEach>
+    						</c:if>	
+						</select>
+                     </div>
+				</div>
+				</c:when>
+				<c:otherwise>
+					<input id="userId" type="hidden" value="${currentUser.id}"/>
+				</c:otherwise>
+				
+				</c:choose>
+				<div class="form-group">
+				<label class="col-md-3 control-label">Type</label>
+                     <div class="col-md-9">
+                         <select path="taskType" id="taskType" name="taskType" class="form-control" data-live-search="true">
+							<option value="">- select -</option>
+  							<option value="LEAVE">Leave</option>
+  							<option value="MEETING">Meeting</option>
+						</select>
+                     </div>
+				</div>
+			<div class="form-group">
+				<label class="col-md-3 control-label">Comments : </label>
+                     <div class="col-md-9">
+                            <textarea class="form-control" id="taskStartComments"  style="height: 100px"></textarea> 
+                         <span class="help-block">required description</span>
+                     </div>
+				</div>
+			</div>
+			<div class="col-md-6">
+			<div class="form-group dateDuration">
+				<label class="col-md-4 control-label">Start Date </label>
+                     <div class="col-md-8" style="margin-top: 7px;">
+                     	 <input type='text' class="form-control datePicker" id='startDate'/>
+                     </div>
+				</div>
+			<div class="form-group dateDuration">
+				<label class="col-md-4 control-label">Duration</label>
+                     <div class="col-md-8">
+                         <select path="taskType" id="duration" name="duration" class="form-control" data-live-search="true">
+							<option value="">- select -</option>
+    								<option value="FIRST">First Half of Day</option>
+    								<option value="SECOND">Second Half of Day</option>
+    								<option value="FULL">Full Day</option>
+						</select>
+                     </div>
+				</div>
+				<div class="form-group dateDuration dateRange">
+				<label class="col-md-7 control-label"> </label>
+                     <div class="col-md-5" style="margin-top: 7px;">
+                     	 --OR--
+                     </div>
+				</div>
+				<div class="form-group dateRange">
+				<label class="col-md-4 control-label ">Start Date </label>
+                     <div class="col-md-8" style="margin-top: 7px;">
+                     	 <input type='text' class="form-control dateTimePicker" id='startDateRange'/>
+                     </div>
+				</div>
+				<div class="form-group dateRange">
+				<label class="col-md-4 control-label">Completion Date </label>
+                     <div class="col-md-8" style="margin-top: 7px;">
+                     	 <input type='text' class="form-control dateTimePicker" id='completionDateRange' />
+                     </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -33,8 +33,23 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     @Resource
     FamstackUserProfileManager famstackUserProfileManager;
 
-    public void createUserActivityItem(int userId, Date startTime, int taskId, String taskName, int durationInMinutes,
-        UserTaskType userTaskType, ProjectType projectType)
+    public void createNonBillableUserActivityItem(int userId, Date startTime, int taskId, String taskName,
+        int durationInHrs, UserTaskType userTaskType, ProjectType projectType, String comment)
+    {
+        UserTaskActivityItem userTaskActivityItem =
+            createUserActivityItem(userId, startTime, taskId, taskName, durationInHrs * 60, userTaskType, projectType);
+
+        userTaskActivityItem.setCompletionComment(comment);
+        userTaskActivityItem.setRecordedStartTime(new Timestamp(startTime.getTime()));
+        userTaskActivityItem.setActualStartTime(new Timestamp(startTime.getTime()));
+        Long endTime = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startTime, durationInHrs).getTime();
+        userTaskActivityItem.setActualEndTime(new Timestamp(endTime));
+        userTaskActivityItem.setRecordedEndTime(new Timestamp(endTime));
+        getFamstackDataAccessObjectManager().saveOrUpdateItem(userTaskActivityItem);
+    }
+
+    public UserTaskActivityItem createUserActivityItem(int userId, Date startTime, int taskId, String taskName,
+        int durationInMinutes, UserTaskType userTaskType, ProjectType projectType)
     {
         UserItem assigneeUserItem = famstackUserProfileManager.getUserItemById(userId);
         Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startTime, 0);
@@ -55,7 +70,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         if (userActivityItem == null) {
             userActivityItem = new UserActivityItem();
             userActivityItem.setCalenderDate(new Timestamp(calenderDate.getTime()));
-            userActivityItem.setLeave(false);
             userActivityItem.setUserItem(assigneeUserItem);
         }
 
@@ -64,12 +78,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         if (projectType == ProjectType.BILLABLE) {
             billableHours += (durationInMinutes / 60);
         }
-
-        productiveHours += (durationInMinutes / 60);
+        if (userTaskType != UserTaskType.LEAVE) {
+            productiveHours += (durationInMinutes / 60);
+        }
         userActivityItem.setProductiveHousrs(productiveHours);
         userActivityItem.setBillableHours(billableHours);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
-        setUserTaskActivity(userActivityItem, taskId, taskName, durationInMinutes, startTime, userTaskType);
+        return setUserTaskActivity(userActivityItem, taskId, taskName, durationInMinutes, startTime, userTaskType);
     }
 
     public List<?> getTodaysUserActivity()
@@ -103,8 +118,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             EmployeeDetails employeeDetails =
                 getFamstackApplicationConfiguration().getUserMap().get(userActivityItem.getUserItem().getId());
 
-            if (userActivityItem.getLeave()) {
-                employeeDetails.setLeave(true);
+            if (userActivityItem.getLeave() != null) {
+                employeeDetails.setLeave(userActivityItem.getLeave());
                 logDebug("User is on leave ");
                 return;
             }

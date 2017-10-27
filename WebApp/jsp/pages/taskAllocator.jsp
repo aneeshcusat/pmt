@@ -752,41 +752,44 @@ var fillTableFromJson = function(){
 				console.log(cellId);
 				
 				hour++;
-				$(cellId).attr("cellcolor", $(cellId).css("background-color"));
-				if($("#taskId").val() != "" && elem.taskId == $("#taskId").val()) {
+				if($("#taskId").val() != "" && elem.taskId == $("#taskId").val() &&  elem.taskId != 0) {
 					console.log(elem.taskId);
 					console.log($("#taskId").val());
 				} else {
 					$(cellId).attr("celleditable", false);
-					console.log("$(cellId).attr(celleditable)" + $(cellId).attr("celleditable"));
 					$(cellId).attr("isassigned",true);
 					$(cellId).attr("cellmarked",true);
 					$(cellId).attr("modified",false);
 					$(cellId).css("text-align", "center");
 					
-					var cellStausColor = isInprogress ? "salmon" :  "blue"; 
-					cellStausColor = isCompleted ? "green" :cellStausColor;
+
+					var cellStausColor = isInprogress ? "rgb(250, 128, 114)" :  "rgb(0, 0, 255)"; 
+					cellStausColor = isCompleted ? "rgb(0, 128, 0)" :cellStausColor;
 					
-					
+					var cellTitleTaskName = "Task Id :" + elem.taskId + ", Activity Id:" + elem.taskActivityId +", Task Name :" +  elem.taskName;
 					if (elem.userTaskType == "PROJECT") {
-						$(cellId).css("background-color", cellStausColor);
-						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
 					} else if (elem.userTaskType == "PROJECT_HELPER") {
-						$(cellId).css("background-color", cellStausColor);
-						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
 					} else if (elem.userTaskType == "LEAVE") {
-						$(cellId).css("background-color", "gray");
-						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">L</span>');
-					} else if (elem.userTaskType == "OTHER") {
-						$(cellId).css("background-color", "lightyellow");
-						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">O</span>');
+						cellStausColor = "rgb(128, 128, 128)";
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">L</span>');
+					} else if (elem.userTaskType == "MEETING") {
+						cellStausColor = "rgb(0, 139, 139)";
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">M</span>');
 					}else if (elem.userTaskType == "PROJECT_HELPER_REVIEW") {
-						$(cellId).css("background-color", cellStausColor);
-						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">RH</span>');
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRH</span>');
 					}else if (elem.userTaskType == "PROJECT_REVIEW") {
-						$(cellId).css("background-color", cellStausColor);
-						$(cellId).html('<span title="'+elem.taskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">R</span>');
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PR</span>');
 					}
+
+					if ($(cellId).css("background-color") == cellStausColor) {
+						$(cellId).css("background-color", "rgb(255, 0, 0)");
+					} else {
+						$(cellId).attr("cellcolor", $(cellId).css("background-color"));
+						$(cellId).css("background-color", cellStausColor);
+					}
+	
 					increaseTotalHours(elem.userId);
 				}
 				
@@ -794,5 +797,4 @@ var fillTableFromJson = function(){
 		}
 	});
 }
-
 </script>

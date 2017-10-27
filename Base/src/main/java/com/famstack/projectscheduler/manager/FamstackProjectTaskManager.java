@@ -235,7 +235,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setStartTime(startDateString);
             taskDetails.setCompletionTime(completionDateString);
             taskDetails.setStatus(taskItem.getStatus());
-            if (taskItem.getStatus() == TaskStatus.INPROGRESS) {
+            if (taskItem.getStatus() == TaskStatus.INPROGRESS || taskItem.getStatus() == TaskStatus.COMPLETED) {
                 taskDetails.setTaskActivityDetails(famstackUserActivityManager
                     .getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
             }
@@ -318,6 +318,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                     for (UserTaskActivityItem userTaskActivityItem : userActivityItem.getUserTaskActivities()) {
 
                         int taskId = userTaskActivityItem.getTaskId();
+                        if (taskId == 0) {
+                            continue;
+                        }
                         TaskItem taskItem = taskItemMap.get(taskId);
                         if (taskItem == null) {
                             taskItem = getTaskItemById(taskId);
@@ -378,6 +381,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
                         if (userTaskActivityItem.getActualEndTime() != null) {
                             int taskId = userTaskActivityItem.getTaskId();
+                            if (taskId == 0) {
+                                continue;
+                            }
                             TaskItem taskItem = taskItemMap.get(taskId);
                             if (taskItem == null) {
                                 taskItem = getTaskItemById(taskId);

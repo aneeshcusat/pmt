@@ -154,7 +154,8 @@ $('#projectsTable').DataTable({
     dom: 'Bfrtip',
     buttons: [
          'copy', 'csv', 'excel', 'pdf', 'print'
-    ]
+    ],
+    "pageLength": 100
 });
 $(document).ready(function(){
 	document.title = "Export_" + $("#daterangeText").val();
