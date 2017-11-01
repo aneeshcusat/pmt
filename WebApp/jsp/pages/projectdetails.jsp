@@ -1105,7 +1105,7 @@ var fillTableFromJson = function(){
 					var cellStausColor = isInprogress ? "rgb(250, 128, 114)" :  "rgb(0, 0, 255)"; 
 					cellStausColor = isCompleted ? "rgb(0, 128, 0)" :cellStausColor;
 					
-					var cellTitleTaskName = "Task Id :"elem.taskId + ", Activity Id:" + elem.taskActivityId+", Task Name :" +  elem.taskName;
+					var cellTitleTaskName = "Task Id :" + elem.taskId + ", Activity Id:" + elem.taskActivityId+", Task Name :" +  elem.taskName;
 					if (elem.userTaskType == "PROJECT") {
 						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
 					} else if (elem.userTaskType == "PROJECT_HELPER") {
