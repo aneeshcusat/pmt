@@ -125,6 +125,14 @@ public class FamstackTaskController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/deleteTaskActivity", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteTaskActivity(@RequestParam("activityId") int activityId)
+    {
+        famstackDashboardManager.deleteTaskActivity(activityId);
+        return "{\"status\": true}";
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/deletetask")
     @ResponseBody
     public String deleteTask(@RequestParam(value = "taskId") int taskId,

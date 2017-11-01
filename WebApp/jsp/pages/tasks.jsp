@@ -407,7 +407,7 @@
 <script>
 
 $(".taskOwnersList").on("click", function(){
-	var hasClass = $("#" + this.id).hasClass("active")
+	var hasClass = $("#" + this.id).hasClass("active");
 	$(".taskOwnersList").removeClass("active");
 	if (!hasClass) {
 		$("#" + this.id).addClass("active");

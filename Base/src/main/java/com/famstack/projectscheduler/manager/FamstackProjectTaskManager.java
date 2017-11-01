@@ -334,7 +334,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                         TaskActivityDetails taskActivityDetails =
                             famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
                         TaskDetails taskDetails = mapTask(taskItem);
-                        taskDetails.setTaskActivityDetails(taskActivityDetails);
+                        List<TaskActivityDetails> taskActivityDetailList = new ArrayList<>();
+                        taskActivityDetailList.add(taskActivityDetails);
+
+                        taskDetails.setTaskActivityDetails(taskActivityDetailList);
                         if (taskItem.getStatus() == TaskStatus.ASSIGNED
                             || taskItem.getStatus() == TaskStatus.INPROGRESS
                             || taskItem.getStatus() == TaskStatus.COMPLETED) {
@@ -393,12 +396,16 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                                 && taskItem.getStatus() != TaskStatus.COMPLETED) {
                                 continue;
                             }
+
                             if (taskItem.getStatus() != TaskStatus.CLOSED
                                 && taskItem.getStatus() != TaskStatus.COMPLETED) {
                                 TaskActivityDetails taskActivityDetails =
                                     famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
                                 TaskDetails taskDetails = mapTask(taskItem);
-                                taskDetails.setTaskActivityDetails(taskActivityDetails);
+
+                                List<TaskActivityDetails> taskActivityDetailList = new ArrayList<>();
+                                taskActivityDetailList.add(taskActivityDetails);
+                                taskDetails.setTaskActivityDetails(taskActivityDetailList);
                                 userTaskActivityList.add(taskDetails);
                             }
                         }

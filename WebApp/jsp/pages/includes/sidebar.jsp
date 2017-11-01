@@ -32,7 +32,8 @@
                             <li><a href="${applicationHome}/employees"><span class="fa fa-users"></span> Employees</a></li>
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
-                            <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>
+                            <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span>Manage Tasks</a></li>
+                            <li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
                             <li><a href="${applicationHome}/projects"><span class="fa fa-list-alt"></span> Projects</a></li>
                             <li><a href="${applicationHome}/mileStones"><span class="fa fa-trophy"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
@@ -49,6 +50,7 @@
                     <li class="xn-openable active">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Pages</span></a>
                         <ul>
+ 							<li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
                             <li><a href="${applicationHome}/projects"><span class="fa fa-edit"></span> Projects</a></li>

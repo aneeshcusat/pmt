@@ -314,13 +314,18 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return userTaskActivityItems;
     }
 
-    public TaskActivityDetails getUserTaskActivityDetailsByTaskId(int taskId)
+    public List<TaskActivityDetails> getUserTaskActivityDetailsByTaskId(int taskId)
     {
 
-        List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
+        List<TaskActivityDetails> taskActivityDetails = new ArrayList<>();
+        List<UserTaskActivityItem> userTaskActivityItems =
+            (List<UserTaskActivityItem>) getUserTaskActivityItemByTaskId(taskId);
 
         if (!userTaskActivityItems.isEmpty()) {
-            return mapUserTaskActivityItem((UserTaskActivityItem) userTaskActivityItems.get(0));
+            for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+                taskActivityDetails.add(mapUserTaskActivityItem(userTaskActivityItem));
+            }
+            return taskActivityDetails;
         }
         return null;
     }
@@ -338,18 +343,20 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
         for (Object userTaskActivityItemObj : userTaskActivityItems) {
             UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
-            if (taskStatus == TaskStatus.INPROGRESS) {
-                userTaskActivityItem.setInprogressComment(comment);
-                userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
-                userTaskActivityItem.setRecordedStartTime(new Timestamp(date.getTime()));
-            } else if (taskStatus == TaskStatus.COMPLETED) {
-                userTaskActivityItem.setCompletionComment(comment);
-                userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
-                userTaskActivityItem.setActualEndTime(new Timestamp(adjustCompletionTimeDate.getTime()));
-                userTaskActivityItem.setRecordedEndTime(new Timestamp(date.getTime()));
-            }
+            if (userTaskActivityItem.getRecordedEndTime() != null) {
+                if (taskStatus == TaskStatus.INPROGRESS) {
+                    userTaskActivityItem.setInprogressComment(comment);
+                    userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
+                    userTaskActivityItem.setRecordedStartTime(new Timestamp(date.getTime()));
+                } else if (taskStatus == TaskStatus.COMPLETED) {
+                    userTaskActivityItem.setCompletionComment(comment);
+                    userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
+                    userTaskActivityItem.setActualEndTime(new Timestamp(adjustCompletionTimeDate.getTime()));
+                    userTaskActivityItem.setRecordedEndTime(new Timestamp(date.getTime()));
+                }
 
-            getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
+                getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
+            }
         }
 
     }
@@ -381,5 +388,15 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             userWorkDetailsMap.put(data[1], userWorkDetails);
         }
         return userWorkDetailsMap;
+    }
+
+    public void deleteTaskActivity(int activityId)
+    {
+        UserTaskActivityItem userTaskActivityItem =
+            (UserTaskActivityItem) getFamstackDataAccessObjectManager().getItemById(activityId,
+                UserTaskActivityItem.class);
+        if (userTaskActivityItem != null) {
+            getFamstackDataAccessObjectManager().deleteItem(userTaskActivityItem);
+        }
     }
 }

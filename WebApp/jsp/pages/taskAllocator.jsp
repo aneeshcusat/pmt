@@ -739,7 +739,11 @@ var fillTableFromJson = function(){
 	$.each(JSON.parse(jsonAssignData), function(idx, elem){
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
 			var hour = parseInt(elem.startHour);
-			var duration = elem.durationInMinutes/60;
+			var duration = 1;
+			if (elem.durationInMinutes >= 60) {
+				duration = elem.durationInMinutes/60;
+			}
+			
 			var isCompleted = elem.actualEndTime == null ?false:true;
 			var isInprogress = elem.actualStartTime == null?false:true;
 			

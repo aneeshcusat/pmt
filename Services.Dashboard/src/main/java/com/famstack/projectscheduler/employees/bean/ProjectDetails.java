@@ -471,25 +471,21 @@ public class ProjectDetails
 
     public int getActualDuration()
     {
-        double actualDuration = 0;
+        int actualDuration = 0;
         if (getStatus() == ProjectStatus.COMPLETED || getStatus() == ProjectStatus.CLOSED) {
             Set<TaskDetails> taskDetailsList = getProjectTaskDeatils();
-            if (taskDetailsList != null && !taskDetailsList.isEmpty()) {
+            if (taskDetailsList != null) {
                 for (TaskDetails taskDetails : taskDetailsList) {
-
-                    TaskActivityDetails taskActivityDetails = taskDetails.getTaskActivityDetails();
+                    List<TaskActivityDetails> taskActivityDetails = taskDetails.getTaskActivityDetails();
                     if (taskActivityDetails != null) {
-                        Date completionTime = taskActivityDetails.getActualEndTime();
-                        Date startTime = taskActivityDetails.getActualStartTime();
-
-                        if (completionTime != null && startTime != null) {
-                            actualDuration += completionTime.getTime() - startTime.getTime();
+                        for (TaskActivityDetails taskActivityDetail : taskActivityDetails) {
+                            actualDuration += taskActivityDetail.getActualTimeTaken();
                         }
                     }
                 }
             }
         }
-        return (int) (actualDuration > 0 ? Math.round(actualDuration / 60 / 1000) : 0);
+        return actualDuration;
     }
 
     public String getActualDurationInHrs()

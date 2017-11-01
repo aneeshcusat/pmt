@@ -713,10 +713,12 @@ public class FamstackDashboardManager extends BaseFamstackService
 
                 if (taskDetailsList != null) {
                     for (TaskDetails taskDetails : taskDetailsList) {
-                        TaskActivityDetails activityDetails = taskDetails.getTaskActivityDetails();
+                        List<TaskActivityDetails> activityDetails = taskDetails.getTaskActivityDetails();
 
                         if (activityDetails != null) {
-                            taskOwners.add(activityDetails.getUserId());
+                            for (TaskActivityDetails activityDetail : activityDetails) {
+                                taskOwners.add(activityDetail.getUserId());
+                            }
                         }
                     }
                 }
@@ -760,5 +762,11 @@ public class FamstackDashboardManager extends BaseFamstackService
 
         famstackUserActivityManager.createNonBillableUserActivityItem(userId, startTime, 0, taskName, duration,
             UserTaskType.valueOf(type), ProjectType.NON_BILLABLE, comments);
+    }
+
+    public void deleteTaskActivity(int activityId)
+    {
+        famstackUserActivityManager.deleteTaskActivity(activityId);
+
     }
 }

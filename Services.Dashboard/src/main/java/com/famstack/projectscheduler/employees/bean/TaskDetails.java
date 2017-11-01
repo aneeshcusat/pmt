@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.ProjectPriority;
@@ -45,7 +46,7 @@ public class TaskDetails
 
     private EmployeeDetails employeeDetails;
 
-    private TaskActivityDetails taskActivityDetails;
+    private List<TaskActivityDetails> taskActivityDetails;
 
     private Boolean disableTask;
 
@@ -189,16 +190,6 @@ public class TaskDetails
         this.helper = helper;
     }
 
-    public TaskActivityDetails getTaskActivityDetails()
-    {
-        return taskActivityDetails;
-    }
-
-    public void setTaskActivityDetails(TaskActivityDetails taskActivityDetails)
-    {
-        this.taskActivityDetails = taskActivityDetails;
-    }
-
     public String getHelpersList()
     {
         if (StringUtils.isNotBlank(helpersList)) {
@@ -229,18 +220,26 @@ public class TaskDetails
 
     public double getTaskRemainingTime()
     {
-        double durationInMinute = duration * 60;
+        double diffInMinute = duration * 60;
         if (status == TaskStatus.COMPLETED) {
             return 0;
         } else if (taskActivityDetails == null) {
-            return durationInMinute;
+            return diffInMinute;
         }
-        Date actualStartTime = taskActivityDetails.getActualStartTime();
-        double diffInMinute = durationInMinute;
-        if (actualStartTime != null) {
+        Date actualStartTime = null;
+        if (taskActivityDetails != null) {
+            for (TaskActivityDetails taskActivityDetail : taskActivityDetails) {
+                if (taskActivityDetail.getActualEndTime() == null) {
+                    actualStartTime = taskActivityDetail.getActualStartTime();
+                    diffInMinute = taskActivityDetail.getDurationInMinutes();
+                    break;
+                }
+            }
+        }
 
+        if (actualStartTime != null) {
             double diff = new Date().getTime() - actualStartTime.getTime();
-            diff = (durationInMinute * 60 * 1000) - diff;
+            diff = (diffInMinute * 60 * 1000) - diff;
             diffInMinute = diff / (60 * 1000);
         }
         return diffInMinute;
@@ -292,6 +291,16 @@ public class TaskDetails
     public void setDisableTask(Boolean disableTask)
     {
         this.disableTask = disableTask;
+    }
+
+    public List<TaskActivityDetails> getTaskActivityDetails()
+    {
+        return taskActivityDetails;
+    }
+
+    public void setTaskActivityDetails(List<TaskActivityDetails> taskActivityDetails)
+    {
+        this.taskActivityDetails = taskActivityDetails;
     }
 
 }
