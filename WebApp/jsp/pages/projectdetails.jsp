@@ -14,6 +14,10 @@
 	width: 70%;
 }
 
+#taskAddExtraTimeModal  .modal-dialog {
+		width: 30%;
+	}
+
 #employeeListForTaskTable th{
 font-weight: normal;
 font-size: 8pt;
@@ -344,7 +348,12 @@ width: 60%;
                                   <li>Estimated completion time:<b> ${projectDetails.completionTime}</b></li>
                                   <li>Project Duration : <b>${projectDetails.duration} hours</b></li>
                                    <c:if test="${projectDetails.status == 'COMPLETED' }">
-								         <li>Actual Duration : <b>${projectDetails.actualDurationInHrs} hours</b></li>
+								         <li>Actual Duration : <b>${projectDetails.actualDurationInHrs} hours</b>
+								        <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+									        <a data-toggle="modal" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.duration}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-danger" href="#" style="display: inline;color: white;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span> Add Extra time</a>
+								        </c:if> 
+								         
+								         </li>
 					              </c:if>
                                   
                                    
@@ -458,6 +467,28 @@ width: 60%;
 		</div>
 	</form:form>
 </div>
+<div class="modal fade" id="taskAddExtraTimeModal" tabindex="-1"
+	role="dialog" aria-labelledby="taskAddExtraTimeModal" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Task Details</h4>
+				</div>
+				<div class="modal-body">
+					<%@include file="fagments/taskExtraTimeModal.jspf"%>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancel</button>
+					<button id="taskReassign" type="button"
+						class="btn btn-primary hide">
+						<span  onclick="taskAddExtraTime()">Add extra time</span>
+					</button>
+				</div>
+			</div>
+		</div>
+</div>                        
+                        
                          
  <%@include file="includes/footer.jsp" %>  
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js"></script> 
@@ -838,6 +869,10 @@ $('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
 	onShow:dateDisplayLogic
 });
 	
+$('.dateTimePickerNew').datetimepicker({
+	allowTimes:['08:00','09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00']
+});
+
 $("#estStartTime").on("change",function(){
 	
 	var startProjectDate = new Date(startProjectTime);
@@ -1166,6 +1201,11 @@ var fillTableFromJson = function(){
 	}catch(err){
 		
 	}
+}
+
+var addTaskExtraTime = function(projectId, estDuration, actualDuration){
+	$(".taskDetailsDuration").html(estDuration);
+	$(".taskDetailsActualDuration").html(actualDuration);
 }
 
 </script>
