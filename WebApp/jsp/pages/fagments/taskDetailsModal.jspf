@@ -27,12 +27,7 @@
                      <b class="taskDetailsStartedAt"></b>
                      </div>
 				</div>
-				<div class="col-md-12">
-				<label class="col-md-5 control-label text-left">Duration</label>
-                     <div class="col-md-7">
-                     <b class="taskDetailsDuration">0</b> Hrs
-                     </div>
-				</div>
+				
 				<div class="col-md-12">
 				<label class="col-md-5 control-label text-left">Task assignee </label>
                      <div class="col-md-7">
