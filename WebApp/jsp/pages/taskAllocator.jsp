@@ -512,7 +512,13 @@ $(document).ready(function() {
     
     $("#employeeListForTaskTable_filter").append('<span style="float:left;font-weight: bold;margin-top: 7px;"><a hre="#"><i class="fa fa-angle1-double-left fa-x" aria-hidden="true"></i></a> <span style="margin-left: 10px;margin-right: 10px;" id="currentAssignmentDate"></span> <a hre="#"><i class="fa fa-angle1-double-right fa-x" aria-hidden="true"></i></a></span>');
 	$("#currentAssignmentDate").html(getTodayDate(new Date()));
-	} );
+	
+	$('#employeeListForTaskTable').on( 'draw.dt', function () {
+			resetAssignTable();
+			fillTableFromJson();
+		} );
+	
+	});
 
 var cellSelectCount = 0;
 var breakTime = 13;
@@ -735,7 +741,7 @@ var decreaseTotalHours = function(userId){
 }
 
 var fillTableFromJson = function(){
-	
+	try{	
 	$.each(JSON.parse(jsonAssignData), function(idx, elem){
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
 			var hour = parseInt(elem.startHour);
@@ -800,5 +806,8 @@ var fillTableFromJson = function(){
 			}
 		}
 	});
+	}catch(err){
+		
+	}
 }
 </script>

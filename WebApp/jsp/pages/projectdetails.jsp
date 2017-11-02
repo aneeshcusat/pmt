@@ -579,9 +579,12 @@ var loadTaskDetails = function(taskId){
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), parseInt($("#"+taskId+"duration").val())));
     $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
 	resetAssignTable();
+	fillTableFromJson();
 	$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
-	
 	var assigneeId = $("#"+taskId+"assignee").val();
+	
+	$("#employeeListForTaskTable_filter input").val($("#"+taskId+"assigneeName").val());
+	$("#employeeListForTaskTable_filter input").keyup();
 	var helpers = $("#"+taskId+"helper").val();
 	if (assigneeId != "" && assigneeId != 0) {
 		 $("#"+assigneeId+"-select").click();
@@ -650,6 +653,12 @@ $(document).ready(function() {
   				file.previewElement.classList.add("dz-error");
   			}
   		});
+  		
+  		
+  		$('#employeeListForTaskTable').on( 'draw.dt', function () {
+  			resetAssignTable();
+  			fillTableFromJson();
+  		} );
 });
 
 var deleteFile = function(fileName){
@@ -1049,6 +1058,7 @@ var resetAssignTable = function(){
 		$('input:checkbox[name=helper]').each(function () { $(this).prop('checked', false); });
 		var cellColor = $(this).attr("cellcolor");
 		$(this).css("background-color", cellColor);
+		$(this).html("");
 		cellSelectCount=0;
 		$(this).attr("cellmarked",false);
 		$(this).attr("modified",false);
@@ -1095,64 +1105,67 @@ var decreaseTotalHours = function(userId){
 }
 
 var fillTableFromJson = function(){
-	
-	$.each(JSON.parse(jsonAssignData), function(idx, elem){
-		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
-			var hour = parseInt(elem.startHour);
-			var duration = 1;
-			if (elem.durationInMinutes >= 60) {
-				duration = elem.durationInMinutes/60;
-			}
-			var isCompleted = elem.actualEndTime == null ?false:true;
-			var isInprogress = elem.actualStartTime == null?false:true;
-	
-			for (var index = 0; index < duration; index++) {
-				
-				if (hour == breakTime) {
+	try{
+		$.each(JSON.parse(jsonAssignData), function(idx, elem){
+			if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
+				var hour = parseInt(elem.startHour);
+				var duration = 1;
+				if (elem.durationInMinutes >= 60) {
+					duration = elem.durationInMinutes/60;
+				}
+				var isCompleted = elem.actualEndTime == null ?false:true;
+				var isInprogress = elem.actualStartTime == null?false:true;
+		
+				for (var index = 0; index < duration; index++) {
+					
+					if (hour == breakTime) {
+						hour++;
+					}
+					var cellId = $("#"+elem.userId+"-"+hour);
 					hour++;
-				}
-				var cellId = $("#"+elem.userId+"-"+hour);
-				hour++;
-				if($("#taskId").val() != "" && elem.taskId == $("#taskId").val()  &&  elem.taskId != 0) {
-				} else {
-					$(cellId).attr("celleditable", false);
-					$(cellId).attr("isassigned",true);
-					$(cellId).attr("cellmarked",true);
-					$(cellId).attr("modified",false);
-
-					var cellStausColor = isInprogress ? "rgb(250, 128, 114)" :  "rgb(0, 0, 255)"; 
-					cellStausColor = isCompleted ? "rgb(0, 128, 0)" :cellStausColor;
-					
-					var cellTitleTaskName = "Task Id :" + elem.taskId + ", Activity Id:" + elem.taskActivityId+", Task Name :" +  elem.taskName;
-					if (elem.userTaskType == "PROJECT") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
-					} else if (elem.userTaskType == "PROJECT_HELPER") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
-					} else if (elem.userTaskType == "LEAVE") {
-						cellStausColor = "rgb(128, 128, 128)";
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">L</span>');
-					} else if (elem.userTaskType == "MEETING") {
-						cellStausColor = "rgb(0, 139, 139)";
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">M</span>');
-					}else if (elem.userTaskType == "PROJECT_HELPER_REVIEW") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRH</span>');
-					}else if (elem.userTaskType == "PROJECT_REVIEW") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PR</span>');
-					}
-
-					if ($(cellId).css("background-color") == "rgb(248, 250, 252)" || $(cellId).css("background-color") == "rgba(0, 0, 0, 0)") {
-						$(cellId).attr("cellcolor", $(cellId).css("background-color"));
-						$(cellId).css("background-color", cellStausColor);
+					if($("#taskId").val() != "" && elem.taskId == $("#taskId").val()  &&  elem.taskId != 0) {
 					} else {
-						$(cellId).css("background-color", "rgb(255, 0, 0)");
+						$(cellId).attr("celleditable", false);
+						$(cellId).attr("isassigned",true);
+						$(cellId).attr("cellmarked",true);
+						$(cellId).attr("modified",false);
+	
+						var cellStausColor = isInprogress ? "rgb(250, 128, 114)" :  "rgb(0, 0, 255)"; 
+						cellStausColor = isCompleted ? "rgb(0, 128, 0)" :cellStausColor;
+						
+						var cellTitleTaskName = "Task Id :" + elem.taskId + ", Activity Id:" + elem.taskActivityId+", Task Name :" +  elem.taskName;
+						if (elem.userTaskType == "PROJECT") {
+							$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
+						} else if (elem.userTaskType == "PROJECT_HELPER") {
+							$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
+						} else if (elem.userTaskType == "LEAVE") {
+							cellStausColor = "rgb(128, 128, 128)";
+							$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">L</span>');
+						} else if (elem.userTaskType == "MEETING") {
+							cellStausColor = "rgb(0, 139, 139)";
+							$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">M</span>');
+						}else if (elem.userTaskType == "PROJECT_HELPER_REVIEW") {
+							$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRH</span>');
+						}else if (elem.userTaskType == "PROJECT_REVIEW") {
+							$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PR</span>');
+						}
+	
+						if ($(cellId).css("background-color") == "rgb(248, 250, 252)" || $(cellId).css("background-color") == "rgba(0, 0, 0, 0)") {
+							$(cellId).attr("cellcolor", $(cellId).css("background-color"));
+							$(cellId).css("background-color", cellStausColor);
+						} else {
+							$(cellId).css("background-color", "rgb(255, 0, 0)");
+						}
+						
+						increaseTotalHours(elem.userId);
 					}
 					
-					increaseTotalHours(elem.userId);
 				}
-				
 			}
-		}
-	});
+		});
+	}catch(err){
+		
+	}
 }
 
 </script>
