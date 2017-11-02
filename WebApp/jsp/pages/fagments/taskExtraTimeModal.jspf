@@ -1,0 +1,58 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<div class="row">
+
+	<div class="col-md-12">
+		<label class="col-md-5 control-label text-left">Est Duration</label>
+		<div class="col-md-7">
+			<b class="taskDetailsDuration">0</b> Hrs
+		</div>
+	</div>
+	<div class="col-md-12">
+		<label class="col-md-5 control-label text-left">Actual
+			Duration</label>
+		<div class="col-md-7">
+			<b class="taskDetailsActualDuration">0</b> Hrs
+		</div>
+	</div>
+	
+	<div class="col-md-12" style="margin-bottom: 10px">
+			<label class="col-md-5 control-label text-left">Extra time for
+				End</label>
+			<div class="col-md-7">
+				<select path="taskAssignee" id="taskAssignee" name="taskAssignee"
+					class="form-control" data-live-search="true">
+					<option value="">- select -</option>
+					<c:if test="${not empty userMap}">
+						<c:forEach var="user" items="${userMap}">
+							<c:if test="${user.role != 'ADMIN' && user.role != 'MANAGER'}">
+								<option value="${user.id}">${user.firstName}</option>
+							</c:if>
+						</c:forEach>
+					</c:if>
+				</select>
+			</div>
+		</div>
+		
+	<div class="col-md-12">
+		<div class="form-group" style="margin-bottom: 40px">
+			<label class="col-md-5 control-label text-left">Extra Time
+				Start</label>
+			<div class="col-md-7">
+				<input type='text' class="form-control dateTimePickerNew"
+					id='additionalStartTime' />
+			</div>
+		</div>
+		<div class="form-group" style="margin-bottom: 40px">
+			<label class="col-md-5 control-label text-left">Extra Time
+				End</label>
+			<div class="col-md-7">
+				<input type='text' class="form-control dateTimePickerNew"
+					id='additionalStartTime' />
+			</div>
+		</div>
+		
+	</div>
+	<input type='hidden' id='additionalTaskProjectId' />
+</div>
