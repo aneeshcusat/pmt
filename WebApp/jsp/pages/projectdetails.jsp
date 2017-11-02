@@ -238,14 +238,24 @@ width: 60%;
                               	${activities.userName} has created the project.
                               </c:if>
                               
+                               <c:if test="${activities.projectActivityType == 'PROJECT_DETAILS_UPDATED'}">
+                              	${activities.userName} has been updated.
+                              </c:if>
+                              
                               <c:if test="${activities.projectActivityType == 'TASK_ADDED'}">
                               	${activities.userName} has created the task.
+                              </c:if>
+                              
+                               <c:if test="${activities.projectActivityType == 'TASK_UPDTED'}">
+                              	${activities.userName} has been updated.
                               </c:if>
                               
                                <c:if test="${activities.projectActivityType == 'COMMENT_ADDED'}">
                               	${activities.userName} has added a comment.
                               </c:if>
-                              
+                               <c:if test="${activities.projectActivityType == 'FILE_UPLOADED'}">
+                              	${activities.userName} has been uploaded.
+                              </c:if>
                               </td>
                               <td>
                                   <span class="label label-info"> ${activities.projectStatus}</span>
@@ -333,6 +343,11 @@ width: 60%;
                                   <li>Estimated start time:<b> ${projectDetails.startTime}</b></li>
                                   <li>Estimated completion time:<b> ${projectDetails.completionTime}</b></li>
                                   <li>Project Duration : <b>${projectDetails.duration} hours</b></li>
+                                   <c:if test="${projectDetails.status == 'COMPLETED' }">
+								         <li>Actual Duration : <b>${projectDetails.actualDurationInHrs} hours</b></li>
+					              </c:if>
+                                  
+                                   
                                   <li>Unassinged Duration : <b>${projectDetails.unAssignedDuration} hours</b></li>
                               </ul>
 

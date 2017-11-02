@@ -437,6 +437,15 @@ public class FamstackProjectManager extends BaseFamstackManager
         }
     }
 
+    public void updateProjectActivityItem(int projectId, ProjectActivityType projectActivityType, String description)
+    {
+        ProjectItem projectItem = getProjectItemById(projectId);
+        if (projectItem != null) {
+            famstackProjectActivityManager.createProjectActivityItemItem(projectItem,
+                ProjectActivityType.PROJECT_DETAILS_UPDATED, description);
+        }
+    }
+
     public TaskDetails getProjectTaskById(int taskId)
     {
         return famstackProjectTaskManager.getTaskDetailsById(taskId);

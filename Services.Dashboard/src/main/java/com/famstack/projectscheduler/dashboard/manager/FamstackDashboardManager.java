@@ -21,6 +21,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.LeaveType;
 import com.famstack.projectscheduler.contants.NotificationType;
+import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
@@ -269,6 +270,8 @@ public class FamstackDashboardManager extends BaseFamstackService
     public void uploadProjectFile(MultipartFile file, String projectId, HttpServletRequest request)
     {
         famstackProjectFileManager.uploadFile(file, projectId, request);
+        projectManager.updateProjectActivityItem(Integer.parseInt(projectId), ProjectActivityType.FILE_UPLOADED,
+            file.getName());
     }
 
     public void deleteProjectFile(String fileName, String projectCode, HttpServletRequest request)
