@@ -457,7 +457,7 @@ width: 60%;
                                    <c:if test="${projectDetails.status == 'COMPLETED' }">
 								         <li>Actual Duration : <b>${projectDetails.actualDurationInHrs} hours</b>
 								        <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-									        <a data-toggle="modal" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.duration}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-danger" href="#" style="display: inline;color: white;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span> Add Extra time</a>
+									        <a data-toggle="modal" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.duration}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-info btn-rounded" href="#" style="display: inline;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span> Add Extra time</a>
 								        </c:if> 
 								         
 								         </li>
@@ -468,7 +468,7 @@ width: 60%;
                               </ul>
 
                               <br>
-                              
+                              <c:if test="${not empty projectDetails.filesNames || not empty projectDetails.completedFilesNames}">
                               <h5 class="bold">Project files</h5>
                               <ul class="list-unstyled p-files" id="upladedFilesList">
                                 <c:if test="${not empty projectDetails.filesNames}">
@@ -492,9 +492,10 @@ width: 60%;
                                  </c:forEach>
                                  </c:if>
                               </ul>
+                              </c:if>
                               <br>
                                <c:if test="${not empty projectDetails.duplicateProjects}">
-                               <h5 class="bold">Duplicate Project</h5>
+                               <h5 class="bold">Duplicate Projects</h5>
                                <ul class="list-unstyled p-files" id="duplicateProjects">
                                  <c:forEach var="duplicateProject" items="${projectDetails.duplicateProjects}" varStatus="fileNameIndex"> 
                                  	<li><a href="${applicationHome}/project/${duplicateProject.id}">${duplicateProject.name}</a></li> 
