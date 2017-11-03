@@ -36,7 +36,7 @@ public class TaskDetails
 
     private int assignee;
 
-    private int[] helper;
+    private Integer[] helper;
 
     private Boolean reviewTask;
 
@@ -180,12 +180,12 @@ public class TaskDetails
         this.assignee = assignee;
     }
 
-    public int[] getHelper()
+    public Integer[] getHelper()
     {
         return helper;
     }
 
-    public void setHelper(int[] helper)
+    public void setHelper(Integer[] helper)
     {
         this.helper = helper;
     }

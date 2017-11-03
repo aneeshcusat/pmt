@@ -43,7 +43,63 @@ width: 60%;
 }
 .task_progress .progress {
 		height: 10px;
-	}
+}
+
+.panel {
+    border: 1px solid #e1e3e4;
+    position: relative;
+    border-radius: 4px;
+    box-shadow: 0 0 0 transparent !important;
+}
+.panel .panel-body {
+    position: relative;
+}
+.no-padding {
+    padding: 0 !important;
+}
+
+.panel-stats .panel-data.panel-progress, .panel-stats-icon .panel-data.panel-progress {
+    padding: 20px 30px;
+}
+
+.panel-stats .panel-data, .panel-stats-icon .panel-data {
+    text-align: center;
+    border-left: 1px solid #dfe7ea;
+    border-top: 1px solid #dfe7ea;
+    margin-left: -1px;
+    margin-top: -1px;
+    padding: 0px;
+    font-size: 20px;
+    color: #444c52;
+}
+
+.panel-stats .panel-data.panel-progress .progress, .panel-stats-icon .panel-data.panel-progress .progress {
+    margin-bottom: 10px;
+}
+
+.progress {
+    box-shadow: 0 0 0 transparent !important;
+    background: #f6f7f7;
+}
+
+.panel-stats .panel-data span, .panel-stats-icon .panel-data span {
+    display: block;
+    font-size: 14px;
+    font-family: 'Karla', sans-serif;
+    color: #7f8c8d;
+}
+
+.panel-stats [class*="col-"], .panel-stats-icon [class*="col-"] {
+    padding: 0 !important;
+}
+
+.panel .panel-footer {
+    background: #fcfcfc;
+    font-size: 13px;
+    color: #3e5465;
+    padding: 11px 15px 12px;
+    border-top: 1px solid #e1e3e4;
+}
 	</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
@@ -124,10 +180,10 @@ width: 60%;
                                   <div class="col-md-6">
                                       <p><span class="bold">Assignee </span>:
                                        
-                                        <c:if test="${not empty projectDetails.projectTaskDeatils}">
-                                 			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
+                                        <c:if test="${not empty projectDetails.contributers}">
+                                 			<c:forEach var="contributer" items="${projectDetails.contributers}" varStatus="taskIndex"> 
 		                                      <span class="project_team">
-		                                         <a href="#"><img alt="image" src="${applicationHome}/image/${taskDetails.assignee}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
+		                                         <a href="#"><img alt="image" src="${applicationHome}/image/${contributer}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
 		                                      </span>
                                       </c:forEach>
                                       </c:if>
@@ -135,23 +191,74 @@ width: 60%;
                                   </div>
 									</c:if>
                                   <div class="col-lg-12">
-                                      <dl class="dl-horizontal mtop20 p-progress">
-                                          <dt>Project Completed:</dt>
-                                          <dd>
-                                          <c:set var="progressState" value="striped"/>
-			                  				<c:if test="${projectDetails.status == 'INPROGRESS' }">
-			                   					<c:set var="progressState" value="striped active"/>
-			                  				</c:if>
-			                  				<c:if test="${projectDetails.status == 'COMPLETED' }">
-			                   					<c:set var="progressState" value=""/>
-			                  				</c:if>
-                                              <div class="progress progress-${progressState}">
-                                                  <div style="width: ${projectDetails.projectCompletionPercentage}%;" class="progress-bar progress-bar-${projectState}"></div>
-                                                   <small>${projectDetails.projectCompletionPercentage}% Complete</small>
-                                              </div>
-                                              <small>Project complition <strong>${100 - projectDetails.projectCompletionPercentage}%</strong> Remaining</small>
-                                          </dd>
-                                      </dl>
+                                     
+                                     <div class="panel panel-default panel-stats">
+										<div class="panel-body no-padding">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="panel-data panel-progress">
+														<div class="progress">
+														
+														  <c:set var="progressState" value="striped" />
+						                  				<c:if test="${projectDetails.status == 'INPROGRESS' }">
+						                   					<c:set var="progressState" value="striped active"/>
+						                  				</c:if>
+						                  				<c:if test="${projectDetails.status == 'COMPLETED' }">
+						                   					<c:set var="progressState" value=""/>
+						                  				</c:if>
+		                  								 <div class="progress progress-${progressState}">
+														<div class="progress-bar progress-bar-${projectState}" role="progressbar" aria-valuenow="${projectDetails.projectCompletionPercentage}" aria-valuemin="0" aria-valuemax="100" style="width: ${projectDetails.projectCompletionPercentage}%;">
+													    	${projectDetails.projectCompletionPercentage}%
+														</div>
+														</div>
+														</div>
+														<div class="progress-meta clearfix">
+															<span class="col-md-6 col-sm-6 text-left"><strong>Milestone:</strong> <c:if test="${projectDetails.completionInDays >= 0}">${projectDetails.completionInDays}</c:if><c:if test="${projectDetails.completionInDays < 0}">${projectDetails.completionInDays * -1}</c:if>
+															<c:if test="${projectDetails.completionInDays >= 0}"> Left</c:if><c:if test="${projectDetails.completionInDays < 0}"> Ago</c:if>
+															</span>
+															<span class="col-md-6 col-sm-6 text-right"><strong>Due:</strong>
+															<fmt:parseDate value = "${projectDetails.completionTime}" var = "parsedDate" pattern = "yyyy/MM/dd HH:mm"/>
+															<fmt:formatDate pattern = "MMM dd YYYY" value = "${parsedDate}"/></span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-12">
+													<div class="col-md-4 col-sm-4">
+														<div class="panel-data">
+															${projectDetails.noOfTasks}	
+															<span>Tasks</span>
+														</div>
+													</div>
+													<div class="col-md-4 col-sm-4">
+														<div class="panel-data">
+															<c:choose>
+															<c:when test="${not empty projectDetails.filesNames && not empty projectDetails.completedFilesNames}">
+																${projectDetails.filesNames.size() + projectDetails.completedFilesNames.size()}
+															</c:when>
+															<c:when test="${not empty projectDetails.filesNames}">
+																${projectDetails.filesNames.size()}
+															</c:when>
+															<c:when test="${not empty projectDetails.completedFilesNames}">
+																${projectDetails.completedFilesNames.size()}
+															</c:when>
+															<c:otherwise>
+																0
+															</c:otherwise>	
+															</c:choose>		
+															<span>Assets</span>
+														</div>
+													</div>
+													<div class="col-md-4 col-sm-4">
+														<div class="panel-data">
+															${projectDetails.contributers.size()}
+															<span>Contributers</span>
+														</div>
+													</div>
+												</div>
+											</div>
+									</div>
                                   </div>
                               </div>
                               <div class="row">
@@ -472,7 +579,7 @@ width: 60%;
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Task Details</h4>
+					<h4 class="modal-title" id="myModalLabel">Extra Project Time</h4>
 				</div>
 				<div class="modal-body">
 					<%@include file="fagments/taskExtraTimeModal.jspf"%>

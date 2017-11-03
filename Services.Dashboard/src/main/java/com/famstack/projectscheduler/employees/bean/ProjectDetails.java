@@ -1,7 +1,9 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -320,6 +322,21 @@ public class ProjectDetails
             return taskDetailsSet.size();
         }
         return 0;
+    }
+
+    public Set<Integer> getContributers()
+    {
+        Set<Integer> contribuersSet = new HashSet<>();
+        Set<TaskDetails> taskDetailsSet = getProjectTaskDeatils();
+        if (taskDetailsSet != null) {
+            for (TaskDetails taskDetails : taskDetailsSet) {
+                contribuersSet.add(taskDetails.getAssignee());
+                if (taskDetails.getHelper() != null) {
+                    contribuersSet.addAll(Arrays.asList(taskDetails.getHelper()));
+                }
+            }
+        }
+        return contribuersSet;
     }
 
     public int getNoOfOpenTasks()

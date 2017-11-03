@@ -19,7 +19,7 @@
 	
 	<div class="col-md-12" style="margin-bottom: 10px">
 			<label class="col-md-5 control-label text-left">Extra time for
-				End</label>
+				</label>
 			<div class="col-md-7">
 				<select path="taskAssignee" id="taskAssignee" name="taskAssignee"
 					class="form-control" data-live-search="true">
