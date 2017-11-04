@@ -106,7 +106,7 @@ width: 60%;
                   <div class="col-md-7">                      
             <h4><span style="padding-top: 10px;" class="fa ">${projectDetails.code}</span> - <span class="editableFieldText">${projectDetails.name}</span></h4>
             </div>
-          <div class="col-md-5 text-right">               
+          <div class="col-md-5 text-right hide">               
            <a href="#" class="btn  btn-default">Complete</a>
             </div>
        </div>

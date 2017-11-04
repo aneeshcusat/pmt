@@ -116,7 +116,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
         if (userTaskActivityItemOld == null) {
             famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(),
-                projectItem.getStartTime(), taskItemNew.getTaskId(), taskDetails.getName(), durationNew,
+                projectItem.getStartTime(), taskItemNew.getTaskId(), taskItemNew.getName(), durationNew,
                 UserTaskType.EXTRATIME, projectItem.getType(), taskDetails.getDescription());
         } else {
             userTaskActivityItemOld.setDurationInMinutes(durationNew * 60);
