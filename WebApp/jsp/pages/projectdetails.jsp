@@ -401,9 +401,7 @@ width: 60%;
                                  			<tr>
                                              <td width="5%">1</td>
                                                 <td class="task_progress"><a href="#" id="${taskDetails.taskId}" class="trigger" 
-                                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-                                                data-toggle="modal"  data-backdrop="static" data-target="#taskActivityDetailsModal"
-                                                </c:if>
+                                                data-toggle="modal"  data-backdrop="static" data-target="#taskActivityDetailsModal" onclick="loadTaskActivityDetails(${taskDetails.taskId})"
                                                 >${taskDetails.name}</a> 
                                                  
                                                  <c:set var="progressTaskState" value="striped"/>
@@ -416,8 +414,11 @@ width: 60%;
 			                  				
                                                  <div class="progress progress-small progress-${progressTaskState}">
                                                  <c:set var="taskHealth" value="info"/>
-                                                 <c:if test="${taskDetails.taskRemainingTime < 1 }">
+                                                 <c:if test="${taskDetails.taskRemainingTime < 0 }">
                                                   <c:set var="taskHealth" value="danger"/>
+                                                 </c:if>
+                                                  <c:if test="${taskDetails.taskRemainingTime == 0 }">
+                                                  <c:set var="taskHealth" value="success"/>
                                                  </c:if>
                                         			<div class="progress-bar progress-bar-${taskHealth}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: ${taskDetails.percentageOfTaskCompleted}%;"></div>
                                     				 <small>${taskDetails.percentageOfTaskCompleted}% Complete</small>
@@ -429,7 +430,11 @@ width: 60%;
                                                <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a>
                                               </td>
                                                <td width="5%">
-                                                <a data-toggle="modal" data-backdrop="static" data-target="#createtaskmodal" class="btn btn-primary btn-rounded" onclick="loadTaskDetails('${taskDetails.taskId}');" href="#"><i class="fa fa-pencil fa-1x" style="" aria-hidden="true"></i></a>
+                                                <a data-toggle="modal" data-backdrop="static" 
+                                                <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                                                data-target="#createtaskmodal" class="btn btn-primary btn-rounded" onclick="loadTaskDetails('${taskDetails.taskId}');"
+                                                </c:if>
+                                                 href="#"><i class="fa fa-pencil fa-1x" style="" aria-hidden="true"></i></a>
                                                </td>
                                             	</c:if>
                                             </tr>
@@ -445,6 +450,59 @@ width: 60%;
                                             <input id="${taskDetails.taskId}helper" type="hidden" value="${taskDetails.helpersList}"/>
                                             <c:set var="helpersNames" value=""/>
                                             <input id="${taskDetails.taskId}helperNames" type="hidden" value="${taskDetails.helperNames}"/>
+                                            
+                                            <div id="taskDetailsContent${taskDetails.taskId}" class="hide">
+									         <a href="#" class="list-group-item">  
+									             <span class="contacts-title">${taskDetails.name}</span>
+									             <p>${taskDetails.description}</p> 
+									             <p>Duration : ${taskDetails.duration}</p> 
+									             <p>Priority : ${taskDetails.priority}</p> 
+									             <p>Start at : ${taskDetails.startTime}</p>
+									             <p>End at   : ${taskDetails.completionTime}</p>
+									             <p>Review   : ${taskDetails.reviewTask}</p>
+									                                                 
+									         </a>
+									         <c:if test="${not empty taskDetails.taskActivityDetails}">
+	                                 			<c:forEach var="taskActivityDetail" items="${taskDetails.taskActivityDetails}" varStatus="taskIndex"> 
+										          <a href="#" class="list-group-item">                                    
+										             <img alt="image" src="${applicationHome}/image/${taskActivityDetail.userId}" class="pull-left"  onerror="this.src='${assets}/images/users/no-image.jpg'">
+										            <span class="contacts-title">${taskActivityDetail.userTaskType} Task Activity</span>
+										           	<c:choose>
+										            	<c:when test="${not empty taskActivityDetail.actualEndTime}">
+										            		<p>Status : COMPLETED</p>
+										            	</c:when>
+										            	<c:when test="${not empty taskActivityDetail.actualStartTime}">
+										            		<p>Status : INPROGRESS</p>
+										            	</c:when>
+										            	<c:when test="${empty taskActivityDetail.actualStartTime}">
+										            		<p>Status : NEW</p>
+										            	</c:when>
+										            </c:choose>
+										            <c:if test="${not empty taskActivityDetail.actualStartTime}">
+										        		<p>Actual start time :${taskActivityDetail.actualStartTime}</p>
+										            </c:if>
+     												<c:if test="${not empty taskActivityDetail.actualEndTime}">
+										        		<p>Actual end time :${taskActivityDetail.actualEndTime}</p>
+										            </c:if>
+     												<c:if test="${not empty taskActivityDetail.recordedStartTime}">
+										        		<p>Recorded end time :${taskActivityDetail.recordedStartTime}</p>
+										            </c:if>
+     												<c:if test="${not empty taskActivityDetail.recordedEndTime}">
+										        		<p>Recorded end time :${taskActivityDetail.recordedEndTime}</p>
+										            </c:if>
+										            <c:if test="${not empty taskActivityDetail.recordedStartTime}">
+										        		<p>In progress Comment :${taskActivityDetail.inprogressComment}</p>
+										            </c:if>
+     												<c:if test="${not empty taskActivityDetail.recordedEndTime}">
+										        		<p>Completion Comment :${taskActivityDetail.completionComment}</p> 
+										            </c:if>
+										             <div class="list-group-controls">
+											             <button style="background-color: transparent;border: 0px;" data-box="#confirmationbox" class="mb-control deleteTaskActivity" onclick="deleteTaskActivity('${taskActivityDetail.taskActivityId}');"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></button>
+										             </div>                                    
+										         </a>   
+									         </c:forEach>
+									         </c:if>  
+                                            </div>
                                  			</c:forEach>
                                  		</c:if>
                                        </tbody>
@@ -1338,4 +1396,46 @@ var addTaskExtraTime = function(projectId, estDuration, actualDuration){
 	$(".taskDetailsActualDuration").html(actualDuration);
 }
 
+var loadTaskActivityDetails = function(taskId) {
+	$("#projectActivityModalContent").html($("#taskDetailsContent"+taskId).html());
+}
+
+function deleteTaskActivity(activityId){
+	$(".msgConfirmText").html("Delete task activity");
+	$(".msgConfirmText1").html(activityId);
+	$("#confirmYesId").prop("href","javascript:deleteTaskActivityAjax('"+activityId+"')");
+}
+
+
+var deleteTaskActivityAjax = function(activityId) {
+	doAjaxRequest("POST", "${applicationHome}/deleteTaskActivity", {activityId:activityId},  function() {
+		$(".mb-control-close").click();
+	}, function(e) {
+	});
+}
+
+$(document).ready(function(){
+	/* MESSAGE BOX */
+	$(document).on("click",".deleteTaskActivity",function(){
+	    var box = $($(this).data("box"));
+	    if(box.length > 0){
+	        box.toggleClass("open");
+	        
+	        var sound = box.data("sound");
+	        
+	        if(sound === 'alert')
+	            playAudio('alert');
+	        
+	        if(sound === 'fail')
+	            playAudio('fail');
+	        
+	    }        
+	    return false;
+	});
+	$(document).on("click",".mb-control-close",function(){
+	   $(this).parents(".message-box").removeClass("open");
+	   return false;
+	});    
+	/* END MESSAGE BOX */
+});
 </script>

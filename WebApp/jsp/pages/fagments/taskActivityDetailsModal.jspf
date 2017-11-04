@@ -1,28 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-	<div class="list-group list-group-contacts">                                
-                                    <a href="#" class="list-group-item">                                    
-                                        <img src="assets/images/users/user3.jpg" class="pull-left" alt="Nadia Ali">
-                                        <span class="contacts-title">Nadia Ali</span>
-                                        <p>Singer-Songwriter</p>                                    
-                                        <div class="list-group-controls">
-                                            <button class="btn btn-primary btn-rounded"><span class="fa fa-pencil"></span></button>
-                                        </div>                                    
-                                    </a>                                                                
-                                    <a href="#" class="list-group-item">                                    
-                                        <img src="assets/images/users/user.jpg" class="pull-left" alt="Dmitry Ivaniuk">
-                                        <span class="contacts-title">Dmitry Ivaniuk</span>
-                                        <p>Web Developer/Designer</p>                                    
-                                        <div class="list-group-controls">
-                                            <button class="btn btn-primary btn-rounded"><span class="fa fa-pencil"></span></button>
-                                        </div>                                    
-                                    </a>
-                                    <a href="#" class="list-group-item">                                    
-                                        <img src="assets/images/users/user2.jpg" class="pull-left" alt="John Doe">
-                                        <span class="contacts-title">John Doe</span>
-                                        <p>UI/UX Designer</p>                     
-                                        <div class="list-group-controls">
-                                            <button class="btn btn-primary btn-rounded"><span class="fa fa-pencil"></span></button>
-                                        </div>
-                                    </a>                                
-                                </div>
+	<div class="list-group list-group-contacts" id="projectActivityModalContent">                                
+                                        
+     </div>
