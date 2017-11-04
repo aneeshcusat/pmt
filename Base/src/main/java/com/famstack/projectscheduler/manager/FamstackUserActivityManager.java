@@ -33,7 +33,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     @Resource
     FamstackUserProfileManager famstackUserProfileManager;
 
-    public void createNonBillableUserActivityItem(int userId, Date startTime, int taskId, String taskName,
+    public void createCompletedUserActivityItem(int userId, Date startTime, int taskId, String taskName,
         int durationInHrs, UserTaskType userTaskType, ProjectType projectType, String comment)
     {
         UserTaskActivityItem userTaskActivityItem =

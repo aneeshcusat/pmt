@@ -77,6 +77,9 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "review_task")
     private Boolean reviewTask;
 
+    @Column(name = "extra_time_task")
+    private Boolean extraTimeTask;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TaskStatus status;
@@ -236,6 +239,16 @@ public class TaskItem implements FamstackBaseItem
     public void setReviewTask(Boolean reviewTask)
     {
         this.reviewTask = reviewTask;
+    }
+
+    public Boolean getExtraTimeTask()
+    {
+        return extraTimeTask == null ? false : extraTimeTask;
+    }
+
+    public void setExtraTimeTask(Boolean extraTimeTask)
+    {
+        this.extraTimeTask = extraTimeTask;
     }
 
 }

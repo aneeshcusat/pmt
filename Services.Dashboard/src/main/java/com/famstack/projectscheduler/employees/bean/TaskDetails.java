@@ -44,6 +44,8 @@ public class TaskDetails
 
     private TaskStatus status;
 
+    private Boolean extraTimeTask;
+
     private EmployeeDetails employeeDetails;
 
     private List<TaskActivityDetails> taskActivityDetails;
@@ -301,6 +303,27 @@ public class TaskDetails
     public void setTaskActivityDetails(List<TaskActivityDetails> taskActivityDetails)
     {
         this.taskActivityDetails = taskActivityDetails;
+    }
+
+    public int getActualTimeTaken()
+    {
+        int actualDuration = 0;
+        if (taskActivityDetails != null) {
+            for (TaskActivityDetails taskActivityDetail : taskActivityDetails) {
+                actualDuration += taskActivityDetail.getActualTimeTaken();
+            }
+        }
+        return actualDuration;
+    }
+
+    public Boolean getExtraTimeTask()
+    {
+        return extraTimeTask == null ? false : extraTimeTask;
+    }
+
+    public void setExtraTimeTask(Boolean extraTimeTask)
+    {
+        this.extraTimeTask = extraTimeTask;
     }
 
 }

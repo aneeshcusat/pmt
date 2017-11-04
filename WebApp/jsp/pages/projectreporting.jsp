@@ -94,7 +94,7 @@
                                                 <td>${project.duration}</td>
                                                 <td>${project.actualDurationInHrs}</td>
                                                 <td>${userDetailsMap[projectTaskDetails.assignee].firstName} </td>
-                                                <td><c:forEach var="projectTaskDetails" items="${project.projectTaskDeatils}" varStatus="projectTaskDetailsIndex">${userDetailsMap[projectTaskDetails.assignee].firstName}<c:if test="${projectTaskDetailsIndex.index < project.projectTaskDeatils.size() - 1}">,</c:if></c:forEach><c:if test="${not empty projectTaskDetails.helpersList}">,${projectTaskDetails.helpersList}</c:if></td>
+                                                <td><c:forEach var="contributer" items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if></c:forEach></td>
 
 				                              	<td> <span class="label label-${projectState}">${project.status}</span></td>
                                             </tr>  

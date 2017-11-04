@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
+import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
@@ -55,6 +56,76 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         saveTask(taskDetails, projectItem, taskItem);
         famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.TASK_ADDED,
             taskItem.getName());
+    }
+
+    public void createExtraTaskItem(TaskDetails taskDetails, ProjectItem projectItem)
+    {
+        Set<TaskItem> taskItems = projectItem.getTaskItems();
+        UserTaskActivityItem userTaskActivityItemOld = null;
+        int durationNew = taskDetails.getDuration();
+
+        TaskItem taskItemNew = null;
+        if (taskItems != null) {
+            for (TaskItem taskItem : taskItems) {
+                if (taskItem.getExtraTimeTask()) {
+                    taskItemNew = taskItem;
+                    break;
+                }
+            }
+        }
+
+        if (taskItemNew == null) {
+            taskItemNew = new TaskItem();
+            taskItemNew.setName("Project extra time");
+            taskItemNew.setStatus(TaskStatus.COMPLETED);
+            taskItemNew.setDescription(taskDetails.getDescription());
+            taskItemNew.setCompletionTime(projectItem.getCompletionTime());
+            taskItemNew.setStartTime(projectItem.getStartTime());
+            taskItemNew.setPriority(ProjectPriority.HIGHT);
+            taskItemNew.setProjectItem(projectItem);
+            taskItemNew.setReviewTask(false);
+            taskItemNew.setExtraTimeTask(true);
+            taskItemNew.setDuration(taskDetails.getDuration());
+            taskItemNew.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
+            taskItemNew.setAssignee(taskDetails.getAssignee());
+        } else {
+            String helpers = "" + taskDetails.getAssignee();
+            if (taskItemNew.getHelpers() != null) {
+                helpers += "," + taskDetails.getAssignee();
+            }
+            taskItemNew.setHelpers(helpers);
+
+            int duration = taskItemNew.getDuration() + taskDetails.getDuration();
+            List<UserTaskActivityItem> userTaskActivityItems =
+                (List<UserTaskActivityItem>) famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItemNew
+                    .getTaskId());
+            if (userTaskActivityItems != null) {
+                for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+                    if (userTaskActivityItem.getUserActivityItem().getUserItem().getId() == taskDetails.getAssignee()) {
+                        userTaskActivityItemOld = userTaskActivityItem;
+                        duration -= (userTaskActivityItemOld.getDurationInMinutes() / 60);
+                        break;
+                    }
+                }
+            }
+
+            taskItemNew.setDuration(duration);
+        }
+
+        famstackDataAccessObjectManager.saveOrUpdateItem(taskItemNew);
+
+        if (userTaskActivityItemOld == null) {
+            famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(),
+                projectItem.getStartTime(), taskItemNew.getTaskId(), taskDetails.getName(), durationNew,
+                UserTaskType.EXTRATIME, projectItem.getType(), taskDetails.getDescription());
+        } else {
+            userTaskActivityItemOld.setDurationInMinutes(durationNew * 60);
+            userTaskActivityItemOld.setTaskName(taskDetails.getName());
+            userTaskActivityItemOld.setTaskName(taskDetails.getName());
+            userTaskActivityItemOld.setCompletionComment(taskDetails.getDescription());
+            famstackDataAccessObjectManager.saveOrUpdateItem(userTaskActivityItemOld);
+        }
+
     }
 
     public void updateTask(TaskDetails taskDetails, ProjectItem projectItem)
@@ -235,13 +306,12 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setStartTime(startDateString);
             taskDetails.setCompletionTime(completionDateString);
             taskDetails.setStatus(taskItem.getStatus());
-            if (taskItem.getStatus() == TaskStatus.INPROGRESS || taskItem.getStatus() == TaskStatus.COMPLETED) {
-                taskDetails.setTaskActivityDetails(famstackUserActivityManager
-                    .getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
-            }
+            taskDetails.setTaskActivityDetails(famstackUserActivityManager.getUserTaskActivityDetailsByTaskId(taskItem
+                .getTaskId()));
             if (isFullLoad) {
                 taskDetails.setDescription(taskItem.getDescription());
                 taskDetails.setReviewTask(taskItem.getReviewTask());
+                taskDetails.setExtraTimeTask(taskItem.getExtraTimeTask());
                 taskDetails.setPriority(taskItem.getPriority());
 
                 if (taskItem.getReporter() != null) {
@@ -252,6 +322,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                 taskDetails.setLastModifiedDate(taskItem.getLastModifiedDate());
                 taskDetails.setProjectId(taskItem.getProjectItem().getProjectId());
                 taskDetails.setHelpersList(taskItem.getHelpers());
+
             }
             return taskDetails;
 

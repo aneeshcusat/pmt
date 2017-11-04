@@ -45,7 +45,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         initializeConfigurations();
     }
 
-    private void initializeUserMap(List<EmployeeDetails> employeeDetailsList)
+    public void initializeUserMap(List<EmployeeDetails> employeeDetailsList)
     {
         Map<Integer, EmployeeDetails> userMapTemp = new HashMap<>();
         Map<String, Integer> userIdMapTemp = new HashMap<>();
@@ -156,7 +156,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     /**
      * Checks if is log debug.
-     *
+     * 
      * @return true, if is log debug
      */
     public boolean isLogDebug()
@@ -169,7 +169,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     /**
      * Checks if is log debug.
-     *
+     * 
      * @return true, if is log debug
      */
     public boolean isAutoRefresh()
@@ -182,7 +182,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     /**
      * Checks if is log debug.
-     *
+     * 
      * @return true, if is log debug
      */
     public boolean isEmailEnabled()

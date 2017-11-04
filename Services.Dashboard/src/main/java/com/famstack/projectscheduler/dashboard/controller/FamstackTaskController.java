@@ -58,6 +58,15 @@ public class FamstackTaskController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/createExtraTimeTask", method = RequestMethod.POST)
+    @ResponseBody
+    public String createExtraTimeTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result,
+        Model model)
+    {
+        famstackDashboardManager.createExtraTimeTask(taskDetails);
+        return "{\"status\": true}";
+    }
+
     @RequestMapping(value = "/updateTask", method = RequestMethod.POST)
     @ResponseBody
     public String updateTask(@ModelAttribute("taskDetails") TaskDetails taskDetails, BindingResult result, Model model)

@@ -8,5 +8,6 @@ public enum UserTaskType
     MEETING,
     PROJECT_REVIEW,
     PROJECT_HELPER_REVIEW,
-    PROJECT_PARTIAL
+    PROJECT_PARTIAL,
+    EXTRATIME;
 }

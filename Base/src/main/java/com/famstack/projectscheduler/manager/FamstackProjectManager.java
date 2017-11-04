@@ -123,6 +123,12 @@ public class FamstackProjectManager extends BaseFamstackManager
         updateProjectStatusBasedOnTaskStatus(taskDetails.getProjectId());
     }
 
+    public void createProjectExtraTimeTask(TaskDetails taskDetails)
+    {
+        ProjectItem projectItem = getProjectItemById(taskDetails.getProjectId());
+        famstackProjectTaskManager.createExtraTaskItem(taskDetails, projectItem);
+    }
+
     public void reAssignTask(TaskDetails taskDetails, int newUserId, int taskActivityId, TaskStatus taskStatus)
     {
         famstackProjectTaskManager.reAssignTask(taskDetails, newUserId, taskActivityId, taskStatus);
@@ -254,7 +260,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         int unassignedCount = projectDetails.getDuration();
         if (projectDetails.getProjectTaskDeatils() != null) {
             for (TaskDetails taskDetails : projectDetails.getProjectTaskDeatils()) {
-                unassignedCount -= taskDetails.getDuration();
+                if (!taskDetails.getExtraTimeTask()) {
+                    unassignedCount -= taskDetails.getDuration();
+                }
             }
         }
         return unassignedCount;

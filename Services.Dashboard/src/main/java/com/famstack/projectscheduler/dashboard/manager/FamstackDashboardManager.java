@@ -250,6 +250,12 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     }
 
+    public void createExtraTimeTask(TaskDetails taskDetails)
+    {
+        projectManager.createProjectExtraTimeTask(taskDetails);
+
+    }
+
     private void triggerTaskNotification(NotificationType type, TaskDetails taskDetails)
     {
         ProjectDetails projectDetails = projectManager.getProjectDetails(taskDetails.getProjectId());
@@ -763,7 +769,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 
         taskName += type;
 
-        famstackUserActivityManager.createNonBillableUserActivityItem(userId, startTime, 0, taskName, duration,
+        famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName, duration,
             UserTaskType.valueOf(type), ProjectType.NON_BILLABLE, comments);
     }
 

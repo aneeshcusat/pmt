@@ -1,7 +1,6 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +14,7 @@ import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.StringUtils;
 
 public class ProjectDetails
 {
@@ -309,6 +309,19 @@ public class ProjectDetails
         return projectTaskDeatils;
     }
 
+    public Set<TaskDetails> getProjectActualTaskDeatils()
+    {
+        Set<TaskDetails> taskDetails = new HashSet<>();
+        if (projectTaskDeatils != null) {
+            for (TaskDetails taskDetail : projectTaskDeatils) {
+                if (!taskDetail.getExtraTimeTask()) {
+                    taskDetails.add(taskDetail);
+                }
+            }
+        }
+        return taskDetails;
+    }
+
     public int getCompletionInDays()
     {
         Date completionDate = DateUtils.tryParse(getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
@@ -317,7 +330,7 @@ public class ProjectDetails
 
     public int getNoOfTasks()
     {
-        Set<TaskDetails> taskDetailsSet = getProjectTaskDeatils();
+        Set<TaskDetails> taskDetailsSet = getProjectActualTaskDeatils();
         if (taskDetailsSet != null) {
             return taskDetailsSet.size();
         }
@@ -331,8 +344,13 @@ public class ProjectDetails
         if (taskDetailsSet != null) {
             for (TaskDetails taskDetails : taskDetailsSet) {
                 contribuersSet.add(taskDetails.getAssignee());
-                if (taskDetails.getHelper() != null) {
-                    contribuersSet.addAll(Arrays.asList(taskDetails.getHelper()));
+                if (StringUtils.isNotBlank(taskDetails.getHelpersList())) {
+                    String[] helperArray = taskDetails.getHelpersList().split(",");
+                    if (helperArray.length > 0) {
+                        for (String helper : helperArray) {
+                            contribuersSet.add(Integer.parseInt(helper));
+                        }
+                    }
                 }
             }
         }
@@ -493,12 +511,7 @@ public class ProjectDetails
             Set<TaskDetails> taskDetailsList = getProjectTaskDeatils();
             if (taskDetailsList != null) {
                 for (TaskDetails taskDetails : taskDetailsList) {
-                    List<TaskActivityDetails> taskActivityDetails = taskDetails.getTaskActivityDetails();
-                    if (taskActivityDetails != null) {
-                        for (TaskActivityDetails taskActivityDetail : taskActivityDetails) {
-                            actualDuration += taskActivityDetail.getActualTimeTaken();
-                        }
-                    }
+                    actualDuration += taskDetails.getActualTimeTaken();
                 }
             }
         }

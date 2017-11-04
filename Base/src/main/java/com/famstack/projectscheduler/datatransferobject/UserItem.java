@@ -106,6 +106,9 @@ public class UserItem implements FamstackBaseItem
     @Column(name = "need_password_reset")
     private boolean needPasswordReset;
 
+    @Column(name = "is_deleted", columnDefinition = "boolean default false", nullable = false)
+    private Boolean deleted;
+
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
     @JoinColumn(name = "reporterting_manager")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
@@ -400,6 +403,17 @@ public class UserItem implements FamstackBaseItem
     public void setNeedPasswordReset(boolean needPasswordReset)
     {
         this.needPasswordReset = needPasswordReset;
+    }
+
+    public Boolean isDeleted()
+    {
+
+        return deleted == null ? false : deleted;
+    }
+
+    public void setDeleted(Boolean deleted)
+    {
+        this.deleted = deleted;
     }
 
 }

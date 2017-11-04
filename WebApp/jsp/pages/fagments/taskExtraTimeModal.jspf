@@ -1,28 +1,39 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<form:input type="hidden" id="projectId" path="projectId" value="${projectDetails.id}"/>
+<form:input type="hidden" id="taskId" path="taskId"/>
 <div class="row">
 
-	<div class="col-md-12">
-		<label class="col-md-5 control-label text-left">Est Duration</label>
+	<div class="col-md-12" style="margin-bottom: 5px">
+		<label class="col-md-5 control-label text-left">Assigned Duration</label>
 		<div class="col-md-7">
 			<b class="taskDetailsDuration">0</b> Hrs
 		</div>
 	</div>
-	<div class="col-md-12">
+	<div class="col-md-12" style="margin-bottom: 5px">
 		<label class="col-md-5 control-label text-left">Actual
 			Duration</label>
 		<div class="col-md-7">
 			<b class="taskDetailsActualDuration">0</b> Hrs
 		</div>
 	</div>
-	
+	<div class="col-md-12" style="margin-bottom: 5px">
+			<label class="col-md-5 control-label text-left">Extra Duration (Hrs)</label>
+			<div class="col-md-7">
+				<form:select class="form-control select" id="duration" path="duration"  data-live-search="true">
+	 	 			<c:forEach begin="1" end="10" varStatus="loop">
+                         <option value="${loop.count}">${loop.count}</option>
+               		</c:forEach>
+                  </form:select>
+			</div>
+	</div>
 	<div class="col-md-12" style="margin-bottom: 10px">
 			<label class="col-md-5 control-label text-left">Extra time for
 				</label>
 			<div class="col-md-7">
-				<select path="taskAssignee" id="taskAssignee" name="taskAssignee"
-					class="form-control" data-live-search="true">
+				<form:select id="taskAssignee" path="assignee"
+					class="form-control select" data-live-search="true">
 					<option value="">- select -</option>
 					<c:if test="${not empty userMap}">
 						<c:forEach var="user" items="${userMap}">
@@ -31,28 +42,14 @@
 							</c:if>
 						</c:forEach>
 					</c:if>
-				</select>
+				</form:select>
 			</div>
 		</div>
 		
 	<div class="col-md-12">
-		<div class="form-group" style="margin-bottom: 40px">
-			<label class="col-md-5 control-label text-left">Extra Time
-				Start</label>
+			<label class="col-md-5 control-label text-left">Comments </label>
 			<div class="col-md-7">
-				<input type='text' class="form-control dateTimePickerNew"
-					id='additionalStartTime' />
+				<form:textarea class="form-control" id="taskStartComments" path="description"  style="height: 50px"></form:textarea> 
 			</div>
-		</div>
-		<div class="form-group" style="margin-bottom: 40px">
-			<label class="col-md-5 control-label text-left">Extra Time
-				End</label>
-			<div class="col-md-7">
-				<input type='text' class="form-control dateTimePickerNew"
-					id='additionalStartTime' />
-			</div>
-		</div>
-		
-	</div>
-	<input type='hidden' id='additionalTaskProjectId' />
+	</div>			
 </div>
