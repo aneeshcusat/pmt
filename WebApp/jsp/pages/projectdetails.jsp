@@ -16,7 +16,7 @@
 
 #taskAddExtraTimeModal  .modal-dialog {
 		width: 30%;
-	}
+}
 
 #employeeListForTaskTable th{
 font-weight: normal;
@@ -51,9 +51,7 @@ width: 60%;
     border-radius: 4px;
     box-shadow: 0 0 0 transparent !important;
 }
-.panel .panel-body {
-    position: relative;
-}
+
 .no-padding {
     padding: 0 !important;
 }
@@ -103,18 +101,15 @@ width: 60%;
 	</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
-	<div class="content-frame-top">  
-	<div class="row">
+	<div class="content-frame-top" style="padding:0 0 0 0">  
+		<div class="row">
                   <div class="col-md-7">                      
-            <h4><span class="fa ">${projectDetails.code}</span> - <span class="editableFieldText">${projectDetails.name}</span></h4>
+            <h4><span style="padding-top: 10px;" class="fa ">${projectDetails.code}</span> - <span class="editableFieldText">${projectDetails.name}</span></h4>
             </div>
-          <!--   <div class="col-md-5 text-right">               
-           <span style="background-color: lightgray;" class="btn  btn-default" disabled=disabled>To Do</span>       
-           <span style="background-color: lightblue;"  class="btn  btn-default" disabled=disabled>Assign</span>
-           <a href="#" class="btn  btn-default">Reviewed</a>
-           <a href="#" class="btn  btn-default">Completed</a>
-            </div> -->
+          <div class="col-md-5 text-right">               
+           <a href="#" class="btn  btn-default">Complete</a>
             </div>
+       </div>
 	</div>        
 	      <div class="row">
 	      
@@ -389,7 +384,7 @@ width: 60%;
                           </div>
                            <div class="col-md-5 text-right">
                             <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-                            <a data-toggle="modal" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
+                            <a data-toggle="modal"  data-backdrop="static" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
                             <c:if test="${projectDetails.unAssignedDuration == 0}">
                             disabled="true"
                             </c:if>
@@ -405,11 +400,11 @@ width: 60%;
                                  			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
                                  			<tr>
                                              <td width="5%">1</td>
-                                                <td class="task_progress">${taskDetails.name}<a href="#" id="${taskDetails.taskId}" class="trigger" 
+                                                <td class="task_progress"><a href="#" id="${taskDetails.taskId}" class="trigger" 
                                                  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-                                                data-toggle="modal" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');"
+                                                data-toggle="modal"  data-backdrop="static" data-target="#taskActivityDetailsModal"
                                                 </c:if>
-                                                >  Details</a> 
+                                                >${taskDetails.name}</a> 
                                                  
                                                  <c:set var="progressTaskState" value="striped"/>
 					                  				<c:if test="${taskDetails.status == 'INPROGRESS' }">
@@ -430,11 +425,16 @@ width: 60%;
                                                 </td>
                                                <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>
                                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-                                               <td width="10%"><a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                                               <td width="5%">
+                                               <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a>
+                                              </td>
+                                               <td width="5%">
+                                                <a data-toggle="modal" data-backdrop="static" data-target="#createtaskmodal" class="btn btn-primary btn-rounded" onclick="loadTaskDetails('${taskDetails.taskId}');" href="#"><i class="fa fa-pencil fa-1x" style="" aria-hidden="true"></i></a>
+                                               </td>
                                             	</c:if>
                                             </tr>
                                             <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
-                                             <input id="${taskDetails.taskId}isReviewTask" type="hidden" value="${taskDetails.reviewTask}"/>
+                                            <input id="${taskDetails.taskId}isReviewTask" type="hidden" value="${taskDetails.reviewTask}"/>
                                             <input id="${taskDetails.taskId}description" type="hidden" value="${taskDetails.description}"/>
                                             <input id="${taskDetails.taskId}startTime" type="hidden" value="${taskDetails.startTime}"/>
                                             <input id="${taskDetails.taskId}completionTime" type="hidden" value="${taskDetails.completionTime}"/>
@@ -457,7 +457,7 @@ width: 60%;
                                    <c:if test="${projectDetails.status == 'COMPLETED' }">
 								         <li>Actual Duration : <b>${projectDetails.actualDurationInHrs} hours</b>
 								        <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-									        <a data-toggle="modal" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.duration}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-info btn-rounded" href="#" style="display: inline;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span> Add Extra time</a>
+									        <a data-toggle="modal"  data-backdrop="static" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.duration}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-info btn-rounded" href="#" style="display: inline;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span><span class="fa fa-clock-o"></span></a>
 								        </c:if> 
 								         
 								         </li>
@@ -575,6 +575,28 @@ width: 60%;
 		</div>
 	</form:form>
 </div>
+<div class="modal fade" id="taskActivityDetailsModal" tabindex="-1"
+	role="dialog" aria-labelledby="taskActivityDetailsModal" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Task Activity Details</h4>
+				</div>
+				<div class="">
+					<%@include file="fagments/taskActivityDetailsModal.jspf"%>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancel</button>
+					<button id="taskReassign" type="button"
+						class="btn btn-primary hide">
+						<span  onclick="taskAddExtraTime()">Add extra time</span>
+					</button>
+				</div>
+			</div>
+		</div>
+</div>          
+
 <div class="modal fade" id="taskAddExtraTimeModal" tabindex="-1"
 	role="dialog" aria-labelledby="taskAddExtraTimeModal" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -595,7 +617,7 @@ width: 60%;
 				</div>
 			</div>
 		</div>
-</div>                        
+</div>                         
                         
                          
  <%@include file="includes/footer.jsp" %>  

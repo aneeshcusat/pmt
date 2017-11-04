@@ -301,16 +301,8 @@
   font-size: 15px;
 }
 
-h2
-{
-  font-family: 'Karla', sans-serif;
-  font-weight: 700;
-      margin-top: 20px;
-    margin-bottom: 10px;
-}
 
-	
-	.list-group-horizontal .list-group-item {
+.list-group-horizontal .list-group-item {
     display: inline-block;
 }
 .list-group-item {
@@ -344,15 +336,16 @@ h2
      <li class="active">Task Activities</li>
  </ul>
  <!-- END BREADCRUMB -->  
-
-<!-- PAGE TITLE -->
-<div class="page-title">                    
-    <h2><span class="fa fa-th-list"></span> Task Activities</h2>
-</div>
-<!-- END PAGE TITLE -->                
-
-<!-- PAGE CONTENT WRAPPER -->
-<div class="page-content-wrap">
+<div class="content-frame" ng-app="mytasks">     
+    <!-- START CONTENT FRAME TOP -->
+    <div class="content-frame-top">                        
+        <div class="page-title">                    
+            <h2><span class="fa fa-tasks"></span> Task Activities</h2>
+        </div>                                                
+        <div class="pull-right">
+            <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
+        </div>                                
+    </div> 
  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
 	<div class="row ">
             <div class="col-md-12" style="background-color: #f5f5f5">
@@ -457,7 +450,7 @@ h2
 		</div>
 	</form:form>
 </div>
-
+</div>
 <ul class="hide"  id="taskTemplate">
 	<li class="list-group-item taskact-item">
 			<div class="task-item">
