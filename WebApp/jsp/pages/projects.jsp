@@ -84,10 +84,11 @@
 
 		</div>
 	</div>
-	<table class="table table-hover p-table datatable ">
+	<table class="table table-hover p-table projectDatatable ">
 		<thead>
 			<tr>
-				<th>Project Name</th>
+				<th width="30%">Project Name</th>
+				<th>Due Date</th>
 				<th>Project Code</th>
 				<th>Assignees</th>
 				<th>Project Progress</th>
@@ -106,13 +107,13 @@
 			<tr>
 				<td class="project_name"><a href="${applicationHome}/project/${project.id}"><span style="font-size: 10pt">${project.name}</span></a> <br> 
 				<small>created at <fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${project.createdDate}"/></small>
-				<br> <small>Completed at ${project.completionTime}</small>
 				</td>
+				<td><h5>${project.completionTime}</h5></td>
 				<td><h5>${project.code}</h5></td>
 				<td class="project_team">
-				<c:if test="${not empty project.projectTaskDeatils}">
-					<c:forEach var="taskDetails" items="${project.projectTaskDeatils}" varStatus="taskIndex"> 
-							<img alt="image" src="${applicationHome}/image/${taskDetails.assignee}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
+				<c:if test="${not empty project.contributers}">
+					<c:forEach var="contributer" items="${project.contributers}" varStatus="taskIndex"> 
+							<img alt="image" src="${applicationHome}/image/${contributer}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
 					</c:forEach>
 				</c:if>
 				</td>
@@ -664,4 +665,14 @@ function initializeCreateProjectForm(project){
 		}
 		return true;
 	}
+	
+	$(document).ready(function() {
+	    $('.projectDatatable').DataTable({ 
+	    	responsive: true,
+	        "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],
+	        "ordering": true,
+	        "order": [[ 1, 'asc' ]]
+	    
+	    });
+	});
 </script>

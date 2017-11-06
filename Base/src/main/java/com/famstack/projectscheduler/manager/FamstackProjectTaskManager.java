@@ -578,8 +578,4 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     }
 
-    public static void main(String[] args)
-    {
-        System.out.println(UserTaskType.PROJECT_HELPER_REVIEW.toString());
-    }
 }
