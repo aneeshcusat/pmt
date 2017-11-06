@@ -440,7 +440,7 @@ width: 60%;
                                             </tr>
                                             <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
                                             <input id="${taskDetails.taskId}isReviewTask" type="hidden" value="${taskDetails.reviewTask}"/>
-                                            <input id="${taskDetails.taskId}timeTaken" type="hidden" value="${taskDetails.actualTimeTaken}"/>
+                                            <input id="${taskDetails.taskId}timeTaken" type="hidden" value="${taskDetails.actualTimeTakenInHrs}"/>
                                             <input id="${taskDetails.taskId}description" type="hidden" value="${taskDetails.description}"/>
                                             <input id="${taskDetails.taskId}startTime" type="hidden" value="${taskDetails.startTime}"/>
                                             <input id="${taskDetails.taskId}completionTime" type="hidden" value="${taskDetails.completionTime}"/>
@@ -457,9 +457,8 @@ width: 60%;
 									             <span class="contacts-title">${taskDetails.name}</span>
 									             <p>${taskDetails.description}</p> 
 									             <p>Duration : ${taskDetails.duration} Hours</p> 
-									             <p>Time Taken : ${taskDetails.actualTimeTaken} Mins</p> 
+									             <p>Time Taken : ${taskDetails.actualTimeTakenInHrs} Hours</p> 
 									         	  <c:if test="${not taskDetails.extraTimeTask}">
-									             <p>Priority : ${taskDetails.priority}</p> 
 									             <p>Start at : ${taskDetails.startTime}</p>
 									             <p>End at   : ${taskDetails.completionTime}</p>
 									             <p>Review   : ${taskDetails.reviewTask}</p>
@@ -500,7 +499,7 @@ width: 60%;
 											            </c:if>
 										            </c:if>
 										            <c:if test="${not empty taskActivityDetail.actualEndTime}">
-											        	<p>Time Taken : ${taskActivityDetail.actualTimeTaken} Mins</p> 
+											        	<p>Time Taken : ${taskActivityDetail.actualTimeTakenInHrs} Hours</p> 
 											        </c:if>
 											        
      												<c:if test="${not empty taskActivityDetail.recordedEndTime}">
@@ -608,8 +607,8 @@ width: 60%;
       <ul class="nav nav-pills nav-stacked labels-info ">
 	        <li>Estimated start time:<b><span id="popup-startTime"></span></b></li>
 	        <li>Estimated completion time:<b><span id="popup-completionTime"></span></b></li>
-	        <li>Duration : <b><span id="popup-duration"></span> hours</b></li>
-	        <li>Time Taken : <b><span id="popup-timeTaken"></span> Mins</b></li>
+	        <li>Duration : <b><span id="popup-duration"></span> Hours</b></li>
+	        <li>Time Taken : <b><span id="popup-timeTaken"></span> Hours</b></li>
 	        <li>Assignee : <b><span id="popup-assigneeName"></span></b></li>
 	        <li>Helpers : <b><span id="popup-HelperName"></span></b></li>
 	        <li>Is review task : <b><span id="popup-isReviewTask"></span></b></li>

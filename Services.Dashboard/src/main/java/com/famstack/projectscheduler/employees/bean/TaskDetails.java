@@ -316,6 +316,36 @@ public class TaskDetails
         return actualDuration;
     }
 
+    public String getActualTimeTakenInHrs()
+    {
+        int actualDurationInMins = getActualTimeTaken();
+        String actualDurationString = "00";
+        if (actualDurationInMins > 0) {
+            int actualTimeInHrs = actualDurationInMins / 60;
+            int actualTimeInMin = actualDurationInMins % 60;
+            if (actualTimeInHrs < 10) {
+                actualDurationString = "0" + actualTimeInHrs;
+            } else {
+                actualDurationString = "" + actualTimeInHrs;
+            }
+
+            if (actualTimeInMin > 59) {
+                actualTimeInMin = actualTimeInMin / 10;
+            }
+
+            if (actualTimeInMin < 10) {
+                actualDurationString += ":0" + actualTimeInMin;
+            } else {
+                actualDurationString += ":" + actualTimeInMin;
+            }
+
+        } else {
+            actualDurationString += ":00";
+        }
+
+        return actualDurationString;
+    }
+
     public Boolean getExtraTimeTask()
     {
         return extraTimeTask == null ? false : extraTimeTask;
