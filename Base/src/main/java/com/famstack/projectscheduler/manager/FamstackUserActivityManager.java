@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
+import com.famstack.projectscheduler.contants.LeaveType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
@@ -50,6 +51,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     public UserTaskActivityItem createUserActivityItem(int userId, Date startTime, int taskId, String taskName,
         int durationInMinutes, UserTaskType userTaskType, ProjectType projectType)
     {
+
         UserItem assigneeUserItem = famstackUserProfileManager.getUserItemById(userId);
         Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startTime, 0);
         Date dayEndDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, startTime, 0);
@@ -79,6 +81,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
         if (userTaskType != UserTaskType.LEAVE) {
             productiveHours += (durationInMinutes / 60);
+        } else {
+            userActivityItem.setLeave(LeaveType.FULL);
         }
         userActivityItem.setProductiveHousrs(productiveHours);
         userActivityItem.setBillableHours(billableHours);
@@ -119,7 +123,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                 getFamstackApplicationConfiguration().getUserMap().get(userActivityItem.getUserItem().getId());
 
             if (userActivityItem.getLeave() != null) {
-                employeeDetails.setLeave(userActivityItem.getLeave());
+                employeeDetails.setLeave(LeaveType.FULL);
                 logDebug("User is on leave ");
                 return;
             }

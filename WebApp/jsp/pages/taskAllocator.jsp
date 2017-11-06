@@ -718,7 +718,7 @@ var increaseTotalHours = function(userId){
 	
 	if (availableHours < 0){
 		$("#"+userId+"-availabeHours").css("color", "red");
-		$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
+		//$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 	} else {
 		$("#"+userId+"-availabeHours").css("color", "green");
 	}

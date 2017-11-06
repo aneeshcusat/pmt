@@ -208,7 +208,7 @@ width: 60%;
 														</div>
 														</div>
 														<div class="progress-meta clearfix">
-															<span class="col-md-6 col-sm-6 text-left"><strong>Milestone:</strong> <c:if test="${projectDetails.completionInDays >= 0}">${projectDetails.completionInDays}</c:if><c:if test="${projectDetails.completionInDays < 0}">${projectDetails.completionInDays * -1}</c:if>
+															<span class="col-md-6 col-sm-6 text-left"><strong>Milestone:</strong> <c:if test="${projectDetails.completionInDays >= 0}">${projectDetails.completionInDays}</c:if><c:if test="${projectDetails.completionInDays < 0}">${projectDetails.completionInDays * -1}</c:if> Days 
 															<c:if test="${projectDetails.completionInDays >= 0}"> Left</c:if><c:if test="${projectDetails.completionInDays < 0}"> Ago</c:if>
 															</span>
 															<span class="col-md-6 col-sm-6 text-right"><strong>Due:</strong>
@@ -938,6 +938,7 @@ var toggleAssignTask = function(){
 	if ($("#assignTableId").is(':hidden')) {
 		$("#assignTableId").show(1000);
 		$("#toggleAssignTask").html("Assign task later");
+		resetAssignTable();
 		fillTableFromJson();
 	} else {
 		$("#assignTableId").hide(1000);
@@ -1336,7 +1337,7 @@ var increaseTotalHours = function(userId){
 	
 	if (availableHours < 0){
 		$("#"+userId+"-availabeHours").css("color", "red");
-		$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
+		//$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
 	} else {
 		$("#"+userId+"-availabeHours").css("color", "green");
 	}

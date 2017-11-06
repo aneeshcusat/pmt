@@ -39,9 +39,7 @@
 							<option value="">- select -</option>
 							<c:if test="${not empty userMap}">
     						<c:forEach var="user" items="${userMap}">
-    						 	<c:if test="${user.role != 'ADMIN' && user.role != 'MANAGER'}">
     								<option value="${user.id}">${user.firstName}</option>
-    							</c:if>
     						</c:forEach>
     						</c:if>
 						</select>

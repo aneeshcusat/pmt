@@ -225,7 +225,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
 
     public EmployeeDetails mapEmployeeDetails(UserItem userItem)
     {
-        if (userItem != null) {
+        if (userItem != null && !userItem.isDeleted()) {
             EmployeeDetails employeeDetails = new EmployeeDetails();
             if (userItem.getDob() != null) {
                 employeeDetails.setDateOfBirth(sdf.format(userItem.getDob()));

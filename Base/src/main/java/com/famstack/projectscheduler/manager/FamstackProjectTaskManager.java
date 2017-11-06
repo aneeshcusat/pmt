@@ -187,7 +187,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             famstackUserActivityManager.deleteAllUserTaskActivities(taskDetails.getTaskId());
         } else if (taskStatus == TaskStatus.INPROGRESS) {
             famstackUserActivityManager.setProjectTaskActivityActualTime(taskDetails.getTaskId(), new Date(),
-                "re assigned", TaskStatus.COMPLETED, null, null);
+                "re assigned", TaskStatus.COMPLETED, currentUserTaskActivityItem.getActualStartTime(), null);
             startDate = new Date();
             durationInMinutes =
                 (int) ((new Date().getTime() - currentUserTaskActivityItem.getActualStartTime().getTime()) / (1000 * 60));
@@ -576,5 +576,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
         return taskDetailsList;
 
+    }
+
+    public static void main(String[] args)
+    {
+        System.out.println(UserTaskType.PROJECT_HELPER_REVIEW.toString());
     }
 }

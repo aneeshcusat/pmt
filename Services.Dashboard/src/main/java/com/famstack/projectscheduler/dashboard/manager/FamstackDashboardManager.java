@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
-import com.famstack.projectscheduler.contants.LeaveType;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
@@ -623,6 +622,9 @@ public class FamstackDashboardManager extends BaseFamstackService
             userStatus.setStatus(employeeDetails.getCheckUserStatus());
             userStatus.setUserId(userId);
             Date userAvailableTime = employeeDetails.getUserAvailableTime();
+            if (employeeDetails.isLeave() != null) {
+                availableMessage = "Leave till";
+            }
             if (userAvailableTime != null) {
                 availableMessage +=
                     " "
@@ -632,14 +634,13 @@ public class FamstackDashboardManager extends BaseFamstackService
                         + (userAvailableTime.getMinutes() < 10 ? "0" + userAvailableTime.getMinutes()
                             : userAvailableTime.getMinutes());
             }
-            if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.FIRST) {
-                availableMessage = "First Half of the Day Leave";
-            } else if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.SECOND) {
-                availableMessage = "Second Half of the Day Leave";
-            } else if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.FULL) {
-                availableMessage = "Full Day Leave";
-            }
-
+            /*
+             * if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.FIRST) { availableMessage
+             * = "First Half of the Day Leave"; } else if (employeeDetails.isLeave() != null &&
+             * employeeDetails.isLeave() == LeaveType.SECOND) { availableMessage = "Second Half of the Day Leave"; }
+             * else if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.FULL) {
+             * availableMessage = "Full Day Leave"; }
+             */
             userStatus.setUserAvailableMsg(availableMessage);
             userStatusList.add(userStatus);
         }
@@ -743,31 +744,30 @@ public class FamstackDashboardManager extends BaseFamstackService
         int duration = 0;
         String taskName = "";
         if ("LEAVE".equalsIgnoreCase(type)) {
-            startTime = DateUtils.tryParse(startDateString + " 08:00", DateUtils.DATE_TIME_FORMAT);
+            startTime = DateUtils.tryParse(startDateString + " 09:00", DateUtils.DATE_TIME_FORMAT);
             switch (endDateString) {
                 case "FIRST":
-                    duration = 5;
+                    duration = 4;
+                    taskName = "Leave First half of the day ";
                     break;
                 case "SECOND":
-                    startTime = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startTime, 6);
-                    duration = 7;
+                    startTime = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startTime, 5);
+                    duration = 4;
+                    taskName = "Leave Second half of the day ";
                     break;
                 case "FULL":
-                    duration = 12;
+                    taskName = "Leave Full day ";
+                    duration = 8;
                     break;
             }
-
-            taskName = endDateString + " half day ";
 
         } else if ("MEETING".equalsIgnoreCase(type)) {
             startTime = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
             Date endTime = DateUtils.tryParse(endDateString, DateUtils.DATE_TIME_FORMAT);
             duration = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60));
 
-            taskName = duration + " hours ";
+            taskName = duration + " hours Meeting";
         }
-
-        taskName += type;
 
         famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName, duration,
             UserTaskType.valueOf(type), ProjectType.NON_BILLABLE, comments);
