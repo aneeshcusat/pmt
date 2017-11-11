@@ -608,4 +608,5 @@ function resetFileUploadUrl(location){
 $('#adjustCompletionTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 $('#adjustStartTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 $('#adjustStartTime1').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+
 </script>

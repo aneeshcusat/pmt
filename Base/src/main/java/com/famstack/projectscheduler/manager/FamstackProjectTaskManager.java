@@ -62,7 +62,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     {
         Set<TaskItem> taskItems = projectItem.getTaskItems();
         UserTaskActivityItem userTaskActivityItemOld = null;
-        int durationNew = taskDetails.getDuration();
+        int durationNewMinutes = taskDetails.getDuration();
 
         TaskItem taskItemNew = null;
         if (taskItems != null) {
@@ -95,7 +95,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             }
             taskItemNew.setHelpers(helpers);
 
-            int duration = taskItemNew.getDuration() + taskDetails.getDuration();
+            int duration = taskItemNew.getDuration() + (taskDetails.getDuration()/60);
             List<UserTaskActivityItem> userTaskActivityItems =
                 (List<UserTaskActivityItem>) famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItemNew
                     .getTaskId());
@@ -116,10 +116,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
         if (userTaskActivityItemOld == null) {
             famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(),
-                projectItem.getStartTime(), taskItemNew.getTaskId(), taskItemNew.getName(), durationNew,
+                projectItem.getStartTime(), taskItemNew.getTaskId(), taskItemNew.getName(), durationNewMinutes,
                 UserTaskType.EXTRATIME, projectItem.getType(), taskDetails.getDescription());
         } else {
-            userTaskActivityItemOld.setDurationInMinutes(durationNew * 60);
+            userTaskActivityItemOld.setDurationInMinutes(durationNewMinutes);
             userTaskActivityItemOld.setTaskName(taskDetails.getName());
             userTaskActivityItemOld.setTaskName(taskDetails.getName());
             userTaskActivityItemOld.setCompletionComment(taskDetails.getDescription());

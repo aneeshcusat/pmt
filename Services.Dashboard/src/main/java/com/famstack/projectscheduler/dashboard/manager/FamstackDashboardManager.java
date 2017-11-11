@@ -741,35 +741,35 @@ public class FamstackDashboardManager extends BaseFamstackService
         String comments)
     {
         Date startTime = null;
-        int duration = 0;
+        int durationInMinutes = 0;
         String taskName = "";
         if ("LEAVE".equalsIgnoreCase(type)) {
             startTime = DateUtils.tryParse(startDateString + " 09:00", DateUtils.DATE_TIME_FORMAT);
             switch (endDateString) {
                 case "FIRST":
-                    duration = 4;
+                    durationInMinutes = 240;
                     taskName = "Leave First half of the day ";
                     break;
                 case "SECOND":
                     startTime = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startTime, 5);
-                    duration = 4;
+                    durationInMinutes = 240;
                     taskName = "Leave Second half of the day ";
                     break;
                 case "FULL":
                     taskName = "Leave Full day ";
-                    duration = 8;
+                    durationInMinutes = 480;
                     break;
             }
 
         } else if ("MEETING".equalsIgnoreCase(type)) {
             startTime = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
             Date endTime = DateUtils.tryParse(endDateString, DateUtils.DATE_TIME_FORMAT);
-            duration = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60));
+            durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
 
-            taskName = duration + " hours Meeting";
+            taskName = durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins Meeting";
         }
 
-        famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName, duration,
+        famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName, durationInMinutes,
             UserTaskType.valueOf(type), ProjectType.NON_BILLABLE, comments);
     }
 

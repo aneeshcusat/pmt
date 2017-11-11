@@ -13,6 +13,25 @@ width: 40%;
 .dataTables_filter{
 width: 60%;
 }
+.markable{
+	height: 100%;
+	padding:0 0 0 0 !important;
+}
+#employeeListForTaskTable{
+height: 100%;
+}
+table tr td.markable span {
+  	float: left;
+    height: 100%;
+    display: table-cell;
+    z-index: 1000;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 15px;
+    font-weight: bold;
+    color: wheat;
+    vertical-align: middle;
+ }
 </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">            
@@ -160,7 +179,7 @@ width: 60%;
 		</div>
 		
 		<div class="row" id="assignTableId"  style="margin-top:10px">
-		<table id="employeeListForTaskTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+		<table id="employeeListForTaskTable" class="table table-striped table-bordered" cellspacing="0" width="100%" height="100%">
         <thead>
             <tr style="height: 20px">
             	<th>Select</th>
@@ -476,7 +495,7 @@ $("#estStartTime").on("change",function(){
 
 });
 
-$("#estStartTime").val(getTodayDateTime(new Date()));
+$("#estStartTime").val(getTodayStartDateTime(new Date()));
 
 $("#duration").on("change",function(){
 	resetAssignTable();
@@ -745,15 +764,33 @@ var fillTableFromJson = function(){
 	$.each(JSON.parse(jsonAssignData), function(idx, elem){
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
 			var hour = parseInt(elem.startHour);
-			var duration = 1;
+			
+			var duration = 0;
+			var durationEnd = 0;
+			
 			if (elem.durationInMinutes >= 60) {
-				duration = elem.durationInMinutes/60;
+				duration = elem.durationInMinutes / 60;
+				durationEnd = elem.durationInMinutes % 60;
+			} else {
+				durationEnd = elem.durationInMinutes;
 			}
 			
 			var isCompleted = elem.actualEndTime == null ?false:true;
 			var isInprogress = elem.actualStartTime == null?false:true;
 			
-			for (var index = 0; index < duration; index++) {
+			for (var index = 0; (index < duration) || (durationEnd > 0); index++) {
+				var cellWidth = 102;
+				
+				if (index + 1 >= duration) {
+					cellWidth = 100;
+					if (durationEnd > 0) {
+						cellWidth = (durationEnd /60) * 100;
+						durationEnd = 0;
+					}
+					
+				} else if (hour + 1 == breakTime) {
+					cellWidth = 100;
+				}
 				
 				if (hour == breakTime) {
 					hour++;
@@ -766,6 +803,11 @@ var fillTableFromJson = function(){
 					console.log(elem.taskId);
 					console.log($("#taskId").val());
 				} else {
+					var isOverLapping = false;
+					if ($(cellId).attr("cellmarked")) {
+						isOverLapping = true;
+					}
+					
 					$(cellId).attr("celleditable", false);
 					$(cellId).attr("isassigned",true);
 					$(cellId).attr("cellmarked",true);
@@ -777,33 +819,33 @@ var fillTableFromJson = function(){
 					cellStausColor = isCompleted ? "rgb(0, 128, 0)" :cellStausColor;
 					
 					var cellTitleTaskName = "Task Id :" + elem.taskId + ", Activity Id:" + elem.taskActivityId +", Task Name :" +  elem.taskName;
+					var cellTaskType = "";
 					if (elem.userTaskType == "PROJECT") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">P</span>');
+						cellTaskType = "P";
 					} else if (elem.userTaskType == "PROJECT_HELPER") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PH</span>');
+						cellTaskType = "PH";
 					} else if (elem.userTaskType == "LEAVE") {
 						cellStausColor = "rgb(128, 128, 128)";
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">L</span>');
+						cellTaskType = "L";
 					} else if (elem.userTaskType == "MEETING") {
 						cellStausColor = "rgb(0, 139, 139)";
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">M</span>');
+						cellTaskType = "M";
 					}else if (elem.userTaskType == "PROJECT_HELPER_REVIEW") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRH</span>');
+						cellTaskType = "PRH";
 					}else if (elem.userTaskType == "PROJECT_REVIEW") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PR</span>');
+						cellTaskType = "PR";
 					}else if (elem.userTaskType == "PROJECT_PARTIAL") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRA</span>');
+						cellTaskType = "PRA";
 					}else if (elem.userTaskType == "EXTRATIME") {
-						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PET</span>');
+						cellTaskType = "PET";
 					}
 					
-					if ($(cellId).css("background-color") == "rgb(248, 250, 252)" || $(cellId).css("background-color") == "rgba(0, 0, 0, 0)") {
-						$(cellId).attr("cellcolor", $(cellId).css("background-color"));
-						$(cellId).css("background-color", cellStausColor);
-					} else {
-						$(cellId).css("background-color", "rgb(255, 0, 0)");
+					if (!isOverLapping) {
+						cellStausColor = "rgb(255, 0, 0)";
 					}
 	
+					$(cellId).html('<span title="'+cellTitleTaskName+'" style="width:'+cellWidth+'%;background-color:'+cellStausColor+'">'+cellTaskType+'</span>');
+					
 					increaseTotalHours(elem.userId);
 				}
 				

@@ -84,6 +84,7 @@
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>            
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js"></script>
+<script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js"></script>
 <script>
 
 $("#taskType").on("change", function(){
@@ -102,21 +103,10 @@ $("#taskType").on("change", function(){
 	
 });
 
-$.datetimepicker.setLocale('en');
+$('#startDate').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD'});
+$('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+$('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 
-$('.datePicker').datetimepicker({
-	lang:'en',
-	timepicker:false,
-	format:'Y/m/d',
-	formatDate:'Y/m/d',
-});
-
-$('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
-	$(this).find('.xdsoft_date.xdsoft_weekend')
-	.addClass('xdsoft_disabled');
-	},
-	allowTimes:['08:00','09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'],
-});
 var createUnbillableTask = function(){
 	
 	var endDate = "";

@@ -57,6 +57,13 @@ var getTodayDate = function(today){
 	return yyyy+'/'+mm+'/'+dd;
 }
 
+var getTodayStartDateTime = function (today){
+	var dateString = getTodayDate(today);
+	
+	dateString += " 09:00";
+	return dateString;
+}
+
 var getTodayDateTime = function (today){
 	var dateString = getTodayDate(today);
 	var hour = today.getHours();

@@ -265,7 +265,7 @@ var clearProjectFormForCreate = function(projectId) {
 	clearCreateProjectForm();
 	$("#projectcode").val("PRJ" + Math.floor(Date.now() / 1000));
 	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
-	$('#estCompleteTime').val(getTodayDate(new Date()) + " 05:00");
+	$('#estCompleteTime').val(getTodayDate(new Date()) + " 18:00");
 	
 }
 var loadProjectForUpdate = function(projectId) {
@@ -284,7 +284,7 @@ var loadProjectForClone = function(projectId) {
 	loadProject(projectId);
 	
 	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
-	$('#estCompleteTime').val(getTodayDate(new Date()) + " 05:00");
+	$('#estCompleteTime').val(getTodayDate(new Date()) + " 18:00");
 }
 
 var loadProject = function(projectId){

@@ -19,11 +19,13 @@
 		</div>
 	</div>
 	<div class="col-md-12" style="margin-bottom: 5px">
-			<label class="col-md-5 control-label text-left">Extra Duration (Hrs)</label>
+			<label class="col-md-5 control-label text-left">Extra Duration (Minutes)</label>
 			<div class="col-md-7">
 				<form:select class="form-control select" id="duration" path="duration"  data-live-search="true">
-	 	 			<c:forEach begin="1" end="10" varStatus="loop">
-                         <option value="${loop.count}">${loop.count}</option>
+				<c:set var="count" value="0" scope="page" />
+	 	 			<c:forEach begin="1" end="30" varStatus="loop">
+						<c:set var="count" value="${count + 5}" scope="page"/>		
+                         <option value="${count}">${count}</option>
                		</c:forEach>
                   </form:select>
 			</div>

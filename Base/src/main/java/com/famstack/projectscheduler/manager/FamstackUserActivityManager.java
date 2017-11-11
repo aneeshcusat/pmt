@@ -35,14 +35,14 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     FamstackUserProfileManager famstackUserProfileManager;
 
     public void createCompletedUserActivityItem(int userId, Date startTime, int taskId, String taskName,
-        int durationInHrs, UserTaskType userTaskType, ProjectType projectType, String comment)
+        int durationInMinutes, UserTaskType userTaskType, ProjectType projectType, String comment)
     {
         UserTaskActivityItem userTaskActivityItem =
-            createUserActivityItem(userId, startTime, taskId, taskName, durationInHrs * 60, userTaskType, projectType);
+            createUserActivityItem(userId, startTime, taskId, taskName, durationInMinutes, userTaskType, projectType);
         userTaskActivityItem.setCompletionComment(comment);
         userTaskActivityItem.setRecordedStartTime(new Timestamp(startTime.getTime()));
         userTaskActivityItem.setActualStartTime(new Timestamp(startTime.getTime()));
-        Long endTime = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startTime, durationInHrs).getTime();
+        Long endTime = DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, startTime, durationInMinutes).getTime();
         userTaskActivityItem.setActualEndTime(new Timestamp(endTime));
         userTaskActivityItem.setRecordedEndTime(new Timestamp(endTime));
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userTaskActivityItem);
