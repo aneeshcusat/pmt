@@ -633,6 +633,8 @@ public class FamstackDashboardManager extends BaseFamstackService
                         + ":"
                         + (userAvailableTime.getMinutes() < 10 ? "0" + userAvailableTime.getMinutes()
                             : userAvailableTime.getMinutes());
+            } else {
+                availableMessage = "Available";
             }
             /*
              * if (employeeDetails.isLeave() != null && employeeDetails.isLeave() == LeaveType.FIRST) { availableMessage
