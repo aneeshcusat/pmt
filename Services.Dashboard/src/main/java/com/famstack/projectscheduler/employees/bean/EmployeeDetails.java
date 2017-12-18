@@ -17,6 +17,8 @@ public class EmployeeDetails
 
     private int id;
 
+    private String userGroupId;
+
     private String firstName;
 
     private String lastName;
@@ -276,6 +278,16 @@ public class EmployeeDetails
     public void setLeave(LeaveType leave)
     {
         this.leave = leave;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

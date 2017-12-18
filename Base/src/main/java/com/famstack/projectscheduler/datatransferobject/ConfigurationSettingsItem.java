@@ -27,6 +27,9 @@ public class ConfigurationSettingsItem implements FamstackBaseItem
     @Column(name = "property_name", nullable = false)
     private String propertyName;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "created_date")
     private Timestamp createdDate;
 
@@ -78,6 +81,17 @@ public class ConfigurationSettingsItem implements FamstackBaseItem
     public void setPropertyValue(String propertyValue)
     {
         this.propertyValue = propertyValue;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

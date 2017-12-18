@@ -13,6 +13,10 @@
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
 <c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
+<c:set var="userGroupMap" value="${applicationScope.applicationConfiguraion.userGroupMap}"/>
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>        

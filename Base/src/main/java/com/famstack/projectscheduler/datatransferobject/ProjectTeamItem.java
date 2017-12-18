@@ -41,6 +41,9 @@ public class ProjectTeamItem implements FamstackBaseItem
     @Column(name = "code")
     private String code;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "poc")
     private String poc;
 
@@ -138,6 +141,17 @@ public class ProjectTeamItem implements FamstackBaseItem
     public void setAccountItems(Set<AccountItem> accountItems)
     {
         this.accountItems = accountItems;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

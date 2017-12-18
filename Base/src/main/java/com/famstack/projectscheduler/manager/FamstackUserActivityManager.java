@@ -104,7 +104,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         String queryKey = "allUserActivityItemsFromDatetoDate";
 
         List<?> userActivityItems =
-            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString(queryKey), dataMap);
+            getFamstackDataAccessObjectManager().executeAllGroupQuery(HQLStrings.getString(queryKey), dataMap);
 
         return userActivityItems;
     }
@@ -313,8 +313,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         dataMap.put("taskId", taskId);
 
         List<?> userTaskActivityItems =
-            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("userTaskActivityItemByTaskId"),
-                dataMap);
+            getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("userTaskActivityItemByTaskId"), dataMap);
 
         return userTaskActivityItems;
     }

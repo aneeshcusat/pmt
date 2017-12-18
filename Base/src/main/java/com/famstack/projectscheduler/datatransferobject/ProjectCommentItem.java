@@ -35,6 +35,9 @@ public class ProjectCommentItem implements FamstackBaseItem
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
     private int commentId;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ProjectItem projectItem;
@@ -127,6 +130,17 @@ public class ProjectCommentItem implements FamstackBaseItem
     public void setCommentId(int commentId)
     {
         this.commentId = commentId;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

@@ -39,6 +39,9 @@ public class ProjectActivityItem implements FamstackBaseItem
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
     private int activityId;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private ProjectActivityType type;
@@ -145,6 +148,17 @@ public class ProjectActivityItem implements FamstackBaseItem
     public void setProjectStatus(ProjectStatus projectStatus)
     {
         this.projectStatus = projectStatus;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

@@ -128,6 +128,19 @@
 				</div>
 
 				<div class="form-group">
+					<label class="col-md-3 control-label">Company Group</label>
+					<div class="col-md-9">
+						<form:select path="userGroupId" id="userGroupId" class="form-control select" data-live-search="true" name="userGroupId">
+							  <option value="">- select -</option>
+							    <c:if test="${not empty userGroupMap}">  
+                                <c:forEach var="group" items="${userGroupMap}">
+                                    	<option value="${group.value.userGroupId}">${group.value.name}</option>
+                   			  </c:forEach>
+                   			</c:if>
+						</form:select>
+					</div>
+				</div>
+				<div class="form-group">
 					<label class="col-md-3 control-label">Qualification</label>
 					<div class="col-md-9">
 						<form:select path="qualification" id="qualification" name="qualification" class="form-control select" data-live-search="true">

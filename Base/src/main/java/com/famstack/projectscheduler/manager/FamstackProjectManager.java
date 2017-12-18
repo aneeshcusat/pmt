@@ -318,8 +318,8 @@ public class FamstackProjectManager extends BaseFamstackManager
         dataMap.put("startTime", startTime);
 
         List<?> projectItemList =
-            famstackDataAccessObjectManager
-                .executeQuery(HQLStrings.getString("getMissedTimeLineProjectItems"), dataMap);
+            famstackDataAccessObjectManager.executeAllGroupQuery(HQLStrings.getString("getMissedTimeLineProjectItems"),
+                dataMap);
         getProjectsList(projectDetailsList, projectItemList, false);
 
         return projectDetailsList;
@@ -572,7 +572,8 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<ProjectDetails> projectDetailsList = new ArrayList<>();
 
         List<?> projectItemList =
-            famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("searchForProjectsWithIn"), dataMap);
+            famstackDataAccessObjectManager.executeAllGroupQuery(HQLStrings.getString("searchForProjectsWithIn"),
+                dataMap);
         logDebug("projectItemList" + projectItemList);
         logDebug("startDate" + startDate);
         logDebug("startDate 2" + startDate2);
@@ -589,7 +590,8 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<ProjectDetails> projectDetailsList = new ArrayList<>();
 
         List<?> projectItemList =
-            famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("searchForProjectsEndWithIn"), dataMap);
+            famstackDataAccessObjectManager.executeAllGroupQuery(HQLStrings.getString("searchForProjectsEndWithIn"),
+                dataMap);
         logDebug("projectItemList" + projectItemList);
         logDebug("endDate" + endDate);
         logDebug("endDate 2" + endDate2);

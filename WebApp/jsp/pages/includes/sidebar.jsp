@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <div class="page-sidebar">
                 <!-- START X-NAVIGATION -->
                 <ul class="x-navigation">
@@ -17,6 +18,8 @@
                             <div class="profile-data">
                                 <div class="profile-data-name">${currentUser.firstName}</div>
                                 <div class="profile-data-title">${currentUser.designation}</div>
+                                <c:set var="userGroupId" value="${currentUser.userGroupId}"/>
+                      			<div class="profile-data-title">${userGroupMap[userGroupId].name}</div>
                             </div>
                         </div>      
                         </a>                                                                  

@@ -19,87 +19,122 @@ import com.famstack.projectscheduler.util.DateUtils;
  */
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class FamstackUserSessionConfiguration implements Serializable {
+public class FamstackUserSessionConfiguration implements Serializable
+{
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -2779591617048681125L;
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = -2779591617048681125L;
 
-	private static final int CURRENT_DAY = 0;
+    private static final int CURRENT_DAY = 0;
 
-	private static final int PROJECT_VIEW_LIMIT_DAYS = -30;
+    private static final int PROJECT_VIEW_LIMIT_DAYS = -30;
 
-	/** The login result. */
-	private LoginResult loginResult;
+    /** The login result. */
+    private LoginResult loginResult;
 
-	/** The auto refresh. */
-	private boolean autoRefresh = true;
+    /** The auto refresh. */
+    private boolean autoRefresh = true;
 
-	private DashBoardDateRange dashBoardDateRange;
+    private DashBoardDateRange dashBoardDateRange;
 
-	/**
-	 * Gets the login result.
-	 *
-	 * @return the login result
-	 */
-	public LoginResult getLoginResult() {
-		if (loginResult == null) {
-			loginResult = new LoginResult();
-			loginResult.setStatus(Status.FAILED);
-		}
-		return loginResult;
-	}
+    private String userGroupIdSelection;
 
-	/**
-	 * Sets the login result.
-	 *
-	 * @param loginResult
-	 *            the new login result
-	 */
-	public void setLoginResult(LoginResult loginResult) {
-		this.loginResult = loginResult;
-	}
+    /**
+     * Gets the login result.
+     * 
+     * @return the login result
+     */
+    public LoginResult getLoginResult()
+    {
+        if (loginResult == null) {
+            loginResult = new LoginResult();
+            loginResult.setStatus(Status.FAILED);
+        }
+        return loginResult;
+    }
 
-	/**
-	 * Checks if is auto refresh.
-	 *
-	 * @return true, if is auto refresh
-	 */
-	public boolean isAutoRefresh() {
-		return autoRefresh;
-	}
+    /**
+     * Sets the login result.
+     * 
+     * @param loginResult the new login result
+     */
+    public void setLoginResult(LoginResult loginResult)
+    {
+        this.loginResult = loginResult;
+    }
 
-	/**
-	 * Sets the auto refresh.
-	 *
-	 * @param autoRefresh
-	 *            the new auto refresh
-	 */
-	public void setAutoRefresh(boolean autoRefresh) {
-		this.autoRefresh = autoRefresh;
-	}
+    /**
+     * Checks if is auto refresh.
+     * 
+     * @return true, if is auto refresh
+     */
+    public boolean isAutoRefresh()
+    {
+        return autoRefresh;
+    }
 
-	public UserItem getCurrentUser() {
-		return getLoginResult().getUserItem();
-	}
+    /**
+     * Sets the auto refresh.
+     * 
+     * @param autoRefresh the new auto refresh
+     */
+    public void setAutoRefresh(boolean autoRefresh)
+    {
+        this.autoRefresh = autoRefresh;
+    }
 
-	public int getProjectViewLimit() {
-		return PROJECT_VIEW_LIMIT_DAYS;
-	}
+    public UserItem getCurrentUser()
+    {
+        return getLoginResult().getUserItem();
+    }
 
-	public DashBoardDateRange getDashBoardDateRange() {
-		return dashBoardDateRange;
-	}
+    public int getProjectViewLimit()
+    {
+        return PROJECT_VIEW_LIMIT_DAYS;
+    }
 
-	public void setDashBoardDateRange(DashBoardDateRange dashBoardDateRange) {
-		this.dashBoardDateRange = dashBoardDateRange;
-	}
+    public DashBoardDateRange getDashBoardDateRange()
+    {
+        return dashBoardDateRange;
+    }
 
-	public Date getDashboardViewStartDate() {
-		return DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), CURRENT_DAY);
-	}
+    public void setDashBoardDateRange(DashBoardDateRange dashBoardDateRange)
+    {
+        this.dashBoardDateRange = dashBoardDateRange;
+    }
 
-	public Date getDashboardViewEndDate() {
-		return DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), CURRENT_DAY);
-	}
+    public Date getDashboardViewStartDate()
+    {
+        return DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), CURRENT_DAY);
+    }
+
+    public Date getDashboardViewEndDate()
+    {
+        return DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), CURRENT_DAY);
+    }
+
+    public String getUserGroupId()
+    {
+        if (userGroupIdSelection == null) {
+
+            UserItem userItem = getCurrentUser();
+            if (userItem != null) {
+                return userItem.getUserGroupId();
+            }
+        } else {
+            return userGroupIdSelection;
+        }
+        return "";
+    }
+
+    public String getUserGroupIdSelection()
+    {
+        return userGroupIdSelection;
+    }
+
+    public void setUserGroupIdSelection(String userGroupIdSelection)
+    {
+        this.userGroupIdSelection = userGroupIdSelection;
+    }
 
 }

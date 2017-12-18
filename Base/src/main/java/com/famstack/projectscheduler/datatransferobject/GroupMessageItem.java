@@ -36,6 +36,9 @@ public class GroupMessageItem implements FamstackBaseItem
     @Lob
     private String description;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "created_date")
     private Timestamp createdDate;
 
@@ -111,6 +114,17 @@ public class GroupMessageItem implements FamstackBaseItem
     public void setUser(UserItem user)
     {
         this.user = user;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

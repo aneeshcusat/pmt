@@ -41,6 +41,9 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "name")
     private String name;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "assignee")
     private int assignee;
 
@@ -249,6 +252,17 @@ public class TaskItem implements FamstackBaseItem
     public void setExtraTimeTask(Boolean extraTimeTask)
     {
         this.extraTimeTask = extraTimeTask;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

@@ -29,8 +29,6 @@ public class FamstackAccountManager extends BaseFamstackManager
 
     private static final List<AccountDetails> accountDetailsList = new ArrayList<>();
 
-    private boolean initialized = false;
-
     public AccountDetails mapProjectItemToProjectDetails(AccountItem accountItem)
     {
         AccountDetails accountDetails = new AccountDetails();
@@ -40,6 +38,7 @@ public class FamstackAccountManager extends BaseFamstackManager
             accountDetails.setHolder(accountItem.getHolder());
             accountDetails.setName(accountItem.getName());
             accountDetails.setType(accountItem.getType());
+            accountDetails.setUserGoupId(accountItem.getUserGroupId());
             Set<ProjectTeamItem> projectTeamItems = accountItem.getProjectTeam();
             for (ProjectTeamItem projectTeamItem : projectTeamItems) {
                 ProjectTeamDetails projectTeamDetails = new ProjectTeamDetails();
@@ -47,7 +46,7 @@ public class FamstackAccountManager extends BaseFamstackManager
                 projectTeamDetails.setName(projectTeamItem.getName());
                 projectTeamDetails.setPoc(projectTeamItem.getPoc());
                 projectTeamDetails.setTeamId(projectTeamItem.getTeamId());
-
+                projectTeamDetails.setUserGoupId(projectTeamItem.getUserGroupId());
                 Set<ProjectSubTeamItem> subTeamItems = projectTeamItem.getProjectSubTeam();
 
                 for (ProjectSubTeamItem projectSubTeamItem : subTeamItems) {
@@ -58,6 +57,8 @@ public class FamstackAccountManager extends BaseFamstackManager
                     projectSubTeamDetails.setPoId(projectSubTeamItem.getPoId());
                     projectSubTeamDetails.setSubTeamId(projectSubTeamItem.getSubTeamId());
                     projectSubTeamDetails.setTeamId(projectSubTeamItem.getProjectTeamItem().getTeamId());
+                    projectSubTeamDetails.setUserGoupId(projectSubTeamItem.getUserGroupId());
+
                     Set<ClientItem> clientItems = projectSubTeamItem.getClientItem();
 
                     for (ClientItem clientItem : clientItems) {
@@ -65,6 +66,7 @@ public class FamstackAccountManager extends BaseFamstackManager
                         clientDetails.setClientId(clientItem.getClientId());
                         clientDetails.setName(clientItem.getName());
                         clientDetails.setEmail(clientItem.getEmail());
+                        clientDetails.setUserGoupId(clientItem.getUserGroupId());
                         projectSubTeamDetails.getClientItems().add(clientDetails);
                         clientMap.put(clientDetails.getClientId(), clientDetails);
                     }
@@ -82,31 +84,39 @@ public class FamstackAccountManager extends BaseFamstackManager
 
     public void initialize()
     {
+
         accountDetailsList.clear();
         accountMap.clear();
         teamMap.clear();
         subTeamMap.clear();
         clientMap.clear();
-
         logDebug("Initializing accounts");
-        List<?> accountItemList = famstackDataAccessObjectManager.getAllItems("AccountItem");
+        List<?> accountItemList = famstackDataAccessObjectManager.getAllGroupItems("AccountItem");
         if (accountItemList != null) {
             for (Object accountItemObj : accountItemList) {
                 AccountItem accountItem = (AccountItem) accountItemObj;
-
                 AccountDetails accountDetails = mapProjectItemToProjectDetails(accountItem);
                 if (accountDetails != null) {
                     accountDetailsList.add(accountDetails);
                 }
             }
         }
-
-        initialized = true;
     }
 
     public List<AccountDetails> getAllAccountDetails()
     {
-        return accountDetailsList;
+        List<AccountDetails> accountsList = new ArrayList<>();
+
+        if (accountDetailsList != null) {
+            for (AccountDetails accountDetails : accountDetailsList) {
+                if (accountDetails.getUserGoupId() != null
+                    && accountDetails.getUserGoupId().equalsIgnoreCase(
+                        getFamstackUserSessionConfiguration().getUserGroupId())) {
+                    accountsList.add(accountDetails);
+                }
+            }
+        }
+        return accountsList;
     }
 
     public static Map<Integer, AccountDetails> getAccountmap()
@@ -127,11 +137,6 @@ public class FamstackAccountManager extends BaseFamstackManager
     public static Map<Integer, ClientDetails> getClientmap()
     {
         return clientMap;
-    }
-
-    public static List<AccountDetails> getAccountdetailslist()
-    {
-        return accountDetailsList;
     }
 
     public void createAccount(String name, String holder, String type, int id)

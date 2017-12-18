@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
+import com.famstack.projectscheduler.datatransferobject.UserGroupItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
@@ -33,6 +34,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
 
+    private static Map<String, UserGroupItem> userGroupMap = new HashMap<>();
+
     private static Map<String, Integer> userIdMap = new HashMap<>();
 
     private final Map<String, String> configSettings = new HashMap<>();
@@ -42,10 +45,22 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
         logDebug("Initializing FamstackApplicationConfiguration...");
         initializeUserMap(famstackUserProfileManager.getEmployeeDataList());
+        initializeUserGroupMap((List<UserGroupItem>) famstackUserProfileManager.getUserGroupList());
         initializeConfigurations();
+        logDebug("END : Initializing FamstackApplicationConfiguration...");
+
     }
 
-    public void initializeUserMap(List<EmployeeDetails> employeeDetailsList)
+    private void initializeUserGroupMap(List<UserGroupItem> userGroupList)
+    {
+        if (userGroupMap.isEmpty()) {
+            for (UserGroupItem userGroupItem : userGroupList) {
+                userGroupMap.put(userGroupItem.getUserGroupId(), userGroupItem);
+            }
+        }
+    }
+
+    public synchronized void initializeUserMap(List<EmployeeDetails> employeeDetailsList)
     {
         Map<Integer, EmployeeDetails> userMapTemp = new HashMap<>();
         Map<String, Integer> userIdMapTemp = new HashMap<>();
@@ -66,7 +81,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     public void initializeConfigurations()
     {
         List<ConfigurationSettingsItem> configurationSettingsItemsList =
-            (List<ConfigurationSettingsItem>) famstackDataAccessObjectManager.getAllItems("ConfigurationSettingsItem");
+            (List<ConfigurationSettingsItem>) famstackDataAccessObjectManager
+                .getAllGroupItems("ConfigurationSettingsItem");
         if (configurationSettingsItemsList != null) {
             for (ConfigurationSettingsItem configurationSettingsItem : configurationSettingsItemsList) {
                 configSettings.put(configurationSettingsItem.getPropertyName(),
@@ -77,7 +93,31 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     public List<EmployeeDetails> getUserList()
     {
-        return new ArrayList<EmployeeDetails>(userMap.values());
+        List<EmployeeDetails> userList = new ArrayList<>();
+        if (userMap != null) {
+            for (Integer userId : userMap.keySet()) {
+
+                if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
+                    userMap.get(userId).getUserGroupId())) {
+                    userList.add(userMap.get(userId));
+                }
+            }
+        }
+        return userList;
+    }
+
+    public Map<Integer, EmployeeDetails> getFilterdUserMap()
+    {
+        Map<Integer, EmployeeDetails> userFiltedMap = new HashMap<>();
+        if (userMap != null) {
+            for (Integer userId : userMap.keySet()) {
+                if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
+                    userMap.get(userId).getUserGroupId())) {
+                    userFiltedMap.put(userId, userMap.get(userId));
+                }
+            }
+        }
+        return userFiltedMap;
     }
 
     public String getHostName()
@@ -120,9 +160,19 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         return getFamstackUserSessionConfiguration().getCurrentUser();
     }
 
+    public String getCurrentUserGroupId()
+    {
+        return getFamstackUserSessionConfiguration().getUserGroupId();
+    }
+
     public Map<Integer, EmployeeDetails> getUserMap()
     {
         return userMap;
+    }
+
+    public Map<String, UserGroupItem> getUserGroupMap()
+    {
+        return userGroupMap;
     }
 
     public void updateLastPing()

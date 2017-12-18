@@ -121,4 +121,21 @@ site_settings = $("#settingsId").html();
 	    	console.log("ERROR: ", error);
 	    },false);
 	 }
+    
+    $("#userGroupSelection").change(function(){
+    	console.log($(this).prop("selectedIndex"));
+    	if ($(this).prop("selectedIndex") > 0) {
+	    	 var id = $(this).val();
+	    	 console.log("userGroupId: ", id);
+	    	 doAjaxChangeUserGroup(id);
+    	}
+    });
+    
+    function doAjaxChangeUserGroup(id) {
+	    doAjaxRequest("POST", "${applicationHome}/changeUserGroup",  {groupId:id},function(data) {
+	    	window.location.reload(true);
+	    },function(error) {
+	    	console.log("ERROR: ", error);
+	    },false);
+	 }
     </script>

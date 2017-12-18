@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -17,27 +15,30 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
-@Table(name = "client_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"client_id"})})
+@Table(name = "user_group_item", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
-public class ClientItem implements FamstackBaseItem
+public class UserGroupItem implements FamstackBaseItem
 {
 
     private static final long serialVersionUID = -5628656638213113049L;
 
     @Id
-    @Column(name = "client_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
-    private int clientId;
+    private int id;
 
     @Column(name = "name")
     private String name;
 
+    @Column(name = "company_name")
+    private String companyName;
+
+    @Column(name = "company_id")
+    private String companyId;
+
     @Column(name = "user_grp_id")
     private String userGroupId;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "created_date")
     private Timestamp createdDate;
@@ -45,9 +46,15 @@ public class ClientItem implements FamstackBaseItem
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
 
-    @ManyToOne
-    @JoinColumn(name = "sub_team_id")
-    private ProjectSubTeamItem projectSubTeamItem;
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
 
     public String getName()
     {
@@ -57,6 +64,18 @@ public class ClientItem implements FamstackBaseItem
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    @Override
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
     @Override
@@ -82,45 +101,24 @@ public class ClientItem implements FamstackBaseItem
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public ProjectSubTeamItem getProjectSubTeamItem()
+    public String getCompanyName()
     {
-        return projectSubTeamItem;
+        return companyName;
     }
 
-    public void setProjectSubTeamItem(ProjectSubTeamItem projectSubTeamItem)
+    public void setCompanyName(String companyName)
     {
-        this.projectSubTeamItem = projectSubTeamItem;
+        this.companyName = companyName;
     }
 
-    public int getClientId()
+    public String getCompanyId()
     {
-        return clientId;
+        return companyId;
     }
 
-    public void setClientId(int clientId)
+    public void setCompanyId(String companyId)
     {
-        this.clientId = clientId;
-    }
-
-    public String getEmail()
-    {
-        return email;
-    }
-
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
-
-    public String getUserGroupId()
-    {
-        return userGroupId;
-    }
-
-    @Override
-    public void setUserGroupId(String userGroupId)
-    {
-        this.userGroupId = userGroupId;
+        this.companyId = companyId;
     }
 
 }

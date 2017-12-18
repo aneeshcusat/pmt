@@ -18,6 +18,8 @@ public class ProjectSubTeamDetails
 
     private Integer totalHours;
 
+    private String userGoupId;
+
     private Set<ClientDetails> clientItems;
 
     public int getSubTeamId()
@@ -91,6 +93,16 @@ public class ProjectSubTeamDetails
     public void setTotalHours(Integer totalHours)
     {
         this.totalHours = totalHours;
+    }
+
+    public String getUserGoupId()
+    {
+        return userGoupId;
+    }
+
+    public void setUserGoupId(String userGoupId)
+    {
+        this.userGoupId = userGoupId;
     }
 
 }

@@ -40,6 +40,9 @@ public class GroupItem implements FamstackBaseItem
     @Column(name = "name")
     private String name;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "description")
     @Lob
     private String description;
@@ -142,6 +145,17 @@ public class GroupItem implements FamstackBaseItem
     public void setCreatedBy(UserItem createdBy)
     {
         this.createdBy = createdBy;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

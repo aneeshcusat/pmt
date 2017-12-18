@@ -12,15 +12,27 @@
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Dashboard</li>
  </ul>
+ <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
  <div class="col-md-12">
- <ul style="float:right;margin-bottom: 3px;">
-   <li>
-        <div id="reportrange" class="dtrange">                                            
+ <ul style="float:right;margin-bottom: 3px; text-decoration: none; list-style: none">
+  <li style="text-decoration: none; list-style: none;display: inline-block">
+  <b>Team : </b>
+  </li>
+   <li style="text-decoration: none; list-style: none;display: inline-block"">
+       <!--  <div id="reportrange" class="dtrange">                                            
             <span></span><b class="caret"></b>
-        </div>                                     
+        </div>  -->
+			
+           <select class="form-control select" data-live-search="true" id="userGroupSelection">
+               <option value="">- select -</option>
+               <c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
+                <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
+               </c:forEach>
+           </select>
     </li>    
 </ul>
 </div>
+</c:if>
  <!-- END BREADCRUMB -->  
                 <!-- PAGE CONTENT WRAPPER -->
                 <div class="page-content-wrap">
@@ -463,6 +475,7 @@
                 </div>
                <!-- END PAGE CONTENT WRAPPER -->  
 <%@include file="includes/footer.jsp" %>
+<script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
 <jsp:useBean id="date" class="java.util.Date"/>
 <fmt:formatDate var="timeHour" value="${date}" pattern="HH"/>
 <fmt:formatDate var="timeMinutes"  value="${date}" pattern="mm"/>

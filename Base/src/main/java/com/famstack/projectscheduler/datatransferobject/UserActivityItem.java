@@ -41,6 +41,9 @@ public class UserActivityItem implements FamstackBaseItem
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
     private int id;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "created_date")
     private Timestamp createdDate;
 
@@ -158,6 +161,17 @@ public class UserActivityItem implements FamstackBaseItem
     public void setLeave(LeaveType leave)
     {
         this.leave = leave;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

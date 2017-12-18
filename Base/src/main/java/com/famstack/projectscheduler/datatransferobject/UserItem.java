@@ -44,6 +44,9 @@ public class UserItem implements FamstackBaseItem
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
     private int id;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     /** The user id. */
     @Column(name = "user_id", nullable = false)
     private String userId;
@@ -104,7 +107,7 @@ public class UserItem implements FamstackBaseItem
     private int modifiedBy;
 
     @Column(name = "need_password_reset")
-    private boolean needPasswordReset;
+    private Boolean needPasswordReset;
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false", nullable = false)
     private Boolean deleted;
@@ -395,12 +398,13 @@ public class UserItem implements FamstackBaseItem
         this.groups = groups;
     }
 
-    public boolean getNeedPasswordReset()
+    public Boolean getNeedPasswordReset()
     {
-        return needPasswordReset;
+
+        return needPasswordReset == null ? false : needPasswordReset;
     }
 
-    public void setNeedPasswordReset(boolean needPasswordReset)
+    public void setNeedPasswordReset(Boolean needPasswordReset)
     {
         this.needPasswordReset = needPasswordReset;
     }
@@ -414,6 +418,18 @@ public class UserItem implements FamstackBaseItem
     public void setDeleted(Boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

@@ -89,4 +89,12 @@ public class FamstackDashboardController extends BaseFamstackService
         famstackDashboardManager.setConfiguration(propertyName, propertyValue);
         return "{\"status\": true}";
     }
+
+    @RequestMapping(value = "/changeUserGroup", method = RequestMethod.POST)
+    @ResponseBody
+    public String changeUserGroup(@RequestParam("groupId") String groupId)
+    {
+        getFamstackUserSessionConfiguration().setUserGroupIdSelection(groupId);
+        return "{\"status\": true}";
+    }
 }

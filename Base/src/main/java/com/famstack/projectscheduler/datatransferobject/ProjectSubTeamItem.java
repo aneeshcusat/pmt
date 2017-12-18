@@ -40,6 +40,9 @@ public class ProjectSubTeamItem implements FamstackBaseItem
     @Column(name = "code")
     private String code;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "total_hour")
     private Integer totalHours;
 
@@ -150,6 +153,17 @@ public class ProjectSubTeamItem implements FamstackBaseItem
     public void setTotalHours(Integer totalHours)
     {
         this.totalHours = totalHours;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

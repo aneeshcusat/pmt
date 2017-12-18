@@ -1,49 +1,59 @@
 package com.famstack.projectscheduler.dashboard.bean;
 
-public class ClientProjectDetails {
+public class ClientProjectDetails
+{
 
-	private Object clientName;
-	private Object completedCount;
-	private Object noCompletedCount;
+    private Object clientName;
 
-	public Object getClientName() {
-		return clientName;
-	}
+    private Object completedCount;
 
-	public void setClientName(Object clientName) {
-		this.clientName = clientName;
-	}
+    private Object noCompletedCount;
 
-	public Object getCompletedCount() {
-		return completedCount;
-	}
+    public Object getClientName()
+    {
+        return clientName;
+    }
 
-	public void setCompletedCount(Object completedCount) {
-		this.completedCount = completedCount;
-	}
+    public void setClientName(Object clientName)
+    {
+        this.clientName = clientName;
+    }
 
-	public Object getNoCompletedCount() {
-		return noCompletedCount;
-	}
+    public Object getCompletedCount()
+    {
+        return completedCount;
+    }
 
-	public void setNoCompletedCount(Object noCompletedCount) {
-		this.noCompletedCount = noCompletedCount;
-	}
+    public void setCompletedCount(Object completedCount)
+    {
+        this.completedCount = completedCount;
+    }
 
-	public double getPercentageOfCompletion() {
-		String completedCountString = "" + completedCount;
-		String noCompletedCountString = "" + noCompletedCount;
+    public Object getNoCompletedCount()
+    {
+        return noCompletedCount;
+    }
 
-		double completedCountInt = Double.parseDouble(completedCountString);
-		double noCompletedCountInt = Double.parseDouble(noCompletedCountString);
+    public void setNoCompletedCount(Object noCompletedCount)
+    {
+        this.noCompletedCount = noCompletedCount;
+    }
 
-		if (noCompletedCountInt > 0) {
-			double percentageOfWorkCompleted = (completedCountInt / noCompletedCountInt) * 100;
-			return Math.round(percentageOfWorkCompleted * 100.0) / 100.0;
-		}
+    public double getPercentageOfCompletion()
+    {
+        String completedCountString = "" + completedCount;
+        String noCompletedCountString = "" + noCompletedCount;
 
-		return 100;
+        double completedCountInt = Double.parseDouble(completedCountString);
+        double noCompletedCountInt = Double.parseDouble(noCompletedCountString);
 
-	}
+        if (noCompletedCountInt > 0) {
+            double percentageOfWorkCompleted = (completedCountInt / noCompletedCountInt) * 100;
+            return Math.round(percentageOfWorkCompleted * 100.0) / 100.0;
+        }
+
+        return 100;
+
+    }
 
 }

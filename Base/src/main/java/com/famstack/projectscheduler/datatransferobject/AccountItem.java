@@ -39,6 +39,9 @@ public class AccountItem implements FamstackBaseItem
     @Column(name = "code")
     private String code;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "holder")
     private String holder;
 
@@ -136,6 +139,17 @@ public class AccountItem implements FamstackBaseItem
     public void setType(String type)
     {
         this.type = type;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

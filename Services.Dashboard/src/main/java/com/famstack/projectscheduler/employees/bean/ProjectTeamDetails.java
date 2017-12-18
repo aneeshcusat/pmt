@@ -3,55 +3,82 @@ package com.famstack.projectscheduler.employees.bean;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProjectTeamDetails {
+public class ProjectTeamDetails
+{
 
-	private int teamId;
-	private String name;
-	private String code;
-	private String poc;
-	private Set<ProjectSubTeamDetails> projectSubTeams;
+    private int teamId;
 
-	public int getTeamId() {
-		return teamId;
-	}
+    private String name;
 
-	public void setTeamId(int teamId) {
-		this.teamId = teamId;
-	}
+    private String code;
 
-	public String getName() {
-		return name;
-	}
+    private String poc;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String userGoupId;
 
-	public String getCode() {
-		return code;
-	}
+    private Set<ProjectSubTeamDetails> projectSubTeams;
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public int getTeamId()
+    {
+        return teamId;
+    }
 
-	public String getPoc() {
-		return poc;
-	}
+    public void setTeamId(int teamId)
+    {
+        this.teamId = teamId;
+    }
 
-	public void setPoc(String poc) {
-		this.poc = poc;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public Set<ProjectSubTeamDetails> getProjectSubTeams() {
-		if (projectSubTeams == null) {
-			projectSubTeams = new HashSet<>();
-		}
-		return projectSubTeams;
-	}
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
-	public void setProjectSubTeams(Set<ProjectSubTeamDetails> projectSubTeams) {
-		this.projectSubTeams = projectSubTeams;
-	}
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
+    }
+
+    public String getPoc()
+    {
+        return poc;
+    }
+
+    public void setPoc(String poc)
+    {
+        this.poc = poc;
+    }
+
+    public Set<ProjectSubTeamDetails> getProjectSubTeams()
+    {
+        if (projectSubTeams == null) {
+            projectSubTeams = new HashSet<>();
+        }
+        return projectSubTeams;
+    }
+
+    public void setProjectSubTeams(Set<ProjectSubTeamDetails> projectSubTeams)
+    {
+        this.projectSubTeams = projectSubTeams;
+    }
+
+    public String getUserGoupId()
+    {
+        return userGoupId;
+    }
+
+    public void setUserGoupId(String userGoupId)
+    {
+        this.userGoupId = userGoupId;
+    }
 
 }

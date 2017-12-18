@@ -95,7 +95,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             }
             taskItemNew.setHelpers(helpers);
 
-            int duration = taskItemNew.getDuration() + (taskDetails.getDuration()/60);
+            int duration = taskItemNew.getDuration() + (taskDetails.getDuration() / 60);
             List<UserTaskActivityItem> userTaskActivityItems =
                 (List<UserTaskActivityItem>) famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItemNew
                     .getTaskId());
@@ -524,8 +524,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         dataMap.put("startTime2", startDate2);
 
         List<?> projectTaskList =
-            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getAllProjectTaskStartWithIn"),
-                dataMap);
+            getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("getAllProjectTaskStartWithIn"), dataMap);
 
         for (Object taskItemObj : projectTaskList) {
             TaskItem taskItem = (TaskItem) taskItemObj;
@@ -545,8 +545,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         dataMap.put("endDate2", endDate2);
 
         List<?> projectTaskList =
-            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getAllProjectTaskEndWithIn"),
-                dataMap);
+            getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("getAllProjectTaskEndWithIn"), dataMap);
 
         for (Object taskItemObj : projectTaskList) {
             TaskItem taskItem = (TaskItem) taskItemObj;
@@ -566,8 +566,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         dataMap.put("startTime", startTime);
 
         List<?> projectTaskList =
-            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getAllProjectTaskMissedDeadLine"),
-                dataMap);
+            getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("getAllProjectTaskMissedDeadLine"), dataMap);
 
         for (Object taskItemObj : projectTaskList) {
             TaskItem taskItem = (TaskItem) taskItemObj;

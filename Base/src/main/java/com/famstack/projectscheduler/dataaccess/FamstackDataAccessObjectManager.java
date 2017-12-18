@@ -20,6 +20,9 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
     {
         saveItem.setCreatedDate(new Timestamp(new Date().getTime()));
         saveItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
+        if (saveItem.getUserGroupId() == null) {
+            saveItem.setUserGroupId(getFamstackUserSessionConfiguration().getUserGroupId());
+        }
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         session.save(saveItem);
@@ -54,6 +57,9 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         if (updateItem.getCreatedDate() == null) {
             updateItem.setCreatedDate(new Timestamp(new Date().getTime()));
         }
+        if (updateItem.getUserGroupId() == null) {
+            updateItem.setUserGroupId(getFamstackUserSessionConfiguration().getUserGroupId());
+        }
         updateItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
@@ -81,6 +87,20 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         String hql = String.format("from %s", itemName);
+        hql += " and userGroupId = " + getFamstackUserSessionConfiguration().getUserGroupId();
+        Query<?> query = session.createQuery(hql).setCacheable(true);
+        List<?> itemList = query.list();
+        tx.commit();
+        session.close();
+        return itemList;
+    }
+
+    @SuppressWarnings("deprecation")
+    public List<?> getAllGroupItems(String itemName)
+    {
+        Session session = getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        String hql = String.format("from %s", itemName);
         Query<?> query = session.createQuery(hql).setCacheable(true);
         List<?> itemList = query.list();
         tx.commit();
@@ -91,6 +111,27 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
     @SuppressWarnings("deprecation")
     @Override
     public List<?> executeQuery(String hqlQuery, Map<String, Object> dataMap)
+    {
+        Session session = getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        hqlQuery += " and userGroupId = " + getFamstackUserSessionConfiguration().getUserGroupId();
+        Query<?> query = session.createQuery(hqlQuery).setCacheable(true);
+        logDebug("executeQuery :" + hqlQuery);
+        if (dataMap != null) {
+            logDebug("dataMap :" + dataMap.keySet());
+            logDebug("dataMap values :" + dataMap.values());
+            for (String paramName : dataMap.keySet()) {
+                query.setParameter(paramName, dataMap.get(paramName));
+            }
+        }
+        List<?> itemList = query.list();
+        tx.commit();
+        session.close();
+        return itemList;
+    }
+
+    @SuppressWarnings("deprecation")
+    public List<?> executeAllGroupQuery(String hqlQuery, Map<String, Object> dataMap)
     {
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
@@ -113,6 +154,9 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
     @Override
     public List<Object[]> executeSQLQuery(String sqlQuery, Map<String, Object> dataMap)
     {
+
+        sqlQuery =
+            String.format(sqlQuery, " and user_grp_id = " + getFamstackUserSessionConfiguration().getUserGroupId());
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         SQLQuery query = session.createSQLQuery(sqlQuery);
@@ -134,6 +178,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
     {
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
+        hqlQuery += " and userGroupId = " + getFamstackUserSessionConfiguration().getUserGroupId();
         Query<?> query = session.createQuery(hqlQuery).setCacheable(true);
         logDebug("executeQuery :" + hqlQuery);
         if (dataMap != null) {

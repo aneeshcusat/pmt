@@ -105,6 +105,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         userItem.setHashkey(hashKey);
         userItem.setPassword(encryptedPassword);
         userItem.setNeedPasswordReset(true);
+        userItem.setDeleted(false);
         employeeDetails.setPassword(password);
         saveUserItem(employeeDetails, userItem);
     }
@@ -164,6 +165,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         userItem.setUserRole(employeeDetails.getRole());
         userItem.setGender(employeeDetails.getGender());
         userItem.setTeam(employeeDetails.getTeam());
+        userItem.setUserGroupId(employeeDetails.getUserGroupId());
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
     }
 
@@ -177,7 +179,12 @@ public class FamstackUserProfileManager extends BaseFamstackManager
 
     public List<?> getAllUserItems()
     {
-        return getFamstackDataAccessObjectManager().getAllItems("UserItem");
+        return getFamstackDataAccessObjectManager().getAllGroupItems("UserItem");
+    }
+
+    public List<?> getUserGroupList()
+    {
+        return getFamstackDataAccessObjectManager().getAllGroupItems("UserGroupItem");
     }
 
     public UserItem getUserItemById(int id)
@@ -190,7 +197,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         Map<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("id", userId);
         List<?> userItemList =
-            getFamstackDataAccessObjectManager().executeQuery(
+            getFamstackDataAccessObjectManager().executeAllGroupQuery(
                 HQLStrings.getString("FamstackQueryStringsusersByUserId"), dataMap);
         if (!userItemList.isEmpty()) {
             UserItem userItem = (UserItem) userItemList.get(0);
@@ -239,6 +246,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeDetails.setMobileNumber(userItem.getMobileNumber());
             employeeDetails.setQualification(userItem.getQualification());
             employeeDetails.setRole(userItem.getUserRole());
+            employeeDetails.setUserGroupId(userItem.getUserGroupId());
             if (userItem.getReportertingManager() != null) {
                 employeeDetails.setReportingManger(userItem.getReportertingManager().getId());
             }
@@ -287,5 +295,4 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         }
         return false;
     }
-
 }

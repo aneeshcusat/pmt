@@ -196,6 +196,8 @@ var jvalidate = $("#createUserFormId").validate({
 	},
 	team: {
 	       required: true
+	},userGroupId: {
+	       required: true
 	},
 	qualification: {
 	       required: true
@@ -313,12 +315,14 @@ function processUserResponseData(data) {
 	$('#reportingManger').val(response.reportingManger);
 	$('#qualification').val(response.qualification);
 	$('#team').val(response.team);
+	$('#userGroupId').val(response.userGroupId);
 	$('#designation').val(response.designation);
 	
 	$('#role').selectpicker('refresh');
 	$('#reportingManger').selectpicker('refresh');
 	$('#qualification').selectpicker('refresh');
 	$('#team').selectpicker('refresh');
+	$('#userGroupId').selectpicker('refresh');
 	$('#designation').selectpicker('refresh');
 	
 }
@@ -335,6 +339,7 @@ function clearUserData() {
 	$('#role').val("");
 	$('#qualification').val("");
 	$('#team').val("");
+	$('#userGroupId').val("");
 	$('#designation').val("");
 	$(".genderGroup label").removeClass("active");
 	$('#role').prop('selectedIndex', 0);
@@ -345,6 +350,7 @@ function clearUserData() {
 	$('#role').selectpicker('refresh');
 	$('#reportingManger').selectpicker('refresh');
 	$('#qualification').selectpicker('refresh');
+	$('#userGroupId').selectpicker('refresh');
 	$('#team').selectpicker('refresh');
 	$('#designation').selectpicker('refresh');
 	

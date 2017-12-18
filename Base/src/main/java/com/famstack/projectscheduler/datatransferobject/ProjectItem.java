@@ -45,6 +45,9 @@ public class ProjectItem implements FamstackBaseItem
     @Column(name = "name")
     private String name;
 
+    @Column(name = "user_grp_id")
+    private String userGroupId;
+
     @Column(name = "code")
     private String code;
 
@@ -371,6 +374,17 @@ public class ProjectItem implements FamstackBaseItem
     public void setQuantity(String quantity)
     {
         this.quantity = quantity;
+    }
+
+    public String getUserGroupId()
+    {
+        return userGroupId;
+    }
+
+    @Override
+    public void setUserGroupId(String userGroupId)
+    {
+        this.userGroupId = userGroupId;
     }
 
 }

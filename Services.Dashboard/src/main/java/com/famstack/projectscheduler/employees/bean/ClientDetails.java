@@ -9,6 +9,8 @@ public class ClientDetails
 
     private String email;
 
+    private String userGoupId;
+
     public String getName()
     {
         return name;
@@ -37,6 +39,16 @@ public class ClientDetails
     public void setEmail(String email)
     {
         this.email = email;
+    }
+
+    public String getUserGoupId()
+    {
+        return userGoupId;
+    }
+
+    public void setUserGoupId(String userGoupId)
+    {
+        this.userGoupId = userGoupId;
     }
 
 }

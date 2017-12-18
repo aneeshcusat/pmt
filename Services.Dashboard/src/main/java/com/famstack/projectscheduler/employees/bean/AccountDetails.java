@@ -3,66 +3,94 @@ package com.famstack.projectscheduler.employees.bean;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AccountDetails {
+public class AccountDetails
+{
 
-	private int accountId;
+    private int accountId;
 
-	private String name;
-	private String code;
-	private String holder;
-	private String type;
+    private String name;
 
-	private Set<ProjectTeamDetails> projectTeams;
+    private String code;
 
-	public int getAccountId() {
-		return accountId;
-	}
+    private String holder;
 
-	public void setAccountId(int accountId) {
-		this.accountId = accountId;
-	}
+    private String type;
 
-	public String getName() {
-		return name;
-	}
+    private String userGoupId;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private Set<ProjectTeamDetails> projectTeams;
 
-	public String getCode() {
-		return code;
-	}
+    public int getAccountId()
+    {
+        return accountId;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setAccountId(int accountId)
+    {
+        this.accountId = accountId;
+    }
 
-	public String getHolder() {
-		return holder;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setHolder(String holder) {
-		this.holder = holder;
-	}
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
-	public Set<ProjectTeamDetails> getProjectTeams() {
-		if (projectTeams == null) {
-			projectTeams = new HashSet<>();
-		}
-		return projectTeams;
-	}
+    public String getCode()
+    {
+        return code;
+    }
 
-	public void setProjectTeams(Set<ProjectTeamDetails> projectTeams) {
-		this.projectTeams = projectTeams;
-	}
+    public void setCode(String code)
+    {
+        this.code = code;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getHolder()
+    {
+        return holder;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setHolder(String holder)
+    {
+        this.holder = holder;
+    }
+
+    public Set<ProjectTeamDetails> getProjectTeams()
+    {
+        if (projectTeams == null) {
+            projectTeams = new HashSet<>();
+        }
+        return projectTeams;
+    }
+
+    public void setProjectTeams(Set<ProjectTeamDetails> projectTeams)
+    {
+        this.projectTeams = projectTeams;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
+    public String getUserGoupId()
+    {
+        return userGoupId;
+    }
+
+    public void setUserGoupId(String userGoupId)
+    {
+        this.userGoupId = userGoupId;
+    }
 
 }

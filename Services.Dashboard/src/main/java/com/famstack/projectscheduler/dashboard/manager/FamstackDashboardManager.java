@@ -547,7 +547,7 @@ public class FamstackDashboardManager extends BaseFamstackService
         Map<Object, UserWorkDetails> userWorkDetailsMap =
             famstackUserActivityManager.getUserBillableProductiveHours(startTime, endTime);
 
-        Map<Integer, EmployeeDetails> empMap = FamstackApplicationConfiguration.userMap;
+        Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getFilterdUserMap();
 
         for (int userId : empMap.keySet()) {
             UserWorkDetails userDetails = userWorkDetailsMap.get(userId);
@@ -614,7 +614,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 
         List<UserStatus> userStatusList = new ArrayList<UserStatus>();
 
-        Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getUserMap();
+        Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getFilterdUserMap();
         for (Integer userId : empMap.keySet()) {
             String availableMessage = "Busy till";
             EmployeeDetails employeeDetails = empMap.get(userId);
