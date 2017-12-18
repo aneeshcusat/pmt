@@ -40,7 +40,7 @@
                     <li class="active">
                         <a href="${applicationHome}/index"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
                     </li>                    
-                    <li class="xn-openable active">
+                    <li class="xn-openable<c:if test="${expandedPage}"> active</c:if>">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Pages</span></a>
                         <ul>
                             <li><a href="${applicationHome}/employees"><span class="fa fa-users"></span> Employees</a></li>
