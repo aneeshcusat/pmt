@@ -1,7 +1,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<div class="page-sidebar">
+
+		<c:if test="${expandedPage}">
+        	<div class="page-sidebar">
+        </c:if>
+		<c:if test="${expandedPage == false}">
+        	<div class="page-sidebar page-sidebar-fixed scroll mCustomScrollbar _mCS_1 mCS-autoHide mCS_disabled">
+        </c:if>
                 <!-- START X-NAVIGATION -->
-                <ul class="x-navigation">
+                <c:if test="${expandedPage}">
+		        	<ul class="x-navigation">
+		        </c:if>
+		         <c:if test="${expandedPage == false}">
+		        	<ul class="x-navigation x-navigation-custom x-navigation-minimized">
+		        </c:if>
                     <li class="xn-logo">
                         <a href="index">famstack</a>
                         <a href="#" class="x-navigation-control"></a>

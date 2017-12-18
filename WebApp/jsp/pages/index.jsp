@@ -582,14 +582,6 @@ $(function(){
                   {latLng: [51.51, -0.13], name: 'HP'}]
     });    
     /* END Vector Map */
-
-    
-    $(".x-navigation-minimize").on("click",function(){
-        setTimeout(function(){
-            rdc_resize();
-        },200);    
-    });
-    
     
 });
 

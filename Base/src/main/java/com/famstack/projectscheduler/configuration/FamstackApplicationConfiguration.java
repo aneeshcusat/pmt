@@ -260,4 +260,13 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         return "TRUE".equalsIgnoreCase(configSettings.get("desktopNotification")) ? true : false;
     }
 
+    public boolean isExpandedPage()
+    {
+        String toggelId = getCurrentUserId() + "_dashboardToggle";
+        if (configSettings.get(toggelId) == null) {
+            return true;
+        }
+        return "TRUE".equalsIgnoreCase(configSettings.get(toggelId)) ? true : false;
+    }
+
 }

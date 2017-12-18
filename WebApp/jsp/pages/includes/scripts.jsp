@@ -114,8 +114,9 @@ site_settings = $("#settingsId").html();
     });
     
     function doAjaxEnableSettings(name,value) {
+    	console.log("name: ", name);
+    	console.log("value: ", value);
 	    doAjaxRequest("POST", "${applicationHome}/setConfiguration",  {propertyName:name,propertyValue:value},function(data) {
-	    	 
 			console.log("data: ", data);
 	    },function(error) {
 	    	console.log("ERROR: ", error);
@@ -138,4 +139,14 @@ site_settings = $("#settingsId").html();
 	    	console.log("ERROR: ", error);
 	    },false);
 	 }
+    
+
+    $("a.x-navigation-minimize").on("click", function(){
+    	var name = ${currentUser.id} + "_dashboardToggle";
+    	var value = false;
+    	if ($(".page-sidebar .x-navigation.x-navigation-minimized").length > 0) {
+    		value = true;
+    	}
+    	doAjaxEnableSettings(name,value);
+    });
     </script>

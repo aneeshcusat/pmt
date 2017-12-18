@@ -15,6 +15,7 @@
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="userGroupMap" value="${applicationScope.applicationConfiguraion.userGroupMap}"/>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
+<c:set var="expandedPage" value="${applicationScope.applicationConfiguraion.expandedPage}"/>
 
 
 <!DOCTYPE html>
@@ -43,8 +44,12 @@
     <body>
     <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
     <!-- START PAGE CONTAINER -->
-        <div class="page-container page-navigation-top-fixed">
-            
+    	<c:if test="${expandedPage}">
+        	<div class="page-container page-navigation-top-fixed">
+        </c:if>
+        <c:if test="${expandedPage == false}">
+        	<div class="page-container page-navigation-top-fixed page-navigation-toggled page-container-wide">
+        </c:if>   
             <!-- START PAGE SIDEBAR -->
             <%@include file="sidebar.jsp" %>
             <!-- END PAGE SIDEBAR -->

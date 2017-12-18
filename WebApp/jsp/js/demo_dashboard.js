@@ -130,14 +130,5 @@ $(function(){
                                               {latLng: [39.91, 116.39], name: 'Beijing - 3'}]
                                 });    
     /* END Vector Map */
-
-    
-    $(".x-navigation-minimize").on("click",function(){
-        setTimeout(function(){
-            rdc_resize();
-        },200);    
-    });
-    
-    
 });
 
