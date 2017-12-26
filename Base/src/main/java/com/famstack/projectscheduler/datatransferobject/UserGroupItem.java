@@ -46,6 +46,9 @@ public class UserGroupItem implements FamstackBaseItem
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
 
+    @Column(name = "user_access_code")
+    private Integer userAccessCode;
+
     public int getId()
     {
         return id;
@@ -119,6 +122,16 @@ public class UserGroupItem implements FamstackBaseItem
     public void setCompanyId(String companyId)
     {
         this.companyId = companyId;
+    }
+
+    public Integer getUserAccessCode()
+    {
+        return userAccessCode;
+    }
+
+    public void setUserAccessCode(Integer userAccessCode)
+    {
+        this.userAccessCode = userAccessCode;
     }
 
 }

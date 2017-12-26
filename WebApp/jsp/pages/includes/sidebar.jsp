@@ -39,7 +39,15 @@
                     <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
                     <li class="active">
                         <a href="${applicationHome}/index"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
-                    </li>                    
+                    </li>   
+                     <li class="xn-openable<c:if test="${expandedPage}"> active</c:if>">
+                        <a href="#"><span class="fa fa-table"></span> <span class="xn-text">Project Reports</span></a>
+                        <ul>
+                             <li><a href="${applicationHome}/projectreportingDefault"><span class="fa fa-table"></span> Default</a></li>
+                              <li><a href="${applicationHome}/projectreportingVS"><span class="fa fa-table"></span> Visual Services</a></li>
+                             <li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span> Team 2</a></li>
+                        </ul>
+                     </li>                 
                     <li class="xn-openable<c:if test="${expandedPage}"> active</c:if>">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Pages</span></a>
                         <ul>
@@ -51,8 +59,8 @@
                             <li><a href="${applicationHome}/projects"><span class="fa fa-list-alt"></span> Projects</a></li>
                             <li><a href="${applicationHome}/mileStones"><span class="fa fa-trophy"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
-                            <li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span> Project Reporting</a></li>
                             <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
+                            <%--  <li><a href="${applicationHome}/applicationConfig"><span class="fa fa-cog"></span>Application config</a></li> --%>
                         </ul>
                     </li>
                     </c:if>

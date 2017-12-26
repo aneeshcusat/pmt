@@ -38,32 +38,45 @@
 		<!-- START DEFAULT TABLE EXPORT -->
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                <div class="col-md-8" >
-                                   <form action="" method="post">
-					                 Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-					                 <input type="text" name="daterange" id="daterangeText" style="width: 175px;height: 33px;margin-left: 5px;padding-left: 7px;" value="${dateRange}" /> 
-					                 <input class="btn btn-default" type="submit" value="Search"></button>
-					             	</form>
+                                
+                                	<div class="col-md-6" >
+                                 	</div>
+                                 	<form action="" method="post">
+                                 	<div class="col-md-2" >
+					                 <span style="margin-top: 9px;margin-right:  10px;float:right"></>Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;</span>
+					                 <input type="text" name="daterange" id="daterangeText" style="display: none" value="${dateRange}" /> 
 					             	</div>
+					             	
+					             	<div class="col-md-3" >
+					             	 <span id="reportrange" class="dtrange">                                            
+            							<span>${dateRange}</span><b class="caret"></b>
+        							</span>
+        							<input style="margin-left:10px" class="btn btn-default" type="submit" value="Search"></button>
+        							</div>
+        							</form>
+        							<div class="col-md-1" >
+        							<button class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
+                                 	</div>
                                 </div>
                                 <div class="panel-body panel-body-table">
                                     <table id="projectsTable" class="table table-striped">
                                         <thead>			
                                             <tr>
-                                                <th>Project code</th>
+                                            	<th>Date</th>
+                                            	<th>Project Code</th>
                                                 <th>ID</th>
                                                 <th>PO ID</th>
+                                                <th>Analyst</th>
+                                                <th>Lead</th>
+                                                <th>Productivity Type</th>
+                                                <th>Project Type</th>
+                                                <th>Client BU</th>
+                                                <th>Client POC</th>
+                                                <th>Requestor</th>
                                                 <th>Project Name</th>
-                                                <th>Type</th>
-                                                 <th>Category</th>
-                                                 <th>Team</th>
-                                                 <th>Sub Team</th>
-                                                <th>Client</th>
-                                                <th>Est Duration (Hrs)</th>
-                                                <th>Project Duration (Hrs)</th>
-                                                <th>Task Duration (Mins)</th>
-                                                <th>Assignee</th>
-                                                <th>Contributers</th>
+                                                <th>Hours Spent</th>
+                                                <th>Utilization</th>
+                                                <th>Analyst Comment</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
@@ -77,51 +90,24 @@
 								              <c:if test="${project.projectMissedTimeLine == true }">
 								              	<c:set var="projectState" value="danger"/>
 								              </c:if>
-        								<c:if test="${not empty project.projectTaskDeatils}">
-        									<c:forEach var="projectTaskDetails" items="${project.projectTaskDeatils}" varStatus="projectTaskDetailsIndex"> 
-				                              <tr
-				                              <c:if test="${projectTaskDetailsIndex.index > 0}">
-				                              </c:if>
-				                              >
+        									   <tr>
+				                               	<td>${project.startTime}</td>
                                                 <td><a href="${applicationHome}/project/${project.id}" target="_new">${project.code}</a></td>
                                                 <td>${project.id}</td>
                                                 <td>${project.PONumber}</td>
-                                                <td>${project.name}</td>
+                                                <td><c:forEach var="contributer" items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if></c:forEach></td>
+                                                <td></td>
                                                 <td>${project.type}</td>
                                                 <td>${project.category}</td>
-                                                <td>${project.teamName}</td>
-                                                <td>${project.subTeamName}</td>
+                                                <td>${project.accountName}</td>
                                                 <td>${project.clientName}</td>
-                                                <td>${project.duration}</td>
+                                                <td>${project.reporterName}</td>
+                                                <td>${project.name}</td>
                                                 <td>${project.actualDurationInHrs}</td>
-                                                <td>${projectTaskDetails.actualTimeTaken}</td>
-                                                <td>${userDetailsMap[projectTaskDetails.assignee].firstName} </td>
-                                                <td><c:forEach var="contributer" items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if></c:forEach></td>
-
+                                                <td></td>
+                                                <td></td>
 				                              	<td> <span class="label label-${projectState}">${project.status}</span></td>
                                             </tr>  
-				                                
-				                             </c:forEach>
-				                            </c:if>    
-				                        <c:if test="${empty project.projectTaskDeatils}">
-                                        <tr>
-                                                <td><a href="${applicationHome}/project/${project.id}" target="_new">${project.code}</a></td>
-                                                <td>${project.id}</td>
-                                                <td>${project.PONumber}</td>
-                                                <td>${project.name}</td>
-                                                <td>${project.type}</td>
-                                                <td>${project.category}</td>
-                                                <td>${project.teamName}</td>
-                                                <td>${project.subTeamName}</td>
-                                                <td>${project.clientName}</td>
-                                                <td>${project.duration}</td>
-                                                <td></td>
-                                                <td>${project.actualDurationInHrs}</td>
-                                                <td> </td>
-                                                <td></td>
-				                              <td> <span class="label label-${projectState}">${project.status}</span></td>
-                                            </tr>
-                                            </c:if>
                                            </c:forEach>
                                         </tbody>
                                         </c:if>
@@ -156,7 +142,7 @@ $(function() {
 $('#projectsTable').DataTable({
     dom: 'Bfrtip',
     buttons: [
-         'copy', 'csv', 'excel', 'pdf', 'print'
+         'copy', 'csv', 'pdf', 'print'
     ],
     "pageLength": 100
 });

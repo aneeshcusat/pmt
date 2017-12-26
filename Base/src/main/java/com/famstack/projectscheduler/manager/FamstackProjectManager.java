@@ -60,6 +60,16 @@ public class FamstackProjectManager extends BaseFamstackManager
         famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
     }
 
+    public void quickDuplicateProject(ProjectDetails projectDetails)
+    {
+        ProjectItem projectItem = getProjectItemById(projectDetails.getId());
+
+        if (projectItem != null) {
+            // TODO :
+        }
+
+    }
+
     private void saveProjectItem(ProjectDetails projectDetails, ProjectItem projectItem)
     {
         projectItem.setCategory(projectDetails.getCategory());
@@ -598,4 +608,5 @@ public class FamstackProjectManager extends BaseFamstackManager
         getProjectsList(projectDetailsList, projectItemList, true);
         return projectDetailsList;
     }
+
 }

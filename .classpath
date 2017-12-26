@@ -111,9 +111,28 @@
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/objenesis-2.4.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/commons-io-2.5.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/quartz-2.2.1.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/poi-ooxml-3.17.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junfamstackR/4"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/c3p0-0.9.1.1.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/commons-fileupload-1.3.2.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/commons-lang3-3.3.2.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/curvesapi-1.04.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/ehcache-2.10.1.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/hibernate-ehcache-5.2.1.Final.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/messaging-jms-client-5.0.7.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/mysql-connector-java-5.1.40.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/poi-ooxml-schemas-3.17.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/spring-messaging-4.2.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/spring-security-acl-4.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/spring-security-taglibs-4.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="WebApp/WEB-INF/classes"/>
 </classpath>

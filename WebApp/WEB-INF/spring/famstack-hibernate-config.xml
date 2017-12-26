@@ -48,6 +48,8 @@
 				
 				<value>com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem</value>
 				<value>com.famstack.projectscheduler.datatransferobject.UserGroupItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.AppConfItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.AppConfValueItem</value>
 				
 			</list>
 		</property>

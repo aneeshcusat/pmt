@@ -121,6 +121,9 @@ public class UserItem implements FamstackBaseItem
     @JoinTable(name = "group_subscribers", joinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "group_id", nullable = false, updatable = false)})
     private Set<GroupItem> groups;
 
+    @Column(name = "user_access_code")
+    private Integer userAccessCode;
+
     public int getCreatedBy()
     {
         return createdBy;
@@ -430,6 +433,21 @@ public class UserItem implements FamstackBaseItem
     public void setUserGroupId(String userGroupId)
     {
         this.userGroupId = userGroupId;
+    }
+
+    public Integer getUserAccessCode()
+    {
+        return userAccessCode;
+    }
+
+    public void setUserAccessCode(Integer userAccessCode)
+    {
+        this.userAccessCode = userAccessCode;
+    }
+
+    public Boolean getDeleted()
+    {
+        return deleted;
     }
 
 }

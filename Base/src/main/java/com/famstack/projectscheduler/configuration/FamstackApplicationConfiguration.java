@@ -2,6 +2,8 @@ package com.famstack.projectscheduler.configuration;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +14,11 @@ import javax.annotation.Resource;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
-import com.famstack.projectscheduler.datatransferobject.UserGroupItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.employees.bean.AppConfDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
+import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 
 public class FamstackApplicationConfiguration extends BaseFamstackService
@@ -22,6 +26,9 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     @Resource
     FamstackUserProfileManager famstackUserProfileManager;
+
+    @Resource
+    FamstackApplicationConfManager famstackApplicationConfManager;
 
     @Resource
     FamstackDataAccessObjectManager famstackDataAccessObjectManager;
@@ -34,7 +41,9 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
 
-    private static Map<String, UserGroupItem> userGroupMap = new HashMap<>();
+    private static Map<String, UserGroupDetails> userGroupMap = new HashMap<>();
+
+    private static Map<String, AppConfDetails> appConfigMap = new HashMap<>();
 
     private static Map<String, Integer> userIdMap = new HashMap<>();
 
@@ -45,17 +54,28 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
         logDebug("Initializing FamstackApplicationConfiguration...");
         initializeUserMap(famstackUserProfileManager.getEmployeeDataList());
-        initializeUserGroupMap((List<UserGroupItem>) famstackUserProfileManager.getUserGroupList());
+        initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
+        initializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
         initializeConfigurations();
         logDebug("END : Initializing FamstackApplicationConfiguration...");
 
     }
 
-    private void initializeUserGroupMap(List<UserGroupItem> userGroupList)
+    private void initializeAppConfigMap(List<AppConfDetails> appConfigList)
+    {
+        if (appConfigMap.isEmpty()) {
+            for (AppConfDetails appConfDetails : appConfigList) {
+                appConfigMap.put(appConfDetails.getType(), appConfDetails);
+            }
+        }
+
+    }
+
+    private void initializeUserGroupMap(List<UserGroupDetails> userGroupList)
     {
         if (userGroupMap.isEmpty()) {
-            for (UserGroupItem userGroupItem : userGroupList) {
-                userGroupMap.put(userGroupItem.getUserGroupId(), userGroupItem);
+            for (UserGroupDetails userGroupDetail : userGroupList) {
+                userGroupMap.put(userGroupDetail.getUserGroupId(), userGroupDetail);
             }
         }
     }
@@ -103,6 +123,15 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
                 }
             }
         }
+        Collections.sort(userList, new Comparator<EmployeeDetails>()
+        {
+            @Override
+            public int compare(EmployeeDetails employeeDetails1, EmployeeDetails employeeDetails2)
+            {
+                return employeeDetails1.getFirstName().toUpperCase()
+                    .compareTo(employeeDetails2.getFirstName().toUpperCase());
+            }
+        });
         return userList;
     }
 
@@ -118,6 +147,20 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
             }
         }
         return userFiltedMap;
+    }
+
+    public Map<String, AppConfDetails> getFilterdApplicationConfigMap()
+    {
+        Map<String, AppConfDetails> appConfigFilterdMap = new HashMap<>();
+        if (appConfigMap != null) {
+            for (String appConfigType : appConfigMap.keySet()) {
+                if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
+                    appConfigMap.get(appConfigType).getUserGroupId())) {
+                    appConfigFilterdMap.put(appConfigType, appConfigMap.get(appConfigType));
+                }
+            }
+        }
+        return appConfigFilterdMap;
     }
 
     public String getHostName()
@@ -170,7 +213,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         return userMap;
     }
 
-    public Map<String, UserGroupItem> getUserGroupMap()
+    public Map<String, UserGroupDetails> getUserGroupMap()
     {
         return userGroupMap;
     }

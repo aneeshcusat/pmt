@@ -101,6 +101,11 @@ dependencies {
 	//scheduler quartz
 	compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.2.1'
 	
+	//XLS operations	
+	compile group: 'org.apache.poi', name: 'poi', version: '3.17'
+	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+	
+	
 	
 	//mysql 
 	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'

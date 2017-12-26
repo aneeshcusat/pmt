@@ -53,6 +53,8 @@ public class EmployeeDetails
 
     private LeaveType leave;
 
+    private Integer userAccessCode;
+
     public String getFirstName()
     {
         return firstName;
@@ -288,6 +290,16 @@ public class EmployeeDetails
     public void setUserGroupId(String userGroupId)
     {
         this.userGroupId = userGroupId;
+    }
+
+    public Integer getUserAccessCode()
+    {
+        return userAccessCode;
+    }
+
+    public void setUserAccessCode(Integer userAccessCode)
+    {
+        this.userAccessCode = userAccessCode;
     }
 
 }

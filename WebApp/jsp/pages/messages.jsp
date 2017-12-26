@@ -149,7 +149,7 @@ list .nav-header {
               		 </div>
               		 <div class="col-md-3 margin10">
               		  <h4>Group Members</h4>
-              		 	<div class="sortDiv list-group list-group-contacts border-bottom margin10" style="box-shadow: -7px -4px 10px #888888">
+              		 	<div class="sortDiv list-group list-group-contacts border-bottom margin10" style="box-shadow: -7px -4px 10px #888888; height: 500px;overflow:  auto;">
                             <c:forEach var="subscriber" items="${group.subscribers}">
                             	 <div class="sortDivData" id="sortDivData${subscriber.id}" data-sort="${subscriber.checkUserStatus}">
                                  <a href="#" class="list-group-item">

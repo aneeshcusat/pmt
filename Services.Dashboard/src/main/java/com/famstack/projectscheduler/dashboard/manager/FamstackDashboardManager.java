@@ -33,6 +33,7 @@ import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
+import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
@@ -146,6 +147,12 @@ public class FamstackDashboardManager extends BaseFamstackService
         projectManager.createProjectItem(projectDetails);
         setCurrentUser(projectDetails);
         notifyAll(NotificationType.PROJECT_CREATE, projectDetails);
+    }
+
+    public void quickDuplicateProject(ProjectDetails projectDetails)
+    {
+        projectManager.quickDuplicateProject(projectDetails);
+
     }
 
     public List<ProjectDetails> getProjectsDataList()
@@ -489,6 +496,12 @@ public class FamstackDashboardManager extends BaseFamstackService
         return famstackAccountManager.getAllAccountDetails();
     }
 
+    public List<ApplicationDetails> getApplicationDetails()
+    {
+        // return famstackAccountManager.getAllApplicationManager();
+        return null;
+    }
+
     public String getProjectNameJson(String query)
     {
         return projectManager.getProjectNameJson(query);
@@ -780,4 +793,5 @@ public class FamstackDashboardManager extends BaseFamstackService
         famstackUserActivityManager.deleteTaskActivity(activityId);
 
     }
+
 }

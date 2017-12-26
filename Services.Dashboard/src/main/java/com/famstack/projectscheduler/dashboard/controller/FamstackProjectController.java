@@ -31,8 +31,10 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
+import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.manager.FamstackXLSExportManager;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
 
@@ -43,6 +45,9 @@ public class FamstackProjectController extends BaseFamstackService
 
     @Resource
     FamstackDashboardManager famstackDashboardManager;
+
+    @Resource
+    FamstackXLSExportManager famstackXLSExportManager;
 
     @RequestMapping(value = "/projects", method = RequestMethod.GET)
     public ModelAndView listProjects()
@@ -85,9 +90,41 @@ public class FamstackProjectController extends BaseFamstackService
         return new ModelAndView("accounts").addObject("accountData", accountData);
     }
 
+    @RequestMapping(value = "/applicationConfig", method = RequestMethod.GET)
+    public ModelAndView getApplicationConfig()
+    {
+        List<ApplicationDetails> accountData = famstackDashboardManager.getApplicationDetails();
+        return new ModelAndView("applicationConfig").addObject("accountData", accountData);
+    }
+
     @RequestMapping("/projectreporting")
     public ModelAndView projectreporting(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
         Model model)
+    {
+        List<ProjectDetails> projectData = getProjectReportingData(dateRange);
+        return new ModelAndView("projectreporting").addObject("projectData", projectData).addObject("dateRange",
+            dateRange);
+    }
+
+    @RequestMapping("/projectreportingVS")
+    public ModelAndView projectreportingVS(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
+        Model model)
+    {
+        List<ProjectDetails> projectData = getProjectReportingData(dateRange);
+        return new ModelAndView("projectreportingVS").addObject("projectData", projectData).addObject("dateRange",
+            dateRange);
+    }
+
+    @RequestMapping("/projectreportingDefault")
+    public ModelAndView projectreportingDefault(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
+        Model model)
+    {
+        List<ProjectDetails> projectData = getProjectReportingData(dateRange);
+        return new ModelAndView("projectreportingDefault").addObject("projectData", projectData).addObject("dateRange",
+            dateRange);
+    }
+
+    private List<ProjectDetails> getProjectReportingData(String dateRange)
     {
         logDebug(dateRange);
         String[] dateRanges;
@@ -107,8 +144,16 @@ public class FamstackProjectController extends BaseFamstackService
         }
 
         List<ProjectDetails> projectData = famstackDashboardManager.getProjectsReporingDataList(startDate, endDate);
-        return new ModelAndView("projectreporting").addObject("projectData", projectData).addObject("dateRange",
-            dateRange);
+        return projectData;
+    }
+
+    @RequestMapping(value = "/export/{templateName}")
+    public void downloadReportingFile(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
+        @PathVariable(value = "templateName") String templateName, HttpServletRequest request,
+        HttpServletResponse response)
+    {
+        List<ProjectDetails> projectData = getProjectReportingData(dateRange);
+        famstackXLSExportManager.exportXLS(templateName, dateRange, projectData, request, response);
     }
 
     @RequestMapping(value = "/getProjectJson", method = RequestMethod.GET)
@@ -124,6 +169,15 @@ public class FamstackProjectController extends BaseFamstackService
         Model model)
     {
         famstackDashboardManager.createProject(projectDetails);
+        return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/quickDuplicateProject", method = RequestMethod.POST)
+    @ResponseBody
+    public String quickDuplicateProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails,
+        BindingResult result, Model model)
+    {
+        famstackDashboardManager.quickDuplicateProject(projectDetails);
         return "{\"status\": true}";
     }
 

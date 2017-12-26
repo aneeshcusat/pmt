@@ -149,4 +149,41 @@ site_settings = $("#settingsId").html();
     	}
     	doAjaxEnableSettings(name,value);
     });
+    
+        /* reportrange */
+        if($("#reportrange").length > 0){   
+            $("#reportrange").daterangepicker({                    
+                ranges: {
+                   'Today': [moment(), moment()],
+                   'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                   'This Week': [moment().startOf('week'), moment().endOf('week')],
+                   'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+                   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                   'This Month': [moment().startOf('month'), moment().endOf('month')],
+                   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                opens: 'left',
+                buttonClasses: ['btn btn-default'],
+                applyClass: 'btn-small btn-primary',
+                cancelClass: 'btn-small',
+                format: 'MM.DD.YYYY',
+                separator: ' to ',
+                startDate: moment().subtract('days', 0),
+                endDate: moment()            
+              },function(start, end) {
+            	  $("#daterangeText").val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+            	  $("#reportrange span").html($("#daterangeText").val());
+            });
+            
+            $("#daterangeText").val(moment().subtract('days', 0).format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+         	$("#reportrange span").html($("#daterangeText").val());
+        }
+        
+
+        var exportReport = function() {
+        	var dateRange = $("#daterangeText").val();
+        	window.location.href = "${applicationHome}/export/vishualService?daterange=" + dateRange;
+        }
+     
     </script>
