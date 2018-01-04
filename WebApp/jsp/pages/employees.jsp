@@ -180,28 +180,16 @@ var jvalidate = $("#createUserFormId").validate({
         validEmail: true
      },
      firstName: {
-             required: true
-     },
-     mobileNumber: {
-             required: true
+         required: true
      },
      dateOfBirth: {
          required: true
  	 },
- 	designation: {
-        required: true
-	 },
-	 lastName: {
-	        required: true
-	},
 	team: {
 	       required: true
 	},userGroupId: {
 	       required: true
 	},
-	qualification: {
-	       required: true
-	 },
 	role: {
 	       required: true
 	},
@@ -210,9 +198,6 @@ var jvalidate = $("#createUserFormId").validate({
 	},
 	range: {
 	       required: false
-	},
-	reportingManger: {
-	       required: true
 	 }   
    }
 });

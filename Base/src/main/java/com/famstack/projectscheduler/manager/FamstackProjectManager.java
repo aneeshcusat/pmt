@@ -78,6 +78,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         projectItem.setName(projectDetails.getName());
         projectItem.setQuantity(projectDetails.getQuantity());
         projectItem.setPriority(projectDetails.getPriority());
+        projectItem.setProjectSubType(projectDetails.getProjectSubType());
+        projectItem.setProjectLead(projectDetails.getProjectLead());
+
         projectItem.setPONumber(projectDetails.getPONumber());
         projectItem.setComplexity(projectDetails.getComplexity());
         Date startDate = DateUtils.tryParse(projectDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
@@ -231,7 +234,8 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectDetails.setCompletionTime(completionDateString);
             projectDetails.setStatus(projectItem.getStatus());
             projectDetails.setCreatedDate(projectItem.getCreatedDate());
-
+            projectDetails.setProjectSubType(projectItem.getProjectSubType());
+            projectDetails.setProjectLead(projectItem.getProjectLead());
             if (isFullLoad) {
                 projectDetails.setCategory(projectItem.getCategory());
                 projectDetails.setClientId(projectItem.getClientId());

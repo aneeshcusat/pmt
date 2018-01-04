@@ -10,6 +10,7 @@ import com.famstack.projectscheduler.configuration.FamstackApplicationConfigurat
 import com.famstack.projectscheduler.contants.ProjectComplexity;
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.ProjectSubType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
@@ -40,6 +41,10 @@ public class ProjectDetails
     private String quantity;
 
     private Integer teamId;
+
+    private Integer projectLead;
+
+    private ProjectSubType projectSubType;
 
     private EmployeeDetails employeeDetails;
 
@@ -564,5 +569,25 @@ public class ProjectDetails
         }
 
         return assigneeString;
+    }
+
+    public Integer getProjectLead()
+    {
+        return projectLead;
+    }
+
+    public void setProjectLead(Integer projectLead)
+    {
+        this.projectLead = projectLead;
+    }
+
+    public ProjectSubType getProjectSubType()
+    {
+        return projectSubType;
+    }
+
+    public void setProjectSubType(ProjectSubType projectSubType)
+    {
+        this.projectSubType = projectSubType;
     }
 }

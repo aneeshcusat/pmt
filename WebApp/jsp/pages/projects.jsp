@@ -221,12 +221,6 @@ var jvalidate = $("#createProjectFormId").validate({
 	name: {
            required: true,
    },
-   priority: {
-   	 required: true
-   },
-   complexity: {
-	   	 required: true
-   },
    accountId: {
 	   	 required: true
 	},
@@ -239,16 +233,10 @@ var jvalidate = $("#createProjectFormId").validate({
 	code: {
 	   	 required: true
 	},
-	quantity: {
-	   	 required: true
-	},
 	startTime: {
 	   	 required: true
 	},
 	completionTime: {
-	   	 required: true
-	},
-	quantity: {
 	   	 required: true
 	},
 	category: {
@@ -316,6 +304,12 @@ function clearCreateProjectForm(){
 	$("#duration").prop("selectedIndex",0);
 	$('#duration').selectpicker('refresh');
 	
+	$("#projectSubType").prop("selectedIndex",0);
+	$('#projectSubType').selectpicker('refresh');
+	
+	$("#projectLead").prop("selectedIndex",0);
+	$('#projectLead').selectpicker('refresh');
+	
 	$("#complexity").prop("selectedIndex",0);
 	$('#complexity').selectpicker('refresh');
 	$("#projectcode").val("");
@@ -361,6 +355,12 @@ function initializeCreateProjectForm(project){
 	}
 	
 	$("#projectType").val(project.type);
+	
+	$("#projectSubType").val(project.projectSubType);
+	$('#projectSubType').selectpicker('refresh');
+	
+	$("#projectLead").val(project.projectLead);
+	$('#projectLead').selectpicker('refresh');
 	
 	$("#priority").val(project.priority);
 	$('#priority').selectpicker('refresh');

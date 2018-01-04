@@ -61,6 +61,17 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     }
 
+    public void forceInitialize()
+    {
+        appConfigMap.clear();
+        userGroupMap.clear();
+
+        initializeUserMap(famstackUserProfileManager.getEmployeeDataList());
+        initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
+        initializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
+        initializeConfigurations();
+    }
+
     private void initializeAppConfigMap(List<AppConfDetails> appConfigList)
     {
         if (appConfigMap.isEmpty()) {
@@ -310,6 +321,11 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
             return true;
         }
         return "TRUE".equalsIgnoreCase(configSettings.get(toggelId)) ? true : false;
+    }
+
+    public Map<String, AppConfDetails> getAppConfigMap()
+    {
+        return appConfigMap;
     }
 
 }

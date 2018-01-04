@@ -12,6 +12,8 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
@@ -25,6 +27,7 @@ import com.famstack.projectscheduler.employees.bean.TaskDetails;
  * @author Aneeshkumar
  */
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FamstackXLSExportProcessor1 extends BaseFamstackService implements FamstackBaseXLSExportProcessor
 {
 
@@ -34,14 +37,14 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
 
     private static CellStyle hssfCellTextWrapStyle;
 
-    private Sheet sheet;
-
     @Override
     public void renderReport(Workbook workBook, Sheet sheet, int rowCount, List<ProjectDetails> exportDataList,
         String dateString)
 
     {
-        this.sheet = sheet;
+        hssfCellUserHeaderStyle = null;
+        hssfCellProjectTotalStyle = null;
+        hssfCellTextWrapStyle = null;
         createHeader(workBook, sheet, dateString);
         createBody(workBook, sheet, exportDataList);
 
@@ -60,24 +63,26 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
                     projectDetailsRow = sheet.createRow(projectDetailsRowCount);
                 }
 
-                createProjectDetailsColoumn(0, projectDetails.getStartTime(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 0, projectDetails.getStartTime(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(1, projectDetails.getCode(), projectDetailsRow, getTextWrapStyle(workBook));
+                createProjectDetailsColoumn(sheet, 1, projectDetails.getCode(), projectDetailsRow,
+                    getTextWrapStyle(workBook));
 
-                createProjectDetailsColoumn(2, projectDetails.getPONumber(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 2, projectDetails.getPONumber(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(3, projectDetails.getName(), projectDetailsRow, getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(4, projectDetails.getType().toString(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 3, projectDetails.getName(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(5, projectDetails.getCategory(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 4, projectDetails.getType().toString(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(6, projectDetails.getTeamName(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 5, projectDetails.getCategory(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(7, projectDetails.getSubTeamName(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 6, projectDetails.getTeamName(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(8, projectDetails.getClientName(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 7, projectDetails.getSubTeamName(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(9, projectDetails.getStatus().toString(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 8, projectDetails.getClientName(), projectDetailsRow,
+                    getTextWrapStyle(workBook));
+                createProjectDetailsColoumn(sheet, 9, projectDetails.getStatus().toString(), projectDetailsRow,
                     getTextWrapStyle(workBook));
 
                 List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
@@ -103,7 +108,7 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
                                 }
                             }
                         }
-                        createProjectDetailsColoumn(projectDetailsUserColumnCount, value, projectDetailsRow,
+                        createProjectDetailsColoumn(sheet, projectDetailsUserColumnCount, value, projectDetailsRow,
                             getTextWrapStyle(workBook));
                         projectDetailsUserColumnCount++;
                     }
@@ -118,12 +123,12 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
             List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
             if (employees != null) {
                 int projectDetailsUserColumnCount = 9;
-                createProjectDetailsColoumn(projectDetailsUserColumnCount++, "Project Hours", projectTotalHoursRow,
-                    getProjectTotalStyle(workBook));
+                createProjectDetailsColoumn(sheet, projectDetailsUserColumnCount++, "Project Hours",
+                    projectTotalHoursRow, getProjectTotalStyle(workBook));
                 for (EmployeeDetails employeeDetails : employees) {
                     Integer projectHours = userProjectHoursMap.get(employeeDetails.getId());
                     String value = projectHours == null ? "" : String.valueOf(projectHours / 60);
-                    createProjectDetailsColoumn(projectDetailsUserColumnCount, value, projectTotalHoursRow,
+                    createProjectDetailsColoumn(sheet, projectDetailsUserColumnCount, value, projectTotalHoursRow,
                         getProjectTotalStyle(workBook));
                     projectDetailsUserColumnCount++;
                 }
@@ -133,8 +138,8 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
 
     }
 
-    private void createProjectDetailsColoumn(int projectDetailsColumnCount, String value, Row projectDetailsRow,
-        CellStyle cellStyle)
+    private void createProjectDetailsColoumn(Sheet sheet, int projectDetailsColumnCount, String value,
+        Row projectDetailsRow, CellStyle cellStyle)
     {
         Cell userCell = projectDetailsRow.getCell(projectDetailsColumnCount);
         if (userCell == null) {

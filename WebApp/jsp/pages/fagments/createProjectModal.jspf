@@ -28,11 +28,33 @@
                                 <label class="col-md-3 control-label">Summary</label>
                                 <div class="col-md-9 col-xs-12">                                            
                                     <form:textarea class="form-control" rows="5" path="description" id="summary"></form:textarea>
-                                    <span class="help-block">required summary</span>
                                 </div>
                             </div>
                          <div class="form-group">
 							<label class="col-xs-3 control-label">Project Type</label>
+							 <div class="col-md-4">
+                                        <form:select class="form-control select" path="projectSubType" id="projectSubType"  data-live-search="true">
+                                        <option value="">- select -</option>
+                                        <option value="ADHOC">Ad-Hoc</option>
+                                        <option value="FTE">FTE</option>
+                                    	</form:select>
+                                </div>
+							<label class="col-md-2 control-label">Project Lead</label>
+                                <div class="col-md-3">
+                                 <form:select path="projectLead" id="projectLead" name="projectLead" class="form-control select" data-live-search="true">
+								<option value="">- select -</option>
+								<c:if test="${not empty userMap}">
+	    						<c:forEach var="user" items="${userMap}">
+	    						 	<c:if test="${user.role != 'SUPERADMIN'}">
+	    								<option value="${user.id}">${user.firstName}</option>
+	    							</c:if>
+		    							</c:forEach>
+		    						</c:if>
+								</form:select>
+                              </div>
+						</div>
+                         <div class="form-group">
+							<label class="col-xs-3 control-label">Type</label>
 							<form:input type="hidden" path="type" id="projectType"/>
 							<div class="col-xs-5">
 								<div class="btn-group" data-toggle="buttons">
@@ -45,6 +67,8 @@
 								</div>
 							</div>
 							
+							
+							
 							<label class="col-md-1 control-label">Priority</label>
                                 <div class="col-md-3">
                                         <form:select class="form-control select" path="priority" id="priority"  data-live-search="true">
@@ -54,7 +78,6 @@
                                         <option>MEDIUM</option>
                                         <option>LOW</option>
                                     </form:select>
-                                    <span class="help-block">required priority</span>
                                 </div>
 						</div>
 						 <div class="form-group">    
@@ -75,7 +98,6 @@
                                         <option>MEDIUM</option>
                                         <option>COMPLEX</option>
                                     </form:select>
-                                    <span class="help-block">required complexity</span>
                                 </div>
                             </div>
                              <div class="form-group">  
@@ -157,20 +179,26 @@
                             </div>
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Project Category</label>
-                                 <div class="col-md-9">                                                                                            
+                                 <div class="col-md-9">                                                                                
                                     <form:select class="form-control select" id="category" path="category"  data-live-search="true">
                                         <option value="">- select -</option>
-                                        <optgroup label="Presentation Design"">
-                                        <option>Formatting/Templatizing Document</option>
-                                        <option>Conceptualization/High-end</option>
-                                        <option>Reporting</option>
-                                        </optgroup>
-                                        <option>Collaterals</option>
-                                        <option>Dashboard</option>
-                                        <option>Infographics</option>
-                                        <option>Motion Graphics</option>
-                                        <option>UI/UX</option>
-                                        <option>Document support (Ms Word/MS Excel)</option>
+                                        <c:if test="${not empty appConfigMap['projectCategory'] }">
+                                        <c:forEach var="projectCategoryConf" items="${appConfigMap['projectCategory'].appConfValueDetails}">
+                                         <option value="${projectCategoryConf.value}">${projectCategoryConf.name}</option>
+                                        </c:forEach>
+                                        </c:if>
+                                        <c:if test="${empty appConfigMap['projectCategory']}">
+	                                        <option>Formatting/Templatizing Document</option>
+	                                        <option>Conceptualization/High-end</option>
+	                                        <option>Reporting</option>
+	                                        </optgroup>
+	                                        <option>Collaterals</option>
+	                                        <option>Dashboard</option>
+	                                        <option>Infographics</option>
+	                                        <option>Motion Graphics</option>
+	                                        <option>UI/UX</option>
+	                                        <option>Document support (Ms Word/MS Excel)</option> 
+                                        </c:if>
                                     </form:select>
                                     <span class="help-block">required project category</span>
                                 </div>
@@ -181,7 +209,6 @@
 							<label class="col-md-3 control-label">Quantity</label>
 							<div class="col-md-9">
 								 <form:input type="text" class="form-control" id="quantity" path="quantity"/>
-								 <span class="help-block">required quantity</span>
 							</div>
 							</div>
                             

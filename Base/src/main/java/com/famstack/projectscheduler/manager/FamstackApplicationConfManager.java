@@ -122,6 +122,7 @@ public class FamstackApplicationConfManager extends BaseFamstackManager
                         appConfValueDetails.setAppConfValueId(appConfValueItem.getAppConfValueId());
                         appConfValueDetails.setName(appConfValueItem.getName());
                         appConfValueDetails.setValue(appConfValueItem.getValue());
+                        appConfDetails.getAppConfValueDetails().add(appConfValueDetails);
                     }
                 }
                 appConfDetails.setApplicationId(appConfigItem.getApplicationId());

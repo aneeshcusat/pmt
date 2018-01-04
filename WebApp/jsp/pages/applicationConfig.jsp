@@ -20,6 +20,7 @@ tr.clickable:hover {
     line-height: 20px;
     color: #999999;
     text-transform: uppercase;
+    border-bottom: 0px !important;
 }
 
 .nav-header a {
@@ -62,17 +63,23 @@ tr.clickable:hover {
 			       <thead>
 				   <tr style="font-weight:bold">
 				        <th class="nav-header">Application config type</th>
-				        <th><a data-toggle="modal" data-target="#createaccountmodal" style="float:right"><i class="fa fa-plus fa-2x" aria-hidden="true" style="color:#95b75d"></i></a></th>
+				        <th><a data-toggle="modal" data-target="#createTypeModel" style="float:right"><i class="fa fa-plus fa-2x" aria-hidden="true" style="color:#95b75d"></i></a></th>
 				    </tr>
 				    </thead>
 				   <tbody>
-				   	<tr class="clickable">
-				   		<td><a href="#tab1" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Designation</a></td>
-				   		<td><a href="#" data-box="#confirmationbox" class="mb-control" style="float:right"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
-				   	</tr>
 			   	 	<tr class="clickable">
-			   	 		<td><a href="#tab2" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Designation</a></td>
-				   		<td><a href="#" data-box="#confirmationbox" class="mb-control" style="float:right"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+			   	 		<td colspan="2"><a href="#tab1" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink active"> <i class="icon-envelope"></i>Company Division</a></td>
+				   	</tr>
+				   	 <tr class="clickable">
+				   		<td colspan="2"><a href="#tab2" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Categories</a></td>
+				   	</tr>
+				   	<tr class="clickable">
+				   		<td colspan="2"><a href="#tab3" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Reports</a></td>
+				   	</tr>
+				   	
+				   	<tr class="clickable">
+				   		<td><a href="#tab4" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Reports</a></td>
+				   		<td><a href="#" data-box="#generalConfiguraions" class="mb-control" style="float:right"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
 				   	</tr>
 			   	 	</tbody>
 			     </table>
@@ -82,11 +89,11 @@ tr.clickable:hover {
 			<div class="col-md-7" id="applicationConfigDiv"
 				style="box-shadow: 5px 5px 20px #888888; margin-top: 10px">
 				<div class="tab-content">
-					<div class='row tab-pane' id="tab1">
+					<div class='row tab-pane active' id="tab1">
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
-									<th colspan="2">Designation</th>
+									<th colspan="2">Company Division</th>
 									<th width="70px" style="text-align: center"><a
 										data-toggle="modal" data-target="#createaccountmodal"
 										parentid="0" onclick="initializeWidget('account', this);"><i

@@ -96,7 +96,7 @@
                                                 <td>${project.id}</td>
                                                 <td>${project.PONumber}</td>
                                                 <td><c:forEach var="contributer" items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if></c:forEach></td>
-                                                <td></td>
+                                                <td>${project.projectLead}</td>
                                                 <td>${project.type}</td>
                                                 <td>${project.category}</td>
                                                 <td>${project.accountName}</td>

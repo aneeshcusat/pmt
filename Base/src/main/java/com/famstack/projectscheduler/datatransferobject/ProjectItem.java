@@ -26,6 +26,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.famstack.projectscheduler.contants.ProjectComplexity;
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.ProjectSubType;
 import com.famstack.projectscheduler.contants.ProjectType;
 
 @Entity
@@ -64,6 +65,13 @@ public class ProjectItem implements FamstackBaseItem
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private ProjectType type;
+
+    @Column(name = "project_lead")
+    private Integer projectLead;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "project_sub_type")
+    private ProjectSubType projectSubType;
 
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
     @JoinColumn(name = "reporter")
@@ -376,6 +384,7 @@ public class ProjectItem implements FamstackBaseItem
         this.quantity = quantity;
     }
 
+    @Override
     public String getUserGroupId()
     {
         return userGroupId;
@@ -385,6 +394,26 @@ public class ProjectItem implements FamstackBaseItem
     public void setUserGroupId(String userGroupId)
     {
         this.userGroupId = userGroupId;
+    }
+
+    public Integer getProjectLead()
+    {
+        return projectLead;
+    }
+
+    public void setProjectLead(Integer projectLead)
+    {
+        this.projectLead = projectLead;
+    }
+
+    public ProjectSubType getProjectSubType()
+    {
+        return projectSubType;
+    }
+
+    public void setProjectSubType(ProjectSubType projectSubType)
+    {
+        this.projectSubType = projectSubType;
     }
 
 }

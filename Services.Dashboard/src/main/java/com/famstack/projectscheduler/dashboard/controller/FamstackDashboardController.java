@@ -81,6 +81,14 @@ public class FamstackDashboardController extends BaseFamstackService
         return famstackDashboardManager.getNotifications(userItem.getId());
     }
 
+    @RequestMapping(value = "/forceConfInitialize", method = RequestMethod.GET)
+    @ResponseBody
+    public String forceConfInitialize()
+    {
+        forceConfInitialize();
+        return "SUCCESS";
+    }
+
     @RequestMapping(value = "/setConfiguration", method = RequestMethod.POST)
     @ResponseBody
     public String setConfiguration(@RequestParam("propertyName") String propertyName,
