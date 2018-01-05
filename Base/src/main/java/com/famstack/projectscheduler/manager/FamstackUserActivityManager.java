@@ -38,7 +38,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     {
         UserTaskActivityItem userTaskActivityItem =
             createUserActivityItem(userId, startTime, taskId, taskName, durationInHrs * 60, userTaskType, projectType);
-
         userTaskActivityItem.setCompletionComment(comment);
         userTaskActivityItem.setRecordedStartTime(new Timestamp(startTime.getTime()));
         userTaskActivityItem.setActualStartTime(new Timestamp(startTime.getTime()));
@@ -84,7 +83,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         userActivityItem.setProductiveHousrs(productiveHours);
         userActivityItem.setBillableHours(billableHours);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
-        return setUserTaskActivity(userActivityItem, taskId, taskName, durationInMinutes, startTime, userTaskType);
+        return setUserTaskActivity(userActivityItem, taskId, taskName, durationInMinutes, startTime, userTaskType,
+            projectType);
     }
 
     public List<?> getTodaysUserActivity()
@@ -183,7 +183,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     }
 
     public UserTaskActivityItem setUserTaskActivity(UserActivityItem userActivityItem, int taskId, String taskName,
-        int durationInMinutes, Date startDate, UserTaskType userTaskType)
+        int durationInMinutes, Date startDate, UserTaskType userTaskType, ProjectType projectType)
     {
         UserTaskActivityItem userTaskActivityItem = new UserTaskActivityItem();
         userTaskActivityItem.setTaskId(taskId);
@@ -192,6 +192,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         userTaskActivityItem.setStartHour(startDate.getHours());
         userTaskActivityItem.setStartTime(new Timestamp(startDate.getTime()));
         userTaskActivityItem.setType(userTaskType);
+        userTaskActivityItem.setProjectType(projectType);
         userTaskActivityItem.setCreatedDate(new Timestamp(new Date().getTime()));
         userTaskActivityItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
         userTaskActivityItem.setUserActivityItem(userActivityItem);
@@ -343,7 +344,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
         for (Object userTaskActivityItemObj : userTaskActivityItems) {
             UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
-            if (userTaskActivityItem.getRecordedEndTime() != null) {
+            if (userTaskActivityItem.getRecordedEndTime() == null) {
                 if (taskStatus == TaskStatus.INPROGRESS) {
                     userTaskActivityItem.setInprogressComment(comment);
                     userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
@@ -396,6 +397,17 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             (UserTaskActivityItem) getFamstackDataAccessObjectManager().getItemById(activityId,
                 UserTaskActivityItem.class);
         if (userTaskActivityItem != null) {
+            int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
+            UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
+            if (userTaskActivityItem.getProjectType() == ProjectType.BILLABLE) {
+                int billableHours = userActivityItem.getBillableHours();
+                userActivityItem.setBillableHours(billableHours - durationInMinutes / 60);
+            }
+            int productiveHours = userActivityItem.getProductiveHousrs();
+            userActivityItem.setProductiveHousrs(productiveHours - durationInMinutes / 60);
+
+            famstackDataAccessObjectManager.updateItem(userActivityItem);
+
             getFamstackDataAccessObjectManager().deleteItem(userTaskActivityItem);
         }
     }

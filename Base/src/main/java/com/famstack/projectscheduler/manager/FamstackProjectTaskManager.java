@@ -249,10 +249,11 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
 
             int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
-
-            int billableHours = userActivityItem.getBillableHours();
+            if (userTaskActivityItem.getProjectType() == ProjectType.BILLABLE) {
+                int billableHours = userActivityItem.getBillableHours();
+                userActivityItem.setBillableHours(billableHours - durationInMinutes / 60);
+            }
             int productiveHours = userActivityItem.getProductiveHousrs();
-            userActivityItem.setBillableHours(billableHours - durationInMinutes / 60);
             userActivityItem.setProductiveHousrs(productiveHours - durationInMinutes / 60);
 
             famstackDataAccessObjectManager.updateItem(userActivityItem);

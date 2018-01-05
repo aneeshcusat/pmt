@@ -791,6 +791,10 @@ var fillTableFromJson = function(){
 						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRH</span>');
 					}else if (elem.userTaskType == "PROJECT_REVIEW") {
 						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PR</span>');
+					}else if (elem.userTaskType == "PROJECT_PARTIAL") {
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PRA</span>');
+					}else if (elem.userTaskType == "EXTRATIME") {
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="font-size: 18px;font-weight: bold;text-align: center;color: wheat;">PET</span>');
 					}
 					
 					if ($(cellId).css("background-color") == "rgb(248, 250, 252)" || $(cellId).css("background-color") == "rgba(0, 0, 0, 0)") {

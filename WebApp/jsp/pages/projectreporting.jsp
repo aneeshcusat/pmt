@@ -60,7 +60,8 @@
                                                  <th>Sub Team</th>
                                                 <th>Client</th>
                                                 <th>Est Duration (Hrs)</th>
-                                                <th>Actual Duration (Hrs)</th>
+                                                <th>Project Duration (Hrs)</th>
+                                                <th>Task Duration (Mins)</th>
                                                 <th>Assignee</th>
                                                 <th>Contributers</th>
                                                 <th>Status</th>
@@ -93,6 +94,7 @@
                                                 <td>${project.clientName}</td>
                                                 <td>${project.duration}</td>
                                                 <td>${project.actualDurationInHrs}</td>
+                                                <td>${projectTaskDetails.actualTimeTaken}</td>
                                                 <td>${userDetailsMap[projectTaskDetails.assignee].firstName} </td>
                                                 <td><c:forEach var="contributer" items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if></c:forEach></td>
 
@@ -113,6 +115,7 @@
                                                 <td>${project.subTeamName}</td>
                                                 <td>${project.clientName}</td>
                                                 <td>${project.duration}</td>
+                                                <td></td>
                                                 <td>${project.actualDurationInHrs}</td>
                                                 <td> </td>
                                                 <td></td>

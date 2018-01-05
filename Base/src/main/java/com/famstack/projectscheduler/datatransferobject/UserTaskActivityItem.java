@@ -18,6 +18,7 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.UserTaskType;
 
 @Entity
@@ -40,6 +41,10 @@ public class UserTaskActivityItem implements FamstackBaseItem
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private UserTaskType type;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "project_type")
+    private ProjectType projectType;
 
     @Column(name = "task_id")
     private int taskId;
@@ -245,6 +250,16 @@ public class UserTaskActivityItem implements FamstackBaseItem
     public void setDurationInMinutes(int durationInMinutes)
     {
         this.durationInMinutes = durationInMinutes;
+    }
+
+    public ProjectType getProjectType()
+    {
+        return projectType;
+    }
+
+    public void setProjectType(ProjectType projectType)
+    {
+        this.projectType = projectType;
     }
 
 }
