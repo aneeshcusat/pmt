@@ -296,6 +296,33 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetailsList;
     }
 
+    public List<ProjectDetails> getPrimaryProjectsDetailList(Date startTime, boolean isFullLoad)
+    {
+        List<ProjectDetails> projectDetailsList = new ArrayList<>();
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("startTime", startTime);
+
+        List<Object[]> projectItemResultList =
+            famstackDataAccessObjectManager.executeSQLQuery(HQLStrings.getString("getPrimaryProjectsItems"), dataMap);
+
+        for (int i = 0; i < projectItemResultList.size(); i++) {
+            ProjectDetails projectDetails = new ProjectDetails();
+            Object[] data = projectItemResultList.get(i);
+
+            projectDetails.setId((Integer) data[0]);
+            projectDetails.setName((String) data[1]);
+            projectDetails.setCreatedDate((Timestamp) data[2]);
+            String completionDateString = DateUtils.format((Date) data[3], DateUtils.DATE_TIME_FORMAT);
+            projectDetails.setCompletionTime(completionDateString);
+            projectDetails.setCode((String) data[4]);
+            projectDetails.setStatus(ProjectStatus.valueOf((String) data[5]));
+            projectDetailsList.add(projectDetails);
+        }
+
+        return projectDetailsList;
+    }
+
     private void getProjectsList(List<ProjectDetails> projectDetailsList, List<?> projectItemList, boolean isFullLoad)
     {
         if (projectItemList != null) {
@@ -348,7 +375,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
         List<?> projectItemList =
             famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getProjectItemsByCode"), dataMap);
-        getProjectsList(projectDetailsList, projectItemList, true);
+        getProjectsList(projectDetailsList, projectItemList, false);
         return projectDetailsList;
     }
 
@@ -386,6 +413,11 @@ public class FamstackProjectManager extends BaseFamstackManager
                 ProjectItem.class));
         projectDetails.setDuplicateProjects(getAllProjectDetailsList(projectDetails.getCode(), projectDetails.getId()));
         return projectDetails;
+    }
+
+    public List<ProjectDetails> loadDuplicateProjects(int projectId, String projectCode)
+    {
+        return getAllProjectDetailsList(projectCode, projectId);
     }
 
     public Map<String, List<TaskDetails>> getProjectTasksDataList(Integer userId)
@@ -612,5 +644,4 @@ public class FamstackProjectManager extends BaseFamstackManager
         getProjectsList(projectDetailsList, projectItemList, true);
         return projectDetailsList;
     }
-
 }

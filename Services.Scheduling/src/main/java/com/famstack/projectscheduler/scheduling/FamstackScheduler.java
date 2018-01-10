@@ -35,10 +35,9 @@ public class FamstackScheduler extends BaseFamstackService
     @Resource
     private FamstackNotificationServiceManager famstackNotificationServiceManager;
 
-    @Async
     public void scheduleJob()
     {
-        logDebug("Running scheduler");
+        logDebug("Running scheduleJob scheduler");
         userTaskStatusRefresh();
         checkProjectDeadlineMissed();
         checkProjectStartTimeReminder();
@@ -46,9 +45,19 @@ public class FamstackScheduler extends BaseFamstackService
         checkTaskStartTimeReminder();
         checkTaskEndTimeReminder();
         checkTaskDeadlineMissed();
+        setTaskRemainingTimeJob();
     }
 
-    @Async
+    public void setTaskRemainingTimeJob()
+    {
+        logDebug("Running setTaskRemainingTimeJob scheduler");
+        try {
+            famstackProjectTaskManager.updateTaskRemaingTime();
+        } catch (Exception e) {
+
+        }
+    }
+
     public void userTaskStatusRefresh()
     {
         logDebug("Running scheduler - userTaskStatusRefresh");

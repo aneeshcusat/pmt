@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -41,7 +40,7 @@ public class FamstackXLSExportManager extends BaseFamstackManager
         try {
             FileInputStream inputStream = new FileInputStream(new File(fullPath));
 
-            Workbook workbook = new XSSFWorkbook(inputStream);
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
             Sheet sheet = workbook.getSheetAt(0);
 
@@ -50,6 +49,8 @@ public class FamstackXLSExportManager extends BaseFamstackManager
                 FamstackBaseXLSExportProcessor baseXLSExportProcessor = exportProcessorMap.get(processorName);
                 if (baseXLSExportProcessor != null) {
                     baseXLSExportProcessor.renderReport(workbook, sheet, rowCount, exportDataList, dateString);
+                } else {
+                    logError("Unable to get the report template");
                 }
             }
 
@@ -60,6 +61,10 @@ public class FamstackXLSExportManager extends BaseFamstackManager
 
             response.setContentType(mimeType);
             response.setContentLength((int) new File(fullPath).length());
+            String headerKey = "Content-Disposition";
+            String headerValue =
+                String.format("attachment; filename=\"%s\"", processorName + "_" + dateString + ".xlsx");
+            response.setHeader(headerKey, headerValue);
             inputStream.close();
             workbook.write(response.getOutputStream());
             workbook.close();

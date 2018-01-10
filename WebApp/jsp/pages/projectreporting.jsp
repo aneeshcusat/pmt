@@ -45,18 +45,18 @@
                                  	<div class="col-md-2" >
 					                 <span style="margin-top: 9px;margin-right:  10px;float:right"></>Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;</span>
 					                 <input type="text" name="daterange" id="daterangeText" style="display: none" value="${dateRange}" /> 
-					             	</div>
+					                </div>
 					             	
 					             	<div class="col-md-3" >
 					             	 <span id="reportrange" class="dtrange">                                            
             							<span>${dateRange}</span><b class="caret"></b>
         							</span>
-        							<input style="margin-left:10px" class="btn btn-default" type="submit" value="Search"></button>
+        								<input style="margin-left:10px" class="btn btn-default" type="submit" value="Search"></button>
         							</div>
-        							</form>
+									</form>
         							<div class="col-md-1" >
-        							<button class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
-                                 	</div>
+        							<button onclick="exportReport('team2')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
+        							</div>
                                 </div>
                                 <div class="panel-body panel-body-table">
                                     <table id="projectsTable" class="table table-striped">
@@ -96,7 +96,7 @@
                                                 <td>${project.id}</td>
                                                 <td>${project.PONumber}</td>
                                                 <td><c:forEach var="contributer" items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if></c:forEach></td>
-                                                <td>${project.projectLead}</td>
+                                                <td>${employeeMap[project.projectLead].firstName}</td>
                                                 <td>${project.type}</td>
                                                 <td>${project.category}</td>
                                                 <td>${project.accountName}</td>

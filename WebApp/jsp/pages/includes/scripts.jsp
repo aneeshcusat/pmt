@@ -176,14 +176,20 @@ site_settings = $("#settingsId").html();
             	  $("#reportrange span").html($("#daterangeText").val());
             });
             
-            $("#daterangeText").val(moment().subtract('days', 0).format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
-         	$("#reportrange span").html($("#daterangeText").val());
+            <c:if test="${not empty dateRange}">
+        		$("#daterangeText").val("${dateRange}");
+        		$("#reportrange span").html("${dateRange}");
+        	</c:if>
+        	<c:if test="${empty dateRange}">
+            	$("#daterangeText").val(moment().subtract('days', 0).format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+         		$("#reportrange span").html($("#daterangeText").val());
+         	</c:if>
         }
         
 
-        var exportReport = function() {
+        var exportReport = function(reportName) {
         	var dateRange = $("#daterangeText").val();
-        	window.location.href = "${applicationHome}/export/vishualService?daterange=" + dateRange;
+        	window.location.href = "${applicationHome}/export/"+reportName+"?daterange=" + dateRange;
         }
      
     </script>

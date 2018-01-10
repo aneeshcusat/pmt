@@ -335,9 +335,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return null;
     }
 
-    public void setProjectTaskActivityActualTime(int taskId, Date date, String comment, TaskStatus taskStatus,
+    public int setProjectTaskActivityActualTime(int taskId, Date date, String comment, TaskStatus taskStatus,
         Date adjustStartTime, Date adjustCompletionTimeDate)
     {
+        long actualDuration = 0;
+
         List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
 
         if (adjustStartTime == null) {
@@ -358,12 +360,21 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                     userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
                     userTaskActivityItem.setActualEndTime(new Timestamp(adjustCompletionTimeDate.getTime()));
                     userTaskActivityItem.setRecordedEndTime(new Timestamp(date.getTime()));
+
+                    Date completionTime = userTaskActivityItem.getActualEndTime();
+                    Date startTime = userTaskActivityItem.getActualStartTime();
+                    if (completionTime != null && startTime != null) {
+                        actualDuration += completionTime.getTime() - startTime.getTime();
+                    }
+
                 }
 
-                getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
             }
+
+            getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
         }
 
+        return (actualDuration > 0 ? Math.round(actualDuration / 60 / 1000) : 0);
     }
 
     public Map<Object, UserWorkDetails> getUserBillableProductiveHours(Date startTime, Date endTime)

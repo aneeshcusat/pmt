@@ -51,12 +51,12 @@
 					             	 <span id="reportrange" class="dtrange">                                            
             							<span>${dateRange}</span><b class="caret"></b>
         							</span>
-        							<input style="margin-left:10px" class="btn btn-default" type="submit" value="Search"></button>
+        								<input style="margin-left:10px" class="btn btn-default" type="submit" value="Search"></button>
         							</div>
-        							</form>
+									</form>
         							<div class="col-md-1" >
-        							<button onclick="exportReport()" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
-                                 	</div>
+        							<button onclick="exportReport('visualServices')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
+        							</div>
                                 </div>
                                 <div class="panel-body panel-body-table">
                                     <table id="projectsTable" class="table table-striped">

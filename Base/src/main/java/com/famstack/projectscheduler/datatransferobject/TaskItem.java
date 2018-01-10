@@ -80,6 +80,12 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "review_task")
     private Boolean reviewTask;
 
+    @Column(name = "actual_time_taken")
+    private Integer actualTimeTaken;
+
+    @Column(name = "task_remaining_time")
+    private Integer taskRemainingTime;
+
     @Column(name = "extra_time_task")
     private Boolean extraTimeTask;
 
@@ -254,6 +260,7 @@ public class TaskItem implements FamstackBaseItem
         this.extraTimeTask = extraTimeTask;
     }
 
+    @Override
     public String getUserGroupId()
     {
         return userGroupId;
@@ -263,6 +270,26 @@ public class TaskItem implements FamstackBaseItem
     public void setUserGroupId(String userGroupId)
     {
         this.userGroupId = userGroupId;
+    }
+
+    public Integer getActualTimeTaken()
+    {
+        return actualTimeTaken == null ? 0 : actualTimeTaken;
+    }
+
+    public void setActualTimeTaken(Integer actualTimeTaken)
+    {
+        this.actualTimeTaken = actualTimeTaken;
+    }
+
+    public Integer getTaskRemainingTime()
+    {
+        return taskRemainingTime == null ? 0 : taskRemainingTime;
+    }
+
+    public void setTaskRemainingTime(Integer taskRemainingTime)
+    {
+        this.taskRemainingTime = taskRemainingTime;
     }
 
 }

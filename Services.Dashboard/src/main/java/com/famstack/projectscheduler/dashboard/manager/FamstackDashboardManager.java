@@ -169,6 +169,34 @@ public class FamstackDashboardManager extends BaseFamstackService
                 .getProjectViewLimit());
         List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startTime, isFullLoad);
 
+        sortProjectData(projectDetailsList);
+        return projectDetailsList;
+    }
+
+    public List<ProjectDetails> getLatestProjects(boolean isFullLoad)
+    {
+        Date startTime =
+            DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), getFamstackUserSessionConfiguration()
+                .getProjectViewLimit());
+        List<ProjectDetails> projectDetailsList = projectManager.getPrimaryProjectsDetailList(startTime, isFullLoad);
+
+        sortProjectData(projectDetailsList);
+        return projectDetailsList;
+    }
+
+    public String loadDuplicateProjectsJon(int projectId, String projectCode)
+    {
+        List<ProjectDetails> projectDetailsList = projectManager.loadDuplicateProjects(projectId, projectCode);
+
+        if (projectDetailsList != null) {
+            return FamstackUtils.getJsonFromObject(projectDetailsList);
+        }
+        return "";
+
+    }
+
+    private void sortProjectData(List<ProjectDetails> projectDetailsList)
+    {
         Collections.sort(projectDetailsList, new Comparator<ProjectDetails>()
         {
             @Override
@@ -185,7 +213,6 @@ public class FamstackDashboardManager extends BaseFamstackService
                 return 0;
             }
         });
-        return projectDetailsList;
     }
 
     public void deleteProject(int projectId)
@@ -793,5 +820,4 @@ public class FamstackDashboardManager extends BaseFamstackService
         famstackUserActivityManager.deleteTaskActivity(activityId);
 
     }
-
 }

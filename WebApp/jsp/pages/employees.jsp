@@ -60,7 +60,7 @@
 <!-- END PAGE TITLE -->                
 
 <!-- PAGE CONTENT WRAPPER -->
-<div class="page-content-wrap">
+<div class="page-content-wrap"  style="min-height: 500px">
     
     <div class="row">
         <div class="col-md-12">

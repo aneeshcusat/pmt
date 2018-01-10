@@ -8,10 +8,12 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -31,26 +33,32 @@ import com.famstack.projectscheduler.employees.bean.TaskDetails;
 public class FamstackXLSExportProcessor1 extends BaseFamstackService implements FamstackBaseXLSExportProcessor
 {
 
-    private static CellStyle hssfCellUserHeaderStyle;
+    private static XSSFCellStyle xssfCellUserHeaderStyle;
 
-    private static CellStyle hssfCellProjectTotalStyle;
+    private static XSSFCellStyle xssfCellProjectTotalStyle;
 
-    private static CellStyle hssfCellTextWrapStyle;
+    private static CellStyle xssfCellTextWrapStyle;
+
+    private static XSSFColor myColorIndexPink;
+
+    private static XSSFColor myColorIndexGray;
 
     @Override
-    public void renderReport(Workbook workBook, Sheet sheet, int rowCount, List<ProjectDetails> exportDataList,
+    public void renderReport(XSSFWorkbook workBook, Sheet sheet, int rowCount, List<ProjectDetails> exportDataList,
         String dateString)
 
     {
-        hssfCellUserHeaderStyle = null;
-        hssfCellProjectTotalStyle = null;
-        hssfCellTextWrapStyle = null;
+        xssfCellUserHeaderStyle = null;
+        xssfCellProjectTotalStyle = null;
+        xssfCellTextWrapStyle = null;
+        myColorIndexPink = null;
+        myColorIndexGray = null;
         createHeader(workBook, sheet, dateString);
         createBody(workBook, sheet, exportDataList);
 
     }
 
-    private void createBody(Workbook workBook, Sheet sheet, List<ProjectDetails> exportDataList)
+    private void createBody(XSSFWorkbook workBook, Sheet sheet, List<ProjectDetails> exportDataList)
     {
 
         if (exportDataList != null) {
@@ -68,21 +76,22 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
                 createProjectDetailsColoumn(sheet, 1, projectDetails.getCode(), projectDetailsRow,
                     getTextWrapStyle(workBook));
 
-                createProjectDetailsColoumn(sheet, 2, projectDetails.getPONumber(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 2, "" + projectDetails.getId(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(sheet, 3, projectDetails.getName(), projectDetailsRow,
+
+                createProjectDetailsColoumn(sheet, 3, projectDetails.getPONumber(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(sheet, 4, projectDetails.getType().toString(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 4, projectDetails.getName(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(sheet, 5, projectDetails.getCategory(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 5, projectDetails.getType().toString(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(sheet, 6, projectDetails.getTeamName(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 6, projectDetails.getCategory(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(sheet, 7, projectDetails.getSubTeamName(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 7, projectDetails.getTeamName(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(sheet, 8, projectDetails.getClientName(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 8, projectDetails.getSubTeamName(), projectDetailsRow,
                     getTextWrapStyle(workBook));
-                createProjectDetailsColoumn(sheet, 9, projectDetails.getStatus().toString(), projectDetailsRow,
+                createProjectDetailsColoumn(sheet, 9, projectDetails.getClientName(), projectDetailsRow,
                     getTextWrapStyle(workBook));
 
                 List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
@@ -116,15 +125,17 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
                 projectDetailsRowCount++;
             }
 
-            Row projectTotalHoursRow = sheet.getRow(projectDetailsRowCount);
+            Row projectTotalHoursRow = sheet.getRow(++projectDetailsRowCount);
             if (projectTotalHoursRow == null) {
                 projectTotalHoursRow = sheet.createRow(projectDetailsRowCount);
             }
+            projectTotalHoursRow.setHeight((short) 350);
             List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
             if (employees != null) {
                 int projectDetailsUserColumnCount = 9;
-                createProjectDetailsColoumn(sheet, projectDetailsUserColumnCount++, "Project Hours",
+                createProjectDetailsColoumn(sheet, projectDetailsUserColumnCount++, "Total Hours",
                     projectTotalHoursRow, getProjectTotalStyle(workBook));
+                sheet.autoSizeColumn(projectDetailsUserColumnCount - 1);
                 for (EmployeeDetails employeeDetails : employees) {
                     Integer projectHours = userProjectHoursMap.get(employeeDetails.getId());
                     String value = projectHours == null ? "" : String.valueOf(projectHours / 60);
@@ -152,7 +163,7 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
         userCell.setCellValue(value);
     }
 
-    private void createHeader(Workbook workBook, Sheet sheet, String dateString)
+    private void createHeader(XSSFWorkbook workBook, Sheet sheet, String dateString)
     {
         Row monthRow = sheet.getRow(1);
         Row userRow = sheet.getRow(2);
@@ -186,45 +197,61 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
         }
     }
 
-    private CellStyle getUserHeaderStyle(Workbook workbook)
+    private CellStyle getUserHeaderStyle(XSSFWorkbook workbook)
     {
-        if (hssfCellUserHeaderStyle == null) {
-            hssfCellUserHeaderStyle = workbook.createCellStyle();
-            hssfCellUserHeaderStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            hssfCellUserHeaderStyle.setWrapText(true);
-            hssfCellUserHeaderStyle.setFillBackgroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            hssfCellUserHeaderStyle.setFillPattern(FillPatternType.BIG_SPOTS);
+        if (xssfCellUserHeaderStyle == null) {
+            xssfCellUserHeaderStyle = workbook.createCellStyle();
+            if (myColorIndexGray == null) {
+                myColorIndexGray = getColor(217, 217, 217, workbook);
+            }
+            xssfCellUserHeaderStyle.setFillForegroundColor(myColorIndexGray);
+            xssfCellUserHeaderStyle.setWrapText(true);
+            xssfCellUserHeaderStyle.setFillBackgroundColor(myColorIndexGray);
+            xssfCellUserHeaderStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             Font font = workbook.createFont();
             font.setBold(true);
-            hssfCellUserHeaderStyle.setFont(font);
+            xssfCellUserHeaderStyle.setFont(font);
         }
 
-        return hssfCellUserHeaderStyle;
+        return xssfCellUserHeaderStyle;
     }
 
     private CellStyle getTextWrapStyle(Workbook workbook)
     {
-        if (hssfCellTextWrapStyle == null) {
-            hssfCellTextWrapStyle = workbook.createCellStyle();
-            hssfCellTextWrapStyle.setWrapText(true);
+        if (xssfCellTextWrapStyle == null) {
+            xssfCellTextWrapStyle = workbook.createCellStyle();
+            xssfCellTextWrapStyle.setWrapText(true);
         }
 
-        return hssfCellTextWrapStyle;
+        return xssfCellTextWrapStyle;
     }
 
-    private CellStyle getProjectTotalStyle(Workbook workbook)
+    private CellStyle getProjectTotalStyle(XSSFWorkbook workbook)
     {
-        if (hssfCellProjectTotalStyle == null) {
-            hssfCellProjectTotalStyle = workbook.createCellStyle();
-            hssfCellProjectTotalStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
-            hssfCellProjectTotalStyle.setFillBackgroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
-            hssfCellProjectTotalStyle.setFillPattern(FillPatternType.BIG_SPOTS);
-            hssfCellProjectTotalStyle.setWrapText(true);
+        if (xssfCellProjectTotalStyle == null) {
+            xssfCellProjectTotalStyle = workbook.createCellStyle();
+            if (myColorIndexPink == null) {
+                myColorIndexPink = getColor(248, 203, 173, workbook);
+            }
+            xssfCellProjectTotalStyle.setFillForegroundColor(myColorIndexPink);
+            xssfCellProjectTotalStyle.setFillBackgroundColor(myColorIndexPink);
+            xssfCellProjectTotalStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            xssfCellProjectTotalStyle.setWrapText(true);
             Font font = workbook.createFont();
             font.setBold(true);
-            hssfCellProjectTotalStyle.setFont(font);
+            xssfCellProjectTotalStyle.setFont(font);
         }
 
-        return hssfCellProjectTotalStyle;
+        return xssfCellProjectTotalStyle;
+    }
+
+    private XSSFColor getColor(int R, int G, int B, Workbook workbook)
+    {
+
+        /*
+         * XSSFWorkbook hwb = (XSSFWorkbook) workbook; HSSFPalette palette = hwb.getC(); HSSFColor myColor =
+         * palette.findSimilarColor(R, G, B); short palIndex = myColor.getIndex();
+         */
+        return new XSSFColor(new java.awt.Color(R, G, B));
     }
 }

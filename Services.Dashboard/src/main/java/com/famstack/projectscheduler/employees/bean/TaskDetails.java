@@ -1,7 +1,6 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
@@ -51,6 +50,10 @@ public class TaskDetails
     private List<TaskActivityDetails> taskActivityDetails;
 
     private Boolean disableTask;
+
+    private int actualTimeTaken;
+
+    private int taskRemainingTime;
 
     public int getTaskId()
     {
@@ -207,44 +210,34 @@ public class TaskDetails
 
     public double getPercentageOfTaskCompleted()
     {
+        double progressPercentage = 0;
         if (status == TaskStatus.COMPLETED) {
             return 100;
         } else if ((status == TaskStatus.INPROGRESS)) {
             double durationInMinute = duration * 60;
             double taskRemainingTime = getTaskRemainingTime();
             double percentageOfWorkCompleted = (100 - (taskRemainingTime / durationInMinute) * 100);
-            return Math.round(percentageOfWorkCompleted * 100.0) / 100.0;
+            progressPercentage = Math.round(percentageOfWorkCompleted * 100.0) / 100.0;
         }
 
-        return 0;
+        return (progressPercentage > 100 ? 100 : progressPercentage) < 0 ? 0 : progressPercentage;
 
     }
 
-    public double getTaskRemainingTime()
+    public int getTaskRemainingTime()
     {
-        double diffInMinute = duration * 60;
-        if (status == TaskStatus.COMPLETED) {
-            return 0;
-        } else if (taskActivityDetails == null) {
-            return diffInMinute;
-        }
-        Date actualStartTime = null;
-        if (taskActivityDetails != null) {
-            for (TaskActivityDetails taskActivityDetail : taskActivityDetails) {
-                if (taskActivityDetail.getActualEndTime() == null) {
-                    actualStartTime = taskActivityDetail.getActualStartTime();
-                    diffInMinute = taskActivityDetail.getDurationInMinutes();
-                    break;
-                }
-            }
-        }
-
-        if (actualStartTime != null) {
-            double diff = new Date().getTime() - actualStartTime.getTime();
-            diff = (diffInMinute * 60 * 1000) - diff;
-            diffInMinute = diff / (60 * 1000);
-        }
-        return diffInMinute;
+        // int diffInMinute = duration * 60;
+        /*
+         * if (status == TaskStatus.COMPLETED) { return 0; } else if (taskActivityDetails == null) { return
+         * diffInMinute; } Date actualStartTime = null; if (taskActivityDetails != null) { for (TaskActivityDetails
+         * taskActivityDetail : taskActivityDetails) { if (taskActivityDetail.getActualEndTime() == null) {
+         * actualStartTime = taskActivityDetail.getActualStartTime(); diffInMinute =
+         * taskActivityDetail.getDurationInMinutes(); break; } } } if (actualStartTime != null) { double diff = new
+         * Date().getTime() - actualStartTime.getTime(); diff = (diffInMinute * 60 * 1000) - diff; diffInMinute = diff /
+         * (60 * 1000); }
+         */
+        // return diffInMinute;
+        return taskRemainingTime;
     }
 
     public EmployeeDetails getEmployeeDetails()
@@ -307,13 +300,7 @@ public class TaskDetails
 
     public int getActualTimeTaken()
     {
-        int actualDuration = 0;
-        if (taskActivityDetails != null) {
-            for (TaskActivityDetails taskActivityDetail : taskActivityDetails) {
-                actualDuration += taskActivityDetail.getActualTimeTaken();
-            }
-        }
-        return actualDuration;
+        return actualTimeTaken;
     }
 
     public String getActualTimeTakenInHrs()
@@ -354,6 +341,16 @@ public class TaskDetails
     public void setExtraTimeTask(Boolean extraTimeTask)
     {
         this.extraTimeTask = extraTimeTask;
+    }
+
+    public void setActualTimeTaken(int actualTimeTaken)
+    {
+        this.actualTimeTaken = actualTimeTaken;
+    }
+
+    public void setTaskRemainingTime(int taskRemainingTime)
+    {
+        this.taskRemainingTime = taskRemainingTime;
     }
 
 }

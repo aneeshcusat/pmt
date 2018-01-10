@@ -56,6 +56,15 @@ public class FamstackProjectController extends BaseFamstackService
         return getProjectPageModelView(projectData);
     }
 
+    @RequestMapping(value = "/projectdashboard", method = RequestMethod.GET)
+    public ModelAndView projectDashboard()
+    {
+        List<ProjectDetails> projectData = famstackDashboardManager.getLatestProjects(false);
+        ModelAndView modelAndView = getProjectPageModelView(projectData);
+        modelAndView.setViewName("projectdashboard");
+        return modelAndView;
+    }
+
     @RequestMapping(value = "/mileStones", method = RequestMethod.GET)
     public ModelAndView getMilestones()
     {
@@ -170,6 +179,14 @@ public class FamstackProjectController extends BaseFamstackService
     {
         famstackDashboardManager.createProject(projectDetails);
         return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/loadDuplicateProjectsJon", method = RequestMethod.GET)
+    @ResponseBody
+    public String loadDuplicateProjectsJon(@RequestParam("projectId") int projectId,
+        @RequestParam("projectCode") String projectCode)
+    {
+        return famstackDashboardManager.loadDuplicateProjectsJon(projectId, projectCode);
     }
 
     @RequestMapping(value = "/quickDuplicateProject", method = RequestMethod.POST)
