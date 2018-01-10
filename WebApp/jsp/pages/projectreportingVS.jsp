@@ -24,7 +24,7 @@
     <!-- START CONTENT FRAME TOP -->
     <div class="content-frame-top">                        
         <div class="page-title">                    
-            <h2><span class="fa fa-table"></span> Project Reporting</h2>
+            <h2><span class="fa fa-table"></span> Project Reporting - ${userGroupMap[currentUserGroupId].name}</h2>
         </div>  
         <div class="pull-right">
             <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>

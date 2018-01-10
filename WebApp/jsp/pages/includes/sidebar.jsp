@@ -40,14 +40,19 @@
                     <li class="active">
                         <a href="${applicationHome}/index"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
                     </li>   
-                     <li class="xn-openable<c:if test="${expandedPage}"> active</c:if>">
-                        <a href="#"><span class="fa fa-table"></span> <span class="xn-text">Project Reports</span></a>
-                        <ul>
-                             <li><a href="${applicationHome}/projectreportingDefault"><span class="fa fa-table"></span> Default</a></li>
-                              <li><a href="${applicationHome}/projectreportingVS"><span class="fa fa-table"></span> Visual Services</a></li>
-                             <li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span> Team 2</a></li>
-                        </ul>
-                     </li>                 
+					 <c:choose>
+                    	<c:when test="${currentUserGroupId == '1001'}">
+                    	 <li><a href="${applicationHome}/projectreportingVS"><span class="fa fa-table"></span><span class="xn-text">Visual Services</span></a></li>
+                    	</c:when>
+                    	
+                    	<c:when test="${currentUserGroupId == '1002'}">
+                    	<li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span><span class="xn-text">Team 2</span></a></li>
+                    	</c:when>
+                    	<c:otherwise>
+                    	 <li><a href="${applicationHome}/projectreportingDefault"><span class="fa fa-table"></span><span class="xn-text">Default</span></a></li>
+                    	</c:otherwise>
+                    </c:choose>	                    
+                    
                     <li class="xn-openable<c:if test="${expandedPage}"> active</c:if>">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Pages</span></a>
                         <ul>
