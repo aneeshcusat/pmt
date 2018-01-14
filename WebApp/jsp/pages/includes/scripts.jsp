@@ -116,7 +116,7 @@ site_settings = $("#settingsId").html();
     function doAjaxEnableSettings(name,value) {
     	console.log("name: ", name);
     	console.log("value: ", value);
-	    doAjaxRequest("POST", "${applicationHome}/setConfiguration",  {propertyName:name,propertyValue:value},function(data) {
+	    doAjaxRequestWithGlobal("POST", "${applicationHome}/setConfiguration",  {propertyName:name,propertyValue:value},function(data) {
 			console.log("data: ", data);
 	    },function(error) {
 	    	console.log("ERROR: ", error);
