@@ -56,7 +56,7 @@ public class FamstackProjectController extends BaseFamstackService
         return getProjectPageModelView(projectData);
     }
 
-    @RequestMapping(value = "/projectdashboard", method = RequestMethod.GET)
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView projectDashboard()
     {
         List<ProjectDetails> projectData = famstackDashboardManager.getLatestProjects(false);
@@ -181,12 +181,36 @@ public class FamstackProjectController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
-    @RequestMapping(value = "/loadDuplicateProjectsJon", method = RequestMethod.GET)
+    @RequestMapping(value = "/getAssigneesSlot", method = RequestMethod.GET)
     @ResponseBody
-    public String loadDuplicateProjectsJon(@RequestParam("projectId") int projectId,
-        @RequestParam("projectCode") String projectCode)
+    public String getAssigneesSlot(@RequestParam(value = "assigneeId", defaultValue = "") int assigneeId,
+        @RequestParam(value = "startDateTime", defaultValue = "") String startDateTime,
+        @RequestParam(value = "endDateTime", defaultValue = "") String endDateTime)
     {
-        return famstackDashboardManager.loadDuplicateProjectsJon(projectId, projectCode);
+        Date date = null;
+        if (StringUtils.isNotBlank("" + assigneeId) && StringUtils.isNotBlank(startDateTime)
+            && StringUtils.isNotBlank(endDateTime)) {
+            date = famstackDashboardManager.getAssigneeSlot(assigneeId, startDateTime, endDateTime);
+        }
+        return date == null ? "Not Available" : DateUtils.format(date, DateUtils.DATE_TIME_FORMAT);
+    }
+
+    @RequestMapping(value = "/loadDuplicateProjectsJSon", method = RequestMethod.GET)
+    public ModelAndView loadDuplicateProjectsJSon(@RequestParam("projectId") int projectId,
+        @RequestParam("projectCode") String projectCode, Model model)
+    {
+        List<ProjectDetails> projectDetails = famstackDashboardManager.loadDuplicateProjectsJon(projectId, projectCode);
+        return new ModelAndView("response/prjdashboadduplicate").addObject("projectDetailsData", projectDetails)
+            .addObject("projectId", projectId);
+    }
+
+    @RequestMapping(value = "/loadTaskDetailsJSon", method = RequestMethod.GET)
+    public ModelAndView loadTaskDetailsJSon(@RequestParam("projectId") int projectId, Model model)
+    {
+
+        List<TaskDetails> taskDetails = famstackDashboardManager.loadProjectTaskDetails(projectId);
+        return new ModelAndView("response/projecttaskdetails").addObject("taskDetailsData", taskDetails).addObject(
+            "projectId", projectId);
     }
 
     @RequestMapping(value = "/quickDuplicateProject", method = RequestMethod.POST)

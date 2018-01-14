@@ -542,6 +542,26 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     }
 
+    public List<TaskDetails> getProjectDetailsTaskDetailsByProjectId(int projectId)
+    {
+
+        Map<String, Object> dataMap = new HashMap<>();
+        List<TaskDetails> taskDetailsList = new ArrayList<>();
+        dataMap.put("projectId", projectId);
+
+        List<?> projectTaskList =
+            getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("getAllProjectTaskByProjectId"), dataMap);
+
+        for (Object taskItemObj : projectTaskList) {
+            TaskItem taskItem = (TaskItem) taskItemObj;
+            TaskDetails taskDetails = mapTask(taskItem, false);
+            taskDetailsList.add(taskDetails);
+        }
+        return taskDetailsList;
+
+    }
+
     public List<TaskDetails> getAllTaskEndWithin(Date endDate, Date endDate2)
     {
 

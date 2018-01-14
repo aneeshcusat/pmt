@@ -184,14 +184,10 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectDetailsList;
     }
 
-    public String loadDuplicateProjectsJon(int projectId, String projectCode)
+    public List<ProjectDetails> loadDuplicateProjectsJon(int projectId, String projectCode)
     {
         List<ProjectDetails> projectDetailsList = projectManager.loadDuplicateProjects(projectId, projectCode);
-
-        if (projectDetailsList != null) {
-            return FamstackUtils.getJsonFromObject(projectDetailsList);
-        }
-        return "";
+        return projectDetailsList;
 
     }
 
@@ -818,6 +814,17 @@ public class FamstackDashboardManager extends BaseFamstackService
     public void deleteTaskActivity(int activityId)
     {
         famstackUserActivityManager.deleteTaskActivity(activityId);
+
+    }
+
+    public List<TaskDetails> loadProjectTaskDetails(int projectId)
+    {
+        return projectManager.getProjectTaskDetails(projectId);
+    }
+
+    public Date getAssigneeSlot(int assigneeId, String startDateTime, String endDateTime)
+    {
+        return famstackUserActivityManager.getAssigneeSlot(assigneeId, startDateTime, endDateTime);
 
     }
 }

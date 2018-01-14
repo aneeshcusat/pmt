@@ -37,7 +37,7 @@ public class FamstackDashboardController extends BaseFamstackService
         return path;
     }
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ModelAndView index()
     {
         UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();

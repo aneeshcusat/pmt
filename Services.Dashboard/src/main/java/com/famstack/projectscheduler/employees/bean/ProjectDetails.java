@@ -562,8 +562,10 @@ public class ProjectDetails
             for (TaskDetails taskDetails : taskDetailsSet) {
                 EmployeeDetails employeeDetails =
                     FamstackApplicationConfiguration.userMap.get(taskDetails.getAssignee());
-                assigneeString += employeeDetails.getFirstName();
-                // assigneeString += taskDetails.getHelperNames();
+                if (employeeDetails != null) {
+                    assigneeString += employeeDetails.getFirstName();
+                    // assigneeString += taskDetails.getHelperNames();
+                }
 
             }
         }

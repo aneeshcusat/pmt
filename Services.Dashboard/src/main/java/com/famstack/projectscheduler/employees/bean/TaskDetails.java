@@ -353,4 +353,11 @@ public class TaskDetails
         this.taskRemainingTime = taskRemainingTime;
     }
 
+    public String getTaskType()
+    {
+        if (reviewTask != null && reviewTask) {
+            return "R";
+        }
+        return "P";
+    }
 }

@@ -84,6 +84,8 @@
 
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-12">
 	<table class="table table-hover p-table projectDatatable ">
 		<thead>
 			<tr>
@@ -160,7 +162,8 @@
 		  There are no assigned projects
 		</c:if>
 	</table>
-
+	</div>
+	</div>
 
 	
 </div>

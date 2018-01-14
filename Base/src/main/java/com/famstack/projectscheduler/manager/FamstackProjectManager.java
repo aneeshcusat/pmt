@@ -236,13 +236,14 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectDetails.setCreatedDate(projectItem.getCreatedDate());
             projectDetails.setProjectSubType(projectItem.getProjectSubType());
             projectDetails.setProjectLead(projectItem.getProjectLead());
+            projectDetails.setClientId(projectItem.getClientId());
+            projectDetails.setAccountId(projectItem.getAccountId());
+            projectDetails.setTeamId(projectItem.getTeamId());
+            projectDetails.setDescription(projectItem.getDescription());
+
             if (isFullLoad) {
                 projectDetails.setCategory(projectItem.getCategory());
-                projectDetails.setClientId(projectItem.getClientId());
-                projectDetails.setAccountId(projectItem.getAccountId());
-                projectDetails.setTeamId(projectItem.getTeamId());
                 projectDetails.setQuantity(projectItem.getQuantity());
-                projectDetails.setDescription(projectItem.getDescription());
                 projectDetails.setPriority(projectItem.getPriority());
                 projectDetails.setComplexity(projectItem.getComplexity());
                 projectDetails.setPONumber(projectItem.getPONumber());
@@ -303,24 +304,23 @@ public class FamstackProjectManager extends BaseFamstackManager
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startTime", startTime);
 
-        List<Object[]> projectItemResultList =
-            famstackDataAccessObjectManager.executeSQLQuery(HQLStrings.getString("getPrimaryProjectsItems"), dataMap);
+        List<?> projectItemList =
+            famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getPrimaryProjectsItems"), dataMap);
 
-        for (int i = 0; i < projectItemResultList.size(); i++) {
-            ProjectDetails projectDetails = new ProjectDetails();
-            Object[] data = projectItemResultList.get(i);
-
-            projectDetails.setId((Integer) data[0]);
-            projectDetails.setName((String) data[1]);
-            projectDetails.setCreatedDate((Timestamp) data[2]);
-            String completionDateString = DateUtils.format((Date) data[3], DateUtils.DATE_TIME_FORMAT);
-            projectDetails.setCompletionTime(completionDateString);
-            projectDetails.setCode((String) data[4]);
-            projectDetails.setStatus(ProjectStatus.valueOf((String) data[5]));
-            projectDetailsList.add(projectDetails);
-        }
-
+        getProjectsList(projectDetailsList, projectItemList, isFullLoad);
         return projectDetailsList;
+
+        /*
+         * List<Object[]> projectItemResultList =
+         * famstackDataAccessObjectManager.executeSQLQuery(HQLStrings.getString("getPrimaryProjectsItems"), dataMap);
+         * for (int i = 0; i < projectItemResultList.size(); i++) { ProjectDetails projectDetails = new
+         * ProjectDetails(); Object[] data = projectItemResultList.get(i); projectDetails.setId((Integer) data[0]);
+         * projectDetails.setName((String) data[1]); projectDetails.setCreatedDate((Timestamp) data[2]); String
+         * completionDateString = DateUtils.format((Date) data[3], DateUtils.DATE_TIME_FORMAT);
+         * projectDetails.setCompletionTime(completionDateString); projectDetails.setCode((String) data[4]);
+         * projectDetails.setStatus(ProjectStatus.valueOf((String) data[5])); projectDetailsList.add(projectDetails); }
+         */
+
     }
 
     private void getProjectsList(List<ProjectDetails> projectDetailsList, List<?> projectItemList, boolean isFullLoad)
@@ -643,5 +643,10 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("endDate 2" + endDate2);
         getProjectsList(projectDetailsList, projectItemList, true);
         return projectDetailsList;
+    }
+
+    public List<TaskDetails> getProjectTaskDetails(int projectId)
+    {
+        return famstackProjectTaskManager.getProjectDetailsTaskDetailsByProjectId(projectId);
     }
 }

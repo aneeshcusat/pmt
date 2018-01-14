@@ -35,6 +35,7 @@ public class FamstackScheduler extends BaseFamstackService
     @Resource
     private FamstackNotificationServiceManager famstackNotificationServiceManager;
 
+    @Async
     public void scheduleJob()
     {
         logDebug("Running scheduleJob scheduler");
@@ -48,6 +49,7 @@ public class FamstackScheduler extends BaseFamstackService
         setTaskRemainingTimeJob();
     }
 
+    @Async
     public void setTaskRemainingTimeJob()
     {
         logDebug("Running setTaskRemainingTimeJob scheduler");
@@ -88,7 +90,6 @@ public class FamstackScheduler extends BaseFamstackService
         logDebug("Running scheduler completed- checkProjectStartTimeReminder");
     }
 
-    @Async
     public void checkProjectStartTimeReminder()
     {
         logDebug("Running scheduler - checkProjectStartTimeReminder");

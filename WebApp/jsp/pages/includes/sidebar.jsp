@@ -36,32 +36,35 @@
                         </a>                                                                  
                     </li>
                     <li class="xn-title">Navigation</li>
+                     <li class="active">
+                        <a href="${applicationHome}/index"><span class="fa fa-list-alt"></span> <span class="xn-text">Home Page</span></a>                        
+                    </li>
+                    
                     <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-                    <li class="active">
-                        <a href="${applicationHome}/index"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
+                    <li>
+                        <a href="${applicationHome}/dashboard"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
                     </li>   
 					 <c:choose>
                     	<c:when test="${currentUserGroupId == '1001'}">
-                    	 <li><a href="${applicationHome}/projectreportingVS"><span class="fa fa-table"></span><span class="xn-text">Reports</span></a></li>
+                    	 <li><a href="${applicationHome}/projectreportingVS"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     	</c:when>
                     	
                     	<c:when test="${currentUserGroupId == '1002'}">
-                    	<li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span><span class="xn-text">Reports</span></a></li>
+                    	<li><a href="${applicationHome}/projectreporting"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     	</c:when>
                     	<c:otherwise>
-                    	 <li><a href="${applicationHome}/projectreportingDefault"><span class="fa fa-table"></span><span class="xn-text">Reports</span></a></li>
+                    	 <li><a href="${applicationHome}/projectreportingDefault"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     	</c:otherwise>
                     </c:choose>	                    
                     
-                    <li class="xn-openable<c:if test="${expandedPage}"> active</c:if>">
-                        <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Pages</span></a>
+                    <li class="xn-openable<c:if test="${expandedPage}"></c:if>">
+                        <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Additional Features</span></a>
                         <ul>
                             <li><a href="${applicationHome}/employees"><span class="fa fa-users"></span> Employees</a></li>
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
                             <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span>Manage Tasks</a></li>
                             <li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
-                            <li><a href="${applicationHome}/projects"><span class="fa fa-list-alt"></span> Projects</a></li>
                             <li><a href="${applicationHome}/mileStones"><span class="fa fa-trophy"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
                             <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
@@ -74,13 +77,18 @@
                     <li class="active">
                         <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>                        
                     </li>                    
+                    
+                     <li class="">
+                        <a href="${applicationHome}/index"><span class="fa fa-list-alt"></span> <span class="xn-text">Home Page</span></a>                        
+                    </li>
+                    
+                    
                     <li class="xn-openable active">
-                        <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Pages</span></a>
+                        <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Additional Features</span></a>
                         <ul>
  							<li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
-                            <li><a href="${applicationHome}/projects"><span class="fa fa-edit"></span> Projects</a></li>
                         </ul>
                     </li>
                     </c:if>

@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.manager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -127,7 +128,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                 logDebug("User is on leave ");
                 return;
             }
-            Timestamp availableTime = updateUserAvailableTime(userActivityItem.getUserTaskActivities());
+            Timestamp availableTime = getUserAvailableTime(userActivityItem.getUserTaskActivities());
 
             if (employeeDetails != null) {
                 logDebug("updated available time for user " + userActivityItem.getId());
@@ -136,7 +137,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
     }
 
-    private Timestamp updateUserAvailableTime(Set<UserTaskActivityItem> userTaskActivityItems)
+    private Timestamp getUserAvailableTime(Set<UserTaskActivityItem> userTaskActivityItems)
     {
         Timestamp userAvailableTime = null;
         logDebug("updating user available time ");
@@ -208,6 +209,16 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     public List<TaskActivityDetails> getAllTaskActivities(String startDateString, String completionDateString)
     {
         List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
+        int currentUserId = getFamstackApplicationConfiguration().getCurrentUserId();
+        List<?> userActivityItems = getAllTaskActivityItems(startDateString, completionDateString, currentUserId, true);
+
+        getAllTaskActivitiesFromUserActivity(taskActivitiesList, userActivityItems);
+        return taskActivitiesList;
+    }
+
+    private List<?> getAllTaskActivityItems(String startDateString, String completionDateString, int currentUserId,
+        boolean isFullLoad)
+    {
         Date startDate = DateUtils.tryParse(startDateString, DateUtils.DATE_FORMAT_CALENDER);
         Date completionDate = DateUtils.tryParse(completionDateString, DateUtils.DATE_FORMAT_CALENDER);
         logDebug("startDateString" + startDateString);
@@ -223,11 +234,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         dataMap.put("calenderDateEnd", dayEndDate);
         logDebug("dayStartDate : " + dayStartDate);
 
-        int currentUserId = getFamstackApplicationConfiguration().getCurrentUserId();
         UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
 
         String queryKey = "userActivityItemsFromDatetoDate";
-        if (userRole == UserRole.ADMIN || userRole == UserRole.SUPERADMIN || userRole == UserRole.MANAGER) {
+        if ((userRole == UserRole.ADMIN || userRole == UserRole.SUPERADMIN || userRole == UserRole.MANAGER)
+            && isFullLoad) {
             queryKey = "allUserActivityItemsFromDatetoDate";
         } else {
             dataMap.put("userId", currentUserId);
@@ -235,9 +246,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         List<?> userActivityItems =
             getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString(queryKey), dataMap);
-
-        getAllTaskActivitiesFromUserActivity(taskActivitiesList, userActivityItems);
-        return taskActivitiesList;
+        return userActivityItems;
     }
 
     public List<TaskActivityDetails> getAllTaskActivities()
@@ -425,5 +434,38 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
             getFamstackDataAccessObjectManager().deleteItem(userTaskActivityItem);
         }
+    }
+
+    public Date getAssigneeSlot(int assigneeId, String startDateString, String completionDateString)
+    {
+
+        Date startDate = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
+        Date endDate = DateUtils.tryParse(completionDateString, DateUtils.DATE_TIME_FORMAT);
+
+        List<UserActivityItem> userActivityItems =
+            (List<UserActivityItem>) getAllTaskActivityItems(
+                DateUtils.format(startDate, DateUtils.DATE_FORMAT_CALENDER),
+                DateUtils.format(endDate, DateUtils.DATE_FORMAT_CALENDER), assigneeId, false);
+
+        Timestamp userAvailableTime = null;
+
+        if (userActivityItems != null && !userActivityItems.isEmpty()) {
+            for (UserActivityItem userActivityItem : userActivityItems) {
+                userAvailableTime = getUserAvailableTime(userActivityItem.getUserTaskActivities());
+
+                if (userAvailableTime != null) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(userAvailableTime);
+                    int hour = cal.get(Calendar.HOUR_OF_DAY);
+                    if (hour > 8 && hour < 21) {
+                        return userAvailableTime;
+                    }
+                }
+            }
+        } else {
+            return DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
+        }
+
+        return null;
     }
 }
