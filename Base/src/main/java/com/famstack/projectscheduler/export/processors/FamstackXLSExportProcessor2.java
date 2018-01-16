@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 
 /**
@@ -51,16 +52,17 @@ public class FamstackXLSExportProcessor2 extends BaseFamstackService implements 
                 createProjectDetailsColoumn(sheet, 2, projectDetails.getAssigneeNames(), projectDetailsRow,
                     getTextStyle(workBook));
 
-                createProjectDetailsColoumn(sheet, 3,
-                    getFamstackApplicationConfiguration().getUserMap().get(projectDetails.getProjectLead())
-                        .getFirstName(), projectDetailsRow, getTextStyle(workBook));
+                EmployeeDetails employeeDetails =
+                    getFamstackApplicationConfiguration().getUserMap().get(projectDetails.getProjectLead());
+                createProjectDetailsColoumn(sheet, 3, employeeDetails != null ? employeeDetails.getFirstName() : "",
+                    projectDetailsRow, getTextStyle(workBook));
 
                 createProjectDetailsColoumn(sheet, 4, projectDetails.getType().toString(), projectDetailsRow,
                     getTextStyle(workBook));
                 createProjectDetailsColoumn(sheet, 5, projectDetails.getCategory(), projectDetailsRow,
                     getTextStyle(workBook));
-                createProjectDetailsColoumn(sheet, 6, projectDetails.getProjectSubType().toString(), projectDetailsRow,
-                    getTextStyle(workBook));
+                createProjectDetailsColoumn(sheet, 6, projectDetails.getProjectSubType() != null ? projectDetails
+                    .getProjectSubType().toString() : "", projectDetailsRow, getTextStyle(workBook));
                 createProjectDetailsColoumn(sheet, 7, projectDetails.getTeamName(), projectDetailsRow,
                     getTextStyle(workBook));
                 createProjectDetailsColoumn(sheet, 8, projectDetails.getClientName(), projectDetailsRow,
