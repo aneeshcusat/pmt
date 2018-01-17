@@ -54,17 +54,9 @@ public class FamstackXLSExportManager extends BaseFamstackManager
                 }
             }
 
-            String mimeType = request.getServletContext().getMimeType(fullPath);
-            if (mimeType == null) {
-                mimeType = "application/octet-stream";
-            }
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment; filename=" + processorName + ".xlsx");
 
-            response.setContentType(mimeType);
-            response.setContentLength((int) new File(fullPath).length());
-            String headerKey = "Content-Disposition";
-            String headerValue =
-                String.format("attachment; filename=\"%s\"", processorName + "_" + dateString + ".xlsx");
-            response.setHeader(headerKey, headerValue);
             inputStream.close();
             workbook.write(response.getOutputStream());
             workbook.close();
