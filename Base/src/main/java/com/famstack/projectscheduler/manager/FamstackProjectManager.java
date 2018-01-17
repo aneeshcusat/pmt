@@ -60,12 +60,75 @@ public class FamstackProjectManager extends BaseFamstackManager
         famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
     }
 
-    public void quickDuplicateProject(ProjectDetails projectDetails)
+    public void quickDuplicateProject(int projectId, String projectName, int projectDuration, String projectStartTime,
+        String projectEndTime, String taskDetailsList)
     {
-        ProjectItem projectItem = getProjectItemById(projectDetails.getId());
+        ProjectItem projectDetails = getProjectItemById(projectId);
+        ProjectItem projectItem = new ProjectItem();
 
-        if (projectItem != null) {
-            // TODO :
+        if (projectDetails != null) {
+            projectItem.setStatus(ProjectStatus.NEW);
+            projectItem.setCategory(projectDetails.getCategory());
+            projectItem.setCode(projectDetails.getCode());
+            projectItem.setDescription(projectDetails.getDescription());
+            projectItem.setName(projectName);
+            projectItem.setQuantity(projectDetails.getQuantity());
+            projectItem.setPriority(projectDetails.getPriority());
+            projectItem.setProjectSubType(projectDetails.getProjectSubType());
+            projectItem.setProjectLead(projectDetails.getProjectLead());
+
+            projectItem.setPONumber(projectDetails.getPONumber());
+            projectItem.setComplexity(projectDetails.getComplexity());
+            Date startDate = DateUtils.tryParse(projectStartTime, DateUtils.DATE_TIME_FORMAT);
+            Date completionDate = DateUtils.tryParse(projectEndTime, DateUtils.DATE_TIME_FORMAT);
+            Timestamp startTimeStamp = null;
+            if (startDate != null) {
+                startTimeStamp = new Timestamp(startDate.getTime());
+            }
+
+            Timestamp completionTimeStamp = null;
+            if (completionDate != null) {
+                completionTimeStamp = new Timestamp(completionDate.getTime());
+            }
+
+            projectItem.setStartTime(startTimeStamp);
+            projectItem.setCompletionTime(completionTimeStamp);
+            projectItem.setDuration(projectDuration);
+
+            projectItem.setAccountId(projectDetails.getAccountId());
+            projectItem.setTeamId(projectDetails.getTeamId());
+            projectItem.setClientId(projectDetails.getClientId());
+            projectItem.setTags(projectDetails.getTags());
+            projectItem.setType(projectDetails.getType());
+            projectItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
+            projectItem.setWatchers(projectDetails.getWatchers());
+            famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
+            famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED,
+                "Duplicated from " + projectDetails.getProjectId());
+
+            if (taskDetailsList != null && !taskDetailsList.isEmpty()) {
+                String[] taskList = taskDetailsList.split("#TD#");
+
+                if (taskList.length > 0) {
+                    for (String taskData : taskList) {
+                        String[] task = taskData.split("#TDD#");
+                        if (task.length > 0) {
+                            TaskDetails taskDetails = new TaskDetails();
+                            taskDetails.setAssignee(Integer.parseInt(task[0]));
+                            taskDetails.setName(task[1]);
+                            taskDetails.setStartTime(task[2]);
+                            taskDetails.setDuration(Integer.parseInt(task[3]));
+                            taskDetails.setReviewTask("0".equalsIgnoreCase(task[4]) ? false : true);
+                            taskDetails.setProjectId(projectId);
+
+                            famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
+                        }
+                    }
+                }
+            }
+
+            updateProjectStatusBasedOnTaskStatus(projectId);
+
         }
 
     }
@@ -240,7 +303,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectDetails.setAccountId(projectItem.getAccountId());
             projectDetails.setTeamId(projectItem.getTeamId());
             projectDetails.setDescription(projectItem.getDescription());
-
+            projectDetails.setCategory(projectItem.getCategory());
             if (isFullLoad) {
                 projectDetails.setCategory(projectItem.getCategory());
                 projectDetails.setQuantity(projectItem.getQuantity());
@@ -649,4 +712,5 @@ public class FamstackProjectManager extends BaseFamstackManager
     {
         return famstackProjectTaskManager.getProjectDetailsTaskDetailsByProjectId(projectId);
     }
+
 }

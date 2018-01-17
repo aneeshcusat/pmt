@@ -13,13 +13,13 @@
 		
 		<c:if test="${not empty project.projectTaskDeatils}">
 		 <c:forEach var="taskDetails" items="${project.projectTaskDeatils}">
-		<div class="col-md-12" id="taskId${taskDetails.taskId}" class="taskDetails">
+		<div class="col-md-12 taskDetails" id="taskId${taskDetails.taskId}" data-taskId="${taskDetails.taskId}">
 			<div class="form-group">
 				<div class="col-md-4 col-xs-12">
 					<input type="text" class="form-control cloneInput tskName" value="${taskDetails.name}"/> <span class="help-block"></span>
 				</div>
 				<div class="col-md-3 col-xs-12">
-				 	<select  name="taskAssignee" class="form-control cloneInput taskCloneAssignee" data-projectId="${project.id}" data-live-search="true">
+				 	<select  name="taskAssignee" class="form-control cloneInput taskCloneAssignee" data-projectId="${project.id}" data-taskId="${taskDetails.taskId}" data-live-search="true">
 					<option value="">- select -</option>
 					<c:if test="${not empty userMap}">
   						<c:forEach var="user" items="${userMap}">
@@ -32,7 +32,8 @@
   						</c:forEach>
   						</c:if>
 					</select>
-					 <span class="availabilityStatus"></span>
+					 <span class="availabilityStatus avaStatus${taskDetails.taskId}"></span>
+					 <input type="hidden" class="availabilityTime avaInputStatus${taskDetails.taskId}"></input>
 				</div>
 				<div class="col-md-2 col-xs-12">
 					<input type="text" class="form-control cloneInput tskDuration"

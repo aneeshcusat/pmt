@@ -161,7 +161,7 @@ div#taskDetailsDiv {
 	                  		<c:set var="projectState" value="danger"/>
 	                  </c:if>
 			        <tr class="clickable projectData ${project.id}" id="projectData${project.id}">
-			            <td  onclick="loadDuplicateProjects(${project.id}, '${project.code}', this)" data-toggle="collapse" data-target=".projectData${project.id}"><i id="projectOpenLink${project.id}" style="color: blue" class="fa fa-chevron-right 2x"></i></td>
+			            <td  onclick="loadDuplicateProjects(${project.id}, '${project.code}', false)" data-toggle="collapse" data-target=".projectData${project.id}"><i id="projectOpenLink${project.id}" style="color: blue" class="fa fa-chevron-right 2x"></i></td>
 			            <td>${project.completionTime}</td>
 			            <td><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
 			            <td>${project.teamName}</td>
@@ -216,6 +216,7 @@ div#taskDetailsDiv {
 												<div class="col-md-8 col-xs-12">
 													<input type="text" class="form-control cloneInput" value="${project.name}"
 														id="prjName${project.id}" /> <span class="help-block"></span>
+													<input type="hidden" value="${project.category}" id="projectCategory${project.id}"/>
 												</div>
 											</div>
 											<div class="form-group">
@@ -223,6 +224,7 @@ div#taskDetailsDiv {
 												<div class="col-md-8 col-xs-12">
 													<input type="text" class="form-control cloneInput"  value="${project.duration}"
 														id="prjDuration${project.id}"/>
+														<span class="help-block" id="projectDurationMsg${project.id}"></span>
 												</div>
 											</div>
 										</div>
@@ -261,7 +263,7 @@ div#taskDetailsDiv {
 												<span class="help-block"></span>
 											</div>
 											<div class="col-md-12 col-xs-12">
-												<a href="javascript:void(0)"  style="color:green">
+												<a href="javascript:void(0)" onclick="createDuplicateProjectWithTask('${project.id}','${project.code}');" style="color:green">
 													<span class="fa fa-save fa-3x"></span>
 												</a>
 											</div>
@@ -341,10 +343,11 @@ div#taskDetailsDiv {
 						</c:if>
 			</select>
 			 <span class="availabilityStatus" ></span>
+			 <input type="hidden" class="availabilityTime"></input>
 		</div>
 		<div class="col-md-2 col-xs-12">
 			<input type="text" class="form-control cloneInput tskDuration"
-				value="0"/>
+				value="1"/>
 				
 		</div>
 		<div class="col-md-2 col-xs-12">
@@ -379,30 +382,10 @@ div#taskDetailsDiv {
 
 var createTaskDurationList = function(duration){
 	 $("#duration").html("");
-	for (var index = 0; index <= duration; index++) {
+	for (var index = 1; index <= duration; index++) {
 	     $("#duration").append('<option value="'+index+'">'+index+'</option>');
 	 }
 }
-
-var taskLinkclick = function(projectId, e){
-	e.preventDefault();
-    $('#taskDetailsDiv').hide();
-    
-	var dataString = {"projectId" : projectId};
-	doAjaxRequestWithGlobal("GET", "${applicationHome}/loadTaskDetailsJSon", dataString, function(data) {
-        console.log("SUCCESS: ", data);
-        $('#taskDetailsDiv').html(data);
-        
-        if (data.trim() != "") {
-        	$('#taskDetailsDiv').css({'top':e.pageY+10,'left':e.pageX-250, 'position':'absolute', 'border':'1px solid gray', 'padding':'5px'});
-        	$('#taskDetailsDiv').show();
-        }
-    }, function(e) {
-        console.log("ERROR: ", e);
-        alert(e);
-    }, false);
-   }
-
 
 var jvalidate = $("#createProjectFormId").validate({
 	 ignore: ".ignorevalidation",
@@ -476,34 +459,6 @@ var loadProject = function(projectId){
         alert(e);
     });
 }
-
-var loadDuplicateProjects = function(projectId, projectCode) {
-	
-	if ( $(".projectDuplicate"+projectId).length ==0) {
-		var dataString = {"projectId" : projectId, "projectCode" : projectCode};
-		doAjaxRequestWithGlobal("GET", "${applicationHome}/loadDuplicateProjectsJSon", dataString, function(data) {
-	        console.log("SUCCESS: ", data);
-	        $(".projectDuplicate"+projectId).remove();
-	        $("#projectDetails"+projectId +" tbody").append(data);
-	    }, function(e) {
-	        console.log("ERROR: ", e);
-	        alert(e);
-	    }, false);
-	}
-	
-	if ($("#projectOpenLink" + projectId).hasClass("fa-chevron-right")) {
-		$("#projectOpenLink" + projectId).removeClass("fa-chevron-right");
-		$("#projectOpenLink" + projectId).addClass("fa-chevron-down");
-		
-		$(".projectData"+projectId).show();	
-		
-	} else {
-		$("#projectOpenLink" + projectId).removeClass("fa-chevron-down");
-		$("#projectOpenLink" + projectId).addClass("fa-chevron-right");
-		$(".projectData"+projectId).hide();	
-	}
-}
-
 function clearCreateProjectForm(){
 	$("#projectName").val("");
 	$("#summary").val("");
@@ -973,35 +928,101 @@ var deleteCloneTaskItem = function(taskId) {
 	$("#"+taskId).remove();
 }
 
-$(document).on('change','.taskCloneAssignee',function(){
-	var assigneeId = $(this).val();
-	var projectId = $(this).attr("data-projectId");
-	var projectStartTime = $("#prjStartTime" + projectId).val();
-	var projectEndTime = $("#prjEndTime" + projectId).val();
-	var thisVar = $(this);
-	var dataString = {"assigneeId" : assigneeId, "startDateTime":projectStartTime, "endDateTime":projectEndTime};
-	
-	doAjaxRequestWithGlobal("GET", "${applicationHome}/getAssigneesSlot", dataString, function(data) {
-        console.log(data);
-        if (data == "Not Available") {
-        	 $(thisVar).nextAll('.availabilityStatus:first').html(data);
-        	 $(thisVar).nextAll('.availabilityStatus:first').css("color", "red");
-        } else {
-        	$(thisVar).nextAll('.availabilityStatus:first').html("Available from " + data);
-        	 $(thisVar).nextAll('.availabilityStatus:first').css("color", "green");
+
+var taskLinkclick = function(projectId, e){
+	e.preventDefault();
+    $('#taskDetailsDiv').hide();
+    
+	var dataString = {"projectId" : projectId};
+	doAjaxRequestWithGlobal("GET", "${applicationHome}/loadTaskDetailsJSon", dataString, function(data) {
+        console.log("SUCCESS: ", data);
+        $('#taskDetailsDiv').html(data);
+        
+        if (data.trim() != "") {
+        	$('#taskDetailsDiv').css({'top':e.pageY+10,'left':e.pageX-250, 'position':'absolute', 'border':'1px solid gray', 'padding':'5px'});
+        	$('#taskDetailsDiv').show();
         }
     }, function(e) {
         console.log("ERROR: ", e);
         alert(e);
     }, false);
+}
+
+
+var loadDuplicateProjects = function(projectId, projectCode, isForce) {
+	
+	if ( $(".projectDuplicate"+projectId).length ==0 || isForce) {
+		var dataString = {"projectId" : projectId, "projectCode" : projectCode};
+		doAjaxRequestWithGlobal("GET", "${applicationHome}/loadDuplicateProjectsJSon", dataString, function(data) {
+	        $(".projectDuplicate"+projectId).remove();
+	        $("#projectDetails"+projectId +" tbody").append(data);
+	    }, function(e) {
+	        console.log("ERROR: ", e);
+	        alert(e);
+	    }, false);
+	}
+	if(!isForce) {
+		if ($("#projectOpenLink" + projectId).hasClass("fa-chevron-right")) {
+			$("#projectOpenLink" + projectId).removeClass("fa-chevron-right");
+			$("#projectOpenLink" + projectId).addClass("fa-chevron-down");
+			loadInitialTaskAvailabilityTime(projectId);
+			$(".projectData"+projectId).show();	
+		} else {
+			$("#projectOpenLink" + projectId).removeClass("fa-chevron-down");
+			$("#projectOpenLink" + projectId).addClass("fa-chevron-right");
+			$(".projectData"+projectId).hide();	
+		}
+	}
+}
+
+var loadInitialTaskAvailabilityTime = function(projectId){
+	$("#projectTaskCloneDIv"+projectId+" .taskDetails").each(function(){
+		var assigneeId = $(this).find(".taskCloneAssignee").val();
+		var taskId =$(this).attr("data-taskid");
+		loadTaskAvailabilityTime(projectId, assigneeId,taskId);
+	});
+}
+
+var loadTaskAvailabilityTime =function(projectId, assigneeId, taskId){
+	var projectStartTime = $("#prjStartTime" + projectId).val();
+	var projectEndTime = $("#prjEndTime" + projectId).val();
+	var dataString = {"assigneeId" : assigneeId, "startDateTime":projectStartTime, "endDateTime":projectEndTime};
+	console.log("taskId" +  taskId);
+	doAjaxRequestWithGlobal("GET", "${applicationHome}/getAssigneesSlot", dataString, function(data) {
+        console.log(data);
+        if (data == "Not Available") {
+        	 $(".avaStatus"+taskId).html(data);
+        	 $(".avaStatus"+taskId).css("color", "red");
+        } else {
+        	$(".avaStatus"+taskId).html("Available from " + data);
+        	$(".avaInputStatus"+taskId).val(data);
+        	$(".avaStatus"+taskId).css("color", "green");
+        }
+    }, function(e) {
+        console.log("ERROR: ", e);
+        alert(e);
+    }, false);
+
+}
+
+$(document).on('change','.taskCloneAssignee',function(){
+	var assigneeId = $(this).val();
+	var projectId = $(this).attr("data-projectId");
+	var taskId =$(this).attr("data-taskid");
+	loadTaskAvailabilityTime(projectId, assigneeId, taskId);
 });
 
 var createNewAssignSection = function(projectId) {
 		var taskId = new Date().getTime();
 		var taskDetailsHidden = $(".taskDetailsHidden").clone();
 		$(taskDetailsHidden).attr("id", "taskId"+taskId);
+		$(taskDetailsHidden).attr("data-taskid", taskId);
 		$(taskDetailsHidden).find(".deleteCloneTaskLink").attr("onclick",'deleteCloneTaskItem("taskId'+taskId+'")');
 		$(taskDetailsHidden).find(".taskCloneAssignee").attr("data-projectId", projectId);
+		$(taskDetailsHidden).find(".taskCloneAssignee").attr("data-taskid", taskId);
+		$(taskDetailsHidden).find(".tskName").val($("#projectCategory"+projectId).val());
+		$(taskDetailsHidden).find(".availabilityStatus").addClass("avaStatus"+taskId);
+		$(taskDetailsHidden).find(".availabilityTime").addClass("avaInputStatus" + taskId);
 		
 		$(taskDetailsHidden).removeClass("taskDetailsHidden");
 		$(taskDetailsHidden).addClass("taskDetails");
@@ -1009,4 +1030,103 @@ var createNewAssignSection = function(projectId) {
 		
 		$("#projectTaskCloneDIv"+projectId).append(taskDetailsHidden);
 	}
+	
+var createDuplicateProjectWithTask = function(projectId, projectCode) {
+	
+	var taskDetails = "";
+	var projectName = $("#prjName"+projectId).val();
+	var projectDuration = $("#prjDuration"+projectId).val();
+	var projectStartTime = $("#prjStartTime"+projectId).val();
+	var projectEndTime = $("#prjEndTime"+projectId).val();
+	
+	$("#prjName"+projectId).removeClass("error");
+	$("#prjDuration"+projectId).removeClass("error");
+	$("#prjStartTime"+projectId).removeClass("error");
+	$("#prjEndTime"+projectId).removeClass("error");
+	var isError = false;
+	if (projectName.trim() == "") {
+		$("#prjName"+projectId).addClass("error");
+		isError = true;
+	}
+	if (projectDuration.trim() == "") {
+		$("#prjDuration"+projectId).addClass("error");
+		isError = true;
+	}
+	if (projectStartTime.trim() == "") {
+		$("#prjStartTime"+projectId).addClass("error");
+		isError = true;
+	}
+	if (projectEndTime.trim() == "") {
+		$("#prjEndTime"+projectId).addClass("error");
+		isError = true;
+	}
+	
+	
+	var projectDurationIntValue = parseInt(projectDuration);
+	var taskDurationIntValue = 0;
+	$("#projectTaskCloneDIv"+projectId+" .taskCloneAssignee").removeClass("error");
+	$("#projectTaskCloneDIv"+projectId+" .tskDuration").removeClass("error");
+	$("#projectTaskCloneDIv"+projectId+" .tskName").removeClass("error");
+	
+	$("#projectTaskCloneDIv"+projectId+" .taskDetails").each(function(){
+		var taskCloneAssignee = $(this).find(".taskCloneAssignee").val();
+		var tskName = $(this).find(".tskName").val();
+		var availabilityTime = $(this).find(".availabilityTime").val();
+		var tskDuration = $(this).find(".tskDuration").val();
+		var tskType = $(this).find(".tskType").val();
+		if (taskDetails != "") {
+			taskDetails+="#TD#";
+		}
+		
+		if (tskName == "") {
+			$(this).find(".tskName").addClass("error");
+			isError = true;
+		}
+		
+		if (tskDuration.trim() == "" || parseInt(tskDuration) <1) {
+			$(this).find(".tskDuration").addClass("error");
+			isError = true;
+		}
+		if (availabilityTime == "") {
+			$(this).find(".taskCloneAssignee").addClass("error");
+			isError = true;
+		}
+		taskDurationIntValue+=parseInt(tskDuration);
+		
+		taskDetails += taskCloneAssignee+"#TDD#"+tskName+"#TDD#"+availabilityTime+"#TDD#"+tskDuration+"#TDD#"+tskType;
+	});
+	
+	
+	$("#projectDurationMsg"+projectId).html("");
+	if (taskDurationIntValue > projectDurationIntValue) {
+		$("#prjDuration"+projectId).addClass("error");
+		$("#projectDurationMsg"+projectId).html("Invalid time assignment");
+		isError=true;
+	}
+	
+	if (taskDurationIntValue < projectDurationIntValue) {
+		$("#prjDuration"+projectId).addClass("error");
+		$("#projectDurationMsg"+projectId).html("Unassigned project time");
+		isError=true;
+	}
+	
+	if (isError){
+		return;
+	}
+	
+	var dataString ={"projectId":projectId,"projectName":projectName,"projectDuration":projectDuration,"projectStartTime":projectStartTime,"projectEndTime":projectEndTime,"taskDetails":taskDetails};
+	
+	doAjaxRequest("POST", "${applicationHome}/quickDuplicateProject", dataString, function(data) {
+		console.log(data);
+		  var responseJson = JSON.parse(data);
+		if (responseJson.status){
+			loadDuplicateProjects(projectId, projectCode, true);
+		}
+	}, function(e) {
+        console.log("ERROR: ", e);
+        alert(e);
+    });
+	
+	console.log(taskDetails);
+}
 </script>

@@ -149,12 +149,6 @@ public class FamstackDashboardManager extends BaseFamstackService
         notifyAll(NotificationType.PROJECT_CREATE, projectDetails);
     }
 
-    public void quickDuplicateProject(ProjectDetails projectDetails)
-    {
-        projectManager.quickDuplicateProject(projectDetails);
-
-    }
-
     public List<ProjectDetails> getProjectsDataList()
     {
         Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
@@ -825,6 +819,15 @@ public class FamstackDashboardManager extends BaseFamstackService
     public Date getAssigneeSlot(int assigneeId, String startDateTime, String endDateTime)
     {
         return famstackUserActivityManager.getAssigneeSlot(assigneeId, startDateTime, endDateTime);
+
+    }
+
+    public void quickDuplicateProject(int projectId, String projectName, int projectDuration, String projectStartTime,
+        String projectEndTime, String taskDetails)
+    {
+
+        projectManager.quickDuplicateProject(projectId, projectName, projectDuration, projectStartTime, projectEndTime,
+            taskDetails);
 
     }
 }

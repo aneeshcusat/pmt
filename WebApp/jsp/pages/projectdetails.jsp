@@ -772,7 +772,7 @@ var clearTaskDetails = function(){
 	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
 	$("#projectDuration").html(${projectDetails.duration});
  	$("#taskDuration").html(${projectDetails.unAssignedDuration});
-	$("#taskName").val("");
+	$("#taskName").val("${projectDetails.category}");
 	$("#description").val("");
 	$("#reviewTask").prop("selectedIndex", 0);
 	$("#priority").prop("selectedIndex", 0);
