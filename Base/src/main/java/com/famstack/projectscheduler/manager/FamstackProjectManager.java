@@ -28,6 +28,7 @@ import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 
 /**
@@ -527,11 +528,11 @@ public class FamstackProjectManager extends BaseFamstackManager
         return jsonProductListObject.toString();
     }
 
-    public List<ProjectDetails> getAllProjectDetailsReportingList(Date startDate, Date endDate)
+    public List<ProjectDetails> getAllProjectDetailsList(Date startDate, Date endDate)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startDate", startDate);
-        dataMap.put("endDate", endDate);
+        dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
 
         List<ProjectDetails> projectDetailsList = new ArrayList<>();
 
@@ -693,8 +694,8 @@ public class FamstackProjectManager extends BaseFamstackManager
     public List<ProjectDetails> getAllProjectDetailsEndTimeWithIn(Date endDate, Date endDate2)
     {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("endDate", endDate);
-        dataMap.put("endDate2", endDate2);
+        dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+        dataMap.put("endDate2", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate2, 0));
 
         List<ProjectDetails> projectDetailsList = new ArrayList<>();
 

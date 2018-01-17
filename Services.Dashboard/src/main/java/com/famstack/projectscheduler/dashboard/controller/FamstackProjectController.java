@@ -110,7 +110,7 @@ public class FamstackProjectController extends BaseFamstackService
     public ModelAndView projectreporting(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
         Model model)
     {
-        List<ProjectDetails> projectData = getProjectReportingData(dateRange);
+        List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
         return new ModelAndView("projectreporting").addObject("projectData", projectData).addObject("dateRange",
             dateRange);
     }
@@ -119,7 +119,7 @@ public class FamstackProjectController extends BaseFamstackService
     public ModelAndView projectreportingVS(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
         Model model)
     {
-        List<ProjectDetails> projectData = getProjectReportingData(dateRange);
+        List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
         return new ModelAndView("projectreportingVS").addObject("projectData", projectData).addObject("dateRange",
             dateRange);
     }
@@ -128,12 +128,12 @@ public class FamstackProjectController extends BaseFamstackService
     public ModelAndView projectreportingDefault(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
         Model model)
     {
-        List<ProjectDetails> projectData = getProjectReportingData(dateRange);
+        List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
         return new ModelAndView("projectreportingDefault").addObject("projectData", projectData).addObject("dateRange",
             dateRange);
     }
 
-    private List<ProjectDetails> getProjectReportingData(String dateRange)
+    private List<ProjectDetails> getAllProjectDetailsList(String dateRange)
     {
         logDebug(dateRange);
         String[] dateRanges;
@@ -152,7 +152,7 @@ public class FamstackProjectController extends BaseFamstackService
             endDate = startDate;
         }
 
-        List<ProjectDetails> projectData = famstackDashboardManager.getProjectsReporingDataList(startDate, endDate);
+        List<ProjectDetails> projectData = famstackDashboardManager.getAllProjectDetailsList(startDate, endDate);
         return projectData;
     }
 
@@ -161,7 +161,7 @@ public class FamstackProjectController extends BaseFamstackService
         @PathVariable(value = "templateName") String templateName, HttpServletRequest request,
         HttpServletResponse response)
     {
-        List<ProjectDetails> projectData = getProjectReportingData(dateRange);
+        List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
         famstackXLSExportManager.exportXLS(templateName, dateRange, projectData, request, response);
     }
 

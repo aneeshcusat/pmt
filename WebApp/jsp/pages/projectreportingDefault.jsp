@@ -51,7 +51,7 @@
 					             	 <span id="reportrange" class="dtrange">                                            
             							<span>${dateRange}</span><b class="caret"></b>
         							</span>
-        							<input style="margin-left:10px" class="btn btn-default" type="submit" value="Search"></button>
+        							<input style="margin-left:10px" class="btn btn-default" type="submit" value="Search"></input>
         							</div>
         							</form>
         							<div class="col-md-1" >

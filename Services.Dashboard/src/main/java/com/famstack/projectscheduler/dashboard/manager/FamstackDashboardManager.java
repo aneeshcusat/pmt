@@ -190,7 +190,7 @@ public class FamstackDashboardManager extends BaseFamstackService
         Collections.sort(projectDetailsList, new Comparator<ProjectDetails>()
         {
             @Override
-            public int compare(ProjectDetails projectDetails1, ProjectDetails projectDetails2)
+            public int compare(ProjectDetails projectDetails2, ProjectDetails projectDetails1)
             {
                 Date date1 = DateUtils.tryParse(projectDetails1.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
                 Date date2 = DateUtils.tryParse(projectDetails2.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
@@ -524,9 +524,9 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectManager.getProjectNameJson(query);
     }
 
-    public List<ProjectDetails> getProjectsReporingDataList(Date startDate, Date endDate)
+    public List<ProjectDetails> getAllProjectDetailsList(Date startDate, Date endDate)
     {
-        List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsReportingList(startDate, endDate);
+        List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startDate, endDate);
         return projectDetailsList;
     }
 
