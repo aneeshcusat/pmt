@@ -169,7 +169,7 @@ site_settings = $("#settingsId").html();
                 cancelClass: 'btn-small',
                 format: 'MM.DD.YYYY',
                 separator: ' to ',
-                startDate: moment().subtract('days', 0),
+                startDate: moment().subtract(6, 'days'),
                 endDate: moment()            
               },function(start, end) {
             	  $("#daterangeText").val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));

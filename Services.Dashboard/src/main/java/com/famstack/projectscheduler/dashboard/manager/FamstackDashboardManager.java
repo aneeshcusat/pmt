@@ -167,12 +167,9 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectDetailsList;
     }
 
-    public List<ProjectDetails> getLatestProjects(boolean isFullLoad)
+    public List<ProjectDetails> getLatestProjects(Date startDate, Date endDate)
     {
-        Date startTime =
-            DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), getFamstackUserSessionConfiguration()
-                .getProjectViewLimit());
-        List<ProjectDetails> projectDetailsList = projectManager.getPrimaryProjectsDetailList(startTime, isFullLoad);
+        List<ProjectDetails> projectDetailsList = projectManager.getPrimaryProjectsDetailList(startDate, endDate);
 
         sortProjectData(projectDetailsList);
         return projectDetailsList;

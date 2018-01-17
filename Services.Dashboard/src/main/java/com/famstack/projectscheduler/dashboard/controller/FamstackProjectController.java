@@ -35,6 +35,7 @@ import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.manager.FamstackXLSExportManager;
+import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
 
@@ -59,10 +60,47 @@ public class FamstackProjectController extends BaseFamstackService
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView projectDashboard()
     {
-        List<ProjectDetails> projectData = famstackDashboardManager.getLatestProjects(false);
-        ModelAndView modelAndView = getProjectPageModelView(projectData);
+        /*
+         * List<ProjectDetails> projectData = famstackDashboardManager.getLatestProjects(false); ModelAndView
+         * modelAndView = getProjectPageModelView(projectData); modelAndView.setViewName("projectdashboard"); return
+         * modelAndView;
+         */
+        Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -6);
+        Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), 0);
+        String dateRange =
+            DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP) + "-"
+                + DateUtils.format(endDate, DateUtils.DATE_FORMAT_DP);
+        ModelAndView modelAndView = getProjectPageModelView(null);
         modelAndView.setViewName("projectdashboard");
-        return modelAndView;
+        return modelAndView.addObject("dateRange", dateRange);
+    }
+
+    @RequestMapping("/projectdashboardList")
+    public ModelAndView projectdashboardList(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
+        Model model)
+    {
+        logDebug(dateRange);
+        String[] dateRanges;
+        Date startDate = null;
+        Date endDate = null;
+        if (StringUtils.isNotBlank(dateRange)) {
+            dateRanges = dateRange.split("-");
+
+            if (dateRanges != null && dateRanges.length > 1) {
+                startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+            }
+        } else {
+            startDate =
+                DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+            endDate = startDate;
+        }
+
+        List<ProjectDetails> projectData = famstackDashboardManager.getLatestProjects(startDate, endDate);
+
+        ModelAndView modelAndView = getProjectPageModelView(projectData);
+        modelAndView.setViewName("response/projectdashboardList");
+        return modelAndView.addObject("dateRange", dateRange);
     }
 
     @RequestMapping(value = "/mileStones", method = RequestMethod.GET)

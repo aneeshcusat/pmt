@@ -1,4 +1,5 @@
-		<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
 	<div class="row" id="projectTaskCloneDIv${project.id}">
 		<div class="col-md-12">
 			<div class="form-group">

@@ -361,17 +361,18 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetailsList;
     }
 
-    public List<ProjectDetails> getPrimaryProjectsDetailList(Date startTime, boolean isFullLoad)
+    public List<ProjectDetails> getPrimaryProjectsDetailList(Date startDate, Date endDate)
     {
         List<ProjectDetails> projectDetailsList = new ArrayList<>();
 
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("startTime", startTime);
+        dataMap.put("startDate", startDate);
+        dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
 
         List<?> projectItemList =
             famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getPrimaryProjectsItems"), dataMap);
 
-        getProjectsList(projectDetailsList, projectItemList, isFullLoad);
+        getProjectsList(projectDetailsList, projectItemList, false);
         return projectDetailsList;
 
         /*
