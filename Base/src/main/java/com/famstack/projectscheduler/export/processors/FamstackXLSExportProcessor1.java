@@ -138,7 +138,11 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
                 sheet.autoSizeColumn(projectDetailsUserColumnCount - 1);
                 for (EmployeeDetails employeeDetails : employees) {
                     Integer projectHours = userProjectHoursMap.get(employeeDetails.getId());
-                    String value = projectHours == null ? "" : String.valueOf(projectHours / 60);
+                    String value =
+                        projectHours == null ? "" : String.valueOf((projectHours / 60 < 10?"0" + (projectHours / 60 ): projectHours / 60 ))
+                            + ":"
+                            + ((projectHours % 60 > 0) ? (projectHours % 60 < 10 ? "0" + (projectHours % 60)
+                                : projectHours % 60) : "00");
                     createProjectDetailsColoumn(sheet, projectDetailsUserColumnCount, value, projectTotalHoursRow,
                         getProjectTotalStyle(workBook));
                     projectDetailsUserColumnCount++;

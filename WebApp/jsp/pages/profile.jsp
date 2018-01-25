@@ -165,7 +165,7 @@ background-color: #F1F1F1;
         
         </div>
            <div  class="col-md-2  col-xs-2">
-               <img src='${assets}/images/empofmonth.png'/>
+             <%--   <img src='${assets}/images/empofmonth.png'/> --%>
            </div>
     </div>   
     
