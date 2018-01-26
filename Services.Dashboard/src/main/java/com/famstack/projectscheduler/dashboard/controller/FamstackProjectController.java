@@ -65,14 +65,20 @@ public class FamstackProjectController extends BaseFamstackService
          * modelAndView = getProjectPageModelView(projectData); modelAndView.setViewName("projectdashboard"); return
          * modelAndView;
          */
+        String dateRange = getDefaultDateRange();
+        ModelAndView modelAndView = getProjectPageModelView(null);
+        modelAndView.setViewName("projectdashboard");
+        return modelAndView.addObject("dateRange", dateRange);
+    }
+
+    private String getDefaultDateRange()
+    {
         Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -6);
         Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), 0);
         String dateRange =
             DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP) + "-"
                 + DateUtils.format(endDate, DateUtils.DATE_FORMAT_DP);
-        ModelAndView modelAndView = getProjectPageModelView(null);
-        modelAndView.setViewName("projectdashboard");
-        return modelAndView.addObject("dateRange", dateRange);
+        return dateRange;
     }
 
     @RequestMapping("/projectdashboardList")
@@ -144,31 +150,22 @@ public class FamstackProjectController extends BaseFamstackService
         return new ModelAndView("applicationConfig").addObject("accountData", accountData);
     }
 
-    @RequestMapping("/projectreporting")
-    public ModelAndView projectreporting(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
-        Model model)
+    @RequestMapping(value = "/projectreporting", method = RequestMethod.GET)
+    public ModelAndView projectreporting(@RequestParam(value = "daterange", defaultValue = "") String dateRange)
     {
-        List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
-        return new ModelAndView("projectreporting").addObject("projectData", projectData).addObject("dateRange",
-            dateRange);
+        if (!StringUtils.isNotBlank(dateRange)) {
+            dateRange = getDefaultDateRange();
+        }
+        return new ModelAndView("projectreporting").addObject("dateRange", dateRange);
     }
 
-    @RequestMapping("/projectreportingVS")
+    @RequestMapping(value = "/projectreportingResponse", method = RequestMethod.GET)
     public ModelAndView projectreportingVS(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
-        Model model)
+        @RequestParam(value = "format", defaultValue = "default") String format, Model model)
     {
         List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
-        return new ModelAndView("projectreportingVS").addObject("projectData", projectData).addObject("dateRange",
-            dateRange);
-    }
-
-    @RequestMapping("/projectreportingDefault")
-    public ModelAndView projectreportingDefault(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
-        Model model)
-    {
-        List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
-        return new ModelAndView("projectreportingDefault").addObject("projectData", projectData).addObject("dateRange",
-            dateRange);
+        return new ModelAndView("response/reporting" + format).addObject("projectData", projectData).addObject(
+            "dateRange", dateRange);
     }
 
     private List<ProjectDetails> getAllProjectDetailsList(String dateRange)
