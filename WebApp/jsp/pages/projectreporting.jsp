@@ -41,7 +41,6 @@
                                 
                                 	<div class="col-md-6" >
                                  	</div>
-                                 	<form action="" method="post">
                                  	<div class="col-md-2" >
 					                 <span style="margin-top: 9px;margin-right:  10px;float:right"></>Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;</span>
 					                 <input type="text" name="daterange" id="daterangeText" style="display: none" value="${dateRange}" /> 
@@ -51,67 +50,15 @@
 					             	 <span id="reportrange" class="dtrange">                                            
             							<span>${dateRange}</span><b class="caret"></b>
         							</span>
-        								<input style="margin-left:10px" class="btn btn-default" type="submit" value="Search"></input>
+        								<input style="margin-left:10px" class="btn btn-default" type="button" onclick="getProjectReportingData('${param.format}');" value="Search"></input>
         							</div>
-									</form>
         							<div class="col-md-1" >
-        							<button onclick="exportReport('team2')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
+        								<c:if test="${not empty param.format  && (param.format eq 'visualServices' || param.format eq 'team2')}">
+        									<button onclick="exportReport('${param.format}')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
+        								</c:if>
         							</div>
                                 </div>
-                                <div class="panel-body panel-body-table">
-                                    <table id="projectsTable" class="table table-striped">
-                                        <thead>			
-                                            <tr>
-                                            	<th>Date</th>
-                                            	<th>Project Code</th>
-                                                <th>ID</th>
-                                                <th>PO ID</th>
-                                                <th>Analyst</th>
-                                                <th>Lead</th>
-                                                <th>Productivity Type</th>
-                                                <th>Project Type</th>
-                                                <th>Client BU</th>
-                                                <th>Client POC</th>
-                                                <th>Requestor</th>
-                                                <th>Project Name</th>
-                                                <th>Hours Spent</th>
-                                                <th>Utilization</th>
-                                                <th>Analyst Comment</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <c:if test="${not empty projectData}">
-										<tbody>
-        								<c:forEach var="project" items="${projectData}">
-	        								 <c:set var="projectState" value="info"/>
-								             <c:if test="${project.status == 'COMPLETED' }">
-								             	<c:set var="projectState" value="success"/>
-								              </c:if>
-								              <c:if test="${project.projectMissedTimeLine == true }">
-								              	<c:set var="projectState" value="danger"/>
-								              </c:if>
-        									   <tr>
-				                               	<td>${project.startTime}</td>
-                                                <td><a href="${applicationHome}/project/${project.id}" target="_new">${project.code}</a></td>
-                                                <td>${project.id}</td>
-                                                <td>${project.PONumber}</td>
-                                                <td><c:forEach var="contributer" items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if></c:forEach></td>
-                                                <td>${employeeMap[project.projectLead].firstName}</td>
-                                                <td>${project.type}</td>
-                                                <td>${project.category}</td>
-                                                <td>${project.accountName}</td>
-                                                <td>${project.clientName}</td>
-                                                <td>${project.reporterName}</td>
-                                                <td>${project.name}</td>
-                                                <td>${project.actualDurationInHrs}</td>
-                                                <td></td>
-                                                <td></td>
-				                              	<td> <span class="label label-${projectState}">${project.status}</span></td>
-                                            </tr>  
-                                           </c:forEach>
-                                        </tbody>
-                                        </c:if>
-                                    </table>                                    
+                                <div class="panel-body panel-body-table" id="reportingBodyDiv">
                                     
                                 </div>
                             </div>
@@ -134,19 +81,36 @@
 
 <script type="text/javascript">
         
+        
+var getProjectReportingData = function(format){
+	 loadAllProjectDetails($('#daterangeText').val(), format);
+}
+        
+var loadAllProjectDetails = function(daterange, format) {
+	
+	var dataString = {"daterange" : daterange, "format":format};
+	doAjaxRequest("GET", "${applicationHome}/projectreportingResponse", dataString, function(data) {
+        $("#reportingBodyDiv").html(data);
+        document.title = "Export_" + daterange;
+        $('#projectsTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 'copy', 'csv', 'print'
+            ],
+            "pageLength": 100
+        });
+        
+	}, function(e) {
+        console.log("ERROR: ", e);
+        alert(e);
+    });
+}
 $(function() {
     $('input[name="daterange"]').daterangepicker();
-   
+    loadAllProjectDetails('${dateRange}','${param.format}');
 });
 
-$('#projectsTable').DataTable({
-    dom: 'Bfrtip',
-    buttons: [
-         'copy', 'csv', 'pdf', 'print'
-    ],
-    "pageLength": 100
-});
 $(document).ready(function(){
-	document.title = "Export_" + $("#daterangeText").val();
+	
 });
 </script>
