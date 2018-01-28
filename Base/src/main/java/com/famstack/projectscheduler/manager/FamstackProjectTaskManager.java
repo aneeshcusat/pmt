@@ -85,7 +85,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskItemNew.setProjectItem(projectItem);
             taskItemNew.setReviewTask(false);
             taskItemNew.setExtraTimeTask(true);
-            taskItemNew.setDuration(taskDetails.getDuration());
+            taskItemNew.setDuration(durationNewMinutes / 60);
+            taskItemNew.setActualTimeTaken(durationNewMinutes);
             taskItemNew.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
             taskItemNew.setAssignee(taskDetails.getAssignee());
         } else {
@@ -95,7 +96,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             }
             taskItemNew.setHelpers(helpers);
 
-            int duration = taskItemNew.getDuration() + (taskDetails.getDuration() / 60);
+            int durationInMins = taskItemNew.getDuration() * 60 + durationNewMinutes;
             List<UserTaskActivityItem> userTaskActivityItems =
                 (List<UserTaskActivityItem>) famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItemNew
                     .getTaskId());
@@ -103,13 +104,14 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                 for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
                     if (userTaskActivityItem.getUserActivityItem().getUserItem().getId() == taskDetails.getAssignee()) {
                         userTaskActivityItemOld = userTaskActivityItem;
-                        duration -= (userTaskActivityItemOld.getDurationInMinutes() / 60);
+                        durationInMins -= (userTaskActivityItemOld.getDurationInMinutes());
                         break;
                     }
                 }
             }
 
-            taskItemNew.setDuration(duration);
+            taskItemNew.setDuration(durationInMins / 60);
+            taskItemNew.setActualTimeTaken(durationInMins);
         }
 
         famstackDataAccessObjectManager.saveOrUpdateItem(taskItemNew);
