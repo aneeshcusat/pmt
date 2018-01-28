@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
+import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
@@ -28,6 +29,7 @@ import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 
@@ -52,6 +54,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     @Resource
     FamstackProjectTaskManager famstackProjectTaskManager;
+
+    @Resource
+    FamstackNotificationServiceManager famstackNotificationServiceManager;
 
     public void createProjectItem(ProjectDetails projectDetails)
     {
@@ -107,6 +112,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED,
                 "Duplicated from " + projectDetails.getProjectId());
 
+            List<TaskDetails> allTaskDetailsList = new ArrayList<>();
             if (taskDetailsList != null && !taskDetailsList.isEmpty()) {
                 String[] taskList = taskDetailsList.split("#TD#");
 
@@ -123,6 +129,7 @@ public class FamstackProjectManager extends BaseFamstackManager
                             taskDetails.setProjectId(projectId);
 
                             famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
+                            allTaskDetailsList.add(taskDetails);
                         }
                     }
                 }
@@ -130,8 +137,23 @@ public class FamstackProjectManager extends BaseFamstackManager
 
             updateProjectStatusBasedOnTaskStatus(projectId);
 
+            notifyProjectTaskAssignment(getProjectDetails(projectId), allTaskDetailsList);
+
         }
 
+    }
+
+    private void notifyProjectTaskAssignment(ProjectDetails projectDetails, List<TaskDetails> allTaskDetailsList)
+    {
+        if (projectDetails != null) {
+            for (TaskDetails taskDetails : allTaskDetailsList) {
+
+                Map<String, Object> projectTaskMap = new HashMap<>();
+                projectTaskMap.put("taskDetails", taskDetails);
+                projectTaskMap.put("projectDetails", projectDetails);
+                famstackNotificationServiceManager.notifyAll(NotificationType.TASK_ASSIGNED, projectTaskMap, null);
+            }
+        }
     }
 
     private void saveProjectItem(ProjectDetails projectDetails, ProjectItem projectItem)

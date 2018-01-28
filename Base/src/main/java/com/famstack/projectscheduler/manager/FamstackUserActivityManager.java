@@ -282,7 +282,9 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                         taskActivitiesList.add(taskActivityDetails);
                         taskActivityDetails.setDateId(DateUtils.format(userActivityItem.getCalenderDate(),
                             DateUtils.DATE_FORMAT));
-                        taskActivityDetails.setUserId(userActivityItem.getUserItem().getId());
+                        if (userActivityItem.getUserItem() != null) {
+                            taskActivityDetails.setUserId(userActivityItem.getUserItem().getId());
+                        }
                     }
                 }
 
@@ -306,8 +308,12 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         taskActivityDetails.setActualStartTime(userTaskActivityItem.getActualStartTime());
         taskActivityDetails.setRecordedStartTime(userTaskActivityItem.getRecordedStartTime());
         taskActivityDetails.setRecordedEndTime(userTaskActivityItem.getRecordedEndTime());
-        taskActivityDetails.setUserId(userTaskActivityItem.getUserActivityItem().getUserItem().getId());
+        if (userTaskActivityItem.getUserActivityItem() != null
+            && userTaskActivityItem.getUserActivityItem().getUserItem() != null) {
+            taskActivityDetails.setUserId(userTaskActivityItem.getUserActivityItem().getUserItem().getId());
+        }
         return taskActivityDetails;
+
     }
 
     public UserTaskActivityItem getUserTaskActivityItem(int taskActivityItemId)

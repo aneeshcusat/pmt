@@ -118,6 +118,28 @@ width: 60%;
     padding: 11px 15px 12px;
     border-top: 1px solid #e1e3e4;
 }
+
+.durationTxt, .dateTimeTaskEditPicker{
+	font-weight: bold;
+	width:30px;
+	margin-right: 5px;
+	height: 30px;
+    line-height: 18px;
+    box-shadow: none;
+    -webkit-appearance: none;
+    border: 1px solid #D5D5D5;
+    background: #F9F9F9;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	border-radius: 4px;
+	color: #555;
+	font-size: 10px;
+	padding: 0px 2px 2px 5px;
+	display:none;
+}
+.dateTimeTaskEditPicker {
+	width: 100px;
+	margin-bottom: 5px;
+}
 	</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
@@ -458,82 +480,7 @@ width: 60%;
                                                </td>
                                             	</c:if>
                                             </tr>
-                                            <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
-                                            <input id="${taskDetails.taskId}isReviewTask" type="hidden" value="${taskDetails.reviewTask}"/>
-                                            <input id="${taskDetails.taskId}timeTaken" type="hidden" value="${taskDetails.actualTimeTakenInHrs}"/>
-                                            <input id="${taskDetails.taskId}description" type="hidden" value="${taskDetails.description}"/>
-                                            <input id="${taskDetails.taskId}startTime" type="hidden" value="${taskDetails.startTime}"/>
-                                            <input id="${taskDetails.taskId}completionTime" type="hidden" value="${taskDetails.completionTime}"/>
-                                            <input id="${taskDetails.taskId}duration" type="hidden" value="${taskDetails.duration}"/>
-                                            <input id="${taskDetails.taskId}priority" type="hidden" value="${taskDetails.priority}"/>
-                                            <input id="${taskDetails.taskId}assignee" type="hidden" value="${taskDetails.assignee}"/>
-                                            <input id="${taskDetails.taskId}assigneeName" type="hidden" value="${userDetailsMap[taskDetails.assignee].firstName}"/>
-                                            <input id="${taskDetails.taskId}helper" type="hidden" value="${taskDetails.helpersList}"/>
-                                            <c:set var="helpersNames" value=""/>
-                                            <input id="${taskDetails.taskId}helperNames" type="hidden" value="${taskDetails.helperNames}"/>
-                                            
-                                            <div id="taskDetailsContent${taskDetails.taskId}" class="hide">
-									         <ul href="#" class="list-group-item">  
-									             <span class="contacts-title">${taskDetails.name}</span>
-									             <p>${taskDetails.description}</p> 
-									             <p>Duration : ${taskDetails.duration} Hours</p> 
-									             <p>Time Taken : ${taskDetails.actualTimeTakenInHrs} Hours</p> 
-									         	  <c:if test="${not taskDetails.extraTimeTask}">
-									             <p>Start at : ${taskDetails.startTime}</p>
-									             <p>End at   : ${taskDetails.completionTime}</p>
-									             <p>Review   : ${taskDetails.reviewTask}</p>
-									             </c:if>
-									                                                 
-									         </ul>
-									         <c:if test="${not empty taskDetails.taskActivityDetails}">
-	                                 			<c:forEach var="taskActivityDetail" items="${taskDetails.taskActivityDetails}" varStatus="taskIndex"> 
-										          <ul class="list-group-item taskActivityTime${taskActivityDetail.taskActivityId}">                                    
-										             <img alt="image" src="${applicationHome}/image/${taskActivityDetail.userId}" class="pull-left"  onerror="this.src='${assets}/images/users/no-image.jpg'">
-										            <span class="contacts-title">${taskActivityDetail.userTaskType} Task Activity</span>
-										           	<c:choose>
-										            	<c:when test="${not empty taskActivityDetail.actualEndTime}">
-										            		<p>Status : COMPLETED</p>
-										            	</c:when>
-										            	<c:when test="${not empty taskActivityDetail.actualStartTime}">
-										            		<p>Status : INPROGRESS</p>
-										            	</c:when>
-										            	<c:when test="${empty taskActivityDetail.actualStartTime}">
-										            		<p>Status : NEW</p>
-										            	</c:when>
-										            </c:choose>
-										              <c:if test="${not taskDetails.extraTimeTask}">
-											            <c:if test="${not empty taskActivityDetail.actualStartTime}">
-											        		<p>Actual start time :${taskActivityDetail.actualStartTime}</p>
-											            </c:if>
-	     												<c:if test="${not empty taskActivityDetail.actualEndTime}">
-											        		<p>Actual end time :${taskActivityDetail.actualEndTime}</p>
-											            </c:if>
-	     												<c:if test="${not empty taskActivityDetail.recordedStartTime}">
-											        		<p>Recorded end time :${taskActivityDetail.recordedStartTime}</p>
-											            </c:if>
-	     												<c:if test="${not empty taskActivityDetail.recordedEndTime}">
-											        		<p>Recorded end time :${taskActivityDetail.recordedEndTime}</p>
-											            </c:if>
-											             <c:if test="${not empty taskActivityDetail.recordedStartTime}">
-											        		<p>In progress Comment :${taskActivityDetail.inprogressComment}</p>
-											            </c:if>
-										            </c:if>
-										            <c:if test="${not empty taskActivityDetail.actualEndTime}">
-											        	<p>Time Taken : ${taskActivityDetail.actualTimeTakenInHrs} Hours</p> 
-											        </c:if>
-											        
-     												<c:if test="${not empty taskActivityDetail.recordedEndTime}">
-										        		<p>Completion Comment :${taskActivityDetail.completionComment}</p> 
-										            </c:if>
-										             <div class="list-group-controls">
-										             	<c:if test="${taskDetails.extraTimeTask}">
-											             <button style="background-color: transparent;border: 0px;" data-box="#confirmationbox" class="mb-control deleteTaskActivity" onclick="deleteTaskActivity('${taskActivityDetail.taskActivityId}');"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></button>
-										             	</c:if>
-										             </div>                                    
-										         </ul>   
-									         </c:forEach>
-									         </c:if>  
-                                            </div>
+                                            <%@include file="response/taskActivityDetailsResponse.jsp"%>
                                  			</c:forEach>
                                  		</c:if>
                                        </tbody>
@@ -670,11 +617,13 @@ width: 60%;
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 					<h4 class="modal-title" id="myModalLabel">Task Activity Details</h4>
 				</div>
-				<div class="">
 					<%@include file="fagments/taskActivityDetailsModal.jspf"%>
-				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">Cancel</button>
@@ -1482,9 +1431,9 @@ var loadTaskActivityDetails = function(taskId) {
 	$("#projectActivityModalContent").html($("#taskDetailsContent"+taskId).html());
 }
 
-function deleteTaskActivity(activityId){
+function deleteTaskActivity(activityId, activityName){
 	$(".msgConfirmText").html("Delete task activity");
-	$(".msgConfirmText1").html(activityId);
+	$(".msgConfirmText1").html(activityName);
 	$("#confirmYesId").prop("href","javascript:deleteTaskActivityAjax('"+activityId+"')");
 }
 
@@ -1522,23 +1471,54 @@ $(document).ready(function(){
 	/* END MESSAGE BOX */
 });
 
-/*
-var addExtraTaskTime = function(){
-	
-	extraTaskStartTime
-	extraTaskEndTime
-	var dataString = {taskId:$(newUserId:$("#taskAssignee").val()};
-	doAjaxRequest("POST", "${applicationHome}/addExtraTaskTime", dataString, function(data) {
-        var responseJson = JSON.parse(data);
-        if (responseJson.status){
-        	$(".modal").modal('hide');
-        } else {
-        	return false;
-        }
-       
-    }, function(e) {
-    });
+var taskActualTimeSubmit = function(taskId){
+	var mins = $("#"+taskId+"actualTimeMins").val();
+	var hours = $("#"+taskId+"actualTimeHour").val();
 }
 
-*/
+var showTaskActualTimeEdit = function(taskId){
+	$("."+taskId+"taskTimeEdit").show();
+	$("."+taskId+"taskTimeEditLink").hide();
+}
+
+var hideTaskActualTimeEdit = function(taskId){
+	$("."+taskId+"taskTimeEdit").hide();
+	$("."+taskId+"taskTimeEditLink").show();
+}
+
+var showTaskActualTimeEditDate = function(taskActId) {
+	$("."+taskActId+"taskTimeEditDateLink").hide();
+	$("."+taskActId+"taskTimeEdit").hide();
+	$("."+taskActId+"taskTimeEditLink").show();
+	$("."+taskActId+"taskTimeEditDate").show();
+	$("."+taskActId+"taskActTimeEdit").show();	
+	$("."+taskActId+"taskTimeEditDateStart").val($("."+taskActId+"taskTimeEditDateStartLink").val());
+	$("."+taskActId+"taskTimeEditDateEnd").val($("."+taskActId+"taskTimeEditDateEndLink").val());
+	
+	$("."+taskActId+"taskTimeEditDate").datetimepicker({onGenerate:function( ct ){
+		$(this).find('.xdsoft_date.xdsoft_weekend')
+		.addClass('xdsoft_disabled');
+		},
+		minDate:startProjectTime, // yesterday is minimum date
+		maxDate:completionProjectTime,
+		allowTimes:['08:00','09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00']
+	});
+}
+
+var showTaskActActualTimeEdit = function(taskActId) {
+	$("."+taskActId+"taskTimeEditDateLink").show();
+	$("."+taskActId+"taskTimeEditLink").hide();
+	$("."+taskActId+"taskTimeEditDate").hide();
+	$("."+taskActId+"taskTimeEdit").show();	
+	$("."+taskActId+"taskActTimeEdit").show();	
+}
+
+var hideTaskActActualTimeEdit = function(taskActId) {
+	$("."+taskActId+"taskTimeEditDateLink").show();
+	$("."+taskActId+"taskTimeEditLink").show();
+	$("."+taskActId+"taskTimeEditDate").hide();
+	$("."+taskActId+"taskTimeEdit").hide();	
+	$("."+taskActId+"taskActTimeEdit").hide();	
+}
 </script>
+
