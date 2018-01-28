@@ -158,9 +158,6 @@
 		</c:forEach>
 	</tbody>
         </c:if>
-		<c:if test="${empty modelViewMap.projectDetailsData}">
-		  There are no assigned projects
-		</c:if>
 	</table>
 	</div>
 	</div>
