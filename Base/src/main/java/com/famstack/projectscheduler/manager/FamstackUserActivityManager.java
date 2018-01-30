@@ -421,7 +421,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return userWorkDetailsMap;
     }
 
-    public void deleteTaskActivity(int activityId)
+    public UserTaskActivityItem deleteTaskActivity(int activityId)
     {
         UserTaskActivityItem userTaskActivityItem =
             (UserTaskActivityItem) getFamstackDataAccessObjectManager().getItemById(activityId,
@@ -440,6 +440,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
             getFamstackDataAccessObjectManager().deleteItem(userTaskActivityItem);
         }
+        return userTaskActivityItem;
     }
 
     public Date getAssigneeSlot(int assigneeId, String startDateString, String completionDateString)
