@@ -39,15 +39,17 @@
 		<p>
 			Time Taken : <span  class="${taskDetails.taskId}taskTimeEditLink"><b>${taskDetails.actualTimeTakenInHrs}</b> Hours </span>
 			<input type="text" placeholder="hh" value="" class="durationTxt ${taskDetails.taskId}taskTimeEdit"/>
-			<input type="text" placeholder="mm" class="durationTxt ${taskDetails.taskId}taskTimeEdit" value=""/> 
+			<input type="text" placeholder="mm" class="durationTxt ${taskDetails.taskId}taskTimeEdit" value=""/>
+			<span style="text-align:right; display:none" class="${taskDetails.taskId}taskTimeEdit">
+				<button style="background-color: transparent; border: 0px;" onclick="taskActualTimeSubmit('${taskDetails.taskId}')" value="Save"><i class="fa fa-check fa-2x" style="color: green" aria-hidden="true"></i></button>
+				<button style="background-color: transparent; border: 0px;" onclick="hideTaskActualTimeEdit('${taskDetails.taskId}')" value="Cancel"><i class="fa fa-undo fa-2x" style="color: gray" aria-hidden="true"></i></button>
+			</span>
 			<a href="javascript:void(0)" onclick="showTaskActualTimeEdit('${taskDetails.taskId}')" style="margin-left: 10px" class="${taskDetails.taskId}taskTimeEditLink"><span class="fa fa-pencil"></span></a></p>
 		<c:if test="${not taskDetails.extraTimeTask}">
 			<p>	Est Start Time : <b>${taskDetails.startTime}</b></p>
 			<p>Est Complete Time : ${taskDetails.completionTime}</p>
 			<p>Review : ${taskDetails.reviewTask}</p>
 		</c:if>
-		
-		<p style="text-align:right; display:none" class="${taskDetails.taskId}taskTimeEdit"><input onclick="taskActualTimeSubmit('${taskDetails.taskId}')" type="submit" value="Save"/><input onclick="hideTaskActualTimeEdit('${taskDetails.taskId}')" type="button" value="Cancel"/></p>
 	</ul>
 
 	<c:if test="${not empty taskDetails.taskActivityDetails}">
@@ -117,7 +119,10 @@
 						<i class="fa fa-times fa-2x" style="color: red" aria-hidden="true"></i>
 					</button>
 				</div>
-				<p style="text-align:right; display:none" class="${taskActivityDetail.taskActivityId}taskActTimeEdit"><input onclick="taskActualTimeSubmit('${taskDetails.taskId}')" type="submit" value="Save"/><input onclick="hideTaskActActualTimeEdit('${taskActivityDetail.taskActivityId}')" type="button" value="Cancel"/></p>
+				<p style="text-align:right; display:none" class="${taskActivityDetail.taskActivityId}taskActTimeEdit">
+				<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmit('${taskActivityDetail.taskActivityId}')" value="Save"><i class="fa fa-check fa-2x" style="color: green" aria-hidden="true"></i></button>
+				<button style="background-color: transparent; border: 0px;" onclick="hideTaskActActualTimeEdit('${taskActivityDetail.taskActivityId}')" value="Cancel"><i class="fa fa-undo fa-2x" style="color: gray" aria-hidden="true"></i></button>
+				</p>
 			</ul>
 		</c:forEach>
 	</c:if>

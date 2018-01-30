@@ -31,7 +31,9 @@ import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
+import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
@@ -47,6 +49,7 @@ import com.famstack.projectscheduler.manager.FamstackGroupMessageManager;
 import com.famstack.projectscheduler.manager.FamstackProjectCommentManager;
 import com.famstack.projectscheduler.manager.FamstackProjectFileManager;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
+import com.famstack.projectscheduler.manager.FamstackProjectTaskManager;
 import com.famstack.projectscheduler.manager.FamstackUserActivityManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
@@ -92,6 +95,9 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     @Resource
     FamstackUserActivityManager famstackUserActivityManager;
+
+    @Resource
+    FamstackProjectTaskManager famstackProjectTaskManager;
 
     public Map<String, Object> getUserData()
     {
@@ -804,7 +810,14 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     public void deleteTaskActivity(int activityId)
     {
-        famstackUserActivityManager.deleteTaskActivity(activityId);
+        UserTaskActivityItem userTaskActivityItem = famstackUserActivityManager.deleteTaskActivity(activityId);
+        if (userTaskActivityItem != null) {
+            int taskId = userTaskActivityItem.getTaskId();
+            TaskItem taskItem = famstackProjectTaskManager.getTaskItemById(taskId);
+            taskItem.setDuration(taskItem.getDuration() - (userTaskActivityItem.getDurationInMinutes() / 60));
+            taskItem.setActualTimeTaken(taskItem.getActualTimeTaken() - userTaskActivityItem.getDurationInMinutes());
+            famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+        }
 
     }
 

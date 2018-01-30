@@ -511,8 +511,26 @@ public class FamstackProjectManager extends BaseFamstackManager
     {
         Map<String, List<TaskDetails>> projectTaskDetailsMap = famstackProjectTaskManager.getAllProjectTask(userId);
         List<TaskDetails> backLogTasks = famstackProjectTaskManager.getBaklogProjectTasks(userId);
+        moveInProgressBackLogTasksToInProgress(projectTaskDetailsMap, backLogTasks);
         projectTaskDetailsMap.put("BACKLOG", backLogTasks);
         return projectTaskDetailsMap;
+    }
+
+    private void moveInProgressBackLogTasksToInProgress(Map<String, List<TaskDetails>> projectTaskDetailsMap,
+        List<TaskDetails> backLogTasks)
+    {
+        List<TaskDetails> inProgressTaskList = new ArrayList<TaskDetails>();
+
+        if (backLogTasks != null) {
+            for (TaskDetails taskDetails : backLogTasks) {
+                if (taskDetails.getStatus() == TaskStatus.INPROGRESS) {
+                    inProgressTaskList.add(taskDetails);
+                }
+            }
+
+            projectTaskDetailsMap.get(TaskStatus.INPROGRESS.value()).addAll(inProgressTaskList);
+            backLogTasks.removeAll(inProgressTaskList);
+        }
     }
 
     public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, Date adjustStartTime,
