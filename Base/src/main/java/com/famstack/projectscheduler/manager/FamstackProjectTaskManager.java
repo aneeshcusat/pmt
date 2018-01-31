@@ -205,6 +205,24 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
     }
 
+    public TaskActivityDetails playTask(int taskId, int taskActivityId)
+    {
+        TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager.getItemById(taskId, TaskItem.class);
+        UserTaskActivityItem userTaskActivityItem =
+            famstackUserActivityManager.completeTaskActivityAndStartNewTaskActivity(taskActivityId, taskItem);
+
+        return famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
+    }
+
+    public void pauseTask(TaskDetails taskDetails)
+    {
+        TaskItem taskItem =
+            (TaskItem) famstackDataAccessObjectManager.getItemById(taskDetails.getTaskId(), TaskItem.class);
+        taskItem.setTaskPausedTime(new Timestamp(new Date().getTime()));
+
+        famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+    }
+
     private void updateUserActivity(TaskDetails taskDetails, Date startDate, ProjectType projectType)
     {
 
@@ -308,6 +326,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setTaskId(taskItem.getTaskId());
             taskDetails.setName(taskItem.getName());
             taskDetails.setDuration(taskItem.getDuration());
+            taskDetails.setTaskPausedTime(taskItem.getTaskPausedTime());
             String startDateString = DateUtils.format(taskItem.getStartTime(), DateUtils.DATE_TIME_FORMAT);
             String completionDateString = DateUtils.format(taskItem.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
             taskDetails.setStartTime(startDateString);
@@ -652,4 +671,5 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
 
     }
+
 }

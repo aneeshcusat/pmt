@@ -23,6 +23,8 @@ public class TaskDetails
 
     private Timestamp lastModifiedDate;
 
+    private Timestamp taskPausedTime;
+
     private String reporterName;
 
     private ProjectPriority priority;
@@ -359,5 +361,15 @@ public class TaskDetails
             return "R";
         }
         return "P";
+    }
+
+    public Timestamp getTaskPausedTime()
+    {
+        return taskPausedTime;
+    }
+
+    public void setTaskPausedTime(Timestamp taskPausedTime)
+    {
+        this.taskPausedTime = taskPausedTime;
     }
 }

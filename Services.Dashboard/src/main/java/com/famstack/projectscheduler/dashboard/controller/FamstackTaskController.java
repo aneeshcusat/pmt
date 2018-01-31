@@ -124,6 +124,21 @@ public class FamstackTaskController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/playTask", method = RequestMethod.POST)
+    @ResponseBody
+    public String playTask(@RequestParam("taskId") int taskId, @RequestParam("taskActivityId") int taskActivityId)
+    {
+        return famstackDashboardManager.playTask(taskId, taskActivityId);
+    }
+
+    @RequestMapping(value = "/pauseTask", method = RequestMethod.POST)
+    @ResponseBody
+    public String pauseTask(@RequestParam("taskId") int taskId)
+    {
+        famstackDashboardManager.pauseTask(taskId);
+        return "{\"status\": true}";
+    }
+
     @RequestMapping(value = "/createNonBillableTask", method = RequestMethod.POST)
     @ResponseBody
     public String createNonBillableTask(@RequestParam("userId") int userId, @RequestParam("type") String type,

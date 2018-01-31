@@ -16,6 +16,7 @@ import com.famstack.projectscheduler.contants.LeaveType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
+import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
@@ -25,6 +26,7 @@ import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.security.user.UserRole;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.TimeInType;
 
 public class FamstackUserActivityManager extends BaseFamstackManager
 {
@@ -378,8 +380,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
                     Date completionTime = userTaskActivityItem.getActualEndTime();
                     Date startTime = userTaskActivityItem.getActualStartTime();
+
                     if (completionTime != null && startTime != null) {
                         actualDuration += completionTime.getTime() - startTime.getTime();
+                        userTaskActivityItem.setDurationInMinutes(DateUtils.getTimeDifference(TimeInType.MINS,
+                            completionTime.getTime(), startTime.getTime()));
                     }
 
                 }
@@ -390,6 +395,36 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
 
         return (actualDuration > 0 ? Math.round(actualDuration / 60 / 1000) : 0);
+    }
+
+    public UserTaskActivityItem completeTaskActivityAndStartNewTaskActivity(int taskActivityId, TaskItem taskItem)
+    {
+        UserTaskActivityItem currentUserTaskActivityItem = getUserTaskActivityItem(taskActivityId);
+        int previousTaskDuration = currentUserTaskActivityItem.getDurationInMinutes();
+        long previousTaskStartTime = currentUserTaskActivityItem.getActualStartTime().getTime();
+        long previousTaskPausedTime = taskItem.getTaskPausedTime().getTime();
+        int prevoisTaskActualDuration =
+            DateUtils.getTimeDifference(TimeInType.MINS, previousTaskPausedTime, previousTaskStartTime);
+
+        int newTaskDuration = previousTaskDuration - prevoisTaskActualDuration;
+        Date startDate = new Date();
+
+        currentUserTaskActivityItem.setActualEndTime(taskItem.getTaskPausedTime());
+        currentUserTaskActivityItem.setRecordedEndTime(taskItem.getTaskPausedTime());
+        currentUserTaskActivityItem.setCompletionComment("Paused task Completed");
+        currentUserTaskActivityItem.setDurationInMinutes(prevoisTaskActualDuration);
+        famstackDataAccessObjectManager.saveOrUpdateItem(currentUserTaskActivityItem);
+
+        UserTaskActivityItem userTaskActivityItem =
+            createUserActivityItem(taskItem.getAssignee(), startDate, taskItem.getTaskId(), taskItem.getName(),
+                newTaskDuration, currentUserTaskActivityItem.getType(), taskItem.getProjectItem().getType());
+        taskItem.setTaskPausedTime(null);
+        famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+
+        userTaskActivityItem.setActualStartTime(new Timestamp(new Date().getTime()));
+        userTaskActivityItem.setRecordedStartTime(new Timestamp(new Date().getTime()));
+        famstackDataAccessObjectManager.saveOrUpdateItem(userTaskActivityItem);
+        return userTaskActivityItem;
     }
 
     public Map<Object, UserWorkDetails> getUserBillableProductiveHours(Date startTime, Date endTime)

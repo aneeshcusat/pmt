@@ -28,6 +28,7 @@ import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
+import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
@@ -231,6 +232,17 @@ public class FamstackProjectManager extends BaseFamstackManager
     public void reAssignTask(TaskDetails taskDetails, int newUserId, int taskActivityId, TaskStatus taskStatus)
     {
         famstackProjectTaskManager.reAssignTask(taskDetails, newUserId, taskActivityId, taskStatus);
+    }
+
+    public TaskActivityDetails playTask(int taskId, int taskActivityId)
+    {
+        return famstackProjectTaskManager.playTask(taskId, taskActivityId);
+
+    }
+
+    public void pauseTask(TaskDetails taskDetails)
+    {
+        famstackProjectTaskManager.pauseTask(taskDetails);
     }
 
     private void updateProjectStatusBasedOnTaskStatus(int projectId)

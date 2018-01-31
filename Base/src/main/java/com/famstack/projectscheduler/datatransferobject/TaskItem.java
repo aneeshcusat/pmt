@@ -60,6 +60,9 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
 
+    @Column(name = "task_paused_time")
+    private Timestamp taskPausedTime;
+
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
     @JoinColumn(name = "reporter")
     private UserItem reporter;
@@ -290,6 +293,16 @@ public class TaskItem implements FamstackBaseItem
     public void setTaskRemainingTime(Integer taskRemainingTime)
     {
         this.taskRemainingTime = taskRemainingTime;
+    }
+
+    public Timestamp getTaskPausedTime()
+    {
+        return taskPausedTime;
+    }
+
+    public void setTaskPausedTime(Timestamp taskPausedTime)
+    {
+        this.taskPausedTime = taskPausedTime;
     }
 
 }

@@ -124,4 +124,28 @@ public final class DateUtils extends BaseFamstackService
         }
         return null;
     }
+
+    public static int getTimeDifference(TimeInType typeInType, long latestTime, long previousTime)
+    {
+        long milliseconds = latestTime - previousTime;
+        int seconds = (int) milliseconds / 1000;
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        seconds = (seconds % 3600) % 60;
+
+        switch (typeInType) {
+            case HOUR:
+                return hours;
+            case MILLISECONDS:
+                return (int) milliseconds;
+            case MINS:
+                return minutes;
+            case SECONDS:
+                return seconds;
+            default:
+                break;
+        }
+
+        return 0;
+    }
 }

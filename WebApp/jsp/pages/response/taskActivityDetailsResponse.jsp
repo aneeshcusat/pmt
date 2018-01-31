@@ -61,8 +61,8 @@
 					src="${applicationHome}/image/${taskActivityDetail.userId}"
 					class="pull-left"
 					onerror="this.src='${assets}/images/users/no-image.jpg'">
-				<span class="contacts-title">${taskActivityDetail.userTaskType}
-					Task Activity</span>
+				<span class="contacts-title" style="font-size: 10px">${taskActivityDetail.userTaskType}
+					[${taskDetails.name}] Task Activity</span>
 				<c:choose>
 					<c:when test="${not empty taskActivityDetail.actualEndTime}">
 						<p>Status : COMPLETED</p>

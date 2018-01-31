@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -438,6 +439,27 @@ public class FamstackDashboardManager extends BaseFamstackService
         projectManager.reAssignTask(taskDetails, newUserId, taskActivityId, taskStatus);
         triggerTaskNotification(NotificationType.TASK_RE_ASSIGNED, taskDetails);
 
+    }
+
+    public String playTask(int taskId, int taskActivityId)
+    {
+        TaskActivityDetails taskActivityDetails = projectManager.playTask(taskId, taskActivityId);
+
+        JSONObject jsonTaskActivity = new JSONObject();
+
+        jsonTaskActivity.put("taskActivityId", taskActivityDetails.getTaskActivityId());
+        jsonTaskActivity.put("startHour", taskActivityDetails.getTimeTakenToCompleteHour());
+        jsonTaskActivity.put("startMins", taskActivityDetails.getTimeTakenToCompleteMinute());
+        jsonTaskActivity.put("startSecs", taskActivityDetails.getTimeTakenToCompleteSecond());
+
+        return jsonTaskActivity.toString();
+
+    }
+
+    public void pauseTask(int taskId)
+    {
+        TaskDetails taskDetails = projectManager.getProjectTaskById(taskId);
+        projectManager.pauseTask(taskDetails);
     }
 
     public void updateTaskStatus(int taskId, TaskStatus taskStatus, String comments, String adjustStartTime,
