@@ -355,7 +355,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     public int setProjectTaskActivityActualTime(int taskId, Date date, String comment, TaskStatus taskStatus,
         Date adjustStartTime, Date adjustCompletionTimeDate)
     {
-        long actualDuration = 0;
+        int actualDuration = 0;
 
         List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
 
@@ -367,6 +367,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
         for (Object userTaskActivityItemObj : userTaskActivityItems) {
             UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
+
             if (userTaskActivityItem.getRecordedEndTime() == null) {
                 if (taskStatus == TaskStatus.INPROGRESS) {
                     userTaskActivityItem.setInprogressComment(comment);
@@ -382,7 +383,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                     Date startTime = userTaskActivityItem.getActualStartTime();
 
                     if (completionTime != null && startTime != null) {
-                        actualDuration += completionTime.getTime() - startTime.getTime();
                         userTaskActivityItem.setDurationInMinutes(DateUtils.getTimeDifference(TimeInType.MINS,
                             completionTime.getTime(), startTime.getTime()));
                     }
@@ -390,11 +390,14 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                 }
 
             }
+            actualDuration +=
+                DateUtils.getTimeDifference(TimeInType.MINS, userTaskActivityItem.getActualEndTime().getTime(),
+                    userTaskActivityItem.getActualStartTime().getTime());
 
             getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
         }
 
-        return (actualDuration > 0 ? Math.round(actualDuration / 60 / 1000) : 0);
+        return (actualDuration > 0 ? actualDuration : 0);
     }
 
     public UserTaskActivityItem completeTaskActivityAndStartNewTaskActivity(int taskActivityId, TaskItem taskItem)
