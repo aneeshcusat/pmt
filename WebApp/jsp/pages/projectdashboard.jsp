@@ -1042,6 +1042,8 @@ loadAllProjectDetails('${dateRange}');
 				var responseJson = JSON.parse(data);
 				loadRecurringProjectDetails(projectId, projectCode, responseJson);
 			} else {
+				$(".recurringTimeDiv").addClass("hide");
+				$(".recurringDelete").addClass("hide");
 				$("#RPABCreatOrUpdate").html("Create");
 				initializeCron("0 5 0 * * ?");
 			}
