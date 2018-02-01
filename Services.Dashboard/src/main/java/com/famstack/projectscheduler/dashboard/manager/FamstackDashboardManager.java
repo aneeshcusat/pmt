@@ -41,6 +41,7 @@ import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.employees.bean.GroupMessageDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.employees.bean.RecurringProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.employees.bean.UserStatus;
@@ -861,5 +862,36 @@ public class FamstackDashboardManager extends BaseFamstackService
         projectManager.quickDuplicateProject(projectId, projectName, projectDuration, projectStartTime, projectEndTime,
             taskDetails);
 
+    }
+
+    public int adjustTaskActivityTime(int activityId, int taskId, int newDuration, String startTime, String endTime)
+    {
+
+        return famstackProjectTaskManager.adjustTaskActivityTime(activityId, taskId, newDuration, startTime, endTime);
+
+    }
+
+    public void adjustTaskTime(int taskId, int newDuration)
+    {
+        famstackProjectTaskManager.adjustTaskTime(taskId, newDuration);
+    }
+
+    public String getRecurringProjectDetails(String projectCode, int projectId)
+    {
+        RecurringProjectDetails recurringProjectDetails =
+            projectManager.getRecurringProjectDetails(projectCode, projectId);
+        return recurringProjectDetails != null ? FamstackUtils.getJsonFromObject(recurringProjectDetails) : "";
+    }
+
+    public String createRecurringProject(String projectCode, int projectId, String cronExp)
+    {
+        RecurringProjectDetails recurringProjectDetails =
+            projectManager.createRecurringProject(projectCode, projectId, cronExp);
+        return recurringProjectDetails != null ? FamstackUtils.getJsonFromObject(recurringProjectDetails) : "";
+    }
+
+    public void deleteRecuringProjectDetails(int recurringProjectId)
+    {
+        projectManager.deleteRecuringProjectDetails(recurringProjectId);
     }
 }

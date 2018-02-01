@@ -10,6 +10,9 @@
  </ul>
  <!-- END BREADCRUMB -->  
  <style>
+ input.error{
+     border-color: #E04B4A
+ }
 .markable{
 	height: 100%;
 	padding:0 0 0 0 !important;
@@ -134,7 +137,6 @@ width: 60%;
 	color: #555;
 	font-size: 10px;
 	padding: 0px 2px 2px 5px;
-	display:none;
 }
 .dateTimeTaskEditPicker {
 	width: 100px;
@@ -1471,10 +1473,6 @@ $(document).ready(function(){
 	/* END MESSAGE BOX */
 });
 
-var taskActualTimeSubmit = function(taskId){
-	var mins = $("#"+taskId+"actualTimeMins").val();
-	var hours = $("#"+taskId+"actualTimeHour").val();
-}
 
 var showTaskActualTimeEdit = function(taskId){
 	$("."+taskId+"taskTimeEdit").show();
@@ -1518,5 +1516,68 @@ var hideTaskActActualTimeEdit = function(taskActId) {
 	$("."+taskActId+"taskTimeEdit").hide();	
 	$("."+taskActId+"taskActTimeEdit").hide();	
 }
+
+var taskActualTimeSubmit = function(taskId) {
+	var hours=$("#projectActivityModalContent #taskHHTimeEdit"+taskId).val();
+	var mins=$("#projectActivityModalContent #taskMMTimeEdit"+taskId).val();
+	
+	$("#projectActivityModalContent #taskHHTimeEdit"+taskId).removeClass("error");
+	$("#projectActivityModalContent #taskMMTimeEdit"+taskId).removeClass("error");
+	var error = false;
+	if (hours == "" || !$.isNumeric(hours)) {
+		$("#projectActivityModalContent #taskHHTimeEdit"+taskId).addClass("error");
+		error = true;
+	}
+	
+	if (mins == "" || !$.isNumeric(mins) || parseInt(mins) >= 60) {
+		$("#projectActivityModalContent #taskMMTimeEdit"+taskId).addClass("error");
+		error = true;
+	}
+	
+	if(error){
+		return;
+	}
+	
+	var newDuration = (parseInt(hours) * 60) +parseInt(mins);
+	
+	doAjaxRequest("POST", "${applicationHome}/adjustTaskTime", {"taskId":taskId,"newDuration":newDuration},  function(taskId) {
+		 window.location.reload(true);
+	}, function(e) {
+	});
+}
+
+var taskActActualTimeSubmit = function(taskId, activityId) {
+	var hours=$("#projectActivityModalContent #taskActHHTimeEdit"+activityId).val();
+	var mins=$("#projectActivityModalContent #taskActMMTimeEdit"+activityId).val();
+	
+	
+	$("#projectActivityModalContent #taskActHHTimeEdit"+taskId).removeClass("error");
+	$("#projectActivityModalContent #taskActMMTimeEdit"+taskId).removeClass("error");
+	
+	var error = false;
+	if (hours == "" || !$.isNumeric(hours)) {
+		$("#projectActivityModalContent #taskActHHTimeEdit"+taskId).addClass("error");
+		error = true;
+	}
+	
+	if (mins == "" || !$.isNumeric(mins) || parseInt(mins) >= 60) {
+		$("#projectActivityModalContent #taskActMMTimeEdit"+taskId).addClass("error");
+		error = true;
+	}
+	
+	if(error){
+		return;
+	}
+	
+	var newDuration = (parseInt(hours) * 60) +parseInt(mins);
+	var startTime ="";
+	var endTime ="";
+	doAjaxRequest("POST", "${applicationHome}/adjustTaskActivityTime", {"activityId":activityId,"taskId":taskId,"newDuration":newDuration,"startTime":startTime,"endTime":endTime},  function(activityId) {
+		 window.location.reload(true);
+	}, function(e) {
+	});
+}
+
+
 </script>
 

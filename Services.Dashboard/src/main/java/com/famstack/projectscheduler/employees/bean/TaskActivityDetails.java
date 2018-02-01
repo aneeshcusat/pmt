@@ -187,21 +187,9 @@ public class TaskActivityDetails
         return (diffHours + ":" + diffMinutes + ":" + diffSeconds);
     }
 
-    public int getActualTimeTaken()
-    {
-        Date completionTime = getActualEndTime();
-        Date startTime = getActualStartTime();
-        long actualDuration = 0;
-        if (completionTime != null && startTime != null) {
-            actualDuration = completionTime.getTime() - startTime.getTime();
-        }
-
-        return (int) actualDuration > 0 ? Math.round(actualDuration / 60 / 1000) : 0;
-    }
-
     public String getActualTimeTakenInHrs()
     {
-        int actualDurationInMins = getActualTimeTaken();
+        int actualDurationInMins = getDurationInMinutes();
         String actualDurationString = "00";
         if (actualDurationInMins > 0) {
             int actualTimeInHrs = actualDurationInMins / 60;

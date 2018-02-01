@@ -172,4 +172,24 @@ public class FamstackTaskController extends BaseFamstackService
     {
         return famstackDashboardManager.getUserTaskActivityJson();
     }
+
+    @RequestMapping(value = "/adjustTaskTime", method = RequestMethod.POST)
+    @ResponseBody
+    public String adjustTaskTime(@RequestParam("taskId") int taskId, @RequestParam("newDuration") int newDuration)
+    {
+        famstackDashboardManager.adjustTaskTime(taskId, newDuration);
+        return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/adjustTaskActivityTime", method = RequestMethod.POST)
+    @ResponseBody
+    public String adjustTaskActivityTime(@RequestParam("activityId") int activityId,
+        @RequestParam("taskId") int taskId, @RequestParam("newDuration") int newDuration,
+        @RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime)
+    {
+        int taskActualDuration =
+            famstackDashboardManager.adjustTaskActivityTime(activityId, taskId, newDuration, startTime, endTime);
+        return "{\"status\": true, \"taskActualDuration\":" + taskActualDuration + "}";
+    }
+
 }

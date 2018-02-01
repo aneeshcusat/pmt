@@ -24,15 +24,18 @@ import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
+import com.famstack.projectscheduler.datatransferobject.RecurringProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
+import com.famstack.projectscheduler.employees.bean.RecurringProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.utils.FamstackUtils;
 
 /**
  * The Class FamstackProjectManager.
@@ -767,4 +770,121 @@ public class FamstackProjectManager extends BaseFamstackManager
         return famstackProjectTaskManager.getProjectDetailsTaskDetailsByProjectId(projectId);
     }
 
+    public RecurringProjectItem getRecurringProjectItemById(int recurringProjectId)
+    {
+        return (RecurringProjectItem) famstackDataAccessObjectManager.getItemById(recurringProjectId,
+            RecurringProjectItem.class);
+    }
+
+    public RecurringProjectDetails getRecurringProjectDetailsById(int recurringProjectId)
+    {
+        RecurringProjectDetails recurringProjectDetails = null;
+        RecurringProjectItem recurringProjectItem = getRecurringProjectItemById(recurringProjectId);
+        if (recurringProjectItem != null) {
+            recurringProjectDetails = mapRecurringProjectItem(recurringProjectItem);
+        }
+
+        return recurringProjectDetails;
+    }
+
+    public RecurringProjectDetails mapRecurringProjectItem(RecurringProjectItem recurringProjectItem)
+    {
+        RecurringProjectDetails recurringProjectDetails = null;
+        if (recurringProjectItem != null) {
+            recurringProjectDetails = new RecurringProjectDetails();
+            recurringProjectDetails.setId(recurringProjectItem.getId());
+            recurringProjectDetails.setCronExpression(recurringProjectItem.getCronExpression());
+            recurringProjectDetails.setLastRun(recurringProjectItem.getLastRun());
+            recurringProjectDetails.setName(recurringProjectItem.getName());
+            recurringProjectDetails.setNextRun(recurringProjectItem.getNextRun());
+            recurringProjectDetails.setProjectId(recurringProjectItem.getProjectId());
+            recurringProjectDetails.setProjectCode(recurringProjectItem.getProjectCode());
+            recurringProjectDetails.setRequestedBy(recurringProjectItem.getRequestedBy());
+            recurringProjectDetails.setUserGroupId(recurringProjectItem.getUserGroupId());
+        }
+        return recurringProjectDetails;
+    }
+
+    public RecurringProjectItem mapRecurringProjectDetails(RecurringProjectDetails recurringProjectDetails)
+    {
+        RecurringProjectItem recurringProjectItem = null;
+        if (recurringProjectDetails != null) {
+            recurringProjectItem = new RecurringProjectItem();
+            recurringProjectItem.setId(recurringProjectDetails.getId());
+            recurringProjectItem.setCronExpression(recurringProjectDetails.getCronExpression());
+            recurringProjectItem.setName(recurringProjectDetails.getName());
+            recurringProjectItem.setProjectId(recurringProjectDetails.getProjectId());
+            recurringProjectItem.setProjectCode(recurringProjectDetails.getProjectCode());
+            recurringProjectItem.setRequestedBy(recurringProjectDetails.getRequestedBy());
+            recurringProjectItem.setUserGroupId(recurringProjectDetails.getUserGroupId());
+        }
+        return recurringProjectItem;
+    }
+
+    public List<RecurringProjectDetails> getAllRecurringProjects()
+    {
+        List<RecurringProjectItem> allRecurringProjectItems =
+            (List<RecurringProjectItem>) famstackDataAccessObjectManager.getAllItems("RecurringProjectItem");
+        List<RecurringProjectDetails> allRecurringProjectDetails = new ArrayList<>();
+        if (allRecurringProjectDetails != null) {
+            for (RecurringProjectItem recurringProjectItem : allRecurringProjectItems) {
+                allRecurringProjectDetails.add(mapRecurringProjectItem(recurringProjectItem));
+            }
+        }
+
+        return allRecurringProjectDetails;
+    }
+
+    public RecurringProjectDetails getRecurringProjectDetails(String projectCode, int projectId)
+    {
+        return mapRecurringProjectItem(getRecurringProjectItem(projectCode, projectId));
+    }
+
+    public RecurringProjectItem getRecurringProjectItem(String projectCode, int projectId)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("projectCode", projectCode);
+        List<?> RecurringProjectItems =
+            famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getRecurringProject"), dataMap);
+
+        if (RecurringProjectItems != null && RecurringProjectItems.size() > 0) {
+            return (RecurringProjectItem) RecurringProjectItems.get(0);
+        }
+
+        return null;
+    }
+
+    public RecurringProjectDetails createRecurringProject(String projectCode, int projectId, String cronExpression)
+    {
+        return mapRecurringProjectItem(saveOrUpdateRecurringProject(projectCode, projectId, cronExpression));
+    }
+
+    private RecurringProjectItem saveOrUpdateRecurringProject(String projectCode, int projectId, String cronExpression)
+    {
+        RecurringProjectItem recurringProjectItem = getRecurringProjectItem(projectCode, projectId);
+        if (recurringProjectItem == null) {
+            recurringProjectItem = new RecurringProjectItem();
+        }
+
+        recurringProjectItem.setCronExpression(cronExpression);
+        Timestamp lastRun = recurringProjectItem.getLastRun();
+        Date nextRun = FamstackUtils.getNextRunFromCron(cronExpression, lastRun);
+        recurringProjectItem.setNextRun(nextRun == null ? null : new Timestamp(nextRun.getTime()));
+        recurringProjectItem.setName(projectCode);
+        recurringProjectItem.setProjectId(projectId);
+        recurringProjectItem.setProjectCode(projectCode);
+
+        famstackDataAccessObjectManager.saveOrUpdateItem(recurringProjectItem);
+        return recurringProjectItem;
+    }
+
+    public void deleteRecuringProjectDetails(int recurringProjectId)
+    {
+        RecurringProjectItem recurringProjectItem =
+            (RecurringProjectItem) famstackDataAccessObjectManager.getItemById(recurringProjectId,
+                RecurringProjectItem.class);
+        if (recurringProjectItem != null) {
+            famstackDataAccessObjectManager.deleteItem(recurringProjectItem);
+        }
+    }
 }

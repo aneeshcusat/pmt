@@ -7,6 +7,8 @@
  </ul>
  <!-- END BREADCRUMB -->       
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/cron/jquery-cron.css"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
 <style>
 @media screen and (min-width: 700px) {
 	#createprojectmodal .modal-dialog {
@@ -175,6 +177,36 @@ div#taskDetailsDiv {
 </div>
 <!-- project create modal end -->
 
+
+<!-- recurring project create modal start -->
+<div class="modal fade" id="recurringprojectmodal" tabindex="-1"
+	role="dialog" aria-labelledby="recurringprojectmodal" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Recurring Project Settings</h4>
+				</div>
+				<div class="modal-body">
+					<%@include file="fagments/recurringProjectModal.jspf"%>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancel</button>
+					<button type="button" id="recurringProjectActionButton" onclick=""
+						class="btn btn-primary">
+						<span id="RPABCreatOrUpdate">Create</span>
+					</button>
+				</div>
+			</div>
+		</div>
+</div>
+<!-- recurring project create modal end -->
+
+
 <!-- task pop up window start-->
     <div id="taskDetailsDiv" style="display: none;">
 	</div>
@@ -225,11 +257,12 @@ div#taskDetailsDiv {
 	src="${js}/plugins/tagsinput/jquery.tagsinput.min.js"></script>
 <script type="text/javascript"
 	src="${js}/plugins/fileinput/fileinput.min.js"></script>
-
 <script type="text/javascript"
 	src="${js}/plugins/autocomplete/jquery.autocomplete.js"></script>
  <script type="text/javascript" src="${js}/plugins/typeahead/typeahead.bundle.js"></script>
  <script type="text/javascript" src="${js}/plugins/tagsinput/mab-jquery-taginput.js"></script>
+<script type="text/javascript" src="${js}/plugins/gentleSelect/jquery-gentleSelect-min.js"></script>
+<script type="text/javascript" src="${js}/plugins/cron/jquery-cron.js"></script>
 <script>
 
 $(function() {
@@ -998,4 +1031,94 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
 }
 
 loadAllProjectDetails('${dateRange}');
+
+
+/******************Recurring Project model************/
+ function recurringProjectModel(projectCode, projectId) {
+	var dataString = {"projectCode": projectCode, "projectId": projectId};
+	doAjaxRequest("GET", "${applicationHome}/getRecurringProjectDetails", dataString, function(data) {
+			console.log(data);
+			if (data != ""){
+				var responseJson = JSON.parse(data);
+				loadRecurringProjectDetails(projectId, projectCode, responseJson);
+			} else {
+				$("#RPABCreatOrUpdate").html("Create");
+				initializeCron("0 5 0 * * ?");
+			}
+			$("#recurringProjectActionButton").attr("onclick", "createRecurringProject('"+projectCode+"',"+projectId+")");
+		}, function(e) {
+	        console.log("ERROR: ", e);
+	        alert(e);
+	    });
+}
+ 
+function initializeCron(cronExpression) {
+	$('#recurringCronExpressionDiv').html('<div id="recurringCronExpression"></div>');
+	$('#recurringCronExpression').cron({
+ 	 initial: cronExpression.replace("?","*").substring(2,13),
+      onChange: function() {
+          $('#recurringCronExpressionValue').val($(this).cron("value"));
+      },
+      customValues: {
+         // "5 Minutes" : "*/5 * * * *",
+         // "2 Hours on Weekends" : "0 */2 * * 5,6"
+      },
+      useGentleSelect: true
+ });
+}
+ 
+function loadRecurringProjectDetails(projectId, projectCode, responseJson){
+	console.log(responseJson);
+	$("#RPABCreatOrUpdate").html("Upate");
+	$(".recurringTimeDiv").removeClass("hide");
+	$(".recurringDelete").removeClass("hide");
+	$("#recurringCronExpressionValue").val(responseJson.cronExpression);
+	initializeCron(responseJson.cronExpression);
+	$("#recurringNET").html(responseJson.nextRun);
+	if (responseJson.lastRun != null){
+		$("#recurringLET").html(responseJson.lastRun);
+	} else {
+		$("#recurringLET").html("Not yet run");
+	}
+	$(".recurringDelete").attr("onclick", "deleteRecurringProject("+responseJson.id+",'"+projectCode+"')");
+}
+
+function createRecurringProject(projectCode, projectId) {
+	var cronExp = $("#recurringCronExpressionValue").val();
+	var dataString = {"projectCode": projectCode, "projectId": projectId, "cronExp":cronExp};
+	doAjaxRequest("POST", "${applicationHome}/createRecurringProject", dataString, function(data) {
+			console.log(data);
+			if (data != ""){
+				var responseJson = JSON.parse(data);
+				loadRecurringProjectDetails(projectId, projectCode, responseJson);
+				$(".recurringSpin"+projectCode).addClass("fa-spin");
+			}
+		}, function(e) {
+	        console.log("ERROR: ", e);
+	        alert(e);
+	    });
+}
+
+function deleteRecurringProject(recurringId, projectCode) {
+	$(".msgConfirmText").html("Deleting recurring project schedule");
+	$(".msgConfirmText1").html(recurringId);
+	$("#confirmYesId").prop("href","javascript:deleteRecuringProjectDetails('"+recurringId+"','"+projectCode+"')");
+}
+
+function deleteRecuringProjectDetails(recurringId, projectCode) {
+	var dataString = {"recurringId": recurringId};
+	doAjaxRequest("POST", "${applicationHome}/deleteRecuringProjectDetails", dataString, function(data) {
+			console.log(data);
+			$(".recurringSpin"+projectCode).removeClass("fa-spin");
+			initializeCron("0 5 0 * * ?");
+			$(".message-box").removeClass("open");
+			$("#RPABCreatOrUpdate").html("Create");
+			$(".recurringTimeDiv").addClass("hide");
+			$(".recurringDelete").addClass("hide");
+		}, function(e) {
+	        console.log("ERROR: ", e);
+	        alert(e);
+	    });
+}
+ 
 </script>

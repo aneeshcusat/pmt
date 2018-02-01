@@ -1,0 +1,34 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<div class="row">
+	<div class="col-md-12">
+		<div class="form-group">
+			<div class="col-md-10">
+			<div id="recurringCronExpressionDiv" style="margin-bottom: 20px">
+			
+			</div>
+			<input type="hidden" id="recurringCronExpressionValue"/>
+			</div>
+			<div class="col-md-2">
+				<a href="javascript:void(0)" class="hide recurringDelete deleteProject mb-control" data-box="#confirmationbox"  onclick="deleteRecurringProject('')"><span class="fa fa-times fa-2x" style="color: red;float: right"></span></a>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12 recurringTimeDiv hide">
+	<div class="form-group">
+			<label class="col-md-4 control-label">Last Execution Time</label>
+			<div class="col-md-8">
+				<b id="recurringLET">2018/12/12 23:10</b>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12  recurringTimeDiv hide">
+	<div class="form-group">
+			<label class="col-md-4 control-label">Next Execution</label>
+			<div class="col-md-8">
+			<b id="recurringNET">2018/12/12 23:10</b>
+			</div>
+		</div>
+	</div>
+</div>

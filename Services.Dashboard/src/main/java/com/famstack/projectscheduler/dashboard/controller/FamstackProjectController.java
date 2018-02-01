@@ -381,4 +381,29 @@ public class FamstackProjectController extends BaseFamstackService
         famstackDashboardManager.delteAccountConfig(action, id);
         return "{\"status\": true}";
     }
+
+    @RequestMapping(value = "/getRecurringProjectDetails", method = RequestMethod.GET)
+    @ResponseBody
+    public String getRecurringProjectDetails(@RequestParam("projectCode") String projectCode,
+        @RequestParam("projectId") int projectId)
+    {
+        return famstackDashboardManager.getRecurringProjectDetails(projectCode, projectId);
+    }
+
+    @RequestMapping(value = "/createRecurringProject", method = RequestMethod.POST)
+    @ResponseBody
+    public String createRecurringProject(@RequestParam("projectCode") String projectCode,
+        @RequestParam("projectId") int projectId, @RequestParam("cronExp") String cronExp)
+    {
+        return famstackDashboardManager.createRecurringProject(projectCode, projectId, cronExp);
+    }
+
+    @RequestMapping(value = "/deleteRecuringProjectDetails", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteRecuringProjectDetails(@RequestParam("recurringId") int recurringId)
+    {
+        famstackDashboardManager.deleteRecuringProjectDetails(recurringId);
+        return "{\"status\": true}";
+    }
+
 }

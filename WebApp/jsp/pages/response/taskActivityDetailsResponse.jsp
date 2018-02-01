@@ -37,9 +37,11 @@
 		<p>${taskDetails.description}</p>
 		<p>Est Duration : <b>${taskDetails.duration}</b> Hours</p>
 		<p>
-			Time Taken : <span  class="${taskDetails.taskId}taskTimeEditLink"><b>${taskDetails.actualTimeTakenInHrs}</b> Hours </span>
-			<input type="text" placeholder="hh" value="" class="durationTxt ${taskDetails.taskId}taskTimeEdit"/>
-			<input type="text" placeholder="mm" class="durationTxt ${taskDetails.taskId}taskTimeEdit" value=""/>
+			Time Taken : <span  class="${taskDetails.taskId}taskTimeEditLink"><b class="${taskDetails.taskId}actualTimeTakenInHrs">${taskDetails.actualTimeTakenInHrs}</b> Hours </span>
+			<span class="${taskDetails.taskId}taskTimeEdit"  style="display:none" >
+				<input type="text" placeholder="hh" class="durationTxt" id="taskHHTimeEdit${taskDetails.taskId}"/>
+				<input type="text" placeholder="mm" class="durationTxt" id="taskMMTimeEdit${taskDetails.taskId}"/>
+			</span>
 			<span style="text-align:right; display:none" class="${taskDetails.taskId}taskTimeEdit">
 				<button style="background-color: transparent; border: 0px;" onclick="taskActualTimeSubmit('${taskDetails.taskId}')" value="Save"><i class="fa fa-check fa-2x" style="color: green" aria-hidden="true"></i></button>
 				<button style="background-color: transparent; border: 0px;" onclick="hideTaskActualTimeEdit('${taskDetails.taskId}')" value="Cancel"><i class="fa fa-undo fa-2x" style="color: gray" aria-hidden="true"></i></button>
@@ -86,14 +88,14 @@
 					
 					<c:if test="${not empty taskActivityDetail.actualStartTime}">
 						<p>Actual start time :<span class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink ${taskActivityDetail.taskActivityId}taskTimeEditDateStartLink"><fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualStartTime}"/></span>
-						<input type="text" value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualStartTime}"/>' style="display:none" class="dateTimeTaskEditPicker ${taskActivityDetail.taskActivityId}taskTimeEditDate ${taskActivityDetail.taskActivityId}taskTimeEditDateStart"/>
+						<input type="text" value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualStartTime}"/>' style="display:none" class="hide dateTimeTaskEditPicker ${taskActivityDetail.taskActivityId}taskTimeEditDate ${taskActivityDetail.taskActivityId}taskTimeEditDateStart"/>
 						
-						<a href="javascript:void(0)"  onclick="showTaskActualTimeEditDate('${taskActivityDetail.taskActivityId}')"   class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink"  style="margin-left: 10px">
+						<a href="javascript:void(0)"  onclick="hide showTaskActualTimeEditDate('${taskActivityDetail.taskActivityId}')"   class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink hide"  style="margin-left: 10px">
 						<span class="fa fa-pencil"></span></a></p>
 					</c:if>
 					<c:if test="${not empty taskActivityDetail.actualEndTime}">
 						<p>Actual end time : <span class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink ${taskActivityDetail.taskActivityId}taskTimeEditDateEndLink"><fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualEndTime}"/></span> 
-						<input type="text" value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualEndTime}"/>' style="display:none; margin-left: 3px" class="dateTimeTaskEditPicker ${taskActivityDetail.taskActivityId}taskTimeEditDate ${taskActivityDetail.taskActivityId}taskTimeEditDateEnd"/></p>
+						<input type="text" value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualEndTime}"/>' style="display:none; margin-left: 3px" class="hide dateTimeTaskEditPicker ${taskActivityDetail.taskActivityId}taskTimeEditDate ${taskActivityDetail.taskActivityId}taskTimeEditDateEnd"/></p>
 						
 					</c:if>
 					<c:if test="${not empty taskActivityDetail.recordedStartTime}">
@@ -103,8 +105,15 @@
 				</c:if>
 				<c:if test="${not empty taskActivityDetail.actualEndTime}">
 					<p>Time Taken : <span class="${taskActivityDetail.taskActivityId}taskTimeEditLink"> ${taskActivityDetail.actualTimeTakenInHrs} Hours </span>
-					<input type="text" value="" placeholder="hh" class="durationTxt ${taskActivityDetail.taskActivityId}taskTimeEdit"/>
-					<input type="text" placeholder="mm" class="durationTxt ${taskActivityDetail.taskActivityId}taskTimeEdit" value=""/> 
+					<span class="${taskActivityDetail.taskActivityId}taskTimeEdit" style="display: none">
+						<input type="text" placeholder="hh" class="durationTxt" id="taskActHHTimeEdit${taskActivityDetail.taskActivityId}"/>
+						<input type="text" placeholder="mm" class="durationTxt" id="taskActMMTimeEdit${taskActivityDetail.taskActivityId}"/> 
+					</span>
+					<span style="text-align:right; display:none" class="${taskActivityDetail.taskActivityId}taskActTimeEdit">
+						<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmit(${taskDetails.taskId},'${taskActivityDetail.taskActivityId}')" value="Save"><i class="fa fa-check fa-2x" style="color: green" aria-hidden="true"></i></button>
+						<button style="background-color: transparent; border: 0px;" onclick="hideTaskActActualTimeEdit('${taskActivityDetail.taskActivityId}')" value="Cancel"><i class="fa fa-undo fa-2x" style="color: gray" aria-hidden="true"></i></button>
+					</span>
+				
 					<a href="javascript:void(0)" class=" ${taskActivityDetail.taskActivityId}taskTimeEditLink" onclick="showTaskActActualTimeEdit('${taskActivityDetail.taskActivityId}')"  style="margin-left: 10px">
 					<span class="fa fa-pencil"></span></a></p>
 				</c:if>
@@ -119,11 +128,7 @@
 						<i class="fa fa-times fa-2x" style="color: red" aria-hidden="true"></i>
 					</button>
 				</div>
-				<p style="text-align:right; display:none" class="${taskActivityDetail.taskActivityId}taskActTimeEdit">
-				<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmit('${taskActivityDetail.taskActivityId}')" value="Save"><i class="fa fa-check fa-2x" style="color: green" aria-hidden="true"></i></button>
-				<button style="background-color: transparent; border: 0px;" onclick="hideTaskActActualTimeEdit('${taskActivityDetail.taskActivityId}')" value="Cancel"><i class="fa fa-undo fa-2x" style="color: gray" aria-hidden="true"></i></button>
-				</p>
-			</ul>
+							</ul>
 		</c:forEach>
 	</c:if>
 </div>

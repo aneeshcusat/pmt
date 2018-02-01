@@ -387,12 +387,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                             completionTime.getTime(), startTime.getTime()));
                     }
 
+                    actualDuration +=
+                        DateUtils.getTimeDifference(TimeInType.MINS, userTaskActivityItem.getActualEndTime().getTime(),
+                            userTaskActivityItem.getActualStartTime().getTime());
+
                 }
 
             }
-            actualDuration +=
-                DateUtils.getTimeDifference(TimeInType.MINS, userTaskActivityItem.getActualEndTime().getTime(),
-                    userTaskActivityItem.getActualStartTime().getTime());
 
             getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
         }
@@ -512,5 +513,18 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
 
         return null;
+    }
+
+    public UserTaskActivityItem adjustTaskActivityTime(int taskActivityItemId, int newDurationInMins, String startTime,
+        String endTime)
+    {
+        UserTaskActivityItem userTaskActivityItem = getUserTaskActivityItem(taskActivityItemId);
+
+        if (userTaskActivityItem != null) {
+            userTaskActivityItem.setDurationInMinutes(newDurationInMins);
+            famstackDataAccessObjectManager.saveOrUpdateItem(userTaskActivityItem);
+        }
+
+        return userTaskActivityItem;
     }
 }

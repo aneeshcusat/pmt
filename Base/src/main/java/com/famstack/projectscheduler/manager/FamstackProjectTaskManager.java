@@ -672,4 +672,41 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     }
 
+    public int adjustTaskActivityTime(int taskActivityItemId, int taskId, int newDuration, String startTime,
+        String endTime)
+    {
+        int actualTaskDuration = 0;
+        famstackUserActivityManager.adjustTaskActivityTime(taskActivityItemId, newDuration, startTime, endTime);
+        List<TaskActivityDetails> userTaskActivities =
+            famstackUserActivityManager.getUserTaskActivityDetailsByTaskId(taskId);
+
+        if (userTaskActivities != null) {
+            actualTaskDuration = recalculateTaskActualDuration(userTaskActivities);
+            adjustTaskTime(taskId, actualTaskDuration);
+        }
+
+        return actualTaskDuration;
+
+    }
+
+    private int recalculateTaskActualDuration(List<TaskActivityDetails> userTaskActivities)
+    {
+        int actualTaskDuration = 0;
+        for (TaskActivityDetails taskActivityDetail : userTaskActivities) {
+            actualTaskDuration += taskActivityDetail.getDurationInMinutes();
+        }
+        return actualTaskDuration;
+    }
+
+    public void adjustTaskTime(int taskId, int newDuration)
+    {
+        TaskItem taskItem = getTaskItemById(taskId);
+
+        if (taskItem != null) {
+            taskItem.setActualTimeTaken(newDuration);
+            famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+        }
+
+    }
+
 }
