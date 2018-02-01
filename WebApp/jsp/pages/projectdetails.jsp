@@ -1492,8 +1492,6 @@ var showTaskActualTimeEditDate = function(taskActId) {
 	$("."+taskActId+"taskTimeEditLink").show();
 	$("."+taskActId+"taskTimeEditDate").show();
 	$("."+taskActId+"taskActTimeEdit").show();	
-	$("."+taskActId+"taskTimeEditDateStart").val($("."+taskActId+"taskTimeEditDateStartLink").val());
-	$("."+taskActId+"taskTimeEditDateEnd").val($("."+taskActId+"taskTimeEditDateEndLink").val());
 	
 	$("."+taskActId+"taskTimeEditDate").datetimepicker({onGenerate:function( ct ){
 		$(this).find('.xdsoft_date.xdsoft_weekend')

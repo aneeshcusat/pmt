@@ -78,22 +78,22 @@
 				
 					<c:if test="${not empty taskActivityDetail.recordedStartTime}">
 						<p>Recorded start time
-							:${taskActivityDetail.recordedStartTime}</p>
+							:<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.recordedStartTime}"/></p>
 					</c:if>
 					<c:if test="${not empty taskActivityDetail.recordedEndTime}">
-						<p>Recorded end time :${taskActivityDetail.recordedEndTime}</p>
+						<p>Recorded end time :<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.recordedEndTime}"/></p>
 					</c:if>
 					
 					<c:if test="${not empty taskActivityDetail.actualStartTime}">
-						<p>Actual start time :<span class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink ${taskActivityDetail.taskActivityId}taskTimeEditDateStartLink">${taskActivityDetail.actualStartTime}</span>
-						<input type="text" value="" style="display:none" class="dateTimeTaskEditPicker ${taskActivityDetail.taskActivityId}taskTimeEditDate ${taskActivityDetail.taskActivityId}taskTimeEditDateStart"/>
+						<p>Actual start time :<span class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink ${taskActivityDetail.taskActivityId}taskTimeEditDateStartLink"><fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualStartTime}"/></span>
+						<input type="text" value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualStartTime}"/>' style="display:none" class="dateTimeTaskEditPicker ${taskActivityDetail.taskActivityId}taskTimeEditDate ${taskActivityDetail.taskActivityId}taskTimeEditDateStart"/>
 						
 						<a href="javascript:void(0)"  onclick="showTaskActualTimeEditDate('${taskActivityDetail.taskActivityId}')"   class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink"  style="margin-left: 10px">
 						<span class="fa fa-pencil"></span></a></p>
 					</c:if>
 					<c:if test="${not empty taskActivityDetail.actualEndTime}">
-						<p>Actual end time : <span class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink ${taskActivityDetail.taskActivityId}taskTimeEditDateEndLink">${taskActivityDetail.actualEndTime}</span> 
-						<input type="text" value="" style="display:none; margin-left: 3px" class="dateTimeTaskEditPicker ${taskActivityDetail.taskActivityId}taskTimeEditDate ${taskActivityDetail.taskActivityId}taskTimeEditDateEnd"/></p>
+						<p>Actual end time : <span class="${taskActivityDetail.taskActivityId}taskTimeEditDateLink ${taskActivityDetail.taskActivityId}taskTimeEditDateEndLink"><fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualEndTime}"/></span> 
+						<input type="text" value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${taskActivityDetail.actualEndTime}"/>' style="display:none; margin-left: 3px" class="dateTimeTaskEditPicker ${taskActivityDetail.taskActivityId}taskTimeEditDate ${taskActivityDetail.taskActivityId}taskTimeEditDateEnd"/></p>
 						
 					</c:if>
 					<c:if test="${not empty taskActivityDetail.recordedStartTime}">
