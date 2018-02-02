@@ -66,6 +66,8 @@ public class ProjectDetails
 
     private Integer clientId;
 
+    private Boolean deleted;
+
     private Set<ProjectCommentDetails> projectComments;
 
     private Set<ProjectActivityDetails> projectActivityDetails;
@@ -591,5 +593,15 @@ public class ProjectDetails
     public void setProjectSubType(ProjectSubType projectSubType)
     {
         this.projectSubType = projectSubType;
+    }
+
+    public Boolean getDeleted()
+    {
+        return deleted == null ? false : deleted;
+    }
+
+    public void setDeleted(Boolean deleted)
+    {
+        this.deleted = deleted;
     }
 }

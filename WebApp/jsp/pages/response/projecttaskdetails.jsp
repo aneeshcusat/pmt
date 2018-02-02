@@ -35,11 +35,15 @@
 								</td>
 								<td>${taskDetails.duration }</td>
 								<td>${taskDetails.actualTimeTaken }</td>
-								<td><c:if test="${taskDetails.reviewTask }">
+								<td>
+								<c:if test="${taskDetails.projectTaskType == 'PRODUCTIVE' }">
+									P
+								</c:if>
+								<c:if test="${taskDetails.projectTaskType == 'REVIEW' }">
 									R
 								</c:if>
-								<c:if test="${!taskDetails.reviewTask }">
-									P
+								<c:if test="${taskDetails.projectTaskType == 'ITERATION' }">
+									I
 								</c:if>
 								</td>
 								<td><span class="label label-${projectState}">${taskDetails.status}</span></td>	

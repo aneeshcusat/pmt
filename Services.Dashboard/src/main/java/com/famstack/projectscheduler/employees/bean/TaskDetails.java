@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.ProjectPriority;
+import com.famstack.projectscheduler.contants.ProjectTaskType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.util.StringUtils;
 
@@ -39,7 +40,7 @@ public class TaskDetails
 
     private Integer[] helper;
 
-    private Boolean reviewTask;
+    private ProjectTaskType projectTaskType;
 
     private String helpersList;
 
@@ -270,16 +271,6 @@ public class TaskDetails
         return hleperNames.trim();
     }
 
-    public Boolean getReviewTask()
-    {
-        return reviewTask == null ? false : reviewTask;
-    }
-
-    public void setReviewTask(Boolean reviewTask)
-    {
-        this.reviewTask = reviewTask;
-    }
-
     public Boolean getDisableTask()
     {
         return disableTask;
@@ -357,8 +348,16 @@ public class TaskDetails
 
     public String getTaskType()
     {
-        if (reviewTask != null && reviewTask) {
-            return "R";
+        if (projectTaskType != null) {
+            switch (projectTaskType) {
+                case ITERATION:
+                    return "I";
+                case PRODUCTIVE:
+                    return "P";
+                case REVIEW:
+                    return "R";
+            }
+
         }
         return "P";
     }
@@ -371,5 +370,15 @@ public class TaskDetails
     public void setTaskPausedTime(Timestamp taskPausedTime)
     {
         this.taskPausedTime = taskPausedTime;
+    }
+
+    public ProjectTaskType getProjectTaskType()
+    {
+        return projectTaskType == null ? ProjectTaskType.PRODUCTIVE : projectTaskType;
+    }
+
+    public void setProjectTaskType(ProjectTaskType projectTaskType)
+    {
+        this.projectTaskType = projectTaskType;
     }
 }

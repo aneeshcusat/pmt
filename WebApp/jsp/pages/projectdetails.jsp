@@ -580,7 +580,7 @@ width: 60%;
 	        <li>Time Taken : <b><span id="popup-timeTaken"></span> Hours</b></li>
 	        <li>Assignee : <b><span id="popup-assigneeName"></span></b></li>
 	        <li>Helpers : <b><span id="popup-HelperName"></span></b></li>
-	        <li>Is review task : <b><span id="popup-isReviewTask"></span></b></li>
+	        <li>Task Type : <b><span id="popup-projectTaskType"></span></b></li>
 	    </ul>
     </div>
 <!-- task pop up window end -->
@@ -700,7 +700,7 @@ width: 60%;
    		 	$("#popup-description").html($("#"+taskId+"description").val());
    			$("#popup-assigneeName").html($("#"+taskId+"assigneeName").val());
    			$("#popup-HelperName").html($("#"+taskId+"helperNames").val());
-   			$("#popup-isReviewTask").html($("#"+taskId+"isReviewTask").val());
+   			$("#popup-projectTaskType").html($("#"+taskId+"projectTaskType").val());
     		 	
     	     $('div#task-pop-up').show()
     	     .css('top', e.pageY + moveDown)
@@ -725,7 +725,7 @@ var clearTaskDetails = function(){
  	$("#taskDuration").html(${projectDetails.unAssignedDuration});
 	$("#taskName").val("${projectDetails.category}");
 	$("#description").val("");
-	$("#reviewTask").prop("selectedIndex", 0);
+	$("#projectTaskType").prop("selectedIndex", 0);
 	$("#priority").prop("selectedIndex", 0);
 	$("#createOrUpdateTaskId span").html("Save");
     $('#createTaskFormId').prop("action", "${applicationHome}/createTask");
@@ -764,13 +764,15 @@ var loadTaskDetails = function(taskId){
     $("#estStartTime").val($("#"+taskId+"startTime").val());
  	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
  	$("#taskName").val($("#"+taskId+"name").val());
- 	var isReviewTask = $("#"+taskId+"isReviewTask").val();
- 	$("#reviewTask").val("0");
- 	famstacklog("isReviewTask" + isReviewTask);
- 	if (isReviewTask == 'true') {
- 		$("#reviewTask").val("1");
+ 	var projectTaskType = $("#"+taskId+"projectTaskType").val();
+ 	$("#projectTaskType").val("Productive");
+ 	famstacklog("projectTaskType" + projectTaskType);
+ 	if (projectTaskType == 'REVIEW') {
+ 		$("#projectTaskType").val("Review");
+ 	} else if (projectTaskType == 'ITERATION') {
+ 		$("#projectTaskType").val("Iteration");
  	}
- 	$('#reviewTask').selectpicker('refresh');
+ 	$('#projectTaskType').selectpicker('refresh');
  	$("#projectDuration").html(${projectDetails.duration});
  	$("#taskDuration").html($("#"+taskId+"duration").val());
  	$("#taskName").val($("#"+taskId+"name").val());

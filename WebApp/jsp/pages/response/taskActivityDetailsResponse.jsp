@@ -6,8 +6,8 @@
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
-<input id="${taskDetails.taskId}isReviewTask" type="hidden"
-	value="${taskDetails.reviewTask}" />
+<input id="${taskDetails.taskId}projectTaskType" type="hidden"
+	value="${taskDetails.projectTaskType}" />
 <input id="${taskDetails.taskId}timeTaken" type="hidden"
 	value="${taskDetails.actualTimeTakenInHrs}" />
 <input id="${taskDetails.taskId}description" type="hidden"
@@ -50,7 +50,16 @@
 		<c:if test="${not taskDetails.extraTimeTask}">
 			<p>	Est Start Time : <b>${taskDetails.startTime}</b></p>
 			<p>Est Complete Time : ${taskDetails.completionTime}</p>
-			<p>Review : ${taskDetails.reviewTask}</p>
+			<p>Task Type :<c:if test="${taskDetails.projectTaskType == 'PRODUCTIVE' }">
+											Productive
+										</c:if>
+										<c:if test="${taskDetails.projectTaskType == 'REVIEW' }">
+											Review
+										</c:if>
+										<c:if test="${taskDetails.projectTaskType == 'ITERATION' }">
+											Iterative
+										</c:if>
+										</p>
 		</c:if>
 	</ul>
 

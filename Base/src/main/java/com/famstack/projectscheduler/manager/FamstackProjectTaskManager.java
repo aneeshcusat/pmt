@@ -20,6 +20,7 @@ import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.ProjectTaskType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
@@ -83,7 +84,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskItemNew.setStartTime(projectItem.getStartTime());
             taskItemNew.setPriority(ProjectPriority.HIGHT);
             taskItemNew.setProjectItem(projectItem);
-            taskItemNew.setReviewTask(false);
+            taskItemNew.setProjectTaskType(ProjectTaskType.PRODUCTIVE);
             taskItemNew.setExtraTimeTask(true);
             taskItemNew.setDuration(durationNewMinutes / 60);
             taskItemNew.setActualTimeTaken(durationNewMinutes);
@@ -149,7 +150,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         taskItem.setProjectItem(projectItem);
         taskItem.setActualTimeTaken(taskDetails.getActualTimeTaken());
         taskItem.setTaskRemainingTime(taskDetails.getTaskRemainingTime());
-        taskItem.setReviewTask(taskDetails.getReviewTask());
+        taskItem.setProjectTaskType(taskDetails.getProjectTaskType());
         Date startDate = DateUtils.tryParse(taskDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
         Date completionDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startDate, taskDetails.getDuration());
         Timestamp startTimeStamp = null;
@@ -231,17 +232,19 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         famstackUserActivityManager.deleteAllUserTaskActivities(taskDetails.getTaskId());
 
         if (taskDetails.getAssignee() > 0) {
-            famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate,
-                taskDetails.getTaskId(), taskDetails.getName(), taskDetails.getDuration() * 60,
-                taskDetails.getReviewTask() ? UserTaskType.PROJECT_REVIEW : UserTaskType.PROJECT, projectType);
+            famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate, taskDetails
+                .getTaskId(), taskDetails.getName(), taskDetails.getDuration() * 60,
+                taskDetails.getProjectTaskType() == ProjectTaskType.REVIEW ? UserTaskType.PROJECT_REVIEW
+                    : UserTaskType.PROJECT, projectType);
         }
 
         logDebug("helpers :" + taskDetails.getHelper());
         if (taskDetails.getHelper() != null && taskDetails.getHelper().length > 0) {
             for (int helperId : taskDetails.getHelper()) {
                 famstackUserActivityManager.createUserActivityItem(helperId, startDate, taskDetails.getTaskId(),
-                    taskDetails.getName(), taskDetails.getDuration() * 60, taskDetails.getReviewTask()
-                        ? UserTaskType.PROJECT_HELPER_REVIEW : UserTaskType.PROJECT_HELPER, projectType);
+                    taskDetails.getName(), taskDetails.getDuration() * 60,
+                    taskDetails.getProjectTaskType() == ProjectTaskType.REVIEW ? UserTaskType.PROJECT_HELPER_REVIEW
+                        : UserTaskType.PROJECT_HELPER, projectType);
             }
         }
     }
@@ -336,7 +339,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                 taskDetails.setTaskActivityDetails(famstackUserActivityManager
                     .getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
                 taskDetails.setDescription(taskItem.getDescription());
-                taskDetails.setReviewTask(taskItem.getReviewTask());
+                taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
                 taskDetails.setExtraTimeTask(taskItem.getExtraTimeTask());
                 taskDetails.setPriority(taskItem.getPriority());
 
@@ -512,7 +515,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     private void checkTaskIsDisabled(TaskItem taskItem, TaskDetails taskDetails)
     {
-        if (taskItem.getReviewTask()) {
+        if (taskItem.getProjectTaskType() == ProjectTaskType.REVIEW) {
             ProjectItem projectItem = taskItem.getProjectItem();
             Set<TaskItem> taskItems = projectItem.getTaskItems();
 

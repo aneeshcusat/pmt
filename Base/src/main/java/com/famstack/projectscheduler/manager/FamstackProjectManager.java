@@ -18,6 +18,7 @@ import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.ProjectTaskType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
@@ -129,7 +130,7 @@ public class FamstackProjectManager extends BaseFamstackManager
                             taskDetails.setName(task[1]);
                             taskDetails.setStartTime(task[2]);
                             taskDetails.setDuration(Integer.parseInt(task[3]));
-                            taskDetails.setReviewTask("0".equalsIgnoreCase(task[4]) ? false : true);
+                            taskDetails.setProjectTaskType(ProjectTaskType.valueOf(task[4]));
                             taskDetails.setProjectId(projectId);
 
                             famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
@@ -319,11 +320,21 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem, boolean isFullLoad)
     {
+        return mapProjectItemToProjectDetails(projectItem, isFullLoad, false);
+    }
+
+    public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem, boolean isFullLoad,
+        boolean includeDeleted)
+    {
         if (projectItem != null) {
+            if (!includeDeleted && projectItem.getDeleted() == true) {
+                return null;
+            }
             ProjectDetails projectDetails = new ProjectDetails();
             projectDetails.setCode(projectItem.getCode());
             projectDetails.setId(projectItem.getProjectId());
             projectDetails.setName(projectItem.getName());
+            projectDetails.setDeleted(projectItem.getDeleted());
             projectDetails.setProjectTaskDeatils(famstackProjectTaskManager.mapProjectTaskDetails(
                 projectItem.getTaskItems(), isFullLoad));
             projectDetails.setDuration(projectItem.getDuration());
@@ -511,8 +522,8 @@ public class FamstackProjectManager extends BaseFamstackManager
     public ProjectDetails getProjectDetails(int projectId)
     {
         ProjectDetails projectDetails =
-            mapProjectItemToProjectDetails((ProjectItem) famstackDataAccessObjectManager.getItemById(projectId,
-                ProjectItem.class));
+            mapProjectItemToProjectDetails(
+                (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class), true);
         projectDetails.setDuplicateProjects(getAllProjectDetailsList(projectDetails.getCode(), projectDetails.getId()));
         return projectDetails;
     }

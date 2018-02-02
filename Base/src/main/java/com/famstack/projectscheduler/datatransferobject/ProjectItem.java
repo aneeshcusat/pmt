@@ -122,6 +122,9 @@ public class ProjectItem implements FamstackBaseItem
     @Column(name = "po_number")
     private String PONumber;
 
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "projectItem", cascade = CascadeType.ALL)
     private Set<ProjectCommentItem> projectComments;
 
@@ -414,6 +417,16 @@ public class ProjectItem implements FamstackBaseItem
     public void setProjectSubType(ProjectSubType projectSubType)
     {
         this.projectSubType = projectSubType;
+    }
+
+    public Boolean getDeleted()
+    {
+        return deleted == null ? false : deleted;
+    }
+
+    public void setDeleted(Boolean deleted)
+    {
+        this.deleted = deleted;
     }
 
 }

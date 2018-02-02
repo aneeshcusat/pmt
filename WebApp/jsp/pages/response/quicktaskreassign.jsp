@@ -42,14 +42,22 @@
 				</div>
 				<div class="col-md-2 col-xs-12">
 						<select class="form-control cloneInput tskType">
-						<c:if test="${not empty taskDetails.reviewTask && taskDetails.reviewTask}">
-							<option value="0">P</option>
-							<option value="1" selected="selected">R</option>
+						<c:if test="${not empty taskDetails.projectTaskType && taskDetails.projectTaskType == 'PRODUCTIVE'}">
+							<option value="PRODUCTIVE"  selected="selected">P</option>
+							<option value="REVIEW">R</option>
+							<option value="ITERATION">I</option>
 						</c:if>
 						
-						<c:if test="${not empty taskDetails.reviewTask && !taskDetails.reviewTask}">
-							<option value="0" selected="selected">P</option>
-							<option value="1">R</option>
+						<c:if test="${not empty taskDetails.projectTaskType  && taskDetails.projectTaskType == 'REVIEW'}">
+							<option value="PRODUCTIVE">P</option>
+							<option value="REVIEW" selected="selected">R</option>
+							<option value="ITERATION">I</option>
+						</c:if>
+						
+						<c:if test="${not empty taskDetails.projectTaskType  && taskDetails.projectTaskType == 'ITERATION'}">
+							<option value="PRODUCTIVE">P</option>
+							<option value="REVIEW">R</option>
+							<option value="ITERATION"   selected="selected">I</option>
 						</c:if>
 						
 					</select>

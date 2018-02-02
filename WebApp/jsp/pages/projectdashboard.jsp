@@ -236,8 +236,9 @@ div#taskDetailsDiv {
 		</div>
 		<div class="col-md-2 col-xs-12">
 			<select class="form-control cloneInput tskType">
-				<option value="0">P</option>
-				<option value="1">R</option>
+				<option value="PRODUCTIVE"  selected="selected">P</option>
+				<option value="REVIEW">R</option>
+				<option value="ITERATION">I</option>
 			</select>
 		</div>
 		<div class="col-md-1 col-xs-12">
@@ -888,6 +889,9 @@ var loadInitialTaskAvailabilityTime = function(projectId){
 }
 
 var loadTaskAvailabilityTime =function(projectId, assigneeId, taskId){
+	if (assigneeId == "") {
+		return;	
+	}
 	var projectStartTime = $("#prjStartTime" + projectId).val();
 	var projectEndTime = $("#prjEndTime" + projectId).val();
 	var dataString = {"assigneeId" : assigneeId, "startDateTime":projectStartTime, "endDateTime":projectEndTime};

@@ -200,11 +200,15 @@
 								</div>
 								<div class="col-md-2">
 									<span style="background-color: blue" class="taskLabel">
-										<c:if test="${tasks.reviewTask}">
-                        R
-                        </c:if> <c:if test="${!tasks.reviewTask}">
-                        P
-                        </c:if>
+										<c:if test="${tasks.projectTaskType == 'PRODUCTIVE' }">
+											P
+										</c:if>
+										<c:if test="${tasks.projectTaskType == 'REVIEW' }">
+											R
+										</c:if>
+										<c:if test="${tasks.projectTaskType == 'ITERATION' }">
+											I
+										</c:if>
 									</span>
 								</div>
 								<div class="col-md-12">
@@ -268,11 +272,15 @@
 								</div>
 								<div class="col-md-2">
 									<span style="background-color: blue" class="taskLabel">
-										<c:if test="${tasks.reviewTask}">
-                        R
-                        </c:if> <c:if test="${!tasks.reviewTask}">
-                        P
-                        </c:if>
+										<c:if test="${tasks.projectTaskType == 'PRODUCTIVE' }">
+											P
+										</c:if>
+										<c:if test="${tasks.projectTaskType == 'REVIEW' }">
+											R
+										</c:if>
+										<c:if test="${tasks.projectTaskType == 'ITERATION' }">
+											I
+										</c:if>
 									</span>
 								</div>
 								<div class="col-md-12">
@@ -335,11 +343,15 @@
 								</div>
 								<div class="col-md-2">
 									<span style="background-color: blue" class="taskLabel">
-										<c:if test="${tasks.reviewTask}">
-                        R
-                        </c:if> <c:if test="${!tasks.reviewTask}">
-                        P
-                        </c:if>
+										<c:if test="${tasks.projectTaskType == 'PRODUCTIVE' }">
+											P
+										</c:if>
+										<c:if test="${tasks.projectTaskType == 'REVIEW' }">
+											R
+										</c:if>
+										<c:if test="${tasks.projectTaskType == 'ITERATION' }">
+											I
+										</c:if>
 									</span>
 								</div>
 								<div class="col-md-12">
@@ -435,11 +447,15 @@
 								</div>
 								<div class="col-md-2">
 									<span style="background-color: blue" class="taskLabel">
-										<c:if test="${tasks.reviewTask}">
-                        R
-                        </c:if> <c:if test="${!tasks.reviewTask}">
-                        P
-                        </c:if>
+										<c:if test="${tasks.projectTaskType == 'PRODUCTIVE' }">
+											P
+										</c:if>
+										<c:if test="${tasks.projectTaskType == 'REVIEW' }">
+											R
+										</c:if>
+										<c:if test="${tasks.projectTaskType == 'ITERATION' }">
+											I
+										</c:if>
 									</span>
 								</div>
 								<div class="col-md-12">

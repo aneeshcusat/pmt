@@ -69,9 +69,10 @@
 				<div class="form-group">
 				<label class="col-md-3 control-label">Is Review Task ?</label>
                      <div class="col-md-9">
-                         <form:select class="form-control select" path="reviewTask" id="reviewTask">
-                             <option value="0">NO</option>
-                             <option value="1">YES</option>
+                         <form:select class="form-control select" path="projectTaskType" id="projectTaskType">
+                            <option value="PRODUCTIVE" selected="selected">PRODUCTIVE</option>
+							<option value="REVIEW">REVIEW</option>
+							<option value="ITERATION">ITERATION</option>
                           </form:select>
                      </div>
 				</div>

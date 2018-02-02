@@ -22,6 +22,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.famstack.projectscheduler.contants.ProjectPriority;
+import com.famstack.projectscheduler.contants.ProjectTaskType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 
 @Entity
@@ -71,6 +72,10 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "priority")
     private ProjectPriority priority;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "prj_task_type")
+    private ProjectTaskType projectTaskType;
+
     @Column(name = "start_time")
     private Timestamp startTime;
 
@@ -79,9 +84,6 @@ public class TaskItem implements FamstackBaseItem
 
     @Column(name = "duration")
     private Integer duration;
-
-    @Column(name = "review_task")
-    private Boolean reviewTask;
 
     @Column(name = "actual_time_taken")
     private Integer actualTimeTaken;
@@ -243,16 +245,6 @@ public class TaskItem implements FamstackBaseItem
         this.helpers = helpers;
     }
 
-    public Boolean getReviewTask()
-    {
-        return reviewTask;
-    }
-
-    public void setReviewTask(Boolean reviewTask)
-    {
-        this.reviewTask = reviewTask;
-    }
-
     public Boolean getExtraTimeTask()
     {
         return extraTimeTask == null ? false : extraTimeTask;
@@ -303,6 +295,16 @@ public class TaskItem implements FamstackBaseItem
     public void setTaskPausedTime(Timestamp taskPausedTime)
     {
         this.taskPausedTime = taskPausedTime;
+    }
+
+    public ProjectTaskType getProjectTaskType()
+    {
+        return projectTaskType == null ? ProjectTaskType.PRODUCTIVE : projectTaskType;
+    }
+
+    public void setProjectTaskType(ProjectTaskType projectTaskType)
+    {
+        this.projectTaskType = projectTaskType;
     }
 
 }
