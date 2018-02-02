@@ -492,7 +492,8 @@ function initializeCreateProjectForm(project){
 		famstacklog(response);
 		var responseJson = JSON.parse(response);
 		if (responseJson.status) {
-			window.location.reload(true);
+			refreshProjectDetails();
+			$('#createprojectmodal').modal('hide');
 		}
 	});
 
@@ -508,7 +509,8 @@ function initializeCreateProjectForm(project){
             famstacklog("SUCCESS: ", data);
             var responseJson = JSON.parse(data);
             if (responseJson.status){
-                window.location.reload(true);
+               $("#projectData"+projectId).remove();
+               $(".message-box").removeClass("open");
             }
         }, function(e) {
             famstacklog("ERROR: ", e);
@@ -825,7 +827,7 @@ var loadAllProjectDetails = function(daterange) {
 	var dataString = {"daterange" : daterange};
 	doAjaxRequest("GET", "${applicationHome}/projectdashboardList", dataString, function(data) {
         $("#projectDashBoardData").html(data);
-        
+        refreshRecurringSpin();
         $('.estStartTime').datetimepicker({value:getTodayDate(new Date()) + " 08:00",
         	onGenerate:function( ct ){
         		$(this).find('.xdsoft_date.xdsoft_weekend')
@@ -1030,8 +1032,12 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
     });
 }
 
-loadAllProjectDetails('${dateRange}');
 
+function refreshProjectDetails(){
+	loadAllProjectDetails('${dateRange}');
+}
+
+refreshProjectDetails();
 
 /******************Recurring Project model************/
  function recurringProjectModel(projectCode, projectId) {
@@ -1123,8 +1129,7 @@ function deleteRecuringProjectDetails(recurringId, projectCode) {
 	    });
 }
 
-
-$( document ).ready(function(){
+function refreshRecurringSpin(){
 	doAjaxRequest("GET", "${applicationHome}/getAllRecuringProjectCodes", {}, function(data) {
 			famstacklog(data);
 			if (data != ""){
@@ -1137,7 +1142,7 @@ $( document ).ready(function(){
 	        famstacklog("ERROR: ", e);
 	        alert(e);
 	    });
-});
+}
 
-
+refreshRecurringSpin();
 </script>
