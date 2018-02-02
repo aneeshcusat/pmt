@@ -1122,5 +1122,22 @@ function deleteRecuringProjectDetails(recurringId, projectCode) {
 	        alert(e);
 	    });
 }
- 
+
+
+$( document ).ready(function(){
+	doAjaxRequest("GET", "${applicationHome}/getAllRecuringProjectCodes", {}, function(data) {
+			famstacklog(data);
+			if (data != ""){
+				var responseJson = JSON.parse(data);
+				$.each(responseJson, function(idx, elem){
+					$(".recurringSpin"+elem).addClass("fa-spin");
+				});
+			} 
+		}, function(e) {
+	        famstacklog("ERROR: ", e);
+	        alert(e);
+	    });
+});
+
+
 </script>

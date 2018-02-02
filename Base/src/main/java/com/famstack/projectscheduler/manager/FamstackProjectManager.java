@@ -887,4 +887,16 @@ public class FamstackProjectManager extends BaseFamstackManager
             famstackDataAccessObjectManager.deleteItem(recurringProjectItem);
         }
     }
+
+    public List<Object> getAllRecuringProjectCodes()
+    {
+        List<Object[]> result =
+            getFamstackDataAccessObjectManager()
+                .executeSQLQuery(HQLStrings.getString("recurringProjectCodesSQL"), null);
+        List<Object> projectCodes = new ArrayList<>();
+        for (int i = 0; i < result.size(); i++) {
+            projectCodes.add(result.get(i));
+        }
+        return projectCodes;
+    }
 }

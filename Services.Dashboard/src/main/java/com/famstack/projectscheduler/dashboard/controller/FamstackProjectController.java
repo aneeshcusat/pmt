@@ -406,4 +406,11 @@ public class FamstackProjectController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/getAllRecuringProjectCodes", method = RequestMethod.GET)
+    @ResponseBody
+    public String getAllRecuringProjectCodes()
+    {
+        return famstackDashboardManager.getAllRecuringProjectCodes();
+    }
+
 }

@@ -894,4 +894,9 @@ public class FamstackDashboardManager extends BaseFamstackService
     {
         projectManager.deleteRecuringProjectDetails(recurringProjectId);
     }
+
+    public String getAllRecuringProjectCodes()
+    {
+        return FamstackUtils.getJsonFromObject(projectManager.getAllRecuringProjectCodes());
+    }
 }
