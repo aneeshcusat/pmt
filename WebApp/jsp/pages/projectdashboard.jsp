@@ -1100,6 +1100,7 @@ function createRecurringProject(projectCode, projectId) {
 				var responseJson = JSON.parse(data);
 				loadRecurringProjectDetails(projectId, projectCode, responseJson);
 				$(".recurringSpin"+projectCode).addClass("fa-spin");
+				$(".recurringSpin"+projectCode).html('');
 			}
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
@@ -1118,6 +1119,7 @@ function deleteRecuringProjectDetails(recurringId, projectCode) {
 	doAjaxRequest("POST", "${applicationHome}/deleteRecuringProjectDetails", dataString, function(data) {
 			famstacklog(data);
 			$(".recurringSpin"+projectCode).removeClass("fa-spin");
+			$(".recurringSpin"+projectCode).html('');
 			initializeCron("0 5 0 * * ?");
 			$(".message-box").removeClass("open");
 			$("#RPABCreatOrUpdate").html("Create");
@@ -1136,6 +1138,7 @@ function refreshRecurringSpin(){
 				var responseJson = JSON.parse(data);
 				$.each(responseJson, function(idx, elem){
 					$(".recurringSpin"+elem).addClass("fa-spin");
+					$(".recurringSpin"+elem).html('<span class="hide">Recurring</span>');
 				});
 			} 
 		}, function(e) {
