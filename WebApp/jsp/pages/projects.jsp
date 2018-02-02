@@ -278,12 +278,12 @@ var loadProjectForClone = function(projectId) {
 var loadProject = function(projectId){
 	var dataString = {"projectId" : projectId};
 	doAjaxRequest("GET", "${applicationHome}/getProjectDetailsJson", dataString, function(data) {
-        console.log("SUCCESS: ", data);
+        famstacklog("SUCCESS: ", data);
         var responseJson = JSON.parse(data);
         clearCreateProjectForm();
         initializeCreateProjectForm(responseJson);
     }, function(e) {
-        console.log("ERROR: ", e);
+        famstacklog("ERROR: ", e);
         alert(e);
     });
 }
@@ -394,7 +394,7 @@ function initializeCreateProjectForm(project){
 	
 	if (project.watchers != "") {
 		var watchersArray = project.watchers.split(",");
-		console.log(watchersArray);
+		famstacklog(watchersArray);
 		for (var index=0; index < watchersArray.length; index++) {
 			$(".tagsinputWatchers").prepend('<span class="label label-primary" data-tag="'+watchersArray[index]+'">'+watchersArray[index]+'<span class="glyphicon glyphicon-remove"></span></span>');
 		}
@@ -428,7 +428,7 @@ function initializeCreateProjectForm(project){
 	}
 
 	$('#createProjectFormId').ajaxForm(function(response) {
-		console.log(response);
+		famstacklog(response);
 		var responseJson = JSON.parse(response);
 		if (responseJson.status) {
 			window.location.reload(true);
@@ -444,13 +444,13 @@ function initializeCreateProjectForm(project){
 	function doAjaxDeleteProject(projectId) {
 		var dataString = {"projectId" : projectId};
 		doAjaxRequest("POST", "${applicationHome}/deleteProject", dataString, function(data) {
-            console.log("SUCCESS: ", data);
+            famstacklog("SUCCESS: ", data);
             var responseJson = JSON.parse(data);
             if (responseJson.status){
                 window.location.reload(true);
             }
         }, function(e) {
-            console.log("ERROR: ", e);
+            famstacklog("ERROR: ", e);
             alert(e);
         });
 	}
@@ -517,7 +517,7 @@ function initializeCreateProjectForm(project){
 	};
 	
 	$("#accountId").on("change",function(){
-		console.log("account id change:" + $(this).val());
+		famstacklog("account id change:" + $(this).val());
 		resetTeam();
 		resetClient();
 		$('.teamOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
@@ -526,21 +526,21 @@ function initializeCreateProjectForm(project){
 	});
 	
 	$("#teamId").on("change",function(){
-		console.log("team id change:" + $(this).val());
+		famstacklog("team id change:" + $(this).val());
 		resetClient();
 		$('.clientOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
 		$('#clientId').selectpicker('refresh');
 		var PONumber = $( "#teamId option:selected" ).attr("poid");
 		$("#PONumber").val(PONumber);
 		$("#POidSpan").html(PONumber);
-		console.log("PONumber" + PONumber);
+		famstacklog("PONumber" + PONumber);
 	});
 	
 	$("#clientId").on("change",function(){
 		var subTeam = $(this).children(":selected").attr("subteam");
 		var account = $(this).children(":selected").attr("account");
-		console.log("account" + account);
-		console.log("subTeam" + subTeam);
+		famstacklog("account" + account);
+		famstacklog("subTeam" + subTeam);
 		$('#accountId').prop("selectedIndex",$("#"+account).prop("index"));
 		$('#teamId').prop("selectedIndex",$("#"+subTeam).prop("index"));
 		
@@ -563,7 +563,7 @@ function initializeCreateProjectForm(project){
 		var PONumber = $( "#teamId option:selected" ).attr("poid");
 		$("#PONumber").val(PONumber);
 		$("#POidSpan").html(PONumber);
-		console.log("PONumber" + PONumber);
+		famstacklog("PONumber" + PONumber);
 		
 	});
 	
@@ -616,7 +616,7 @@ function initializeCreateProjectForm(project){
 	});
 	
 	function validateEstimatedStartTime(){
-		console.log("validating project validateEstimatedStartTime");
+		famstacklog("validating project validateEstimatedStartTime");
 		var estimatedTimeVal = $('#estStartTime').val();
 		if (estimatedTimeVal != "") {
 			var estimatedStartTimeDate = new Date(estimatedTimeVal);
@@ -631,7 +631,7 @@ function initializeCreateProjectForm(project){
 	}
 	
 	function validateEstimatedEndTime(){
-		console.log("validating project validateEstimatedEndTime");
+		famstacklog("validating project validateEstimatedEndTime");
 		var estCompleteTimeVal = $('#estCompleteTime').val();
 		if (estCompleteTimeVal != "") {
 			var estCompleteTimeDate = new Date(estCompleteTimeVal);
@@ -647,7 +647,7 @@ function initializeCreateProjectForm(project){
 	}
 	
 	function validateProjectDuration(){
-		console.log("validating project duration");
+		famstacklog("validating project duration");
 		var estCompleteTimeVal = $('#estCompleteTime').val();
 		if (estCompleteTimeVal != "") {
 			var estCompleteTimeDate = new Date(estCompleteTimeVal);

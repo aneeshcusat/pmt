@@ -678,7 +678,7 @@ $(function(){
                 	$("#adjustStartTime1").val(adjustStartTime);
                 	var adjustStartTimeDate = new Date(adjustStartTime);
                 	var diffTime = (new Date() - adjustStartTimeDate) /(60*1000);
-                	console.log(diffTime);
+                	famstacklog(diffTime);
                 	$("#completedTimeHrs").html(Math.round(diffTime));
                 	$(".taskCompletionLink").click();
                 }
@@ -742,14 +742,14 @@ var myDropZone = $("#my-dropzone").dropzone({
 	addRemoveLinks : false,
 	success : function(file, response) {
 		file.previewElement.classList.add("dz-success");
-		console.log(file.name);
+		famstacklog(file.name);
 	},
 	error : function(file, response) {
 		file.previewElement.classList.add("dz-error");
 	},init: function() {
 	    this.on("processing", function(file) {
 		      this.options.url = "${applicationHome}/uploadfile/"+fileLocation;
-		      console.log("new file upload location");
+		      famstacklog("new file upload location");
 		    });
 		  }
 });
@@ -764,7 +764,7 @@ function pauseTask(taskId){
 	var dataString = {"taskId": taskId, "taskActivityId":taskActivityId};
 	doAjaxRequest("POST", "${applicationHome}/pauseTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
-        console.log(responseJson);
+        famstacklog(responseJson);
         if (responseJson.status){
         	 $(".taskPlayPause"+taskId).removeClass("fa-pause");
     		 $(".taskPlayPause"+taskId).addClass("fa-play");
@@ -785,7 +785,7 @@ function playTask(taskId){
 	doAjaxRequest("POST", "${applicationHome}/playTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
 
-        console.log(responseJson);
+        famstacklog(responseJson);
         $(".taskPlayPause"+taskId).removeClass("fa-play");
 		$(".taskPlayPause"+taskId).addClass("fa-pause");
 		$(".taskPlayPause"+taskId).attr("data-task-state", "running");

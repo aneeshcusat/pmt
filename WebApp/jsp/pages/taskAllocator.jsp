@@ -276,7 +276,7 @@ $('#createTaskFormId').ajaxForm(function(response) {
 $("#projectId").on("change",function(){
 	$('.taskIdOption').each(function () { $(this).hide(); });
 	$("#taskSelectId").prop("selectedIndex",0);
-	console.log($(this).val());	
+	famstacklog($(this).val());	
 	$('.taskIdOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
 });
 
@@ -316,12 +316,12 @@ var loadTaskDetails = function(taskId, projectId){
 	
 	if (assigneeId != "" && assigneeId != 0) {
 		 $("#"+assigneeId+"-select").click();
-		 console.log("helpers" + helpers);
+		 famstacklog("helpers" + helpers);
 		 if (helpers != "") {
-			 console.log("inside helper" + helpers);
+			 famstacklog("inside helper" + helpers);
 			 var helperIds = helpers.replace("[","").replace("]","").split(",");
 			 for (var index = 0; index<helperIds.length; index++) {
-				 console.log("inside ids" + helperIds[index]);
+				 famstacklog("inside ids" + helperIds[index]);
 				 $("#"+helperIds[index].trim()+"-helper").click();
 			 }
 		 }
@@ -382,18 +382,18 @@ var fillAssignTabledBasedOnDate =function(id){
 }
 
 var markTableFields = function(userId, startTimeHour, duration, color, helper, reset){
-	console.log("userId :"+userId+"startTimeHour :" + startTimeHour +"duration :"+ duration);
+	famstacklog("userId :"+userId+"startTimeHour :" + startTimeHour +"duration :"+ duration);
 	
 	for (var index = 0; index < duration; index++) {
 		if(startTimeHour ==  breakTime){
 			startTimeHour++;
 		}
-		console.log("index :" + index);
-		console.log("startTimeHour :" + startTimeHour);
+		famstacklog("index :" + index);
+		famstacklog("startTimeHour :" + startTimeHour);
 		var getCell = $("#"+userId+"-"+startTimeHour);
 		$("#estStartTime").css("border", "1px solid #D5D5D5");
 		if (reset){
-			console.log("reset");
+			famstacklog("reset");
 			if($(getCell).attr("isassigned") == "true"){
 				return;
 			}
@@ -402,12 +402,12 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 			$(getCell).attr("cellmarked",false);
 			$(getCell).attr("modified",false);
 		} else {
-			console.log("helper" + $(getCell).attr("isassigned"));
+			famstacklog("helper" + $(getCell).attr("isassigned"));
 			var cellBackGroundColor = $(getCell).css("background-color");
-			console.log("cellBackGroundColor0 :" + cellBackGroundColor);
+			famstacklog("cellBackGroundColor0 :" + cellBackGroundColor);
 			if($(getCell).attr("isassigned") == "true"){
 				if (helper){
-					console.log("error- helper");
+					famstacklog("error- helper");
 					$("#"+userId+"-helper").prop("checked", false);
 					return;
 					//error
@@ -420,7 +420,7 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 				}
 			}
 			increaseTotalHours(userId);
-			console.log("cellBackGroundColor1 :" + cellBackGroundColor);
+			famstacklog("cellBackGroundColor1 :" + cellBackGroundColor);
 			$(getCell).attr("cellcolor", cellBackGroundColor);
 			$(getCell).css("background-color", color);
 			$(getCell).attr("cellmarked",true);
@@ -486,7 +486,7 @@ $("#estStartTime").on("change",function(){
 	
 	if (!$("#assignTableId").is(':hidden') && $('input:radio[name=assignee]:checked').length > 0) {
 		var id = $('input:radio[name=assignee]:checked').attr('id');
-		console.log("select box id" + id);
+		famstacklog("select box id" + id);
 		fillAssignTabledBasedOnDate(id);
 	}
 	
@@ -545,8 +545,8 @@ var checkNextAndPreviousMarked = function(thisVarId, checkOrUnchek){
 	var cellIds  = thisVarId.split("-");
 	var userId = cellIds[0];
 	var time = parseInt(cellIds[1]);
-	console.log("time" + time);
-	console.log("userId" + userId);
+	famstacklog("time" + time);
+	famstacklog("userId" + userId);
 	var nextMarked = false;
 	var preMarked = false;
 	var sameMarked = false;
@@ -558,9 +558,9 @@ var checkNextAndPreviousMarked = function(thisVarId, checkOrUnchek){
 	preMarked = isPreMarked(thisVarId);
 	nextMarked = isNextMarked(thisVarId);
 	
-	console.log("cellSelectCount" + cellSelectCount);
-	console.log("preMarked" + preMarked);
-	console.log("nextMarked" + nextMarked);
+	famstacklog("cellSelectCount" + cellSelectCount);
+	famstacklog("preMarked" + preMarked);
+	famstacklog("nextMarked" + nextMarked);
 	if (checkOrUnchek) {
 		return (cellSelectCount == 0 || preMarked || nextMarked) && !sameMarked;
 	}
@@ -578,14 +578,14 @@ var isPreMarked = function(thisVarId){
 		if (time == breakTime+1) {
 			tmpTime--;
 		}
-		console.log("pre cell id :" + userId+"-"+tmpTime);
+		famstacklog("pre cell id :" + userId+"-"+tmpTime);
 		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
 		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
 		if (cellmarked == 'true' && celleditable == 'true') {
 			preMarked = true;
 		}
 	}
-	console.log("preMarked" + preMarked);
+	famstacklog("preMarked" + preMarked);
 	return preMarked;
 }
 
@@ -601,14 +601,14 @@ var isNextMarked = function(thisVarId){
 		if (time == breakTime-1) {
 			tmpTime++;
 		}
-		console.log("next cell id :" + userId+"-"+tmpTime);
+		famstacklog("next cell id :" + userId+"-"+tmpTime);
 		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
 		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
 		if (cellmarked == 'true' && celleditable == 'true') {
 			nextMarked = true;
 		}
 	}
-	console.log("nextMarked" + nextMarked);
+	famstacklog("nextMarked" + nextMarked);
 	return nextMarked;
 }
 
@@ -616,13 +616,13 @@ var isNextMarked = function(thisVarId){
 $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", function(){
 	
 	var maxDuration = $('#duration > option').length;
-	console.log("maxDuration" + maxDuration);
+	famstacklog("maxDuration" + maxDuration);
 	var cellId = this.id;
 	var userId  = cellId.split("-")[0];
 	var hourId = cellId.split("-")[1];
 	
 	var cellBackGroundColor = $(this).css("background-color");
-	console.log(cellBackGroundColor);
+	famstacklog(cellBackGroundColor);
 	var celleditable = $("#"+userId+"-"+hourId).attr("celleditable");
 	if (cellBackGroundColor == "rgb(0, 0, 255)" || celleditable == "false") {
 		return;
@@ -636,7 +636,7 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 	
 	if (cellBackGroundColor == "rgb(255, 255, 0)" && checkNextAndPreviousMarked(this.id, false)) {
 		var cellColor = $(this).attr("cellcolor");
-		console.log(cellColor);
+		famstacklog(cellColor);
 		$(this).css("background-color", cellColor);
 		decreaseTotalHours(userId);
 		cellSelectCount--;
@@ -657,8 +657,8 @@ $("table#employeeListForTaskTable").on("click", "tr.editable td.markable", funct
 		
 	} else if (checkNextAndPreviousMarked(this.id, true)){
 		var startProjectDate = new Date(startProjectTime);
-		console.log("housrid:" + hourId);
-		console.log(" startProjectDate.getHours():" +  startProjectDate.getHours());
+		famstacklog("housrid:" + hourId);
+		famstacklog(" startProjectDate.getHours():" +  startProjectDate.getHours());
 		if(hourId < startProjectDate.getHours()) {
 			return;
 		} 
@@ -722,14 +722,14 @@ var resetAssignTable = function(){
 	});
 	
 	$('table#employeeListForTaskTable td[dynamicvalue="8"]').each(function () {
-		console.log("reset 8");
+		famstacklog("reset 8");
 		$(this).html("8");
 	});
 }
 
 
 var increaseTotalHours = function(userId){
-	console.log($("#"+userId+"-totalHours").html());
+	famstacklog($("#"+userId+"-totalHours").html());
 	var totalHours = parseInt($("#"+userId+"-totalHours").html()) + 1;
 	var availableHours = parseInt($("#"+userId+"-availabeHours").html()) - 1;
 	$("#"+userId+"-totalHours").html(""+totalHours);
@@ -741,11 +741,11 @@ var increaseTotalHours = function(userId){
 	} else {
 		$("#"+userId+"-availabeHours").css("color", "green");
 	}
-	console.log("increase total hours:" +totalHours);
+	famstacklog("increase total hours:" +totalHours);
 }
 
 var decreaseTotalHours = function(userId){
-	console.log($("#"+userId+"-totalHours").html());
+	famstacklog($("#"+userId+"-totalHours").html());
 	var totalHours = parseInt($("#"+userId+"-totalHours").html()) - 1;
 	var availableHours = parseInt($("#"+userId+"-availabeHours").html()) + 1;
 	$("#"+userId+"-totalHours").html(""+totalHours);
@@ -756,7 +756,7 @@ var decreaseTotalHours = function(userId){
 	} else {
 		$("#"+userId+"-availabeHours").css("color", "green");
 	}
-	console.log("increase total hours:" +totalHours);
+	famstacklog("increase total hours:" +totalHours);
 }
 
 var fillTableFromJson = function(){
@@ -796,12 +796,12 @@ var fillTableFromJson = function(){
 					hour++;
 				}
 				var cellId = $("#"+elem.userId+"-"+hour);
-				console.log(cellId);
+				famstacklog(cellId);
 				
 				hour++;
 				if($("#taskId").val() != "" && elem.taskId == $("#taskId").val() &&  elem.taskId != 0) {
-					console.log(elem.taskId);
-					console.log($("#taskId").val());
+					famstacklog(elem.taskId);
+					famstacklog($("#taskId").val());
 				} else {
 					var isOverLapping = false;
 					if ($(cellId).attr("cellmarked")) {

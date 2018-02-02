@@ -243,7 +243,7 @@ function sendMessage(group) {
             $('#'+groupId).val('')
         }
     }, function(e) {
-        console.log(e)
+        famstacklog(e)
     }, false);
 }
 
@@ -264,7 +264,7 @@ function setGroupEditPage(responseJsonObj) {
 
     var subscribers = responseJsonObj.subscriberIds;
     for (var i=0; i<subscribers.length; i++) {
-    	console.log(subscribers[i]);
+    	famstacklog(subscribers[i]);
         $('#sub'+subscribers[i]).prop("checked",true);
     }
     $('#createGroupFormId').prop("action", "updateGroup");
@@ -279,7 +279,7 @@ function editGroup(groupId) {
         var responseJsonObj = JSON.parse(response);
         setGroupEditPage(responseJsonObj);
     }, function(e) {
-        console.log(e)
+        famstacklog(e)
     });
 }
 
@@ -292,7 +292,7 @@ function getMessageAfterId(groupId, messageId) {
             var responseJsonObj = JSON.parse(response);
             processMessageAfterSave(responseJsonObj, groupId);
         }, function(e) {
-            console.log(e)
+            famstacklog(e)
         }, false);
 }
 
@@ -395,7 +395,7 @@ function doAjaxDeleteGroup(groupId) {
 	            window.location.reload(true);
 	        }
 	    }, function(e) {
-	        console.log(e)
+	        famstacklog(e)
 	    });
 }
 

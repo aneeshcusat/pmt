@@ -283,7 +283,7 @@ tr.clickable:hover {
 	 doAjaxRequest("POST", "${applicationHome}/deleteAccountConfig",  {id:id, action:action},function(data) {
 		 window.location.reload(true);
 	 	},function(error) {
-	    	console.log("ERROR: ", error);
+	    	famstacklog("ERROR: ", error);
 	    });
  }
  
@@ -298,7 +298,7 @@ tr.clickable:hover {
 	 doAjaxRequest("POST", "${applicationHome}/accountConfig",  {input1: input1, input2: input2,type: type, action:action, parentId:parentid, id:id},function(data) {
 		 window.location.reload(true);
 	    },function(error) {
-	    	console.log("ERROR: ", error);
+	    	famstacklog("ERROR: ", error);
 	    });
  }
  
@@ -310,12 +310,12 @@ tr.clickable:hover {
      
 
      $("input[type=search]").keydown(function(){
-    	 console.log($(this).val());
+    	 famstacklog($(this).val());
     	 filterAccountData(this);
      });
      
      $("input[type=search]").keyup(function(){
-    	 console.log($(this).val());
+    	 famstacklog($(this).val());
     	 filterAccountData(this);
      });
  });
@@ -330,7 +330,7 @@ tr.clickable:hover {
 		    $('span.accountInfo').each(function(){
 		       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
 		          var accountId =  $(this).attr("accountId");
-		          console.log(accountId);
+		          famstacklog(accountId);
 		          $('table tr[account="'+accountId+'"]').each(function () {
 						$(this).show();
 					});

@@ -125,7 +125,7 @@
     	if(validation()) {
     		return;
     	}
-    	console.log("jello");
+    	famstacklog("jello");
     	var dataString = {"email": $('#emailId').val(), "oldPassword": $('#currentPassword').val() , "password": $('#password').val(), "confPassword": $('#confPassword').val() };
     	
 		doAjaxRequest("POST", "/bops/dashboard/changePassword", dataString,

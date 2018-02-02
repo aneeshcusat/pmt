@@ -203,7 +203,7 @@ var jvalidate = $("#createUserFormId").validate({
 });
 
 $('#createUserFormId').ajaxForm(function(response) { 
-	console.log(response);
+	famstacklog(response);
 	var responseJson = JSON.parse(response);
     if (responseJson.status){
         window.location.reload(true);
@@ -219,7 +219,7 @@ function createEmployeeDetails(){
 function doAjaxUpdateUserForm(){
 	var imageData = $('.image-editor').cropit('export');
 	$('#filePhoto').val(imageData);
-	console.log(imageData);
+	famstacklog(imageData);
 	$('#createUserFormId').prop("action", "updateEmployee");
     $('#createUserFormId').submit();
 }
@@ -239,16 +239,16 @@ function loadUser(userId) {
         data: "userId="+userId,
         timeout : 1000,
         success : function(data) {
-            console.log("SUCCESS: ", data);
+            famstacklog("SUCCESS: ", data);
             processUserResponseData(data);
             $("#createOrUpdateEmployeeId span").html("Update");
             $("#createOrUpdateEmployeeId").prop("href","javascript:doAjaxUpdateUserForm()");
         },
         error : function(e) {
-            console.log("ERROR: ", e);
+            famstacklog("ERROR: ", e);
         },
         done : function(e) {
-            console.log("DONE");
+            famstacklog("DONE");
         }
     });
 
@@ -268,17 +268,17 @@ function doAjaxDeleteUser(userId) {
         data: "userId="+userId,
         timeout : 1000,
         success : function(data) {
-            console.log("SUCCESS: ", data);
+            famstacklog("SUCCESS: ", data);
             var responseJson = JSON.parse(data);
             if (responseJson.status){
                 window.location.reload(true);
             }
         },
         error : function(e) {
-            console.log("ERROR: ", e);
+            famstacklog("ERROR: ", e);
         },
         done : function(e) {
-            console.log("DONE");
+            famstacklog("DONE");
         }
     });
 
@@ -347,7 +347,7 @@ $(function() {
 
 function performSearch(){
 	var serarchText = $('#employeeSearch').val();
-	console.log(serarchText);
+	famstacklog(serarchText);
 	if (serarchText != "") {
 	 $('.contact-name').hide();
     $('.contact-name').each(function(){

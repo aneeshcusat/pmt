@@ -631,7 +631,7 @@ $(".taskOwnersList").on("click", function(){
 
 function performSearch(){
 	var serarchText = $('#taskActivitySearchId').val();
-	console.log(serarchText);
+	famstacklog(serarchText);
 	var searchId = ".taskact-item";
 
 	if (activeUserId != "") {

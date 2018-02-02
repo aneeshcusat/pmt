@@ -68,7 +68,7 @@ function userPingCheck(){
     	});
     	sortOnlineStatus();
     },function(error) {
-    	console.log("ERROR: ", error);
+    	famstacklog("ERROR: ", error);
     },false);
 }
 
@@ -76,9 +76,9 @@ function userNotifications(){
 	doAjaxRequestWithGlobal("GET", "${applicationHome}/getNotifications",  {},function(data) {
     	var notifications = JSON.parse(data);
     	processNotification(notifications);
-		console.log("notifications: ", notifications);
+		famstacklog("notifications: ", notifications);
     },function(error) {
-    	console.log("ERROR: ", error);
+    	famstacklog("ERROR: ", error);
     },false);
 }
 
@@ -86,9 +86,9 @@ function userMessageNotifications(){
 	doAjaxRequestWithGlobal("GET", "${applicationHome}/getMessageNotifications",  {},function(data) {
     	var msgNotifications = JSON.parse(data);
     	processMessageNotification(msgNotifications);
-		console.log("notifications: ", msgNotifications);
+		famstacklog("notifications: ", msgNotifications);
     },function(error) {
-    	console.log("ERROR: ", error);
+    	famstacklog("ERROR: ", error);
     },false);
 }
 
@@ -102,16 +102,16 @@ function updateTaskNotification(){
     	processTaskNotification(notifications.COMPLETED);
     	processTaskNotification(notifications.ASSIGNED);
     	processTaskNotification(notifications.INPROGRESS);
-		console.log("task notification: ", notifications);
+		famstacklog("task notification: ", notifications);
 		$(".taskNotification").html(tasksCount);
     },function(error) {
-    	console.log("ERROR: ", error);
+    	famstacklog("ERROR: ", error);
     },false);
 }
 
 function processTaskNotification(notifications){
 	$.each(notifications, function(idx, elem){
-		console.log(tasksCount);
+		famstacklog(tasksCount);
 		var taskName = elem.name;
 		var taskPercentage=elem.percentageOfTaskCompleted;
 		var taskDate = null;
@@ -181,7 +181,7 @@ function processNotification(notification){
 	$("#notificationPageDiv").html("");
 	var newMessages = parseInt($("#newNotification").html());
 	$.each(notification, function(idx, elem){
-		console.log(newMessages);
+		famstacklog(newMessages);
 		var noficationType = elem.notificationType;
 		var message = elem.data.name ;
 		var titileMsg = getMessageFromKey(elem.data.notificationKey);
@@ -211,9 +211,9 @@ function processMessageNotification(notification){
 	$("#mCSB_2_container").html("");
 	var newMessages = parseInt($("#newMessageNotification").html());
 	$.each(notification, function(idx, groupElem){
-		console.log(groupElem);
+		famstacklog(groupElem);
 		$.each(groupElem, function(idx, elem){
-			console.log(elem);
+			famstacklog(elem);
 			var groupId = elem.group;
 			var groupName = elem.groupName;
 			var userName = elem.userFullName;

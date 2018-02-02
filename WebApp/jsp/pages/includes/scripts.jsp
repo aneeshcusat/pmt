@@ -106,6 +106,16 @@ site_settings = $("#settingsId").html();
          <!--  famstack scripts ends -->
     <!-- END SCRIPTS --> 
     <script>
+    var famstackLogEnabled = false;
+    function famstacklog(message){
+    	famstacklog("", message);
+    }
+    
+	function famstacklog(code, message){
+    	if (famstackLogEnabled) {
+    		console.log(code, message);
+    	}
+    }
     
     $('input[type="checkbox"].icheckbox').change(function () {
         var name = $(this).prop('name');
@@ -114,20 +124,20 @@ site_settings = $("#settingsId").html();
     });
     
     function doAjaxEnableSettings(name,value) {
-    	console.log("name: ", name);
-    	console.log("value: ", value);
+    	famstacklog("name: ", name);
+    	famstacklog("value: ", value);
 	    doAjaxRequestWithGlobal("POST", "${applicationHome}/setConfiguration",  {propertyName:name,propertyValue:value},function(data) {
-			console.log("data: ", data);
+			famstacklog("data: ", data);
 	    },function(error) {
-	    	console.log("ERROR: ", error);
+	    	famstacklog("ERROR: ", error);
 	    },false);
 	 }
     
     $("#userGroupSelection").change(function(){
-    	console.log($(this).prop("selectedIndex"));
+    	famstacklog($(this).prop("selectedIndex"));
     	if ($(this).prop("selectedIndex") > 0) {
 	    	 var id = $(this).val();
-	    	 console.log("userGroupId: ", id);
+	    	 famstacklog("userGroupId: ", id);
 	    	 doAjaxChangeUserGroup(id);
     	}
     });
@@ -136,7 +146,7 @@ site_settings = $("#settingsId").html();
 	    doAjaxRequest("POST", "${applicationHome}/changeUserGroup",  {groupId:id},function(data) {
 	    	window.location.reload(true);
 	    },function(error) {
-	    	console.log("ERROR: ", error);
+	    	famstacklog("ERROR: ", error);
 	    },false);
 	 }
     

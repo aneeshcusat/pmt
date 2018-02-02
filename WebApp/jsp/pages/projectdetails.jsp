@@ -766,7 +766,7 @@ var loadTaskDetails = function(taskId){
  	$("#taskName").val($("#"+taskId+"name").val());
  	var isReviewTask = $("#"+taskId+"isReviewTask").val();
  	$("#reviewTask").val("0");
- 	console.log("isReviewTask" + isReviewTask);
+ 	famstacklog("isReviewTask" + isReviewTask);
  	if (isReviewTask == 'true') {
  		$("#reviewTask").val("1");
  	}
@@ -979,7 +979,7 @@ var fillAssignTabledBasedOnDate =function(id){
 var markTableFields = function(userId, startTimeHour, duration, color, helper, reset){
 	
 	for (var index = 0; index < duration; index++) {
-		console.log("duration :" + duration);
+		famstacklog("duration :" + duration);
 		if(startTimeHour ==  breakTime){
 			startTimeHour++;
 		}
@@ -1363,12 +1363,12 @@ var fillTableFromJson = function(){
 					hour++;
 				}
 				var cellId = $("#"+elem.userId+"-"+hour);
-				console.log(cellId);
+				famstacklog(cellId);
 				
 				hour++;
 				if($("#taskId").val() != "" && elem.taskId == $("#taskId").val() &&  elem.taskId != 0) {
-					console.log(elem.taskId);
-					console.log($("#taskId").val());
+					famstacklog(elem.taskId);
+					famstacklog($("#taskId").val());
 				} else {
 					var isOverLapping = false;
 					if ($(cellId).attr("cellmarked")) {
