@@ -265,6 +265,7 @@ public class UserTaskActivityItem implements FamstackBaseItem
         this.projectType = projectType;
     }
 
+    @Override
     public String getUserGroupId()
     {
         return userGroupId;

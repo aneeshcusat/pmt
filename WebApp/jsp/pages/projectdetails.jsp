@@ -1329,45 +1329,58 @@ var decreaseTotalHours = function(userId){
 }
 
 var fillTableFromJson = function(){
+	famstacklog("jsonAssignData :" + jsonAssignData);
 	try{	
 	$.each(JSON.parse(jsonAssignData), function(idx, elem){
 		if (getTodayDate(new Date($("#estStartTime").val())) == elem.dateId) {
-			var hour = parseInt(elem.startHour);
-			
-			var duration = 0;
-			var durationEnd = 0;
-			
-			if (elem.durationInMinutes >= 60) {
-				duration = elem.durationInMinutes / 60;
-				durationEnd = elem.durationInMinutes % 60;
-			} else {
-				durationEnd = elem.durationInMinutes;
-			}
 			
 			var isCompleted = elem.actualEndTime == null ?false:true;
 			var isInprogress = elem.actualStartTime == null?false:true;
+
+			var starthour = parseInt(elem.startHour);
+			var durationmins = parseInt(elem.durationInMinutes);
+			var startmins = parseInt(elem.startMins);
+	
+			var iteration = 0;
+			var duration = (durationmins * 100) /60;
 			
-			for (var index = 0; (index < duration) || (durationEnd > 0); index++) {
-				var cellWidth = 102;
-				
-				if (index + 1 >= duration) {
-					cellWidth = 100;
-					if (durationEnd > 0) {
-						cellWidth = (durationEnd /60) * 100;
-						durationEnd = 0;
+			famstacklog("duration :" + duration);
+			famstacklog("starthour :" + starthour);
+			famstacklog("startmins :" + startmins);
+			while (duration > 0 ) {
+				var marginLeft = 0;
+				var style = "float:left;";
+				if (iteration == 0){
+					marginLeft = (startmins*100)/60;
+					if ((duration + marginLeft) >= 100) {
+						firstWidth = 100 - marginLeft;
+						duration-=firstWidth;
+					} else {
+						firstWidth = duration;
+						duration =0;
 					}
 					
-				} else if (hour + 1 == breakTime) {
-					cellWidth = 100;
+					style +="width:"+firstWidth+"%;margin-left:"+marginLeft+"px;";
+				} else {
+					
+					if (duration >= 100) {
+						style +="width:100%;margin-left:0px;";
+						duration-=100;
+					} else {
+						style +="width:"+duration+"%;";
+						duration =0;
+					}
+					
 				}
 				
-				if (hour == breakTime) {
-					hour++;
+				famstacklog("style :" + style);
+				
+				if (starthour == breakTime) {
+					starthour++;
 				}
-				var cellId = $("#"+elem.userId+"-"+hour);
+				var cellId = $("#"+elem.userId+"-"+starthour);
 				famstacklog(cellId);
 				
-				hour++;
 				if($("#taskId").val() != "" && elem.taskId == $("#taskId").val() &&  elem.taskId != 0) {
 					famstacklog(elem.taskId);
 					famstacklog($("#taskId").val());
@@ -1412,13 +1425,15 @@ var fillTableFromJson = function(){
 					if (!isOverLapping) {
 						cellStausColor = "rgb(255, 0, 0)";
 					}
-	
-					$(cellId).html('<span title="'+cellTitleTaskName+'" style="width:'+cellWidth+'%;background-color:'+cellStausColor+'">'+cellTaskType+'</span>');
+					$(cellId).html('<span title="'+cellTitleTaskName+'" style="'+style+'height:41px;padding-top:10px;background-color:'+cellStausColor+'">'+cellTaskType+'</span>');
 					
 					increaseTotalHours(elem.userId);
 				}
 				
+				iteration++;
+				starthour++;
 			}
+			
 		}
 	});
 	}catch(err){

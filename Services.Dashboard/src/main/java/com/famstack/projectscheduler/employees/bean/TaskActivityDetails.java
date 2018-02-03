@@ -87,6 +87,11 @@ public class TaskActivityDetails
         this.startHour = startHour;
     }
 
+    public int getStartMins()
+    {
+        return startTime != null ? startTime.getMinutes() : 0;
+    }
+
     public int getUserId()
     {
         return userId;
@@ -267,4 +272,8 @@ public class TaskActivityDetails
         this.durationInMinutes = durationInMinutes;
     }
 
+    public static void main(String[] args)
+    {
+        System.out.println(new Date(Long.parseLong("1516156200000")));
+    }
 }
