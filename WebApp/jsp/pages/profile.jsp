@@ -157,7 +157,7 @@
            <div class="header">
                 <h2>${userProile.firstName} ${userProile.lastName}</h2><span>
                  <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${userProile.id}')">
-	     			Edit
+	     			<span class="fa fa-edit fa-2x" style="color: blue"></span>
 	      		</a> 			
 	     		</span>
                  <table class="table table-user-information">
