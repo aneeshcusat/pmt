@@ -59,12 +59,10 @@
 									onclick="deleteProject('${project.id}','${project.name}');">
 									<span class="fa fa-times  fa-2x"></span>
 								</a>
-								<!--	
 								<a href="#" data-box="#confirmationbox" style="margin-left:7px; color:orange;"  title="Archive this project" class="deleteProject mb-control profile-control-right" 
 									onclick="archiveProject('${project.id}','${project.name}');">
 									<i class="fa fa-ban fa-2x" aria-hidden="true"></i>
 								</a>
-								-->
 							
 							</td>
 			        	</tr>

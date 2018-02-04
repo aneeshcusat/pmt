@@ -67,10 +67,17 @@
 								<span class="fa fa-times  fa-2x"></span>
 							</a>
 							
+							<a href="#" data-box="#confirmationbox" style="margin-left:7px; color:orange;"  title="Archive this project" class="deleteProject mb-control profile-control-right" 
+									onclick="archiveProject('${project.id}','${project.name}');">
+									<i class="fa fa-ban fa-2x" aria-hidden="true"></i>
+							</a>
+							
 							<a href="#" style="margin-left: 7px;color:blue"  title="Recurring Project"  data-toggle="modal" data-target="#recurringprojectmodal" 
 								onclick="recurringProjectModel('${project.code}', '${project.id}')">
 								<span class="fa fa-recycle fa-2x recurringSpin${project.code}" ></span>
 							</a>
+							
+							
 						</td>
 			        </tr>
 					<tr class="collapse projectDataHidden projectData${project.id}">

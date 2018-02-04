@@ -504,6 +504,29 @@ function initializeCreateProjectForm(project){
 		$("#confirmYesId").prop("href","javascript:doAjaxDeleteProject('"+projectId+"')");
 	}
 	
+	function archiveProject(projectId, projectName){
+		$(".msgConfirmText").html("Archive project");
+		$(".msgConfirmText1").html(projectName);
+		$("#confirmYesId").prop("href","javascript:doAjaxArchiveProject('"+projectId+"')");
+	}
+	
+	function doAjaxArchiveProject(projectId) {
+		var dataString = {"projectId" : projectId};
+		doAjaxRequest("POST", "${applicationHome}/archiveProject", dataString, function(data) {
+            famstacklog("SUCCESS: ", data);
+            var responseJson = JSON.parse(data);
+            if (responseJson.status){
+               $("#projectData"+projectId).remove();
+               $(".projectData"+projectId).remove();
+               $(".message-box").removeClass("open");
+            }
+        }, function(e) {
+            famstacklog("ERROR: ", e);
+            alert(e);
+        });
+	}
+	
+	
 	function doAjaxDeleteProject(projectId) {
 		var dataString = {"projectId" : projectId};
 		doAjaxRequest("POST", "${applicationHome}/deleteProject", dataString, function(data) {

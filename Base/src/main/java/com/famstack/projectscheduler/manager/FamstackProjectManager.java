@@ -230,6 +230,17 @@ public class FamstackProjectManager extends BaseFamstackManager
         }
     }
 
+    public void archiveProjectItem(int projectId)
+    {
+        ProjectItem projectItem =
+            (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class);
+        if (projectItem != null) {
+            projectItem.setDeleted(true);
+            famstackDataAccessObjectManager.updateItem(projectItem);
+        }
+
+    }
+
     public ProjectItem getProjectItemById(int projectId)
     {
         return (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class);

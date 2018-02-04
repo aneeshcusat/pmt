@@ -142,7 +142,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
             notificationEmailItem.setNotificationType(notificationType);
             for (FamstackBaseNotificationService notificationService : notificationServices) {
 
-                if (notificationService.isEnabled()) {
+                if (notificationService.isEnabled() || allowNotification(notificationType)) {
                     logDebug("Sending notification...");
                     notificationService.notify(notificationEmailItem);
                 }
@@ -150,6 +150,13 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         } else {
             logError("Email type " + notificationType + "has not configured! ");
         }
+    }
+
+    private boolean allowNotification(NotificationType notificationType)
+    {
+        return (notificationType == NotificationType.RESET_PASSWORD
+            || notificationType == NotificationType.FORGOT_PASSWORD || notificationType == NotificationType.USER_REGISTRAION)
+            ? true : false;
     }
 
     private EmailNotificationItem getProjectStatusNotificationItem(Object object)

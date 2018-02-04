@@ -218,6 +218,12 @@ public class FamstackDashboardManager extends BaseFamstackService
         notifyAll(NotificationType.PROJECT_DELETE, projectDetails);
     }
 
+    public void archiveProject(int projectId)
+    {
+        projectManager.archiveProjectItem(projectId);
+
+    }
+
     public void createComment(String projectComments, int projectId)
     {
         projectCommentManager.createProjectCommentItem(projectComments, projectId);

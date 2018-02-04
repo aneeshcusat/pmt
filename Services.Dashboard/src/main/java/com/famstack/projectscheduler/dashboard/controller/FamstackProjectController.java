@@ -278,6 +278,14 @@ public class FamstackProjectController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/archiveProject", method = RequestMethod.POST)
+    @ResponseBody
+    public String archiveProject(@RequestParam("projectId") int projectId)
+    {
+        famstackDashboardManager.archiveProject(projectId);
+        return "{\"status\": true}";
+    }
+
     @RequestMapping(value = "/getProjectDetailsJson", method = RequestMethod.GET)
     @ResponseBody
     public String getProjectDetailsJson(@RequestParam("projectId") int projectId)
