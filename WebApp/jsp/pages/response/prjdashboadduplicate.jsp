@@ -22,7 +22,7 @@
 	                  		<c:set var="projectState" value="danger"/>
 	                  </c:if>
 	                  
-                 		<tr class="projectDuplicate${projectId}">
+                 		<tr class="projectDuplicate${projectId}" id="projectData${project.id}">
 		        			<td width="1%"></td>
 				        	<td width="10%">${project.completionTime}</td>
 				        	<td width="20%"><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
@@ -59,6 +59,13 @@
 									onclick="deleteProject('${project.id}','${project.name}');">
 									<span class="fa fa-times  fa-2x"></span>
 								</a>
+								<!--	
+								<a href="#" data-box="#confirmationbox" style="margin-left:7px; color:orange;"  title="Archive this project" class="deleteProject mb-control profile-control-right" 
+									onclick="archiveProject('${project.id}','${project.name}');">
+									<i class="fa fa-ban fa-2x" aria-hidden="true"></i>
+								</a>
+								-->
+							
 							</td>
 			        	</tr>
 					</c:forEach>

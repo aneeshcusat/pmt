@@ -511,6 +511,7 @@ function initializeCreateProjectForm(project){
             var responseJson = JSON.parse(data);
             if (responseJson.status){
                $("#projectData"+projectId).remove();
+               $(".projectData"+projectId).remove();
                $(".message-box").removeClass("open");
             }
         }, function(e) {

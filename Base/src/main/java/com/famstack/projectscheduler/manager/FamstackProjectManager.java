@@ -539,8 +539,12 @@ public class FamstackProjectManager extends BaseFamstackManager
         ProjectDetails projectDetails =
             mapProjectItemToProjectDetails(
                 (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class), true);
-        projectDetails.setDuplicateProjects(getAllProjectDetailsList(projectDetails.getCode(), projectDetails.getId()));
+        if (projectDetails != null) {
+            projectDetails.setDuplicateProjects(getAllProjectDetailsList(projectDetails.getCode(),
+                projectDetails.getId()));
+        }
         return projectDetails;
+
     }
 
     public List<ProjectDetails> loadDuplicateProjects(int projectId, String projectCode)
