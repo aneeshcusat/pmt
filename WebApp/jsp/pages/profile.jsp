@@ -1,8 +1,47 @@
 <%@include file="includes/header.jsp" %>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <style>
-*{
-    font-family: 'Open Sans', sans-serif;
-}
+ #registerusermodal .modal-dialog  {width:65%;}
+    .cropit-preview {
+        background-color: #f8f8f8;
+        background-size: cover;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-top: 7px;
+        width: 175px;
+        height: 175px;
+        cursor: move;
+      }
+
+      .cropit-preview-image-container {
+        cursor: move;
+      }
+
+      .image-size-label {
+        margin-top: 10px;
+      }
+
+      input, .export {
+        display: block;
+      }
+      
+      
+      .cropit-image-background {
+        opacity: .2;
+        cursor: auto;
+      }
+
+      .image-size-label {
+        margin-top: 10px;
+      }
+
+      input {
+        display: block;
+      }
+
+      .export {
+        margin-top: 10px;
+      }
 
 .well {
     margin-top:-20px;
@@ -25,14 +64,6 @@
     padding: 15px;
     border-radius: 0px !important;
     border-bottom : 2px solid rgba(97, 203, 255, 0.65);
-}
-
-body {
-font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-font-size: 14px;
-line-height: 1.42857143;
-color: #fff;
-background-color: #F1F1F1;
 }
 
 .bg_blur
@@ -111,18 +142,6 @@ background-color: #F1F1F1;
 }
 
 
-@media (max-width: 767px) {
-    .header{
-        text-align : center;
-    }
-    
-    
-    
-    .nav{
-        margin-top : 30px;
-    }
-}
-
 </style>
   <div class="content-frame">                                    
        <!-- START CONTENT FRAME TOP -->
@@ -134,9 +153,13 @@ background-color: #F1F1F1;
    <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
 	<div class="row panel">
         <div class="col-md-8  col-xs-10">
-           <img src="${applicationHome}/image/${userProile.id}" class="img-thumbnail picture hidden-xs" alt="${userProile.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
+               <img src="${applicationHome}/image/${userProile.id}" class="img-thumbnail picture hidden-xs" alt="${userProile.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
            <div class="header">
-                <h2>${userProile.firstName} ${userProile.lastName}</h2>
+                <h2>${userProile.firstName} ${userProile.lastName}</h2><span>
+                 <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${userProile.id}')">
+	     			Edit
+	      		</a> 			
+	     		</span>
                  <table class="table table-user-information">
                     <tbody>
                       <tr>
@@ -179,4 +202,146 @@ background-color: #F1F1F1;
     </div>
 </div>
 </div>
-<%@include file="includes/footer.jsp" %>     
+  <div class="modal fade" id="registerusermodal" tabindex="-1"
+			role="dialog" aria-labelledby="reprocessConfirmation"
+			aria-hidden="true">
+	<form:form id="createUserFormId" action="createEmployee" method="POST" role="form" class="form-horizontal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Update My details</h4>
+			</div>
+			<div class="modal-body">
+				<%@include file="fagments/userRegisterModal.jspf" %>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancel</button>
+					<a id="createOrUpdateEmployeeId" href="#" class="btn btn-primary"><span id="userButton">Save</span></a>
+				</div>
+			</div>
+		</div>
+		
+		</form:form>
+	</div>
+
+<%@include file="includes/footer.jsp" %>    
+<script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.js'></script>   
+<script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+<script type="text/javascript" src="${js}/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="${js}/plugins/fileinput/fileinput.min.js"></script> 
+
+<script>
+jQuery.validator.addMethod("validEmail", function(value, element) {
+	  return this.optional( element ) || /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test( value );
+}, 'Please enter a valid email address.');
+
+var jvalidate = $("#createUserFormId").validate({
+	 ignore: ".ignorevalidation",
+    rules: {                                            
+   	 email: {
+        required: true,
+        validEmail: true
+     },
+     firstName: {
+         required: true
+     },
+     dateOfBirth: {
+         required: true
+ 	 },
+	team: {
+	       required: true
+	},userGroupId: {
+	       required: true
+	},
+	role: {
+	       required: true
+	},
+	file: {
+	       required: false
+	},
+	range: {
+	       required: false
+	 }   
+   }
+});
+
+function doAjaxUpdateUserForm(){
+	var imageData = $('.image-editor').cropit('export');
+	$('#filePhoto').val(imageData);
+	famstacklog(imageData);
+	$('#createUserFormId').prop("action", "${applicationHome}/updateEmployee");
+    $('#createUserFormId').submit();
+}
+
+$('#createUserFormId').ajaxForm(function(response) { 
+	famstacklog(response);
+	var responseJson = JSON.parse(response);
+    if (responseJson.status){
+        window.location.reload(true);
+    }
+}); 
+
+function loadUser(userId) {
+	$.ajax({
+        type : "GET",
+        contentType : "application/json",
+        url : "${applicationHome}/editEmployee",
+        data: "userId="+userId,
+        timeout : 1000,
+        success : function(data) {
+            famstacklog("SUCCESS: ", data);
+            processUserResponseData(data);
+            $("#createOrUpdateEmployeeId span").html("Update");
+            $("#createOrUpdateEmployeeId").prop("href","javascript:doAjaxUpdateUserForm()");
+        },
+        error : function(e) {
+            famstacklog("ERROR: ", e);
+        },
+        done : function(e) {
+            famstacklog("DONE");
+        }
+    });
+
+}
+
+
+function processUserResponseData(data) {
+	var response = JSON.parse(data);
+	$('#firstName').val(response.firstName);
+	$('#mobileNumber').val(response.mobileNumber);
+	$('#dateOfBirth').val(response.dateOfBirth);
+	$('#lastName').val(response.lastName);
+	$('#email').val(response.email);
+	$('#id').val(response.id);
+	$('#'+response.gender).click();
+		$(".cropit-preview").show();
+		$(".cropit-preview-image").attr("onerror","this.src='${assets}/images/users/no-image.jpg'");
+		$(".cropit-preview-image").prop("src", "${applicationHome}/image/" + response.id);
+		
+	$('#role').val(response.role);
+	$('#reportingManger').val(response.reportingManger);
+	$('#qualification').val(response.qualification);
+	$('#team').val(response.team);
+	$('#userGroupId').val(response.userGroupId);
+	$('#designation').val(response.designation);
+	
+	$('#role').selectpicker('refresh');
+	$('#reportingManger').selectpicker('refresh');
+	$('#qualification').selectpicker('refresh');
+	$('#team').selectpicker('refresh');
+	$('#userGroupId').selectpicker('refresh');
+	$('#designation').selectpicker('refresh');
+	
+}
+
+
+$(function() {
+    $('.image-editor').cropit();
+  });
+
+</script> 

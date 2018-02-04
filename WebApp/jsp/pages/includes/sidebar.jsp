@@ -18,22 +18,23 @@
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     <li class="xn-profile">
-                        <a href="${applicationHome}/profile/${currentUser.id}" class="profile-mini">
+                        <a href="javascript:void(0)" class="profile-mini">
                           <img src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                         </a>
-                        <a href="${applicationHome}/profile/${currentUser.id}">
                         <div class="profile" >
                             <div class="profile-image">
                                <img src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                             </div>
+						 <a href="${applicationHome}/profile/${currentUser.id}">
                             <div class="profile-data">
                                 <div class="profile-data-name">${currentUser.firstName}</div>
                                 <div class="profile-data-title">${currentUser.designation}</div>
                                 <c:set var="userGroupId" value="${currentUser.userGroupId}"/>
                       			<div class="profile-data-title">${userGroupMap[userGroupId].name}</div>
                             </div>
+                        </a>
+                        
                         </div>      
-                        </a>                                                                  
                     </li>
                     <li class="xn-title">Navigation</li>
                      <li class="active">
