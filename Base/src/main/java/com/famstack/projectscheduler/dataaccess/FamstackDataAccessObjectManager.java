@@ -108,13 +108,19 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         return itemList;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public List<?> executeQuery(String hqlQuery, Map<String, Object> dataMap)
     {
+        String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+        return executeQueryWithGroupId(hqlQuery, dataMap, userGroupId);
+    }
+
+    @SuppressWarnings("deprecation")
+    public List<?> executeQueryWithGroupId(String hqlQuery, Map<String, Object> dataMap, String userGroupId)
+    {
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        hqlQuery += " and userGroupId = " + getFamstackUserSessionConfiguration().getUserGroupId();
+        hqlQuery += " and userGroupId = " + userGroupId;
         Query<?> query = session.createQuery(hqlQuery).setCacheable(true);
         logDebug("executeQuery :" + hqlQuery);
         if (dataMap != null) {

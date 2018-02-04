@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.manager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.TimeInType;
 import com.famstack.projectscheduler.utils.FamstackUtils;
 
 /**
@@ -75,6 +77,46 @@ public class FamstackProjectManager extends BaseFamstackManager
         String projectEndTime, String taskDetailsList)
     {
         ProjectItem projectDetails = getProjectItemById(projectId);
+        List<TaskDetails> allTaskDetailsList = new ArrayList<>();
+
+        Date startDate = DateUtils.tryParse(projectStartTime, DateUtils.DATE_TIME_FORMAT);
+        Date completionDate = DateUtils.tryParse(projectEndTime, DateUtils.DATE_TIME_FORMAT);
+        Timestamp startTimeStamp = null;
+        if (startDate != null) {
+            startTimeStamp = new Timestamp(startDate.getTime());
+        }
+
+        Timestamp completionTimeStamp = null;
+        if (completionDate != null) {
+            completionTimeStamp = new Timestamp(completionDate.getTime());
+        }
+
+        if (taskDetailsList != null && !taskDetailsList.isEmpty()) {
+            String[] taskList = taskDetailsList.split("#TD#");
+
+            if (taskList.length > 0) {
+                for (String taskData : taskList) {
+                    String[] task = taskData.split("#TDD#");
+                    if (task.length > 0) {
+                        TaskDetails taskDetails = new TaskDetails();
+                        taskDetails.setAssignee(Integer.parseInt(task[0]));
+                        taskDetails.setName(task[1]);
+                        taskDetails.setStartTime(task[2]);
+                        taskDetails.setDuration(Integer.parseInt(task[3]));
+                        taskDetails.setProjectTaskType(ProjectTaskType.valueOf(task[4]));
+                        allTaskDetailsList.add(taskDetails);
+                    }
+                }
+            }
+        }
+
+        quickDuplicateProject(projectDetails, projectName, projectDuration, startTimeStamp, completionTimeStamp,
+            allTaskDetailsList);
+    }
+
+    public void quickDuplicateProject(ProjectItem projectDetails, String projectName, int projectDuration,
+        Timestamp startTimeStamp, Timestamp completionTimeStamp, List<TaskDetails> taskItemList)
+    {
         ProjectItem projectItem = new ProjectItem();
 
         if (projectDetails != null) {
@@ -90,17 +132,6 @@ public class FamstackProjectManager extends BaseFamstackManager
 
             projectItem.setPONumber(projectDetails.getPONumber());
             projectItem.setComplexity(projectDetails.getComplexity());
-            Date startDate = DateUtils.tryParse(projectStartTime, DateUtils.DATE_TIME_FORMAT);
-            Date completionDate = DateUtils.tryParse(projectEndTime, DateUtils.DATE_TIME_FORMAT);
-            Timestamp startTimeStamp = null;
-            if (startDate != null) {
-                startTimeStamp = new Timestamp(startDate.getTime());
-            }
-
-            Timestamp completionTimeStamp = null;
-            if (completionDate != null) {
-                completionTimeStamp = new Timestamp(completionDate.getTime());
-            }
 
             projectItem.setStartTime(startTimeStamp);
             projectItem.setCompletionTime(completionTimeStamp);
@@ -111,38 +142,22 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectItem.setClientId(projectDetails.getClientId());
             projectItem.setTags(projectDetails.getTags());
             projectItem.setType(projectDetails.getType());
-            projectItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
+
+            projectItem.setUserGroupId(projectDetails.getUserGroupId());
+
+            projectItem.setReporter(projectDetails.getReporter());
+
             projectItem.setWatchers(projectDetails.getWatchers());
             famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
             famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED,
                 "Duplicated from " + projectDetails.getProjectId());
 
-            List<TaskDetails> allTaskDetailsList = new ArrayList<>();
-            if (taskDetailsList != null && !taskDetailsList.isEmpty()) {
-                String[] taskList = taskDetailsList.split("#TD#");
-
-                if (taskList.length > 0) {
-                    for (String taskData : taskList) {
-                        String[] task = taskData.split("#TDD#");
-                        if (task.length > 0) {
-                            TaskDetails taskDetails = new TaskDetails();
-                            taskDetails.setAssignee(Integer.parseInt(task[0]));
-                            taskDetails.setName(task[1]);
-                            taskDetails.setStartTime(task[2]);
-                            taskDetails.setDuration(Integer.parseInt(task[3]));
-                            taskDetails.setProjectTaskType(ProjectTaskType.valueOf(task[4]));
-                            taskDetails.setProjectId(projectId);
-
-                            famstackProjectTaskManager.createTaskItem(taskDetails, projectItem);
-                            allTaskDetailsList.add(taskDetails);
-                        }
-                    }
-                }
+            for (TaskDetails taskDetails : taskItemList) {
+                famstackProjectTaskManager.createTaskItem(taskDetails, projectItem, true);
             }
 
-            updateProjectStatusBasedOnTaskStatus(projectId);
-
-            notifyProjectTaskAssignment(getProjectDetails(projectId), allTaskDetailsList);
+            updateProjectStatusBasedOnTaskStatus(projectItem.getProjectId());
+            notifyProjectTaskAssignment(mapProjectItemToProjectDetails(projectItem), taskItemList);
 
         }
 
@@ -909,5 +924,95 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectCodes.add(result.get(i));
         }
         return projectCodes;
+    }
+
+    public void createRecurringProjects()
+    {
+        List<RecurringProjectItem> recurringProjectItems = getAllrecurringProjectsForCreation();
+        logDebug("recurringProjectItems :" + recurringProjectItems);
+        if (recurringProjectItems != null) {
+            for (RecurringProjectItem recurringProjectItem : recurringProjectItems) {
+                int projectId = recurringProjectItem.getProjectId();
+
+                ProjectItem projectItem = getProjectItemById(projectId);
+                logDebug("recurring Project id :" + projectId);
+                if (projectItem != null) {
+                    Timestamp projectStartTime = getNewTimeForDuplicate(projectItem.getStartTime());
+
+                    int projectDuration =
+                        DateUtils.getTimeDifference(TimeInType.MINS, projectItem.getCompletionTime().getTime(),
+                            projectItem.getStartTime().getTime());
+
+                    Timestamp projectEndTime =
+                        new Timestamp(DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, projectStartTime,
+                            projectDuration).getTime());
+
+                    List<TaskDetails> taskItemList = getUpdatedTaskDetailsList(projectItem);
+
+                    quickDuplicateProject(projectItem, projectItem.getName(), projectItem.getDuration(),
+                        projectStartTime, projectEndTime, taskItemList);
+                }
+
+                recurringProjectItem.setLastRun(recurringProjectItem.getNextRun());
+                Date nextRun =
+                    FamstackUtils.getNextRunFromCron(recurringProjectItem.getCronExpression(),
+                        recurringProjectItem.getNextRun());
+
+                recurringProjectItem.setNextRun(nextRun == null ? null : new Timestamp(nextRun.getTime()));
+
+                famstackDataAccessObjectManager.saveOrUpdateItem(recurringProjectItem);
+            }
+        }
+
+    }
+
+    private List<TaskDetails> getUpdatedTaskDetailsList(ProjectItem projectItem)
+    {
+        List<TaskDetails> taskDetailsList = new ArrayList<>();
+
+        for (TaskItem taskItem : projectItem.getTaskItems()) {
+            Date taskStartTime = getNewTimeForDuplicate(taskItem.getStartTime());
+
+            TaskDetails taskDetails = new TaskDetails();
+            taskDetails.setAssignee(taskItem.getAssignee());
+            taskDetails.setName(taskItem.getName());
+            taskDetails.setStartTime(DateUtils.format(taskStartTime, DateUtils.DATE_TIME_FORMAT));
+            taskDetails.setDuration(taskItem.getDuration());
+            taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
+            taskDetailsList.add(taskDetails);
+
+        }
+        return taskDetailsList;
+    }
+
+    private Timestamp getNewTimeForDuplicate(Timestamp startTime)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startTime);
+
+        Calendar todaysCalender = Calendar.getInstance();
+        todaysCalender.setTime(new Date());
+
+        todaysCalender.set(todaysCalender.get(Calendar.YEAR), todaysCalender.get(Calendar.MONTH),
+            todaysCalender.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+
+        logDebug("todaysCalender :" + todaysCalender);
+        return new Timestamp(todaysCalender.getTimeInMillis());
+    }
+
+    private List<RecurringProjectItem> getAllrecurringProjectsForCreation()
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        Date startTime = new Date();
+        dataMap.put("startTime", startTime);
+
+        List<?> recurrinProjectItems =
+            famstackDataAccessObjectManager.executeAllGroupQuery(HQLStrings.getString("recurringProjectsWithIn"),
+                dataMap);
+
+        logDebug("recurrinProjectItems" + recurrinProjectItems);
+        logDebug("startTime" + startTime);
+        return (List<RecurringProjectItem>) recurrinProjectItems;
+
     }
 }

@@ -49,14 +49,21 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     public void createTaskItem(TaskDetails taskDetails, ProjectItem projectItem)
     {
+        createTaskItem(taskDetails, projectItem, false);
+    }
+
+    public void createTaskItem(TaskDetails taskDetails, ProjectItem projectItem, Boolean isScheduler)
+    {
         TaskItem taskItem = new TaskItem();
 
         taskItem.setStatus(TaskStatus.NEW);
-        taskItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
-
+        if (!isScheduler) {
+            taskItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
+        }
         saveTask(taskDetails, projectItem, taskItem);
         famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.TASK_ADDED,
             taskItem.getName());
+
     }
 
     public void createExtraTaskItem(TaskDetails taskDetails, ProjectItem projectItem)
@@ -148,6 +155,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         taskItem.setName(taskDetails.getName());
         taskItem.setPriority(taskDetails.getPriority());
         taskItem.setProjectItem(projectItem);
+        taskItem.setUserGroupId(projectItem.getUserGroupId());
         taskItem.setActualTimeTaken(taskDetails.getActualTimeTaken());
         taskItem.setTaskRemainingTime(taskDetails.getTaskRemainingTime());
         taskItem.setProjectTaskType(taskDetails.getProjectTaskType());
@@ -177,7 +185,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
         famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
         taskDetails.setTaskId(taskItem.getTaskId());
-        updateUserActivity(taskDetails, startDate, projectItem.getType());
+        updateUserActivity(taskDetails, startDate, projectItem.getType(), projectItem.getUserGroupId());
     }
 
     public void reAssignTask(TaskDetails taskDetails, int newUserId, int userTaskActivityId, TaskStatus taskStatus)
@@ -199,7 +207,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
 
         famstackUserActivityManager.createUserActivityItem(newUserId, startDate, taskDetails.getTaskId(), taskDetails
-            .getName(), durationInMinutes, currentUserTaskActivityItem.getType(), taskItem.getProjectItem().getType());
+            .getName(), durationInMinutes, currentUserTaskActivityItem.getType(), taskItem.getProjectItem().getType(),
+            null);
 
         taskItem.setStatus(TaskStatus.ASSIGNED);
         taskItem.setAssignee(newUserId);
@@ -224,7 +233,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
     }
 
-    private void updateUserActivity(TaskDetails taskDetails, Date startDate, ProjectType projectType)
+    private void updateUserActivity(TaskDetails taskDetails, Date startDate, ProjectType projectType, String userGroupId)
     {
 
         logDebug("task assignee :" + taskDetails.getAssignee());
@@ -235,7 +244,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate, taskDetails
                 .getTaskId(), taskDetails.getName(), taskDetails.getDuration() * 60,
                 taskDetails.getProjectTaskType() == ProjectTaskType.REVIEW ? UserTaskType.PROJECT_REVIEW
-                    : UserTaskType.PROJECT, projectType);
+                    : UserTaskType.PROJECT, projectType, userGroupId);
         }
 
         logDebug("helpers :" + taskDetails.getHelper());
@@ -244,7 +253,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                 famstackUserActivityManager.createUserActivityItem(helperId, startDate, taskDetails.getTaskId(),
                     taskDetails.getName(), taskDetails.getDuration() * 60,
                     taskDetails.getProjectTaskType() == ProjectTaskType.REVIEW ? UserTaskType.PROJECT_HELPER_REVIEW
-                        : UserTaskType.PROJECT_HELPER, projectType);
+                        : UserTaskType.PROJECT_HELPER, projectType, userGroupId);
             }
         }
     }

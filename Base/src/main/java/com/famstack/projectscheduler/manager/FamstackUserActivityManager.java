@@ -41,7 +41,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         int durationInMinutes, UserTaskType userTaskType, ProjectType projectType, String comment)
     {
         UserTaskActivityItem userTaskActivityItem =
-            createUserActivityItem(userId, startTime, taskId, taskName, durationInMinutes, userTaskType, projectType);
+            createUserActivityItem(userId, startTime, taskId, taskName, durationInMinutes, userTaskType, projectType,
+                null);
         userTaskActivityItem.setCompletionComment(comment);
         userTaskActivityItem.setRecordedStartTime(new Timestamp(startTime.getTime()));
         userTaskActivityItem.setActualStartTime(new Timestamp(startTime.getTime()));
@@ -52,7 +53,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     }
 
     public UserTaskActivityItem createUserActivityItem(int userId, Date startTime, int taskId, String taskName,
-        int durationInMinutes, UserTaskType userTaskType, ProjectType projectType)
+        int durationInMinutes, UserTaskType userTaskType, ProjectType projectType, String userGroupId)
     {
 
         UserItem assigneeUserItem = famstackUserProfileManager.getUserItemById(userId);
@@ -63,9 +64,17 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         dataMap.put("calenderDateStart", dayStartDate);
         dataMap.put("calenderDateEnd", dayEndDate);
         dataMap.put("userId", userId);
+        List<?> userActivityItemlist = null;
+        if (userGroupId == null) {
+            userActivityItemlist =
+                getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getUserActivityByDate"),
+                    dataMap);
+        } else {
+            userActivityItemlist =
+                getFamstackDataAccessObjectManager().executeQueryWithGroupId(
+                    HQLStrings.getString("getUserActivityByDate"), dataMap, userGroupId);
+        }
 
-        List<?> userActivityItemlist =
-            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getUserActivityByDate"), dataMap);
         UserActivityItem userActivityItem = null;
         if (!userActivityItemlist.isEmpty()) {
             userActivityItem = (UserActivityItem) userActivityItemlist.get(0);
@@ -89,6 +98,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
         userActivityItem.setProductiveHousrs(productiveHours);
         userActivityItem.setBillableHours(billableHours);
+        userActivityItem.setUserGroupId(userGroupId);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
         return setUserTaskActivity(userActivityItem, taskId, taskName, durationInMinutes, startTime, userTaskType,
             projectType);
@@ -202,6 +212,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         userTaskActivityItem.setProjectType(projectType);
         userTaskActivityItem.setCreatedDate(new Timestamp(new Date().getTime()));
         userTaskActivityItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
+        userTaskActivityItem.setUserGroupId(userActivityItem.getUserGroupId());
         userTaskActivityItem.setUserActivityItem(userActivityItem);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userTaskActivityItem);
         return userTaskActivityItem;
@@ -421,7 +432,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         UserTaskActivityItem userTaskActivityItem =
             createUserActivityItem(taskItem.getAssignee(), startDate, taskItem.getTaskId(), taskItem.getName(),
-                newTaskDuration, currentUserTaskActivityItem.getType(), taskItem.getProjectItem().getType());
+                newTaskDuration, currentUserTaskActivityItem.getType(), taskItem.getProjectItem().getType(), null);
         taskItem.setTaskPausedTime(null);
         famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
 

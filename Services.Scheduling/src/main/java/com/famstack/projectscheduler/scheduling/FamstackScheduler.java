@@ -40,6 +40,7 @@ public class FamstackScheduler extends BaseFamstackService
     {
         logDebug("Running scheduleJob scheduler");
         userTaskStatusRefresh();
+        creatingRecurringProjects();
         checkProjectDeadlineMissed();
         checkProjectStartTimeReminder();
         checkProjectEndTimeReminder();
@@ -50,13 +51,24 @@ public class FamstackScheduler extends BaseFamstackService
     }
 
     @Async
+    public void creatingRecurringProjects()
+    {
+        logDebug("Running creatingRecurringProjects scheduler");
+        try {
+            famstackProjectManager.createRecurringProjects();
+        } catch (Exception e) {
+            logError("Unable to run creatingRecurringProjects", e);
+        }
+    }
+
+    @Async
     public void setTaskRemainingTimeJob()
     {
         logDebug("Running setTaskRemainingTimeJob scheduler");
         try {
             famstackProjectTaskManager.updateTaskRemaingTime();
         } catch (Exception e) {
-
+            logError("Unable to run setTaskRemainingTimeJob", e);
         }
     }
 
@@ -66,7 +78,7 @@ public class FamstackScheduler extends BaseFamstackService
         try {
             famstackUserActivityManager.updateAllUserAvailableTime();
         } catch (Exception e) {
-            logError(e.getMessage(), e);
+            logError("Unable to run userTaskStatusRefresh", e);
         }
         logDebug("Running scheduler complted- userTaskStatusRefresh");
     }
