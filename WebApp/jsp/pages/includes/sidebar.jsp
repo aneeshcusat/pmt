@@ -37,7 +37,7 @@
                         </div>      
                     </li>
                     <li class="xn-title">Navigation</li>
-                     <li class="active">
+                     <li class="">
                         <a href="${applicationHome}/index"><span class="fa fa-list-alt"></span> <span class="xn-text">Home Page</span></a>                        
                     </li>
                     
