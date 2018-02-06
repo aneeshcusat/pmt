@@ -163,6 +163,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
     private Timestamp getUserAvaliableTime(Timestamp userAvailableTime, UserTaskActivityItem userTaskActivityItem)
     {
+        logDebug("getUserAvaliableTime task : " + userTaskActivityItem.getTaskId());
         Timestamp actualEndTime = userTaskActivityItem.getActualEndTime();
         Timestamp startTime = userTaskActivityItem.getStartTime();
         int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
@@ -185,6 +186,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             }
 
         }
+        logDebug("getUserAvaliableTime time : " + userAvailableTime);
         return userAvailableTime;
     }
 

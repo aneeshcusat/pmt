@@ -705,82 +705,111 @@ function initializeCreateProjectForm(project){
 	
 	
 	$('#estStartTime').on("change", function(){
-		validateEstimatedStartTime();
-		validateEstimatedEndTime();
-		validateProjectDuration();
+		validateEstimatedStartTime($('#estStartTime'));
+		validateEstimatedEndTime($('#estStartTime'),$('#estCompleteTime'));
+		validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
 	});
 	
 	$('#estCompleteTime').on("change", function(){
-		validateEstimatedStartTime();
-		validateEstimatedEndTime();
-		validateProjectDuration();
+		validateEstimatedStartTime($('#estStartTime'));
+		validateEstimatedEndTime($('#estStartTime'),$('#estCompleteTime'));
+		validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
 	});
-	
-	$('.estStartTime').on("change", function(){
-		validateEstimatedStartTime();
-		validateEstimatedEndTime();
-		validateProjectDuration();
-	});
-	
-	$('.estCompleteTime').on("change", function(){
-		validateEstimatedStartTime();
-		validateEstimatedEndTime();
-		validateProjectDuration();
-	});
-	
 	
 	$('#duration').on("change", function(){
-		validateEstimatedStartTime();
-		validateEstimatedEndTime();
-		validateProjectDuration();
+		validateEstimatedStartTime($('#estStartTime'));
+		validateEstimatedEndTime($('#estStartTime'),$('#estCompleteTime'));
+		validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
 	});
+
+
+	$(document).on("change",".estStartTime", function(){
+
+			var projectId = $(this).attr("data-projectId");
+			var estStartTime = $('#prjStartTime'+projectId);
+			var estCompleteTime = $('#prjEndTime'+projectId);
+			var duration = $('#prjDuration'+projectId);
+			validateEstimatedStartTime(estStartTime);
+			validateEstimatedEndTime(estStartTime, estCompleteTime);
+			validateProjectDuration(estStartTime, estCompleteTime, duration);
+			
+			loadInitialTaskAvailabilityTime(projectId);
+		});
+		
+		$(document).on("change",".estCompleteTime", function(){
+			var projectId = $(this).attr("data-projectId");
+			var estStartTime = $('#prjStartTime'+projectId);
+			var estCompleteTime = $('#prjEndTime'+projectId);
+			var duration = $('#prjDuration'+projectId);
+			validateEstimatedStartTime(estStartTime);
+			validateEstimatedEndTime(estStartTime, estCompleteTime);
+			validateProjectDuration(estStartTime, estCompleteTime, duration);
+			
+			loadInitialTaskAvailabilityTime(projectId);
+		});
+		
+		$(document).on("change",".duration", function(){
+			var projectId = $(this).attr("data-projectId");
+			var estStartTime = $('#prjStartTime'+projectId);
+			var estCompleteTime = $('#prjEndTime'+projectId);
+			var duration = $('#prjDuration'+projectId);
+			validateEstimatedStartTime(estStartTime);
+			validateEstimatedEndTime(estStartTime, estCompleteTime);
+			validateProjectDuration(estStartTime, estCompleteTime, duration);
+			
+			loadInitialTaskAvailabilityTime(projectId);
+		});
 	
-	function validateEstimatedStartTime(){
+	
+	
+	function validateEstimatedStartTime(estStartTime){
 		famstacklog("validating project validateEstimatedStartTime");
-		var estimatedTimeVal = $('#estStartTime').val();
+		var estimatedTimeVal = $(estStartTime).val();
 		if (estimatedTimeVal != "") {
 			var estimatedStartTimeDate = new Date(estimatedTimeVal);
 			if(estimatedStartTimeDate < new Date()) {
-				$("#estStartTime").css("border", "1px solid red");
+				$(estStartTime).css("border", "1px solid red");
 				return false;
 			} else {
-				$("#estStartTime").css("border", "1px solid #D5D5D5");
+				$(estStartTime).css("border", "1px solid #D5D5D5");
 			}
 		}
 		return true;
 	}
 	
-	function validateEstimatedEndTime(){
+	function validateEstimatedEndTime(estStartTime, estCompleteTime){
 		famstacklog("validating project validateEstimatedEndTime");
-		var estCompleteTimeVal = $('#estCompleteTime').val();
+		var estCompleteTimeVal = $(estCompleteTime).val();
 		if (estCompleteTimeVal != "") {
 			var estCompleteTimeDate = new Date(estCompleteTimeVal);
-			var estimatedStartTimeDate = new Date($("#estStartTime").val());
+			var estimatedStartTimeDate = new Date($(estStartTime).val());
 			if(estCompleteTimeDate < estimatedStartTimeDate) {
-				$("#estCompleteTime").css("border", "1px solid red");
+				$(estCompleteTime).css("border", "1px solid red");
 				return false;
 			} else {
-				$("#estCompleteTime").css("border", "1px solid #D5D5D5");
+				$(estCompleteTime).css("border", "1px solid #D5D5D5");
 			}
 		}
 		return true;
 	}
 	
-	function validateProjectDuration(){
+	function validateProjectDuration(estStartTime, estCompleteTime, duration){
 		famstacklog("validating project duration");
-		var estCompleteTimeVal = $('#estCompleteTime').val();
+		var estCompleteTimeVal = $(estCompleteTime).val();
 		if (estCompleteTimeVal != "") {
 			var estCompleteTimeDate = new Date(estCompleteTimeVal);
-			var estimatedStartTimeDate = new Date($("#estStartTime").val());
+			var estimatedStartTimeDate = new Date($(estStartTime).val());
 			
 			var diffTime = (estCompleteTimeDate - estimatedStartTimeDate) /(60*60*1000);
-			var projectDuration =  $('#duration').val();
+			var projectDuration =  $(duration).val();
 			
 			if(diffTime < projectDuration) {
-				$("#duration").closest('div').find('button').css("border", "1px solid red");
+				$(duration).closest('div').find('button').css("border", "1px solid red");
+				$(duration).css("border", "1px solid red");
 				return false;
 			} else {
-				$("#duration").closest('div').find('button').css("border", "1px solid #D5D5D5");
+				$(duration).closest('div').find('button').css("border", "1px solid #D5D5D5");
+				$(duration).css("border", "1px solid #D5D5D5");
 			}
 		}
 		return true;
@@ -1065,8 +1094,6 @@ function refreshProjectDetails(){
 	loadAllProjectDetails('${dateRange}');
 }
 
-refreshProjectDetails();
-
 /******************Recurring Project model************/
  function recurringProjectModel(projectCode, projectId) {
 	var dataString = {"projectCode": projectCode, "projectId": projectId};
@@ -1175,5 +1202,8 @@ function refreshRecurringSpin(){
 	    });
 }
 
+$( document ).ready(function(){
+refreshProjectDetails();
 refreshRecurringSpin();
+});
 </script>

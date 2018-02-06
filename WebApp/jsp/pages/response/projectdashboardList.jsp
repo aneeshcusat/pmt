@@ -107,7 +107,7 @@
 											<div class="form-group">
 												<label class="col-md-4 control-label">Duration</label>
 												<div class="col-md-8 col-xs-12">
-													<input type="text" class="form-control cloneInput"  value="${project.duration}"
+													<input type="text" class="form-control cloneInput duration"  value="${project.duration}" data-projectId="${project.id}"
 														id="prjDuration${project.id}"/>
 														<span class="help-block" id="projectDurationMsg${project.id}"></span>
 												</div>
@@ -118,14 +118,14 @@
 											<div class="form-group">
 												<label class="col-md-4 control-label">Start Date</label>
 												<div class="col-md-8 col-xs-12">
-													<input type="text" class="form-control cloneInput estStartTime"
+													<input type="text" class="form-control cloneInput estStartTime" data-projectId="${project.id}"
 														id="prjStartTime${project.id}" /> <span class="help-block"></span>
 												</div>
 											</div>
 											<div class="form-group">
 												<label class="col-md-4 control-label">Due Date</label>
 												<div class="col-md-8 col-xs-12">
-													<input type="text" class="form-control cloneInput estCompleteTime"
+													<input type="text" class="form-control cloneInput estCompleteTime" data-projectId="${project.id}"
 														id="prjEndTime${project.id}"/>
 												</div>
 											</div>
