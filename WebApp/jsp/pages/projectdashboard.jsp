@@ -724,40 +724,30 @@ function initializeCreateProjectForm(project){
 
 
 	$(document).on("change",".estStartTime", function(){
-
-			var projectId = $(this).attr("data-projectId");
+		validateStartAndEndTime($(this).attr("data-projectId"));
+		});
+	
+		function validateStartAndEndTime(projectId){
+			var isValidStart = true;
+			var isValidEnd = true;
+			var isValidDuration = true;
 			var estStartTime = $('#prjStartTime'+projectId);
 			var estCompleteTime = $('#prjEndTime'+projectId);
 			var duration = $('#prjDuration'+projectId);
-			validateEstimatedStartTime(estStartTime);
-			validateEstimatedEndTime(estStartTime, estCompleteTime);
-			validateProjectDuration(estStartTime, estCompleteTime, duration);
-			
-			loadInitialTaskAvailabilityTime(projectId);
-		});
+			isValidStart = validateEstimatedStartTime(estStartTime);
+			isValidEnd = validateEstimatedEndTime(estStartTime, estCompleteTime);
+			isValidDuration = validateProjectDuration(estStartTime, estCompleteTime, duration);
+			if (isValidStart && isValidEnd && isValidDuration) {
+				loadInitialTaskAvailabilityTime(projectId);
+			}
+		}
 		
 		$(document).on("change",".estCompleteTime", function(){
-			var projectId = $(this).attr("data-projectId");
-			var estStartTime = $('#prjStartTime'+projectId);
-			var estCompleteTime = $('#prjEndTime'+projectId);
-			var duration = $('#prjDuration'+projectId);
-			validateEstimatedStartTime(estStartTime);
-			validateEstimatedEndTime(estStartTime, estCompleteTime);
-			validateProjectDuration(estStartTime, estCompleteTime, duration);
-			
-			loadInitialTaskAvailabilityTime(projectId);
+			validateStartAndEndTime($(this).attr("data-projectId"));
 		});
 		
 		$(document).on("change",".duration", function(){
-			var projectId = $(this).attr("data-projectId");
-			var estStartTime = $('#prjStartTime'+projectId);
-			var estCompleteTime = $('#prjEndTime'+projectId);
-			var duration = $('#prjDuration'+projectId);
-			validateEstimatedStartTime(estStartTime);
-			validateEstimatedEndTime(estStartTime, estCompleteTime);
-			validateProjectDuration(estStartTime, estCompleteTime, duration);
-			
-			loadInitialTaskAvailabilityTime(projectId);
+			validateStartAndEndTime($(this).attr("data-projectId"));
 		});
 	
 	

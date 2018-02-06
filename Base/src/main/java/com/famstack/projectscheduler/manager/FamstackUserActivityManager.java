@@ -241,8 +241,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         logDebug("startDate" + startDate);
         logDebug("completionDate" + completionDate);
 
-        Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, -1);
-        Date dayEndDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, completionDate, 1);
+        Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0);
+        Date dayEndDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, completionDate, 0);
 
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("calenderDateStart", dayStartDate);
