@@ -86,8 +86,8 @@
 </div>
 <script>
 var site_settings = "";
-<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER')}">
-site_settings = $("#settingsId").html();
+<c:if test="${(currentUser.userRole == 'SUPERADMIN')}">
+	site_settings = $("#settingsId").html();
 </c:if>
 
     </script>
