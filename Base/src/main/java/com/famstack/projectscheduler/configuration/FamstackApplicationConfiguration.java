@@ -318,7 +318,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     {
         String toggelId = getCurrentUserId() + "_dashboardToggle";
         if (configSettings.get(toggelId) == null) {
-            return true;
+            return false;
         }
         return "TRUE".equalsIgnoreCase(configSettings.get(toggelId)) ? true : false;
     }

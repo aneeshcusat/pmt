@@ -66,7 +66,7 @@
                     </li>
                     <!-- END TOGGLE NAVIGATION -->
                     <!-- SEARCH -->
-                    <li class="xn-search">
+                    <li class="xn-search hide">
                         <form role="form">
                             <input type="text" name="search" placeholder="Search..."/>
                         </form>
