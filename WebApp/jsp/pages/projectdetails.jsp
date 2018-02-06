@@ -1360,7 +1360,7 @@ var fillTableFromJson = function(){
 						duration =0;
 					}
 					
-					style +="width:"+firstWidth+"%;margin-left:"+marginLeft+"px;";
+					style +="width:"+firstWidth+"%;margin-left:"+marginLeft+"%;";
 				} else {
 					
 					if (duration >= 100) {
