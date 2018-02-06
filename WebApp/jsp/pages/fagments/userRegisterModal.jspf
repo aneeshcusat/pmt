@@ -57,9 +57,20 @@
                             <option>Senior Manager</option>
                             <option>Manager</option>
                             <option>Associate Manager</option>
+                            <option>Principal Data Scientist</option>
+                            <option>Senior Project Executive</option>
+                            <option>Senior Executive</option>
+                            <option>Consultant</option>
+                            <option>Senior Data Scientist</option>
+                            <option>Data Scientist</option>
+                            <option>Associate Data Scientist</option>
+                            <option>Associate Data Scientist</option>
+                            <option>Visualization Specialist</option>
                             <option>Senior Analyst</option>
                             <option>Analyst</option>
                             <option>Junior Analyst</option>
+                            <option>Trainee Analyst</option>
+							<option>Trainee</option>
                         </form:select>
                     </div>
                 </div>
