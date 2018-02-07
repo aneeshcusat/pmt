@@ -734,12 +734,12 @@ function initializeCreateProjectForm(project){
 			var estStartTime = $('#prjStartTime'+projectId);
 			var estCompleteTime = $('#prjEndTime'+projectId);
 			var duration = $('#prjDuration'+projectId);
-			isValidStart = validateEstimatedStartTime(estStartTime);
+			//isValidStart = validateEstimatedStartTime(estStartTime);
 			isValidEnd = validateEstimatedEndTime(estStartTime, estCompleteTime);
-			isValidDuration = validateProjectDuration(estStartTime, estCompleteTime, duration);
-			if (isValidStart && isValidEnd && isValidDuration) {
+			//isValidDuration = validateProjectDuration(estStartTime, estCompleteTime, duration);
+			//if (isValidEnd && isValidDuration) {
 				loadInitialTaskAvailabilityTime(projectId);
-			}
+			//}
 		}
 		
 		$(document).on("change",".estCompleteTime", function(){
