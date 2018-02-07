@@ -63,7 +63,16 @@
         <script type="text/javascript" src="${js}/famstack.ajax.js"></script>   
         <!-- END PLUGINS -->  
  <script type="text/javascript">
+ var famstackLogEnabled = false;
+ function famstacklog(message){
+ 	famstacklog("", message);
+ }
  
+	function famstacklog(code, message){
+ 	if (famstackLogEnabled) {
+ 		console.log(code, message);
+ 	}
+ }
     
     function invokeForgotPasswordAjax(){
     	famstacklog("jello");

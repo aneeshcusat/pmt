@@ -80,6 +80,17 @@
         <!-- END PLUGINS -->  
  <script type="text/javascript">
  
+ var famstackLogEnabled = false;
+ function famstacklog(message){
+ 	famstacklog("", message);
+ }
+ 
+	function famstacklog(code, message){
+ 	if (famstackLogEnabled) {
+ 		console.log(code, message);
+ 	}
+ }
+	
     function makeError(fieldSelector){
     	fieldSelector.css("border", "1px solid red");
     }
