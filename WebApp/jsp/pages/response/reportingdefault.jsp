@@ -29,13 +29,26 @@
 	<c:if test="${not empty projectData}">
 		<tbody>
 			<c:forEach var="project" items="${projectData}">
-				<c:set var="projectState" value="info" />
-				<c:if test="${project.status == 'COMPLETED' }">
-					<c:set var="projectState" value="success" />
-				</c:if>
-				<c:if test="${project.projectMissedTimeLine == true }">
-					<c:set var="projectState" value="danger" />
-				</c:if>
+				 <c:set var="projectState" value="info"/>
+				      <c:set var="statusColor" value=""/>
+	                  <c:if test="${project.status == 'NEW' }">
+							<c:set var="statusColor" value="background-color:lightblue"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'UNASSIGNED' }">
+							<c:set var="statusColor" value="background-color:darkviolet"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'ASSIGNED' }">
+	                  		<c:set var="statusColor" value="background-color:orange"/>
+	                  </c:if>
+   					  <c:if test="${project.status == 'INPROGRESS' }">
+   					  	<c:set var="statusColor" value="background-color: brown;"/>
+	                  </c:if>
+	                  <c:if test="${project.projectMissedTimeLine == true }">
+	                  		<c:set var="projectState" value="danger"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'COMPLETED' }">
+	                   		<c:set var="projectState" value="success"/>
+	                  </c:if>
 				<c:if test="${not empty project.projectTaskDeatils}">
 					<c:forEach var="projectTaskDetails"
 						items="${project.projectTaskDeatils}"
@@ -63,7 +76,7 @@
 										test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if>
 								</c:forEach></td>
 
-							<td><span class="label label-${projectState}">${project.status}</span></td>
+							<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
 						</tr>
 
 					</c:forEach>

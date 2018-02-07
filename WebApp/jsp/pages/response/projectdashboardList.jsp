@@ -25,13 +25,24 @@
 			    <tbody>
 			    	<c:forEach var="project" items="${modelViewMap.projectDetailsData}">
 				      <c:set var="projectState" value="info"/>
-	                  <c:if test="${project.status == 'COMPLETED' }">
-	                   		<c:set var="projectState" value="success"/>
-	                  </c:if>
+				      <c:set var="statusColor" value=""/>
 	                  <c:if test="${project.status == 'NEW' }">
+							<c:set var="statusColor" value="background-color:lightblue"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'UNASSIGNED' }">
+							<c:set var="statusColor" value="background-color:darkviolet"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'ASSIGNED' }">
+	                  		<c:set var="statusColor" value="background-color:orange"/>
+	                  </c:if>
+   					  <c:if test="${project.status == 'INPROGRESS' }">
+   					  	<c:set var="statusColor" value="background-color: brown;"/>
 	                  </c:if>
 	                  <c:if test="${project.projectMissedTimeLine == true }">
 	                  		<c:set var="projectState" value="danger"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'COMPLETED' }">
+	                   		<c:set var="projectState" value="success"/>
 	                  </c:if>
 			        <tr class="clickable projectData ${project.id}" id="projectData${project.id}">
 			            <td  onclick="loadDuplicateProjects(${project.id}, '${project.code}', false)" data-toggle="collapse" data-target=".projectData${project.id}"><i id="projectOpenLink${project.id}" style="color: blue" class="fa fa-chevron-right 2x"></i></td>
@@ -56,7 +67,7 @@
 			            </td>
 			            
 			            <td>${project.description}</td>
-			          	<td><span class="label label-${projectState}">${project.status}</span></td>  
+			          	<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>  
 			            <td>
 							<a href="#" style="margin-right: 7px;color:darkgreen"  title="Edit this project"  data-toggle="modal" data-target="#createprojectmodal" 
 								onclick="loadProjectForUpdate('${project.id}')">
@@ -64,7 +75,7 @@
 							</a>
 							<a href="#" data-box="#confirmationbox" style="color:red""  title="Delete this project" class="deleteProject mb-control profile-control-right" 
 								onclick="deleteProject('${project.id}','${project.name}');">
-								<span class="fa fa-times  fa-2x"></span>
+								<span class="fa fa-trash-o  fa-2x"></span>
 							</a>
 							
 							<a href="#" data-box="#confirmationbox" style="margin-left:7px; color:orange;"  title="Archive this project" class="deleteProject mb-control profile-control-right" 

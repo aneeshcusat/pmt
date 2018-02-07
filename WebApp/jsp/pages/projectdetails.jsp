@@ -169,18 +169,31 @@ width: 60%;
                           <div class="panel-body bio-graph-info">
                               <!--<h1>New Dashboard BS3 </h1>-->
                               <div class="row project_details">
-                              <c:set var="projectState" value="info"/>
-			                  <c:if test="${projectDetails.status == 'COMPLETED' }">
-			                   	<c:set var="projectState" value="success"/>
-			                  </c:if>
-			                  <c:if test="${projectDetails.projectMissedTimeLine == true }">
-			                  	<c:set var="projectState" value="danger"/>
-			                  </c:if>
+                               <c:set var="projectState" value="info"/>
+				      <c:set var="statusColor" value=""/>
+	                  <c:if test="${project.status == 'NEW' }">
+							<c:set var="statusColor" value="background-color:lightblue"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'UNASSIGNED' }">
+							<c:set var="statusColor" value="background-color:darkviolet"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'ASSIGNED' }">
+	                  		<c:set var="statusColor" value="background-color:orange"/>
+	                  </c:if>
+   					  <c:if test="${project.status == 'INPROGRESS' }">
+   					  	<c:set var="statusColor" value="background-color: brown;"/>
+	                  </c:if>
+	                  <c:if test="${project.projectMissedTimeLine == true }">
+	                  		<c:set var="projectState" value="danger"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'COMPLETED' }">
+	                   		<c:set var="projectState" value="success"/>
+	                  </c:if>
                                   <div class="col-md-6">
                                       <p><span class="bold">Created by </span>: ${projectDetails.reporterName}</p>
                                   </div>
                                   <div class="col-md-6">
-                                      <p class="text-capitalize"><span class="bold">Status </span>: <span class="label label-${projectState}">${projectDetails.status}</span></p>
+                                      <p class="text-capitalize"><span class="bold">Status </span>: <span class="label label-${projectState}" style="${statusColor}">${projectDetails.status}</span></p>
                                   </div>
                                   <div class="col-md-6">
                                       <p><span class="bold">Created </span>: ${projectDetails.createdDate}</p>

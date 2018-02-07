@@ -121,22 +121,33 @@
 				</td>
 				<td class="project_progress">
 				
-				 <c:set var="projectState" value="info"/>
-                  <c:if test="${project.status == 'COMPLETED' }">
-                   	<c:set var="projectState" value="success"/>
-                  </c:if>
-                  <c:if test="${project.status == 'NEW' }">
-                  </c:if>
-                  <c:if test="${project.projectMissedTimeLine == true }">
-                  	<c:set var="projectState" value="danger"/>
-                  </c:if>
+				  <c:set var="projectState" value="info"/>
+				      <c:set var="statusColor" value=""/>
+	                  <c:if test="${project.status == 'NEW' }">
+							<c:set var="statusColor" value="background-color:lightblue"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'UNASSIGNED' }">
+							<c:set var="statusColor" value="background-color:darkviolet"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'ASSIGNED' }">
+	                  		<c:set var="statusColor" value="background-color:orange"/>
+	                  </c:if>
+   					  <c:if test="${project.status == 'INPROGRESS' }">
+   					  	<c:set var="statusColor" value="background-color: brown;"/>
+	                  </c:if>
+	                  <c:if test="${project.projectMissedTimeLine == true }">
+	                  		<c:set var="projectState" value="danger"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'COMPLETED' }">
+	                   		<c:set var="projectState" value="success"/>
+	                  </c:if>
                       <div class="progress progress-small">
                           <div class="progress-bar progress-bar-${projectState}" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: ${project.projectCompletionPercentage}%;"></div>
                       		 <small>${project.projectCompletionPercentage}% Complete</small>
                       </div>
 	                                                        
 				</td>
-				<td><span class="label label-${projectState}">${project.status}</span></td>
+				<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
 				  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
 				<td>
 				

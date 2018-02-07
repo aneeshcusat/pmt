@@ -13,13 +13,24 @@
 	        		</tr>
 			    	<c:forEach var="project" items="${projectDetailsData}">
 				      <c:set var="projectState" value="info"/>
-	                  <c:if test="${project.status == 'COMPLETED' }">
-	                   		<c:set var="projectState" value="success"/>
-	                  </c:if>
+				      <c:set var="statusColor" value=""/>
 	                  <c:if test="${project.status == 'NEW' }">
+							<c:set var="statusColor" value="background-color:lightblue"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'UNASSIGNED' }">
+							<c:set var="statusColor" value="background-color:darkviolet"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'ASSIGNED' }">
+	                  		<c:set var="statusColor" value="background-color:orange"/>
+	                  </c:if>
+   					  <c:if test="${project.status == 'INPROGRESS' }">
+   					  	<c:set var="statusColor" value="background-color: brown;"/>
 	                  </c:if>
 	                  <c:if test="${project.projectMissedTimeLine == true }">
 	                  		<c:set var="projectState" value="danger"/>
+	                  </c:if>
+	                  <c:if test="${project.status == 'COMPLETED' }">
+	                   		<c:set var="projectState" value="success"/>
 	                  </c:if>
 	                  
                  		<tr class="projectDuplicate${projectId}" id="projectData${project.id}">
@@ -45,7 +56,7 @@
 				            </c:if>
 				        	</td>
 				        	<td  width="12%">${project.description}</td>
-				        	<td width="10%"><span class="label label-${projectState}">${project.status}</span></td>
+				        	<td width="10%"><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
 				        	<td width="20%">
 								<a href="#" style="margin-right: 7px;color:blue"  title="Clone this project"  data-toggle="modal" data-target="#createprojectmodal"
 									onclick="loadProjectForClone('${project.id}')">
