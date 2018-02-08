@@ -69,7 +69,7 @@
 	                  <c:if test="${project.status == 'COMPLETED' }">
 	                   		<c:set var="projectState" value="success"/>
 	                  </c:if>
-			        <tr class="clickable projectData ${project.id}" id="projectData${project.id}" data-projectId="${project.id}"  style="<c:if test='${project.deleted == true }'>background-color:#ff9696</c:if>">
+			        <tr class="clickable projectData ${project.id} <c:if test='${project.deleted == true }'>archived</c:if>" id="projectData${project.id}" data-projectId="${project.id}"  style="">
 			            <td  onclick="loadDuplicateProjects(${project.id}, '${project.code}', false)" data-toggle="collapse" data-target=".projectData${project.id}"><i id="projectOpenLink${project.id}" style="color: blue" class="fa fa-chevron-right 2x"></i></td>
 			            <td>${project.completionTime}</td>
 			            <td><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>

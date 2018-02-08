@@ -89,6 +89,9 @@ div#taskDetailsDiv {
     font-size: 9px;
     color: green
   }
+.archived{
+	background-color: #ff9696;
+}
 </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame margin5" style="min-height: 500px">
@@ -566,8 +569,13 @@ function initializeCreateProjectForm(project){
 		var dataString = {"projectIds" : projectIds,type:type};
 		doAjaxRequest("POST", "${applicationHome}/deleteProjects", dataString, function(data) {
 			$.each(projectIds,function(idx, projectId){
-				$("#projectData"+projectId).remove();
-	             $(".projectData"+projectId).remove();
+				if ("soft" == type && $("input#includeArchive").is(":checked")) {
+					$("#projectData"+projectId).addClass("archived");
+					$("#projectData"+projectId).append('<span class="hide">Archived</span>');
+				} else {
+					$("#projectData"+projectId).remove();
+	             	$(".projectData"+projectId).remove();
+				}
 			});
 			$(".message-box").removeClass("open");
 			
