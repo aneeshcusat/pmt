@@ -62,12 +62,12 @@ div#taskDetailsDiv {
 #x {
     position: relative;
     float: right;
-    top: -10px;
-    right: -10px;
+    top: -5px;
+    right: 0px;
     border-radius: 25px;
     font-size: 16pt;
     font-weight: bold;
-    color: red;
+    color: gray;
     background-color: white;
     border-color: gray;
     z-index: 1000
@@ -123,10 +123,14 @@ div#taskDetailsDiv {
             							<span>${dateRange}</span><b class="caret"></b>
         							</span>
         								<input style="margin-left:10px" class="btn btn-default" type="button" value="Filter" onclick="loadAllProjectDetails($('#daterangeText').val());"></input>
-        								<input type="text" name="daterange" id="daterangeText" style="display: none" value="${dateRange}" /> 
-        							</div>
-							<div class="col-md-4">
-								  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+        								<input type="hidden" id="daterangeText" value="hello" /> 
+        					</div>
+        					<div class="col-md-1">
+        							<p style="text-align:center;margin :0 0 0px">Show Archived</p>
+									<p style="text-align: center;margin :0 0 0px"><input id="includeArchive" type="checkbox" class=""/></p>
+							</div>
+							<div class="col-md-3">
+								  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 								<a data-toggle="modal" data-target="#createprojectmodal" onclick="clearProjectFormForCreate()"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
 									Create a new Project
@@ -498,21 +502,84 @@ function initializeCreateProjectForm(project){
 		}
 	});
 
+	
+	function deleteProjects(){
+		$(".msgConfirmText").html("Delete the selected projects");
+		$(".msgConfirmText1").html("");
+		$("#confirmYesId").prop("href","javascript:doAjaxArchiveDeleteProjects('hard')");
+	}
+	
+	function archiveProjects(){
+		$(".msgConfirmText").html("Archive the selected projects");
+		$(".msgConfirmText1").html("");
+		$("#confirmYesId").prop("href","javascript:doAjaxArchiveDeleteProjects('soft')");
+	}
+	
 	function deleteProject(projectId, projectName){
 		$(".msgConfirmText").html("Delete project");
 		$(".msgConfirmText1").html(projectName);
-		$("#confirmYesId").prop("href","javascript:doAjaxDeleteProject('"+projectId+"')");
+		$("#confirmYesId").prop("href","javascript:doAjaxDeleteProject('"+projectId+"','deleteProject')");
 	}
 	
 	function archiveProject(projectId, projectName){
 		$(".msgConfirmText").html("Archive project");
 		$(".msgConfirmText1").html(projectName);
-		$("#confirmYesId").prop("href","javascript:doAjaxArchiveProject('"+projectId+"')");
+		$("#confirmYesId").prop("href","javascript:doAjaxArchiveProject('"+projectId+"','archiveProject')");
 	}
 	
-	function doAjaxArchiveProject(projectId) {
+	function undoArchiveProject(projectId, projectName){
+		$(".msgConfirmText").html("Archive project");
+		$(".msgConfirmText1").html(projectName);
+		$("#confirmYesId").prop("href","javascript:doAjaxUndoArchiveProject('"+projectId+"','archiveProject')");
+	}
+	
+	function doAjaxUndoArchiveProject(){
+	}
+	
+
+	$(document).on("change",".prjectDeleteArchive", function(){
+		if ($("input.prjectDeleteArchive:checked").length > 0) {
+			$(".deleteProjectDropDown").removeClass("hide");
+		} else {
+			$(".deleteProjectDropDown").addClass("hide");
+		}
+	});
+
+	
+	function getAllSelectedProjectIds(){
+		var projectIds= new Array();
+		var index = 0;
+		$("input.prjectDeleteArchive:checked").each(function(){
+			var projectId = $(this).attr("data-projectId");
+			projectIds[index++] = projectId;
+		});
+		return projectIds;
+	}
+	
+	
+	function doAjaxArchiveDeleteProjects(type) {
+		var projectIds = getAllSelectedProjectIds();
+		if (projectIds.length == 0) {
+			 $(".message-box").removeClass("open");
+			return;
+		}
+		var dataString = {"projectIds" : projectIds,type:type};
+		doAjaxRequest("POST", "${applicationHome}/deleteProjects", dataString, function(data) {
+			$.each(projectIds,function(idx, projectId){
+				$("#projectData"+projectId).remove();
+	             $(".projectData"+projectId).remove();
+			});
+			$(".message-box").removeClass("open");
+			
+		}, function(e) {
+            famstacklog("ERROR: ", e);
+            alert(e);
+        });
+	}
+	
+	function doAjaxArchiveDeleteProject(projectId, type) {
 		var dataString = {"projectId" : projectId};
-		doAjaxRequest("POST", "${applicationHome}/archiveProject", dataString, function(data) {
+		doAjaxRequest("POST", "${applicationHome}/"+type, dataString, function(data) {
             famstacklog("SUCCESS: ", data);
             var responseJson = JSON.parse(data);
             if (responseJson.status){
@@ -525,24 +592,6 @@ function initializeCreateProjectForm(project){
             alert(e);
         });
 	}
-	
-	
-	function doAjaxDeleteProject(projectId) {
-		var dataString = {"projectId" : projectId};
-		doAjaxRequest("POST", "${applicationHome}/deleteProject", dataString, function(data) {
-            famstacklog("SUCCESS: ", data);
-            var responseJson = JSON.parse(data);
-            if (responseJson.status){
-               $("#projectData"+projectId).remove();
-               $(".projectData"+projectId).remove();
-               $(".message-box").removeClass("open");
-            }
-        }, function(e) {
-            famstacklog("ERROR: ", e);
-            alert(e);
-        });
-	}
-	
 	
 	function performProjectSearch(){
 		var serarchText = $('#projectSearchBoxId').val();
@@ -722,7 +771,7 @@ function initializeCreateProjectForm(project){
 		validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
 	});
 
-
+	
 	$(document).on("change",".estStartTime", function(){
 		validateStartAndEndTime($(this).attr("data-projectId"));
 		});
@@ -868,7 +917,7 @@ var taskLinkclick = function(projectId, e){
 
 var loadAllProjectDetails = function(daterange) {
 	
-	var dataString = {"daterange" : daterange};
+	var dataString = {"daterange" : daterange, includeArchive:$("input#includeArchive").is(":checked")};
 	doAjaxRequest("GET", "${applicationHome}/projectdashboardList", dataString, function(data) {
         $("#projectDashBoardData").html(data);
         refreshRecurringSpin();

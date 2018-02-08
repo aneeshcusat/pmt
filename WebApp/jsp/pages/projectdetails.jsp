@@ -440,7 +440,7 @@ width: 60%;
                            <h5 class="bold">Tasks</h5>
                           </div>
                            <div class="col-md-5 text-right">
-                            <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                            <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                             <a data-toggle="modal"  data-backdrop="static" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
                             <c:if test="${projectDetails.unAssignedDuration == 0}">
                             disabled="true"
@@ -482,7 +482,7 @@ width: 60%;
                                     			</div>
                                                 </td>
                                                <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>
-                                                <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                                                <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                                                <td width="5%">
                                                <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a>
                                               </td>
@@ -507,7 +507,7 @@ width: 60%;
                                   <li>Project Duration : <b>${projectDetails.duration} hours</b></li>
                                    <c:if test="${projectDetails.status == 'COMPLETED' }">
 								         <li>Actual Duration : <b>${projectDetails.actualDurationInHrs} hours</b>
-								        <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+								        <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 									        <a data-toggle="modal"  data-backdrop="static" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.duration}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-info btn-rounded" href="#" style="display: inline;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span><span class="fa fa-clock-o"></span></a>
 								        </c:if> 
 								         
@@ -525,7 +525,7 @@ width: 60%;
                                 <c:if test="${not empty projectDetails.filesNames}">
                                  <c:forEach var="fileName" items="${projectDetails.filesNames}" varStatus="fileNameIndex"> 
                                  	<li><a href="${applicationHome}/download/${projectDetails.id}/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a>
-                                 	 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                                 	 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                                  	<a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-trash-o" style="color:red" aria-hidden="true"></i></a>
                                  	</c:if>
                                  	</li> 
@@ -536,7 +536,7 @@ width: 60%;
                                   <h6 class="bold">Completed files</h6>
                                  <c:forEach var="fileName" items="${projectDetails.completedFilesNames}" varStatus="fileNameIndex"> 
                                  	<li><a href="${applicationHome}/download/${projectDetails.id}-completed/${fileName}?fileName=${fileName}"><i class="fa fa-file-text"></i>${fileName}</a>
-                                 	 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                                 	 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                                  	<a data-box="#confirmationbox" class="mb-control" style="margin-left:5px;" href="#" onclick="deleteFile('${fileName}');"><i class="fa fa-trash-o" style="color:red" aria-hidden="true"></i></a>
                                  	</c:if>
                                  	</li> 

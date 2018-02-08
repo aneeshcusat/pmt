@@ -175,9 +175,10 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectDetailsList;
     }
 
-    public List<ProjectDetails> getLatestProjects(Date startDate, Date endDate)
+    public List<ProjectDetails> getLatestProjects(Date startDate, Date endDate, Boolean includeArchive)
     {
-        List<ProjectDetails> projectDetailsList = projectManager.getPrimaryProjectsDetailList(startDate, endDate);
+        List<ProjectDetails> projectDetailsList =
+            projectManager.getPrimaryProjectsDetailList(startDate, endDate, includeArchive);
 
         sortProjectData(projectDetailsList);
         return projectDetailsList;
@@ -904,5 +905,11 @@ public class FamstackDashboardManager extends BaseFamstackService
     public String getAllRecuringProjectCodes()
     {
         return FamstackUtils.getJsonFromObject(projectManager.getAllRecuringProjectCodes());
+    }
+
+    public void deleteProjects(List<Integer> projectIds, String type)
+    {
+        projectManager.deleteProjects(projectIds, type);
+
     }
 }

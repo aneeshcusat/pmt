@@ -4,10 +4,10 @@
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
 			    <c:if test="${not empty taskDetailsData}">
-			    	<button id = "x" onclick='$("#taskDetailsDiv").hide();'>
+			    	<button class="close" id = "x" onclick='$("#taskDetailsDiv").hide();'>
 			           	 X
 			        	</button>
-			 			<table class="table table-responsive table-hover"  style="top:-35px;position: relative;">
+			 			<table class="table table-responsive table-hover"  style="top: -25px;position: relative;left: -4px;">
 						  <thead>
 						        <tr>
 						        	<th width="35%">Task Name</th>

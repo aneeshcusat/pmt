@@ -252,7 +252,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
 
         String queryKey = "userActivityItemsFromDatetoDate";
-        if ((userRole == UserRole.ADMIN || userRole == UserRole.SUPERADMIN || userRole == UserRole.MANAGER)
+        if ((userRole == UserRole.ADMIN || userRole == UserRole.SUPERADMIN || userRole == UserRole.TEAMLEAD)
             && isFullLoad) {
             queryKey = "allUserActivityItemsFromDatetoDate";
         } else {

@@ -66,6 +66,7 @@ public class FamstackProjectController extends BaseFamstackService
          * modelAndView;
          */
         String dateRange = getDefaultDateRange();
+        logDebug("Default dateRange : " + dateRange);
         ModelAndView modelAndView = getProjectPageModelView(null);
         modelAndView.setViewName("projectdashboard");
         return modelAndView.addObject("dateRange", dateRange);
@@ -73,19 +74,20 @@ public class FamstackProjectController extends BaseFamstackService
 
     private String getDefaultDateRange()
     {
-        Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -6);
-        Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), 0);
+        Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -6);
+        Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), 0);
         String dateRange =
-            DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP) + "-"
+            DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP) + " - "
                 + DateUtils.format(endDate, DateUtils.DATE_FORMAT_DP);
         return dateRange;
     }
 
     @RequestMapping("/projectdashboardList")
     public ModelAndView projectdashboardList(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
-        Model model)
+        @RequestParam(value = "includeArchive", defaultValue = "false") Boolean includeArchive, Model model)
     {
         logDebug(dateRange);
+        logDebug("includeArchive : " + includeArchive);
         String[] dateRanges;
         Date startDate = null;
         Date endDate = null;
@@ -102,7 +104,8 @@ public class FamstackProjectController extends BaseFamstackService
             endDate = startDate;
         }
 
-        List<ProjectDetails> projectData = famstackDashboardManager.getLatestProjects(startDate, endDate);
+        List<ProjectDetails> projectData =
+            famstackDashboardManager.getLatestProjects(startDate, endDate, includeArchive);
 
         ModelAndView modelAndView = getProjectPageModelView(projectData);
         modelAndView.setViewName("response/projectdashboardList");
@@ -267,6 +270,15 @@ public class FamstackProjectController extends BaseFamstackService
         Model model)
     {
         famstackDashboardManager.updateProject(projectDetails);
+        return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/deleteProjects", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteProjects(@RequestParam("projectIds[]") List<Integer> projectIds,
+        @RequestParam("type") String type)
+    {
+        famstackDashboardManager.deleteProjects(projectIds, type);
         return "{\"status\": true}";
     }
 

@@ -7,6 +7,9 @@
  <!-- END BREADCRUMB -->       
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <style>
+#DataTables_Table_0_filter{
+	display: none;
+}
 @media screen and (min-width: 700px) {
 	#createprojectmodal .modal-dialog {
 		width: 75%;
@@ -57,7 +60,7 @@
 				<div class="panel-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<div class="col-md-8">
+							<div class="col-md-12">
 								<div class="input-group">
 									<div class="input-group-addon">
 										<span class="fa fa-search"></span>
@@ -65,18 +68,18 @@
 									<input type="text" class="form-control" id="projectSearchBoxId"
 										placeholder="Search for a project.." />
 									<div class="input-group-btn">
-										<button class="btn btn-primary">Search</button>
+										<button class="btn btn-primary hide">Search</button>
 									</div>
 								</div>
 							</div>
-							<div class="col-md-4">
-								  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+							<div >
+							<%-- 	  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 								<a data-toggle="modal" data-target="#createprojectmodal" onclick="clearProjectFormForCreate()"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
 									Create a new Project
 								</a>
 								</c:if>
-							</div>
+							 --%></div>
 						</div>
 					</form>
 				</div>
@@ -95,8 +98,7 @@
 				<th>Assignees</th>
 				<th>Project Progress</th>
 				<th>Project Status</th>
-				 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-				<th>Actions</th>
+				 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 				</c:if>
 			</tr>
 		</thead> 
@@ -148,9 +150,9 @@
 	                                                        
 				</td>
 				<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
-				  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
-				<td>
+				  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 				
+				<%-- <td>
 					<button class="btn btn-default btn-rounded btn-sm" data-toggle="modal" data-target="#createprojectmodal"
 						onclick="loadProjectForClone('${project.id}')">
 						<span class="fa fa-clipboard" ></span>
@@ -162,8 +164,8 @@
 					<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right btn btn-danger btn-rounded btn-sm" 
 						onclick="deleteProject('${project.id}','${project.name}');">
 						<span class="fa fa-times"></span>
-					</a>
-				</td>
+					</a></td>
+				 --%>
 					</c:if>
 			</tr>
 		</c:forEach>

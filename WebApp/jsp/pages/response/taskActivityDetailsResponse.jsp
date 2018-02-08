@@ -1,7 +1,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 	<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-	
+<c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>	
 	<spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
@@ -40,13 +40,16 @@
 			Time Taken : <span  class="${taskDetails.taskId}taskTimeEditLink"><b class="${taskDetails.taskId}actualTimeTakenInHrs">${taskDetails.actualTimeTakenInHrs}</b> Hours </span>
 			<span class="${taskDetails.taskId}taskTimeEdit"  style="display:none" >
 				<input type="text" placeholder="hh" class="durationTxt" id="taskHHTimeEdit${taskDetails.taskId}"/>
-				<input type="text" placeholder="mm" class="durationTxt" id="taskMMTimeEdit${taskDetails.taskId}"/>
+				<input type="text" value="0" placeholder="mm" class="durationTxt" id="taskMMTimeEdit${taskDetails.taskId}"/>
 			</span>
 			<span style="text-align:right; display:none" class="${taskDetails.taskId}taskTimeEdit">
 				<button style="background-color: transparent; border: 0px;" onclick="taskActualTimeSubmit('${taskDetails.taskId}')" value="Save"><i class="fa fa-check fa-2x" style="color: green" aria-hidden="true"></i></button>
 				<button style="background-color: transparent; border: 0px;" onclick="hideTaskActualTimeEdit('${taskDetails.taskId}')" value="Cancel"><i class="fa fa-undo fa-2x" style="color: gray" aria-hidden="true"></i></button>
 			</span>
-			<a href="javascript:void(0)" onclick="showTaskActualTimeEdit('${taskDetails.taskId}')" style="margin-left: 10px" class="${taskDetails.taskId}taskTimeEditLink"><span class="fa fa-pencil"></span></a></p>
+			 <c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && taskDetails.status == 'COMPLETED'}">
+				<a href="javascript:void(0)" onclick="showTaskActualTimeEdit('${taskDetails.taskId}')" style="margin-left: 10px" class="${taskDetails.taskId}taskTimeEditLink"><span class="fa fa-pencil"></span></a>
+			</c:if>			
+			</p>
 		<c:if test="${not taskDetails.extraTimeTask}">
 			<p>	Est Start Time : <b>${taskDetails.startTime}</b></p>
 			<p>Est Complete Time : ${taskDetails.completionTime}</p>
@@ -116,15 +119,18 @@
 					<p>Time Taken : <span class="${taskActivityDetail.taskActivityId}taskTimeEditLink"> ${taskActivityDetail.actualTimeTakenInHrs} Hours </span>
 					<span class="${taskActivityDetail.taskActivityId}taskTimeEdit" style="display: none">
 						<input type="text" placeholder="hh" class="durationTxt" id="taskActHHTimeEdit${taskActivityDetail.taskActivityId}"/>
-						<input type="text" placeholder="mm" class="durationTxt" id="taskActMMTimeEdit${taskActivityDetail.taskActivityId}"/> 
+						<input type="text" value="0" placeholder="mm" class="durationTxt" id="taskActMMTimeEdit${taskActivityDetail.taskActivityId}"/> 
 					</span>
 					<span style="text-align:right; display:none" class="${taskActivityDetail.taskActivityId}taskActTimeEdit">
 						<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmit(${taskDetails.taskId},'${taskActivityDetail.taskActivityId}')" value="Save"><i class="fa fa-check fa-2x" style="color: green" aria-hidden="true"></i></button>
 						<button style="background-color: transparent; border: 0px;" onclick="hideTaskActActualTimeEdit('${taskActivityDetail.taskActivityId}')" value="Cancel"><i class="fa fa-undo fa-2x" style="color: gray" aria-hidden="true"></i></button>
 					</span>
-				
-					<a href="javascript:void(0)" class=" ${taskActivityDetail.taskActivityId}taskTimeEditLink" onclick="showTaskActActualTimeEdit('${taskActivityDetail.taskActivityId}')"  style="margin-left: 10px">
-					<span class="fa fa-pencil"></span></a></p>
+					<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty taskActivityDetail.recordedEndTime}">
+						<a href="javascript:void(0)" class=" ${taskActivityDetail.taskActivityId}taskTimeEditLink" onclick="showTaskActActualTimeEdit('${taskActivityDetail.taskActivityId}')"  style="margin-left: 10px">
+						<span class="fa fa-pencil"></span></a>
+					</c:if>					
+					
+					</p>
 				</c:if>
 
 				<c:if test="${not empty taskActivityDetail.recordedEndTime}">

@@ -41,7 +41,7 @@ public class FamstackDashboardController extends BaseFamstackService
     public ModelAndView index()
     {
         UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
-        if (userRole != UserRole.SUPERADMIN && userRole != UserRole.ADMIN && userRole != UserRole.MANAGER) {
+        if (userRole != UserRole.SUPERADMIN && userRole != UserRole.ADMIN && userRole != UserRole.TEAMLEAD) {
             return new ModelAndView("redirect:tasks");
         }
 

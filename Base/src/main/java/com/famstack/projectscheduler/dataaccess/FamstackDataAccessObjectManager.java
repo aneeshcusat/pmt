@@ -217,4 +217,21 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         tx.commit();
         session.close();
     }
+
+    public void executeSQLUpdate(String sqlQuery, Map<String, Object> dataMap)
+    {
+        Session session = getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        Query query = session.createSQLQuery(sqlQuery);
+        if (dataMap != null) {
+            logDebug("dataMap :" + dataMap.keySet());
+            logDebug("dataMap values :" + dataMap.values());
+            for (String paramName : dataMap.keySet()) {
+                query.setParameter(paramName, dataMap.get(paramName));
+            }
+        }
+        query.executeUpdate();
+        tx.commit();
+        session.close();
+    }
 }

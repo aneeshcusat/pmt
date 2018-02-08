@@ -435,7 +435,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetailsList;
     }
 
-    public List<ProjectDetails> getPrimaryProjectsDetailList(Date startDate, Date endDate)
+    public List<ProjectDetails> getPrimaryProjectsDetailList(Date startDate, Date endDate, Boolean includeArchive)
     {
         List<ProjectDetails> projectDetailsList = new ArrayList<>();
 
@@ -446,7 +446,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<?> projectItemList =
             famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getPrimaryProjectsItems"), dataMap);
 
-        getProjectsList(projectDetailsList, projectItemList, false);
+        getProjectsList(projectDetailsList, projectItemList, false, includeArchive);
         return projectDetailsList;
 
         /*
@@ -464,10 +464,16 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     private void getProjectsList(List<ProjectDetails> projectDetailsList, List<?> projectItemList, boolean isFullLoad)
     {
+        getProjectsList(projectDetailsList, projectItemList, isFullLoad, false);
+    }
+
+    private void getProjectsList(List<ProjectDetails> projectDetailsList, List<?> projectItemList, boolean isFullLoad,
+        Boolean includeArchive)
+    {
         if (projectItemList != null) {
             for (Object projectItemObj : projectItemList) {
                 ProjectItem projectItem = (ProjectItem) projectItemObj;
-                ProjectDetails projectDetails = mapProjectItemToProjectDetails(projectItem, isFullLoad);
+                ProjectDetails projectDetails = mapProjectItemToProjectDetails(projectItem, isFullLoad, includeArchive);
                 if (projectDetails != null) {
                     projectDetailsList.add(projectDetails);
                 }
@@ -1028,6 +1034,26 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("recurrinProjectItems" + recurrinProjectItems);
         logDebug("startTime" + startTime);
         return (List<RecurringProjectItem>) recurrinProjectItems;
+
+    }
+
+    public void deleteProjects(List<Integer> projectIds, String type)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("projectIds", projectIds);
+        if ("soft".equalsIgnoreCase(type)) {
+            famstackDataAccessObjectManager.executeSQLUpdate(HQLStrings.getString("projectSoftDeleteSQL"), dataMap);
+
+        } else if ("hard".equalsIgnoreCase(type)) {
+
+            for (Integer projectId : projectIds) {
+                try {
+                    deleteProjectItem(projectId);
+                } catch (Exception e) {
+                    logError("Unable to delete project : " + projectId, e);
+                }
+            }
+        }
 
     }
 }

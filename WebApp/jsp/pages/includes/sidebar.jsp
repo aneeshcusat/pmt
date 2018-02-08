@@ -41,7 +41,7 @@
                         <a href="${applicationHome}/index"><span class="fa fa-list-alt"></span> <span class="xn-text">Home Page</span></a>                        
                     </li>
                     
-                    <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+                    <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                     <li>
                         <a href="${applicationHome}/dashboard"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
                     </li>   
@@ -74,7 +74,7 @@
                     </li>
                     </c:if>
                     
-                     <c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER')}">
+                     <c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}">
                     <li class="active">
                         <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>                        
                     </li>                    

@@ -346,7 +346,7 @@
             <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
         </div>                                
     </div> 
- <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'MANAGER'}">
+ <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 	<div class="row ">
             <div class="col-md-12" style="background-color: #f5f5f5">
             <div class="col-md-1" style="background-color: #f5f5f5">

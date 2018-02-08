@@ -174,7 +174,8 @@
 							<c:if test="${currentUser.userRole == 'SUPERADMIN'}">
 								<option value="SUPERADMIN">Super Admin</option>
 							</c:if>
-							<option value="ADMIN">Admin</option>
+							<option value="ADMIN">Manager</option>
+							<option value="TEAMLEAD">Team Lead</option>
 							<option value="CORDINATOR">Cordinator</option>
 							<option value="PRODUCTION">Production</option>
 						</form:select>
@@ -187,7 +188,7 @@
 							<option value="">- select -</option>
 							<c:if test="${not empty userMap}">
     						<c:forEach var="user" items="${userMap}">
-    						 	<c:if test="${user.role == 'ADMIN' || user.role == 'MANAGER'}">
+    						 	<c:if test="${user.role == 'ADMIN' || user.role == 'TEAMLEAD'}">
     								<option value="${user.id}">${user.firstName}</option>
     							</c:if>
     						</c:forEach>

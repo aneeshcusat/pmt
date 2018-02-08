@@ -82,7 +82,7 @@ public class FamstackTaskController extends BaseFamstackService
         UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
         Integer userId = currentUserItem.getId();
         if (currentUserItem.getUserRole() == UserRole.ADMIN || currentUserItem.getUserRole() == UserRole.SUPERADMIN
-            || currentUserItem.getUserRole() == UserRole.MANAGER) {
+            || currentUserItem.getUserRole() == UserRole.TEAMLEAD) {
             userId = null;
         }
         Map<String, List<TaskDetails>> taskDetailsMap = famstackDashboardManager.getProjectTasksDataList(userId);

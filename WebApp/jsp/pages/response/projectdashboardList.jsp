@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-	
+<c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>	
 <spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
@@ -18,7 +18,32 @@
 			        	<th width="5%">Tasks</th>
 			        	<th width="12%">Comments</th>
 			        	<th width="10%">Status</th>
-			        	<th width="20%">Actions</th>
+			        	<th width="20%">
+			        	<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN'}">
+			        	<span class="dropdown">
+					          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></a>
+					          <ul class="dropdown-menu deleteProjectDropDown hide">
+					            <li> 
+					            	<a href="#" data-box="#confirmationbox"  style="color:red""  title="Delete this project" class="deleteProject mb-control profile-control-right" 
+									onclick="deleteProjects();">
+									<span class="fa fa-trash-o" aria-hidden="true"></span>Delete Projects
+								</a>
+							</li>
+							
+							 <li>
+							 	<a href="#" data-box="#confirmationbox" style="color:orange;"  title="Archive this project" class="deleteProject mb-control profile-control-right" 
+									onclick="archiveProjects();">
+									<span class="fa fa-ban" aria-hidden="true"></span>Archive Projects
+								</a>
+							</li>
+							
+			        		</ul>
+			        	</span>
+			        	</c:if>
+			        	<c:if test="${currentUser.userRole != 'SUPERADMIN' && currentUser.userRole != 'ADMIN'}">
+			        		Actions
+			        	</c:if>
+			        	</th>
 			        </tr>
 			    </thead>
 			    <c:if test="${not empty modelViewMap.projectDetailsData}">
@@ -44,7 +69,7 @@
 	                  <c:if test="${project.status == 'COMPLETED' }">
 	                   		<c:set var="projectState" value="success"/>
 	                  </c:if>
-			        <tr class="clickable projectData ${project.id}" id="projectData${project.id}">
+			        <tr class="clickable projectData ${project.id}" id="projectData${project.id}" data-projectId="${project.id}"  style="<c:if test='${project.deleted == true }'>background-color:#ff9696</c:if>">
 			            <td  onclick="loadDuplicateProjects(${project.id}, '${project.code}', false)" data-toggle="collapse" data-target=".projectData${project.id}"><i id="projectOpenLink${project.id}" style="color: blue" class="fa fa-chevron-right 2x"></i></td>
 			            <td>${project.completionTime}</td>
 			            <td><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
@@ -73,7 +98,7 @@
 								onclick="loadProjectForUpdate('${project.id}')">
 								<span class="fa fa-pencil  fa-2x"></span>
 							</a>
-							<a href="#" data-box="#confirmationbox" style="color:red""  title="Delete this project" class="deleteProject mb-control profile-control-right" 
+							<%-- <a href="#" data-box="#confirmationbox" style="color:red""  title="Delete this project" class="deleteProject mb-control profile-control-right" 
 								onclick="deleteProject('${project.id}','${project.name}');">
 								<span class="fa fa-trash-o  fa-2x"></span>
 							</a>
@@ -81,14 +106,20 @@
 							<a href="#" data-box="#confirmationbox" style="margin-left:7px; color:orange;"  title="Archive this project" class="deleteProject mb-control profile-control-right" 
 									onclick="archiveProject('${project.id}','${project.name}');">
 									<i class="fa fa-ban fa-2x" aria-hidden="true"></i>
-							</a>
+							</a> --%>
 							
 							<a href="#" style="margin-left: 7px;color:blue"  title="Recurring Project"  data-toggle="modal" data-target="#recurringprojectmodal" 
 								onclick="recurringProjectModel('${project.code}', '${project.id}')">
 								<span class="fa fa-recycle fa-2x recurringSpin${project.code}" ></span>
 							</a>
-							
-							
+								<input type="checkbox" class="prjectDeleteArchive"  style="margin-left: 7px" data-projectId="${project.id}"/>
+							<c:if test='${project.deleted == true }'>
+								<span class="hide">Archived</span>
+								<%-- <a href="#" data-box="#confirmationbox" style="margin-left:7px; color:green;"  title="Undo Archive" class="deleteProject mb-control profile-control-right" 
+									onclick="undoArchiveProject('${project.id}','${project.name}');">
+									<i class="fa fa-ban fa-2x" aria-hidden="true"></i>
+								</a> --%>
+							</c:if>
 						</td>
 			        </tr>
 					<tr class="collapse projectDataHidden projectData${project.id}">
