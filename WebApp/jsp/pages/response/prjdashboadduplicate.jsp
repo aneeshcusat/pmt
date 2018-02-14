@@ -33,7 +33,7 @@
 	                   		<c:set var="projectState" value="success"/>
 	                  </c:if>
 	                  
-                 		<tr class="projectDuplicate${projectId}" id="projectData${project.id}">
+                 		<tr class="projectDuplicate${projectId} <c:if test='${project.deleted == true }'>archived</c:if>" id="projectData${project.id}">
 		        			<td width="1%"></td>
 				        	<td width="10%">${project.completionTime}</td>
 				        	<td width="20%"><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>

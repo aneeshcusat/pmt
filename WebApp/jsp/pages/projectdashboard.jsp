@@ -90,7 +90,7 @@ div#taskDetailsDiv {
     color: green
   }
 .archived{
-	background-color: #ff9696;
+	background-color: #FEF8F8;
 }
 </style>
 <!-- START CONTENT FRAME -->
@@ -121,6 +121,10 @@ div#taskDetailsDiv {
 									</div>
 								</div>
 							</div>
+								<div class="col-md-1">
+        							<p style="text-align:center;margin :0 0 0px">Show Archived</p>
+									<p style="text-align: center;margin :0 0 0px"><input id="includeArchive" type="checkbox" class=""/></p>
+							</div>
 			                <div class="col-md-3" >
 					             	 <span id="reportrange" class="dtrange">                                            
             							<span>${dateRange}</span><b class="caret"></b>
@@ -128,10 +132,7 @@ div#taskDetailsDiv {
         								<input style="margin-left:10px" class="btn btn-default" type="button" value="Filter" onclick="loadAllProjectDetails($('#daterangeText').val());"></input>
         								<input type="hidden" id="daterangeText" value="hello" /> 
         					</div>
-        					<div class="col-md-1">
-        							<p style="text-align:center;margin :0 0 0px">Show Archived</p>
-									<p style="text-align: center;margin :0 0 0px"><input id="includeArchive" type="checkbox" class=""/></p>
-							</div>
+        					
 							<div class="col-md-3">
 								  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 								<a data-toggle="modal" data-target="#createprojectmodal" onclick="clearProjectFormForCreate()"
