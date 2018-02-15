@@ -1053,6 +1053,8 @@ public class FamstackProjectManager extends BaseFamstackManager
                     logError("Unable to delete project : " + projectId, e);
                 }
             }
+        } else if ("undoarchived".equalsIgnoreCase(type)) {
+            famstackDataAccessObjectManager.executeSQLUpdate(HQLStrings.getString("projectUndoSoftDeleteSQL"), dataMap);
         }
 
     }

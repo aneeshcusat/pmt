@@ -23,17 +23,24 @@
 			        	<span class="dropdown">
 					          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></a>
 					          <ul class="dropdown-menu deleteProjectDropDown hide">
-					            <li> 
-					            	<a href="#" data-box="#confirmationbox"  style="color:red""  title="Delete this project" class="deleteProject mb-control profile-control-right" 
+					            <li class="deleteProjectDropDownLink hide"> 
+					            	<a href="#" data-box="#confirmationbox"  title="Delete this project" class="deleteProject mb-control profile-control-right" 
 									onclick="deleteProjects();">
-									<span class="fa fa-trash-o" aria-hidden="true"></span>Delete Projects
+									<span class="fa fa-trash-o"  style="color:red" aria-hidden="true"></span>Delete Projects
 								</a>
-							</li>
-							
-							 <li>
-							 	<a href="#" data-box="#confirmationbox" style="color:orange;"  title="Archive this project" class="deleteProject mb-control profile-control-right" 
-									onclick="archiveProjects();">
-									<span class="fa fa-ban" aria-hidden="true"></span>Archive Projects
+								</li>
+								
+								 <li class="archiveProjectDropDownLink hide">
+								 	<a href="#" data-box="#confirmationbox"   title="Archive this project" class="deleteProject mb-control profile-control-right" 
+										onclick="archiveProjects();">
+										<span class="fa fa-ban" aria-hidden="true" style="color:orange;"></span>Archive Projects
+									</a>
+								</li>
+								
+							 <li class="undoArchiveProjectDropDownLink hide">
+							 	<a href="#" data-box="#confirmationbox"   title="Undo Archive this project" class="undoarchive deleteProject mb-control profile-control-right" 
+									onclick="undoArchiveProject();">
+									<span class="fa fa-ban" aria-hidden="true" style="color:blue;"></span>Undo Archive Projects
 								</a>
 							</li>
 							
@@ -112,13 +119,13 @@
 								onclick="recurringProjectModel('${project.code}', '${project.id}')">
 								<span class="fa fa-recycle fa-2x recurringSpin${project.code}" ></span>
 							</a>
-								<input type="checkbox" class="prjectDeleteArchive"  style="margin-left: 7px" data-projectId="${project.id}"/>
+								
 							<c:if test='${project.deleted == true }'>
-								<span class="hide">Archived</span>
-								<%-- <a href="#" data-box="#confirmationbox" style="margin-left:7px; color:green;"  title="Undo Archive" class="deleteProject mb-control profile-control-right" 
-									onclick="undoArchiveProject('${project.id}','${project.name}');">
-									<i class="fa fa-ban fa-2x" aria-hidden="true"></i>
-								</a> --%>
+								<span class="hide archivedProject${project.id}">Archived</span>
+								<input type="checkbox" class="prjectDeleteArchive archivedProject prjectDeleteArchive${project.id}"  style="margin-left: 7px" data-projectId="${project.id}"/>
+							</c:if>
+							<c:if test='${project.deleted != true }'>
+								<input type="checkbox" class="prjectDeleteArchive prjectDeleteArchive${project.id}"  style="margin-left: 7px" data-projectId="${project.id}"/>
 							</c:if>
 						</td>
 			        </tr>

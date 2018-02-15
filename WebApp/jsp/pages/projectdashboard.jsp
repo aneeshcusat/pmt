@@ -536,6 +536,12 @@ function initializeCreateProjectForm(project){
 		$("#confirmYesId").prop("href","javascript:doAjaxArchiveDeleteProjects('soft')");
 	}
 	
+	function undoArchiveProject(){
+		$(".msgConfirmText").html("Undo Archived selected projects");
+		$(".msgConfirmText1").html("");
+		$("#confirmYesId").prop("href","javascript:doAjaxArchiveDeleteProjects('undoarchived')");
+	}
+	
 	function deleteProject(projectId, projectName){
 		$(".msgConfirmText").html("Delete project");
 		$(".msgConfirmText1").html(projectName);
@@ -548,21 +554,25 @@ function initializeCreateProjectForm(project){
 		$("#confirmYesId").prop("href","javascript:doAjaxArchiveProject('"+projectId+"','archiveProject')");
 	}
 	
-	function undoArchiveProject(projectId, projectName){
-		$(".msgConfirmText").html("Archive project");
-		$(".msgConfirmText1").html(projectName);
-		$("#confirmYesId").prop("href","javascript:doAjaxUndoArchiveProject('"+projectId+"','archiveProject')");
-	}
-	
-	function doAjaxUndoArchiveProject(){
-	}
-	
-
 	$(document).on("change",".prjectDeleteArchive", function(){
 		if ($("input.prjectDeleteArchive:checked").length > 0) {
 			$(".deleteProjectDropDown").removeClass("hide");
+			$(".deleteProjectDropDownLink").removeClass("hide");
+			if ($("input.prjectDeleteArchive.archivedProject:checked").length > 0) {
+				$(".undoArchiveProjectDropDownLink").removeClass("hide");
+			} else {
+				$(".undoArchiveProjectDropDownLink").addClass("hide");
+			}
+			if ($("input.prjectDeleteArchive.archivedProject:checked").length < $("input.prjectDeleteArchive:checked").length){
+				$(".archiveProjectDropDownLink").removeClass("hide");
+			} else {
+				$(".archiveProjectDropDownLink").addClass("hide");
+			}
 		} else {
 			$(".deleteProjectDropDown").addClass("hide");
+			$(".deleteProjectDropDownLink").addClass("hide");
+			$(".archiveProjectDropDownLink").addClass("hide");
+			$(".undoArchiveProjectDropDownLink").addClass("hide");
 		}
 	});
 
@@ -589,11 +599,17 @@ function initializeCreateProjectForm(project){
 			$.each(projectIds,function(idx, projectId){
 				if ("soft" == type && $("input#includeArchive").is(":checked")) {
 					$("#projectData"+projectId).addClass("archived");
-					$("#projectData"+projectId).append('<span class="hide">Archived</span>');
-				} else {
+					$("#projectData"+projectId).append('<span class="hide archivedProject"'+projectId+'">Archived</span>');
+					$(".prjectDeleteArchive"+projectId).addClass("archivedProject");
+				} else if ("hard" == type) {
 					$("#projectData"+projectId).remove();
 	             	$(".projectData"+projectId).remove();
+				} else if ("undoarchived" == type) {
+					$("#projectData"+projectId).removeClass("archived");
+					$(".archivedProject"+projectId).remove();
+					$(".prjectDeleteArchive"+projectId).removeClass("archivedProject");
 				}
+				$("input.prjectDeleteArchive:checked").attr("checked", false);
 			});
 			$(".message-box").removeClass("open");
 			
