@@ -54,7 +54,7 @@ div#taskDetailsDiv {
     padding: 5px;
     display: block;
     background-color: white;
-    width: 400px;
+    width: 500px;
     border-radius: 10px;
     box-shadow: 5px 5px 2px #888888;
 }
@@ -92,6 +92,23 @@ div#taskDetailsDiv {
 .archived{
 	background-color: #FEF8F8;
 }
+.durationTxt{
+    font-weight: bold;
+    width: 22px;
+    margin-right: 1px;
+    height: 22px;
+    line-height: 18px;
+    box-shadow: none;
+    -webkit-appearance: none;
+    border: 1px solid #D5D5D5;
+    background: #F9F9F9;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    border-radius: 4px;
+    color: #555;
+    font-size: 9px;
+    padding: 0px 2px 2px 2px;
+}
+
 </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame margin5" style="min-height: 500px">
@@ -117,12 +134,12 @@ div#taskDetailsDiv {
 									<input type="text" class="form-control" id="projectSearchBoxId"
 										placeholder="Search for a project.." />
 									<div class="input-group-btn">
-										<button class="btn btn-primary">Search</button>
+										<button class="hide btn btn-primary">Search</button>
 									</div>
 								</div>
 							</div>
 								<div class="col-md-1">
-        							<p style="text-align:center;margin :0 0 0px">Show Archived</p>
+        							<p style="text-align:center;margin :0 0 0px;font-weight: bold">Show Archived</p>
 									<p style="text-align: center;margin :0 0 0px"><input id="includeArchive" type="checkbox" class=""/></p>
 							</div>
 			                <div class="col-md-3" >
@@ -1254,4 +1271,46 @@ $( document ).ready(function(){
 refreshProjectDetails();
 refreshRecurringSpin();
 });
+
+
+var showTaskActualTimeEdit = function(taskId){
+	$("."+taskId+"taskTimeEdit").show();
+	$("."+taskId+"taskTimeEditLink").hide();
+}
+
+var hideTaskActualTimeEdit = function(taskId){
+	$("."+taskId+"taskTimeEdit").hide();
+	$("."+taskId+"taskTimeEditLink").show();
+}
+
+var taskActualTimeSubmit = function(taskId) {
+	var hours=$("#taskDetailsDiv #taskHHTimeEdit"+taskId).val();
+	var mins=$("#taskDetailsDiv #taskMMTimeEdit"+taskId).val();
+	
+	$("#taskDetailsDiv #taskHHTimeEdit"+taskId).removeClass("error");
+	$("#taskDetailsDiv #taskMMTimeEdit"+taskId).removeClass("error");
+	var error = false;
+	if (hours == "" || !$.isNumeric(hours)) {
+		$("#taskDetailsDiv #taskHHTimeEdit"+taskId).addClass("error");
+		error = true;
+	}
+	
+	if (mins == "" || !$.isNumeric(mins) || parseInt(mins) >= 60) {
+		$("#taskDetailsDiv #taskMMTimeEdit"+taskId).addClass("error");
+		error = true;
+	}
+	
+	if(error){
+		return;
+	}
+	
+	var newDuration = (parseInt(hours) * 60) +parseInt(mins);
+	
+	doAjaxRequest("POST", "${applicationHome}/adjustTaskTime", {"taskId":taskId,"newDuration":newDuration},  function() {
+		hideTaskActualTimeEdit(taskId);
+		$("."+taskId+"taskActTimeHrs").html((hours.length > 1 ? hours : "0" + hours) + ":" + (mins.length > 1 ? mins : "0" + mins));
+	}, function(e) {
+	});
+}
+
 </script>
