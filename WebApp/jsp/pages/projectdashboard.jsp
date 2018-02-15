@@ -991,7 +991,7 @@ var loadAllProjectDetails = function(daterange) {
 var loadDuplicateProjects = function(projectId, projectCode, isForce) {
 	
 	if ( $(".projectDuplicate"+projectId).length ==0 || isForce) {
-		var dataString = {"projectId" : projectId, "projectCode" : projectCode};
+		var dataString = {"projectId" : projectId, "projectCode" : projectCode, includeArchive:$("input#includeArchive").is(":checked")};
 		doAjaxRequestWithGlobal("GET", "${applicationHome}/loadDuplicateProjectsJSon", dataString, function(data) {
 	        $(".projectDuplicate"+projectId).remove();
 	        $("#projectDetails"+projectId +" tbody").append(data);

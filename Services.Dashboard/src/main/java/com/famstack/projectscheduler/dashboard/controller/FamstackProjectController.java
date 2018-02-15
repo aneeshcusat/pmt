@@ -235,9 +235,11 @@ public class FamstackProjectController extends BaseFamstackService
 
     @RequestMapping(value = "/loadDuplicateProjectsJSon", method = RequestMethod.GET)
     public ModelAndView loadDuplicateProjectsJSon(@RequestParam("projectId") int projectId,
-        @RequestParam("projectCode") String projectCode, Model model)
+        @RequestParam("projectCode") String projectCode,
+        @RequestParam(value = "includeArchive", defaultValue = "false") Boolean includeArchive, Model model)
     {
-        List<ProjectDetails> projectDetails = famstackDashboardManager.loadDuplicateProjectsJon(projectId, projectCode);
+        List<ProjectDetails> projectDetails =
+            famstackDashboardManager.loadDuplicateProjectsJon(projectId, projectCode, includeArchive);
         return new ModelAndView("response/prjdashboadduplicate").addObject("projectDetailsData", projectDetails)
             .addObject("projectId", projectId);
     }

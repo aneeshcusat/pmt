@@ -184,9 +184,10 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectDetailsList;
     }
 
-    public List<ProjectDetails> loadDuplicateProjectsJon(int projectId, String projectCode)
+    public List<ProjectDetails> loadDuplicateProjectsJon(int projectId, String projectCode, Boolean includeArchive)
     {
-        List<ProjectDetails> projectDetailsList = projectManager.loadDuplicateProjects(projectId, projectCode);
+        List<ProjectDetails> projectDetailsList =
+            projectManager.loadDuplicateProjects(projectId, projectCode, includeArchive);
         return projectDetailsList;
 
     }

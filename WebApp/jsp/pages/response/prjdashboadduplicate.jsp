@@ -74,7 +74,13 @@
 									onclick="archiveProject('${project.id}','${project.name}');">
 									<i class="fa fa-ban fa-2x" aria-hidden="true"></i>
 								</a> --%>
-							<input type="checkbox" class="prjectDeleteArchive" style="margin-left: 7px" data-projectId="${project.id}"/>
+							<c:if test='${project.deleted == true }'>
+								<span class="hide archivedProject${project.id}">Archived</span>
+								<input type="checkbox" class="prjectDeleteArchive archivedProject prjectDeleteArchive${project.id}"  style="margin-left: 7px" data-projectId="${project.id}"/>
+							</c:if>
+							<c:if test='${project.deleted != true }'>
+								<input type="checkbox" class="prjectDeleteArchive prjectDeleteArchive${project.id}"  style="margin-left: 7px" data-projectId="${project.id}"/>
+							</c:if>
 							
 							</td>
 			        	</tr>

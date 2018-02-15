@@ -511,7 +511,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetailsList;
     }
 
-    public List<ProjectDetails> getAllProjectDetailsList(String projectCode, int projectId)
+    public List<ProjectDetails> getAllProjectDetailsList(String projectCode, int projectId, Boolean includeArchive)
     {
         List<ProjectDetails> projectDetailsList = new ArrayList<>();
         Map<String, Object> dataMap = new HashMap<>();
@@ -520,7 +520,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
         List<?> projectItemList =
             famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getProjectItemsByCode"), dataMap);
-        getProjectsList(projectDetailsList, projectItemList, false);
+        getProjectsList(projectDetailsList, projectItemList, false, includeArchive);
         return projectDetailsList;
     }
 
@@ -558,15 +558,15 @@ public class FamstackProjectManager extends BaseFamstackManager
                 (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class), true);
         if (projectDetails != null) {
             projectDetails.setDuplicateProjects(getAllProjectDetailsList(projectDetails.getCode(),
-                projectDetails.getId()));
+                projectDetails.getId(), false));
         }
         return projectDetails;
 
     }
 
-    public List<ProjectDetails> loadDuplicateProjects(int projectId, String projectCode)
+    public List<ProjectDetails> loadDuplicateProjects(int projectId, String projectCode, Boolean includeArchive)
     {
-        return getAllProjectDetailsList(projectCode, projectId);
+        return getAllProjectDetailsList(projectCode, projectId, includeArchive);
     }
 
     public Map<String, List<TaskDetails>> getProjectTasksDataList(Integer userId)
