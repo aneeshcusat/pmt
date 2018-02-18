@@ -48,6 +48,18 @@ public class FamstackScheduler extends BaseFamstackService
         checkTaskEndTimeReminder();
         checkTaskDeadlineMissed();
         setTaskRemainingTimeJob();
+        deleteOlderProjects();
+    }
+
+    @Async
+    private void deleteOlderProjects()
+    {
+        logDebug("Running deleteOlderProjects scheduler");
+        try {
+            famstackProjectManager.softDeleteProjectOlderThan(90);
+        } catch (Exception e) {
+            logError("Unable to run deleteOlderProjects", e);
+        }
     }
 
     @Async

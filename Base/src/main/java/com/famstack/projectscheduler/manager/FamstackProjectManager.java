@@ -410,15 +410,15 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     private int getUnAssignedDuration(ProjectDetails projectDetails)
     {
-        int unassignedCount = projectDetails.getDuration();
+        int unassignedDuration = projectDetails.getDuration();
         if (projectDetails.getProjectTaskDeatils() != null) {
             for (TaskDetails taskDetails : projectDetails.getProjectTaskDeatils()) {
                 if (!taskDetails.getExtraTimeTask()) {
-                    unassignedCount -= taskDetails.getDuration();
+                    unassignedDuration -= taskDetails.getDuration();
                 }
             }
         }
-        return unassignedCount;
+        return unassignedDuration;
     }
 
     public List<ProjectDetails> getAllProjectDetailsList(Date startTime, boolean isFullLoad)
@@ -1057,5 +1057,14 @@ public class FamstackProjectManager extends BaseFamstackManager
             famstackDataAccessObjectManager.executeSQLUpdate(HQLStrings.getString("projectUndoSoftDeleteSQL"), dataMap);
         }
 
+    }
+
+    public void softDeleteProjectOlderThan(int days)
+    {
+
+        Date dateTill = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -1 * days);
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("dateTill", dateTill);
+        famstackDataAccessObjectManager.executeSQLUpdate(HQLStrings.getString("projectSoftDeleteOlderSQL"), dataMap);
     }
 }
