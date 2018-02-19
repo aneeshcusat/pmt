@@ -35,7 +35,7 @@ public class AppConfItem implements FamstackBaseItem
     @Column(name = "user_grp_id")
     private String userGroupId;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "appConfItem", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "appConfItem", cascade = CascadeType.ALL)
     private Set<AppConfValueItem> appConfValueItem;
 
     @Column(name = "typeName")

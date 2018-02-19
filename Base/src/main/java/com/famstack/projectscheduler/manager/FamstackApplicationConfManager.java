@@ -117,16 +117,18 @@ public class FamstackApplicationConfManager extends BaseFamstackManager
 
                 if (appConfigItem.getAppConfValueItem() != null) {
                     appConfDetails.setAppConfValueDetails(new HashSet<AppConfValueDetails>());
+                    logDebug("appConfDetails.getApplicationId() -->" + appConfDetails.getApplicationId());
                     for (AppConfValueItem appConfValueItem : appConfigItem.getAppConfValueItem()) {
                         AppConfValueDetails appConfValueDetails = new AppConfValueDetails();
                         appConfValueDetails.setAppConfValueId(appConfValueItem.getAppConfValueId());
                         appConfValueDetails.setName(appConfValueItem.getName());
                         appConfValueDetails.setValue(appConfValueItem.getValue());
                         appConfDetails.getAppConfValueDetails().add(appConfValueDetails);
+                        logDebug("appConfValueDetails.getValue() -->" + appConfValueDetails.getValue());
                     }
                 }
                 appConfDetails.setApplicationId(appConfigItem.getApplicationId());
-                appConfDetails.setType(appConfigItem.getType());
+                appConfDetails.setType(appConfigItem.getType() + appConfigItem.getUserGroupId());
                 appConfDetails.setUserGroupId(appConfigItem.getUserGroupId());
                 appConfDetailsList.add(appConfDetails);
             }
