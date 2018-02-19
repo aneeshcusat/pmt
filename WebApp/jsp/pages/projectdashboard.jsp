@@ -9,6 +9,8 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/cron/jquery-cron.css"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/checkbox/styledCheckbox.css"/>
+
 <style>
 @media screen and (min-width: 700px) {
 	#createprojectmodal .modal-dialog {
@@ -140,7 +142,14 @@ div#taskDetailsDiv {
 							</div>
 								<div class="col-md-1">
         							<p style="text-align:center;margin :0 0 0px;font-weight: bold">Show Archived</p>
-									<p style="text-align: center;margin :0 0 0px"><input id="includeArchive" type="checkbox" class=""/></p>
+									<p style="text-align: center;margin :0 0 0px">
+									<div class="slideThree">	
+										<input type="checkbox" class="styledCheckBox includeArchive" value="None" id="slideThree" name="check" />
+										<label for="slideThree"></label>
+									</div>
+																		<!-- <input id="includeArchive" type="checkbox" class=""/> -->
+									
+									</p>
 							</div>
 			                <div class="col-md-3" >
 					             	 <span id="reportrange" class="dtrange">                                            
@@ -597,7 +606,7 @@ function initializeCreateProjectForm(project){
 		var dataString = {"projectIds" : projectIds,type:type};
 		doAjaxRequest("POST", "${applicationHome}/deleteProjects", dataString, function(data) {
 			$.each(projectIds,function(idx, projectId){
-				if ("soft" == type && $("input#includeArchive").is(":checked")) {
+				if ("soft" == type && $("input.includeArchive").is(":checked")) {
 					$("#projectData"+projectId).addClass("archived");
 					$("#projectData"+projectId).append('<span class="hide archivedProject"'+projectId+'">Archived</span>');
 					$(".prjectDeleteArchive"+projectId).addClass("archivedProject");
@@ -959,7 +968,7 @@ var taskLinkclick = function(projectId, e){
 
 var loadAllProjectDetails = function(daterange) {
 	
-	var dataString = {"daterange" : daterange, includeArchive:$("input#includeArchive").is(":checked")};
+	var dataString = {"daterange" : daterange, includeArchive:$("input.includeArchive").is(":checked")};
 	doAjaxRequest("GET", "${applicationHome}/projectdashboardList", dataString, function(data) {
         $("#projectDashBoardData").html(data);
         refreshRecurringSpin();
@@ -991,7 +1000,7 @@ var loadAllProjectDetails = function(daterange) {
 var loadDuplicateProjects = function(projectId, projectCode, isForce) {
 	
 	if ( $(".projectDuplicate"+projectId).length ==0 || isForce) {
-		var dataString = {"projectId" : projectId, "projectCode" : projectCode, includeArchive:$("input#includeArchive").is(":checked")};
+		var dataString = {"projectId" : projectId, "projectCode" : projectCode, includeArchive:$("input.includeArchive").is(":checked")};
 		doAjaxRequestWithGlobal("GET", "${applicationHome}/loadDuplicateProjectsJSon", dataString, function(data) {
 	        $(".projectDuplicate"+projectId).remove();
 	        $("#projectDetails"+projectId +" tbody").append(data);
