@@ -32,9 +32,9 @@
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-title"><span class="fa fa-angle-down"></span>Nunc pellentesque sagittis pulvinar?</div>
+                    <div class="faq-title"><span class="fa fa-angle-down"></span>How do I update my personal information?</div>
                     <div class="faq-text">
-                        <h5>How do I update my personal information</h5>
+                        <h5>Personal information can be updated from profile page</h5>
                         <p>Login to the system click on the Profile Pic that will take you to profile page.</p>
                         <p>Locate the edit button and click on it, that will open a new window for you to update your details.</p>
                     </div>
@@ -49,7 +49,7 @@
             <div class="panel-body faq">
                 
                 <div class="faq-item">
-                    <div class="faq-title"><span class="fa fa-angle-down"></span>How do I create a new project</div>
+                    <div class="faq-title"><span class="fa fa-angle-down"></span>How do I create a new project?</div>
                     <div class="faq-text">
                         <h5>Project can be created from the Project dashboard</h5>
                         <p>Locate the project create button from project dashboard.</p>
