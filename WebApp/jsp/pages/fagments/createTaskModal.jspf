@@ -67,7 +67,7 @@
                      </div>
 				</div>
 				<div class="form-group">
-				<label class="col-md-3 control-label">Is Review Task ?</label>
+				<label class="col-md-3 control-label">Task Type</label>
                      <div class="col-md-9">
                          <form:select class="form-control select" path="projectTaskType" id="projectTaskType">
                             <option value="PRODUCTIVE" selected="selected">PRODUCTIVE</option>
