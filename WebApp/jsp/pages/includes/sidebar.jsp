@@ -44,7 +44,11 @@
                     <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                     <li>
                         <a href="${applicationHome}/dashboard"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
-                    </li>   
+                    </li>
+                    <li>
+                    	<a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span><span class="xn-text">Manage Tasks</span></a>
+                    </li>
+                          
 					 <c:choose>
                     	<c:when test="${currentUserGroupId == '1001'}">
                     	 <li><a href="${applicationHome}/projectreporting?format=visualServices"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
@@ -64,7 +68,6 @@
                             <li><a href="${applicationHome}/employees"><span class="fa fa-users"></span> Employees</a></li>
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
-                            <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span>Manage Tasks</a></li>
                             <li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
                             <li><a href="${applicationHome}/mileStones"><span class="fa fa-trophy"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
