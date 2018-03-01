@@ -256,7 +256,7 @@ public class FamstackProjectController extends BaseFamstackService
     @RequestMapping(value = "/quickDuplicateProject", method = RequestMethod.POST)
     @ResponseBody
     public String quickDuplicateProject(@RequestParam("projectId") int projectId,
-        @RequestParam("projectName") String projectName, @RequestParam("projectDuration") int projectDuration,
+        @RequestParam("projectName") String projectName, @RequestParam("projectDuration") Integer projectDuration,
         @RequestParam("projectStartTime") String projectStartTime,
         @RequestParam("projectEndTime") String projectEndTime, @RequestParam("taskDetails") String taskDetails)
     {

@@ -442,7 +442,7 @@ width: 60%;
                            <div class="col-md-5 text-right">
                             <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                             <a data-toggle="modal"  data-backdrop="static" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
-                            <c:if test="${projectDetails.unAssignedDuration == 0}">
+                            <c:if test="${projectDetails.status == 'COMPLETED'}">
                             disabled="true"
                             </c:if>
                             >
@@ -504,11 +504,11 @@ width: 60%;
                               <ul class="nav nav-pills nav-stacked labels-info ">
                                   <li>Estimated start time:<b> ${projectDetails.startTime}</b></li>
                                   <li>Estimated completion time:<b> ${projectDetails.completionTime}</b></li>
-                                  <li>Project Duration : <b>${projectDetails.duration} hours</b></li>
+                                  <li>Project Duration : <b>${projectDetails.durationHrs} hours</b></li>
                                    <c:if test="${projectDetails.status == 'COMPLETED' }">
 								         <li>Actual Duration : <b>${projectDetails.actualDurationInHrs} hours</b>
 								        <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
-									        <a data-toggle="modal"  data-backdrop="static" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.duration}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-info btn-rounded" href="#" style="display: inline;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span><span class="fa fa-clock-o"></span></a>
+									        <a data-toggle="modal"  data-backdrop="static" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.durationHrs}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-info btn-rounded" href="#" style="display: inline;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span><span class="fa fa-clock-o"></span></a>
 								        </c:if> 
 								         
 								         </li>
@@ -734,7 +734,7 @@ var clearTaskDetails = function(){
 	$("#estStartTime").val("${projectDetails.startTime}");
 	$("#estCompleteTime").html("${projectDetails.completionTime}");
 	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
-	$("#projectDuration").html(${projectDetails.duration});
+	$("#projectDuration").html(${projectDetails.durationHrs});
  	$("#taskDuration").html(${projectDetails.unAssignedDuration});
 	$("#taskName").val("${projectDetails.category}");
 	$("#description").val("");
@@ -786,7 +786,7 @@ var loadTaskDetails = function(taskId){
  		$("#projectTaskType").val("Iteration");
  	}
  	$('#projectTaskType').selectpicker('refresh');
- 	$("#projectDuration").html(${projectDetails.duration});
+ 	$("#projectDuration").html(${projectDetails.durationHrs});
  	$("#taskDuration").html($("#"+taskId+"duration").val());
  	$("#taskName").val($("#"+taskId+"name").val());
  	$("#description").val($("#"+taskId+"description").val());
@@ -794,9 +794,9 @@ var loadTaskDetails = function(taskId){
  	$('#priority').selectpicker('refresh');
 	$("#createOrUpdateTaskId span").html("Update");
     $('#createTaskFormId').prop("action", "${applicationHome}/updateTask");
-    createTaskDurationList(${projectDetails.unAssignedDuration}+parseInt($("#"+taskId+"duration").val()));
-    $("#duration").prop('selectedIndex', parseInt($("#"+taskId+"duration").val()));
-    $("#duration").selectpicker('refresh');
+    //createTaskDurationList(${projectDetails.unAssignedDuration}+parseInt($("#"+taskId+"duration").val()));
+   // $("#duration").prop('selectedIndex', parseInt($("#"+taskId+"duration").val()));
+    //$("#duration").selectpicker('refresh');
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), parseInt($("#"+taskId+"duration").val())));
     $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
 	resetAssignTable();
@@ -1116,7 +1116,13 @@ $("#duration").on("change",function(){
 
 var getEstimatedCompletionTime = function(startTime, duration){
 	var estimatedCompletionTime = new Date(startTime); 
+	
+	if (duraion > 8) {
+		var currentHour = estimatedCompletionTime.getHours();
+		
+	}
 	estimatedCompletionTime.addHours(duration);
+	
 	var completionTimeString = getTodayDate(estimatedCompletionTime);
 	var completionHour = estimatedCompletionTime.getHours();
 	var startTimeHours =  new Date(startTime).getHours();

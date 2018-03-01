@@ -304,13 +304,13 @@ $(function() {
     $('input[name="daterange"]').daterangepicker();
    
 });
-
+/* 
 var createTaskDurationList = function(duration){
 	 $("#duration").html("");
 	for (var index = 1; index <= duration; index++) {
 	     $("#duration").append('<option value="'+index+'">'+index+'</option>');
 	 }
-}
+} */
 
 var jvalidate = $("#createProjectFormId").validate({
 	 ignore: ".ignorevalidation",
@@ -397,9 +397,9 @@ function clearCreateProjectForm(){
 	$("#priority").prop("selectedIndex",0);
 	$('#priority').selectpicker('refresh');
 	
-	$("#duration").prop("selectedIndex",0);
-	$('#duration').selectpicker('refresh');
-	
+	//$("#duration").prop("selectedIndex",0);
+	//$('#duration').selectpicker('refresh');
+	$('#duration').val("");
 	$("#projectSubType").prop("selectedIndex",0);
 	$('#projectSubType').selectpicker('refresh');
 	
@@ -462,7 +462,7 @@ function initializeCreateProjectForm(project){
 	$('#priority').selectpicker('refresh');
 	
 	$("#duration").val(project.duration);
-	$('#duration').selectpicker('refresh');
+	//$('#duration').selectpicker('refresh');
 	
 	$("#complexity").val(project.complexity);
 	$('#complexity').selectpicker('refresh');
@@ -807,21 +807,21 @@ function initializeCreateProjectForm(project){
 	$('#estStartTime').on("change", function(){
 		validateEstimatedStartTime($('#estStartTime'));
 		validateEstimatedEndTime($('#estStartTime'),$('#estCompleteTime'));
-		validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
+		//validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
 	});
 	
 	$('#estCompleteTime').on("change", function(){
 		validateEstimatedStartTime($('#estStartTime'));
 		validateEstimatedEndTime($('#estStartTime'),$('#estCompleteTime'));
-		validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
+		//validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
 	});
 	
-	$('#duration').on("change", function(){
+	/* $('#duration').on("change", function(){
 		validateEstimatedStartTime($('#estStartTime'));
 		validateEstimatedEndTime($('#estStartTime'),$('#estCompleteTime'));
 		validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
 	});
-
+ */
 	
 	$(document).on("change",".estStartTime", function(){
 		validateStartAndEndTime($(this).attr("data-projectId"));
@@ -846,9 +846,9 @@ function initializeCreateProjectForm(project){
 			validateStartAndEndTime($(this).attr("data-projectId"));
 		});
 		
-		$(document).on("change",".duration", function(){
+		/* $(document).on("change",".duration", function(){
 			validateStartAndEndTime($(this).attr("data-projectId"));
-		});
+		}); */
 	
 	
 	
@@ -1099,10 +1099,7 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
 		$("#prjName"+projectId).addClass("error");
 		isError = true;
 	}
-	if (projectDuration.trim() == "") {
-		$("#prjDuration"+projectId).addClass("error");
-		isError = true;
-	}
+	 
 	if (projectStartTime.trim() == "") {
 		$("#prjStartTime"+projectId).addClass("error");
 		isError = true;
@@ -1112,8 +1109,6 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
 		isError = true;
 	}
 	
-	
-	var projectDurationIntValue = parseInt(projectDuration);
 	var taskDurationIntValue = 0;
 	$("#projectTaskCloneDIv"+projectId+" .taskCloneAssignee").removeClass("error");
 	$("#projectTaskCloneDIv"+projectId+" .tskDuration").removeClass("error");
@@ -1146,7 +1141,15 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
 		
 		taskDetails += taskCloneAssignee+"#TDD#"+tskName+"#TDD#"+availabilityTime+"#TDD#"+tskDuration+"#TDD#"+tskType;
 	});
-	
+
+	var projectDurationIntValue = taskDurationIntValue;
+	if (projectDuration != "" && projectDuration != '0') {
+		/* $("#prjDuration"+projectId).addClass("error");
+		isError = true; */
+		projectDurationIntValue = parseInt(projectDuration);
+	} else {
+		projectDuration = 0;
+	}
 	
 	$("#projectDurationMsg"+projectId).html("");
 	if (taskDurationIntValue > projectDurationIntValue) {

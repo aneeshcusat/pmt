@@ -73,8 +73,8 @@ public class FamstackProjectManager extends BaseFamstackManager
         famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
     }
 
-    public void quickDuplicateProject(int projectId, String projectName, int projectDuration, String projectStartTime,
-        String projectEndTime, String taskDetailsList)
+    public void quickDuplicateProject(int projectId, String projectName, Integer projectDuration,
+        String projectStartTime, String projectEndTime, String taskDetailsList)
     {
         ProjectItem projectDetails = getProjectItemById(projectId);
         List<TaskDetails> allTaskDetailsList = new ArrayList<>();
@@ -114,7 +114,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             allTaskDetailsList);
     }
 
-    public void quickDuplicateProject(ProjectItem projectDetails, String projectName, int projectDuration,
+    public void quickDuplicateProject(ProjectItem projectDetails, String projectName, Integer projectDuration,
         Timestamp startTimeStamp, Timestamp completionTimeStamp, List<TaskDetails> taskItemList)
     {
         ProjectItem projectItem = new ProjectItem();
@@ -135,7 +135,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
             projectItem.setStartTime(startTimeStamp);
             projectItem.setCompletionTime(completionTimeStamp);
-            projectItem.setDuration(projectDuration);
+            projectItem.setDurationHrs(projectDuration);
 
             projectItem.setAccountId(projectDetails.getAccountId());
             projectItem.setTeamId(projectDetails.getTeamId());
@@ -203,7 +203,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
         projectItem.setStartTime(startTimeStamp);
         projectItem.setCompletionTime(completionTimeStamp);
-        projectItem.setDuration(projectDetails.getDuration());
+        projectItem.setDurationHrs(projectDetails.getDurationHrs());
 
         projectItem.setAccountId(projectDetails.getAccountId());
         projectItem.setTeamId(projectDetails.getTeamId());
@@ -301,14 +301,14 @@ public class FamstackProjectManager extends BaseFamstackManager
     {
 
         List<TaskStatus> taskStatsList = new ArrayList<>();
-        int projectDuration = projectItem.getDuration();
-        if (projectItem != null) {
+        Integer projectDuration = projectItem.getDurationHrs();
+        if (projectItem != null && projectDuration != 0) {
             for (TaskItem taskItem : projectItem.getTaskItems()) {
                 TaskStatus taskStatus = taskItem.getStatus();
                 taskStatsList.add(taskStatus);
                 projectDuration -= taskItem.getDuration();
             }
-        }
+        } 
         if (taskStatsList.isEmpty()) {
             return ProjectStatus.NEW;
         } else if (projectDuration != 0) {
@@ -363,7 +363,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectDetails.setDeleted(projectItem.getDeleted());
             projectDetails.setProjectTaskDeatils(famstackProjectTaskManager.mapProjectTaskDetails(
                 projectItem.getTaskItems(), isFullLoad));
-            projectDetails.setDuration(projectItem.getDuration());
+            projectDetails.setDurationHrs(projectItem.getDurationHrs());
             int unAssignedDuration = getUnAssignedDuration(projectDetails);
             projectDetails.setUnAssignedDuration(unAssignedDuration);
             String startDateString = DateUtils.format(projectItem.getStartTime(), DateUtils.DATE_TIME_FORMAT);
@@ -410,14 +410,15 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     private int getUnAssignedDuration(ProjectDetails projectDetails)
     {
-        int unassignedDuration = projectDetails.getDuration();
-        if (projectDetails.getProjectTaskDeatils() != null) {
+        Integer unassignedDuration = projectDetails.getDurationHrs();
+        if (projectDetails.getProjectTaskDeatils() != null && unassignedDuration != 0) {
             for (TaskDetails taskDetails : projectDetails.getProjectTaskDeatils()) {
                 if (!taskDetails.getExtraTimeTask()) {
                     unassignedDuration -= taskDetails.getDuration();
                 }
             }
         }
+        
         return unassignedDuration;
     }
 
@@ -970,7 +971,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
                     List<TaskDetails> taskItemList = getUpdatedTaskDetailsList(projectItem);
 
-                    quickDuplicateProject(projectItem, projectItem.getName(), projectItem.getDuration(),
+                    quickDuplicateProject(projectItem, projectItem.getName(), projectItem.getDurationHrs(),
                         projectStartTime, projectEndTime, taskItemList);
                 }
 

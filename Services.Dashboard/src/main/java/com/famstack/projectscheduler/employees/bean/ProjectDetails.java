@@ -60,7 +60,7 @@ public class ProjectDetails
 
     private String completionTime;
 
-    private Integer duration;
+    private Integer durationHrs;
 
     private ProjectStatus status;
 
@@ -129,16 +129,6 @@ public class ProjectDetails
     public Date getCreatedDate()
     {
         return createdDate;
-    }
-
-    public Integer getDuration()
-    {
-        return duration;
-    }
-
-    public void setDuration(Integer duration)
-    {
-        this.duration = duration;
     }
 
     public ProjectStatus getStatus()
@@ -603,5 +593,15 @@ public class ProjectDetails
     public void setDeleted(Boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public Integer getDurationHrs()
+    {
+        return durationHrs == null ? 0 : durationHrs;
+    }
+
+    public void setDurationHrs(Integer durationHrs)
+    {
+        this.durationHrs = durationHrs;
     }
 }

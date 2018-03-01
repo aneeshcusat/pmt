@@ -286,7 +286,7 @@
 					                                      </c:if>
 														</td>
 														<td  class="panelHideTD" style="display: none">
-															${project.duration}
+															${project.durationHrs}
 														</td>
 														<td class="panelHideTD" style="display: none">
 															${project.actualDurationInHrs}

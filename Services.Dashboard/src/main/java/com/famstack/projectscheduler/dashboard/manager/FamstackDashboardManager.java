@@ -863,8 +863,8 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     }
 
-    public void quickDuplicateProject(int projectId, String projectName, int projectDuration, String projectStartTime,
-        String projectEndTime, String taskDetails)
+    public void quickDuplicateProject(int projectId, String projectName, Integer projectDuration,
+        String projectStartTime, String projectEndTime, String taskDetails)
     {
 
         projectManager.quickDuplicateProject(projectId, projectName, projectDuration, projectStartTime, projectEndTime,

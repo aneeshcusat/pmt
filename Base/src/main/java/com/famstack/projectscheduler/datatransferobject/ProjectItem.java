@@ -101,7 +101,7 @@ public class ProjectItem implements FamstackBaseItem
     private Timestamp completionTime;
 
     @Column(name = "duration")
-    private Integer duration;
+    private Integer durationHrs;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -224,16 +224,6 @@ public class ProjectItem implements FamstackBaseItem
     public void setStartTime(Timestamp startTime)
     {
         this.startTime = startTime;
-    }
-
-    public Integer getDuration()
-    {
-        return duration;
-    }
-
-    public void setDuration(Integer duration)
-    {
-        this.duration = duration;
     }
 
     public ProjectStatus getStatus()
@@ -427,6 +417,16 @@ public class ProjectItem implements FamstackBaseItem
     public void setDeleted(Boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public Integer getDurationHrs()
+    {
+        return durationHrs == null ? 0 : durationHrs;
+    }
+
+    public void setDurationHrs(Integer durationHrs)
+    {
+        this.durationHrs = durationHrs;
     }
 
 }

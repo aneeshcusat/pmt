@@ -84,11 +84,12 @@
 						 <div class="form-group">    
 						 <label class="col-xs-3 control-label">Project Duration (Hrs)</label>
 							<div class="col-xs-4">
-							 	<form:select class="form-control select" id="duration" path="duration"  data-live-search="true">
+							<form:input class="form-control select" id="duration" path="durationHrs" type="text"/>
+							 	<%-- <form:select class="form-control select" id="duration" path="duration"  data-live-search="true">
 							 	 	<c:forEach begin="0" end="100" varStatus="loop">
                                         <option>${loop.count}</option>
                                  	</c:forEach>
-                                    </form:select>
+                                    </form:select> --%>
 							 	 <span class="help-block">required project duration</span>
 							</div>                                    
                                 <label class="col-md-2 control-label">Complexity</label>

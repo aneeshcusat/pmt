@@ -66,7 +66,7 @@
 							<td>${project.teamName}</td>
 							<td>${project.subTeamName}</td>
 							<td>${project.clientName}</td>
-							<td>${project.duration}</td>
+							<td>${project.durationHrs}</td>
 							<td>${project.actualDurationInHrs}</td>
 							<td>${projectTaskDetails.actualTimeTaken}</td>
 							<td>${userDetailsMap[projectTaskDetails.assignee].firstName}
@@ -93,7 +93,7 @@
 						<td>${project.teamName}</td>
 						<td>${project.subTeamName}</td>
 						<td>${project.clientName}</td>
-						<td>${project.duration}</td>
+						<td>${project.durationHrs}</td>
 						<td></td>
 						<td>${project.actualDurationInHrs}</td>
 						<td></td>

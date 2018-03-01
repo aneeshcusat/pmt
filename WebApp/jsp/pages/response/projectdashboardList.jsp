@@ -156,7 +156,7 @@
 											<div class="form-group">
 												<label class="col-md-4 control-label">Duration</label>
 												<div class="col-md-8 col-xs-12">
-													<input type="text" class="form-control cloneInput duration"  value="${project.duration}" data-projectId="${project.id}"
+													<input type="text" class="form-control cloneInput durationHrs"  value="${project.durationHrs}" data-projectId="${project.id}"
 														id="prjDuration${project.id}"/>
 														<span class="help-block" id="projectDurationMsg${project.id}"></span>
 												</div>

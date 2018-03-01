@@ -182,7 +182,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         notificationEmailItem.getData().put("priority", projectDetails.getPriority());
         notificationEmailItem.getData().put("startTime", projectDetails.getStartTime());
         notificationEmailItem.getData().put("completionTime", projectDetails.getCompletionTime());
-        notificationEmailItem.getData().put("duration", projectDetails.getDuration());
+        notificationEmailItem.getData().put("duration", projectDetails.getDurationHrs());
         notificationEmailItem.getData().put("status", projectDetails.getStatus());
         notificationEmailItem.getData().put("PONumber", projectDetails.getPONumber());
         notificationEmailItem.getData().put("clientName", projectDetails.getClientName());

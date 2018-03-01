@@ -68,7 +68,7 @@ table tr td.markable span {
 	                        	<input type="hidden" id="${project.id}unAssignedDuration" value="${project.unAssignedDuration}"/>
 	                        	<input type="hidden" id="${project.id}startTime" value="${project.startTime}"/>
 	                        	<input type="hidden" id="${project.id}completionTime" value="${project.completionTime}"/>
-	                        	<input type="hidden" id="${project.id}duration" value="${project.duration}"/>
+	                        	<input type="hidden" id="${project.id}duration" value="${project.durationHrs}"/>
 	                        </c:forEach>
                          </c:if>
 					</div>
@@ -153,18 +153,21 @@ table tr td.markable span {
                      </div>
 					<label class="col-md-2 control-label">Duration</label>
                      <div class="col-md-3">
-                         <form:select class="form-control select" path="duration" name="duration" id="duration"  data-live-search="true">
+                     <form:input class="form-control" path="duration" name="duration" id="duration"/>
+                         <%-- <form:select class="form-control select" path="duration" name="duration" id="duration"  data-live-search="true">
                          <option>0</option>
-                       	 </form:select>
+                       	 </form:select> --%>
                          <span class="help-block">required duration</span>
                      </div>
 				</div>
 				
 				<div class="form-group">
-				<label class="col-md-3 control-label">Est Completion Time</label>
-                     <div class="col-md-4">
+				 <div class="col-md-4">
+				 </div>
+				<!--<label class="col-md-3 control-label">Est Completion Time</label>
+                      <div class="col-md-4">
                            <h5 id="estCompleteTime">000/00/00 00:00</h5>
-                     </div>
+                     </div> -->
                      <label class="col-md-2 control-label"></label>
                      <div class="col-md-5">
 					<button type="button" onclick=""
@@ -307,9 +310,10 @@ var loadTaskDetails = function(taskId, projectId){
 	$("#helper").val(helpers);
 	$("#name").val($("#"+taskId+"name").val());
 
-	createTaskDurationList(parseInt($("#"+projectId+"unAssignedDuration").val())+parseInt($("#"+taskId+"duration").val()));
-    $("#duration").prop('selectedIndex', parseInt($("#"+taskId+"duration").val()));
-    $("#duration").selectpicker('refresh');
+	//createTaskDurationList(parseInt($("#"+projectId+"unAssignedDuration").val())+parseInt($("#"+taskId+"duration").val()));
+    //$("#duration").prop('selectedIndex', parseInt($("#"+taskId+"duration").val()));
+    $("#duration").val(parseInt($("#"+taskId+"duration").val()));
+   // $("#duration").selectpicker('refresh');
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), parseInt($("#"+taskId+"duration").val())));
     $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
 	$('input:radio[name=assignee]').each(function () { $(this).prop('checked', false); });
