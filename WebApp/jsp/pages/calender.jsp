@@ -92,7 +92,7 @@ $("#taskType").on("change", function(){
 	if($("#taskType").val() == "LEAVE") {
 		$(".dateDuration").show();
 		$(".dateRange").hide();
-	} else if ($("#taskType").val() == "MEETING"){
+	} else if($("#taskType").val() != "" && $("#taskType").val() != "LEAVE"){
 		$(".dateRange").show();
 		$(".dateDuration").hide();
 	} else {
@@ -117,7 +117,7 @@ var createUnbillableTask = function(){
 	if($("#taskType").val() == "LEAVE") {
 		startDate = $("#startDate").val();
 		endDate = $("#duration").val();
-	} else if ($("#taskType").val() == "MEETING") {
+	} else if ($("#taskType").val() != "" && $("#taskType").val() != "LEAVE") {
 		startDate = $("#startDateRange").val();
 		endDate = $("#completionDateRange").val();
 		

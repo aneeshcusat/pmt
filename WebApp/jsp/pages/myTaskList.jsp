@@ -494,7 +494,7 @@ $("#taskType").on("change", function(){
 	if($("#taskType").val() == "LEAVE") {
 		$(".dateDuration").show();
 		$(".dateRange").hide();
-	} else if ($("#taskType").val() == "MEETING"){
+	} else if ($("#taskType").val() != "" && $("#taskType").val() != "LEAVE"){
 		$(".dateRange").show();
 		$(".dateDuration").hide();
 	} else {
@@ -520,7 +520,7 @@ var createUnbillableTask = function(){
 	if($("#taskType").val() == "LEAVE") {
 		startDate = $("#startDate").val();
 		endDate = $("#duration").val();
-	} else if ($("#taskType").val() == "MEETING") {
+	} else if ($("#taskType").val() != "" && $("#taskType").val() != "LEAVE") {
 		startDate = $("#startDateRange").val();
 		endDate = $("#completionDateRange").val();
 		
@@ -576,7 +576,7 @@ var fillTableFromJson = function(jsonAssignData) {
 		$(taskData).find(".deleteTask").attr("onclick", "deleteTaskActivity('" +elem.taskActivityId + "','"+elem.taskName+"' )" );
 		$(taskData).find(".assignee").attr("src", "/bops/dashboard/image/" + elem.userId );
 		
-		if (elem.userTaskType == "LEAVE" || elem.userTaskType == "MEETING") {
+		if (elem.userTaskType == "LEAVE" || elem.userTaskType == "MEETING" || elem.userTaskType == "TRAINING" || elem.userTaskType == "ADMIN" || elem.userTaskType == "BD") {
 			 $(taskData).find(".deleteTask").removeClass("hide");
 			 $(taskData).find(".task-title").html(elem.taskName);
   		}

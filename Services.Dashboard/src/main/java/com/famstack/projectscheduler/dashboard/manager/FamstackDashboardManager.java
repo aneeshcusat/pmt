@@ -827,12 +827,12 @@ public class FamstackDashboardManager extends BaseFamstackService
                     break;
             }
 
-        } else if ("MEETING".equalsIgnoreCase(type)) {
+        } else if (!("LEAVE".equalsIgnoreCase(type))) {
             startTime = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
             Date endTime = DateUtils.tryParse(endDateString, DateUtils.DATE_TIME_FORMAT);
             durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
 
-            taskName = durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins Meeting";
+            taskName = durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + type;
         }
 
         famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName, durationInMinutes,
@@ -845,9 +845,12 @@ public class FamstackDashboardManager extends BaseFamstackService
         if (userTaskActivityItem != null) {
             int taskId = userTaskActivityItem.getTaskId();
             TaskItem taskItem = famstackProjectTaskManager.getTaskItemById(taskId);
-            taskItem.setDuration(taskItem.getDuration() - (userTaskActivityItem.getDurationInMinutes() / 60));
-            taskItem.setActualTimeTaken(taskItem.getActualTimeTaken() - userTaskActivityItem.getDurationInMinutes());
-            famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+            if (taskItem != null) {
+                taskItem.setDuration(taskItem.getDuration() - (userTaskActivityItem.getDurationInMinutes() / 60));
+                taskItem
+                    .setActualTimeTaken(taskItem.getActualTimeTaken() - userTaskActivityItem.getDurationInMinutes());
+                famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+            }
         }
 
     }

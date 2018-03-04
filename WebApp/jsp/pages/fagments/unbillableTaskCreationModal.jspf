@@ -33,6 +33,9 @@
 							<option value="">- select -</option>
   							<option value="LEAVE">Leave</option>
   							<option value="MEETING">Meeting</option>
+  							<option value="TRAINING">Training</option>
+  							<option value="ADMIN">Admin</option>
+  							<option value="BD">BD</option>
 						</select>
                      </div>
 				</div>

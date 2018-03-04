@@ -80,7 +80,7 @@
                     
                      <c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}">
                     <li class="active">
-                        <li><a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a></li>                        
+                        <a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a>                    
                     </li>                    
                     
                      <li class="">

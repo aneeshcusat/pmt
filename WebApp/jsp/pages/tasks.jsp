@@ -7,6 +7,11 @@
 	<li class="active">Tasks</li>
 </ul>
 <style>
+
+#unbillableTaskCreationModal .modal-dialog {
+	width: 50%;
+}
+
 .fa-clock-o,.fa-pause,.fa-play {
 	margin-right: 6px;
 }
@@ -165,13 +170,13 @@
 	<!-- END CONTENT FRAME TOP -->
 	<c:if test="${not empty modelViewMap.taskOwners}">
 		<div class="row ">
-			<div class="col-md-12" style="background-color: #f5f5f5">
+			<div class="col-md-10" style="background-color: #f5f5f5">
 				<div class="col-md-1" style="background-color: #f5f5f5">
 					<span
-						style="vertical-align: middle; text-align: left; float: left; margin-top: 5px; font-weight: bold; font-size: 15px; line-height: 20px;">Task
+						style="vertical-align: middle; text-align: left; float: left; margin-top: 5px; font-weight: bold; font-size: 13px; line-height: 20px;">Task
 						Filters :</span>
 				</div>
-				<div class="col-md-11" style="background-color: #f5f5f5">
+				<div class="col-md-8" style="background-color: #f5f5f5">
 					<div class="list-group list-group-horizontal">
 						<c:forEach var="taskOwner" items="${modelViewMap.taskOwners}"
 							varStatus="taskOwnerIndex">
@@ -180,6 +185,12 @@
 						</c:forEach>
 					</div>
 				</div>
+			</div>
+			<div class="col-md-2">
+				  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate()"
+					class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
+					Record Non-billable Time.
+					</a>
 			</div>
 		</div>
 	</c:if>
@@ -551,8 +562,38 @@
 		</div>
 	</div>
 </div>
-
 <!-- project create modal end -->
+
+
+<!-- unbilled task modal start -->
+<div class="modal fade" id="unbillableTaskCreationModal" tabindex="-1" data-backdrop="static"
+	role="dialog" aria-labelledby=""createUnbillableModal"" aria-hidden="true">
+	<form:form id="unbillableTaskCreationModal" action="unbillableTaskCreationModal" method="POST"
+		role="form" class="form-horizontal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">Create Non-billable time</h4>
+				</div>
+				<div class="modal-body">
+					<%@include file="fagments/unbillableTaskCreationModal.jspf"%>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary createUnbillableCancel"
+						data-dismiss="modal">Cancel</button>
+					<button type="button" id="taskCreate" onclick="createUnbillableTask()"
+						class="btn btn-primary" style="display: none">
+						<span >Create</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</form:form>
+</div>
+<!-- unbilled task create modal end -->  
+
+
+
 <a data-toggle="modal" data-target="#taskCompletionModal"
 	class="hide taskCompletionLink" data-backdrop="static">complete</a>
 <a data-toggle="modal" data-target="#taskStartModal"
@@ -588,6 +629,7 @@ window.setInterval(reloadTime, 1000);
 var taskStart = function(){
 	var comments =$("#taskStartComments").val();
 	var adjustStartTime =$("#adjustStartTime").val();
+	$(lastMovedItem.item).find("input.startTime").val(adjustStartTime);
 	var taskId = $(lastMovedItem.item).find("input.taskId").val();
 	var dataString = {"taskId":taskId,"taskStatus": "INPROGRESS","comments":comments, "adjustStartTime":adjustStartTime, "adjustCompletionTime":""}
 	updateTaskStatus(dataString, false);
@@ -834,5 +876,97 @@ function taskPlayOrPause(taskId){
 $('#adjustCompletionTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 $('#adjustStartTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 $('#adjustStartTime1').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+
+//unbilled task start
+$("#taskType").on("change", function(){
+	$("#taskCreate").show();
+	if($("#taskType").val() == "LEAVE") {
+		$(".dateDuration").show();
+		$(".dateRange").hide();
+	} else if ($("#taskType").val() != "" && $("#taskType").val() != "LEAVE"){
+		$(".dateRange").show();
+		$(".dateDuration").hide();
+	} else {
+		$(".dateRange").show();
+		$(".dateDuration").show();
+		$("#taskCreate").hide();
+	}
+	
+});
+
+$('#startDate').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD'});
+$('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+$('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+
+var validateStartAndEndUBTtime = function(){
+	var startDate = $('#startDateRange').val();
+	var endDate = $('#completionDateRange').val();
+	$('#startDateRange').removeClass("error");
+	$('#completionDateRange').removeClass("error");
+	
+	if (startDate != "" && endDate != "") {
+		
+		if (new Date(startDate) > new Date(endDate) || (new Date(startDate).getDate() != new Date(endDate).getDate())) {
+			$('#startDateRange').addClass("error");
+			$('#completionDateRange').addClass("error");
+			
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+var createUnbillableTask = function(){
+	
+	var endDate = "";
+	var startDate = "";
+	$("#userId").removeClass("error");
+	
+	if($("#taskType").val() == "LEAVE") {
+		startDate = $("#startDate").val();
+		endDate = $("#duration").val();
+	} else if ($("#taskType").val() != "" && $("#taskType").val() != "LEAVE") {
+		startDate = $("#startDateRange").val();
+		endDate = $("#completionDateRange").val();
+		
+		if (!validateStartAndEndUBTtime()){
+			return;
+		}
+	}
+    
+	if ($("#userId").val() == "" || $("#taskType").val() == "") {
+		$("#userId").addClass("error");
+		return;
+	}
+	
+	var dataString = {userId:$("#userId").val(),type:$("#taskType").val(),startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
+	doAjaxRequest("POST", "${applicationHome}/createNonBillableTask", dataString, function(data) {
+        var responseJson = JSON.parse(data);
+        if (responseJson.status){
+        	$(".modal").modal('hide');
+        } else {
+        	return false;
+        }
+       
+    }, function(e) {
+    });
+}
+
+var clearUnbillableFormForCreate = function() {
+	$("#userId").prop("selectedIndex",0);
+	$("#taskType").prop("selectedIndex",0);
+	$("#duration").prop("selectedIndex",0);
+	$("#startDate").val("");
+	$("#startDateRange").val("");
+	$("#completionDateRange").val("");
+	$("#taskStartComments").val("");
+}
+
+//unbilled task end
+
+
+
+
 
 </script>

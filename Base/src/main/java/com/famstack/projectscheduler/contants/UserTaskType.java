@@ -4,10 +4,13 @@ public enum UserTaskType
 {
     PROJECT,
     PROJECT_HELPER,
-    LEAVE,
-    MEETING,
     PROJECT_REVIEW,
     PROJECT_HELPER_REVIEW,
     PROJECT_PARTIAL,
-    EXTRATIME;
+    EXTRATIME,
+    TRAINING,
+    ADMIN,
+    BD,
+    LEAVE,
+    MEETING;
 }
