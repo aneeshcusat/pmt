@@ -77,6 +77,25 @@
                           </form:select>
                      </div>
 				</div>
+				
+				<div class="form-group" id="assigneeSelectId">
+				<label class="col-md-3 control-label">Assignee</label>
+                     <div class="col-md-9">
+                          <c:if test="${not empty userMap}">
+                          	 <form:select path="assignee" class="assigneeSelectName form-control select" data-live-search="true">
+								<option value="">- select -</option>
+								<c:if test="${not empty userMap}">
+	    						<c:forEach var="user" items="${userMap}">
+	    						 	<c:if test="${user.role != 'SUPERADMIN'}">
+	    								<option value="${user.id}">${user.firstName}</option>
+	    							</c:if>
+		    							</c:forEach>
+		    						</c:if>
+								</form:select>
+           					</c:if>
+                     </div>
+				</div>
+				
 			</div>
 
 		</div>
@@ -110,7 +129,7 @@
              <c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
              <c:if test="${user.role != 'SUPERADMIN'}">
              <tr class="editable" id="${user.id}-row"">
-            	<td><input name="assignee" type="radio" id="${user.id}-select" value="${user.id}" path="assignee"></input></td>
+            	<td><input name="assigneeId" type="radio" id="${user.id}-select" value="${user.id}"></input></td>
                 <td class="nonmarkable" id="${user.id}-name">${user.firstName} ${user.lastName}</td>
                 <td class="markable" id="${user.id}-8" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
                 <td class="markable" id="${user.id}-9" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
