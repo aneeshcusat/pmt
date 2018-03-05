@@ -168,15 +168,17 @@
 		</div>
 	</div>
 	<!-- END CONTENT FRAME TOP -->
-	<c:if test="${not empty modelViewMap.taskOwners}">
+	
 		<div class="row ">
+		
 			<div class="col-md-10" style="background-color: #f5f5f5">
+			<c:if test="${not empty modelViewMap.taskOwners}">
 				<div class="col-md-1" style="background-color: #f5f5f5">
 					<span
 						style="vertical-align: middle; text-align: left; float: left; margin-top: 5px; font-weight: bold; font-size: 13px; line-height: 20px;">Task
 						Filters :</span>
 				</div>
-				<div class="col-md-8" style="background-color: #f5f5f5">
+				<div class="col-md-11" style="background-color: #f5f5f5">
 					<div class="list-group list-group-horizontal">
 						<c:forEach var="taskOwner" items="${modelViewMap.taskOwners}"
 							varStatus="taskOwnerIndex">
@@ -185,6 +187,7 @@
 						</c:forEach>
 					</div>
 				</div>
+			</c:if>
 			</div>
 			<div class="col-md-2">
 				  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate()"
@@ -193,7 +196,7 @@
 					</a>
 			</div>
 		</div>
-	</c:if>
+
 	<!-- START CONTENT FRAME BODY -->
 	<div class="row ">
 		<div class="col-md-3">

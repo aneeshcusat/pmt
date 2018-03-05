@@ -107,12 +107,30 @@ $('#startDate').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD'});
 $('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 $('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 
+var validateStartAndEndUBTtime = function(){
+	var startDate = $('#startDateRange').val();
+	var endDate = $('#completionDateRange').val();
+	$('#startDateRange').removeClass("error");
+	$('#completionDateRange').removeClass("error");
+	
+	if (startDate != "" && endDate != "") {
+		
+		if (new Date(startDate) > new Date(endDate) || (new Date(startDate).getDate() != new Date(endDate).getDate())) {
+			$('#startDateRange').addClass("error");
+			$('#completionDateRange').addClass("error");
+			
+			return false;
+		}
+	}
+	
+	return true;
+}
+
 var createUnbillableTask = function(){
 	
 	var endDate = "";
 	var startDate = "";
-	$("#startDateRange").css("border", "1px solid #D5D5D5");
-	$("#completionDateRange").css("border", "1px solid #D5D5D5");
+	$("#userId").removeClass("error");
 	
 	if($("#taskType").val() == "LEAVE") {
 		startDate = $("#startDate").val();
@@ -121,11 +139,14 @@ var createUnbillableTask = function(){
 		startDate = $("#startDateRange").val();
 		endDate = $("#completionDateRange").val();
 		
-		if (new Date(startDate) >= new Date(endDate)){
-			$("#startDateRange").css("border", "1px solid red");
-			$("#completionDateRange").css("border", "1px solid red");
+		if (!validateStartAndEndUBTtime()){
 			return;
 		}
+	}
+    
+	if ($("#userId").val() == "" || $("#taskType").val() == "") {
+		$("#userId").addClass("error");
+		return;
 	}
     
 	var dataString = {userId:$("#userId").val(),type:$("#taskType").val(),startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
