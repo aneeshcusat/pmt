@@ -238,7 +238,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
         logDebug("task assignee :" + taskDetails.getAssignee());
 
-        famstackUserActivityManager.deleteAllUserTaskActivities(taskDetails.getTaskId());
+        deleteAllTaskActivitiesItem(taskDetails.getTaskId());
 
         if (taskDetails.getAssignee() > 0) {
             famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate, taskDetails
@@ -284,11 +284,12 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
             int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
             if (userTaskActivityItem.getProjectType() == ProjectType.BILLABLE) {
-                int billableHours = userActivityItem.getBillableHours();
-                userActivityItem.setBillableHours(billableHours - durationInMinutes / 60);
+                int billableMins = userActivityItem.getBillableMins();
+                userActivityItem.setBillableMins(billableMins - durationInMinutes);
+            } else {
+                int nonBillableMins = userActivityItem.getNonBillableMins();
+                userActivityItem.setNonBillableMins(nonBillableMins - durationInMinutes);
             }
-            int productiveHours = userActivityItem.getProductiveHousrs();
-            userActivityItem.setProductiveHousrs(productiveHours - durationInMinutes / 60);
 
             famstackDataAccessObjectManager.updateItem(userActivityItem);
         }

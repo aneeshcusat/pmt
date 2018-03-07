@@ -301,12 +301,10 @@ public class FamstackProjectManager extends BaseFamstackManager
     {
 
         List<TaskStatus> taskStatsList = new ArrayList<>();
-        Integer projectDuration = projectItem.getDurationHrs();
-        if (projectItem != null && projectDuration != 0) {
+        if (projectItem != null) {
             for (TaskItem taskItem : projectItem.getTaskItems()) {
                 TaskStatus taskStatus = taskItem.getStatus();
                 taskStatsList.add(taskStatus);
-                projectDuration -= taskItem.getDuration();
             }
         }
         if (taskStatsList.isEmpty()) {

@@ -60,11 +60,14 @@ public class UserActivityItem implements FamstackBaseItem
     @Column(name = "leaType")
     private LeaveType leave;
 
-    @Column(name = "billable_hours")
-    private int billableHours;
+    @Column(name = "billable_mins")
+    private Integer billableMins;
 
-    @Column(name = "productive_hours")
-    private int productiveHousrs;
+    @Column(name = "non_billable_mins")
+    private Integer nonBillableMins;
+
+    @Column(name = "leave_mins")
+    private Integer leaveMins;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
@@ -133,26 +136,6 @@ public class UserActivityItem implements FamstackBaseItem
         this.userItem = userItem;
     }
 
-    public int getBillableHours()
-    {
-        return billableHours;
-    }
-
-    public void setBillableHours(int billableHours)
-    {
-        this.billableHours = billableHours;
-    }
-
-    public int getProductiveHousrs()
-    {
-        return productiveHousrs;
-    }
-
-    public void setProductiveHousrs(int productiveHousrs)
-    {
-        this.productiveHousrs = productiveHousrs;
-    }
-
     public LeaveType getLeave()
     {
         return leave;
@@ -163,6 +146,7 @@ public class UserActivityItem implements FamstackBaseItem
         this.leave = leave;
     }
 
+    @Override
     public String getUserGroupId()
     {
         return userGroupId;
@@ -172,6 +156,36 @@ public class UserActivityItem implements FamstackBaseItem
     public void setUserGroupId(String userGroupId)
     {
         this.userGroupId = userGroupId;
+    }
+
+    public Integer getBillableMins()
+    {
+        return billableMins == null ? 0 : billableMins;
+    }
+
+    public void setBillableMins(Integer billableMins)
+    {
+        this.billableMins = billableMins;
+    }
+
+    public Integer getNonBillableMins()
+    {
+        return nonBillableMins == null ? 0 : nonBillableMins;
+    }
+
+    public void setNonBillableMins(Integer nonBillableMins)
+    {
+        this.nonBillableMins = nonBillableMins;
+    }
+
+    public Integer getLeaveMins()
+    {
+        return leaveMins == null ? 0 : leaveMins;
+    }
+
+    public void setLeaveMins(Integer leaveMins)
+    {
+        this.leaveMins = leaveMins;
     }
 
 }

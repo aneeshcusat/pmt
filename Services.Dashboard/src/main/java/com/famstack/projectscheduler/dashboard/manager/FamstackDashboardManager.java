@@ -617,9 +617,9 @@ public class FamstackDashboardManager extends BaseFamstackService
             UserWorkDetails userDetails = userWorkDetailsMap.get(userId);
             if (userWorkDetailsMap.get(userId) == null && empMap.get(userId).getRole() != UserRole.SUPERADMIN) {
                 userDetails = new UserWorkDetails();
-                userDetails.setBillableHours(0);
+                userDetails.setBillableHours(null);
                 userDetails.setCount(0);
-                userDetails.setProductiveHours(0);
+                userDetails.setNonBillableHours(null);
                 userWorkDetailsMap.put(userId, userDetails);
             }
 

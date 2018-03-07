@@ -86,18 +86,23 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             userActivityItem.setUserItem(assigneeUserItem);
         }
 
-        int productiveHours = userActivityItem.getProductiveHousrs();
-        int billableHours = userActivityItem.getBillableHours();
-        if (projectType == ProjectType.BILLABLE) {
-            billableHours += (durationInMinutes / 60);
-        }
-        if (userTaskType != UserTaskType.LEAVE) {
-            productiveHours += (durationInMinutes / 60);
+        if (userTaskType == UserTaskType.LEAVE) {
+            int leaveMins = userActivityItem.getLeaveMins();
+            leaveMins += (durationInMinutes);
+            userActivityItem.setLeaveMins(leaveMins);
         } else {
             userActivityItem.setLeave(LeaveType.FULL);
+            int nonBillableHrs = userActivityItem.getNonBillableMins();
+            int billableHours = userActivityItem.getBillableMins();
+            if (projectType == ProjectType.BILLABLE) {
+                billableHours += (durationInMinutes);
+            } else {
+                nonBillableHrs += (durationInMinutes);
+            }
+            userActivityItem.setNonBillableMins(nonBillableHrs);
+            userActivityItem.setBillableMins(billableHours);
         }
-        userActivityItem.setProductiveHousrs(productiveHours);
-        userActivityItem.setBillableHours(billableHours);
+
         userActivityItem.setUserGroupId(userGroupId);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
         return setUserTaskActivity(userActivityItem, taskId, taskName, durationInMinutes, startTime, userTaskType,
@@ -461,13 +466,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             Object[] data = result.get(i);
             userWorkDetails.setBillableHours(data[2]);
             userWorkDetails.setCount(data[0]);
-            userWorkDetails.setProductiveHours(data[3]);
+            userWorkDetails.setNonBillableHours(data[3]);
             userWorkDetails.setUserId(data[1]);
 
             logDebug("day count " + data[0]);
             logDebug("User ID " + data[1]);
             logDebug("billableHrs " + data[2]);
-            logDebug("Productive hours " + data[3]);
+            logDebug("non billable hours " + data[3]);
             userWorkDetailsMap.put(data[1], userWorkDetails);
         }
         return userWorkDetailsMap;
@@ -481,12 +486,18 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         if (userTaskActivityItem != null) {
             int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
             UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
-            if (userTaskActivityItem.getProjectType() == ProjectType.BILLABLE) {
-                int billableHours = userActivityItem.getBillableHours();
-                userActivityItem.setBillableHours(billableHours - durationInMinutes / 60);
+            if (userTaskActivityItem.getType() == UserTaskType.LEAVE) {
+                int leaveMins = userActivityItem.getLeaveMins();
+                userActivityItem.setBillableMins(leaveMins - durationInMinutes);
+            } else {
+                if (userTaskActivityItem.getProjectType() == ProjectType.BILLABLE) {
+                    int billableMins = userActivityItem.getBillableMins();
+                    userActivityItem.setBillableMins(billableMins - durationInMinutes);
+                } else {
+                    int nonBillableMins = userActivityItem.getNonBillableMins();
+                    userActivityItem.setNonBillableMins(nonBillableMins - durationInMinutes);
+                }
             }
-            int productiveHours = userActivityItem.getProductiveHousrs();
-            userActivityItem.setProductiveHousrs(productiveHours - durationInMinutes / 60);
 
             famstackDataAccessObjectManager.updateItem(userActivityItem);
 
