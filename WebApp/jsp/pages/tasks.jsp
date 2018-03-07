@@ -190,7 +190,7 @@
 			</c:if>
 			</div>
 			<div class="col-md-2">
-				  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate()"
+				  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
 					class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
 					Record Non-billable Time.
 					</a>
@@ -956,8 +956,8 @@ var createUnbillableTask = function(){
     });
 }
 
-var clearUnbillableFormForCreate = function() {
-	$("#userId").prop("selectedIndex",0);
+var clearUnbillableFormForCreate = function(currentUserId) {
+	$("#userId").val(currentUserId);
 	$("#taskType").prop("selectedIndex",0);
 	$("#duration").prop("selectedIndex",0);
 	$("#startDate").val("");

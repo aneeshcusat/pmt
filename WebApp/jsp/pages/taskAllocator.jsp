@@ -821,7 +821,7 @@ var fillTableFromJson = function(){
 					famstacklog($("#taskId").val());
 				} else {
 					var isOverLapping = false;
-					if ($(cellId).attr("cellmarked")) {
+					if ($(cellId).attr("cellmarked") == 'true') {
 						isOverLapping = true;
 					}
 					
@@ -855,10 +855,20 @@ var fillTableFromJson = function(){
 						cellTaskType = "PRA";
 					}else if (elem.userTaskType == "EXTRATIME") {
 						cellTaskType = "PET";
+					} else if (elem.userTaskType == "ADMIN") {
+						cellStausColor = "rgb(0, 139, 139)";
+						cellTaskType = "ADM";
+					} else if (elem.userTaskType == "BD") {
+						cellStausColor = "rgb(0, 139, 139)";
+						cellTaskType = "BD";
+					} else if (elem.userTaskType == "TRAINING") {
+						cellStausColor = "rgb(0, 139, 139)";
+						cellTaskType = "T";
 					}
 					
-					if (!isOverLapping) {
-						cellStausColor = "rgb(255, 0, 0)";
+					if (isOverLapping) {
+						cellStausColor = "rgb(235, 0, 0)";
+						$(cellId).css("background-color","red");
 					}
 					$(cellId).html('<span title="'+cellTitleTaskName+'" style="'+style+'height:41px;padding-top:10px;background-color:'+cellStausColor+'">'+cellTaskType+'</span>');
 					

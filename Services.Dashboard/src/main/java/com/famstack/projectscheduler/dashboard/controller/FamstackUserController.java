@@ -35,6 +35,7 @@ import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
+import com.famstack.projectscheduler.util.StringUtils;
 
 @Controller
 @SessionAttributes
@@ -176,14 +177,16 @@ public class FamstackUserController extends BaseFamstackService
         UserItem userItem = famstackDashboardManager.getUser(userId);
         if (userItem != null && userItem.getProfilePhoto() != null) {
             String dataUrl = new String(userItem.getProfilePhoto());
-            String encodingPrefix = "base64,";
-            int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
-            byte[] imageData = Base64.decodeBase64(dataUrl.substring(contentStartIndex));
-            try {
-                OutputStream out = httpServletResponse.getOutputStream();
-                out.write(imageData);
-            } catch (IOException e) {
-                logError("Unable to render profile image");
+            if (StringUtils.isNotBlank(dataUrl) && !"NULL".equalsIgnoreCase(dataUrl)) {
+                String encodingPrefix = "base64,";
+                int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
+                byte[] imageData = Base64.decodeBase64(dataUrl.substring(contentStartIndex));
+                try {
+                    OutputStream out = httpServletResponse.getOutputStream();
+                    out.write(imageData);
+                } catch (IOException e) {
+                    logError("Unable to render profile image");
+                }
             }
         }
     }

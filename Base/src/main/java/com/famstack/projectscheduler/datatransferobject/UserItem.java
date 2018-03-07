@@ -112,7 +112,7 @@ public class UserItem implements FamstackBaseItem
     @Column(name = "is_deleted", columnDefinition = "boolean default false", nullable = false)
     private Boolean deleted;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
     @JoinColumn(name = "reporterting_manager")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
     private UserItem reportertingManager;
