@@ -65,8 +65,9 @@ public abstract class BaseFamstackDataAccessObjectManager extends BaseFamstackSe
      * Save or update item.
      * 
      * @param updateItem the update item
+     * @return
      */
-    public abstract void saveOrUpdateItem(FamstackBaseItem updateItem);
+    public abstract FamstackBaseItem saveOrUpdateItem(FamstackBaseItem updateItem);
 
     /**
      * Gets the item by id.

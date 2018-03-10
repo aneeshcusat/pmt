@@ -150,11 +150,12 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     }
 
-    public void createProject(ProjectDetails projectDetails)
+    public int createProject(ProjectDetails projectDetails)
     {
-        projectManager.createProjectItem(projectDetails);
+        int projectId = projectManager.createProjectItem(projectDetails);
         setCurrentUser(projectDetails);
         notifyAll(NotificationType.PROJECT_CREATE, projectDetails);
+        return projectId;
     }
 
     public List<ProjectDetails> getProjectsDataList()
@@ -564,6 +565,11 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectDetailsList;
     }
 
+    public Map<String, Map<Integer, UserWorkDetails>> getAllEmployeeUtilizationList(Date startDate, Date endDate)
+    {
+        return famstackUserActivityManager.getUserUtilizationHours(startDate, endDate);
+    }
+
     public void updateProject(ProjectDetails projectDetails)
     {
         projectManager.updateProjectItem(projectDetails);
@@ -624,7 +630,7 @@ public class FamstackDashboardManager extends BaseFamstackService
             }
 
             if (userDetails != null) {
-                userDetails.setUserId(empMap.get(userId).getFirstName());
+                userDetails.setUserFirstName(empMap.get(userId).getFirstName());
             }
         }
 
@@ -916,4 +922,5 @@ public class FamstackDashboardManager extends BaseFamstackService
         projectManager.deleteProjects(projectIds, type);
 
     }
+
 }

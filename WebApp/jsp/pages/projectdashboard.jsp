@@ -527,6 +527,7 @@ function initializeCreateProjectForm(project){
 		famstacklog(response);
 		var responseJson = JSON.parse(response);
 		if (responseJson.status) {
+			showNotification($("#projectName").val(),$("#summary").val(),"${applicationHome}/project/"+responseJson.projectId);
 			refreshProjectDetails();
 			$('#createprojectmodal').modal('hide');
 		}

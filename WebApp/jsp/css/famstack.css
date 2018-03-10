@@ -106,3 +106,25 @@ border-bottom: 1px solid lightgray;
 .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
 	right: 0px;
 }
+
+
+
+
+.alert-minimalist {
+	background-color: lightblue;
+	border-color: rgba(149, 149, 149, 0.3);
+	border-radius: 3px;
+	color: rgb(149, 149, 149);
+	padding: 10px;
+	width:25%;
+	line-height: 15px;
+}
+.alert-minimalist-title {
+	color: rgb(51, 51, 51);
+	display: block;
+	font-weight: bold;
+	font-size: 13px;
+}
+.alert-minimalist-message {
+	font-size: 11px;
+}

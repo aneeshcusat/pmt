@@ -1,11 +1,12 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class UserWorkDetails
 {
 
-    private Object userId;
+    private Integer userId;
 
     private Object count;
 
@@ -13,12 +14,18 @@ public class UserWorkDetails
 
     private Object nonBillableHours;
 
-    public Object getUserId()
+    private Object leaveHours;
+
+    private Date calenderDate;
+
+    private String userFirstName;
+
+    public Integer getUserId()
     {
         return userId;
     }
 
-    public void setUserId(Object userId)
+    public void setUserId(Integer userId)
     {
         this.userId = userId;
     }
@@ -40,15 +47,21 @@ public class UserWorkDetails
 
     public void setBillableHours(Object billableMins)
     {
-        int billableHours = 0;
-        if (billableMins != null) {
-            if (billableMins instanceof BigDecimal) {
-                billableHours = ((BigDecimal) billableMins).intValue() / 60;
-            } else if (billableMins instanceof Integer) {
-                billableHours = ((Integer) billableMins).intValue() / 60;
+        int billableHours = convertToHours(billableMins);
+        this.billableHours = billableHours;
+    }
+
+    private int convertToHours(Object timeInMins)
+    {
+        int timeInHours = 0;
+        if (timeInMins != null) {
+            if (timeInMins instanceof BigDecimal) {
+                timeInHours = ((BigDecimal) timeInMins).intValue() / 60;
+            } else if (timeInMins instanceof Integer) {
+                timeInHours = ((Integer) timeInMins).intValue() / 60;
             }
         }
-        this.billableHours = billableHours;
+        return timeInHours;
     }
 
     public Object getNonBillableHours()
@@ -58,15 +71,38 @@ public class UserWorkDetails
 
     public void setNonBillableHours(Object nonBillableMin)
     {
-        int nonBillableHours = 0;
-
-        if (nonBillableMin != null) {
-            if (nonBillableMin instanceof BigDecimal) {
-                nonBillableHours = ((BigDecimal) nonBillableMin).intValue() / 60;
-            } else if (nonBillableMin instanceof Integer) {
-                nonBillableHours = ((Integer) nonBillableMin).intValue() / 60;
-            }
-        }
+        int nonBillableHours = convertToHours(nonBillableMin);
         this.nonBillableHours = nonBillableHours;
+    }
+
+    public Date getCalenderDate()
+    {
+        return calenderDate;
+    }
+
+    public void setCalenderDate(Date calenderDate)
+    {
+        this.calenderDate = calenderDate;
+    }
+
+    public Object getLeaveHours()
+    {
+        return leaveHours;
+    }
+
+    public void setLeaveHours(Object leaveHours)
+    {
+        this.leaveHours = convertToHours(leaveHours);
+        ;
+    }
+
+    public String getUserFirstName()
+    {
+        return userFirstName;
+    }
+
+    public void setUserFirstName(String userFirstName)
+    {
+        this.userFirstName = userFirstName;
     }
 }

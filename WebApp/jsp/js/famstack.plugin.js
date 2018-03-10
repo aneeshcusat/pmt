@@ -95,4 +95,53 @@ var templatePlugins = function(){
         },index*300);              
     });
     /* END MESSAGES LOADING */  
- 
+
+    
+
+    var showNotification = function(titile, message, url){
+    	$.notification({
+    		// options
+    		icon: 'fa fa-exclamation-triangle fa-3x col-xs-1',
+    		title: titile,
+    		message: message,
+    		url: url,
+    		target: '_blank'
+    	},{
+    		// settings
+    		element: 'body',
+    		position: null,
+    		type: "minimalist",
+    		allow_dismiss: true,
+    		newest_on_top: false,
+    		showProgressbar: false,
+    		placement: {
+    			from: "top",
+    			align: "right"
+    		},
+    		offset: 20,
+    		spacing: 10,
+    		z_index: 1031,
+    		delay: 5000,
+    		timer: 1000,
+    		url_target: '_blank',
+    		mouse_over: null,
+    		animate: {
+    			enter: 'animated fadeInDown',
+    			exit: 'animated fadeOutUp'
+    		},
+    		onShow: null,
+    		onShown: null,
+    		onClose: null,
+    		onClosed: null,
+    		icon_type: 'class',
+    		template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+    			'<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+    			'<span data-notify="icon" style="color:blue"></span> ' +
+    			'<span class="col-xs-10">' +
+    				'<span data-notify="title" class="col-xs-12 alert-minimalist-title">{1}</span>' +
+    				'<span data-notify="message"  class="col-xs-12 alert-minimalist-message">{2}</span>' +
+    				'<a href="{3}" target="{4}" data-notify="url"></a>' +
+    			'</span>' +
+    		'</div>'
+    	});
+    }

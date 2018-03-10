@@ -514,7 +514,7 @@ $(function(){
 	    Morris.Bar({
 	        element: 'dashboard-bar-emp',
 	        data: ${employeeUtilization},
-	        xkey: 'userId',
+	        xkey: 'userFirstName',
 	        ykeys: ['billableHours', 'nonBillableHours'],
 	        labels: ['Billable', 'NonBillableHours'],
 	        barColors: ['#33414E', '#1caf9a'],

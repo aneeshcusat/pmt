@@ -345,11 +345,11 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setStartTime(startDateString);
             taskDetails.setCompletionTime(completionDateString);
             taskDetails.setStatus(taskItem.getStatus());
+            taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
             if (isFullLoad) {
                 taskDetails.setTaskActivityDetails(famstackUserActivityManager
                     .getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));
                 taskDetails.setDescription(taskItem.getDescription());
-                taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
                 taskDetails.setExtraTimeTask(taskItem.getExtraTimeTask());
                 taskDetails.setPriority(taskItem.getPriority());
 

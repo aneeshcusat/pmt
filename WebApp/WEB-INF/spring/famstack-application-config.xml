@@ -35,6 +35,7 @@
 	   <map>
 		  <entry key="visualServices" value-ref="famstackXLSExportProcessor1" />
 		  <entry key="team2" value-ref="famstackXLSExportProcessor2" />
+		  <entry key="famstackEmpUtilisation" value-ref="famstackXLSEmployeeUtilisationProcessor" />
 		</map>
 	</property>
 	</bean>

@@ -34,6 +34,7 @@ import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.manager.FamstackXLSExportManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -194,13 +195,40 @@ public class FamstackProjectController extends BaseFamstackService
         return projectData;
     }
 
+    private Map<String, Map<Integer, UserWorkDetails>> getAllEmployeeUtilizationList(String dateRange)
+    {
+        logDebug(dateRange);
+        String[] dateRanges;
+        Date startDate = null;
+        Date endDate = null;
+        if (StringUtils.isNotBlank(dateRange)) {
+            dateRanges = dateRange.split("-");
+
+            if (dateRanges != null && dateRanges.length > 1) {
+                startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+            }
+        } else {
+            startDate =
+                DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+            endDate = startDate;
+        }
+
+        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData =
+            famstackDashboardManager.getAllEmployeeUtilizationList(startDate, endDate);
+        return employeeUtilizationData;
+    }
+
     @RequestMapping(value = "/export/{templateName}")
     public void downloadReportingFile(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
         @PathVariable(value = "templateName") String templateName, HttpServletRequest request,
         HttpServletResponse response)
     {
         List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
-        famstackXLSExportManager.exportXLS(templateName, dateRange, projectData, request, response);
+        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData = getAllEmployeeUtilizationList(dateRange);
+
+        famstackXLSExportManager.exportXLS(templateName, dateRange, projectData, employeeUtilizationData, request,
+            response);
     }
 
     @RequestMapping(value = "/getProjectJson", method = RequestMethod.GET)
@@ -215,8 +243,8 @@ public class FamstackProjectController extends BaseFamstackService
     public String createProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,
         Model model)
     {
-        famstackDashboardManager.createProject(projectDetails);
-        return "{\"status\": true}";
+        int projectId = famstackDashboardManager.createProject(projectDetails);
+        return "{\"status\": true,\"projectId\": " + projectId + "}";
     }
 
     @RequestMapping(value = "/getAssigneesSlot", method = RequestMethod.GET)

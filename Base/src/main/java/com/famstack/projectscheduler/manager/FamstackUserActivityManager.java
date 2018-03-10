@@ -467,7 +467,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             userWorkDetails.setBillableHours(data[2]);
             userWorkDetails.setCount(data[0]);
             userWorkDetails.setNonBillableHours(data[3]);
-            userWorkDetails.setUserId(data[1]);
+            userWorkDetails.setUserId((Integer) data[1]);
 
             logDebug("day count " + data[0]);
             logDebug("User ID " + data[1]);
@@ -476,6 +476,38 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             userWorkDetailsMap.put(data[1], userWorkDetails);
         }
         return userWorkDetailsMap;
+    }
+
+    public Map<String, Map<Integer, UserWorkDetails>> getUserUtilizationHours(Date startDate, Date endDate)
+    {
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("calenderDateStart", startDate);
+        dataMap.put("calenderDateEnd", endDate);
+        List<UserActivityItem> userActivityItems =
+            (List<UserActivityItem>) getFamstackDataAccessObjectManager().executeQuery(
+                HQLStrings.getString("allUserActivityItemsFromDatetoDate"), dataMap);
+
+        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationMap = new HashMap<>();
+
+        for (UserActivityItem userActivityItem : userActivityItems) {
+            String dateStringKey = DateUtils.format(userActivityItem.getCalenderDate(), DateUtils.DATE_FORMAT_DP);
+            Map<Integer, UserWorkDetails> userWorkList = employeeUtilizationMap.get(dateStringKey);
+
+            if (userWorkList == null) {
+                userWorkList = new HashMap<>();
+                employeeUtilizationMap.put(dateStringKey, userWorkList);
+            }
+
+            UserWorkDetails userWorkDetails = new UserWorkDetails();
+            userWorkDetails.setBillableHours(userActivityItem.getBillableMins());
+            userWorkDetails.setNonBillableHours(userActivityItem.getNonBillableMins());
+            userWorkDetails.setUserId(userActivityItem.getUserItem().getId());
+            userWorkDetails.setLeaveHours(userActivityItem.getLeaveMins());
+            userWorkDetails.setCalenderDate(userActivityItem.getCalenderDate());
+            userWorkList.put(userWorkDetails.getUserId(), userWorkDetails);
+        }
+        return employeeUtilizationMap;
     }
 
     public UserTaskActivityItem deleteTaskActivity(int activityId)

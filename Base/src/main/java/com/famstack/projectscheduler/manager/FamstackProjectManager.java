@@ -65,12 +65,13 @@ public class FamstackProjectManager extends BaseFamstackManager
     @Resource
     FamstackNotificationServiceManager famstackNotificationServiceManager;
 
-    public void createProjectItem(ProjectDetails projectDetails)
+    public int createProjectItem(ProjectDetails projectDetails)
     {
         ProjectItem projectItem = new ProjectItem();
         projectItem.setStatus(ProjectStatus.NEW);
-        saveProjectItem(projectDetails, projectItem);
+        int projectId = saveProjectItem(projectDetails, projectItem);
         famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.CREATED, null);
+        return projectId;
     }
 
     public void quickDuplicateProject(int projectId, String projectName, Integer projectDuration,
@@ -176,7 +177,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         }
     }
 
-    private void saveProjectItem(ProjectDetails projectDetails, ProjectItem projectItem)
+    private int saveProjectItem(ProjectDetails projectDetails, ProjectItem projectItem)
     {
         projectItem.setCategory(projectDetails.getCategory());
         projectItem.setCode(projectDetails.getCode());
@@ -212,7 +213,8 @@ public class FamstackProjectManager extends BaseFamstackManager
         projectItem.setType(projectDetails.getType());
         projectItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
         projectItem.setWatchers(projectDetails.getWatchers());
-        famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
+        projectItem = (ProjectItem) famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
+        return projectItem.getProjectId();
     }
 
     public void deleteProjectItem(int projectId)

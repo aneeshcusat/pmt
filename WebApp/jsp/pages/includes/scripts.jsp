@@ -103,6 +103,8 @@ var site_settings = "";
          <!--  famstack scripts -->
          <script type="text/javascript" src="${js}/famstack.ajax.js"></script>
          <script type="text/javascript" src="${js}/famstack.plugin.js"></script>
+         <script type="text/javascript" src="${js}/plugins/notify/bootstrap-notify.js"></script>
+        
          <!--  famstack scripts ends -->
     <!-- END SCRIPTS --> 
     <script>

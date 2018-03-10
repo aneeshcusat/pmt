@@ -14,7 +14,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.export.processors.FamstackBaseXLSExportProcessor;
+import com.famstack.projectscheduler.export.processors.FamstackXLSEmployeeUtilisationProcessor;
 
 /**
  * The Class FamstackXLSExportManager.
@@ -30,10 +32,12 @@ public class FamstackXLSExportManager extends BaseFamstackManager
      * @param templateName the template name
      * @param outputStream the output stream
      * @param exportDataList the export data list
+     * @param employeeUtilizationData
      * @param request the request
      */
     public void exportXLS(String processorName, String dateString, List<ProjectDetails> exportDataList,
-        HttpServletRequest request, HttpServletResponse response)
+        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData, HttpServletRequest request,
+        HttpServletResponse response)
     {
         String fullPath =
             request.getServletContext().getRealPath("/WEB-INF/classes/templates/" + processorName + ".xlsx");
@@ -51,6 +55,18 @@ public class FamstackXLSExportManager extends BaseFamstackManager
                     baseXLSExportProcessor.renderReport(workbook, sheet, rowCount, exportDataList, dateString);
                 } else {
                     logError("Unable to get the report template");
+                }
+            }
+
+            if (!employeeUtilizationData.isEmpty()) {
+                logDebug("Getting employee utilization export processor");
+                FamstackXLSEmployeeUtilisationProcessor employeeUtilisationProcessor =
+                    (FamstackXLSEmployeeUtilisationProcessor) exportProcessorMap.get("famstackEmpUtilisation");
+
+                if (employeeUtilisationProcessor != null) {
+                    sheet = workbook.getSheetAt(1);
+                    logDebug("Processing employee utilization export report");
+                    employeeUtilisationProcessor.renderReport(workbook, sheet, employeeUtilizationData, dateString);
                 }
             }
 

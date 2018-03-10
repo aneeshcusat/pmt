@@ -52,7 +52,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
     }
 
     @Override
-    public void saveOrUpdateItem(FamstackBaseItem updateItem)
+    public FamstackBaseItem saveOrUpdateItem(FamstackBaseItem updateItem)
     {
         if (updateItem.getCreatedDate() == null) {
             updateItem.setCreatedDate(new Timestamp(new Date().getTime()));
@@ -66,6 +66,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         session.saveOrUpdate(updateItem);
         tx.commit();
         session.close();
+        return updateItem;
     }
 
     @Override

@@ -781,12 +781,12 @@ var loadTaskDetails = function(taskId){
  	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
  	$("#taskName").val($("#"+taskId+"name").val());
  	var projectTaskType = $("#"+taskId+"projectTaskType").val();
- 	$("#projectTaskType").val("Productive");
+ 	$("#projectTaskType").val("PRODUCTIVE");
  	famstacklog("projectTaskType" + projectTaskType);
  	if (projectTaskType == 'REVIEW') {
- 		$("#projectTaskType").val("Review");
+ 		$("#projectTaskType").val("REVIEW");
  	} else if (projectTaskType == 'ITERATION') {
- 		$("#projectTaskType").val("Iteration");
+ 		$("#projectTaskType").val("ITERATION");
  	}
  	$('#projectTaskType').selectpicker('refresh');
  	$("#projectDuration").html(${projectDetails.durationHrs});
