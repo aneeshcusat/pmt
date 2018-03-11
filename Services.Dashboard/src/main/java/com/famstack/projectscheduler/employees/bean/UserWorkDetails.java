@@ -10,13 +10,13 @@ public class UserWorkDetails
 
     private Object count;
 
-    private Object billableHours;
-
-    private Object nonBillableHours;
-
-    private Object leaveHours;
-
     private Date calenderDate;
+
+    private Integer billableMins;
+
+    private Integer nonBillableMins;
+
+    private Integer leaveMins;
 
     private String userFirstName;
 
@@ -42,37 +42,30 @@ public class UserWorkDetails
 
     public Object getBillableHours()
     {
-        return billableHours;
-    }
-
-    public void setBillableHours(Object billableMins)
-    {
-        int billableHours = convertToHours(billableMins);
-        this.billableHours = billableHours;
-    }
-
-    private int convertToHours(Object timeInMins)
-    {
-        int timeInHours = 0;
-        if (timeInMins != null) {
-            if (timeInMins instanceof BigDecimal) {
-                timeInHours = ((BigDecimal) timeInMins).intValue() / 60;
-            } else if (timeInMins instanceof Integer) {
-                timeInHours = ((Integer) timeInMins).intValue() / 60;
-            }
-        }
-        return timeInHours;
+        return billableMins == null ? 0 : billableMins / 60;
     }
 
     public Object getNonBillableHours()
     {
-        return nonBillableHours;
+        return nonBillableMins == null ? 0 : nonBillableMins / 60;
     }
 
-    public void setNonBillableHours(Object nonBillableMin)
+    public Object getLeaveHours()
     {
-        int nonBillableHours = convertToHours(nonBillableMin);
-        this.nonBillableHours = nonBillableHours;
+        return leaveMins == null ? 0 : leaveMins / 60;
+    }
+
+    private int convertToInt(Object timeInMins)
+    {
+        int timeInHours = 0;
+        if (timeInMins != null) {
+            if (timeInMins instanceof BigDecimal) {
+                timeInHours = ((BigDecimal) timeInMins).intValue();
+            } else if (timeInMins instanceof Integer) {
+                timeInHours = ((Integer) timeInMins).intValue();
+            }
+        }
+        return timeInHours;
     }
 
     public Date getCalenderDate()
@@ -85,17 +78,6 @@ public class UserWorkDetails
         this.calenderDate = calenderDate;
     }
 
-    public Object getLeaveHours()
-    {
-        return leaveHours;
-    }
-
-    public void setLeaveHours(Object leaveHours)
-    {
-        this.leaveHours = convertToHours(leaveHours);
-        ;
-    }
-
     public String getUserFirstName()
     {
         return userFirstName;
@@ -104,5 +86,35 @@ public class UserWorkDetails
     public void setUserFirstName(String userFirstName)
     {
         this.userFirstName = userFirstName;
+    }
+
+    public Integer getBillableMins()
+    {
+        return billableMins;
+    }
+
+    public void setBillableMins(Object billableMins)
+    {
+        this.billableMins = convertToInt(billableMins);
+    }
+
+    public Integer getNonBillableMins()
+    {
+        return nonBillableMins;
+    }
+
+    public void setNonBillableMins(Object nonBillableMins)
+    {
+        this.nonBillableMins = convertToInt(nonBillableMins);
+    }
+
+    public Integer getLeaveMins()
+    {
+        return leaveMins;
+    }
+
+    public void setLeaveMins(Object leaveMins)
+    {
+        this.leaveMins = convertToInt(leaveMins);
     }
 }

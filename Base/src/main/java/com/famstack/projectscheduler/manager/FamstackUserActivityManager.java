@@ -464,9 +464,9 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         for (int i = 0; i < result.size(); i++) {
             UserWorkDetails userWorkDetails = new UserWorkDetails();
             Object[] data = result.get(i);
-            userWorkDetails.setBillableHours(data[2]);
+            userWorkDetails.setBillableMins(data[2]);
             userWorkDetails.setCount(data[0]);
-            userWorkDetails.setNonBillableHours(data[3]);
+            userWorkDetails.setNonBillableMins(data[3]);
             userWorkDetails.setUserId((Integer) data[1]);
 
             logDebug("day count " + data[0]);
@@ -500,10 +500,10 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             }
 
             UserWorkDetails userWorkDetails = new UserWorkDetails();
-            userWorkDetails.setBillableHours(userActivityItem.getBillableMins());
-            userWorkDetails.setNonBillableHours(userActivityItem.getNonBillableMins());
+            userWorkDetails.setBillableMins(userActivityItem.getBillableMins());
+            userWorkDetails.setNonBillableMins(userActivityItem.getNonBillableMins());
             userWorkDetails.setUserId(userActivityItem.getUserItem().getId());
-            userWorkDetails.setLeaveHours(userActivityItem.getLeaveMins());
+            userWorkDetails.setLeaveMins(userActivityItem.getLeaveMins());
             userWorkDetails.setCalenderDate(userActivityItem.getCalenderDate());
             userWorkList.put(userWorkDetails.getUserId(), userWorkDetails);
         }

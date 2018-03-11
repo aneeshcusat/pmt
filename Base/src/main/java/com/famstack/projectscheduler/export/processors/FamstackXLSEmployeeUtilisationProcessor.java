@@ -134,14 +134,39 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
         String leaveHours = EMPTY_STRING;
 
         if (userWorkDetails != null) {
-            billableHours = EMPTY_STRING + userWorkDetails.getBillableHours();
-            nonBillableHours = EMPTY_STRING + userWorkDetails.getNonBillableHours();
-            leaveHours = EMPTY_STRING + userWorkDetails.getLeaveHours();
+            billableHours = convertToHours(userWorkDetails.getBillableMins());
+            nonBillableHours = convertToHours(userWorkDetails.getNonBillableMins());
+            leaveHours = convertToHours(userWorkDetails.getLeaveMins());
         }
 
         createCell(sheet, colIndex++, rowIndex, billableHours, billableUtilCellStyle);
         createCell(sheet, colIndex++, rowIndex, nonBillableHours, nonBillableUtilCellStyle);
         createCell(sheet, colIndex++, rowIndex, leaveHours, leaveCellStyle);
+
+    }
+
+    private String convertToHours(Integer timeInMins)
+    {
+        if (timeInMins == 0) {
+            return EMPTY_STRING;
+        }
+
+        int hours = timeInMins / 60;
+        int mins = timeInMins % 60;
+
+        String timeString = "";
+        if (hours < 10) {
+            timeString += "0";
+        }
+        timeString += hours;
+
+        timeString += ":";
+        if (mins < 10) {
+            timeString += "0";
+        }
+        timeString += mins;
+
+        return timeString;
 
     }
 
