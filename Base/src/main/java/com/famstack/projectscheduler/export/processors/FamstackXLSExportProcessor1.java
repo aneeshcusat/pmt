@@ -1,8 +1,12 @@
 package com.famstack.projectscheduler.export.processors;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -18,10 +22,15 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import scala.actors.threadpool.Arrays;
+
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.manager.FamstackUserActivityManager;
+import com.famstack.projectscheduler.util.StringUtils;
 
 /**
  * visual service
@@ -32,6 +41,9 @@ import com.famstack.projectscheduler.employees.bean.TaskDetails;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FamstackXLSExportProcessor1 extends BaseFamstackService implements FamstackBaseXLSExportProcessor
 {
+
+    @Resource
+    FamstackUserActivityManager famstackUserActivityManager;
 
     private static XSSFCellStyle xssfCellUserHeaderStyle;
 
@@ -96,29 +108,69 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
 
                 List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
                 if (employees != null) {
+                    Map<Integer, Map<Integer, Integer>> taskUserActualTimeMap = new HashMap<>();
+
                     for (EmployeeDetails employeeDetails : employees) {
+                        logDebug("userId : " + employeeDetails.getId() + " name : " + employeeDetails.getFirstName());
                         Cell userCell = projectDetailsRow.getCell(projectDetailsUserColumnCount);
                         if (userCell == null) {
                             userCell = projectDetailsRow.createCell(projectDetailsUserColumnCount);
                         }
-                        String value = "";
                         if (projectDetails.getProjectTaskDeatils() != null) {
-                            for (TaskDetails taskDetails : projectDetails.getProjectActualTaskDeatils()) {
-                                if (taskDetails.getAssignee() == employeeDetails.getId()) {
-                                    value = taskDetails.getActualTimeTakenInHrs();
-                                    if (userProjectHoursMap.get(employeeDetails.getId()) == null) {
-                                        userProjectHoursMap.put(employeeDetails.getId(),
+                            for (TaskDetails taskDetails : projectDetails.getProjectTaskDeatils()) {
+
+                                Map<Integer, Integer> userTaskActualTimeMap =
+                                    taskUserActualTimeMap.get(taskDetails.getTaskId());
+
+                                if (userTaskActualTimeMap == null) {
+                                    userTaskActualTimeMap = new HashMap<>();
+                                    taskUserActualTimeMap.put(taskDetails.getTaskId(), userTaskActualTimeMap);
+
+                                    Set<Integer> contributers =
+                                        new HashSet<>(Arrays.asList(taskDetails.getContributers()));
+                                    logDebug("Task id :" + taskDetails.getTaskId() + " Contributers :" + contributers);
+                                    if (contributers.size() > 1) {
+                                        List<UserTaskActivityItem> userTaskActivityItems =
+                                            (List<UserTaskActivityItem>) famstackUserActivityManager
+                                                .getUserTaskActivityItemByTaskId(taskDetails.getTaskId());
+                                        for (Integer contributer : contributers) {
+                                            for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+                                                if (userTaskActivityItem.getUserActivityItem().getUserItem().getId() == contributer) {
+                                                    Integer currenTime = userTaskActualTimeMap.get(contributer);
+                                                    if (currenTime != null) {
+                                                        currenTime += userTaskActivityItem.getDurationInMinutes();
+                                                    } else {
+                                                        currenTime = userTaskActivityItem.getDurationInMinutes();
+                                                    }
+                                                    userTaskActualTimeMap.put(contributer, currenTime);
+                                                }
+                                            }
+                                        }
+
+                                    } else if (taskDetails.getContributers()[0] != 0) {
+                                        userTaskActualTimeMap.put(taskDetails.getContributers()[0],
                                             taskDetails.getActualTimeTaken());
-                                    } else {
-                                        Integer userProjectTotal = userProjectHoursMap.get(employeeDetails.getId());
-                                        userProjectTotal += taskDetails.getActualTimeTaken();
-                                        userProjectHoursMap.put(employeeDetails.getId(), userProjectTotal);
                                     }
+                                }
+
+                                logDebug("taskUserActualTimeMap : " + taskUserActualTimeMap);
+
+                                Integer userTaskTime =
+                                    taskUserActualTimeMap.get(taskDetails.getTaskId()).get(employeeDetails.getId());
+
+                                createTaskTimeCell(sheet, projectDetailsUserColumnCount, userTaskTime,
+                                    projectDetailsRow, getTextWrapStyle(workBook));
+
+                                if (userProjectHoursMap.get(employeeDetails.getId()) == null) {
+                                    userProjectHoursMap.put(employeeDetails.getId(), userTaskTime);
+                                } else {
+                                    Integer userProjectTotal = userProjectHoursMap.get(employeeDetails.getId());
+                                    userProjectTotal += (userTaskTime == null ? 0 : userTaskTime);
+                                    userProjectHoursMap.put(employeeDetails.getId(), userProjectTotal);
                                 }
                             }
                         }
-                        createProjectDetailsColoumn(sheet, projectDetailsUserColumnCount, value, projectDetailsRow,
-                            getTextWrapStyle(workBook));
+
                         projectDetailsUserColumnCount++;
                     }
                 }
@@ -138,11 +190,7 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
                 sheet.autoSizeColumn(projectDetailsUserColumnCount - 1);
                 for (EmployeeDetails employeeDetails : employees) {
                     Integer projectHours = userProjectHoursMap.get(employeeDetails.getId());
-                    String value =
-                        projectHours == null ? "" : String.valueOf((projectHours / 60 < 10?"0" + (projectHours / 60 ): projectHours / 60 ))
-                            + ":"
-                            + ((projectHours % 60 > 0) ? (projectHours % 60 < 10 ? "0" + (projectHours % 60)
-                                : projectHours % 60) : "00");
+                    String value = convertToActualTimeString(projectHours);
                     createProjectDetailsColoumn(sheet, projectDetailsUserColumnCount, value, projectTotalHoursRow,
                         getProjectTotalStyle(workBook));
                     projectDetailsUserColumnCount++;
@@ -151,6 +199,15 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
 
         }
 
+    }
+
+    private String convertToActualTimeString(Integer timeInMins)
+    {
+
+        return timeInMins == null ? "" : String.valueOf((timeInMins / 60 < 10 ? "0" + (timeInMins / 60)
+            : timeInMins / 60))
+            + ":"
+            + ((timeInMins % 60 > 0) ? (timeInMins % 60 < 10 ? "0" + (timeInMins % 60) : timeInMins % 60) : "00");
     }
 
     private void createProjectDetailsColoumn(Sheet sheet, int projectDetailsColumnCount, String value,
@@ -165,6 +222,33 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
         }
         sheet.autoSizeColumn(projectDetailsColumnCount);
         userCell.setCellValue(value);
+    }
+
+    private void createTaskTimeCell(Sheet sheet, int projectDetailsColumnCount, Integer userTaskTime,
+        Row projectDetailsRow, CellStyle cellStyle)
+    {
+        Cell userCell = projectDetailsRow.getCell(projectDetailsColumnCount);
+        if (userCell == null) {
+            userCell = projectDetailsRow.createCell(projectDetailsColumnCount);
+        }
+        if (cellStyle != null) {
+            userCell.setCellStyle(cellStyle);
+        }
+        sheet.autoSizeColumn(projectDetailsColumnCount);
+        String cellValue = userCell.getStringCellValue();
+
+        if (StringUtils.isNotBlank(cellValue)) {
+            userTaskTime = (userTaskTime == null ? 0 : userTaskTime) + convertToInt(cellValue);
+        }
+        userCell.setCellValue(convertToActualTimeString(userTaskTime));
+    }
+
+    private Integer convertToInt(String cellValue)
+    {
+        String[] time = cellValue.split(":");
+        int hour = Integer.parseInt(time[0]);
+        int mins = Integer.parseInt(time[1]);
+        return (hour * 60) + mins;
     }
 
     private void createHeader(XSSFWorkbook workBook, Sheet sheet, String dateString)

@@ -38,6 +38,10 @@ import com.famstack.projectscheduler.utils.FamstackUtils;
 public class FamstackProjectTaskManager extends BaseFamstackManager
 {
 
+    private static final String TASK_CONTRIBUTERS = "TASK_CONTRIBUTERS";
+
+    private static final String TASK_ACTUAL_DURATION = "TASK_ACTUAL_DURATION";
+
     @Resource
     FamstackProjectActivityManager famstackProjectActivityManager;
 
@@ -119,10 +123,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             }
 
             taskItemNew.setDuration(durationInMins / 60);
-            taskItemNew.setActualTimeTaken(durationInMins);
         }
 
-        famstackDataAccessObjectManager.saveOrUpdateItem(taskItemNew);
+        taskItemNew = (TaskItem) famstackDataAccessObjectManager.saveOrUpdateItem(taskItemNew);
 
         if (userTaskActivityItemOld == null) {
             famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(),
@@ -136,6 +139,33 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             famstackDataAccessObjectManager.saveOrUpdateItem(userTaskActivityItemOld);
         }
 
+        updateTaskActualDurationFromActivities(taskItemNew);
+
+    }
+
+    private void updateTaskActualDurationFromActivities(TaskItem taskItemNew)
+    {
+        Integer actualDuration = 0;
+
+        List<UserTaskActivityItem> userTaskActivityItems =
+            (List<UserTaskActivityItem>) famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItemNew
+                .getTaskId());
+
+        List<Integer> contributersList = new ArrayList<>();
+
+        for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+            UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
+            if (userActivityItem != null && userActivityItem.getUserItem() != null) {
+                contributersList.add(userActivityItem.getUserItem().getId());
+            }
+            actualDuration += userTaskActivityItem.getDurationInMinutes();
+        }
+
+        taskItemNew.setActualTimeTaken(actualDuration);
+        taskItemNew.setContributers(contributersList.toString().replace("[", "").replaceAll("]", "")
+            .replace("null", ""));
+
+        famstackDataAccessObjectManager.saveOrUpdateItem(taskItemNew);
     }
 
     public void updateTask(TaskDetails taskDetails, ProjectItem projectItem)
@@ -361,7 +391,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                 taskDetails.setLastModifiedDate(taskItem.getLastModifiedDate());
                 taskDetails.setProjectId(taskItem.getProjectItem().getProjectId());
                 taskDetails.setHelpersList(taskItem.getHelpers());
-
+                taskDetails.setContributers(taskItem.getContributers());
             }
             return taskDetails;
 
@@ -545,10 +575,15 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
         if (taskItem != null) {
             taskItem.setStatus(taskStatus);
-            int actualTimeTaken =
+            Map<String, Object> taskActivities =
                 famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments, taskStatus,
                     adjustStartTime, adjustCompletionTimeDate);
+            Integer actualTimeTaken = (Integer) taskActivities.get(TASK_ACTUAL_DURATION);
+            List<Integer> contributersList = (List<Integer>) taskActivities.get(TASK_CONTRIBUTERS);
+
             taskItem.setActualTimeTaken(actualTimeTaken);
+            taskItem.setContributers(contributersList.toString().replace("[", "").replaceAll("]", "")
+                .replace("null", ""));
         }
 
         getFamstackDataAccessObjectManager().updateItem(taskItem);

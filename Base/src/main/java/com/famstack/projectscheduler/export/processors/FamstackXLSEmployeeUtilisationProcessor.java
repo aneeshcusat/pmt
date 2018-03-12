@@ -66,6 +66,27 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
     public void renderReport(XSSFWorkbook workbook, Sheet sheet,
         Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData, String dateString)
     {
+
+        dateHeaderCellStyle = null;
+
+        billableUtilCellStyle = null;
+
+        nonBillableUtilCellStyle = null;
+
+        leaveCellStyle = null;
+
+        empHeaderCellStyle = null;
+
+        dateHeaderColor = null;
+
+        billableColor = null;
+
+        nonBillableColor = null;
+
+        leaveColor = null;
+
+        employeeHeaderColor = null;
+
         logDebug("Rendering employee utilisation");
         String[] dateRanges;
         if (StringUtils.isNotBlank(dateString) && employeeUtilizationData != null && !employeeUtilizationData.isEmpty()) {

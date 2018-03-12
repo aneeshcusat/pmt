@@ -639,7 +639,7 @@ var taskStart = function(){
 	taskTimerMap[taskId] = window.setInterval(function(taskId){
 		getRemaining(taskId);
 	}, 1000, taskId);
-	
+	$(".task-item" + taskId).find("input.taskStatus").val("INPROGRESS");
 	$(".taskPlayPause"+taskId).removeClass("fa-clock-o");
 	$(".taskPlayPause"+taskId).addClass("fa-pause");
 	$(".taskPlayPause"+taskId).attr("data-task-state", "running");
@@ -661,6 +661,7 @@ var reAssignTask = function(){
         var responseJson = JSON.parse(data);
         if (responseJson.status){
         	$(".modal").modal('hide');
+        	 window.location.reload(true);
         } else {
         	return false;
         }
@@ -857,7 +858,7 @@ function playTask(taskId){
 		$("."+taskId+".taskRemainingDiv .taskSeconds").html(responseJson.startSecs);
 		
 		$(".task-item" + taskId).find("input.taskActivityId").val(responseJson.taskActivityId);
-		
+		$(".task-item" + taskId).find("input.startTime").val(getTodayDateTime(new Date()));
 		window.setInterval(function(taskId){
 			getRemaining(taskId);
 		}, 1000, taskId);
@@ -948,6 +949,7 @@ var createUnbillableTask = function(){
         var responseJson = JSON.parse(data);
         if (responseJson.status){
         	$(".modal").modal('hide');
+        	 window.location.reload(true);
         } else {
         	return false;
         }

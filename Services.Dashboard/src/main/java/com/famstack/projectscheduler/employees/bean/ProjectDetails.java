@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import scala.actors.threadpool.Arrays;
+
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.ProjectComplexity;
 import com.famstack.projectscheduler.contants.ProjectPriority;
@@ -15,7 +17,6 @@ import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.util.DateUtils;
-import com.famstack.projectscheduler.util.StringUtils;
 
 public class ProjectDetails
 {
@@ -340,15 +341,14 @@ public class ProjectDetails
         Set<TaskDetails> taskDetailsSet = getProjectTaskDeatils();
         if (taskDetailsSet != null) {
             for (TaskDetails taskDetails : taskDetailsSet) {
-                contribuersSet.add(taskDetails.getAssignee());
-                if (StringUtils.isNotBlank(taskDetails.getHelpersList())) {
-                    String[] helperArray = taskDetails.getHelpersList().split(",");
-                    if (helperArray.length > 0) {
-                        for (String helper : helperArray) {
-                            contribuersSet.add(Integer.parseInt(helper));
-                        }
-                    }
+                if (taskDetails.getContributers().length > 0) {
+                    contribuersSet.addAll(Arrays.asList(taskDetails.getContributers()));
                 }
+                /*
+                 * if (StringUtils.isNotBlank(taskDetails.getHelpersList())) { String[] helperArray =
+                 * taskDetails.getHelpersList().split(","); if (helperArray.length > 0) { for (String helper :
+                 * helperArray) { contribuersSet.add(Integer.parseInt(helper)); } } }
+                 */
             }
         }
         return contribuersSet;

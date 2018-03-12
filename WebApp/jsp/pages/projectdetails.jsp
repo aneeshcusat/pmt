@@ -442,9 +442,6 @@ width: 60%;
                            <div class="col-md-5 text-right">
                             <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                             <a data-toggle="modal"  data-backdrop="static" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
-                            <c:if test="${projectDetails.status == 'COMPLETED'}">
-                            disabled="true"
-                            </c:if>
                             >
                                <span class="fa fa-plus"></span> Create a Task</a>
                                </c:if>

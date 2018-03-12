@@ -51,6 +51,9 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "helpers")
     private String helpers;
 
+    @Column(name = "contributers")
+    private String contributers;
+
     @Column(name = "description")
     @Lob
     private String description;
@@ -305,6 +308,16 @@ public class TaskItem implements FamstackBaseItem
     public void setProjectTaskType(ProjectTaskType projectTaskType)
     {
         this.projectTaskType = projectTaskType;
+    }
+
+    public String getContributers()
+    {
+        return contributers;
+    }
+
+    public void setContributers(String contributers)
+    {
+        this.contributers = contributers;
     }
 
 }

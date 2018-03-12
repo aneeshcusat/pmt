@@ -40,6 +40,8 @@ public class TaskDetails
 
     private Integer[] helper;
 
+    private Integer[] contributers;
+
     private ProjectTaskType projectTaskType;
 
     private String helpersList;
@@ -380,5 +382,25 @@ public class TaskDetails
     public void setProjectTaskType(ProjectTaskType projectTaskType)
     {
         this.projectTaskType = projectTaskType;
+    }
+
+    public Integer[] getContributers()
+    {
+        Integer[] defaultContributer = {assignee};
+
+        return contributers == null ? defaultContributer : contributers;
+    }
+
+    public void setContributers(String contributers)
+    {
+        if (StringUtils.isNotBlank(contributers)) {
+            String[] contribuersList = contributers.split(",");
+            Integer[] contribuersIntList = new Integer[contribuersList.length];
+            int index = 0;
+            for (String contributer : contribuersList) {
+                contribuersIntList[index++] = Integer.parseInt(contributer.trim());
+            }
+            this.contributers = contribuersIntList;
+        }
     }
 }

@@ -31,6 +31,10 @@ import com.famstack.projectscheduler.util.TimeInType;
 public class FamstackUserActivityManager extends BaseFamstackManager
 {
 
+    private static final String TASK_CONTRIBUTERS = "TASK_CONTRIBUTERS";
+
+    private static final String TASK_ACTUAL_DURATION = "TASK_ACTUAL_DURATION";
+
     @Resource
     FamstackProjectActivityManager famstackProjectActivityManager;
 
@@ -370,12 +374,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return null;
     }
 
-    public int setProjectTaskActivityActualTime(int taskId, Date date, String comment, TaskStatus taskStatus,
-        Date adjustStartTime, Date adjustCompletionTimeDate)
+    public Map<String, Object> setProjectTaskActivityActualTime(int taskId, Date date, String comment,
+        TaskStatus taskStatus, Date adjustStartTime, Date adjustCompletionTimeDate)
     {
-        int actualDuration = 0;
+        Integer actualDuration = 0;
 
         List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
+        List<Integer> contributersList = new ArrayList<>();
 
         if (adjustStartTime == null) {
             adjustStartTime = date;
@@ -385,6 +390,10 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
         for (Object userTaskActivityItemObj : userTaskActivityItems) {
             UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
+            UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
+            if (userActivityItem != null && userActivityItem.getUserItem() != null) {
+                contributersList.add(userActivityItem.getUserItem().getId());
+            }
 
             if (userTaskActivityItem.getRecordedEndTime() == null) {
                 if (taskStatus == TaskStatus.INPROGRESS) {
@@ -411,12 +420,17 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
                 }
 
+            } else {
+                actualDuration += userTaskActivityItem.getDurationInMinutes();
             }
 
             getFamstackDataAccessObjectManager().updateItem(userTaskActivityItem);
         }
+        Map<String, Object> taskActivities = new HashMap<>();
 
-        return (actualDuration > 0 ? actualDuration : 0);
+        taskActivities.put(TASK_ACTUAL_DURATION, actualDuration);
+        taskActivities.put(TASK_CONTRIBUTERS, contributersList);
+        return taskActivities;
     }
 
     public UserTaskActivityItem completeTaskActivityAndStartNewTaskActivity(int taskActivityId, TaskItem taskItem)
