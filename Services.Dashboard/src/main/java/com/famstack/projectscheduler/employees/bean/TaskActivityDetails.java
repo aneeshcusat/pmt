@@ -79,7 +79,8 @@ public class TaskActivityDetails
 
     public int getStartHour()
     {
-        return startHour;
+        Date startTimeDate = actualStartTime == null ? startTime : actualStartTime;
+        return startTimeDate != null ? startTimeDate.getHours() : 0;
     }
 
     public void setStartHour(int startHour)
@@ -89,7 +90,8 @@ public class TaskActivityDetails
 
     public int getStartMins()
     {
-        return startTime != null ? startTime.getMinutes() : 0;
+        Date startTimeDate = actualStartTime == null ? startTime : actualStartTime;
+        return startTimeDate != null ? startTimeDate.getMinutes() : 0;
     }
 
     public int getUserId()
