@@ -42,17 +42,17 @@ public class UserWorkDetails
 
     public Object getBillableHours()
     {
-        return billableMins == null ? 0 : billableMins / 60;
+        return billableMins;// s == null ? 0 : billableMins / 60;
     }
 
     public Object getNonBillableHours()
     {
-        return nonBillableMins == null ? 0 : nonBillableMins / 60;
+        return nonBillableMins;// == null ? 0 : nonBillableMins / 60;
     }
 
     public Object getLeaveHours()
     {
-        return leaveMins == null ? 0 : leaveMins / 60;
+        return leaveMins;// == null ? 0 : leaveMins / 60;
     }
 
     private int convertToInt(Object timeInMins)

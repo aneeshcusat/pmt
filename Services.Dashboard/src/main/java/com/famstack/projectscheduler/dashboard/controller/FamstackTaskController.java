@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
-import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
@@ -38,7 +37,7 @@ public class FamstackTaskController extends BaseFamstackService
     @RequestMapping(value = "/taskAllocator", method = RequestMethod.GET)
     public ModelAndView taskAllocator()
     {
-        List<ProjectDetails> unAssignedProjects = famstackDashboardManager.getProjectDetails(ProjectStatus.UNASSIGNED);
+        List<ProjectDetails> unAssignedProjects = famstackDashboardManager.getAllUnAssignedProjects();
         return new ModelAndView("taskAllocator", "command", new TaskDetails()).addObject("unAssignedProjects",
             unAssignedProjects);
     }

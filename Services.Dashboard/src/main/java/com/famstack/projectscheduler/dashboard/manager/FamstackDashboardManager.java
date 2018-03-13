@@ -509,6 +509,12 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     }
 
+    public List<ProjectDetails> getAllUnAssignedProjects()
+    {
+        Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.YEAR, new Date(), -1);
+        return projectManager.getAllProjectDetailsList(ProjectStatus.UNASSIGNED, startDate);
+    }
+
     public List<ProjectDetails> getProjectDetails(ProjectStatus projectStatus)
     {
         Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();

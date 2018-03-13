@@ -140,6 +140,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
 
         updateTaskActualDurationFromActivities(taskItemNew);
+        calculateBillableAndNonBillableTime(taskItemNew.getTaskId());
 
     }
 
@@ -232,7 +233,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             famstackUserActivityManager.setProjectTaskActivityActualTime(taskDetails.getTaskId(), new Date(),
                 "re assigned", TaskStatus.COMPLETED, currentUserTaskActivityItem.getActualStartTime(), null);
             startDate = new Date();
-            durationInMinutes =
+            durationInMinutes -=
                 (int) ((new Date().getTime() - currentUserTaskActivityItem.getActualStartTime().getTime()) / (1000 * 60));
         }
 
@@ -292,20 +293,27 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     {
         TaskItem taskItem = getTaskItemById(taskId);
         if (taskItem != null) {
-            deleteAllTaskActivitiesItem(taskItem.getTaskId());
+            deleteAllTaskActivitiesItem(taskId);
             famstackDataAccessObjectManager.deleteItem(taskItem);
         }
     }
 
     public void deleteAllTaskActivitiesItem(int taskId)
     {
-        resetProjectProductiveAndBillableTime(taskId);
-        famstackUserActivityManager.deleteAllUserTaskActivities(taskId);
+        TaskItem taskItem = getTaskItemById(taskId);
+        if (taskItem != null) {
+            resetProjectProductiveAndBillableTime(taskItem);
+            famstackUserActivityManager.deleteAllUserTaskActivities(taskItem.getTaskId());
+        }
     }
 
-    public void resetProjectProductiveAndBillableTime(int taskId)
+    public void resetProjectProductiveAndBillableTime(TaskItem taskItem)
     {
-        List<?> userTaskActivityItems = famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskId);
+        if (taskItem.getStatus() != TaskStatus.COMPLETED) {
+            return;
+        }
+        List<?> userTaskActivityItems =
+            famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItem.getTaskId());
 
         for (Object userTaskActivityItemObj : userTaskActivityItems) {
             UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
@@ -575,19 +583,47 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
         if (taskItem != null) {
             taskItem.setStatus(taskStatus);
+            // TODO: change user activity date on start.
             Map<String, Object> taskActivities =
                 famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments, taskStatus,
                     adjustStartTime, adjustCompletionTimeDate);
+
             Integer actualTimeTaken = (Integer) taskActivities.get(TASK_ACTUAL_DURATION);
             List<Integer> contributersList = (List<Integer>) taskActivities.get(TASK_CONTRIBUTERS);
 
             taskItem.setActualTimeTaken(actualTimeTaken);
             taskItem.setContributers(contributersList.toString().replace("[", "").replaceAll("]", "")
                 .replace("null", ""));
+
+            if (taskStatus == TaskStatus.COMPLETED) {
+                calculateBillableAndNonBillableTime(taskId);
+            }
         }
 
         getFamstackDataAccessObjectManager().updateItem(taskItem);
         return taskItem;
+    }
+
+    private void calculateBillableAndNonBillableTime(int taskId)
+    {
+        List<UserTaskActivityItem> userTaskActivityItems =
+            (List<UserTaskActivityItem>) famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskId);
+        if (userTaskActivityItems != null) {
+            for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+                UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
+
+                if (userTaskActivityItem.getProjectType() == ProjectType.BILLABLE) {
+                    userActivityItem.setBillableMins(userActivityItem.getBillableMins()
+                        + userTaskActivityItem.getDurationInMinutes());
+                } else {
+                    userActivityItem.setNonBillableMins(userActivityItem.getNonBillableMins()
+                        + userTaskActivityItem.getDurationInMinutes());
+                }
+
+                famstackDataAccessObjectManager.saveOrUpdateItem(userActivityItem);
+            }
+        }
+
     }
 
     public List<TaskDetails> getAllTaskStartWithin(Date startDate, Date startDate2)

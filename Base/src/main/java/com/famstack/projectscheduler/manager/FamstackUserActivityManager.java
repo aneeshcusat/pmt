@@ -96,15 +96,15 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             userActivityItem.setLeaveMins(leaveMins);
         } else {
             userActivityItem.setLeave(LeaveType.FULL);
-            int nonBillableHrs = userActivityItem.getNonBillableMins();
+           /* int nonBillableHrs = userActivityItem.getNonBillableMins();
             int billableHours = userActivityItem.getBillableMins();
             if (projectType == ProjectType.BILLABLE) {
                 billableHours += (durationInMinutes);
             } else {
                 nonBillableHrs += (durationInMinutes);
-            }
-            userActivityItem.setNonBillableMins(nonBillableHrs);
-            userActivityItem.setBillableMins(billableHours);
+            }*/
+            // userActivityItem.setNonBillableMins(nonBillableHrs);
+            // userActivityItem.setBillableMins(billableHours);
         }
 
         userActivityItem.setUserGroupId(userGroupId);
@@ -532,20 +532,22 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         if (userTaskActivityItem != null) {
             int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
             UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
-            if (userTaskActivityItem.getType() == UserTaskType.LEAVE) {
-                int leaveMins = userActivityItem.getLeaveMins();
-                userActivityItem.setBillableMins(leaveMins - durationInMinutes);
-            } else {
-                if (userTaskActivityItem.getProjectType() == ProjectType.BILLABLE) {
-                    int billableMins = userActivityItem.getBillableMins();
-                    userActivityItem.setBillableMins(billableMins - durationInMinutes);
+            if (userTaskActivityItem.getRecordedEndTime() != null) {
+                if (userTaskActivityItem.getType() == UserTaskType.LEAVE) {
+                    int leaveMins = userActivityItem.getLeaveMins();
+                    userActivityItem.setLeaveMins(leaveMins - durationInMinutes);
                 } else {
-                    int nonBillableMins = userActivityItem.getNonBillableMins();
-                    userActivityItem.setNonBillableMins(nonBillableMins - durationInMinutes);
+                    if (userTaskActivityItem.getProjectType() == ProjectType.BILLABLE) {
+                        int billableMins = userActivityItem.getBillableMins();
+                        userActivityItem.setBillableMins(billableMins - durationInMinutes);
+                    } else {
+                        int nonBillableMins = userActivityItem.getNonBillableMins();
+                        userActivityItem.setNonBillableMins(nonBillableMins - durationInMinutes);
+                    }
                 }
-            }
 
-            famstackDataAccessObjectManager.updateItem(userActivityItem);
+                famstackDataAccessObjectManager.updateItem(userActivityItem);
+            }
 
             getFamstackDataAccessObjectManager().deleteItem(userTaskActivityItem);
         }
