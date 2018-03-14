@@ -5,6 +5,7 @@
 	<spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
+	<c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
 <input id="${taskDetails.taskId}projectTaskType" type="hidden"
 	value="${taskDetails.projectTaskType}" />
@@ -79,7 +80,7 @@
 					[${taskDetails.name}] Task Activity</span>
 				<c:choose>
 					<c:when test="${not empty taskActivityDetail.actualEndTime}">
-						<p>Status : COMPLETED</p>
+						<p>Status :<b> COMPLETED</b></p>
 					</c:when>
 					<c:when test="${not empty taskActivityDetail.actualStartTime}">
 						<p>Status : INPROGRESS</p>
@@ -88,6 +89,7 @@
 						<p>Status : NEW</p>
 					</c:when>
 				</c:choose>
+				<p>Assignee : <b>${employeeMap[taskActivityDetail.userId].firstName}</b></p>
 				<c:if test="${not taskDetails.extraTimeTask}">
 				
 					<c:if test="${not empty taskActivityDetail.recordedStartTime}">

@@ -718,6 +718,8 @@ var resetAssignTable = function(){
 		$(this).attr("modified",false);
 		$(this).attr("celleditable", true);
 		$(this).attr("isassigned",false);
+		$(this).removeAttr("data-taskId");
+		
 		$(this).html("");
 	});
 	
@@ -866,12 +868,17 @@ var fillTableFromJson = function(){
 						cellTaskType = "T";
 					}
 					
-					if (isOverLapping) {
-						cellStausColor = "rgb(235, 0, 0)";
-						$(cellId).css("background-color","red");
+					if ($(cellId).attr("data-taskId") == elem.taskId) {
+						$(cellId).find("span").css("margin-left","");
+						$(cellId).append('<span title="'+cellTitleTaskName+'" style="'+style+'height:41px;padding-top:10px;background-color:'+cellStausColor+'">'+cellTaskType+'</span>');
+					} else {
+						if (isOverLapping) {
+							cellStausColor = "rgb(235, 0, 0)";
+							$(cellId).css("background-color","red");
+						}
+						$(cellId).html('<span title="'+cellTitleTaskName+'" style="'+style+'height:41px;padding-top:10px;background-color:'+cellStausColor+'">'+cellTaskType+'</span>');
 					}
-					$(cellId).html('<span title="'+cellTitleTaskName+'" style="'+style+'height:41px;padding-top:10px;background-color:'+cellStausColor+'">'+cellTaskType+'</span>');
-					
+					$(cellId).attr("data-taskId",elem.taskId);
 					increaseTotalHours(elem.userId);
 				}
 				
