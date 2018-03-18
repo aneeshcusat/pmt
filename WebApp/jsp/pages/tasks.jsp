@@ -646,10 +646,18 @@ var taskStart = function(){
 }
 
 var taskComplete = function(){
+	$("#adjustCompletionTime").removeClass("error");
+	$("#adjustStartTime1").removeClass("error");
 	var comments =$("#taskCompletionComments").val();
 	var taskId = $(lastMovedItem.item).find("input.taskId").val();
 	var adjustCompletionTime =$("#adjustCompletionTime").val();
 	var adjustStartTime =$("#adjustStartTime1").val();
+	
+	if (new Date(adjustCompletionTime) < new Date(adjustStartTime)) {
+		$("#adjustCompletionTime").addClass("error");
+		$("#adjustStartTime1").addClass("error");
+		return;
+	}
 	var dataString = {"taskId":taskId,"taskStatus": "COMPLETED","comments":comments, "adjustStartTime":adjustStartTime, "adjustCompletionTime":adjustCompletionTime}
 	updateTaskStatus(dataString, true);
 	window.clearInterval(taskTimerMap[taskId]);
@@ -704,11 +712,6 @@ var updateTaskStatus = function(dataString, isComplete){
 	
 }
 
-$("#taskComplete").click(function(){
-	$(".modal").hide();
-});
-
-
 $("#adjustCompletionTime").on("change", function(){
 	var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
 	var adjustStartTimeDate = new Date(adjustStartTime);
@@ -742,6 +745,8 @@ $(function(){
                 	var diffTime = (new Date() - adjustStartTimeDate) /(60*1000);
                 	famstacklog(diffTime);
                 	$("#completedTimeHrs").html(Math.round(diffTime));
+                	$("#adjustCompletionTime").removeClass("error");
+                	$("#adjustStartTime1").removeClass("error");
                 	$(".taskCompletionLink").click();
                 }
                 if(this.id == "tasks_progreess"){

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn">
 	<Properties>
-		<Property name="di-log-path">d:/famstack</Property>
+		<Property name="di-log-path">c:/apps/famstack</Property>
 	</Properties>
 	<Appenders>
 		<Console name="console-log" target="SYSTEM_OUT">
