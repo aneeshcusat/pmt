@@ -204,6 +204,10 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
     private String convertToActualTimeString(Integer timeInMins)
     {
 
+        if (timeInMins != null && timeInMins < 0) {
+            timeInMins = 0;
+        }
+
         return timeInMins == null ? "" : String.valueOf((timeInMins / 60 < 10 ? "0" + (timeInMins / 60)
             : timeInMins / 60))
             + ":"
@@ -218,7 +222,7 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
             userCell = projectDetailsRow.createCell(projectDetailsColumnCount);
         }
         if (cellStyle != null) {
-            userCell.setCellStyle(cellStyle);
+            // userCell.setCellStyle(cellStyle);
         }
         sheet.autoSizeColumn(projectDetailsColumnCount);
         userCell.setCellValue(value);

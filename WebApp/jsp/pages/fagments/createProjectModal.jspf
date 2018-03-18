@@ -190,7 +190,7 @@
                                          <option value="${projectCategoryConf.value}">${projectCategoryConf.name}</option>
                                         </c:forEach>
                                         </c:if>
-                                        <c:if test="${empty appConfigMap[projectCategory || empty appConfigMap[projectCategory].appConfValueDetails]}">
+                                        <c:if test="${empty appConfigMap[projectCategory] || empty appConfigMap[projectCategory].appConfValueDetails}">
 	                                        <option>Formatting/Templatizing Document</option>
 	                                        <option>Conceptualization/High-end</option>
 	                                        <option>Reporting</option>

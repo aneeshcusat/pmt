@@ -23,7 +23,7 @@
             <span></span><b class="caret"></b>
         </div>  -->
 			
-           <select class="form-control select" data-live-search="true" id="userGroupSelection">
+           <select class="form-control" data-live-search="true" id="userGroupSelection">
                <option value="">- select -</option>
                <c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
                 <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
