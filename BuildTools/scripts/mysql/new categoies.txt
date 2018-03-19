@@ -1,0 +1,68 @@
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1001","projectCategory","1001");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1002","projectCategory","1002");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1003","projectCategory","1003");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1004","projectCategory","1004");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1005","projectCategory","1005");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1006","projectCategory","1006");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1007","projectCategory","1007");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1008","projectCategory","1008");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1009","projectCategory","1009");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1010","projectCategory","1010");
+INSERT INTO `bops`.`app_conf_info` (`appl_conf_id`, `typeName`, `user_grp_id`) VALUES ("1011","projectCategory","1011");
+
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1001,"Team Namratta - Visual Services","Blue Ocean","bops","1001");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1002,"Team Silky","Blue Ocean","bops","1002");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1003,"Team Kiran","Blue Ocean","bops","1003");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1004,"Team Anumod","Blue Ocean","bops","1004");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1005,"Team Zabi - Advanced Analytics","Blue Ocean","bops","1005");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1006,"Team Shreyas","Blue Ocean","bops","1006");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1007,"Team Dhanya","Blue Ocean","bops","1007");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1008,"Team Anil","Blue Ocean","bops","1008");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1009,"Team Honey - Social Media","Blue Ocean","bops","1009");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1010,"Team Praveen","Blue Ocean","bops","1010");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1011,"Team Nischay","Blue Ocean","bops","1011");
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (99999,"Famstack","Restriced Group","famstack","99999");
+
+
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (1,"Basic","1001","Basic","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (2,"Moderate","1001","Moderate","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (3,"Storytelling","1001","Storytelling","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (4,"Reporting","1001","Reporting","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (5,"Dashboards","1001","Dashboards","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (6,"Infographics","1001","Infographics","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (7,"Motion Graphics","1001","Motion Graphics","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (8,"UIs","1001","UIs","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (9,"Collaterals","1001","Collaterals","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (10,"Admin","1001","Admin","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (11,"Training","1001","Training","1001");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (12,"BD activities","1001","BD activities","1001");
+
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (14,"Secondary research","1003","Secondary research","1003");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (15,"Data Visualization","1003","Data Visualization","1003");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (16,"Social work","1003","Social work","1003");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (17,"Data Reporting","1003","Data Reporting","1003");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (18,"Data analysis","1003","Data analysis","1003");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (19,"Admin","1003","Admin","1003");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (20,"Training","1003","Training","1003");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (21,"BD activities","1003","BD activities","1003");
+
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (23,"Secondary research","1004","Secondary research","1004");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (24,"Data Visualization","1004","Data Visualization","1004");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (25,"Social work","1004","Social work","1004");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (26,"Data Reporting","1004","Data Reporting","1004");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (27,"Data analysis","1004","Data analysis","1004");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (28,"Admin","1004","Admin","1004");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (29,"Training","1004","Training","1004");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (30,"BD activities","1004","BD activities","1004");
+
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (32,"Data Engineering","1006","Data Engineering","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (33,"BI","1006","BI","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (34,"Digital Analytics","1006","Digital Analytics","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (35,"Web Development","1006","Web Development","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (36,"Data Sciences","1006","Data Sciences","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (37,"ETL","1006","ETL","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (38,"Tableau Server Administration","1006","Tableau Server Administration","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (39,"Admin","1006","Admin","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (40,"Training","1006","Training","1006");
+INSERT INTO `bops`.`app_conf_val_info` (`app_conf_val_id`, `name`, `user_grp_id`, `value`, `appl_conf_id`) VALUES (41,"BD activities","1006","BD activities","1006");
+

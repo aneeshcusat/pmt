@@ -71,7 +71,8 @@ public class FamstackXLSExportManager extends BaseFamstackManager
             }
 
             response.setContentType("application/vnd.ms-excel");
-            response.setHeader("Content-Disposition", "attachment; filename=" + processorName + ".xlsx");
+            response.setHeader("Content-Disposition", "attachment; filename=" + processorName + "_" + dateString
+                + ".xlsx");
 
             inputStream.close();
             workbook.write(response.getOutputStream());
