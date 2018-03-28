@@ -20,6 +20,7 @@ import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
 import com.famstack.projectscheduler.security.user.UserRole;
 
 @Controller
@@ -29,6 +30,9 @@ public class FamstackDashboardController extends BaseFamstackService
 
     @Resource
     FamstackDashboardManager famstackDashboardManager;
+
+    @Resource
+    FamstackApplicationConfManager famstackApplicationConfManager;
 
     @RequestMapping("/{path}")
     public String login(@PathParam("path") String path, Model model)
@@ -104,5 +108,29 @@ public class FamstackDashboardController extends BaseFamstackService
     {
         getFamstackUserSessionConfiguration().setUserGroupIdSelection(groupId);
         return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/createAppConfValue", method = RequestMethod.POST)
+    @ResponseBody
+    public String createAppConfValue(@RequestParam("input1") String name, @RequestParam("input2") String value,
+        @RequestParam("type") String type)
+    {
+        famstackApplicationConfManager.createAppConfigValue(name, value, type);
+        return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/deleteAppConfValue", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteAppConfValue(@RequestParam("id") Integer appConfigValueId)
+    {
+
+        famstackApplicationConfManager.deleteAppConfigValue(appConfigValueId);
+        return "{\"status\": true}";
+    }
+
+    @RequestMapping("/appConfigProjectCategories")
+    public ModelAndView projectdashboardList(Model model)
+    {
+        return new ModelAndView("response/appConfigProjectCategories");
     }
 }

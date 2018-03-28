@@ -54,7 +54,7 @@
                     	 <li><a href="${applicationHome}/projectreporting?format=visualServices"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     	</c:when>
                     	
-                    	<c:when test="${currentUserGroupId == '1002'}">
+                    	<c:when test="${currentUserGroupId == '1003'}">
                     	<li><a href="${applicationHome}/projectreporting?format=team2"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     	</c:when>
                     	<c:otherwise>
@@ -72,7 +72,7 @@
                             <li><a href="${applicationHome}/mileStones"><span class="fa fa-trophy"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
                             <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
-                            <%-- <li><a href="${applicationHome}/applicationConfig"><span class="fa fa-cog"></span>Application config</a></li> --%>
+                            <li><a href="${applicationHome}/applicationConfig"><span class="fa fa-cog"></span>Application config</a></li>
                             <li><a href="${applicationHome}/faq"><span class="fa fa-arrow-circle-o-left"></span>FAQ</a></li>
                         </ul>
                     </li>
@@ -80,7 +80,7 @@
                     
                      <c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}">
                     <li class="active">
-                        <a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span> My Tasks</a>                    
+                        <a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span><span class="xn-text">Manage Tasks</span></a>                    
                     </li>                    
                     
                      <li class="">

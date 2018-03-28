@@ -72,14 +72,21 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         initializeConfigurations();
     }
 
-    private void initializeAppConfigMap(List<AppConfDetails> appConfigList)
+    public void initializeAppConfigMap(List<AppConfDetails> appConfigList)
     {
+        logInfo("Initializing app config value" + appConfigList);
         if (appConfigMap.isEmpty()) {
-            for (AppConfDetails appConfDetails : appConfigList) {
-                appConfigMap.put(appConfDetails.getType(), appConfDetails);
-            }
+            reInitializeAppConfigMap(appConfigList);
         }
 
+    }
+
+    public void reInitializeAppConfigMap(List<AppConfDetails> appConfigList)
+    {
+        logInfo("Re Initializing app config value" + appConfigList);
+        for (AppConfDetails appConfDetails : appConfigList) {
+            appConfigMap.put(appConfDetails.getType(), appConfDetails);
+        }
     }
 
     private void initializeUserGroupMap(List<UserGroupDetails> userGroupList)

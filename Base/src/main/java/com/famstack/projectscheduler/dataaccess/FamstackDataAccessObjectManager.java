@@ -88,7 +88,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         String hql = String.format("from %s", itemName);
-        hql += " and userGroupId = " + getFamstackUserSessionConfiguration().getUserGroupId();
+        hql += " where userGroupId = " + getFamstackUserSessionConfiguration().getUserGroupId();
         Query<?> query = session.createQuery(hql).setCacheable(true);
         List<?> itemList = query.list();
         tx.commit();

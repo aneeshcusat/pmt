@@ -1,11 +1,14 @@
 package com.famstack.projectscheduler.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.datatransferobject.AppConfItem;
 import com.famstack.projectscheduler.datatransferobject.AppConfValueItem;
 import com.famstack.projectscheduler.datatransferobject.UserGroupItem;
@@ -16,14 +19,6 @@ import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 @Component
 public class FamstackApplicationConfManager extends BaseFamstackManager
 {
-
-    public void createAppConfigType(String typeName)
-    {
-        AppConfItem appConfItem = new AppConfItem();
-        appConfItem.setType(typeName);
-        famstackDataAccessObjectManager.saveOrUpdateItem(appConfItem);
-
-    }
 
     public void createUserGroup(String name, String companyName, String companyId, String userGroupId,
         Integer userAccessCode)
@@ -52,6 +47,14 @@ public class FamstackApplicationConfManager extends BaseFamstackManager
 
     }
 
+    public AppConfItem createAppConfigType(String typeName)
+    {
+        AppConfItem appConfItem = new AppConfItem();
+        appConfItem.setType(typeName);
+        return (AppConfItem) famstackDataAccessObjectManager.saveOrUpdateItem(appConfItem);
+
+    }
+
     public void createAppConfigValue(String name, String value, int appConfigTypeId)
     {
         AppConfItem appConfItem =
@@ -63,6 +66,32 @@ public class FamstackApplicationConfManager extends BaseFamstackManager
         appConfValueItem.setAppConfItem(appConfItem);
 
         famstackDataAccessObjectManager.saveOrUpdateItem(appConfValueItem);
+
+    }
+
+    public void createAppConfigValue(String name, String value, String type)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("type", type);
+
+        List<AppConfItem> appConfItems =
+            (List<AppConfItem>) famstackDataAccessObjectManager.executeQuery(
+                HQLStrings.getString("getAppConfigByType"), dataMap);
+
+        AppConfItem appConfItem = null;
+        if (appConfItems == null || appConfItems.isEmpty()) {
+            appConfItem = createAppConfigType(type);
+        } else {
+            appConfItem = appConfItems.get(0);
+        }
+        AppConfValueItem appConfValueItem = new AppConfValueItem();
+        appConfValueItem.setName(name);
+        appConfValueItem.setValue(value);
+        appConfValueItem.setAppConfItem(appConfItem);
+
+        famstackDataAccessObjectManager.saveOrUpdateItem(appConfValueItem);
+
+        getFamstackApplicationConfiguration().reInitializeAppConfigMap(getCurrentAppConfigList());
 
     }
 
@@ -81,6 +110,7 @@ public class FamstackApplicationConfManager extends BaseFamstackManager
             (AppConfValueItem) famstackDataAccessObjectManager.getItemById(appConfigValueId, AppConfValueItem.class);
         if (appConfValueItem != null) {
             famstackDataAccessObjectManager.deleteItem(appConfValueItem);
+            getFamstackApplicationConfiguration().reInitializeAppConfigMap(getCurrentAppConfigList());
         }
     }
 
@@ -105,6 +135,12 @@ public class FamstackApplicationConfManager extends BaseFamstackManager
     {
         return mapAppConfigDetails((List<AppConfItem>) getFamstackDataAccessObjectManager().getAllGroupItems(
             "AppConfItem"));
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<AppConfDetails> getCurrentAppConfigList()
+    {
+        return mapAppConfigDetails((List<AppConfItem>) getFamstackDataAccessObjectManager().getAllItems("AppConfItem"));
     }
 
     public List<AppConfDetails> mapAppConfigDetails(List<AppConfItem> appConfigItems)

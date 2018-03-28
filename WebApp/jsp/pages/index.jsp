@@ -12,7 +12,7 @@
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Dashboard</li>
  </ul>
- <c:if test="${currentUser.userRole == 'ADMIN' || currentUser.userRole == 'SUPERADMIN'}">
+ <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
  <div class="col-md-12">
  <ul style="float:right;margin-bottom: 3px; text-decoration: none; list-style: none">
   <li style="text-decoration: none; list-style: none;display: inline-block">

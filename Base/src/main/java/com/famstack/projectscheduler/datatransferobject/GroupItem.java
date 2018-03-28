@@ -47,7 +47,7 @@ public class GroupItem implements FamstackBaseItem
     @Lob
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by")
     private UserItem createdBy;
 
@@ -57,7 +57,7 @@ public class GroupItem implements FamstackBaseItem
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "group_subscribers", joinColumns = {@JoinColumn(name = "group_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)})
     private Set<UserItem> subscribers;
 
@@ -147,6 +147,7 @@ public class GroupItem implements FamstackBaseItem
         this.createdBy = createdBy;
     }
 
+    @Override
     public String getUserGroupId()
     {
         return userGroupId;
