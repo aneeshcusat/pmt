@@ -32,6 +32,25 @@ table tr td.markable span {
     color: wheat;
     vertical-align: middle;
  }
+ 
+.legend span {
+    width: 23px;
+    height: 23px;
+    border: 1px solid lightgray;
+    padding-top: 3px;
+    display: table-cell;
+    z-index: 1000;
+    text-align: center;
+    font-size: 9px;
+    font-weight: bold;
+    color: wheat;
+    vertical-align: middle;
+}
+
+.legend table td{
+	font-weight: bold;
+	padding-left: 5px;
+}
 </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">            
@@ -240,7 +259,98 @@ table tr td.markable span {
 </div>
 </form:form>
     <!-- body end -->
-    
+     <div class="row">
+	<div class="col-md-12"  style="margin-top:10px;margin-bottom: 15px;">
+	<table class="legend">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td><span style="background-color: rgb(250, 128, 114);">P</span></td>
+						<td>Project Task</td>
+					</tr>
+					<tr>
+						<td><span style="background-color: rgb(250, 128, 114);">PH</span></td>
+						<td>Project Helper Task</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td><span style="background-color: rgb(250, 128, 114);">PR</span></td>
+						<td>Project Review Task</td>
+					</tr>
+					<tr>
+						<td><span style="background-color: rgb(250, 128, 114);">PRH</span></td>
+						<td>Project Review Task helper</td>
+					</tr>
+					
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td><span style="background-color: rgb(250, 128, 114);">PET</span></td>
+						<td>Project Extra Time</td>
+					</tr>
+					<tr>
+						<td><span style="background-color: rgb(128, 128, 128);">L</span></td>
+						<td>Leave</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td><span style="background-color: rgb(0, 139, 139);">M</span></td>
+						<td>Meeting</td>
+					</tr>
+					<tr>
+						<td><span style="background-color: rgb(0, 139, 139);">ADM</span></td>
+						<td>Admin Task</td>
+					</tr>
+					
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td><span style="background-color: rgb(0, 139, 139);">BD</span></td>
+						<td>Business Developement</td>
+					</tr>
+					<tr>
+						<td><span style="background-color: rgb(0, 139, 139);">T</span></td>
+						<td>Training</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr>
+						<td><span style="background-color: green;"></span></td>
+						<td>Completed</td>
+					</tr>
+					<tr>
+						<td><span style="background-color: red;"></span></td>
+						<td>Task Overlapping</td>
+					</tr>
+				</table>
+			</td>
+			<td style="vertical-align: top">
+				<table>
+					<tr>
+						<td><span style="background-color: blue;"></span></td>
+						<td>In Progress</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	</div>
+    </div>
 </div>               
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %> 

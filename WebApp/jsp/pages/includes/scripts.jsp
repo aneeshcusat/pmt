@@ -1,5 +1,6 @@
  <!-- START PRELOADS -->
-        <audio id="audio-alert" src="${audio}/alert.mp3" preload="auto"></audio>
+        <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
+<audio id="audio-alert" src="${audio}/alert.mp3" preload="auto"></audio>
         <audio id="audio-fail" src="${audio}/fail.mp3" preload="auto"></audio>
         <!-- END PRELOADS -->                  
         
@@ -36,6 +37,9 @@
         <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js"></script>
         <script type="text/javascript" src=" ${js}/plugins/desktopnotification/push_notification.min.js"></script>
         <!-- END THIS PAGE PLUGINS-->        
+
+
+<%@include file="autologout.jsp"%>
 
 <div id="settingsId" class="hide">
 	<div class="ts-button">
