@@ -17,8 +17,7 @@
 <c:set var="appConfigMap" value="${applicationScope.applicationConfiguraion.appConfigMap}"/>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="expandedPage" value="${applicationScope.applicationConfiguraion.expandedPage}"/>
-
-
+<%@include file="accessCheck.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>        
