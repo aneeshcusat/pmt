@@ -56,7 +56,7 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
     private static XSSFColor myColorIndexGray;
 
     @Override
-    public void renderReport(XSSFWorkbook workBook, Sheet sheet, int rowCount, List<ProjectDetails> exportDataList,
+    public void renderReport(XSSFWorkbook workBook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
         String dateString)
 
     {
@@ -65,7 +65,7 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
         xssfCellTextWrapStyle = null;
         myColorIndexPink = null;
         myColorIndexGray = null;
-        createHeader(workBook, sheet, dateString);
+        createHeader(workBook, sheet, dateString, teamName);
         createBody(workBook, sheet, exportDataList);
 
     }
@@ -255,13 +255,14 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
         return (hour * 60) + mins;
     }
 
-    private void createHeader(XSSFWorkbook workBook, Sheet sheet, String dateString)
+    private void createHeader(XSSFWorkbook workBook, Sheet sheet, String dateString, String teamName)
     {
+        Row teamNameRow = sheet.getRow(0);
         Row monthRow = sheet.getRow(1);
         Row userRow = sheet.getRow(2);
         Row userDetailsRow = sheet.getRow(3);
         Row userDetailsHeaderRow = sheet.getRow(6);
-
+        teamNameRow.getCell(0).setCellValue(teamName);
         monthRow.getCell(1).setCellValue(dateString);
 
         List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();

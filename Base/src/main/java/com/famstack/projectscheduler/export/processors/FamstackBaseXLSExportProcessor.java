@@ -10,7 +10,7 @@ import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 public interface FamstackBaseXLSExportProcessor
 {
 
-    public void renderReport(XSSFWorkbook workbook, Sheet sheet, int rowCount, List<ProjectDetails> exportDataList,
+    public void renderReport(XSSFWorkbook workbook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
         String dateString);
 
 }

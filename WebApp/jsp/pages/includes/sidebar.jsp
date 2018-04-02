@@ -51,11 +51,11 @@
                           
 					 <c:choose>
                     	<c:when test="${currentUserGroupId == '1001'}">
-                    	 <li><a href="${applicationHome}/projectreporting?format=visualServices"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
+                    	 <li><a href="${applicationHome}/projectreporting?format=format1"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     	</c:when>
                     	
-                    	<c:when test="${currentUserGroupId == '1003'}">
-                    	<li><a href="${applicationHome}/projectreporting?format=team2"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
+                    	<c:when test="${currentUserGroupId == '1004'}">
+                    	<li><a href="${applicationHome}/projectreporting?format=format2"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     	</c:when>
                     	<c:otherwise>
                     	 <li><a href="${applicationHome}/projectreporting?format=default"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>

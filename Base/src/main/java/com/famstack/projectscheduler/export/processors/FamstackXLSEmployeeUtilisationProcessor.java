@@ -230,7 +230,7 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
 
     @Deprecated
     @Override
-    public void renderReport(XSSFWorkbook workBook, Sheet sheet, int rowCount, List<ProjectDetails> exportDataList,
+    public void renderReport(XSSFWorkbook workBook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
         String dateString)
     {
     }

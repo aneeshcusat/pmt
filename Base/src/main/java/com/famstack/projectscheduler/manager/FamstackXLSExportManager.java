@@ -43,16 +43,22 @@ public class FamstackXLSExportManager extends BaseFamstackManager
             request.getServletContext().getRealPath("/WEB-INF/classes/templates/" + processorName + ".xlsx");
         try {
             FileInputStream inputStream = new FileInputStream(new File(fullPath));
-
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-
             Sheet sheet = workbook.getSheetAt(0);
 
-            int rowCount = sheet.getLastRowNum();
+            String teamName = "Project Report";
+            try {
+                teamName =
+                    getFamstackApplicationConfiguration().getUserGroupMap()
+                        .get(getFamstackApplicationConfiguration().getCurrentUserGroupId()).getName();
+            } catch (Exception e) {
+
+            }
+
             if (exportDataList != null) {
                 FamstackBaseXLSExportProcessor baseXLSExportProcessor = exportProcessorMap.get(processorName);
                 if (baseXLSExportProcessor != null) {
-                    baseXLSExportProcessor.renderReport(workbook, sheet, rowCount, exportDataList, dateString);
+                    baseXLSExportProcessor.renderReport(workbook, sheet, teamName, exportDataList, dateString);
                 } else {
                     logError("Unable to get the report template");
                 }
@@ -71,8 +77,7 @@ public class FamstackXLSExportManager extends BaseFamstackManager
             }
 
             response.setContentType("application/vnd.ms-excel");
-            response.setHeader("Content-Disposition", "attachment; filename=" + processorName + "_" + dateString
-                + ".xlsx");
+            response.setHeader("Content-Disposition", "attachment; filename=" + teamName + "_" + dateString + ".xlsx");
 
             inputStream.close();
             workbook.write(response.getOutputStream());

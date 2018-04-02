@@ -33,8 +33,8 @@
 	<bean id="famstackXLSExportManager" class="com.famstack.projectscheduler.manager.FamstackXLSExportManager">
 	<property name="exportProcessorMap">
 	   <map>
-		  <entry key="visualServices" value-ref="famstackXLSExportProcessor1" />
-		  <entry key="team2" value-ref="famstackXLSExportProcessor2" />
+		  <entry key="format1" value-ref="famstackXLSExportProcessor1" />
+		  <entry key="format2" value-ref="famstackXLSExportProcessor2" />
 		  <entry key="famstackEmpUtilisation" value-ref="famstackXLSEmployeeUtilisationProcessor" />
 		</map>
 	</property>

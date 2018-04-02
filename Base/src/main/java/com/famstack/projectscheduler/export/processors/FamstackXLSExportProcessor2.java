@@ -28,7 +28,7 @@ public class FamstackXLSExportProcessor2 extends BaseFamstackService implements 
     private static CellStyle xssfCellTextStyle;
 
     @Override
-    public void renderReport(XSSFWorkbook workBook, Sheet sheet, int rowCount, List<ProjectDetails> exportDataList,
+    public void renderReport(XSSFWorkbook workBook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
         String dateString)
 
     {

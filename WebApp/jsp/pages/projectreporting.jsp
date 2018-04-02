@@ -53,7 +53,7 @@
         								<input style="margin-left:10px" class="btn btn-default" type="button" onclick="getProjectReportingData('${param.format}');" value="Search"></input>
         							</div>
         							<div class="col-md-1" >
-        								<c:if test="${not empty param.format  && (param.format eq 'visualServices' || param.format eq 'team2')}">
+        								<c:if test="${not empty param.format  && (param.format eq 'format1' || param.format eq 'format2')}">
         									<button onclick="exportReport('${param.format}')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
         								</c:if>
         							</div>
