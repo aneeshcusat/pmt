@@ -8,6 +8,7 @@ import javax.ws.rs.PathParam;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -119,12 +120,47 @@ public class FamstackDashboardController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/updateAppConfValue", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateAppConfValue(@RequestParam("input1") String name, @RequestParam("input2") String value,
+        @RequestParam("type") String type)
+    {
+        famstackApplicationConfManager.updateAppConfigValue(name, value, type);
+        return "{\"status\": true}";
+    }
+
     @RequestMapping(value = "/deleteAppConfValue", method = RequestMethod.POST)
     @ResponseBody
     public String deleteAppConfValue(@RequestParam("id") Integer appConfigValueId)
     {
 
         famstackApplicationConfManager.deleteAppConfigValue(appConfigValueId);
+        return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/initalize/{itemName}", method = RequestMethod.GET)
+    @ResponseBody
+    public String initalizeConfiguration(@PathVariable("itemName") String itemName)
+    {
+
+        logInfo("Initializing : " + itemName);
+        if (itemName != null && "user".equalsIgnoreCase(itemName)) {
+            getFamstackApplicationConfiguration().initializeUserMap(
+                getFamstackApplicationConfiguration().getFamstackUserProfileManager().getEmployeeDataList());
+            logInfo("intizlized : " + itemName);
+        } else if (itemName != null && "application".equalsIgnoreCase(itemName)) {
+            getFamstackApplicationConfiguration().reInitializeAppConfigMap(
+                famstackApplicationConfManager.getAppConfigList());
+            logInfo("intizlized : " + itemName);
+        } else if (itemName != null && "group".equalsIgnoreCase(itemName)) {
+            getFamstackApplicationConfiguration().forceInitializeUserGroup(
+                famstackApplicationConfManager.getUserGroupList());
+            logInfo("intizlized : " + itemName);
+        } else if (itemName != null && "full".equalsIgnoreCase(itemName)) {
+            getFamstackApplicationConfiguration().forceInitialize();
+            logInfo("intizlized : " + itemName);
+        }
+
         return "{\"status\": true}";
     }
 

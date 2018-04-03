@@ -74,7 +74,7 @@ tr.clickable:hover {
 				   	 <tr class="clickable">
 				   		<td colspan="2"><a href="#tab2" onclick="refreshProjectCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Categories</a></td>
 				   	</tr>
-				   	<tr class="clickable hide">
+				   	<tr class="clickable">
 				   		<td colspan="2"><a href="#tab3" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Reports</a></td>
 				   	</tr>
 			   	 	</tbody>
@@ -133,13 +133,13 @@ tr.clickable:hover {
 							<tbody>
 								<tr class="clickable">
 									<td>
-									<select class="form-control select">
-										<option>default</option>
-										<option>format1</opiton>
-										<option>format2</option>
+									<select class="form-control select" id="reportingSelectId">
+										<option value="default">Default</option>
+										<option value="format1">Format 1</opiton>
+										<option value="format2">Format 2</option>
 									</select>
 									</td>
-									<td width="70px"><a href="#" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+									<td width="70px"><a href="#" onclick="createReportingApplicationConfig()" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
 								</tr>
 							</tbody>
 						</table>
@@ -180,6 +180,16 @@ tr.clickable:hover {
  <script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
  
+ <c:set var="projectReporting" value='reporting${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[projectReporting] && not empty appConfigMap[projectReporting].appConfValueDetails}">
+  <c:forEach var="projectReportingConf" items="${appConfigMap[projectReporting].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#reportingSelectId").val('${projectReportingConf.value}');
+  	 	$("#reportingSelectId").refresh();
+  	 </script>
+  </c:forEach>
+  </c:if>
+ 
  <script type="text/javascript">
  
  function deleteApplicationConfigVal(name, id, type){
@@ -193,6 +203,18 @@ tr.clickable:hover {
 	 var input2 = $("#secondInputId").val();
 	 var dataString = {input1: input1, input2: input1,type: type};
 	 doAjaxRequest("POST", "${applicationHome}/createAppConfValue", dataString ,function(data) {
+		 refreshProjectCategory();
+		 $('#createAppModel').modal('hide');
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
+ function createReportingApplicationConfig(){
+	 var input1 = $("#reportingSelectId").val();
+	 var type = "reporting";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
 		 refreshProjectCategory();
 		 $('#createAppModel').modal('hide');
 	    },function(error) {

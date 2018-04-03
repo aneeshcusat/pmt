@@ -89,12 +89,17 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         }
     }
 
-    private void initializeUserGroupMap(List<UserGroupDetails> userGroupList)
+    public void initializeUserGroupMap(List<UserGroupDetails> userGroupList)
     {
         if (userGroupMap.isEmpty()) {
-            for (UserGroupDetails userGroupDetail : userGroupList) {
-                userGroupMap.put(userGroupDetail.getUserGroupId(), userGroupDetail);
-            }
+            forceInitializeUserGroup(userGroupList);
+        }
+    }
+
+    public void forceInitializeUserGroup(List<UserGroupDetails> userGroupList)
+    {
+        for (UserGroupDetails userGroupDetail : userGroupList) {
+            userGroupMap.put(userGroupDetail.getUserGroupId(), userGroupDetail);
         }
     }
 

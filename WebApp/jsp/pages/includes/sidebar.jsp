@@ -48,19 +48,17 @@
                     <li>
                     	<a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span><span class="xn-text">Manage Tasks</span></a>
                     </li>
-                          
-					 <c:choose>
-                    	<c:when test="${currentUserGroupId == '1001'}">
-                    	 <li><a href="${applicationHome}/projectreporting?format=format1"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
-                    	</c:when>
-                    	
-                    	<c:when test="${currentUserGroupId == '1004'}">
-                    	<li><a href="${applicationHome}/projectreporting?format=format2"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
-                    	</c:when>
-                    	<c:otherwise>
-                    	 <li><a href="${applicationHome}/projectreporting?format=default"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
-                    	</c:otherwise>
-                    </c:choose>	                    
+                    
+                    <c:set var="projectReporting" value='reporting${currentUserGroupId}'/>   
+                    <c:if test="${not empty appConfigMap[projectReporting] && not empty appConfigMap[projectReporting].appConfValueDetails}">
+                    <c:forEach var="projectReportingConf" items="${appConfigMap[projectReporting].appConfValueDetails}">
+                    	 <li><a href="${applicationHome}/projectreporting?format=${projectReportingConf.value}"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
+                    </c:forEach>
+                    </c:if>
+                    
+                    <c:if test="${empty appConfigMap[projectReporting] || empty appConfigMap[projectReporting].appConfValueDetails}">
+	                    <li><a href="${applicationHome}/projectreporting?format=default"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
+                    </c:if>
                     
                     <li class="xn-openable<c:if test="${expandedPage}"></c:if>">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Additional Features</span></a>

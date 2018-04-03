@@ -95,6 +95,41 @@ public class FamstackApplicationConfManager extends BaseFamstackManager
 
     }
 
+    public void updateAppConfigValue(String name, String value, String type)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("type", type);
+
+        List<AppConfItem> appConfItems =
+            (List<AppConfItem>) famstackDataAccessObjectManager.executeQuery(
+                HQLStrings.getString("getAppConfigByType"), dataMap);
+
+        AppConfItem appConfItem = null;
+        AppConfValueItem appConfValueItem = null;
+        if (appConfItems == null || appConfItems.isEmpty()) {
+            appConfItem = createAppConfigType(type);
+
+        } else {
+            appConfItem = appConfItems.get(0);
+            appConfValueItem =
+                appConfItem.getAppConfValueItem() != null && appConfItem.getAppConfValueItem().size() > 0
+                    ? new ArrayList<>(appConfItem.getAppConfValueItem()).get(0) : null;
+        }
+
+        if (appConfValueItem == null) {
+            appConfValueItem = new AppConfValueItem();
+        }
+
+        appConfValueItem.setName(name);
+        appConfValueItem.setValue(value);
+        appConfValueItem.setAppConfItem(appConfItem);
+
+        famstackDataAccessObjectManager.saveOrUpdateItem(appConfValueItem);
+
+        getFamstackApplicationConfiguration().reInitializeAppConfigMap(getCurrentAppConfigList());
+
+    }
+
     public void deleteAppConfigType(int appConfigTypeId)
     {
         AppConfItem appConfItem =
@@ -189,4 +224,5 @@ public class FamstackApplicationConfManager extends BaseFamstackManager
         }
         return userGroupDetailsList;
     }
+
 }
