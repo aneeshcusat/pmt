@@ -82,8 +82,10 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                            <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
+                             <c:if test="${currentUserGroupId == '1012'}">
+                           		 <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
                                <span class="fa fa-plus"></span> Register a new Employee</a>
+                             </c:if>
                             </div>
                         </div>
                     </form>                                    
@@ -112,7 +114,12 @@
                     </div>
                     <div class="profile-controls">
                         <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit"></span></a>
-                        <a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}','${user.lastName} ${user.firstName}')"><span class="fa fa-times"></span></a>
+                         <c:if test="${currentUserGroupId == '1012'}">
+                        	<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}','${user.lastName} ${user.firstName}')"><span class="fa fa-times"></span></a>
+                    	</c:if>
+                    	 <c:if test="${currentUserGroupId != '1012'}">
+                    	 	<span class="fa fa-times"></span>
+                    	 </c:if>
                     </div>
                 </div>                                
                 <div class="panel-body">                                    
