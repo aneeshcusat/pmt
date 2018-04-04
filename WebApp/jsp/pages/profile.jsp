@@ -251,10 +251,10 @@ var jvalidate = $("#createUserFormId").validate({
          required: true
      },
      dateOfBirth: {
-         required: true
+         required: false
  	 },
 	team: {
-	       required: true
+	       required: false
 	},userGroupId: {
 	       required: true
 	},
