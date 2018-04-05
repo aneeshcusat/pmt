@@ -3,8 +3,14 @@ package com.famstack.projectscheduler.manager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,10 +19,13 @@ import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.export.processors.FamstackBaseXLSExportProcessor;
 import com.famstack.projectscheduler.export.processors.FamstackXLSEmployeeUtilisationProcessor;
+import com.famstack.projectscheduler.thread.ExportEmpUtilWorkerThread;
+import com.famstack.projectscheduler.thread.ExportProjectWorkerThread;
 
 /**
  * The Class FamstackXLSExportManager.
@@ -54,14 +63,27 @@ public class FamstackXLSExportManager extends BaseFamstackManager
             } catch (Exception e) {
 
             }
+            List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+            List<Future> futures = Collections.synchronizedList(new ArrayList<Future>());
 
             if (exportDataList != null) {
+
                 FamstackBaseXLSExportProcessor baseXLSExportProcessor = exportProcessorMap.get(processorName);
                 if (baseXLSExportProcessor != null) {
-                    baseXLSExportProcessor.renderReport(workbook, sheet, teamName, exportDataList, dateString);
+
+                    ExportProjectWorkerThread projectWorkerThred =
+                        new ExportProjectWorkerThread(baseXLSExportProcessor, workbook, sheet, teamName,
+                            exportDataList, dateString, employees);
+                    Future future = executorService.submit(projectWorkerThred);
+                    futures.add(future);
+
+                    // baseXLSExportProcessor.renderReport(workbook, sheet, teamName, exportDataList, dateString,
+                    // employees);
                 } else {
                     logError("Unable to get the report template");
                 }
+
             }
 
             if (!employeeUtilizationData.isEmpty()) {
@@ -70,11 +92,31 @@ public class FamstackXLSExportManager extends BaseFamstackManager
                     (FamstackXLSEmployeeUtilisationProcessor) exportProcessorMap.get("famstackEmpUtilisation");
 
                 if (employeeUtilisationProcessor != null) {
-                    sheet = workbook.getSheetAt(1);
+                    Sheet employeeSheet = workbook.getSheetAt(1);
                     logDebug("Processing employee utilization export report");
-                    employeeUtilisationProcessor.renderReport(workbook, sheet, employeeUtilizationData, dateString);
+
+                    ExportEmpUtilWorkerThread empUtilsWorkerThred =
+                        new ExportEmpUtilWorkerThread(employeeUtilisationProcessor, workbook, employeeSheet,
+                            employeeUtilizationData, dateString, employees);
+                    Future future = executorService.submit(empUtilsWorkerThred);
+                    futures.add(future);
+                    // employeeUtilisationProcessor.renderReport(workbook, employeeSheet, employeeUtilizationData,
+                    // dateString);
                 }
             }
+            logDebug("Starting reporting threads");
+            for (Future future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                    logError("Unable to generate report", e);
+                }
+            }
+
+            logDebug("Completing reporting threads");
+
+            // executorService.shutdown();
 
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment; filename=" + teamName + "_" + dateString + ".xlsx");

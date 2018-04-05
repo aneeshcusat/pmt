@@ -5,12 +5,13 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 
 public interface FamstackBaseXLSExportProcessor
 {
 
     public void renderReport(XSSFWorkbook workbook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
-        String dateString);
+        String dateString, List<EmployeeDetails> employees);
 
 }

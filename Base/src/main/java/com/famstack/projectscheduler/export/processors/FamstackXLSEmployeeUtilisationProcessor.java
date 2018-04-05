@@ -64,7 +64,8 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
     private static XSSFColor employeeHeaderColor = null;
 
     public void renderReport(XSSFWorkbook workbook, Sheet sheet,
-        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData, String dateString)
+        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData, String dateString,
+        List<EmployeeDetails> employees)
     {
 
         dateHeaderCellStyle = null;
@@ -95,7 +96,6 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
             if (dateRanges != null && dateRanges.length > 1) {
                 Date startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
                 Date endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
-                List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
 
                 List<String> dateList = new ArrayList<>();
                 while (startDate.before(endDate)) {
@@ -231,7 +231,7 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
     @Deprecated
     @Override
     public void renderReport(XSSFWorkbook workBook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
-        String dateString)
+        String dateString, List<EmployeeDetails> employees)
     {
     }
 

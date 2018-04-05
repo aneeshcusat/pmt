@@ -73,7 +73,7 @@ public class ProjectItem implements FamstackBaseItem
     @Column(name = "project_sub_type")
     private ProjectSubType projectSubType;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = false)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
     @JoinColumn(name = "reporter")
     private UserItem reporter;
 
