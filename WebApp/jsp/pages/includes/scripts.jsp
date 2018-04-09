@@ -112,6 +112,19 @@ var site_settings = "";
          <!--  famstack scripts ends -->
     <!-- END SCRIPTS --> 
     <script>
+
+    $(".menuExpandLink").on("click", function(){
+		if(!$(this).hasClass("expanded")) {
+			setTimeout( function () {
+				   $("#mcs_container").mCustomScrollbar('scrollTo','last');
+			}, 100);
+			$(".menuExpandLink").addClass("expanded");
+		} else {
+			//$('.scroll-y').mCustomScrollbar('scrollTo', 'top');
+			$(".menuExpandLink").removeClass("expanded");
+		}    	
+    });
+    
     var famstackLogEnabled = false;
     function famstacklog(message){
     	famstacklog("", message);

@@ -60,7 +60,7 @@
 	                    <li><a href="${applicationHome}/projectreporting?format=default"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     </c:if>
                     
-                    <li class="xn-openable<c:if test="${expandedPage}"></c:if>">
+                    <li  class="menuExpandLink xn-openable<c:if test="${expandedPage}"></c:if>">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Additional Features</span></a>
                         <ul>
                             <li><a href="${applicationHome}/employees"><span class="fa fa-users"></span> Employees</a></li>
@@ -86,7 +86,7 @@
                     </li>
                     
                     
-                    <li class="xn-openable active">
+                    <li class="menuExpandLink xn-openable active">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Additional Features</span></a>
                         <ul>
  							<li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
