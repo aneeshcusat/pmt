@@ -94,17 +94,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             int leaveMins = userActivityItem.getLeaveMins();
             leaveMins += (durationInMinutes);
             userActivityItem.setLeaveMins(leaveMins);
-        } else {
-            userActivityItem.setLeave(LeaveType.FULL);
-           /* int nonBillableHrs = userActivityItem.getNonBillableMins();
-            int billableHours = userActivityItem.getBillableMins();
-            if (projectType == ProjectType.BILLABLE) {
-                billableHours += (durationInMinutes);
-            } else {
-                nonBillableHrs += (durationInMinutes);
-            }*/
-            // userActivityItem.setNonBillableMins(nonBillableHrs);
-            // userActivityItem.setBillableMins(billableHours);
+        } else if (userTaskType == UserTaskType.ADMIN || userTaskType == UserTaskType.MEETING
+            || userTaskType == UserTaskType.BD || userTaskType == UserTaskType.TRAINING) {
+            int nonBillabaleMins = userActivityItem.getNonBillableMins();
+            nonBillabaleMins += (durationInMinutes);
+            userActivityItem.setNonBillableMins(nonBillabaleMins);
         }
 
         userActivityItem.setUserGroupId(userGroupId);

@@ -39,7 +39,7 @@
         <!-- END THIS PAGE PLUGINS-->        
 
 
-<%@include file="autologout.jsp"%>
+<%-- <%@include file="autologout.jsp"%> --%>
 
 <div id="settingsId" class="hide">
 	<div class="ts-button">

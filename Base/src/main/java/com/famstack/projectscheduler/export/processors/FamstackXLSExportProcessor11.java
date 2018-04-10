@@ -75,30 +75,33 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
         if (exportDataList != null) {
             int projectDetailsRowCount = 7;
             Map<Integer, Integer> userProjectTotalHoursMap = new ConcurrentHashMap();
-            ExecutorService executorService =
-                Executors.newFixedThreadPool(exportDataList.size() > maxThread ? maxThread : exportDataList.size());
-            List<Future> futures = Collections.synchronizedList(new ArrayList<Future>());
 
-            for (ProjectDetails projectDetails : exportDataList) {
-                ExportProjectDetailsWorkerThread projectDetailsWorkerThred =
-                    new ExportProjectDetailsWorkerThread(this, workBook, sheet, projectDetailsRowCount, projectDetails,
-                        userProjectTotalHoursMap, xssfCellTextWrapStyle, employees);
-                Future future = executorService.submit(projectDetailsWorkerThred);
-                futures.add(future);
-                projectDetailsRowCount++;
-            }
+            if (exportDataList.size() > 0) {
+                ExecutorService executorService =
+                    Executors.newFixedThreadPool(exportDataList.size() > maxThread ? maxThread : exportDataList.size());
+                List<Future> futures = Collections.synchronizedList(new ArrayList<Future>());
 
-            logDebug("Starting project reporting threads");
-            for (Future future : futures) {
-                try {
-                    future.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                    logError("Unable to generate project report", e);
+                for (ProjectDetails projectDetails : exportDataList) {
+                    ExportProjectDetailsWorkerThread projectDetailsWorkerThred =
+                        new ExportProjectDetailsWorkerThread(this, workBook, sheet, projectDetailsRowCount,
+                            projectDetails, userProjectTotalHoursMap, xssfCellTextWrapStyle, employees);
+                    Future future = executorService.submit(projectDetailsWorkerThred);
+                    futures.add(future);
+                    projectDetailsRowCount++;
                 }
+
+                logDebug("Starting project reporting threads");
+                for (Future future : futures) {
+                    try {
+                        future.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        logError("Unable to generate project report", e);
+                    }
+                }
+                logDebug("Completed project reporting threads");
+                executorService.shutdown();
             }
-            logDebug("Completed project reporting threads");
-            executorService.shutdown();
 
             Row projectTotalHoursRow = sheet.getRow(++projectDetailsRowCount);
             if (projectTotalHoursRow == null) {
