@@ -235,7 +235,7 @@ width: 60%;
                                         <c:if test="${not empty projectDetails.contributers}">
                                  			<c:forEach var="contributer" items="${projectDetails.contributers}" varStatus="taskIndex"> 
 		                                      <span class="project_team">
-		                                         <a href="#"><img alt="image" src="${applicationHome}/image/${contributer}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
+		                                         <a href="#"><img alt="image" src="${applicationHome}/image/${contributer}" title="${employeeMap[contributer].firstName}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
 		                                      </span>
                                       </c:forEach>
                                       </c:if>
