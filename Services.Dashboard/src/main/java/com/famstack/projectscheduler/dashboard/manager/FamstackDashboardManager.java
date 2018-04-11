@@ -597,12 +597,16 @@ public class FamstackDashboardManager extends BaseFamstackService
     public String getNotifications(int userId)
     {
 
-        LimitedQueue<NotificationItem> notificationItemList =
-            famstackDesktopNotificationService.getNotificatioItems(userId);
-        if (notificationItemList != null) {
-            return FamstackUtils.getJsonFromObject(notificationItemList);
+        try {
+            LimitedQueue<NotificationItem> notificationItemList =
+                famstackDesktopNotificationService.getNotificatioItems(userId);
+            if (notificationItemList != null) {
+                return FamstackUtils.getJsonFromObject(notificationItemList);
+            }
+        } catch (Exception exception) {
+            logError("Unable to notify user : " + userId, exception);
+            famstackDesktopNotificationService.clearNotification(userId);
         }
-
         return "{}";
     }
 

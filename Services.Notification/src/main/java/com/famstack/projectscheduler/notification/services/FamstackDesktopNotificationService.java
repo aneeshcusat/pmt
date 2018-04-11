@@ -51,6 +51,15 @@ public class FamstackDesktopNotificationService extends FamstackBaseNotification
         return null;
     }
 
+    public void clearNotification(int userId)
+    {
+        LimitedQueue<NotificationItem> notificationQueue = userNotificationMap.get(userId);
+        if (notificationQueue != null) {
+            notificationQueue.clear();
+        }
+
+    }
+
     @Async
     public void notifyMessage(GroupMessageDetails groupMessageDetails, int[] subscriberIds)
     {
