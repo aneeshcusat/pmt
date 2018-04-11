@@ -1,4 +1,4 @@
-
+D
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
@@ -9,7 +9,7 @@
 <table id="projectsTable" class="table table-striped">
 	<thead>
 		<tr>
-			<th>Date</th>
+			<th>Delivery Date</th>
 			<th>Project Code</th>
 			<th>ID</th>
 			<th>PO ID</th>
@@ -51,7 +51,7 @@
 	                   		<c:set var="projectState" value="success"/>
 	                  </c:if>
 				<tr>
-					<td>${project.startTime}</td>
+					<td>${project.completionTime}</td>
 					<td><a href="${applicationHome}/project/${project.id}"
 						target="_new">${project.code}</a></td>
 					<td>${project.id}</td>

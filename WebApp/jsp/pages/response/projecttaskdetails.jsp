@@ -4,6 +4,7 @@
 	<c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>	
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
+<c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 			    <c:if test="${not empty taskDetailsData}">
 			    	<button class="close" id = "x" onclick='$("#taskDetailsDiv").hide();'>
 			           	 X
@@ -31,7 +32,7 @@
 								<td>${taskDetails.name }</td>
 								<td class="project_team">
 								<c:if test="${not empty taskDetails.assignee}">
-									<img alt="image" src="${applicationHome}/image/${taskDetails.assignee}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
+									<img alt="image" src="${applicationHome}/image/${taskDetails.assignee}"  title="${employeeMap[taskDetails.assignee].firstName}"   onerror="this.src='${assets}/images/users/no-image.jpg'">
 								</c:if>
 								</td>
 								<td>${taskDetails.duration }</td>

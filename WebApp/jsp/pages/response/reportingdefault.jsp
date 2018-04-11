@@ -9,6 +9,7 @@
 <table id="projectsTable" class="table table-striped">
 	<thead>
 		<tr>
+			<th>Delivery Date</th>
 			<th>Project code</th>
 			<th>ID</th>
 			<th>PO ID</th>
@@ -20,7 +21,7 @@
 			<th>Client</th>
 			<th>Est Duration (Hrs)</th>
 			<th>Project Duration (Hrs)</th>
-			<th>Task Duration (Mins)</th>
+			<th>Task Duration (Hrs)</th>
 			<th>Assignee</th>
 			<th>Contributers</th>
 			<th>Status</th>
@@ -56,6 +57,7 @@
 						<tr
 							<c:if test="${projectTaskDetailsIndex.index > 0}">
 				                              </c:if>>
+				            <td>${project.completionTime}</td>
 							<td><a href="${applicationHome}/project/${project.id}"
 								target="_new">${project.code}</a></td>
 							<td>${project.id}</td>
@@ -68,7 +70,7 @@
 							<td>${project.clientName}</td>
 							<td>${project.durationHrs}</td>
 							<td>${project.actualDurationInHrs}</td>
-							<td>${projectTaskDetails.actualTimeTaken}</td>
+							<td>${projectTaskDetails.actualTimeTakenInHrs}</td>
 							<td>${userDetailsMap[projectTaskDetails.assignee].firstName}
 							</td>
 							<td><c:forEach var="contributer"
@@ -83,6 +85,7 @@
 				</c:if>
 				<c:if test="${empty project.projectTaskDeatils}">
 					<tr>
+					<td>${project.completionTime}</td>
 						<td><a href="${applicationHome}/project/${project.id}"
 							target="_new">${project.code}</a></td>
 						<td>${project.id}</td>

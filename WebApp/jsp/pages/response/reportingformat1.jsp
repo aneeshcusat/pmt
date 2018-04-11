@@ -9,7 +9,7 @@
 <table id="projectsTable" class="table table-striped">
 	<thead>
 		<tr>
-			<th>Date</th>
+			<th>Delivery Date</th>
 			<th>Project code</th>
 			<th>ID</th>
 			<th>PO ID</th>
@@ -47,7 +47,7 @@
 	                   		<c:set var="projectState" value="success"/>
 	                  </c:if>
 				<tr>
-					<td>${project.startTime}</td>
+					<td>${project.completionTime}</td>
 					<td><a href="${applicationHome}/project/${project.id}"
 						target="_new">${project.code}</a></td>
 					<td>${project.id}</td>

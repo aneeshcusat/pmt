@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>	
+<c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
@@ -85,7 +86,7 @@
 			           <td class="project_team">
 						<c:if test="${not empty project.contributers}">
 							<c:forEach var="contributer" items="${project.contributers}" varStatus="taskIndex"> 
-									<img alt="image" src="${applicationHome}/image/${contributer}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
+									<img alt="image" src="${applicationHome}/image/${contributer}"  data-toggle="tooltip" data-html="true"  title="${employeeMap[contributer].firstName}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
 							</c:forEach>
 						</c:if>
 						</td>
