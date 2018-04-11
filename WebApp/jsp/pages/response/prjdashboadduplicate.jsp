@@ -4,6 +4,7 @@
 	
 	<spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+	<c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
 			    <c:if test="${not empty projectDetailsData}">
 			    	<tr class="projectDuplicate${projectId}">
@@ -42,7 +43,7 @@
 				        	<td width="10%" class="project_team">
 							<c:if test="${not empty project.contributers}">
 								<c:forEach var="contributer" items="${project.contributers}" varStatus="taskIndex"> 
-										<img alt="image" src="${applicationHome}/image/${contributer}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
+										<img alt="image" src="${applicationHome}/image/${contributer}" title="${employeeMap[contributer].firstName}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
 								</c:forEach>
 							</c:if>
 							</td>
