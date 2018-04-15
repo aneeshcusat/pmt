@@ -1344,4 +1344,17 @@ var taskActualTimeSubmit = function(taskId) {
 	});
 }
 
+$(".ranges ul li").on("click",function(){
+	persistDateFilter($(this).html());
+});
+
+var persistDateFilter = function(value){
+	var name = ${currentUser.id} + "_filterDate";
+	
+	if ("Custom Range" != value) {
+		doAjaxEnableSettings(name,value);
+	}
+	
+}
+
 </script>

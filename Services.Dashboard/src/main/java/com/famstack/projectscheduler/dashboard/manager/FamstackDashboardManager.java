@@ -791,7 +791,7 @@ public class FamstackDashboardManager extends BaseFamstackService
         configurationSettingsItem.setPropertyName(propertyName);
         famstackDataAccessObjectManager.saveOrUpdateItem(configurationSettingsItem);
 
-        getFamstackApplicationConfiguration().initializeConfigurations();
+        getFamstackApplicationConfiguration().updatConfiguraionIteme(configurationSettingsItem);
 
     }
 

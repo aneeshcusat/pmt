@@ -148,4 +148,42 @@ public final class DateUtils extends BaseFamstackService
         return 0;
     }
 
+    public static Date getFirstDayOfThisWeek()
+    {
+        Calendar currentCal = Calendar.getInstance();
+        currentCal.setTime(new Date());
+        currentCal.set(Calendar.DAY_OF_WEEK, 1);
+        return currentCal.getTime();
+
+    }
+
+    public static Date getFirstDayOfThisMonth()
+    {
+        Calendar currentCal = Calendar.getInstance();
+        currentCal.setTime(new Date());
+        currentCal.set(Calendar.DAY_OF_MONTH, 1);
+        return currentCal.getTime();
+
+    }
+
+    public static int getNumberOfDaysInThisMonth()
+    {
+        Calendar currentCal = Calendar.getInstance();
+        currentCal.setTime(new Date());
+        return currentCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+    }
+
+    public static void main(String[] args)
+    {
+        System.out.println(getFirstDayOfThisMonth());
+    }
+
+    public static int getNumberOfDaysInThisMonth(Date date)
+    {
+        Calendar currentCal = Calendar.getInstance();
+        currentCal.setTime(date);
+        return currentCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
 }

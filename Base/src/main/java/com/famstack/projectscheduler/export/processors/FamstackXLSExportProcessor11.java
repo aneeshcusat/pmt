@@ -203,7 +203,6 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
         if (timeInMins != null && timeInMins != 0) {
             DecimalFormat df2 = new DecimalFormat(".##");
             String dateString = df2.format(timeInMins / 60d);
-            System.out.println("timeInMins :  " + timeInMins);
             if (timeInMins < 60 && timeInMins > 0) {
                 dateString = "00" + dateString;
             }
@@ -248,7 +247,6 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
 
     private Integer convertToInt(String cellValue)
     {
-        System.out.println(" convertToInt : " + cellValue);
         String[] time = cellValue.split("\\.");
         int hour = Integer.parseInt(time[0]);
         int mins = Integer.parseInt(time[1]);

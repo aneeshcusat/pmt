@@ -58,19 +58,28 @@
             <label class="check"><input type="radio" class="iradio" name="st_layout_boxed" value="1"/> Boxed</label>
         </div>
         <div class="ts-title">Options</div>
+         <div class="ts-row">
+            <label class="check"><input type="checkbox" class="icheckbox" name="${currentUser.id}_enableEmail" id="enableEmail"
+               <c:if test="${applicationScope.applicationConfiguraion.emailEnabled == true}">
+             	checked
+             </c:if> />
+            Enable Emails</label>
+        </div>
+        <c:if test="${(currentUser.userRole == 'SUPERADMIN')}">
+        <div class="ts-row">
+            <label class="check"><input type="checkbox" class="icheckbox" name="enableEmail" id="enableAllEmail"
+               <c:if test="${applicationScope.applicationConfiguraion.emailAllEnabled == true}">
+             	checked
+             </c:if> />
+            Enable All Emails</label>
+        </div>
+        
         <div class="ts-row">
             <label class="check"><input type="checkbox" class="icheckbox" name="autoRefresh"
                <c:if test="${applicationScope.applicationConfiguraion.autoRefresh == true}">
              	checked
              </c:if> />
              Auto refresh</label>
-        </div>
-        <div class="ts-row">
-            <label class="check"><input type="checkbox" class="icheckbox" name="enableEmail" id="enableEmail"
-               <c:if test="${applicationScope.applicationConfiguraion.emailEnabled == true}">
-             	checked
-             </c:if> />
-            Enable Email</label>
         </div>
           <div class="ts-row">
             <label class="check"><input type="checkbox" class="icheckbox" name="logDebug"  id="logDebug"
@@ -86,14 +95,12 @@
              </c:if> />
             Enable Desktop Notification</label>
         </div>
+        </c:if>
     </div>
 </div>
 <script>
 var site_settings = "";
-<c:if test="${(currentUser.userRole == 'SUPERADMIN')}">
 	site_settings = $("#settingsId").html();
-</c:if>
-
     </script>
 
         <!-- START TEMPLATE -->
@@ -169,6 +176,16 @@ var site_settings = "";
 	    },false);
 	 }
     
+    var filterDateMap = {'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'This Week': [moment().startOf('week'), moment().endOf('week')],
+            'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]};
+
+    
 
     $("a.x-navigation-minimize").on("click", function(){
     	var name = ${currentUser.id} + "_dashboardToggle";
@@ -182,24 +199,15 @@ var site_settings = "";
         /* reportrange */
         if($("#reportrange").length > 0){   
             $("#reportrange").daterangepicker({                    
-                ranges: {
-                   'Today': [moment(), moment()],
-                   'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                   'This Week': [moment().startOf('week'), moment().endOf('week')],
-                   'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
-                   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                   'This Month': [moment().startOf('month'), moment().endOf('month')],
-                   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                },
+                ranges: filterDateMap,
                 opens: 'left',
                 buttonClasses: ['btn btn-default'],
                 applyClass: 'btn-small btn-primary',
                 cancelClass: 'btn-small',
                 format: 'MM.DD.YYYY',
                 separator: ' to ',
-                startDate: moment().startOf('week'),
-                endDate: moment().endOf('week')           
+                startDate: filterDateMap['${dateRangeLabel}'][0],
+                endDate: filterDateMap['${dateRangeLabel}'][1]          
               },function(start, end) {
             	  $("#daterangeText").val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
             	  $("#reportrange span").html($("#daterangeText").val());

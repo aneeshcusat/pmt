@@ -67,17 +67,60 @@ public class FamstackProjectController extends BaseFamstackService
          * modelAndView;
          */
         String dateRange = getDefaultDateRange();
-        logDebug("Default dateRange : " + dateRange);
         ModelAndView modelAndView = getProjectPageModelView(null);
         modelAndView.setViewName("projectdashboard");
-        return modelAndView.addObject("dateRange", dateRange);
+        return modelAndView.addObject("dateRange", dateRange).addObject("dateRangeLabel",
+            getFamstackApplicationConfiguration().getDefaultDate());
     }
 
     private String getDefaultDateRange()
     {
+        String dateRange = getFamstackApplicationConfiguration().getDefaultDate();
         Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -6);
         Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), 0);
-        String dateRange =
+        if (StringUtils.isNotBlank(dateRange)) {
+            switch (dateRange) {
+                case "Today":
+                    startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), 0);
+                    break;
+                case "Yesterday":
+                    startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -1);
+                    endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -1);
+                    break;
+                case "Last 7 Days":
+                    startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -6);
+                    break;
+                case "This Week":
+                    startDate = DateUtils.getFirstDayOfThisWeek();
+                    endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, startDate, 6);
+                    break;
+                case "Last Week":
+                    Date firstDayOfThisWeek = DateUtils.getFirstDayOfThisWeek();
+                    startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, firstDayOfThisWeek, -7);
+                    endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, startDate, 6);
+                    break;
+                case "Last 30 Days":
+                    startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -29);
+                    break;
+                case "This Month":
+                    startDate = DateUtils.getFirstDayOfThisMonth();
+                    int numberOfDaysInThisMOnth = DateUtils.getNumberOfDaysInThisMonth();
+                    endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, startDate, numberOfDaysInThisMOnth - 1);
+                    break;
+                case "Last Month":
+                    Date firstDayOfMonth = DateUtils.getFirstDayOfThisMonth();
+                    int numberOfDaysInLastMOnth = DateUtils.getNumberOfDaysInThisMonth(firstDayOfMonth);
+                    endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, firstDayOfMonth, -1);
+                    startDate =
+                        DateUtils.getNextPreviousDate(DateTimePeriod.DAY, endDate, -1 * numberOfDaysInLastMOnth);
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        dateRange =
             DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP) + " - "
                 + DateUtils.format(endDate, DateUtils.DATE_FORMAT_DP);
         return dateRange;
@@ -160,7 +203,8 @@ public class FamstackProjectController extends BaseFamstackService
         if (!StringUtils.isNotBlank(dateRange)) {
             dateRange = getDefaultDateRange();
         }
-        return new ModelAndView("projectreporting").addObject("dateRange", dateRange);
+        return new ModelAndView("projectreporting").addObject("dateRange", dateRange).addObject("dateRangeLabel",
+            getFamstackApplicationConfiguration().getDefaultDate());
     }
 
     @RequestMapping(value = "/projectreportingResponse", method = RequestMethod.GET)

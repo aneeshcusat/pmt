@@ -65,6 +65,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     {
         appConfigMap.clear();
         userGroupMap.clear();
+        configSettings.clear();
 
         initializeUserMap(famstackUserProfileManager.getEmployeeDataList());
         initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
@@ -128,10 +129,16 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
                 .getAllGroupItems("ConfigurationSettingsItem");
         if (configurationSettingsItemsList != null) {
             for (ConfigurationSettingsItem configurationSettingsItem : configurationSettingsItemsList) {
-                configSettings.put(configurationSettingsItem.getPropertyName(),
-                    configurationSettingsItem.getPropertyValue());
+                updatConfiguraionIteme(configurationSettingsItem);
             }
         }
+    }
+
+    public void updatConfiguraionIteme(ConfigurationSettingsItem configurationSettingsItem)
+    {
+        logInfo("intizlized  configurationSettingsItem : " + configurationSettingsItem.getPropertyName() + " ,value :"
+            + configurationSettingsItem.getPropertyValue());
+        configSettings.put(configurationSettingsItem.getPropertyName(), configurationSettingsItem.getPropertyValue());
     }
 
     public List<EmployeeDetails> getUserList()
@@ -303,10 +310,25 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
      */
     public boolean isEmailEnabled()
     {
-        if (configSettings.get("enableEmail") == null) {
+        if (isEmailAllEnabled()) {
+            String isEmailEnabledId = getCurrentUserId() + "_enableEmail";
+
+            if (configSettings.get(isEmailEnabledId) == null) {
+                return true;
+            }
+            return "TRUE".equalsIgnoreCase(configSettings.get(isEmailEnabledId)) ? true : false;
+        }
+        return false;
+    }
+
+    public boolean isEmailAllEnabled()
+    {
+        String isEmailEnabledId = "enableEmail";
+
+        if (configSettings.get(isEmailEnabledId) == null) {
             return true;
         }
-        return "TRUE".equalsIgnoreCase(configSettings.get("enableEmail")) ? true : false;
+        return "TRUE".equalsIgnoreCase(configSettings.get(isEmailEnabledId)) ? true : false;
     }
 
     public String getConfiguraionItem(String scheduleCron)
@@ -333,6 +355,14 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
             return false;
         }
         return "TRUE".equalsIgnoreCase(configSettings.get(toggelId)) ? true : false;
+    }
+
+    public String getDefaultDate()
+    {
+        String defaultDateId = getCurrentUserId() + "_filterDate";
+        String defaultDateLabel = configSettings.get(defaultDateId);
+        logDebug("deraultFilterDate : " + defaultDateLabel);
+        return defaultDateLabel == null ? "This Week" : defaultDateLabel;
     }
 
     public Map<String, AppConfDetails> getAppConfigMap()
