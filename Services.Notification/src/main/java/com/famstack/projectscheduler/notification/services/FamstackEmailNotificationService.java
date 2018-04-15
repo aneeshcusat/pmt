@@ -1,6 +1,8 @@
 package com.famstack.projectscheduler.notification.services;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -27,7 +29,7 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
 
     /**
      * Send email notification for error.
-     *
+     * 
      * @param orderExceptionState the order exception state
      * @param dataObjMap the data map
      * @param deliveryOrderItem the delivery order item
@@ -52,11 +54,36 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
             famstackTemplateEmailInfo.setMailSubject(mailSubject);
             famstackTemplateEmailInfo.setVelocityTemplateName(templateName);
             famstackTemplateEmailInfo.setTemplateParameters(dataMap);
-            famstackEmailSender.sendEmail(famstackTemplateEmailInfo,
-                emailNotificationItem.getToList().toArray(new String[0]));
+
+            Set<String> filteredToList =
+                getFilteredEmailToList(emailNotificationItem, emailNotificationItem.getTemplates());
+
+            famstackEmailSender.sendEmail(famstackTemplateEmailInfo, filteredToList.toArray(new String[0]));
         } else {
             logDebug("Unable to send emails" + emailNotificationItem.getToList());
         }
+    }
+
+    private Set<String> getFilteredEmailToList(EmailNotificationItem emailNotificationItem, Templates templates)
+    {
+        Set<String> toList = emailNotificationItem.getToList();
+
+        if (templates == Templates.RESET_PASSWORD || templates == Templates.FORGOT_PASSWORD
+            || templates == Templates.USER_REGISTRAION || templates == Templates.USER_UPDATE) {
+            return toList;
+        }
+
+        Set<String> filteredToList = new HashSet<>();
+        if (toList != null) {
+            for (String userId : toList) {
+                if (!getFamstackApplicationConfiguration().isEmailDisabled(userId)) {
+                    filteredToList.add(userId);
+                } else {
+                    logInfo("Email Disalbed for : " + userId);
+                }
+            }
+        }
+        return filteredToList;
     }
 
     private String getNotificationSubject(Templates emailTemplate)
@@ -67,7 +94,7 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
     @Override
     public boolean isEnabled()
     {
-        return getFamstackApplicationConfiguration().isEmailEnabled();
+        return getFamstackApplicationConfiguration().isEmailAllEnabled();
     }
 
 }

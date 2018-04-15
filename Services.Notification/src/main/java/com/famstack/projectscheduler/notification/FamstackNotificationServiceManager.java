@@ -155,7 +155,8 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
     private boolean allowNotification(NotificationType notificationType)
     {
         return (notificationType == NotificationType.RESET_PASSWORD
-            || notificationType == NotificationType.FORGOT_PASSWORD || notificationType == NotificationType.USER_REGISTRAION)
+            || notificationType == NotificationType.FORGOT_PASSWORD
+            || notificationType == NotificationType.USER_REGISTRAION || notificationType == NotificationType.USER_UPDATE)
             ? true : false;
     }
 

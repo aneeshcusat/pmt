@@ -46,6 +46,7 @@
         <span class="fa fa-cogs fa-spin"></span>
     </div>
     <div class="ts-body">
+    	<c:if test="${(currentUser.userRole == 'SUPERADMIN')}">
 	    <div class="ts-title">Themes</div>
         <div class="ts-themes">
             <a href="#" class="active" data-theme="${css}/theme-default.css"><img src="${image}/themes/default.jpg"/></a>            
@@ -57,13 +58,14 @@
         <div class="ts-row">
             <label class="check"><input type="radio" class="iradio" name="st_layout_boxed" value="1"/> Boxed</label>
         </div>
+        </c:if>
         <div class="ts-title">Options</div>
          <div class="ts-row">
-            <label class="check"><input type="checkbox" class="icheckbox" name="${currentUser.id}_enableEmail" id="enableEmail"
-               <c:if test="${applicationScope.applicationConfiguraion.emailEnabled == true}">
+            <label class="check"><input type="checkbox" class="icheckbox" name="${currentUser.userId}_disableEmail" id="enableEmail"
+               <c:if test="${applicationScope.applicationConfiguraion.emailUserDisabled == true}">
              	checked
              </c:if> />
-            Enable Emails</label>
+            Disable Emails</label>
         </div>
         <c:if test="${(currentUser.userRole == 'SUPERADMIN')}">
         <div class="ts-row">

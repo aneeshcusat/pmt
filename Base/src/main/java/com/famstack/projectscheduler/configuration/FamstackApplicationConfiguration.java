@@ -308,17 +308,19 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
      * 
      * @return true, if is log debug
      */
-    public boolean isEmailEnabled()
+    public boolean isEmailDisabled(String userId)
     {
-        if (isEmailAllEnabled()) {
-            String isEmailEnabledId = getCurrentUserId() + "_enableEmail";
+        String isEmailDisabledId = userId + "_disableEmail";
 
-            if (configSettings.get(isEmailEnabledId) == null) {
-                return true;
-            }
-            return "TRUE".equalsIgnoreCase(configSettings.get(isEmailEnabledId)) ? true : false;
+        if (configSettings.get(isEmailDisabledId) == null) {
+            return false;
         }
-        return false;
+        return "TRUE".equalsIgnoreCase(configSettings.get(isEmailDisabledId)) ? true : false;
+    }
+
+    public boolean isEmailUserDisabled()
+    {
+        return isEmailDisabled(getCurrentUser().getUserId());
     }
 
     public boolean isEmailAllEnabled()
