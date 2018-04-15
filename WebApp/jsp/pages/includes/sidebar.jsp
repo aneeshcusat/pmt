@@ -37,11 +37,10 @@
                         </div>      
                     </li>
                     <li class="xn-title">Navigation</li>
+                    <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                      <li class="">
                         <a href="${applicationHome}/index"><span class="fa fa-list-alt"></span> <span class="xn-text">Home Page</span></a>                        
                     </li>
-                    
-                    <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                     <li>
                         <a href="${applicationHome}/dashboard"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
                     </li>
@@ -80,11 +79,6 @@
                     <li class="active">
                         <a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span><span class="xn-text">Manage Tasks</span></a>                    
                     </li>                    
-                    
-                     <li class="">
-                        <a href="${applicationHome}/index"><span class="fa fa-list-alt"></span> <span class="xn-text">Home Page</span></a>                        
-                    </li>
-                    
                     
                     <li class="menuExpandLink xn-openable active">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Additional Features</span></a>

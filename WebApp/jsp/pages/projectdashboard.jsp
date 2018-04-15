@@ -958,7 +958,7 @@ var taskLinkclick = function(projectId, e){
         $('#taskDetailsDiv').html(data);
         
         if (data.trim() != "") {
-        	$('#taskDetailsDiv').css({'top':e.pageY+10,'left':e.pageX-250, 'position':'absolute', 'border':'1px solid gray', 'padding':'5px'});
+        	$('#taskDetailsDiv').css({'top':e.pageY+10,'left':e.pageX-350, 'position':'absolute', 'border':'1px solid gray', 'padding':'5px'});
         	$('#taskDetailsDiv').show();
         }
     }, function(e) {

@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.export.processors;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -176,6 +177,9 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
                     }
                 }
             }
+
+            createTaskTimeCell(sheet, projectDetailsUserColumnCount + employees.size() + 1,
+                projectDetails.getActualDuration(), projectDetailsRow, null);
         }
     }
 
@@ -190,15 +194,22 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
 
     private String convertToActualTimeString(Integer timeInMins)
     {
+        /*
+         * if (timeInMins != null && timeInMins < 0) { timeInMins = 0; } return timeInMins == null ? "" :
+         * String.valueOf((timeInMins / 60 < 10 ? "0" + (timeInMins / 60) : timeInMins / 60)) + "." + ((timeInMins % 60
+         * > 0) ? (timeInMins % 60 < 10 ? "0" + (timeInMins % 60) : timeInMins % 60) : "00");
+         */
 
-        if (timeInMins != null && timeInMins < 0) {
-            timeInMins = 0;
+        if (timeInMins != null && timeInMins != 0) {
+            DecimalFormat df2 = new DecimalFormat(".##");
+            String dateString = df2.format(timeInMins / 60d);
+            System.out.println("timeInMins :  " + timeInMins);
+            if (timeInMins < 60 && timeInMins > 0) {
+                dateString = "00" + dateString;
+            }
+            return dateString;
         }
-
-        return timeInMins == null ? "" : String.valueOf((timeInMins / 60 < 10 ? "0" + (timeInMins / 60)
-            : timeInMins / 60))
-            + ":"
-            + ((timeInMins % 60 > 0) ? (timeInMins % 60 < 10 ? "0" + (timeInMins % 60) : timeInMins % 60) : "00");
+        return "";
     }
 
     private void createProjectDetailsColoumn(Sheet sheet, int projectDetailsColumnCount, String value,
@@ -237,7 +248,8 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
 
     private Integer convertToInt(String cellValue)
     {
-        String[] time = cellValue.split(":");
+        System.out.println(" convertToInt : " + cellValue);
+        String[] time = cellValue.split("\\.");
         int hour = Integer.parseInt(time[0]);
         int mins = Integer.parseInt(time[1]);
         return (hour * 60) + mins;
@@ -275,6 +287,14 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
                 sheet.autoSizeColumn(userDetailsRowCount);
                 userDetailsRowCount++;
             }
+
+            Cell projectTotalCell = userDetailsHeaderRow.getCell(userDetailsRowCount + 10);
+
+            if (projectTotalCell == null) {
+                projectTotalCell = userDetailsHeaderRow.createCell(userDetailsRowCount + 10);
+            }
+
+            projectTotalCell.setCellValue("Project Total Hrs");
         }
     }
 

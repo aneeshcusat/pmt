@@ -485,7 +485,7 @@ width: 60%;
                                               </td>
                                               
                                                <td width="5%">
-                                               <c:if test="${not taskDetails.extraTimeTask}">
+                                               <c:if test="${not taskDetails.extraTimeTask && taskDetails.status != 'INPROGRESS'}">
                                                 <a data-toggle="modal" data-backdrop="static" data-target="#createtaskmodal" class="btn btn-primary btn-rounded" onclick="loadTaskDetails('${taskDetails.taskId}');"
                                                  href="#"><i class="fa fa-pencil fa-1x" style="" aria-hidden="true"></i></a>
                                                	</c:if>
