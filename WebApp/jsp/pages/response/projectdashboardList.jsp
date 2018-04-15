@@ -13,8 +13,8 @@
 			        	<th width="1%"></th>
 			        	<th width="10%">Delivery Date</th>
 			        	<th width="20%">Project Name</th>
+			        	<th width="10%">Account</th>
 			        	<th width="10%">Team</th>
-			        	<th width="10%">Client</th>
 			        	<th width="10%">Assignees</th>
 			        	<th width="5%">Tasks</th>
 			        	<th width="12%">Comments</th>
@@ -81,8 +81,8 @@
 			            <td  onclick="loadDuplicateProjects(${project.id}, '${project.code}', false)" data-toggle="collapse" data-target=".projectData${project.id}"><i id="projectOpenLink${project.id}" style="color: blue" class="fa fa-chevron-right 2x"></i></td>
 			            <td>${project.completionTime}</td>
 			            <td><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
-			            <td>${project.teamName}</td>
-			            <td>${project.clientName}</td>
+			            <td>${project.accountName}</td>
+			            <td title="${project.teamName} - ${project.subTeamName}">${project.teamName}</td>
 			           <td class="project_team">
 						<c:if test="${not empty project.contributers}">
 							<c:forEach var="contributer" items="${project.contributers}" varStatus="taskIndex"> 
