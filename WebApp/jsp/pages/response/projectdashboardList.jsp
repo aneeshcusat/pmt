@@ -82,7 +82,7 @@
 			            <td>${project.completionTime}</td>
 			            <td><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
 			            <td>${project.accountName}</td>
-			            <td title="${project.teamName} - ${project.subTeamName}">${project.teamName}</td>
+			            <td title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.teamName}</td>
 			           <td class="project_team">
 						<c:if test="${not empty project.contributers}">
 							<c:forEach var="contributer" items="${project.contributers}" varStatus="taskIndex"> 
