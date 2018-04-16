@@ -20,6 +20,15 @@
 #employeeListForTaskTable{
 height: 100%;
 }
+.durationRangeSelector{
+	width: 35px; 
+	margin: 0 0; 
+	font-weight: bold; 
+	text-align: center; 
+	padding: 0 0; 
+	padding-left: 7px;
+}
+
 table tr td.markable span {
   	float: left;
     height: 100%;
@@ -743,7 +752,7 @@ var clearTaskDetails = function(){
     $('#createTaskFormId').prop("action", "${applicationHome}/createTask");
     //createTaskDurationList(${projectDetails.unAssignedDuration});
     //$("#duration").prop('selectedIndex', ${projectDetails.unAssignedDuration});
-    $("#duration").val('0');
+    $("#duration").val('1');
     $("select.assigneeSelectName").val("");
 	$("select.assigneeSelectName").selectpicker('refresh');
     
@@ -1634,7 +1643,5 @@ var taskActActualTimeSubmit = function(taskId, activityId) {
 	}, function(e) {
 	});
 }
-
-
 </script>
 
