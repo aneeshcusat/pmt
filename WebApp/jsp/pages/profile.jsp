@@ -337,6 +337,8 @@ function processUserResponseData(data) {
 	$('#userGroupId').selectpicker('refresh');
 	$('#designation').selectpicker('refresh');
 	
+	$('#temporaryEmployee').attr("checked", response.temporaryEmployee);
+	$('#empCode').val(response.empCode);
 }
 
 

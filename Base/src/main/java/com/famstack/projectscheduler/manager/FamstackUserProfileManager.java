@@ -166,6 +166,8 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         userItem.setUserAccessCode(employeeDetails.getUserAccessCode());
         userItem.setGender(employeeDetails.getGender());
         userItem.setTeam(employeeDetails.getTeam());
+        userItem.setEmpCode(employeeDetails.getEmpCode());
+        userItem.setTemporaryEmployee(employeeDetails.getTemporaryEmployee());
         userItem.setUserGroupId(employeeDetails.getUserGroupId());
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
     }
@@ -244,6 +246,10 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeDetails.setRole(userItem.getUserRole());
             employeeDetails.setUserGroupId(userItem.getUserGroupId());
             employeeDetails.setUserAccessCode(userItem.getUserAccessCode());
+
+            employeeDetails.setEmpCode(userItem.getEmpCode());
+            employeeDetails.setTemporaryEmployee(userItem.getTemporaryEmployee());
+
             if (userItem.getReportertingManager() != null) {
                 employeeDetails.setReportingManger(userItem.getReportertingManager().getId());
             }

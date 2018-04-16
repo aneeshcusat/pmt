@@ -88,6 +88,12 @@ public class UserItem implements FamstackBaseItem
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    @Column(name = "emp_code")
+    private String empCode;
+
+    @Column(name = "is_temp")
+    private Boolean temporaryEmployee;
+
     @Column(name = "profile_photo", columnDefinition = "LONGBLOB")
     private byte[] profilePhoto;
 
@@ -448,6 +454,26 @@ public class UserItem implements FamstackBaseItem
     public Boolean getDeleted()
     {
         return deleted;
+    }
+
+    public String getEmpCode()
+    {
+        return empCode;
+    }
+
+    public void setEmpCode(String empCode)
+    {
+        this.empCode = empCode;
+    }
+
+    public Boolean getTemporaryEmployee()
+    {
+        return temporaryEmployee;
+    }
+
+    public void setTemporaryEmployee(Boolean temporaryEmployee)
+    {
+        this.temporaryEmployee = temporaryEmployee;
     }
 
 }

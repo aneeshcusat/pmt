@@ -141,6 +141,18 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         configSettings.put(configurationSettingsItem.getPropertyName(), configurationSettingsItem.getPropertyValue());
     }
 
+    public List<EmployeeDetails> getAllUserList()
+    {
+        List<EmployeeDetails> userList = new ArrayList<>();
+        if (userMap != null) {
+            for (Integer userId : userMap.keySet()) {
+                userList.add(userMap.get(userId));
+            }
+        }
+        sortUserList(userList);
+        return userList;
+    }
+
     public List<EmployeeDetails> getUserList()
     {
         List<EmployeeDetails> userList = new ArrayList<>();
@@ -153,6 +165,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
                 }
             }
         }
+        sortUserList(userList);
+        return userList;
+    }
+
+    private void sortUserList(List<EmployeeDetails> userList)
+    {
         Collections.sort(userList, new Comparator<EmployeeDetails>()
         {
             @Override
@@ -162,7 +180,6 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
                     .compareTo(employeeDetails2.getFirstName().toUpperCase());
             }
         });
-        return userList;
     }
 
     public Map<Integer, EmployeeDetails> getFilterdUserMap()

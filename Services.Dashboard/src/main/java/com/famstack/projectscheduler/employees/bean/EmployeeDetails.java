@@ -25,6 +25,10 @@ public class EmployeeDetails
 
     private String email;
 
+    private String empCode;
+
+    private Boolean temporaryEmployee;
+
     private String password;
 
     private String confirmPassword;
@@ -300,6 +304,26 @@ public class EmployeeDetails
     public void setUserAccessCode(Integer userAccessCode)
     {
         this.userAccessCode = userAccessCode;
+    }
+
+    public String getEmpCode()
+    {
+        return empCode;
+    }
+
+    public void setEmpCode(String empCode)
+    {
+        this.empCode = empCode;
+    }
+
+    public Boolean getTemporaryEmployee()
+    {
+        return temporaryEmployee == null ? false : temporaryEmployee;
+    }
+
+    public void setTemporaryEmployee(Boolean temporaryEmployee)
+    {
+        this.temporaryEmployee = temporaryEmployee;
     }
 
 }
