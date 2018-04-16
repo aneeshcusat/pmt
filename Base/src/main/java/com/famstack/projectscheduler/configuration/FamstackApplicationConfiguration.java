@@ -16,6 +16,7 @@ import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.AppConfDetails;
+import com.famstack.projectscheduler.employees.bean.AppConfValueDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
@@ -389,4 +390,28 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         return appConfigMap;
     }
 
+    public List<AppConfValueDetails> getProjectCategories()
+    {
+        List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
+        String projectCategoryId = "projectCategory" + getCurrentUserGroupId();
+        if (appConfigMap != null) {
+            AppConfDetails appConfigDetails = appConfigMap.get(projectCategoryId);
+
+            if (appConfigDetails != null && appConfigDetails.getAppConfValueDetails() != null) {
+                appConfValueDetails.addAll(appConfigDetails.getAppConfValueDetails());
+
+                Collections.sort(appConfValueDetails, new Comparator<AppConfValueDetails>()
+                {
+                    @Override
+                    public int compare(AppConfValueDetails appConfValueDetails1,
+                        AppConfValueDetails appConfValueDetails2)
+                    {
+                        return appConfValueDetails1.getName().toUpperCase()
+                            .compareTo(appConfValueDetails2.getName().toUpperCase());
+                    }
+                });
+            }
+        }
+        return appConfValueDetails;
+    }
 }
