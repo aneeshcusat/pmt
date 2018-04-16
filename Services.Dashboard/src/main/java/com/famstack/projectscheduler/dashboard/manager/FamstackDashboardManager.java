@@ -181,7 +181,7 @@ public class FamstackDashboardManager extends BaseFamstackService
         List<ProjectDetails> projectDetailsList =
             projectManager.getPrimaryProjectsDetailList(startDate, endDate, includeArchive);
 
-        sortProjectData(projectDetailsList);
+        // sortProjectData(projectDetailsList);
         return projectDetailsList;
     }
 

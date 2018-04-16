@@ -109,6 +109,28 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         return itemList;
     }
 
+    public List<?> executeQueryOrderedBy(String hqlQuery, Map<String, Object> dataMap, String orderedBy)
+    {
+        String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+        Session session = getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        hqlQuery += " and userGroupId = " + userGroupId;
+        hqlQuery += " " + orderedBy;
+        Query<?> query = session.createQuery(hqlQuery).setCacheable(true);
+        logDebug("executeQuery :" + hqlQuery);
+        if (dataMap != null) {
+            logDebug("dataMap :" + dataMap.keySet());
+            logDebug("dataMap values :" + dataMap.values());
+            for (String paramName : dataMap.keySet()) {
+                query.setParameter(paramName, dataMap.get(paramName));
+            }
+        }
+        List<?> itemList = query.list();
+        tx.commit();
+        session.close();
+        return itemList;
+    }
+
     @Override
     public List<?> executeQuery(String hqlQuery, Map<String, Object> dataMap)
     {

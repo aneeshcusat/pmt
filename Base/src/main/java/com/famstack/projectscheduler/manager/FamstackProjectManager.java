@@ -443,7 +443,8 @@ public class FamstackProjectManager extends BaseFamstackManager
         dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
 
         List<?> projectItemList =
-            famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getPrimaryProjectsItems"), dataMap);
+            famstackDataAccessObjectManager.executeQueryOrderedBy(HQLStrings.getString("getPrimaryProjectsItems"),
+                dataMap, HQLStrings.getString("getPrimaryProjectsItems-OrderBy"));
 
         getProjectsList(projectDetailsList, projectItemList, false, includeArchive);
         return projectDetailsList;
