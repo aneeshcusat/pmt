@@ -29,6 +29,13 @@
 				</div>
 				
 				<div class="col-md-12">
+				<label class="col-md-5 control-label text-left">Priority</label>
+                     <div class="col-md-7">
+                     <b class="taskPriority"></b>
+                     </div>
+				</div>
+				
+				<div class="col-md-12">
 				<label class="col-md-5 control-label text-left">Task assignee </label>
                      <div class="col-md-7">
                      	<input id="taskAssigneeHidden" type="hidden"/>

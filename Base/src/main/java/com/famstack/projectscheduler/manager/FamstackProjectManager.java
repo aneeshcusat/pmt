@@ -3,6 +3,8 @@ package com.famstack.projectscheduler.manager;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -575,7 +577,41 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<TaskDetails> backLogTasks = famstackProjectTaskManager.getBaklogProjectTasks(userId);
         moveInProgressBackLogTasksToInProgress(projectTaskDetailsMap, backLogTasks);
         projectTaskDetailsMap.put("BACKLOG", backLogTasks);
+
+        sorTaksDetails(projectTaskDetailsMap);
         return projectTaskDetailsMap;
+    }
+
+    private void sorTaksDetails(Map<String, List<TaskDetails>> projectTaskDetailsMap)
+    {
+        List<TaskDetails> assignedTaskDetailsList = projectTaskDetailsMap.get(TaskStatus.ASSIGNED);
+        List<TaskDetails> inProgressTaskDetailsList = projectTaskDetailsMap.get(TaskStatus.INPROGRESS);
+        List<TaskDetails> completedTaskDetailsList = projectTaskDetailsMap.get(TaskStatus.COMPLETED);
+        List<TaskDetails> backLogTaskDetailsList = projectTaskDetailsMap.get("BACKLOG");
+
+        sortProjectData(assignedTaskDetailsList);
+        sortProjectData(inProgressTaskDetailsList);
+        sortProjectData(completedTaskDetailsList);
+        sortProjectData(backLogTaskDetailsList);
+    }
+
+    private void sortProjectData(List<TaskDetails> taskDetailsList)
+    {
+        if (taskDetailsList != null) {
+            Collections.sort(taskDetailsList, new Comparator<TaskDetails>()
+            {
+                @Override
+                public int compare(TaskDetails taskDetails1, TaskDetails taskDetails2)
+                {
+                    if (taskDetails1.getPriorityInt() > taskDetails2.getPriorityInt()) {
+                        return -1;
+                    } else if (taskDetails1.getPriorityInt() < taskDetails2.getPriorityInt()) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+        }
     }
 
     private void moveInProgressBackLogTasksToInProgress(Map<String, List<TaskDetails>> projectTaskDetailsMap,

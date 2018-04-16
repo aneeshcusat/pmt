@@ -93,7 +93,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskItemNew.setDescription(taskDetails.getDescription());
             taskItemNew.setCompletionTime(projectItem.getCompletionTime());
             taskItemNew.setStartTime(projectItem.getStartTime());
-            taskItemNew.setPriority(ProjectPriority.HIGHT);
+            taskItemNew.setPriority(ProjectPriority.HIGH);
             taskItemNew.setProjectItem(projectItem);
             taskItemNew.setProjectTaskType(ProjectTaskType.PRODUCTIVE);
             taskItemNew.setExtraTimeTask(true);

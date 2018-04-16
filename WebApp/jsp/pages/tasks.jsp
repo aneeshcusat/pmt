@@ -259,6 +259,7 @@
 								class="startTime"
 								value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails[0].actualStartTime}"/>' />
 							<input type="hidden" class="duration" value="${tasks.duration}" />
+							<input type="hidden" class="taskPriority" value="${tasks.priority}" />
 							<input type="hidden" class="assignee"
 								value="${tasks.taskActivityDetails[0].userId}" /> <input
 								type="hidden" class="taskStatus" value="${tasks.status}" /> <input
@@ -328,7 +329,9 @@
 								<input type="hidden" class="estStartTime"
 									value="${tasks.startTime}" /> <input type="hidden"
 									class="startTime" value="" /> <input type="hidden"
-									class="duration" value="${tasks.duration}" /> <input
+									class="duration" value="${tasks.duration}" /> 
+									<input type="hidden" class="taskPriority" value="${tasks.priority}" />
+									<input
 									type="hidden" class="assignee"
 									value="${tasks.taskActivityDetails[0].userId}" /> <input
 									type="hidden" class="projectId" value="${tasks.projectId}" /> <input
@@ -414,6 +417,7 @@
 								class="startTime"
 								value="<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails[0].actualStartTime}" />" />
 							<input type="hidden" class="duration" value="${tasks.duration}" />
+							<input type="hidden" class="taskPriority" value="${tasks.priority}" />
 							<input type="hidden" class="assignee"
 								value="${tasks.taskActivityDetails[0].userId}" /> <input
 								type="hidden" class="taskId" value="${tasks.taskId}" /> <input
@@ -791,6 +795,8 @@ var openTaskDetails = function (taskId){
 	$(".taskDetailsDuration").html($(".task-item" + taskId).find("input.duration").val());
 	$(".taskDetailsStartedAt").html($(".task-item" + taskId).find("input.startedAt").val());
 	$(".taskDetailsEstStartTimet").html($(".task-item" + taskId).find("input.estStartTime").val());
+	$(".taskPriority").html($(".task-item" + taskId).find("input.taskPriority").val());
+	
 	$(".taskDetailsTaskDescription").html($(".task-item" + taskId).find(".taskDescription").html());
 	$("#taskAssigneeHidden").val($(".task-item" + taskId).find("input.assignee").val());
 	

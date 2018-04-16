@@ -30,6 +30,8 @@ public class TaskDetails
 
     private ProjectPriority priority;
 
+    private int priorityInt;
+
     private String startTime;
 
     private String completionTime;
@@ -117,6 +119,16 @@ public class TaskDetails
 
     public void setPriority(ProjectPriority priority)
     {
+        if (priority == null) {
+            priorityInt = -1;
+        } else if (priority == ProjectPriority.HIGH) {
+            priorityInt = 3;
+        } else if (priority == ProjectPriority.MEDIUM) {
+            priorityInt = 2;
+        } else if (priority == ProjectPriority.HIGH) {
+            priorityInt = 1;
+        }
+
         this.priority = priority;
     }
 
@@ -402,5 +414,15 @@ public class TaskDetails
             }
             this.contributers = contribuersIntList;
         }
+    }
+
+    public int getPriorityInt()
+    {
+        return priorityInt;
+    }
+
+    public void setPriorityInt(int priorityInt)
+    {
+        this.priorityInt = priorityInt;
     }
 }
