@@ -117,6 +117,11 @@
  var taskTimerMap = {};
  
  var getRemaining = function(taskId) {
+	 
+	 if (!$(".taskPlayPause"+taskId).hasClass("fa-pause")){
+		 return;
+	 }
+	 
 	 $("."+taskId+".durationDiv").remove();
 	 $("."+taskId+".taskRemainingDiv").show();
 	 
