@@ -518,9 +518,18 @@ function initializeCreateProjectForm(project){
 		});
 
 	function doAjaxCreateProjectForm() {
-		if (validateEstimatedEndTime()) {
+		if (validateEstimatedEndTime() && validateProjectType()) {
 			$('#createProjectFormId').submit();
 		}
+	}
+	
+	function validateProjectType() {
+		$(".projectTypeDiv").css("border", "0px solid red");
+		if($("#projectType").val() == "") {
+			$(".projectTypeDiv").css("border", "1px solid red");
+			return false;
+		}
+		return true;
 	}
 
 	$('#createProjectFormId').ajaxForm(function(response) {
@@ -703,25 +712,25 @@ function initializeCreateProjectForm(project){
 	}
 	
 	var clickBillableType = function(){
-		resetAccount();
-		resetTeam();
-		resetClient();
-		$('.accountOption[filter^=BILLABLE]').each(function () { $(this).show(); });
-		$('#accountId').selectpicker('refresh');
-		$('#teamId').selectpicker('refresh');
-		$('#clientId').selectpicker('refresh');
+		//resetAccount();
+		//resetTeam();
+		//resetClient();
+		//$('.accountOption[filter^=BILLABLE]').each(function () { $(this).show(); });
+		//$('#accountId').selectpicker('refresh');
+		//$('#teamId').selectpicker('refresh');
+		//$('#clientId').selectpicker('refresh');
 		$("#projectType").val("BILLABLE");
 	};
 	
 	var clickNonBillableType =  function(){
-		resetAccount();
-		resetTeam();
-		resetClient();
+		//resetAccount();
+		//resetTeam();
+		//resetClient();
 		$("#projectType").val("NON_BILLABLE");
-		$('.accountOption[filter^=NONBILLABLE]').each(function () { $(this).show(); });
-		$('#accountId').selectpicker('refresh');
-		$('#teamId').selectpicker('refresh');
-		$('#clientId').selectpicker('refresh');
+		//$('.accountOption[filter^=NONBILLABLE]').each(function () { $(this).show(); });
+		//$('#accountId').selectpicker('refresh');
+		//$('#teamId').selectpicker('refresh');
+		//$('#clientId').selectpicker('refresh');
 	};
 	
 	$("#accountId").on("change",function(){
@@ -752,17 +761,19 @@ function initializeCreateProjectForm(project){
 		$('#accountId').prop("selectedIndex",$("#"+account).prop("index"));
 		$('#teamId').prop("selectedIndex",$("#"+subTeam).prop("index"));
 		
-		$('#billable').parent().removeClass("active");
-		$('#nonbillable').parent().removeClass("active");
-		
-		if ($(this).children(":selected").attr("accounttype") == 'BILLABLE') {
-			$('#billable').attr("checked", true);
-			$('#billable').parent().addClass("active");
-			$("#projectType").val("BILLABLE");
-		} else {
-			$('#nonbillable').attr("checked", true);
-			$('#nonbillable').parent().addClass("active");
-			$("#projectType").val("NON_BILLABLE");
+		if ($("#projectType").val() == "") {
+			$('#billable').parent().removeClass("active");
+			$('#nonbillable').parent().removeClass("active");
+			
+			if ($(this).children(":selected").attr("accounttype") == 'BILLABLE') {
+				$('#billable').attr("checked", true);
+				$('#billable').parent().addClass("active");
+				$("#projectType").val("BILLABLE");
+			} else {
+				$('#nonbillable').attr("checked", true);
+				$('#nonbillable').parent().addClass("active");
+				$("#projectType").val("NON_BILLABLE");
+			}
 		}
 		
 		$('#accountId').selectpicker('refresh');
