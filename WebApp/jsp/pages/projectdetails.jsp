@@ -485,7 +485,7 @@ width: 60%;
                                               </td>
                                               
                                                <td width="5%">
-                                               <c:if test="${not taskDetails.extraTimeTask && taskDetails.status != 'INPROGRESS'}">
+                                               <c:if test="${not taskDetails.extraTimeTask && taskDetails.status != 'INPROGRESS' &&  taskDetails.status != 'COMPLETED'}">
                                                 <a data-toggle="modal" data-backdrop="static" data-target="#createtaskmodal" class="btn btn-primary btn-rounded" onclick="loadTaskDetails('${taskDetails.taskId}');"
                                                  href="#"><i class="fa fa-pencil fa-1x" style="" aria-hidden="true"></i></a>
                                                	</c:if>
@@ -591,6 +591,7 @@ width: 60%;
 	        <li>Assignee : <b><span id="popup-assigneeName"></span></b></li>
 	        <li>Helpers : <b><span id="popup-HelperName"></span></b></li>
 	        <li>Task Type : <b><span id="popup-projectTaskType"></span></b></li>
+	        <li>Priority : <b><span id="popup-priority"></span></b></li>
 	    </ul>
     </div>
 <!-- task pop up window end -->
@@ -711,6 +712,7 @@ width: 60%;
    			$("#popup-assigneeName").html($("#"+taskId+"assigneeName").val());
    			$("#popup-HelperName").html($("#"+taskId+"helperNames").val());
    			$("#popup-projectTaskType").html($("#"+taskId+"projectTaskType").val());
+   			$("#popup-priority").html($("#"+taskId+"priority").val());
     		 	
     	     $('div#task-pop-up').show()
     	     .css('top', e.pageY + moveDown)

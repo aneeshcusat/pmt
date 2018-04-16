@@ -9,6 +9,8 @@
 <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
 <input id="${taskDetails.taskId}projectTaskType" type="hidden"
 	value="${taskDetails.projectTaskType}" />
+	<input id="${taskDetails.taskId}priority" type="hidden"
+	value="${taskDetails.priority}" />
 <input id="${taskDetails.taskId}timeTaken" type="hidden"
 	value="${taskDetails.actualTimeTakenInHrs}" />
 <input id="${taskDetails.taskId}description" type="hidden"
@@ -65,6 +67,7 @@
 										</c:if>
 										</p>
 		</c:if>
+		<p>Priority : ${taskDetails.priority}</p>
 	</ul>
 
 	<c:if test="${not empty taskDetails.taskActivityDetails}">
