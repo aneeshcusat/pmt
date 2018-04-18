@@ -55,7 +55,17 @@
 </style>         
 <!-- PAGE TITLE -->
 <div class="page-title">                    
-    <h2><span class="fa fa-users"></span> Employees <small>${fn:length(userMap)} contacts</small></h2>
+    <h2><span class="fa fa-users"></span> Employees <small>
+    
+     <c:if test="${currentUser.userGroupId != '1012'}">
+    	${fn:length(userMap)} 
+	</c:if>
+	
+	 <c:if test="${currentUser.userGroupId == '1012'}">
+    	${fn:length(employeeMap)} 
+	</c:if>    
+    
+    contacts</small></h2>
 </div>
 <!-- END PAGE TITLE -->                
 
@@ -76,13 +86,13 @@
                                         <span class="fa fa-search"></span>
                                     </div>
                                     <input type="text" class="form-control" placeholder="Who are you looking for?" id="employeeSearch"/>
-                                    <div class="input-group-btn">
+                                    <div class="input-group-btn hide">
                                         <button class="btn btn-primary">Search</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                             <c:if test="${currentUserGroupId == '1012'}">
+                             <c:if test="${currentUser.userGroupId == '1012'}">
                            		 <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
                                <span class="fa fa-plus"></span> Register a new Employee</a>
                              </c:if>
@@ -96,46 +106,22 @@
     </div>
     
     <div class="row">
-    <c:if test="${not empty userMap}">
-    <c:forEach var="user" items="${userMap}">
-    <c:if test="${user.role != 'SUPERADMIN' || currentUser.userRole == 'SUPERADMIN'}">
-        <div class="col-md-3 contact-name">
-            <!-- CONTACT ITEM -->
-            <div class="panel panel-default">
-                <div class="panel-body profile">
-                 	<a href="${applicationHome}/profile/${user.id}">
-                    <div class="profile-image">
-                        <img src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
-                    </div>
-                    </a>
-                    <div class="profile-data">
-                        <div class="profile-data-name">${user.firstName}</div>
-                        <div class="profile-data-title">${user.designation}</div>
-                    </div>
-                    <div class="profile-controls">
-                        <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit"></span></a>
-                         <c:if test="${currentUserGroupId == '1012'}">
-                        	<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}','${user.lastName} ${user.firstName}')"><span class="fa fa-times"></span></a>
-                    	</c:if>
-                    	 <c:if test="${currentUserGroupId != '1012'}">
-                    	 	<span class="fa fa-times"></span>
-                    	 </c:if>
-                    </div>
-                </div>                                
-                <div class="panel-body">                                    
-                    <div class="contact-info">
-                        <p><small>Mobile</small><br/>${user.mobileNumber}</p>
-                        <p><small>Email</small><br/>${user.email}</p>
-                        <p><small>Team</small><br/>${user.team}</p>                                   
-                    </div>
-                </div>                                
-            </div>
-            <!-- END CONTACT ITEM -->
-        </div>
-         </c:if>
-        </c:forEach>
-        </c:if>
-        
+    <c:if test="${currentUser.userGroupId != '1012'}">
+	    <c:if test="${not empty userMap}">
+	    <c:forEach var="user" items="${userMap}">
+	        	<%@include file="fagments/employeeDetails.jspf" %>
+	    </c:forEach>
+	    </c:if>
+    </c:if> 
+    
+     <c:if test="${currentUser.userGroupId == '1012'}">
+	    <c:if test="${not empty employeeMap}">
+	    <c:forEach var="employeeItem" items="${employeeMap}">
+	    		<c:set var="user" value="${employeeItem.value}"></c:set>
+	        	<%@include file="fagments/employeeDetails.jspf" %>
+	    </c:forEach>
+	    </c:if>
+    </c:if> 
                 </div>
                
             </div>
@@ -212,8 +198,19 @@ var jvalidate = $("#createUserFormId").validate({
 $('#createUserFormId').ajaxForm(function(response) { 
 	famstacklog(response);
 	var responseJson = JSON.parse(response);
+	$(".email-error").addClass("hide");
+	$("#email").removeClass("error");
     if (responseJson.status){
         window.location.reload(true);
+    } else {
+    	var errorCode = responseJson.errorCode;
+    	
+    	if (errorCode == 'Duplicate') {
+    		$(".email-error").html("Email id is already registered");
+    		$(".email-error").removeClass("hide");
+    		$("#email").removeClass("valid");
+    		$("#email").addClass("error");
+    	}
     }
 }); 
 
@@ -278,7 +275,8 @@ function doAjaxDeleteUser(userId) {
             famstacklog("SUCCESS: ", data);
             var responseJson = JSON.parse(data);
             if (responseJson.status){
-                window.location.reload(true);
+                $(".userDetails"+userId).remove();
+                $(".message-box").removeClass("open");
             }
         },
         error : function(e) {

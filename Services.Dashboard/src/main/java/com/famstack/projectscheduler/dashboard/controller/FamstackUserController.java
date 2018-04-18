@@ -146,8 +146,13 @@ public class FamstackUserController extends BaseFamstackService
     public String createEmployee(@ModelAttribute("employeeDetails") EmployeeDetails employeeDetails,
         BindingResult result, Model model)
     {
-        famstackDashboardManager.createUser(employeeDetails);
-        getFamstackApplicationConfiguration().initialize();
+        try {
+            famstackDashboardManager.createUser(employeeDetails);
+            getFamstackApplicationConfiguration().initialize();
+        } catch (Exception e) {
+            return "{\"status\": false,\"errorCode\": \"Duplicate\"}";
+        }
+
         return "{\"status\": true}";
     }
 
@@ -156,8 +161,12 @@ public class FamstackUserController extends BaseFamstackService
     public String updateEmployee(@ModelAttribute("employeeDetails") EmployeeDetails employeeDetails,
         BindingResult result, Model model)
     {
-        famstackDashboardManager.updateUser(employeeDetails);
-        getFamstackApplicationConfiguration().initialize();
+        try {
+            famstackDashboardManager.updateUser(employeeDetails);
+            getFamstackApplicationConfiguration().initialize();
+        } catch (Exception e) {
+            return "{\"status\": false,\"errorCode\": \"Duplicate\"}";
+        }
         return "{\"status\": true}";
     }
 

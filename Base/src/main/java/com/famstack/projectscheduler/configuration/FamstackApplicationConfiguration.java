@@ -137,7 +137,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     public void updatConfiguraionIteme(ConfigurationSettingsItem configurationSettingsItem)
     {
-        logInfo("intizlized  configurationSettingsItem : " + configurationSettingsItem.getPropertyName() + " ,value :"
+        logDebug("intizlized  configurationSettingsItem : " + configurationSettingsItem.getPropertyName() + " ,value :"
             + configurationSettingsItem.getPropertyValue());
         configSettings.put(configurationSettingsItem.getPropertyName(), configurationSettingsItem.getPropertyValue());
     }

@@ -1,6 +1,5 @@
 package com.famstack.projectscheduler.export.processors;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -194,21 +193,17 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
 
     private String convertToActualTimeString(Integer timeInMins)
     {
-        /*
-         * if (timeInMins != null && timeInMins < 0) { timeInMins = 0; } return timeInMins == null ? "" :
-         * String.valueOf((timeInMins / 60 < 10 ? "0" + (timeInMins / 60) : timeInMins / 60)) + "." + ((timeInMins % 60
-         * > 0) ? (timeInMins % 60 < 10 ? "0" + (timeInMins % 60) : timeInMins % 60) : "00");
-         */
 
-        if (timeInMins != null && timeInMins != 0) {
-            DecimalFormat df2 = new DecimalFormat(".##");
-            String dateString = df2.format(timeInMins / 60d);
-            if (timeInMins < 60 && timeInMins > 0) {
-                dateString = "00" + dateString;
-            }
-            return dateString;
+        if (timeInMins != null) {
+
+            int hour = timeInMins / 60;
+            int minutes = timeInMins % 60;
+
+            return hour + "." + minutes;
         }
+
         return "";
+
     }
 
     private void createProjectDetailsColoumn(Sheet sheet, int projectDetailsColumnCount, String value,

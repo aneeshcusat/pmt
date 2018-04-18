@@ -1,0 +1,40 @@
+<c:if test="${user.role != 'SUPERADMIN' || currentUser.userRole == 'SUPERADMIN'}">
+<div class="col-md-3 contact-name userDetails${user.id}">
+            <!-- CONTACT ITEM -->
+            <div class="panel panel-default">
+                <div class="panel-body profile">
+                 	<a href="${applicationHome}/profile/${user.id}">
+                    <div class="profile-image">
+                        <img src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
+                    </div>
+                    </a>
+                    <div class="profile-data">
+                        <div class="profile-data-name">${user.firstName}</div>
+                        <div class="profile-data-title"><c:if test="${empty user.designation}">&nbsp;</c:if><c:if test="${not empty user.designation}">${user.designation}</c:if></div>
+                    </div>
+                    <div class="profile-controls">
+                        <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit"></span></a>
+                         <c:if test="${currentUser.userGroupId == '1012'}">
+                        	<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}','${user.lastName} ${user.firstName}')"><span class="fa fa-times"></span></a>
+                    	</c:if>
+                    	 <c:if test="${currentUser.userGroupId != '1012'}">
+                    	 	<span class="fa fa-times"></span>
+                    	 </c:if>
+                    </div>
+                </div>                                
+                <div class="panel-body">                                    
+                    <div class="contact-info">
+                        <p><small>Mobile</small><br/><c:if test="${empty user.mobileNumber}">&nbsp;</c:if><c:if test="${not empty user.mobileNumber}">${user.mobileNumber}</c:if></p>
+                        <p><small>Email</small><br/><c:if test="${empty user.email}">&nbsp;</c:if><c:if test="${not empty user.email}">${user.email}</c:if></p>
+                        <p><small>Team</small><br/><c:if test="${empty user.team}">&nbsp;</c:if><c:if test="${not empty user.team}">${user.team}</c:if></p>
+                         <c:if test="${currentUser.userGroupId == '1012'}">
+                         <p><small>Group</small><br/>
+                         ${userGroupMap[user.userGroupId].name}
+                         </p>
+                         </c:if>                                   
+                    </div>
+                </div>                                
+            </div>
+            <!-- END CONTACT ITEM -->
+        </div>
+   </c:if>      
