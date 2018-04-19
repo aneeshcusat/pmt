@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.annotation.Resource;
 
@@ -69,8 +67,9 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
 
     }
 
-    private void createBody(XSSFWorkbook workBook, Sheet sheet, List<ProjectDetails> exportDataList,
-        List<EmployeeDetails> employees, CellStyle xssfCellProjectTotalStyle, CellStyle xssfCellTextWrapStyle)
+    private void createBody(final XSSFWorkbook workBook, final Sheet sheet, final List<ProjectDetails> exportDataList,
+        final List<EmployeeDetails> employees, final CellStyle xssfCellProjectTotalStyle,
+        final CellStyle xssfCellTextWrapStyle)
     {
         if (exportDataList != null) {
             int projectDetailsRowCount = 7;
@@ -79,25 +78,24 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
             if (exportDataList.size() > 0) {
                 ExecutorService executorService =
                     Executors.newFixedThreadPool(exportDataList.size() > maxThread ? maxThread : exportDataList.size());
-                List<Future> futures = Collections.synchronizedList(new ArrayList<Future>());
+                // List<Future> futures = Collections.synchronizedList(new ArrayList<Future>());
+
+                List<ExportProjectDetailsWorkerThread> futures =
+                    Collections.synchronizedList(new ArrayList<ExportProjectDetailsWorkerThread>());
 
                 for (ProjectDetails projectDetails : exportDataList) {
                     ExportProjectDetailsWorkerThread projectDetailsWorkerThred =
                         new ExportProjectDetailsWorkerThread(this, workBook, sheet, projectDetailsRowCount,
                             projectDetails, userProjectTotalHoursMap, xssfCellTextWrapStyle, employees);
-                    Future future = executorService.submit(projectDetailsWorkerThred);
-                    futures.add(future);
+                    // Future future = executorService.submit(projectDetailsWorkerThred);
+                    // futures.add(future);
+                    futures.add(projectDetailsWorkerThred);
                     projectDetailsRowCount++;
                 }
 
                 logDebug("Starting project reporting threads");
-                for (Future future : futures) {
-                    try {
-                        future.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                        logError("Unable to generate project report", e);
-                    }
+                for (ExportProjectDetailsWorkerThread future : futures) {
+                    future.run();
                 }
                 logDebug("Completed project reporting threads");
                 executorService.shutdown();
@@ -169,9 +167,10 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
                             Integer hours = userTaskActualTimeMap.get(assigneeId);
                             int userCellIndex = employeeIndexList.indexOf(assigneeId);
                             logDebug("Creating user task time");
-
-                            createTaskTimeCell(sheet, projectDetailsUserColumnCount + userCellIndex, hours,
-                                projectDetailsRow, null);
+                            if (userCellIndex > -1) {
+                                createTaskTimeCell(sheet, projectDetailsUserColumnCount + userCellIndex, hours,
+                                    projectDetailsRow, null);
+                            }
                         }
                     }
                 }
@@ -223,6 +222,10 @@ public class FamstackXLSExportProcessor11 extends BaseFamstackService implements
     private void createTaskTimeCell(Sheet sheet, int columnIndex, Integer userTaskTime, Row projectDetailsRow,
         CellStyle cellStyle)
     {
+
+        if (userTaskTime == null) {
+            userTaskTime = 0;
+        }
         logDebug("User task time cell index " + columnIndex);
         Cell userCell = projectDetailsRow.getCell(columnIndex);
         if (userCell == null) {
