@@ -156,6 +156,21 @@ public class FamstackProjectController extends BaseFamstackService
         return modelAndView.addObject("dateRange", dateRange);
     }
 
+    @RequestMapping("/searchProjectDetails")
+    public ModelAndView searchProjectDetails(
+        @RequestParam(value = "searchString", defaultValue = "") String searchString,
+        @RequestParam(value = "includeArchive", defaultValue = "false") Boolean includeArchive, Model model)
+    {
+        logDebug("searchString : " + searchString);
+        logDebug("includeArchive : " + includeArchive);
+
+        List<ProjectDetails> projectData = famstackDashboardManager.searchProjectDetails(searchString, includeArchive);
+
+        ModelAndView modelAndView = getProjectPageModelView(projectData);
+        modelAndView.setViewName("response/projectdashboardList");
+        return modelAndView;
+    }
+
     @RequestMapping(value = "/mileStones", method = RequestMethod.GET)
     public ModelAndView getMilestones()
     {

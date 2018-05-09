@@ -464,6 +464,22 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     }
 
+    public List<ProjectDetails> searchProjectDetails(String searchString, Boolean includeArchive)
+    {
+        List<ProjectDetails> projectDetailsList = new ArrayList<>();
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("searchString", "%" + searchString + "%");
+
+        List<?> projectItemList =
+            famstackDataAccessObjectManager.executeQueryOrderedBy(
+                HQLStrings.getString("getPrimaryProjectsSearchItems"), dataMap,
+                HQLStrings.getString("getPrimaryProjectsItems-OrderBy"));
+
+        getProjectsList(projectDetailsList, projectItemList, false, includeArchive);
+        return projectDetailsList;
+    }
+
     private void getProjectsList(List<ProjectDetails> projectDetailsList, List<?> projectItemList, boolean isFullLoad)
     {
         getProjectsList(projectDetailsList, projectItemList, isFullLoad, false);

@@ -40,10 +40,12 @@
 				        	<td width="20%"><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
 				        	<td width="10%">${project.accountName}</td>
 				        	<td width="10%" title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.teamName}</td>
+				        	<td width="10%" title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.subTeamName}</td>
 				        	<td width="10%" class="project_team">
 							<c:if test="${not empty project.contributers}">
 								<c:forEach var="contributer" items="${project.contributers}" varStatus="taskIndex"> 
 										<img alt="image" src="${applicationHome}/image/${contributer}" title="${employeeMap[contributer].firstName}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
+										<span class="hide">${employeeMap[contributer].firstName}</span>
 								</c:forEach>
 							</c:if>
 							</td>
@@ -56,7 +58,6 @@
 				            	None
 				            </c:if>
 				        	</td>
-				        	<td  width="12%">${project.description}</td>
 				        	<td width="10%"><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
 				        	<td width="20%">
 								<a href="#" style="margin-right: 7px;color:blue"  title="Clone this project"  data-toggle="modal" data-target="#createprojectmodal"

@@ -15,9 +15,9 @@
 			        	<th width="20%">Project Name</th>
 			        	<th width="10%">Account</th>
 			        	<th width="10%">Team</th>
+			        	<th width="10%">Sub Team</th>
 			        	<th width="10%">Assignees</th>
 			        	<th width="5%">Tasks</th>
-			        	<th width="12%">Comments</th>
 			        	<th width="10%">Status</th>
 			        	<th width="20%">
 			        	<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN'}">
@@ -83,10 +83,12 @@
 			            <td><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
 			            <td>${project.accountName}</td>
 			            <td title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.teamName}</td>
+			            <td title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.subTeamName}</td>
 			           <td class="project_team">
 						<c:if test="${not empty project.contributers}">
 							<c:forEach var="contributer" items="${project.contributers}" varStatus="taskIndex"> 
 									<img alt="image" src="${applicationHome}/image/${contributer}"  data-toggle="tooltip" data-html="true"  title="${employeeMap[contributer].firstName}"  onerror="this.src='${assets}/images/users/no-image.jpg'">
+									<span class="hide">${employeeMap[contributer].firstName}</span>
 							</c:forEach>
 						</c:if>
 						</td>
@@ -99,7 +101,6 @@
 			            </c:if>
 			            </td>
 			            
-			            <td>${project.description}</td>
 			          	<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>  
 			            <td>
 							<a href="#" style="margin-right: 7px;color:darkgreen"  title="Edit this project"  data-toggle="modal" data-target="#createprojectmodal" 

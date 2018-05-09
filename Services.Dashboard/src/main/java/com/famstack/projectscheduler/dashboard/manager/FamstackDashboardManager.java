@@ -185,6 +185,13 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectDetailsList;
     }
 
+    public List<ProjectDetails> searchProjectDetails(String searchString, Boolean includeArchive)
+    {
+        List<ProjectDetails> projectDetailsList = projectManager.searchProjectDetails(searchString, includeArchive);
+
+        return projectDetailsList;
+    }
+
     public List<ProjectDetails> loadDuplicateProjectsJon(int projectId, String projectCode, Boolean includeArchive)
     {
         List<ProjectDetails> projectDetailsList =

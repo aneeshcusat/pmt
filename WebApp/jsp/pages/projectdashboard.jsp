@@ -136,12 +136,12 @@ div#taskDetailsDiv {
 									<input type="text" class="form-control" id="projectSearchBoxId"
 										placeholder="Search for a project.." />
 									<div class="input-group-btn">
-										<button class="hide btn btn-primary">Search</button>
+										<button type="button" class="hide btn btn-primary projectSearchBtn"  onclick="searchAllProjectDetails($('#projectSearchBoxId').val());">Search</button>
 									</div>
 								</div>
 							</div>
 								<div class="col-md-1">
-        							<p style="text-align:center;margin :0 0 0px;font-weight: bold">Show Archived</p>
+        							<p style="text-align:center;margin :0 0 0px;">Show Archived</p>
 									<p style="text-align: center;margin :0 0 0px">
 									<div class="slideThree">	
 										<input type="checkbox" class="styledCheckBox includeArchive" value="None" id="slideThree" name="check" />
@@ -152,10 +152,10 @@ div#taskDetailsDiv {
 									</p>
 							</div>
 			                <div class="col-md-3" >
-					             	 <span id="reportrange" class="dtrange">                                            
+					             	 <span id="reportrange" class="dtrange dateFilterDiv">                                            
             							<span>${dateRange}</span><b class="caret"></b>
         							</span>
-        								<input style="margin-left:10px" class="btn btn-default" type="button" value="Filter" onclick="loadAllProjectDetails($('#daterangeText').val());"></input>
+        								<input style="margin-left:10px" class="btn btn-default dateFilterDiv" type="button" value="Filter" onclick="loadAllProjectDetails($('#daterangeText').val());"></input>
         								<input type="hidden" id="daterangeText" value="hello" /> 
         					</div>
         					
@@ -658,15 +658,20 @@ function initializeCreateProjectForm(project){
 		var serarchText = $('#projectSearchBoxId').val();
 		famstacklog(serarchText);
 		if (serarchText != "") {
-		$('.projectData').hide();
-		$('.projectDataHidden').hide();
-		
-	    $('.projectData').each(function(){
-	       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
-	           $(this).show();
-	       }
-	    });
+			$('.projectData').hide();
+			$('.projectDataHidden').hide();
+			$('.projectSearchBtn').removeClass('hide');
+			$(".dateFilterDiv").addClass('hide');
+		    $('.projectData').each(function(){
+		       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
+		           $(this).show();
+		           $(".dateFilterDiv").removeClass('hide');
+		           $('.projectSearchBtn').addClass('hide');
+		       }
+		    });
 		} else {
+			$(".dateFilterDiv").removeClass('hide');
+			$('.projectSearchBtn').addClass('hide');
 			$('.projectData').show();
 		}
 	}
@@ -982,33 +987,49 @@ var loadAllProjectDetails = function(daterange) {
 	
 	var dataString = {"daterange" : daterange, includeArchive:$("input.includeArchive").is(":checked")};
 	doAjaxRequest("GET", "${applicationHome}/projectdashboardList", dataString, function(data) {
-        $("#projectDashBoardData").html(data);
-        refreshRecurringSpin();
-        $('.estStartTime').datetimepicker({value:getTodayDate(new Date()) + " 08:00",
-        	onGenerate:function( ct ){
-        		$(this).find('.xdsoft_date.xdsoft_weekend')
-        		.addClass('xdsoft_disabled');
-       	},
-       	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']
-       	
-       	});
-       	
-       	
-       	$('.estCompleteTime').datetimepicker({value:getTodayDate(new Date()) + " 18:00",
-       	onGenerate:function( ct ){
-       		$(this).find('.xdsoft_date.xdsoft_weekend')
-       		.addClass('xdsoft_disabled');
-       	},
-       	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']
-       	
-       	});
-       	
+        fillProjectData(data);
        	performProjectSearch();
         	
     }, function(e) {
         famstacklog("ERROR: ", e);
         alert(e);
     });
+}
+
+var searchAllProjectDetails = function(searchString) {
+	
+	var dataString = {"searchString" : searchString, includeArchive:$("input.includeArchive").is(":checked")};
+	doAjaxRequest("GET", "${applicationHome}/searchProjectDetails", dataString, function(data) {
+        fillProjectData(data);
+    }, function(e) {
+        famstacklog("ERROR: ", e);
+        alert(e);
+    });
+}
+
+var fillProjectData = function(data){
+	
+	$("#projectDashBoardData").html(data);
+    refreshRecurringSpin();
+    $('.estStartTime').datetimepicker({value:getTodayDate(new Date()) + " 08:00",
+    	onGenerate:function( ct ){
+    		$(this).find('.xdsoft_date.xdsoft_weekend')
+    		.addClass('xdsoft_disabled');
+   	},
+   	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']
+   	
+   	});
+   	
+   	
+   	$('.estCompleteTime').datetimepicker({value:getTodayDate(new Date()) + " 18:00",
+   	onGenerate:function( ct ){
+   		$(this).find('.xdsoft_date.xdsoft_weekend')
+   		.addClass('xdsoft_disabled');
+   	},
+   	allowTimes:['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00']
+   	
+   	});
+   	
 }
 
 var loadDuplicateProjects = function(projectId, projectCode, isForce) {
