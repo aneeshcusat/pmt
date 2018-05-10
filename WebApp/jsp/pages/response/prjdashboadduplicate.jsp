@@ -37,10 +37,10 @@
                  		<tr class="projectDuplicate${projectId} <c:if test='${project.deleted == true }'>archived</c:if>" id="projectData${project.id}">
 		        			<td width="1%"></td>
 				        	<td width="10%">${project.completionTime}</td>
-				        	<td width="20%"><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
+				        	<td width="20%"  style="word-wrap:break-word"><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
 				        	<td width="10%">${project.accountName}</td>
-				        	<td width="10%" title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.teamName}</td>
-				        	<td width="10%" title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.subTeamName}</td>
+				        	<td width="8%" title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.teamName}</td>
+				        	<td width="8%" title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.subTeamName}</td>
 				        	<td width="10%" class="project_team">
 							<c:if test="${not empty project.contributers}">
 								<c:forEach var="contributer" items="${project.contributers}" varStatus="taskIndex"> 
@@ -59,6 +59,7 @@
 				            </c:if>
 				        	</td>
 				        	<td width="10%"><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
+				        	<td width="6%">${project.actualDurationInHrs}</td>
 				        	<td width="20%">
 								<a href="#" style="margin-right: 7px;color:blue"  title="Clone this project"  data-toggle="modal" data-target="#createprojectmodal"
 									onclick="loadProjectForClone('${project.id}')">

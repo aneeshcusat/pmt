@@ -655,22 +655,26 @@ function initializeCreateProjectForm(project){
 	}
 	
 	function performProjectSearch(){
-		var serarchText = $('#projectSearchBoxId').val();
-		famstacklog(serarchText);
-		if (serarchText != "") {
+		var searchText = $('#projectSearchBoxId').val();
+		famstacklog(searchText);
+		if (searchText != "") {
 			$('.projectData').hide();
 			$('.projectDataHidden').hide();
-			$('.projectSearchBtn').removeClass('hide');
-			$(".dateFilterDiv").addClass('hide');
+			//$('.projectSearchBtn').removeClass('hide');
+			//$(".dateFilterDiv").addClass('hide');
 		    $('.projectData').each(function(){
-		       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
+		       if($(this).text().toUpperCase().indexOf(searchText.toUpperCase()) != -1){
 		           $(this).show();
-		           $(".dateFilterDiv").removeClass('hide');
-		           $('.projectSearchBtn').addClass('hide');
+		          // $(".dateFilterDiv").removeClass('hide');
+		          // $('.projectSearchBtn').addClass('hide');
 		       }
 		    });
+		    
+		    if (searchText.length > 2) {
+		    	$(".projectSearchBtn").removeClass('hide');
+		    }
 		} else {
-			$(".dateFilterDiv").removeClass('hide');
+			//$(".dateFilterDiv").removeClass('hide');
 			$('.projectSearchBtn').addClass('hide');
 			$('.projectData').show();
 		}
@@ -974,7 +978,7 @@ var taskLinkclick = function(projectId, e){
         $('#taskDetailsDiv').html(data);
         
         if (data.trim() != "") {
-        	$('#taskDetailsDiv').css({'top':e.pageY+10,'left':e.pageX-350, 'position':'absolute', 'border':'1px solid gray', 'padding':'5px'});
+        	$('#taskDetailsDiv').css({'top':e.pageY+10,'left':e.pageX-500, 'position':'absolute', 'border':'1px solid gray', 'padding':'5px'});
         	$('#taskDetailsDiv').show();
         }
     }, function(e) {

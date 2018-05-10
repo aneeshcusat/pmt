@@ -14,11 +14,12 @@
 			        	<th width="10%">Delivery Date</th>
 			        	<th width="20%">Project Name</th>
 			        	<th width="10%">Account</th>
-			        	<th width="10%">Team</th>
-			        	<th width="10%">Sub Team</th>
+			        	<th width="8%">Team</th>
+			        	<th width="8%">Sub Team</th>
 			        	<th width="10%">Assignees</th>
 			        	<th width="5%">Tasks</th>
 			        	<th width="10%">Status</th>
+			        	<th width="6%">Time Taken Hrs</th>
 			        	<th width="20%">
 			        	<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN'}">
 			        	<span class="dropdown">
@@ -80,7 +81,7 @@
 			        <tr class="clickable projectData ${project.id} <c:if test='${project.deleted == true }'>archived</c:if>" id="projectData${project.id}" data-projectId="${project.id}"  style="">
 			            <td  onclick="loadDuplicateProjects(${project.id}, '${project.code}', false)" data-toggle="collapse" data-target=".projectData${project.id}"><i id="projectOpenLink${project.id}" style="color: blue" class="fa fa-chevron-right 2x"></i></td>
 			            <td>${project.completionTime}</td>
-			            <td><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
+			            <td style=" word-wrap:break-word"><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
 			            <td>${project.accountName}</td>
 			            <td title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.teamName}</td>
 			            <td title="${project.teamName} - ${project.subTeamName} - ${project.clientName}">${project.subTeamName}</td>
@@ -102,6 +103,7 @@
 			            </td>
 			            
 			          	<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>  
+			            <td>${project.actualDurationInHrs}</td>
 			            <td>
 							<a href="#" style="margin-right: 7px;color:darkgreen"  title="Edit this project"  data-toggle="modal" data-target="#createprojectmodal" 
 								onclick="loadProjectForUpdate('${project.id}')">

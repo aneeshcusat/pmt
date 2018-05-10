@@ -504,7 +504,8 @@ public class ProjectDetails
     public int getActualDuration()
     {
         int actualDuration = 0;
-        if (getStatus() == ProjectStatus.COMPLETED || getStatus() == ProjectStatus.CLOSED) {
+        if (getStatus() == ProjectStatus.COMPLETED || getStatus() == ProjectStatus.CLOSED
+            || getStatus() == ProjectStatus.INPROGRESS) {
             Set<TaskDetails> taskDetailsList = getProjectTaskDeatils();
             if (taskDetailsList != null) {
                 for (TaskDetails taskDetails : taskDetailsList) {
@@ -518,6 +519,11 @@ public class ProjectDetails
     public String getActualDurationInHrs()
     {
         int actualDurationInMins = getActualDuration();
+        if (actualDurationInMins <= 0
+            && !(getStatus() == ProjectStatus.COMPLETED || getStatus() == ProjectStatus.CLOSED)) {
+            return "";
+        }
+
         String actualDurationString = "00";
         if (actualDurationInMins > 0) {
             int actualTimeInHrs = actualDurationInMins / 60;
