@@ -175,31 +175,47 @@
 	<!-- END CONTENT FRAME TOP -->
 	
 		<div class="row ">
-		
-			<div class="col-md-10" style="background-color: #f5f5f5">
-			<c:if test="${not empty modelViewMap.taskOwners}">
-				<div class="col-md-1" style="background-color: #f5f5f5">
-					<span
-						style="vertical-align: middle; text-align: left; float: left; margin-top: 5px; font-weight: bold; font-size: 13px; line-height: 20px;">Task
-						Filters :</span>
-				</div>
-				<div class="col-md-11" style="background-color: #f5f5f5">
-					<div class="list-group list-group-horizontal">
-						<c:forEach var="taskOwner" items="${modelViewMap.taskOwners}"
-							varStatus="taskOwnerIndex">
-							<a href="#" id="userId${taskOwner}"
-								class="taskOwnersList list-group-item">${userDetailsMap[taskOwner].firstName}</a>
-						</c:forEach>
+			<div class="col-md-12">
+
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="col-md-6">
+								<div class="input-group">
+									<div class="input-group-addon">
+										<span class="fa fa-search"></span>
+									</div>
+									<input type="text" class="form-control" id="taskActivitySearchId" placeholder="Search for a task">
+								</div>
+							</div>
+							<c:if test="${not empty modelViewMap.taskOwners}">
+					<div class="col-md-3">
+						<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
+						<option value="">All</option>
+							  <c:forEach var="taskOwner" items="${modelViewMap.taskOwners}"
+								varStatus="taskOwnerIndex">
+								<option value="userId${taskOwner}">${userDetailsMap[taskOwner].firstName}</option>
+							</c:forEach>
+						</select>
+						
 					</div>
+				</c:if>
+							<div class="col-md-3">
+								  
+								  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
+									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
+									Record Non-billable Time.
+									</a>
+								
+							</div>
+						</div>
+					</form>
 				</div>
-			</c:if>
 			</div>
-			<div class="col-md-2">
-				  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
-					class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
-					Record Non-billable Time.
-					</a>
-			</div>
+
+		</div>
+
 		</div>
 
 	<!-- START CONTENT FRAME BODY -->
@@ -614,6 +630,8 @@
 	class="hide taskDetailsLink" data-backdrop="static">taskdetails</a>
 <!-- END MODALS -->
 <%@include file="includes/footer.jsp"%>
+<script type="text/javascript"
+	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
 <script type='text/javascript'
 	src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js"></script>
 <script type="text/javascript"
@@ -631,6 +649,52 @@ $(".taskOwnersList").on("click", function(){
 		$(".task-item").show();
 	}
 });
+
+var activeUserId = "";
+
+$("#taskAssigneeId").on("change", function(){
+	var assigneeSelectionId = $(this).val();
+	if (assigneeSelectionId != "") {
+		$(".task-item").hide();
+		$(".task-item." + assigneeSelectionId).show();
+		activeUserId=assigneeSelectionId;
+	} else {
+		$(".task-item").show();
+		activeUserId="";
+	}
+	performSearch();
+});
+
+function performSearch(){
+	var serarchText = $('#taskActivitySearchId').val();
+	famstacklog(serarchText);
+	var searchId = ".task-item";
+
+	if (activeUserId != "") {
+		searchId+="."+activeUserId;
+	}
+	
+	if (serarchText != "") {
+		$('.task-item').hide();
+	    $(searchId).each(function(){
+	       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
+	           $(this).show();
+	       }
+	    });
+	} else {
+		$(searchId).show();
+	}
+}
+
+$('#taskActivitySearchId').keydown(function(){
+	performSearch();
+});
+
+$('#taskActivitySearchId').keyup(function(){
+	performSearch();
+});
+
+
 function reloadTime() {
 	 var completedTime = getTodayDateTime(new Date());
 	 $(".completedTime").html(completedTime);
@@ -985,9 +1049,9 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 }
 
 //unbilled task end
-
-
-
-
+$(document).ready(function () {
+   sortSelect('#taskAssigneeId', 'text', 'asc');
+   $("#taskAssigneeId").selectpicker('refresh');
+});
 
 </script>

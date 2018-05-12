@@ -76,6 +76,13 @@
             rows      : undefined,
             title     : undefined
         },
+		skipweOpts : {
+            minWidth  : 10, // only applies if columns and itemWidth not set
+            itemWidth : undefined,
+            columns   : undefined,
+            rows      : undefined,
+            title     : undefined
+        },
         timeMinuteOpts : {
             minWidth  : 100, // only applies if columns and itemWidth not set
             itemWidth : 20,
@@ -139,10 +146,10 @@
     	var weekIndex = i + 1;
         str_opt_dow += "<option value='"+weekIndex+"'>" + days[i] + "</option>\n";
     }
-
+	
     // options for period
     var str_opt_period = "";
-    var periods = ["hour", "day", "week", "month", "year"];
+    var periods = ["hour", "day", "week", "1 and 3 week","2 and 4 week", "month", "quarterly", "year"];
     for (var i = 0; i < periods.length; i++) {
         str_opt_period += "<option value='"+periods[i]+"'>" + periods[i] + "</option>\n";
     }
@@ -151,9 +158,12 @@
     var toDisplay = {
         "minute" : [],
         "hour"   : ["mins"],
-        "day"    : ["time"],
+        "day"    : ["time", "skipwe"],
         "week"   : ["dow", "time"],
+		"1 and 3 week"   : ["dow", "time"],
+		"2 and 4 week"   : ["dow", "time"],
         "month"  : ["dom", "time"],
+		"quarterly": ["dom", "time"],
         "year"   : ["dom", "month", "time"]
     };
 
@@ -162,9 +172,12 @@
         "hour"   : /^\d{1,2}\s(\*\s){3}\*$/,           // "? * * * *"
         "day"    : /^(\d{1,2}\s){2}(\*\s){2}\*$/,      // "? ? * * *"
         "week"   : /^(\d{1,2}\s){2}(\*\s){2}\d{1,2}$/, // "? ? * * ?"
+		"1 and 3 week"   : /^(\d{1,2}\s){2}(\*\s){2}\d{1,2}$/, // "? ? * * ?"
+    	"2 and 4 week"   : /^(\d{1,2}\s){2}(\*\s){2}\d{1,2}$/, // "? ? * * ?"  
         "month"  : /^(\d{1,2}\s){3}\*\s\*$/,           // "? ? ? * *"
+		"quarterly"  : /^(\d{1,2}\s){3}\*\s\*$/,           // "? ? ? * *"
         "year"   : /^(\d{1,2}\s){4}\*$/                // "? ? ? ? *"
-    };
+        };
 
     // ------------------ internal functions ---------------
     function defined(obj) {
@@ -194,7 +207,7 @@
         // check actual cron values
         var d = cron_str.split(" ");
         //            mm, hh, DD, MM, DOW
-        var minval = [ 0,  0,  1,  1,  0];
+        var minval = [0,  0,  1,  1,  0];
         var maxval = [59, 23, 31, 12,  6];
         for (var i = 0; i < d.length; i++) {
             if (d[i] == "*") continue;
@@ -216,6 +229,7 @@
     }
 
     function hasError(c, o) {
+    	
         if (!defined(getCronType(o.initial, o))) { return true; }
         if (!undefinedOrObject(o.customValues)) { return true; }
 
@@ -251,10 +265,16 @@
         case "day":
             min  = b["time"].find("select.cron-time-min").val();
             hour = b["time"].find("select.cron-time-hour").val();
+			var skipweValue = b["skipwe"].find("input").prop("checked");
             
             items[1] = min;
     		items[2] = hour;
-    		items[5] = '?';  // To support Quartz
+			if (skipweValue) {
+				items[3] = '?';
+				items[5] = '2,3,4,5,6';
+			} else {
+				items[5] = '?';  // To support Quartz
+			}
             break;
 
         case "week":
@@ -267,7 +287,27 @@
     		items[5] = parseInt(dow);
     		
             break;
-
+			
+		case "1 and 3 week":
+            min  = b["time"].find("select.cron-time-min").val();
+            hour = b["time"].find("select.cron-time-hour").val();
+            dow  =  b["dow"].find("select").val();
+            items[1] = min;
+    		items[2] = hour;
+            items[3] = '?';  // To support Quartz
+    		items[5] = parseInt(dow) +'#1';
+            break;
+			
+		case "2 and 4 week":
+            min  = b["time"].find("select.cron-time-min").val();
+            hour = b["time"].find("select.cron-time-hour").val();
+            dow  =  b["dow"].find("select").val();
+            items[1] = min;
+    		items[2] = hour;
+            items[3] = '?';  // To support Quartz
+    		items[5] = parseInt(dow) +'#2';
+    		
+            break;
         case "month":
             min  = b["time"].find("select.cron-time-min").val();
             hour = b["time"].find("select.cron-time-hour").val();
@@ -276,9 +316,19 @@
     		items[2] = hour;
             items[3] = day;
     		items[5] = '?';  // To support Quartz
-    		
             break;
-
+            		
+		case "quarterly":
+			min  = b["time"].find("select.cron-time-min").val();
+			hour = b["time"].find("select.cron-time-hour").val();
+			day  = b["dom"].find("select").val();
+			month = "*/3";
+			items[1] = min;
+			items[2] = hour;
+			items[3] = day;
+			items[4] = month;
+			items[5] = '?';  // To support Quartz
+			break;
         case "year":
             min  = b["time"].find("select.cron-time-min").val();
             hour = b["time"].find("select.cron-time-hour").val();
@@ -312,12 +362,15 @@
                 domOpts        : $.extend({}, defaults.domOpts, eo, options.domOpts),
                 monthOpts      : $.extend({}, defaults.monthOpts, eo, options.monthOpts),
                 dowOpts        : $.extend({}, defaults.dowOpts, eo, options.dowOpts),
+				skipweOpts     : $.extend({}, defaults.skipweOpts, eo, options.skipweOpts),
                 timeHourOpts   : $.extend({}, defaults.timeHourOpts, eo, options.timeHourOpts),
                 timeMinuteOpts : $.extend({}, defaults.timeMinuteOpts, eo, options.timeMinuteOpts)
             });
 
+            o.initial = o.initial.replace("?","*").substring(2,o.initial.length);
+            
             // error checking
-            if (hasError(this, o)) { return this; }
+            //if (hasError(this, o)) { return this; }
 
             // ---- define select boxes in the right order -----
 
@@ -367,13 +420,20 @@
             if (o.useGentleSelect) select.gentleSelect(o.minuteOpts);
 
             block["dow"] = $("<span class='cron-block cron-block-dow'>"
-                    + " on <select name='cron-dow'>" + str_opt_dow
+                    + "on <select name='cron-dow'>" + str_opt_dow
                     + "</select> </span>")
                 .appendTo(this)
                 .data("root", this);
-
+		
             select = block["dow"].find("select").data("root", this);
             if (o.useGentleSelect) select.gentleSelect(o.dowOpts);
+			
+			 block["skipwe"] = $("<span class='cron-block cron-block-skipwe'>skip weekends <input type='checkbox' name='cron-skipwe'/> </span>")
+                .appendTo(this)
+                .data("root", this);
+		
+            select = block["skipwe"].find("input").data("root", this);
+            //if (o.useGentleSelect) select.gentleSelect(o.skipweOpts);
 
             block["time"] = $("<span class='cron-block cron-block-time'>"
                     + " at <select name='cron-time-hour' class='cron-time-hour'>" + str_opt_hid
@@ -398,6 +458,7 @@
                     .end();
 
             this.find("select").bind("change.cron-callback", event_handlers.somethingChanged);
+			this.find("input").bind("change.cron-callback", event_handlers.somethingChanged);
             this.data("options", o).data("block", block); // store options and block pointer
             this.data("current_value", o.initial); // remember base value to detect changes
 
@@ -405,13 +466,30 @@
         },
 
         value : function(cron_str) {
+        	
             // when no args, act as getter
             if (!cron_str) { return getCurrentValue(this); }
 
             var o = this.data('options');
             var block = this.data("block");
             var useGentleSelect = o.useGentleSelect;
-            var t = getCronType(cron_str, o);
+            var t;
+            if (cron_str.indexOf('#1') != -1) {
+            	cron_str = cron_str.replace("#1","");
+            	t = "1 and 3 week";
+            } else  if (cron_str.indexOf('#2') != -1) {
+            	cron_str = cron_str.replace('#2',"");
+            	t = "2 and 4 week";
+            } else if (cron_str.indexOf('/3') != -1) {
+            	t = "quarterly";
+            } else if (cron_str.indexOf('2,3,4,5,6') != -1) {
+            	block["skipwe"].find("input").prop("checked",true);
+            	cron_str = cron_str.replace("2,3,4,5,6","*");
+            	t = "day";
+            }  
+            else {
+            	t = getCronType(cron_str, o);
+        	}
             
             if (!defined(t)) { return false; }
             
@@ -437,7 +515,7 @@
 
                         btgt = block[tgt].find("select.cron-time-min").val(v["mins"]);
                         if (useGentleSelect) btgt.gentleSelect("update");
-                    } else {;
+                    } else if(tgt != "skipwe") {;
                         var btgt = block[tgt].find("select").val(v[tgt]);
                         if (useGentleSelect) btgt.gentleSelect("update");
                     }

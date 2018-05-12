@@ -145,3 +145,27 @@ var templatePlugins = function(){
     		'</div>'
     	});
     }
+    
+    
+
+    var sortSelect = function (select, attr, order) {
+        if(attr === 'text'){
+            if(order === 'asc'){
+                $(select).html($(select).children('option').sort(function (x, y) {
+                	if ($(x).text() == 'All') {
+                		return 0;
+                	}
+                    return $(x).text().toUpperCase() < $(y).text().toUpperCase() ? -1 : 1;
+                }));
+                $(select).get(0).selectedIndex = 0;
+            }// end asc
+            if(order === 'desc'){
+                $(select).html($(select).children('option').sort(function (y, x) {
+                    return $(x).text().toUpperCase() < $(y).text().toUpperCase() ? -1 : 1;
+                }));
+                $(select).get(0).selectedIndex = 0;
+            }// end desc
+        }
+
+    };
+

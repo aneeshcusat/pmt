@@ -1250,7 +1250,7 @@ function refreshProjectDetails(){
 function initializeCron(cronExpression) {
 	$('#recurringCronExpressionDiv').html('<div id="recurringCronExpression"></div>');
 	$('#recurringCronExpression').cron({
- 	 initial: cronExpression.replace("?","*").substring(2,13),
+ 	 initial: cronExpression,
       onChange: function() {
           $('#recurringCronExpressionValue').val($(this).cron("value"));
       },

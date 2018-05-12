@@ -346,41 +346,35 @@
             <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
         </div>                                
     </div> 
- <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
-	<div class="row ">
-            <div class="col-md-12" style="background-color: #f5f5f5">
-            <div class="col-md-1" style="background-color: #f5f5f5">
-            	<span style="vertical-align: middle;text-align: left;float:left; margin-top: 5px;font-weight: bold; font-size: 15px;line-height: 20px;">Task Filters :</span>
-            </div>
-            <div class="col-md-11" style="background-color: #f5f5f5">
-			<div class="list-group list-group-horizontal">
-			  <c:if test="${not empty userMap}">
-				<c:forEach var="user" items="${userMap}">
-					<c:if test="${user.role != 'SUPERADMIN'}">
-						<a href="#" id="userId${user.id}" class="taskOwnersList list-group-item">${user.firstName}</a>
-    				</c:if>
-			  </c:forEach>
-			  </c:if>
-            </div>
-            </div>
-   		</div>
-    </div>
-</c:if>
 <div class="col-md-12">
 
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<div class="col-md-8">
+							<div class="col-md-6">
 								<div class="input-group">
 									<div class="input-group-addon">
 										<span class="fa fa-search"></span>
 									</div>
-									<input type="text" class="form-control" id="taskActivitySearchId" placeholder="Search for a task">
+									<input type="text" class="form-control" id="taskActivitySearchId" placeholder="Search for a task activity">
 								</div>
 							</div>
-							<div class="col-md-4">
+							 <div class="col-md-3">
+							  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
+								<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
+								<option value="">All</option>
+									 <c:if test="${not empty userMap}">
+										<c:forEach var="user" items="${userMap}">
+											<c:if test="${user.role != 'SUPERADMIN'}">
+												<option value="userId${user.id}">${user.firstName}</option>
+											</c:if>
+						  				</c:forEach>
+						  			</c:if>
+								</select>
+								</c:if>
+							</div>
+							<div class="col-md-3">
 								  
 								  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
@@ -487,6 +481,9 @@
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>     
  <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js"></script>       
+<script type="text/javascript"
+	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+
 <script>
 
 $("#taskType").on("change", function(){
@@ -648,6 +645,19 @@ $(".taskOwnersList").on("click", function(){
 	performSearch();
 });
 
+
+$("#taskAssigneeId").on("change", function(){
+	var assigneeSelectionId = $(this).val();
+	if (assigneeSelectionId != "") {
+		$(".taskact-item").hide();
+		$(".taskact-item." + assigneeSelectionId).show();
+		activeUserId=assigneeSelectionId;
+	} else {
+		$(".taskact-item").show();
+		activeUserId="";
+	}
+	performSearch();
+});
 
 
 function performSearch(){

@@ -869,30 +869,20 @@ public class FamstackProjectManager extends BaseFamstackManager
         return famstackProjectTaskManager.getProjectDetailsTaskDetailsByProjectId(projectId);
     }
 
-    public RecurringProjectItem getRecurringProjectItemById(int recurringProjectId)
-    {
-        return (RecurringProjectItem) famstackDataAccessObjectManager.getItemById(recurringProjectId,
-            RecurringProjectItem.class);
-    }
-
-    public RecurringProjectDetails getRecurringProjectDetailsById(int recurringProjectId)
-    {
-        RecurringProjectDetails recurringProjectDetails = null;
-        RecurringProjectItem recurringProjectItem = getRecurringProjectItemById(recurringProjectId);
-        if (recurringProjectItem != null) {
-            recurringProjectDetails = mapRecurringProjectItem(recurringProjectItem);
-        }
-
-        return recurringProjectDetails;
-    }
-
     public RecurringProjectDetails mapRecurringProjectItem(RecurringProjectItem recurringProjectItem)
     {
         RecurringProjectDetails recurringProjectDetails = null;
         if (recurringProjectItem != null) {
             recurringProjectDetails = new RecurringProjectDetails();
             recurringProjectDetails.setId(recurringProjectItem.getId());
-            recurringProjectDetails.setCronExpression(recurringProjectItem.getCronExpression());
+
+            String cronExpression = recurringProjectItem.getCronExpression();
+
+            if (cronExpression.contains("|")) {
+                cronExpression = cronExpression.substring(0, cronExpression.indexOf("|"));
+            }
+
+            recurringProjectDetails.setCronExpression(cronExpression);
             recurringProjectDetails.setLastRun(recurringProjectItem.getLastRun());
             recurringProjectDetails.setName(recurringProjectItem.getName());
             recurringProjectDetails.setNextRun(recurringProjectItem.getNextRun());
@@ -965,9 +955,24 @@ public class FamstackProjectManager extends BaseFamstackManager
             recurringProjectItem = new RecurringProjectItem();
         }
 
-        recurringProjectItem.setCronExpression(cronExpression);
         Timestamp lastRun = recurringProjectItem.getLastRun();
         Date nextRun = FamstackUtils.getNextRunFromCron(cronExpression, lastRun);
+
+        String newCronExpression = cronExpression;
+        if (cronExpression.contains("#")) {
+            String secondCronExpression =
+                cronExpression.contains("#1") ? cronExpression.replace("#1", "#3") : cronExpression.contains("#2")
+                    ? cronExpression.replace("#2", "#4") : "";
+            Date nextRun2 = FamstackUtils.getNextRunFromCron(secondCronExpression, lastRun);
+
+            if (nextRun.after(nextRun2)) {
+                nextRun = nextRun2;
+            }
+
+            newCronExpression = cronExpression + "|" + secondCronExpression;
+        }
+
+        recurringProjectItem.setCronExpression(newCronExpression);
         recurringProjectItem.setNextRun(nextRun == null ? null : new Timestamp(nextRun.getTime()));
         recurringProjectItem.setName(projectCode);
         recurringProjectItem.setProjectId(projectId);
@@ -1027,9 +1032,23 @@ public class FamstackProjectManager extends BaseFamstackManager
                 }
 
                 recurringProjectItem.setLastRun(recurringProjectItem.getNextRun());
-                Date nextRun =
-                    FamstackUtils.getNextRunFromCron(recurringProjectItem.getCronExpression(),
-                        recurringProjectItem.getNextRun());
+                String cronExpression = recurringProjectItem.getCronExpression();
+                Date nextRun = null;
+                if (cronExpression.contains("|")) {
+                    String cronExpression1 = cronExpression.split("[|]")[0];
+                    String cronExpression2 = cronExpression.split("[|]")[1];
+
+                    nextRun = FamstackUtils.getNextRunFromCron(cronExpression1, recurringProjectItem.getNextRun());
+                    Date nextRun2 =
+                        FamstackUtils.getNextRunFromCron(cronExpression2, recurringProjectItem.getNextRun());
+
+                    if (nextRun.after(nextRun2)) {
+                        nextRun = nextRun2;
+                    }
+
+                } else {
+                    nextRun = FamstackUtils.getNextRunFromCron(cronExpression, recurringProjectItem.getNextRun());
+                }
 
                 recurringProjectItem.setNextRun(nextRun == null ? null : new Timestamp(nextRun.getTime()));
 
