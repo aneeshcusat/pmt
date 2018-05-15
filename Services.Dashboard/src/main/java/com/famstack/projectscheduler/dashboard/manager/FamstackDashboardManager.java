@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.dashboard.manager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -829,37 +830,48 @@ public class FamstackDashboardManager extends BaseFamstackService
     public void createNonBillableTask(int userId, String type, String startDateString, String endDateString,
         String comments)
     {
-        Date startTime = null;
+        Date startTime = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
+        Date endTime = DateUtils.tryParse(endDateString, DateUtils.DATE_TIME_FORMAT);
+
+        int numberOfDays = DateUtils.getNumberOfDaysBetweenTwoDates(startTime, endTime);
         int durationInMinutes = 0;
-        String taskName = "";
-        if ("LEAVE".equalsIgnoreCase(type)) {
-            startTime = DateUtils.tryParse(startDateString + " 09:00", DateUtils.DATE_TIME_FORMAT);
-            switch (endDateString) {
-                case "FIRST":
-                    durationInMinutes = 240;
-                    taskName = "Leave First half of the day ";
-                    break;
-                case "SECOND":
-                    startTime = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startTime, 5);
-                    durationInMinutes = 240;
-                    taskName = "Leave Second half of the day ";
-                    break;
-                case "FULL":
-                    taskName = "Leave Full day ";
-                    durationInMinutes = 480;
-                    break;
+
+        int index = 0;
+        do {
+
+            if (numberOfDays == 0) {
+                durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
+            } else if (index == 0) {
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startTime);
+                cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 17, 0);
+                Date sameDayEndDate = cal.getTime();
+
+                durationInMinutes = (int) ((sameDayEndDate.getTime() - startTime.getTime()) / (1000 * 60));
+            } else if (numberOfDays == index) {
+                durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
+            } else {
+                durationInMinutes = 480;
             }
 
-        } else if (!("LEAVE".equalsIgnoreCase(type))) {
-            startTime = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
-            Date endTime = DateUtils.tryParse(endDateString, DateUtils.DATE_TIME_FORMAT);
-            durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
+            if (durationInMinutes > 480) {
+                durationInMinutes = 480;
+            }
 
-            taskName = durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + type;
-        }
+            String taskName =
+                durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + type + " " + comments;
+            famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName,
+                durationInMinutes, UserTaskType.valueOf(type), ProjectType.NON_BILLABLE, comments);
 
-        famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName, durationInMinutes,
-            UserTaskType.valueOf(type), ProjectType.NON_BILLABLE, comments);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startTime);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 9, 0);
+            startTime = cal.getTime();
+
+            index++;
+        } while (index <= numberOfDays);
     }
 
     public void deleteTaskActivity(int activityId)

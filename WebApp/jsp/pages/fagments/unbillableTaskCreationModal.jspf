@@ -48,29 +48,6 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-			<div class="form-group dateDuration">
-				<label class="col-md-4 control-label">Start Date </label>
-                     <div class="col-md-8" style="margin-top: 7px;">
-                     	 <input type='text' class="form-control datePicker" id='startDate'/>
-                     </div>
-				</div>
-			<div class="form-group dateDuration">
-				<label class="col-md-4 control-label">Duration</label>
-                     <div class="col-md-8">
-                         <select path="taskType" id="duration" name="duration" class="form-control" data-live-search="true">
-							<option value="">- select -</option>
-    								<option value="FIRST">First Half of Day</option>
-    								<option value="SECOND">Second Half of Day</option>
-    								<option value="FULL">Full Day</option>
-						</select>
-                     </div>
-				</div>
-				<div class="form-group dateDuration dateRange">
-				<label class="col-md-7 control-label"> </label>
-                     <div class="col-md-5" style="margin-top: 7px;">
-                     	 --OR--
-                     </div>
-				</div>
 				<div class="form-group dateRange">
 				<label class="col-md-4 control-label ">Start Date </label>
                      <div class="col-md-8" style="margin-top: 7px;">

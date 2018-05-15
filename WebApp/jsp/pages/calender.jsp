@@ -89,56 +89,37 @@
 
 $("#taskType").on("change", function(){
 	$("#taskCreate").show();
-	if($("#taskType").val() == "LEAVE") {
-		$(".dateDuration").show();
-		$(".dateRange").hide();
-	} else if($("#taskType").val() != "" && $("#taskType").val() != "LEAVE"){
-		$(".dateRange").show();
-		$(".dateDuration").hide();
-	} else {
-		$(".dateRange").show();
-		$(".dateDuration").show();
+	if($("#taskType").val() == "") {
 		$("#taskCreate").hide();
 	}
 	
 });
 
-$('#startDate').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD'});
-$('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
-$('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+$('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 8:00"});
+$('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 18:00"});
 
 var validateStartAndEndUBTtime = function(){
 	var startDate = $('#startDateRange').val();
 	var endDate = $('#completionDateRange').val();
 	$('#startDateRange').removeClass("error");
 	$('#completionDateRange').removeClass("error");
-	
 	if (startDate != "" && endDate != "") {
-		
-		if (new Date(startDate) > new Date(endDate) || (new Date(startDate).getDate() != new Date(endDate).getDate())) {
+		if (new Date(startDate) >= new Date(endDate)) {
 			$('#startDateRange').addClass("error");
 			$('#completionDateRange').addClass("error");
-			
 			return false;
 		}
 	}
-	
 	return true;
 }
 
 var createUnbillableTask = function(){
-	
 	var endDate = "";
 	var startDate = "";
 	$("#userId").removeClass("error");
-	
-	if($("#taskType").val() == "LEAVE") {
-		startDate = $("#startDate").val();
-		endDate = $("#duration").val();
-	} else if ($("#taskType").val() != "" && $("#taskType").val() != "LEAVE") {
+	if ($("#taskType").val() != "") {
 		startDate = $("#startDateRange").val();
 		endDate = $("#completionDateRange").val();
-		
 		if (!validateStartAndEndUBTtime()){
 			return;
 		}
@@ -165,8 +146,6 @@ var createUnbillableTask = function(){
 var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#userId").val(currentUserId);
 	$("#taskType").prop("selectedIndex",0);
-	$("#duration").prop("selectedIndex",0);
-	$("#startDate").val("");
 	$("#startDateRange").val("");
 	$("#completionDateRange").val("");
 	$("#taskStartComments").val("");

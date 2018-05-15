@@ -189,8 +189,9 @@
 									<input type="text" class="form-control" id="taskActivitySearchId" placeholder="Search for a task">
 								</div>
 							</div>
-							<c:if test="${not empty modelViewMap.taskOwners}">
+							
 					<div class="col-md-3">
+						<c:if test="${not empty modelViewMap.taskOwners}">
 						<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
 						<option value="">All</option>
 							  <c:forEach var="taskOwner" items="${modelViewMap.taskOwners}"
@@ -198,9 +199,9 @@
 								<option value="userId${taskOwner}">${userDetailsMap[taskOwner].firstName}</option>
 							</c:forEach>
 						</select>
-						
+						</c:if>
 					</div>
-				</c:if>
+				
 							<div class="col-md-3">
 								  
 								  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
@@ -964,56 +965,37 @@ $('#adjustStartTime1').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH
 //unbilled task start
 $("#taskType").on("change", function(){
 	$("#taskCreate").show();
-	if($("#taskType").val() == "LEAVE") {
-		$(".dateDuration").show();
-		$(".dateRange").hide();
-	} else if ($("#taskType").val() != "" && $("#taskType").val() != "LEAVE"){
-		$(".dateRange").show();
-		$(".dateDuration").hide();
-	} else {
-		$(".dateRange").show();
-		$(".dateDuration").show();
+	if($("#taskType").val() == "") {
 		$("#taskCreate").hide();
 	}
 	
 });
 
-$('#startDate').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD'});
-$('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
-$('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+$('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 8:00"});
+$('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 18:00"});
 
 var validateStartAndEndUBTtime = function(){
 	var startDate = $('#startDateRange').val();
 	var endDate = $('#completionDateRange').val();
 	$('#startDateRange').removeClass("error");
 	$('#completionDateRange').removeClass("error");
-	
 	if (startDate != "" && endDate != "") {
-		
-		if (new Date(startDate) > new Date(endDate) || (new Date(startDate).getDate() != new Date(endDate).getDate())) {
+		if (new Date(startDate) >= new Date(endDate)) {
 			$('#startDateRange').addClass("error");
 			$('#completionDateRange').addClass("error");
-			
 			return false;
 		}
 	}
-	
 	return true;
 }
 
 var createUnbillableTask = function(){
-	
 	var endDate = "";
 	var startDate = "";
 	$("#userId").removeClass("error");
-	
-	if($("#taskType").val() == "LEAVE") {
-		startDate = $("#startDate").val();
-		endDate = $("#duration").val();
-	} else if ($("#taskType").val() != "" && $("#taskType").val() != "LEAVE") {
+	if ($("#taskType").val() != "") {
 		startDate = $("#startDateRange").val();
 		endDate = $("#completionDateRange").val();
-		
 		if (!validateStartAndEndUBTtime()){
 			return;
 		}
@@ -1023,13 +1005,12 @@ var createUnbillableTask = function(){
 		$("#userId").addClass("error");
 		return;
 	}
-	
+    
 	var dataString = {userId:$("#userId").val(),type:$("#taskType").val(),startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
 	doAjaxRequest("POST", "${applicationHome}/createNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){
         	$(".modal").modal('hide');
-        	 window.location.reload(true);
         } else {
         	return false;
         }
@@ -1041,14 +1022,11 @@ var createUnbillableTask = function(){
 var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#userId").val(currentUserId);
 	$("#taskType").prop("selectedIndex",0);
-	$("#duration").prop("selectedIndex",0);
-	$("#startDate").val("");
 	$("#startDateRange").val("");
 	$("#completionDateRange").val("");
 	$("#taskStartComments").val("");
-}
+}//unbilled task end
 
-//unbilled task end
 $(document).ready(function () {
    sortSelect('#taskAssigneeId', 'text', 'asc');
    $("#taskAssigneeId").selectpicker('refresh');

@@ -176,7 +176,8 @@ public final class DateUtils extends BaseFamstackService
 
     public static void main(String[] args)
     {
-        System.out.println(getFirstDayOfThisMonth());
+        System.out.println(getNumberOfDaysBetweenTwoDates(new Date(),
+            getNextPreviousDate(DateTimePeriod.DAY, new Date(), +6)));
     }
 
     public static int getNumberOfDaysInThisMonth(Date date)
@@ -184,6 +185,20 @@ public final class DateUtils extends BaseFamstackService
         Calendar currentCal = Calendar.getInstance();
         currentCal.setTime(date);
         return currentCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getNumberOfDaysBetweenTwoDates(Date date1, Date date2)
+    {
+        Calendar dateCal1 = Calendar.getInstance();
+        Calendar dateCal2 = Calendar.getInstance();
+        dateCal1.setTime(date1);
+        dateCal2.setTime(date2);
+        dateCal1.set(dateCal1.get(Calendar.YEAR), dateCal1.get(Calendar.MONTH), dateCal1.get(Calendar.DAY_OF_MONTH), 0,
+            0);
+        dateCal2.set(dateCal2.get(Calendar.YEAR), dateCal2.get(Calendar.MONTH), dateCal2.get(Calendar.DAY_OF_MONTH), 0,
+            0);
+
+        return (int) ((dateCal2.getTime().getTime() - dateCal1.getTime().getTime()) / (1000 * 60 * 60 * 24));
     }
 
 }
