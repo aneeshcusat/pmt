@@ -169,4 +169,13 @@ public class FamstackDashboardController extends BaseFamstackService
     {
         return new ModelAndView("response/appConfigProjectCategories");
     }
+
+    @RequestMapping(value = "/sendMail", method = RequestMethod.GET)
+    @ResponseBody
+    public String sendMail(@RequestParam("subject") String subject, @RequestParam("body") String body)
+    {
+        famstackDashboardManager.sendMail(subject, body);
+        return "{\"status\": true}";
+    }
+
 }

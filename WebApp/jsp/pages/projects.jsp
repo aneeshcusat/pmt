@@ -297,7 +297,7 @@ var loadProject = function(projectId){
         initializeCreateProjectForm(responseJson);
     }, function(e) {
         famstacklog("ERROR: ", e);
-        alert(e);
+        famstackalert(e);
     });
 }
 
@@ -464,7 +464,7 @@ function initializeCreateProjectForm(project){
             }
         }, function(e) {
             famstacklog("ERROR: ", e);
-            alert(e);
+            famstackalert(e);
         });
 	}
 	

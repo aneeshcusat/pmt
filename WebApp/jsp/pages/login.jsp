@@ -110,7 +110,7 @@
 						var responseJsonObj = JSON.parse(response);
 						if (responseJsonObj.status == true) {
 							var currentUrl = window.location.href;
-							if (currentUrl.indexOf("/dashboard/index") > 0 || currentUrl.indexOf("/dashboard/logout") > 0){
+							if (currentUrl.indexOf("/dashboard/index") > 0 || currentUrl.indexOf("/dashboard/logout") > 0 || currentUrl.indexOf("/dashboard/login") > 0){
 								window.location = "/bops/dashboard/index";
 							} else {
 								window.location.reload(true);

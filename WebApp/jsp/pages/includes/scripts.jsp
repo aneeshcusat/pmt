@@ -139,6 +139,21 @@ var site_settings = "";
     	famstacklog("", message);
     }
     
+    function famstackalert(error){
+    
+    	if(error.status == 401) {
+    		window.location = "/bops/dashboard/login";
+    	} else {
+       	var subject = error.status +" : "+ error.statusText;
+    	var message = "error has occured - user name - ${currentUser.firstName} - ${currentUser.userId} " ;
+    	doAjaxRequestWithGlobal("GET", "${applicationHome}/sendMail",  {subject:subject,body:message},function(data) {
+			famstacklog("data: ", data);
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    },false);
+	    }
+    }
+    
 	function famstacklog(code, message){
     	if (famstackLogEnabled) {
     		console.log(code, message);

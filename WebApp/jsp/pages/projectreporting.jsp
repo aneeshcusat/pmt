@@ -102,7 +102,7 @@ var loadAllProjectDetails = function(daterange, format) {
         
 	}, function(e) {
         famstacklog("ERROR: ", e);
-        alert(e);
+        famstackalert(e);
     });
 }
 $(function() {

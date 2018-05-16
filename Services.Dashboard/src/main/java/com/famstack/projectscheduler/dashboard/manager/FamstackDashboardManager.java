@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.famstack.email.FamstackEmailSender;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.NotificationType;
@@ -101,6 +102,9 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     @Resource
     FamstackProjectTaskManager famstackProjectTaskManager;
+
+    @Resource
+    FamstackEmailSender famstackEmailSender;
 
     public Map<String, Object> getUserData()
     {
@@ -950,6 +954,12 @@ public class FamstackDashboardManager extends BaseFamstackService
     {
         projectManager.deleteProjects(projectIds, type);
 
+    }
+
+    public void sendMail(String subject, String messageBody)
+    {
+        famstackEmailSender.sendTextMessage("famstack.bops@gmail.com", "famstack.bops@gmail.com", "ALERT: ERROR - "
+            + subject, messageBody);
     }
 
 }

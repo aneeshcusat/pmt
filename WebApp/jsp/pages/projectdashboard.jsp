@@ -381,7 +381,7 @@ var loadProject = function(projectId){
         initializeCreateProjectForm(responseJson);
     }, function(e) {
         famstacklog("ERROR: ", e);
-        alert(e);
+        famstackalert(e);
     });
 }
 function clearCreateProjectForm(){
@@ -634,7 +634,7 @@ function initializeCreateProjectForm(project){
 			
 		}, function(e) {
             famstacklog("ERROR: ", e);
-            alert(e);
+            famstackalert(e);
         });
 	}
 	
@@ -650,7 +650,7 @@ function initializeCreateProjectForm(project){
             }
         }, function(e) {
             famstacklog("ERROR: ", e);
-            alert(e);
+            famstackalert(e);
         });
 	}
 	
@@ -983,7 +983,7 @@ var taskLinkclick = function(projectId, e){
         }
     }, function(e) {
         famstacklog("ERROR: ", e);
-        alert(e);
+        famstackalert(e);
     }, false);
 }
 
@@ -996,7 +996,7 @@ var loadAllProjectDetails = function(daterange) {
         	
     }, function(e) {
         famstacklog("ERROR: ", e);
-        alert(e);
+        famstackalert(e);
     });
 }
 
@@ -1007,7 +1007,7 @@ var searchAllProjectDetails = function(searchString) {
         fillProjectData(data);
     }, function(e) {
         famstacklog("ERROR: ", e);
-        alert(e);
+        famstackalert(e);
     });
 }
 
@@ -1045,7 +1045,7 @@ var loadDuplicateProjects = function(projectId, projectCode, isForce) {
 	        $("#projectDetails"+projectId +" tbody").append(data);
 	    }, function(e) {
 	        famstacklog("ERROR: ", e);
-	        alert(e);
+	        famstackalert(e);
 	    }, false);
 	}
 	if(!isForce) {
@@ -1090,7 +1090,7 @@ var loadTaskAvailabilityTime =function(projectId, assigneeId, taskId){
         }
     }, function(e) {
         famstacklog("ERROR: ", e);
-        alert(e);
+        famstackalert(e);
     }, false);
 
 }
@@ -1217,7 +1217,7 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
 		}
 	}, function(e) {
         famstacklog("ERROR: ", e);
-        alert(e);
+        famstackalert(e);
     });
 }
 
@@ -1243,7 +1243,7 @@ function refreshProjectDetails(){
 			$("#recurringProjectActionButton").attr("onclick", "createRecurringProject('"+projectCode+"',"+projectId+")");
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
-	        alert(e);
+	        famstackalert(e);
 	    });
 }
  
@@ -1291,7 +1291,7 @@ function createRecurringProject(projectCode, projectId) {
 			}
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
-	        alert(e);
+	        famstackalert(e);
 	    });
 }
 
@@ -1314,7 +1314,7 @@ function deleteRecuringProjectDetails(recurringId, projectCode) {
 			$(".recurringDelete").addClass("hide");
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
-	        alert(e);
+	        famstackalert(e);
 	    });
 }
 
@@ -1330,7 +1330,7 @@ function refreshRecurringSpin(){
 			} 
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
-	        alert(e);
+	        famstackalert(e);
 	    });
 }
 
