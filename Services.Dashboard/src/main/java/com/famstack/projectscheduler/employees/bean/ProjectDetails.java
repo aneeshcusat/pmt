@@ -419,7 +419,8 @@ public class ProjectDetails
                 projectCompletionPercentage = projectCompletionPercentage / taskDetailsList.size();
             }
         }
-        return projectCompletionPercentage;
+        return (projectCompletionPercentage > 100 ? 100 : projectCompletionPercentage) < 0 ? 0
+            : projectCompletionPercentage;
     }
 
     public boolean getProjectMissedTimeLine()

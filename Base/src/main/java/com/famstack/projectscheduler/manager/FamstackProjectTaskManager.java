@@ -723,29 +723,36 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             for (Object taskItemObj : projectTaskList) {
                 try {
                     TaskItem taskItem = (TaskItem) taskItemObj;
-                    int diffInMinute = 0;
+                    int timeRemainingInMinute = 0;
                     List<UserTaskActivityItem> userTaskActivityItems =
                         (List<UserTaskActivityItem>) famstackUserActivityManager
                             .getUserTaskActivityItemByTaskId(taskItem.getTaskId());
 
                     if (userTaskActivityItems != null) {
                         Date actualStartTime = null;
-
+                        int actualTimeTaken = 0;
                         for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
                             if (userTaskActivityItem.getActualEndTime() == null) {
                                 actualStartTime = userTaskActivityItem.getActualStartTime();
-                                diffInMinute = userTaskActivityItem.getDurationInMinutes();
-                                break;
+                                int diffInMinute = userTaskActivityItem.getDurationInMinutes();
+                                if (actualStartTime != null) {
+                                    double diff = new Date().getTime() - actualStartTime.getTime();
+
+                                    if (timeRemainingInMinute > 0) {
+                                        timeRemainingInMinute =
+                                            (int) (((diffInMinute * 60 * 1000) - diff) / (60 * 1000));
+                                        actualTimeTaken += (diffInMinute - timeRemainingInMinute);
+                                    } else {
+                                        actualTimeTaken += (diff / (60 * 1000));
+                                    }
+                                }
+                            } else {
+                                actualTimeTaken += userTaskActivityItem.getDurationInMinutes();
                             }
                         }
-                        if (actualStartTime != null) {
-                            double diff = new Date().getTime() - actualStartTime.getTime();
-                            diff = (diffInMinute * 60 * 1000) - diff;
-                            diffInMinute = (int) (diff / (60 * 1000));
-                        }
+                        taskItem.setActualTimeTaken(actualTimeTaken);
                     }
-
-                    taskItem.setTaskRemainingTime(diffInMinute);
+                    taskItem.setTaskRemainingTime(timeRemainingInMinute);
                     famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
 
                 } catch (Exception e) {

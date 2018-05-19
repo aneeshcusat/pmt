@@ -136,7 +136,6 @@ tr.clickable:hover {
 									<select class="form-control select" id="reportingSelectId">
 										<option value="default">Default</option>
 										<option value="format1">Format 1</opiton>
-										<option value="format2">Format 2</option>
 									</select>
 									</td>
 									<td width="70px"><a href="#" onclick="createReportingApplicationConfig()" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>

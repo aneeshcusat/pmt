@@ -75,6 +75,7 @@ public class FamstackXLSExportManager extends BaseFamstackManager
                     ExportProjectWorkerThread projectWorkerThred =
                         new ExportProjectWorkerThread(baseXLSExportProcessor, workbook, sheet, teamName,
                             exportDataList, dateString, employees);
+                    // workbook.setSheetName(0, dateString);
                     Future future = executorService.submit(projectWorkerThred);
                     futures.add(future);
 
@@ -86,7 +87,7 @@ public class FamstackXLSExportManager extends BaseFamstackManager
 
             }
 
-            if (!employeeUtilizationData.isEmpty()) {
+            if (!employeeUtilizationData.isEmpty() && !"default".equalsIgnoreCase(processorName)) {
                 logDebug("Getting employee utilization export processor");
                 FamstackXLSEmployeeUtilisationProcessor employeeUtilisationProcessor =
                     (FamstackXLSEmployeeUtilisationProcessor) exportProcessorMap.get("famstackEmpUtilisation");

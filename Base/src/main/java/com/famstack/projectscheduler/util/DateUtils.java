@@ -201,4 +201,28 @@ public final class DateUtils extends BaseFamstackService
         return (int) ((dateCal2.getTime().getTime() - dateCal1.getTime().getTime()) / (1000 * 60 * 60 * 24));
     }
 
+    public static int getWorkingDaysBetweenTwoDates(Date startDate, Date endDate)
+    {
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(startDate);
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(endDate);
+        int workDays = 0;
+        if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
+            return 0;
+        }
+        if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
+            startCal.setTime(endDate);
+            endCal.setTime(startDate);
+        }
+        do {
+            startCal.add(Calendar.DAY_OF_MONTH, 1);
+            if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
+                && startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                ++workDays;
+            }
+        } while (startCal.getTimeInMillis() < endCal.getTimeInMillis()); // excluding end date
+
+        return workDays;
+    }
 }

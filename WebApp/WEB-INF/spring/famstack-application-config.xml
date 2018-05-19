@@ -30,15 +30,11 @@
 	 <bean id="famstackUserActivityManager" class="com.famstack.projectscheduler.manager.FamstackUserActivityManager" init-method="initialize">
 	</bean>
 	
-	<bean id="famstackXLSExportProcessor11" class="com.famstack.projectscheduler.export.processors.FamstackXLSExportProcessor11">
-   		 <property name="maxThread" value="${report.maxThread}"/>
-   </bean>
-	
 	<bean id="famstackXLSExportManager" class="com.famstack.projectscheduler.manager.FamstackXLSExportManager">
 	<property name="exportProcessorMap">
 	   <map>
-		  <entry key="format1" value-ref="famstackXLSExportProcessor11"/>
-		  <entry key="format2" value-ref="famstackXLSExportProcessor2" />
+	   	  <entry key="default" value-ref="famstackXLSExportProcessorDefault"/>
+		  <entry key="format1" value-ref="famstackXLSExportProcessor1"/>
 		  <entry key="famstackEmpUtilisation" value-ref="famstackXLSEmployeeUtilisationProcessor" />
 		</map>
 	</property>

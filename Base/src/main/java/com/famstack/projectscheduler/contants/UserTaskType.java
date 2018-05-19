@@ -8,9 +8,10 @@ public enum UserTaskType
     PROJECT_HELPER_REVIEW,
     PROJECT_PARTIAL,
     EXTRATIME,
+    LEAVE,
     TRAINING,
     ADMIN,
     BD,
-    LEAVE,
-    MEETING;
+    MEETING,
+    OTHER;
 }
