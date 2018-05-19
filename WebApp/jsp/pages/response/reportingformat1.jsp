@@ -1,4 +1,4 @@
-
+D
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
@@ -10,17 +10,21 @@
 	<thead>
 		<tr>
 			<th>Delivery Date</th>
-			<th>Project code</th>
+			<th>Project Code</th>
 			<th>ID</th>
 			<th>PO ID</th>
+			<th>Analyst</th>
+			<th>Lead</th>
+			<th>Productivity Type</th>
+			<th>Project Type</th>
+			<th>Client BU</th>
+			<th>Client POC</th>
+			<th>Requestor</th>
 			<th>Project Name</th>
-			<th>Type</th>
-			<th>Category</th>
-			<th>Team</th>
-			<th>Sub Team</th>
-			<th>Client</th>
+			<th>Hours Spent</th>
+			<th>Utilization</th>
+			<th>Analyst Comment</th>
 			<th>Status</th>
-			<th>Project Duration</th>
 		</tr>
 	</thead>
 	<c:if test="${not empty projectData}">
@@ -52,14 +56,21 @@
 						target="_new">${project.code}</a></td>
 					<td>${project.id}</td>
 					<td>${project.PONumber}</td>
-					<td>${project.name}</td>
+					<td><c:forEach var="contributer"
+							items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if
+								test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if>
+						</c:forEach></td>
+					<td>${employeeMap[project.projectLead].firstName}</td>
 					<td>${project.type}</td>
 					<td>${project.category}</td>
-					<td>${project.teamName}</td>
-					<td>${project.subTeamName}</td>
+					<td>${project.accountName}</td>
 					<td>${project.clientName}</td>
-					<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
+					<td>${project.reporterName}</td>
+					<td>${project.name}</td>
 					<td>${project.actualDurationInHrs}</td>
+					<td></td>
+					<td></td>
+					<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
 				</tr>
 			</c:forEach>
 		</tbody>

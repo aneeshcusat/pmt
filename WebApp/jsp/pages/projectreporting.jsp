@@ -53,11 +53,13 @@
         								<input style="margin-left:10px" class="btn btn-default" type="button" onclick="getProjectReportingData('${param.format}');" value="Search"></input>
         							</div>
         							<div class="col-md-1" >
+        								<c:set var="reportFormat" value="${param.format}"/>
         								<c:if test="${not empty param.format  && (param.format eq 'format1' || param.format eq 'default')}">
         									<button onclick="exportReport('${param.format}')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
         								</c:if>
         								<c:if test="${empty param.format || (param.format ne 'format1' && param.format ne 'default')}">
         									<button onclick="exportReport('default')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
+        									<c:set var="reportFormat" value="default"/>
         								</c:if>
         							</div>
                                 </div>
@@ -110,7 +112,7 @@ var loadAllProjectDetails = function(daterange, format) {
 }
 $(function() {
     $('input[name="daterange"]').daterangepicker();
-    loadAllProjectDetails('${dateRange}','${param.format}');
+    loadAllProjectDetails('${dateRange}','${reportFormat}');
 });
 
 $(document).ready(function(){

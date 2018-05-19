@@ -19,12 +19,8 @@
 			<th>Team</th>
 			<th>Sub Team</th>
 			<th>Client</th>
-			<th>Est Duration (Hrs)</th>
-			<th>Project Duration (Hrs)</th>
-			<th>Task Duration (Hrs)</th>
-			<th>Assignee</th>
-			<th>Contributers</th>
 			<th>Status</th>
+			<th>Project Duration</th>
 		</tr>
 	</thead>
 	<c:if test="${not empty projectData}">
@@ -50,60 +46,21 @@
 	                  <c:if test="${project.status == 'COMPLETED' }">
 	                   		<c:set var="projectState" value="success"/>
 	                  </c:if>
-				<c:if test="${not empty project.projectTaskDeatils}">
-					<c:forEach var="projectTaskDetails"
-						items="${project.projectTaskDeatils}"
-						varStatus="projectTaskDetailsIndex">
-						<tr
-							<c:if test="${projectTaskDetailsIndex.index > 0}">
-				                              </c:if>>
-				            <td>${project.completionTime}</td>
-							<td><a href="${applicationHome}/project/${project.id}"
-								target="_new">${project.code}</a></td>
-							<td>${project.id}</td>
-							<td>${project.PONumber}</td>
-							<td>${project.name}</td>
-							<td>${project.type}</td>
-							<td>${project.category}</td>
-							<td>${project.teamName}</td>
-							<td>${project.subTeamName}</td>
-							<td>${project.clientName}</td>
-							<td>${project.durationHrs}</td>
-							<td>${project.actualDurationInHrs}</td>
-							<td>${projectTaskDetails.actualTimeTakenInHrs}</td>
-							<td>${userDetailsMap[projectTaskDetails.assignee].firstName}
-							</td>
-							<td><c:forEach var="contributer"
-									items="${project.contributers}" varStatus="contributerIndex">${userDetailsMap[contributer].firstName}<c:if
-										test="${contributerIndex.index < project.contributers.size() - 1}">,</c:if>
-								</c:forEach></td>
-
-							<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
-						</tr>
-
-					</c:forEach>
-				</c:if>
-				<c:if test="${empty project.projectTaskDeatils}">
-					<tr>
+				<tr>
 					<td>${project.completionTime}</td>
-						<td><a href="${applicationHome}/project/${project.id}"
-							target="_new">${project.code}</a></td>
-						<td>${project.id}</td>
-						<td>${project.PONumber}</td>
-						<td>${project.name}</td>
-						<td>${project.type}</td>
-						<td>${project.category}</td>
-						<td>${project.teamName}</td>
-						<td>${project.subTeamName}</td>
-						<td>${project.clientName}</td>
-						<td>${project.durationHrs}</td>
-						<td></td>
-						<td>${project.actualDurationInHrs}</td>
-						<td></td>
-						<td></td>
-						<td><span class="label label-${projectState}">${project.status}</span></td>
-					</tr>
-				</c:if>
+					<td><a href="${applicationHome}/project/${project.id}"
+						target="_new">${project.code}</a></td>
+					<td>${project.id}</td>
+					<td>${project.PONumber}</td>
+					<td>${project.name}</td>
+					<td>${project.type}</td>
+					<td>${project.category}</td>
+					<td>${project.teamName}</td>
+					<td>${project.subTeamName}</td>
+					<td>${project.clientName}</td>
+					<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>
+					<td>${project.actualDurationInHrs}</td>
+				</tr>
 			</c:forEach>
 		</tbody>
 	</c:if>
