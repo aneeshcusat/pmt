@@ -9,7 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
-import com.famstack.projectscheduler.export.processors.FamstackXLSExportProcessor11;
+import com.famstack.projectscheduler.export.processors.FamstackXLSExportProcessorDefault;
 
 public class ExportProjectDetailsWorkerThread implements Runnable
 {
@@ -22,7 +22,7 @@ public class ExportProjectDetailsWorkerThread implements Runnable
 
     int rowIndex;
 
-    FamstackXLSExportProcessor11 famstackXLSExportProcessor;
+    FamstackXLSExportProcessorDefault famstackXLSExportProcessor;
 
     CellStyle xssfCellTextWrapStyle;
 
@@ -30,7 +30,7 @@ public class ExportProjectDetailsWorkerThread implements Runnable
 
     Map<Integer, Integer> userProjectTotalHoursMap;
 
-    public ExportProjectDetailsWorkerThread(FamstackXLSExportProcessor11 famstackXLSExportProcessor,
+    public ExportProjectDetailsWorkerThread(FamstackXLSExportProcessorDefault famstackXLSExportProcessor,
         XSSFWorkbook workBook, Sheet sheet, int rowIndex, ProjectDetails projectDetails,
         Map<Integer, Integer> userProjectTotalHoursMap, CellStyle xssfCellTextWrapStyle, List<EmployeeDetails> employees)
     {
@@ -47,8 +47,9 @@ public class ExportProjectDetailsWorkerThread implements Runnable
     @Override
     public void run()
     {
-        famstackXLSExportProcessor.createProjectDetailsRow(workBook, sheet, rowIndex, projectDetails,
-            userProjectTotalHoursMap, employees, xssfCellTextWrapStyle);
-    }
+        /*
+         * famstackXLSExportProcessor.createProjectDetailsRow(workBook, sheet, rowIndex, projectDetails,
+         * userProjectTotalHoursMap, employees, xssfCellTextWrapStyle);
+         */}
 
 }
