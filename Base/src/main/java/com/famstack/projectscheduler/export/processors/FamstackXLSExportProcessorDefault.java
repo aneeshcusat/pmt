@@ -164,29 +164,29 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         Row utilizationRow = sheet.getRow(rowCount + 4);
         Row availableHrsRow = sheet.getRow(rowCount + 5);
         Row totalHrsRow = sheet.getRow(rowCount + 6);
-        int columnNumber = 1;
+        int columnNumber = 11;
 
         for (EmployeeDetails employeeDetails : employees) {
-            Cell totalUserProjectHoursCell = getCell(totalUserProjectHoursRow, columnNumber + 9);
+            Cell totalUserProjectHoursCell = getCell(totalUserProjectHoursRow, columnNumber);
             totalUserProjectHoursCell.setCellStyle(xssfCellProjectTotalStyle);
 
-            String cellLetter = CellReference.convertNumToColString(columnNumber + 9);
+            String cellLetter = CellReference.convertNumToColString(columnNumber);
             String strFormula = "SUM(" + cellLetter + 7 + ":" + cellLetter + rowCount + ")";
             totalUserProjectHoursCell.setCellType(CellType.FORMULA);
             totalUserProjectHoursCell.setCellFormula(strFormula);
 
-            Cell holidayCell = getCell(holidayRow, columnNumber + 9);
+            Cell holidayCell = getCell(holidayRow, columnNumber);
             holidayCell.setCellStyle(xssfCellProjectTaskHrsStyle);
             holidayCell.setCellValue(convertToActualTimeString(holidayHours * 60));
 
-            Cell leaveCell = getCell(leaveRow, columnNumber + 9);
+            Cell leaveCell = getCell(leaveRow, columnNumber);
             leaveCell.setCellStyle(xssfCellProjectTaskHrsStyle);
 
-            Cell availableHrsCell = getCell(availableHrsRow, columnNumber + 9);
+            Cell availableHrsCell = getCell(availableHrsRow, columnNumber);
             availableHrsCell.setCellStyle(xssfCellProjectTaskHrsStyle);
             availableHrsCell.setCellValue(convertToActualTimeString(availableWorkingDayHours * 60));
 
-            Cell totalHrsCell = getCell(totalHrsRow, columnNumber + 9);
+            Cell totalHrsCell = getCell(totalHrsRow, columnNumber);
             totalHrsCell.setCellStyle(xssfCellProjectTaskHrsStyle);
             totalHrsCell.setCellValue(convertToActualTimeString(availableWorkingDayHours * 60));
             strFormula =
@@ -194,7 +194,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             totalHrsCell.setCellType(CellType.FORMULA);
             totalHrsCell.setCellFormula(strFormula);
 
-            Cell excessWorkingHrsCell = getCell(excessWorkingHrsRow, columnNumber + 9);
+            Cell excessWorkingHrsCell = getCell(excessWorkingHrsRow, columnNumber);
             excessWorkingHrsCell.setCellStyle(xssfCellProjectTaskHrsStyle);
             strFormula =
                 "IF(" + cellLetter + (totalUserProjectHoursRow.getRowNum() + 1) + "-" + cellLetter
@@ -203,7 +203,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             excessWorkingHrsCell.setCellType(CellType.FORMULA);
             excessWorkingHrsCell.setCellFormula(strFormula);
 
-            Cell utilizationCell = getCell(utilizationRow, columnNumber + 9);
+            Cell utilizationCell = getCell(utilizationRow, columnNumber);
             xssfCellUtilizationStyle.setDataFormat(workBook.createDataFormat().getFormat("0.00"));
             utilizationCell.setCellStyle(xssfCellUtilizationStyle);
             strFormula =
@@ -212,13 +212,13 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             utilizationCell.setCellType(CellType.FORMULA);
             utilizationCell.setCellFormula(strFormula);
 
-            sheet.autoSizeColumn(columnNumber + 9);
+            sheet.autoSizeColumn(columnNumber);
             columnNumber++;
         }
 
-        Cell projectGrandTotalCell = getCell(totalUserProjectHoursRow, columnNumber + 10);
+        Cell projectGrandTotalCell = getCell(totalUserProjectHoursRow, columnNumber);
         projectGrandTotalCell.setCellStyle(xssfCellProjectGrandTotalStyle);
-        String cellLetter = CellReference.convertNumToColString(columnNumber + 10);
+        String cellLetter = CellReference.convertNumToColString(columnNumber);
         String strFormula = "SUM(" + cellLetter + 7 + ":" + cellLetter + rowCount + ")";
         projectGrandTotalCell.setCellType(CellType.FORMULA);
         projectGrandTotalCell.setCellFormula(strFormula);
@@ -234,8 +234,8 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             sheet.shiftRows(rowCount, sheet.getLastRowNum() + 1, 1, true, true);
             Row nonBillableItemRow = getRow(sheet, rowCount++);
 
-            createProjectDetailsColoumn(sheet, 5, "NON_BILLABLE", nonBillableItemRow, xssfCellTextWrapStyle);
-            createProjectDetailsColoumn(sheet, 6, "Category", nonBillableItemRow, xssfCellTextWrapStyle);
+            createProjectDetailsColoumn(sheet, 6, "NON_BILLABLE", nonBillableItemRow, xssfCellTextWrapStyle);
+            createProjectDetailsColoumn(sheet, 7, "Category", nonBillableItemRow, xssfCellTextWrapStyle);
 
             List<Integer> employeeIndexList = getEmployeeIndexList(employees);
 
@@ -252,7 +252,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         CellStyle xssfCellProjectTotalStyle, CellStyle xssfCellProjectTaskHrsStyle)
     {
         if (projectDetails != null) {
-            int projectDetailsUserColumnCount = 10;
+            int projectDetailsUserColumnCount = 11;
             sheet.shiftRows(projectDetailsRowCount, sheet.getLastRowNum() + 1, 1, true, true);
             Row projectDetailsRow = getRow(sheet, projectDetailsRowCount);
             Map<Integer, Map<Integer, Integer>> taskUserActualTimeMap = getProjectTaskDuration(projectDetails);
@@ -266,11 +266,13 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
 
             createProjectDetailsColoumn(sheet, 3, projectDetails.getPONumber(), projectDetailsRow, textWrapStyle);
             createProjectDetailsColoumn(sheet, 4, projectDetails.getName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 5, projectDetails.getType().toString(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 6, projectDetails.getCategory(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 7, projectDetails.getTeamName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 8, projectDetails.getSubTeamName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 9, projectDetails.getClientName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 5, projectDetails.getStatus().toString(), projectDetailsRow,
+                textWrapStyle);
+            createProjectDetailsColoumn(sheet, 6, projectDetails.getType().toString(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 7, projectDetails.getCategory(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 8, projectDetails.getTeamName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 9, projectDetails.getSubTeamName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 10, projectDetails.getClientName(), projectDetailsRow, textWrapStyle);
 
             if (!taskUserActualTimeMap.isEmpty()) {
 
@@ -293,7 +295,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
                 }
             }
 
-            createProjectSumFunctionCell(projectDetailsRow, projectDetailsUserColumnCount + employees.size() + 1,
+            createProjectSumFunctionCell(projectDetailsRow, projectDetailsUserColumnCount + employees.size(),
                 xssfCellProjectTotalStyle);
 
             /*
@@ -414,10 +416,10 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         if (employees != null) {
             userRow.getCell(1).setCellValue(employees.size());
             for (EmployeeDetails employeeDetails : employees) {
-                Cell userHeaderCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 9);
+                Cell userHeaderCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 10);
                 userHeaderCell.setCellValue(employeeDetails.getFirstName());
                 userHeaderCell.setCellStyle(xssfCellUserHeaderStyle);
-                sheet.autoSizeColumn(userDetailsColumnCount + 9);
+                sheet.autoSizeColumn(userDetailsColumnCount + 10);
                 userDetailsColumnCount++;
             }
 
