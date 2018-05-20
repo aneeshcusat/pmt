@@ -1148,6 +1148,12 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
 		isError = true;
 	}
 	
+	var estCompleteTimeDate = new Date(projectEndTime);
+	var estimatedStartTimeDate = new Date(projectStartTime);
+	if(estCompleteTimeDate < estimatedStartTimeDate){
+		isError = true;
+	}
+	
 	var taskDurationIntValue = 0;
 	$("#projectTaskCloneDIv"+projectId+" .taskCloneAssignee").removeClass("error");
 	$("#projectTaskCloneDIv"+projectId+" .tskDuration").removeClass("error");
