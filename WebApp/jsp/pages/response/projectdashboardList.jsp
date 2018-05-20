@@ -11,16 +11,18 @@
 			  <thead>
 			        <tr>
 			        	<th width="1%"></th>
-			        	<th width="10%">Delivery Date</th>
-			        	<th width="20%">Project Name</th>
+			        	<th width="7%">Created Date</th>
+			        	<th width="10%">Delivery Time</th>
+			        	<th width="15%">Project Name</th>
 			        	<th width="10%">Account</th>
 			        	<th width="8%">Team</th>
 			        	<th width="8%">Sub Team</th>
 			        	<th width="10%">Assignees</th>
 			        	<th width="5%">Tasks</th>
-			        	<th width="10%">Status</th>
-			        	<th width="6%">Time Taken Hrs</th>
-			        	<th width="20%">
+			        	<th width="5%">Status</th>
+			        	<th width="6%">Time Taken</th>
+			        	<th width="5%">Est Hrs</th>
+			        	<th width="18%">
 			        	<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN'}">
 			        	<span class="dropdown">
 					          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></a>
@@ -80,6 +82,7 @@
 	                  </c:if>
 			        <tr class="clickable projectData ${project.id} <c:if test='${project.deleted == true }'>archived</c:if>" id="projectData${project.id}" data-projectId="${project.id}"  style="">
 			            <td  onclick="loadDuplicateProjects(${project.id}, '${project.code}', false)" data-toggle="collapse" data-target=".projectData${project.id}"><i id="projectOpenLink${project.id}" style="color: blue" class="fa fa-chevron-right 2x"></i></td>
+			            <td>${project.createdTime}</td>
 			            <td>${project.completionTime}</td>
 			            <td style=" word-wrap:break-word"><a href="${applicationHome}/project/${project.id}">${project.name}</a></td>
 			            <td>${project.accountName}</td>
@@ -104,6 +107,7 @@
 			            
 			          	<td><span class="label label-${projectState}" style="${statusColor}">${project.status}</span></td>  
 			            <td>${project.actualDurationInHrs}</td>
+			            <td>${project.durationHrs}</td>
 			            <td>
 							<a href="#" style="margin-right: 7px;color:darkgreen"  title="Edit this project"  data-toggle="modal" data-target="#createprojectmodal" 
 								onclick="loadProjectForUpdate('${project.id}')">
@@ -134,17 +138,17 @@
 						</td>
 			        </tr>
 					<tr class="collapse projectDataHidden projectData${project.id}">
-					<td colspan="11" style="width: 100%; border-bottom:1px dotted gray">
+					<td colspan="13" style="width: 100%; border-bottom:1px dotted gray">
 						<span class="duplicateTxt">Quick Project Cloning</span>
 					</td>
 					</tr>
 					
 					 <tr class=" collapse projectDataHidden projectData${project.id}" style="background-color: white">
-						<td colspan="11">
+						<td colspan="13">
 							<table style="width: 100%" class="table" id="projectDetails${project.id}">
 							<tbody>
 							<tr class="collapse projectDataHidden projectData${project.id}">
-	        			<td colspan="11">
+	        			<td colspan="13">
 	        				<!-- task creator start -->
 	        				<div class="col-xs-12">
 									<div class="row">

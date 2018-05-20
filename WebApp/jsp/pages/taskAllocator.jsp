@@ -221,7 +221,7 @@ table tr td.markable span {
                 <th>20:01 - 21:00</th>
                 <th style="width: 50px;font-weight:bold">Total Hrs</th>
                 <th style="width: 50px;font-weight:bold">Avlbl Hrs</th>
-                 <th style="width: 10px">Helper</th>
+                 <th style="width: 10px">Collaborators</th>
             </tr>
         </thead>
         <tbody>
@@ -271,7 +271,7 @@ table tr td.markable span {
 					</tr>
 					<tr>
 						<td><span style="background-color: rgb(250, 128, 114);">PH</span></td>
-						<td>Project Helper Task</td>
+						<td>Project Collaborator Task</td>
 					</tr>
 				</table>
 			</td>
@@ -283,7 +283,7 @@ table tr td.markable span {
 					</tr>
 					<tr>
 						<td><span style="background-color: rgb(250, 128, 114);">PRH</span></td>
-						<td>Project Review Task helper</td>
+						<td>Project Review Task Collaborator</td>
 					</tr>
 					
 				</table>

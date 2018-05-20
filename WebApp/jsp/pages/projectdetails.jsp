@@ -598,7 +598,7 @@ width: 60%;
 	        <li>Duration : <b><span id="popup-duration"></span> Hours</b></li>
 	        <li>Time Taken : <b><span id="popup-timeTaken"></span> Hours</b></li>
 	        <li>Assignee : <b><span id="popup-assigneeName"></span></b></li>
-	        <li>Helpers : <b><span id="popup-HelperName"></span></b></li>
+	        <li>Collaborators : <b><span id="popup-HelperName"></span></b></li>
 	        <li>Task Type : <b><span id="popup-projectTaskType"></span></b></li>
 	        <li>Priority : <b><span id="popup-priority"></span></b></li>
 	    </ul>
@@ -739,12 +739,21 @@ width: 60%;
 var clearTaskDetails = function(){
 	getAssignJsonData();
     $("#taskId").val("");
-	$("#estStartTime").val("${projectDetails.startTime}");
+    var taskDate = new Date();
+	var projectEndDate = new Date('${projectDetails.completionTime}');
+    console.log(" date " + projectEndDate);
+	if (taskDate < projectEndDate){
+		$("#estStartTime").val(getTodayDate(new Date()) + " 08:00");
+	} else {
+		$("#estStartTime").val(getTodayDate(new Date("${projectDetails.completionTime}")) + " 08:00");
+	}
 	$("#estCompleteTime").html("${projectDetails.completionTime}");
 	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
 	$("#projectDuration").html(${projectDetails.durationHrs});
  	$("#taskDuration").html(${projectDetails.unAssignedDuration});
 	$("#taskName").val("${projectDetails.category}");
+	$("#taskcategory").val("${projectDetails.category}");
+	$('#taskcategory').selectpicker('refresh');
 	$("#description").val("");
 	$("#projectTaskType").prop("selectedIndex", 0);
 	$("#priority").prop("selectedIndex", 0);
@@ -763,6 +772,12 @@ var clearTaskDetails = function(){
 	resetAssignTable();
 	$('input:radio[name=assigneeId]').each(function () { $(this).prop('checked', false); });
 }    
+
+$("#taskcategory").on("change",function(){
+	if($("#taskcategory").prop("selectedIndex") > 0) {
+		$("#taskName").val($(this).val());
+	}
+});
 
 var createTaskDurationList = function(duration){
 	 $("#duration").html("");

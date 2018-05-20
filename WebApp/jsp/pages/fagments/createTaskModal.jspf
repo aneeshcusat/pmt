@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="projectCategories" value="${applicationScope.applicationConfiguraion.projectCategories}"/>
 <div class="row">
 <form:input type="hidden" id="projectId" path="projectId" value="${projectDetails.id}"/>
 <form:input type="hidden" id="taskId" path="taskId"/>
@@ -90,6 +91,30 @@
                           </form:select>
                      </div>
 				</div>
+				<div class="form-group">                                        
+                    <label class="col-md-2 control-label">Task Category</label>
+                     <div class="col-md-10">  
+                        <select class="form-control select" id="taskcategory" data-live-search="true">
+                            <option value="">- select -</option>
+                            <c:if test="${not empty projectCategories }">
+                            <c:forEach var="projectCategoryConf" items="${projectCategories}">
+                             <option value="${projectCategoryConf.value}">${projectCategoryConf.name}</option>
+                            </c:forEach>
+                            </c:if>
+                            <c:if test="${empty projectCategories}">
+                             <option>Conceptualization/High-end</option>
+                             <option>Collaterals</option>
+                             <option>Dashboard</option>
+                             <option>Document support (Ms Word/MS Excel)</option> 
+                             <option>Formatting/Templatizing Document</option>
+                             <option>Infographics</option>
+                             <option>Motion Graphics</option>
+                             <option>Reporting</option>
+                             <option>UI/UX</option>
+                            </c:if>
+                        </select>
+                    </div>
+                </div>
 				
 				<div class="form-group" id="assigneeSelectId">
 				<label class="col-md-2 control-label">Assignee</label>
@@ -133,7 +158,7 @@
                 <th>20:01 - 21:00</th>
                 <th style="width: 50px;font-weight:bold">Total Hrs</th>
                 <th style="width: 50px;font-weight:bold">Avlbl Hrs</th>
-                 <th style="width: 10px">Helper</th>
+                 <th style="width: 10px">Collaborators</th>
             </tr>
         </thead>
         <tbody>

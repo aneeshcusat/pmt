@@ -611,4 +611,9 @@ public class ProjectDetails
     {
         this.durationHrs = durationHrs;
     }
+
+    public String getCreatedTime()
+    {
+        return DateUtils.format(createdDate, DateUtils.DATE_FORMAT_CALENDER);
+    }
 }
