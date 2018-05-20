@@ -250,6 +250,21 @@ public class FamstackProjectManager extends BaseFamstackManager
         return (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class);
     }
 
+    public ProjectItem getLatestProjectByCode(String projectCode)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("projectCode", projectCode);
+
+        List<?> projectItemList =
+            famstackDataAccessObjectManager.executeAllGroupQuery(HQLStrings.getString("getProjectTobeRecurring"),
+                dataMap);
+
+        if (projectItemList.size() > 0) {
+            return (ProjectItem) projectItemList.get(0);
+        }
+        return null;
+    }
+
     public void createProjectTask(TaskDetails taskDetails)
     {
         ProjectItem projectItem = getProjectItemById(taskDetails.getProjectId());
@@ -537,7 +552,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         dataMap.put("projectId", projectId);
 
         List<?> projectItemList =
-            famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("getProjectItemsByCode"), dataMap);
+            famstackDataAccessObjectManager.executeQueryOrderedBy(HQLStrings.getString("getProjectItemsByCode"),
+                dataMap, HQLStrings.getString("getProjectItemsByCode-OrderBy"));
+
         getProjectsList(projectDetailsList, projectItemList, false, includeArchive);
         return projectDetailsList;
     }
@@ -955,15 +972,14 @@ public class FamstackProjectManager extends BaseFamstackManager
             recurringProjectItem = new RecurringProjectItem();
         }
 
-        Timestamp lastRun = recurringProjectItem.getLastRun();
-        Date nextRun = FamstackUtils.getNextRunFromCron(cronExpression, lastRun);
+        Date nextRun = FamstackUtils.getNextRunFromCron(cronExpression, new Date());
 
         String newCronExpression = cronExpression;
         if (cronExpression.contains("#")) {
             String secondCronExpression =
                 cronExpression.contains("#1") ? cronExpression.replace("#1", "#3") : cronExpression.contains("#2")
                     ? cronExpression.replace("#2", "#4") : "";
-            Date nextRun2 = FamstackUtils.getNextRunFromCron(secondCronExpression, lastRun);
+            Date nextRun2 = FamstackUtils.getNextRunFromCron(secondCronExpression, new Date());
 
             if (nextRun.after(nextRun2)) {
                 nextRun = nextRun2;
@@ -1010,10 +1026,10 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("recurringProjectItems :" + recurringProjectItems);
         if (recurringProjectItems != null) {
             for (RecurringProjectItem recurringProjectItem : recurringProjectItems) {
-                int projectId = recurringProjectItem.getProjectId();
+                String projectCode = recurringProjectItem.getProjectCode();
 
-                ProjectItem projectItem = getProjectItemById(projectId);
-                logDebug("recurring Project id :" + projectId);
+                ProjectItem projectItem = getLatestProjectByCode(projectCode);
+                logDebug("recurring Project code :" + projectCode);
                 if (projectItem != null) {
                     Timestamp projectStartTime = getNewTimeForDuplicate(projectItem.getStartTime());
 
