@@ -45,3 +45,6 @@ update task_info set priority='HIGH' where priority='HIGHT';
 update user_task_activity_info utai set task_act_category="Business Development", type="OTHER" where type="BD";
 update user_task_activity_info utai set task_act_category="Training", type="OTHER" where type="TRAINING";
 update user_task_activity_info utai set task_act_category="Admin", type="OTHER" where type="ADMIN";
+
+update user_task_activity_info utai set task_act_category="Leave" where type="LEAVE";
+update user_task_activity_info utai set task_act_category="Meeting" where type="MEETING";

@@ -38,7 +38,7 @@ public class FamstackScheduler extends BaseFamstackService
     @Async
     public void scheduleJob()
     {
-        logDebug("Running scheduleJob scheduler");
+        logInfo("Running scheduleJob scheduler");
         userTaskStatusRefresh();
         creatingRecurringProjects();
         checkProjectDeadlineMissed();
