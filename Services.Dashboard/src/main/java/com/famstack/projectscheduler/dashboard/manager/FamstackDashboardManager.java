@@ -831,8 +831,8 @@ public class FamstackDashboardManager extends BaseFamstackService
         return taskOwners;
     }
 
-    public void createNonBillableTask(int userId, String type, String startDateString, String endDateString,
-        String comments)
+    public void createNonBillableTask(int userId, String type, String taskActCategory, String startDateString,
+        String endDateString, String comments)
     {
         Date startTime = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
         Date endTime = DateUtils.tryParse(endDateString, DateUtils.DATE_TIME_FORMAT);
@@ -864,9 +864,10 @@ public class FamstackDashboardManager extends BaseFamstackService
             }
 
             String taskName =
-                durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + type + " " + comments;
+                durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + taskActCategory + " "
+                    + comments;
             famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName,
-                durationInMinutes, UserTaskType.valueOf(type), ProjectType.NON_BILLABLE, comments);
+                durationInMinutes, UserTaskType.valueOf(type), taskActCategory, ProjectType.NON_BILLABLE, comments);
 
             Calendar cal = Calendar.getInstance();
             cal.setTime(startTime);

@@ -45,6 +45,9 @@ public class UserTaskActivityItem implements FamstackBaseItem
     @Column(name = "type")
     private UserTaskType type;
 
+    @Column(name = "task_act_category")
+    private String taskActCategory;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "project_type")
     private ProjectType projectType;
@@ -275,6 +278,16 @@ public class UserTaskActivityItem implements FamstackBaseItem
     public void setUserGroupId(String userGroupId)
     {
         this.userGroupId = userGroupId;
+    }
+
+    public String getTaskActCategory()
+    {
+        return taskActCategory;
+    }
+
+    public void setTaskActCategory(String taskActCategory)
+    {
+        this.taskActCategory = taskActCategory;
     }
 
 }

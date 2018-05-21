@@ -130,7 +130,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         if (userTaskActivityItemOld == null) {
             famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(),
                 projectItem.getStartTime(), taskItemNew.getTaskId(), taskItemNew.getName(), durationNewMinutes,
-                UserTaskType.EXTRATIME, projectItem.getType(), taskDetails.getDescription());
+                UserTaskType.EXTRATIME, null, projectItem.getType(), taskDetails.getDescription());
         } else {
             userTaskActivityItemOld.setDurationInMinutes(durationNewMinutes);
             userTaskActivityItemOld.setTaskName(taskDetails.getName());
@@ -238,8 +238,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
 
         famstackUserActivityManager.createUserActivityItem(newUserId, startDate, taskDetails.getTaskId(), taskDetails
-            .getName(), durationInMinutes, currentUserTaskActivityItem.getType(), taskItem.getProjectItem().getType(),
-            null);
+            .getName(), durationInMinutes, currentUserTaskActivityItem.getType(), null, taskItem.getProjectItem()
+            .getType(), null);
 
         taskItem.setStatus(TaskStatus.ASSIGNED);
         taskItem.setAssignee(newUserId);
@@ -275,7 +275,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             famstackUserActivityManager.createUserActivityItem(taskDetails.getAssignee(), startDate, taskDetails
                 .getTaskId(), taskDetails.getName(), taskDetails.getDuration() * 60,
                 taskDetails.getProjectTaskType() == ProjectTaskType.REVIEW ? UserTaskType.PROJECT_REVIEW
-                    : UserTaskType.PROJECT, projectType, userGroupId);
+                    : UserTaskType.PROJECT, null, projectType, userGroupId);
         }
 
         logDebug("helpers :" + taskDetails.getHelper());
@@ -284,7 +284,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                 famstackUserActivityManager.createUserActivityItem(helperId, startDate, taskDetails.getTaskId(),
                     taskDetails.getName(), taskDetails.getDuration() * 60,
                     taskDetails.getProjectTaskType() == ProjectTaskType.REVIEW ? UserTaskType.PROJECT_HELPER_REVIEW
-                        : UserTaskType.PROJECT_HELPER, projectType, userGroupId);
+                        : UserTaskType.PROJECT_HELPER, null, projectType, userGroupId);
             }
         }
     }

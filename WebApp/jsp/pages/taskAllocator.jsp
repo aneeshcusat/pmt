@@ -308,25 +308,13 @@ table tr td.markable span {
 						<td>Meeting</td>
 					</tr>
 					<tr>
-						<td><span style="background-color: rgb(0, 139, 139);">ADM</span></td>
-						<td>Admin Task</td>
+						<td><span style="background-color: rgb(0, 139, 139);">OTH</span></td>
+						<td>Other Non Billable</td>
 					</tr>
 					
 				</table>
 			</td>
-
-			<td>
-				<table>
-					<tr>
-						<td><span style="background-color: rgb(0, 139, 139);">BD</span></td>
-						<td>Business Developement</td>
-					</tr>
-					<tr>
-						<td><span style="background-color: rgb(0, 139, 139);">T</span></td>
-						<td>Training</td>
-					</tr>
-				</table>
-			</td>
+			
 			<td>
 				<table>
 					<tr>
@@ -967,15 +955,9 @@ var fillTableFromJson = function(){
 						cellTaskType = "PRA";
 					}else if (elem.userTaskType == "EXTRATIME") {
 						cellTaskType = "PET";
-					} else if (elem.userTaskType == "ADMIN") {
+					} else if (elem.userTaskType == "OTHER") {
 						cellStausColor = "rgb(0, 139, 139)";
-						cellTaskType = "ADM";
-					} else if (elem.userTaskType == "BD") {
-						cellStausColor = "rgb(0, 139, 139)";
-						cellTaskType = "BD";
-					} else if (elem.userTaskType == "TRAINING") {
-						cellStausColor = "rgb(0, 139, 139)";
-						cellTaskType = "T";
+						cellTaskType = "OTH";
 					}
 					
 					if ($(cellId).attr("data-taskId") == elem.taskId) {

@@ -33,6 +33,8 @@ public class TaskActivityDetails
 
     private UserTaskType userTaskType;
 
+    private String taskActCategory;
+
     private String inprogressComment;
 
     private String completionComment;
@@ -277,5 +279,15 @@ public class TaskActivityDetails
     public static void main(String[] args)
     {
         System.out.println(new Date(Long.parseLong("1516156200000")));
+    }
+
+    public String getTaskActCategory()
+    {
+        return taskActCategory;
+    }
+
+    public void setTaskActCategory(String taskActCategory)
+    {
+        this.taskActCategory = taskActCategory;
     }
 }

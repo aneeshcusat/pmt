@@ -1470,15 +1470,9 @@ var fillTableFromJson = function(){
 						cellTaskType = "PRA";
 					}else if (elem.userTaskType == "EXTRATIME") {
 						cellTaskType = "PET";
-					} else if (elem.userTaskType == "ADMIN") {
+					} else if (elem.userTaskType == "OTHER") {
 						cellStausColor = "rgb(0, 139, 139)";
-						cellTaskType = "ADM";
-					} else if (elem.userTaskType == "BD") {
-						cellStausColor = "rgb(0, 139, 139)";
-						cellTaskType = "BD";
-					} else if (elem.userTaskType == "TRAINING") {
-						cellStausColor = "rgb(0, 139, 139)";
-						cellTaskType = "T";
+						cellTaskType = "OTH";
 					}
 					if ($(cellId).attr("data-taskId") == elem.taskId) {
 						$(cellId).find("span").css("margin-left","");

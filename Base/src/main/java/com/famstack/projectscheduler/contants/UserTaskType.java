@@ -9,9 +9,6 @@ public enum UserTaskType
     PROJECT_PARTIAL,
     EXTRATIME,
     LEAVE,
-    TRAINING,
-    ADMIN,
-    BD,
     MEETING,
     OTHER;
 }

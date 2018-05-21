@@ -130,7 +130,20 @@ var createUnbillableTask = function(){
 		return;
 	}
     
-	var dataString = {userId:$("#userId").val(),type:$("#taskType").val(),startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
+	var taskType = $("#taskType").val();
+	var taskActCategory = "";
+	
+	if (taskType == "LEAVE"){
+		taskActCategory = "Leave";
+		
+	} else if (taskType == "MEETING"){
+		taskActCategory = "Meeting";
+	} else {
+		taskActCategory = taskType;
+		taskType = "OTHER";
+	}
+	
+	var dataString = {userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
 	doAjaxRequest("POST", "${applicationHome}/createNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){

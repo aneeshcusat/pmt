@@ -170,6 +170,12 @@ public class FamstackDashboardController extends BaseFamstackService
         return new ModelAndView("response/appConfigProjectCategories");
     }
 
+    @RequestMapping("/appConfigNonBillableCategories")
+    public ModelAndView appConfigNonBillableCategories(Model model)
+    {
+        return new ModelAndView("response/appConfigNonBillableCategories");
+    }
+
     @RequestMapping(value = "/sendMail", method = RequestMethod.GET)
     @ResponseBody
     public String sendMail(@RequestParam("subject") String subject, @RequestParam("body") String body)

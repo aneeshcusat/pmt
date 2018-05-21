@@ -392,8 +392,18 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     public List<AppConfValueDetails> getProjectCategories()
     {
+        return getCategories("projectCategory");
+    }
+
+    public List<AppConfValueDetails> getNonBillableCategories()
+    {
+        return getCategories("nonBillableCategory");
+    }
+
+    public List<AppConfValueDetails> getCategories(String type)
+    {
         List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
-        String projectCategoryId = "projectCategory" + getCurrentUserGroupId();
+        String projectCategoryId = type + getCurrentUserGroupId();
         if (appConfigMap != null) {
             AppConfDetails appConfigDetails = appConfigMap.get(projectCategoryId);
 

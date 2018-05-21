@@ -1,6 +1,5 @@
 <%@include file="includes/header.jsp" %>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
-
 <style>
 .backgroundColor{
 background-color: lightblue;
@@ -74,8 +73,11 @@ tr.clickable:hover {
 				   	 <tr class="clickable">
 				   		<td colspan="2"><a href="#tab2" onclick="refreshProjectCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Categories</a></td>
 				   	</tr>
+				   	 <tr class="clickable">
+				   		<td colspan="2"><a href="#tab3" onclick="refreshNonBillableCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Non-billable Categories</a></td>
+				   	</tr>
 				   	<tr class="clickable">
-				   		<td colspan="2"><a href="#tab3" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Reports</a></td>
+				   		<td colspan="2"><a href="#tab4" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Reports</a></td>
 				   	</tr>
 			   	 	</tbody>
 			     </table>
@@ -112,7 +114,7 @@ tr.clickable:hover {
 								<tr style="font-weight: bold">
 									<th>Project Type</th>
 									<th width="70px" style="text-align: center"><a
-										data-toggle="modal" data-target="#createAppModel"
+										data-toggle="modal" data-target="#createAppModel"  onclick="setAppConfigAction('createProjectCategory();')"
 										parentid="0"><i
 											class="fa fa-plus fa-2x" aria-hidden="true"
 											style="color: #95b75d;float:right"></i></a></th>
@@ -123,7 +125,26 @@ tr.clickable:hover {
 							    </tbody>
 						</table>
 					</div>
-					<div class='row tab-pane ' id="tab3">
+					
+					<div class='row tab-pane' id="tab3">
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th>Non-Billable Type</th>
+									<th width="70px" style="text-align: center"><a
+										data-toggle="modal" data-target="#createAppModel" onclick="setAppConfigAction('createNonBillableCategory();')"
+										parentid="0"><i
+											class="fa fa-plus fa-2x" aria-hidden="true"
+											style="color: #95b75d;float:right"></i></a></th>
+								</tr>
+							<thead>
+								<tbody id="nonBillableCategoryDiv">
+									<%@include file="response/appConfigNonBillableCategories.jsp"%>
+							    </tbody>
+						</table>
+					</div>
+					
+					<div class='row tab-pane ' id="tab4">
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
@@ -158,7 +179,7 @@ tr.clickable:hover {
                          aria-label="Close">
                      <span aria-hidden="true">&times;</span>
                  </button>
-                 <h4 class="modal-title" id="myModalLabel">Project Category</h4>
+                 <h4 class="modal-title" id="myModalLabel">Category Type</h4>
              </div>
              <div class="modal-body">
                  <%@include file="fagments/createAppConfModal.jspf" %>
@@ -184,12 +205,24 @@ tr.clickable:hover {
   <c:forEach var="projectReportingConf" items="${appConfigMap[projectReporting].appConfValueDetails}">
   	 <script type="text/javascript">
   	 	$("#reportingSelectId").val('${projectReportingConf.value}');
-  	 	$("#reportingSelectId").refresh();
+  	 	//$("#reportingSelectId").refresh();
   	 </script>
   </c:forEach>
   </c:if>
  
  <script type="text/javascript">
+ 
+ function setAppConfigAction(callbackFunctionName){
+	 $("#createOrUpdateId").attr("onclick",callbackFunctionName);
+ }
+ 
+ function createProjectCategory(){
+	 createApplicationConfig('projectCategory');
+ }
+
+ function createNonBillableCategory(){
+	 createApplicationConfig('nonBillableCategory');
+ }
  
  function deleteApplicationConfigVal(name, id, type){
 		$(".msgConfirmText").html("Delete " + type);
@@ -203,6 +236,7 @@ tr.clickable:hover {
 	 var dataString = {input1: input1, input2: input1,type: type};
 	 doAjaxRequest("POST", "${applicationHome}/createAppConfValue", dataString ,function(data) {
 		 refreshProjectCategory();
+		 refreshNonBillableCategory();
 		 $('#createAppModel').modal('hide');
 	    },function(error) {
 	    	famstacklog("ERROR: ", error);
@@ -214,7 +248,6 @@ tr.clickable:hover {
 	 var type = "reporting";
 	 var dataString = {input1: input1, input2: input1,type: type};
 	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
-		 refreshProjectCategory();
 		 $('#createAppModel').modal('hide');
 	    },function(error) {
 	    	famstacklog("ERROR: ", error);
@@ -228,6 +261,7 @@ tr.clickable:hover {
          var responseJson = JSON.parse(data);
          if (responseJson.status){
         	 refreshProjectCategory();
+        	 refreshNonBillableCategory();
          }
          $(".message-box").removeClass("open");
      }, function(e) {
@@ -242,6 +276,16 @@ tr.clickable:hover {
 	        famstacklog("ERROR: ", e);
 	    }, false);
  }
+ 
+ function refreshNonBillableCategory(){
+	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfigNonBillableCategories", {}, function(data) {
+	        $("#nonBillableCategoryDiv").html(data);
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	    }, false);
+ }
+ 
+ 
  
  $(document).ready(function(){
 		/* MESSAGE BOX */

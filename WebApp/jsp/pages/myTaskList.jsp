@@ -529,12 +529,24 @@ var createUnbillableTask = function(){
 		return;
 	}
     
-	var dataString = {userId:$("#userId").val(),type:$("#taskType").val(),startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
+	var taskType = $("#taskType").val();
+	var taskActCategory = "";
+	
+	if (taskType == "LEAVE"){
+		taskActCategory = "Leave";
+		
+	} else if (taskType == "MEETING"){
+		taskActCategory = "Meeting";
+	} else {
+		taskActCategory = taskType;
+		taskType = "OTHER";
+	}
+	
+	var dataString = {userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
 	doAjaxRequest("POST", "${applicationHome}/createNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){
         	$(".modal").modal('hide');
-        	getAssignJsonData();
         } else {
         	return false;
         }
@@ -573,7 +585,7 @@ var fillTableFromJson = function(jsonAssignData) {
 		$(taskData).find(".deleteTask").attr("onclick", "deleteTaskActivity('" +elem.taskActivityId + "','"+elem.taskName+"' )" );
 		$(taskData).find(".assignee").attr("src", "/bops/dashboard/image/" + elem.userId );
 		
-		if (elem.userTaskType == "LEAVE" || elem.userTaskType == "MEETING" || elem.userTaskType == "TRAINING" || elem.userTaskType == "ADMIN" || elem.userTaskType == "BD") {
+		if (elem.userTaskType == "LEAVE" || elem.userTaskType == "MEETING" || elem.userTaskType == "OTHER") {
 			 $(taskData).find(".deleteTask").removeClass("hide");
 			 $(taskData).find(".task-title").html(elem.taskName);
   		}

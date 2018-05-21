@@ -42,11 +42,12 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     FamstackUserProfileManager famstackUserProfileManager;
 
     public void createCompletedUserActivityItem(int userId, Date startTime, int taskId, String taskName,
-        int durationInMinutes, UserTaskType userTaskType, ProjectType projectType, String comment)
+        int durationInMinutes, UserTaskType userTaskType, String taskActCategory, ProjectType projectType,
+        String comment)
     {
         UserTaskActivityItem userTaskActivityItem =
-            createUserActivityItem(userId, startTime, taskId, taskName, durationInMinutes, userTaskType, projectType,
-                null);
+            createUserActivityItem(userId, startTime, taskId, taskName, durationInMinutes, userTaskType,
+                taskActCategory, projectType, null);
         userTaskActivityItem.setCompletionComment(comment);
         userTaskActivityItem.setRecordedStartTime(new Timestamp(startTime.getTime()));
         userTaskActivityItem.setActualStartTime(new Timestamp(startTime.getTime()));
@@ -57,7 +58,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     }
 
     public UserTaskActivityItem createUserActivityItem(int userId, Date startTime, int taskId, String taskName,
-        int durationInMinutes, UserTaskType userTaskType, ProjectType projectType, String userGroupId)
+        int durationInMinutes, UserTaskType userTaskType, String taskActCategory, ProjectType projectType,
+        String userGroupId)
     {
 
         UserItem assigneeUserItem = famstackUserProfileManager.getUserItemById(userId);
@@ -94,8 +96,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             int leaveMins = userActivityItem.getLeaveMins();
             leaveMins += (durationInMinutes);
             userActivityItem.setLeaveMins(leaveMins);
-        } else if (userTaskType == UserTaskType.ADMIN || userTaskType == UserTaskType.MEETING
-            || userTaskType == UserTaskType.BD || userTaskType == UserTaskType.TRAINING) {
+        } else if (userTaskType == UserTaskType.OTHER) {
             int nonBillabaleMins = userActivityItem.getNonBillableMins();
             nonBillabaleMins += (durationInMinutes);
             userActivityItem.setNonBillableMins(nonBillabaleMins);
@@ -104,7 +105,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         userActivityItem.setUserGroupId(userGroupId);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userActivityItem);
         return setUserTaskActivity(userActivityItem, taskId, taskName, durationInMinutes, startTime, userTaskType,
-            projectType);
+            taskActCategory, projectType);
     }
 
     public List<?> getTodaysUserActivity()
@@ -205,7 +206,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     }
 
     public UserTaskActivityItem setUserTaskActivity(UserActivityItem userActivityItem, int taskId, String taskName,
-        int durationInMinutes, Date startDate, UserTaskType userTaskType, ProjectType projectType)
+        int durationInMinutes, Date startDate, UserTaskType userTaskType, String taskActCategory,
+        ProjectType projectType)
     {
         UserTaskActivityItem userTaskActivityItem = new UserTaskActivityItem();
         userTaskActivityItem.setTaskId(taskId);
@@ -214,6 +216,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         userTaskActivityItem.setStartHour(startDate.getHours());
         userTaskActivityItem.setStartTime(new Timestamp(startDate.getTime()));
         userTaskActivityItem.setType(userTaskType);
+        userTaskActivityItem.setTaskActCategory(taskActCategory);
         userTaskActivityItem.setProjectType(projectType);
         userTaskActivityItem.setCreatedDate(new Timestamp(new Date().getTime()));
         userTaskActivityItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
@@ -320,6 +323,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         taskActivityDetails.setActualEndTime(userTaskActivityItem.getActualEndTime());
         taskActivityDetails.setDurationInMinutes(userTaskActivityItem.getDurationInMinutes());
         taskActivityDetails.setUserTaskType(userTaskActivityItem.getType());
+        taskActivityDetails.setTaskActCategory(userTaskActivityItem.getTaskActCategory());
         taskActivityDetails.setStartHour(userTaskActivityItem.getStartHour());
         taskActivityDetails.setInprogressComment((userTaskActivityItem.getInprogressComment()));
         taskActivityDetails.setCompletionComment(userTaskActivityItem.getCompletionComment());
@@ -447,7 +451,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         UserTaskActivityItem userTaskActivityItem =
             createUserActivityItem(taskItem.getAssignee(), startDate, taskItem.getTaskId(), taskItem.getName(),
-                newTaskDuration, currentUserTaskActivityItem.getType(), taskItem.getProjectItem().getType(), null);
+                newTaskDuration, currentUserTaskActivityItem.getType(), null, taskItem.getProjectItem().getType(), null);
         taskItem.setTaskPausedTime(null);
         famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
 

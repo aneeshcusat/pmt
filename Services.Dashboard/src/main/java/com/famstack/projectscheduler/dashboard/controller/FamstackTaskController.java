@@ -141,10 +141,10 @@ public class FamstackTaskController extends BaseFamstackService
     @RequestMapping(value = "/createNonBillableTask", method = RequestMethod.POST)
     @ResponseBody
     public String createNonBillableTask(@RequestParam("userId") int userId, @RequestParam("type") String type,
-        @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
-        @RequestParam("comments") String comments)
+        @RequestParam("taskActCategory") String taskActCategory, @RequestParam("startDate") String startDate,
+        @RequestParam("endDate") String endDate, @RequestParam("comments") String comments)
     {
-        famstackDashboardManager.createNonBillableTask(userId, type, startDate, endDate, comments);
+        famstackDashboardManager.createNonBillableTask(userId, type, taskActCategory, startDate, endDate, comments);
         return "{\"status\": true}";
     }
 
