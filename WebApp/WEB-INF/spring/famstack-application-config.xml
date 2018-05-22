@@ -35,6 +35,7 @@
 	   <map>
 	   	  <entry key="default" value-ref="famstackXLSExportProcessorDefault"/>
 		  <entry key="format1" value-ref="famstackXLSExportProcessor1"/>
+		  <entry key="format2" value-ref="famstackXLSExportProcessorFormat2"/>
 		  <entry key="famstackEmpUtilisation" value-ref="famstackXLSEmployeeUtilisationProcessor" />
 		</map>
 	</property>

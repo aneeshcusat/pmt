@@ -11,6 +11,7 @@
                 <div class="mb-middle">
                     <div class="mb-title"><span class="fa fa-sign-out"></span> Log <strong>Out</strong> ?</div>
                     <div class="mb-content">
+                     	<p class="hide taskInProgressWarningMsg" ><span style="color: red;font-size: 13pt;font-weight: bold;">Tasks are In-Progress make sure to pause or complete it!</span><a href="${applicationHome}/tasks"> click here</a></p>
                         <p>Are you sure you want to log out?</p>                    
                         <p>Press No if you want to continue work. Press Yes to logout current user.</p>
                     </div>
@@ -102,11 +103,23 @@ function updateTaskNotification(){
     	processTaskNotification(notifications.COMPLETED);
     	processTaskNotification(notifications.ASSIGNED);
     	processTaskNotification(notifications.INPROGRESS);
+    	
+    	checkInprogressTasks(notifications.INPROGRESS);
 		famstacklog("task notification: ", notifications);
 		$(".taskNotification").html(tasksCount);
     },function(error) {
     	famstacklog("ERROR: ", error);
     },false);
+}
+
+function checkInprogressTasks(notifications){
+	$(".taskInProgressWarningMsg").addClass("hide");
+	$.each(notifications, function(idx, elem){
+		if(elem.taskPausedTime == null) {
+			$(".taskInProgressWarningMsg").removeClass("hide");
+			return;
+		}
+	});
 }
 
 function processTaskNotification(notifications){

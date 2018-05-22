@@ -207,6 +207,7 @@ public final class DateUtils extends BaseFamstackService
         startCal.setTime(startDate);
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(endDate);
+
         int workDays = 0;
         if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
             return 0;
@@ -221,7 +222,7 @@ public final class DateUtils extends BaseFamstackService
                 && startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                 ++workDays;
             }
-        } while (startCal.getTimeInMillis() < endCal.getTimeInMillis()); // excluding end date
+        } while (startCal.getTimeInMillis() <= endCal.getTimeInMillis()); // excluding end date
 
         return workDays;
     }

@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
@@ -226,13 +227,6 @@ public class FamstackProjectController extends BaseFamstackService
     public ModelAndView projectreportingVS(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
         @RequestParam(value = "format", defaultValue = "default") String format, Model model)
     {
-        List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
-        return new ModelAndView("response/reporting" + format).addObject("projectData", projectData).addObject(
-            "dateRange", dateRange);
-    }
-
-    private List<ProjectDetails> getAllProjectDetailsList(String dateRange)
-    {
         logDebug(dateRange);
         String[] dateRanges;
         Date startDate = null;
@@ -250,58 +244,16 @@ public class FamstackProjectController extends BaseFamstackService
             endDate = startDate;
         }
 
-        List<ProjectDetails> projectData = famstackDashboardManager.getAllProjectDetailsList(startDate, endDate);
-        return projectData;
-    }
-
-    private Map<String, Map<Integer, UserWorkDetails>> getAllEmployeeUtilizationList(String dateRange)
-    {
-        logDebug(dateRange);
-        String[] dateRanges;
-        Date startDate = null;
-        Date endDate = null;
-        if (StringUtils.isNotBlank(dateRange)) {
-            dateRanges = dateRange.split("-");
-
-            if (dateRanges != null && dateRanges.length > 1) {
-                startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
-                endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
-            }
+        if ("default".equalsIgnoreCase(format)) {
+            List<ProjectTaskActivityDetails> projectTaskAssigneeDataList =
+                famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate);
+            return new ModelAndView("response/reporting" + format)
+                .addObject("projectData", projectTaskAssigneeDataList).addObject("dateRange", dateRange);
         } else {
-            startDate =
-                DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
-            endDate = startDate;
+            List<ProjectDetails> projectData = famstackDashboardManager.getAllProjectDetailsList(startDate, endDate);
+            return new ModelAndView("response/reporting" + format).addObject("projectData", projectData).addObject(
+                "dateRange", dateRange);
         }
-
-        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData =
-            famstackDashboardManager.getAllEmployeeUtilizationList(startDate, endDate);
-        return employeeUtilizationData;
-    }
-
-    private Map<String, Map<Integer, Integer>> getAllNonBillableTaskActivityList(String dateRange)
-    {
-        logDebug(dateRange);
-        String[] dateRanges;
-        Date startDate = null;
-        Date endDate = null;
-        if (StringUtils.isNotBlank(dateRange)) {
-            dateRanges = dateRange.split("-");
-
-            if (dateRanges != null && dateRanges.length > 1) {
-                startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
-                endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
-            }
-        } else {
-            startDate =
-                DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
-            endDate = startDate;
-        }
-
-        Map<String, Map<Integer, Integer>> nonBillableTaskActivityData =
-            famstackDashboardManager.getAllNonBillableTaskActivityList(startDate, endDate);
-
-        System.out.println("nonBillableTaskActivityData :" + nonBillableTaskActivityData);
-        return nonBillableTaskActivityData;
     }
 
     @RequestMapping(value = "/export/{templateName}")
@@ -309,19 +261,43 @@ public class FamstackProjectController extends BaseFamstackService
         @PathVariable(value = "templateName") String templateName, HttpServletRequest request,
         HttpServletResponse response)
     {
-        List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
+
+        logDebug(dateRange);
+        String[] dateRanges;
+        Date startDate = null;
+        Date endDate = null;
+        if (StringUtils.isNotBlank(dateRange)) {
+            dateRanges = dateRange.split("-");
+
+            if (dateRanges != null && dateRanges.length > 1) {
+                startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+            }
+        } else {
+            startDate =
+                DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+            endDate = startDate;
+        }
+
         Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData = null;
         Map<String, Map<Integer, Integer>> nonBillableTaskActivities = null;
-        if ("default".equalsIgnoreCase(templateName)) {
-            nonBillableTaskActivities = getAllNonBillableTaskActivityList(dateRange);
-        } else {
-            employeeUtilizationData = getAllEmployeeUtilizationList(dateRange);
-        }
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("exportDataList", projectData);
+        if ("default".equalsIgnoreCase(templateName)) {
+            List<ProjectTaskActivityDetails> projectTaskAssigneeDataList =
+                famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate);
+            nonBillableTaskActivities = famstackDashboardManager.getAllNonBillableTaskActivityList(startDate, endDate);
+            dataMap.put("exportDataList", projectTaskAssigneeDataList);
+            dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
+        } else {
+            List<ProjectDetails> projectData = famstackDashboardManager.getAllProjectDetailsList(startDate, endDate);
+            nonBillableTaskActivities = famstackDashboardManager.getAllNonBillableTaskActivityList(startDate, endDate);
+            employeeUtilizationData = famstackDashboardManager.getAllEmployeeUtilizationList(startDate, endDate);
+            dataMap.put("exportDataList", projectData);
+            dataMap.put("employeeUtilizationData", employeeUtilizationData);
+            dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
+        }
+
         dataMap.put("dateString", dateRange);
-        dataMap.put("employeeUtilizationData", employeeUtilizationData);
-        dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
 
         famstackXLSExportManager.exportXLS(templateName, dataMap, request, response);
     }

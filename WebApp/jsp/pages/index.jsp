@@ -228,9 +228,10 @@
                                                     <th width="30%">Project</th>
                                                     <th width="15%" class="panelHideTD" style="display: none">PO ID</th>
                                                     <th width="10%" class="panelHideTD" style="display: none">Type</th>
-                                                    <th width="15%" class="panelHideTD" style="display: none">category</th>
-                                                    <th width="15%" class="panelHideTD" style="display: none">team</th>
-                                                    <th width="20%" class="panelHideTD" style="display: none">client</th>
+                                                    <th width="15%" class="panelHideTD" style="display: none">Category</th>
+                                                    <th width="15%" class="panelHideTD" style="display: none">Team</th>
+                                                     <th width="15%" class="panelHideTD" style="display: none">Sub Team</th>
+                                                    <th width="20%" class="panelHideTD" style="display: none">Client</th>
                                                     <th width="20%" class="panelHideTD" style="display: none">Assignees</th>
                                                     <th width="20%" class="panelHideTD" style="display: none">Assignee Names</th>
                                                     <th width="10%" class="panelHideTD" style="display: none">Estimated Duration</th>
@@ -268,6 +269,7 @@
 		                                                <td class="panelHideTD" style="display: none">${project.type}</td>
         		                                        <td class="panelHideTD" style="display: none">${project.category}</td>
                 		                                <td class="panelHideTD" style="display: none">${project.teamName}</td>
+                		                                <td class="panelHideTD" style="display: none">${project.subTeamName}</td>
                         		                        <td class="panelHideTD" style="display: none">${project.clientName}</td>
 	                                                    <td class="panelHideTD" style="display: none">
 					 										<c:if test="${not empty project.projectTaskDeatils}">

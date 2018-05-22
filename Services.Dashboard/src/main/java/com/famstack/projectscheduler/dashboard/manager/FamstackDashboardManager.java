@@ -31,6 +31,7 @@ import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
+import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
@@ -580,6 +581,13 @@ public class FamstackDashboardManager extends BaseFamstackService
     public List<ProjectDetails> getAllProjectDetailsList(Date startDate, Date endDate)
     {
         List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startDate, endDate);
+        return projectDetailsList;
+    }
+
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
+    {
+        List<ProjectTaskActivityDetails> projectDetailsList =
+            projectManager.getAllProjectTaskAssigneeData(startDate, endDate);
         return projectDetailsList;
     }
 

@@ -1041,8 +1041,13 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 }//unbilled task end
 
 $(document).ready(function () {
-   sortSelect('#taskAssigneeId', 'text', 'asc');
-   $("#taskAssigneeId").selectpicker('refresh');
+	try{
+	   sortSelect('#taskAssigneeId', 'text', 'asc');
+	   $("#taskAssigneeId").val("userId${currentUser.id}");
+	   $("#taskAssigneeId").selectpicker('refresh');
+	} catch(err){
+		
+	}
 });
 
 </script>

@@ -203,6 +203,26 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         return itemList;
     }
 
+    public List<Object[]> executeAllSQLQueryOrderedBy(String sqlQuery, Map<String, Object> dataMap)
+    {
+
+        Session session = getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        SQLQuery query = session.createSQLQuery(sqlQuery);
+        logDebug("executeSQLQuery :" + sqlQuery);
+        if (dataMap != null) {
+            logDebug("dataMap :" + dataMap.keySet());
+            logDebug("dataMap values :" + dataMap.values());
+            for (String paramName : dataMap.keySet()) {
+                query.setParameter(paramName, dataMap.get(paramName));
+            }
+        }
+        List<Object[]> itemList = query.list();
+        tx.commit();
+        session.close();
+        return itemList;
+    }
+
     public long getCount(String hqlQuery, Map<String, Object> dataMap)
     {
         Session session = getSessionFactory().openSession();

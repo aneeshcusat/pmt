@@ -22,10 +22,12 @@ import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectTaskType;
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
+import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.RecurringProjectItem;
@@ -717,6 +719,60 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetailsList;
     }
 
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("startDate", startDate);
+        dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+
+        List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
+
+        String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
+        String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+        sqlQuery += " and utai.user_grp_id = " + userGroupId;
+        sqlQuery += " " + HQLStrings.getString("projectTeamAssigneeReportSQL-OrderBy");
+
+        List<Object[]> projectItemList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
+        logDebug("projectItemList" + projectItemList);
+        logDebug("startDate" + startDate);
+        logDebug("endDate" + endDate);
+        mapProjectsList(projectDetailsList, projectItemList);
+        return projectDetailsList;
+    }
+
+    private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<Object[]> projectItemList)
+    {
+
+        /*
+         * projectStartTime projectCompletionTime projectCode projectId projectNumber projectName projectStatus
+         * projectType projectCategory projectTeamId projectClientId taskName taskActivityStartTime taskActivityDuration
+         * userId
+         */
+
+        for (int i = 0; i < projectItemList.size(); i++) {
+            ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
+            Object[] data = projectItemList.get(i);
+            projectTaskActivityDetails.setProjectStartTime((Date) data[0]);
+            projectTaskActivityDetails.setProjectCompletionTime((Date) data[1]);
+            projectTaskActivityDetails.setProjectCode((String) data[2]);
+            projectTaskActivityDetails.setProjectId((Integer) data[3]);
+            projectTaskActivityDetails.setProjectNumber((String) data[4]);
+            projectTaskActivityDetails.setProjectName((String) data[5]);
+            projectTaskActivityDetails.setProjectStatus(ProjectStatus.valueOf((String) data[6]));
+            projectTaskActivityDetails.setProjectType(ProjectType.valueOf((String) data[7]));
+            projectTaskActivityDetails.setProjectCategory((String) data[8]);
+            projectTaskActivityDetails.setProjectTeamId((Integer) data[9]);
+            projectTaskActivityDetails.setProjectClientId((Integer) data[10]);
+
+            projectTaskActivityDetails.setTaskName((String) data[11]);
+            projectTaskActivityDetails.setTaskActivityStartTime((Date) data[12]);
+            projectTaskActivityDetails.setTaskActivityDuration((Integer) data[13]);
+            projectTaskActivityDetails.setUserId((Integer) data[14]);
+
+            projectDetailsList.add(projectTaskActivityDetails);
+        }
+    }
+
     public void updateProjectItem(ProjectDetails projectDetails)
     {
         ProjectItem projectItem = getProjectItemById(projectDetails.getId());
@@ -1037,6 +1093,10 @@ public class FamstackProjectManager extends BaseFamstackManager
                         DateUtils.getTimeDifference(TimeInType.MINS, projectItem.getCompletionTime().getTime(),
                             projectItem.getStartTime().getTime());
 
+                    if (projectDuration < 0) {
+                        projectDuration = 60 * 24 * 15;
+                    }
+
                     Timestamp projectEndTime =
                         new Timestamp(DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, projectStartTime,
                             projectDuration).getTime());
@@ -1084,6 +1144,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             TaskDetails taskDetails = new TaskDetails();
             taskDetails.setAssignee(taskItem.getAssignee());
             taskDetails.setName(taskItem.getName());
+            taskDetails.setDescription(taskItem.getDescription());
             taskDetails.setStartTime(DateUtils.format(taskStartTime, DateUtils.DATE_TIME_FORMAT));
             taskDetails.setDuration(taskItem.getDuration());
             taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
@@ -1154,4 +1215,5 @@ public class FamstackProjectManager extends BaseFamstackManager
         dataMap.put("dateTill", dateTill);
         famstackDataAccessObjectManager.executeSQLUpdate(HQLStrings.getString("projectSoftDeleteOlderSQL"), dataMap);
     }
+
 }
