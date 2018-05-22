@@ -1,17 +1,10 @@
 package com.famstack.projectscheduler.export.processors;
 
-import java.util.List;
-
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
-import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import java.util.Map;
 
 public interface FamstackBaseXLSExportProcessor
 {
 
-    public void renderReport(XSSFWorkbook workbook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
-        String dateString, List<EmployeeDetails> employees);
+    public void renderReport(Map<String, Object> dataMap);
 
 }

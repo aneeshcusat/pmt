@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
-import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -228,13 +227,6 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
         sheet.autoSizeColumn(colIndex);
     }
 
-    @Deprecated
-    @Override
-    public void renderReport(XSSFWorkbook workBook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
-        String dateString, List<EmployeeDetails> employees)
-    {
-    }
-
     private CellStyle getDateHeaderCellStyle(XSSFWorkbook workbook)
     {
         if (dateHeaderCellStyle == null) {
@@ -353,5 +345,12 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
     private XSSFColor getColor(int R, int G, int B, Workbook workbook)
     {
         return new XSSFColor(new java.awt.Color(R, G, B));
+    }
+
+    @Override
+    public void renderReport(Map<String, Object> dataMap)
+    {
+        // TODO Auto-generated method stub
+
     }
 }

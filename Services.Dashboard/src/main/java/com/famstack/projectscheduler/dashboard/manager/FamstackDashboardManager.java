@@ -588,6 +588,11 @@ public class FamstackDashboardManager extends BaseFamstackService
         return famstackUserActivityManager.getUserUtilizationHours(startDate, endDate);
     }
 
+    public Map<String, Map<Integer, Integer>> getAllNonBillableTaskActivityList(Date startDate, Date endDate)
+    {
+        return famstackUserActivityManager.getAllNonBillableTaskActivityList(startDate, endDate);
+    }
+
     public void updateProject(ProjectDetails projectDetails)
     {
         projectManager.updateProjectItem(projectDetails);

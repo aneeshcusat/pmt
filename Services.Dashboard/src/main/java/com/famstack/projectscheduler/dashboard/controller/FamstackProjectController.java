@@ -278,16 +278,52 @@ public class FamstackProjectController extends BaseFamstackService
         return employeeUtilizationData;
     }
 
+    private Map<String, Map<Integer, Integer>> getAllNonBillableTaskActivityList(String dateRange)
+    {
+        logDebug(dateRange);
+        String[] dateRanges;
+        Date startDate = null;
+        Date endDate = null;
+        if (StringUtils.isNotBlank(dateRange)) {
+            dateRanges = dateRange.split("-");
+
+            if (dateRanges != null && dateRanges.length > 1) {
+                startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+            }
+        } else {
+            startDate =
+                DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+            endDate = startDate;
+        }
+
+        Map<String, Map<Integer, Integer>> nonBillableTaskActivityData =
+            famstackDashboardManager.getAllNonBillableTaskActivityList(startDate, endDate);
+
+        System.out.println("nonBillableTaskActivityData :" + nonBillableTaskActivityData);
+        return nonBillableTaskActivityData;
+    }
+
     @RequestMapping(value = "/export/{templateName}")
     public void downloadReportingFile(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
         @PathVariable(value = "templateName") String templateName, HttpServletRequest request,
         HttpServletResponse response)
     {
         List<ProjectDetails> projectData = getAllProjectDetailsList(dateRange);
-        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData = getAllEmployeeUtilizationList(dateRange);
+        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData = null;
+        Map<String, Map<Integer, Integer>> nonBillableTaskActivities = null;
+        if ("default".equalsIgnoreCase(templateName)) {
+            nonBillableTaskActivities = getAllNonBillableTaskActivityList(dateRange);
+        } else {
+            employeeUtilizationData = getAllEmployeeUtilizationList(dateRange);
+        }
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("exportDataList", projectData);
+        dataMap.put("dateString", dateRange);
+        dataMap.put("employeeUtilizationData", employeeUtilizationData);
+        dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
 
-        famstackXLSExportManager.exportXLS(templateName, dateRange, projectData, employeeUtilizationData, request,
-            response);
+        famstackXLSExportManager.exportXLS(templateName, dataMap, request, response);
     }
 
     @RequestMapping(value = "/getProjectJson", method = RequestMethod.GET)

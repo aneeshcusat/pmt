@@ -495,7 +495,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("calenderDateStart", startDate);
-        dataMap.put("calenderDateEnd", endDate);
+        dataMap.put("calenderDateEnd", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
         List<UserActivityItem> userActivityItems =
             (List<UserActivityItem>) getFamstackDataAccessObjectManager().executeQuery(
                 HQLStrings.getString("allUserActivityItemsFromDatetoDate"), dataMap);
@@ -520,6 +520,41 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             userWorkList.put(userWorkDetails.getUserId(), userWorkDetails);
         }
         return employeeUtilizationMap;
+    }
+
+    public Map<String, Map<Integer, Integer>> getAllNonBillableTaskActivityList(Date startDate, Date endDate)
+    {
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("calenderDateStart", startDate);
+        dataMap.put("calenderDateEnd", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+        List<UserTaskActivityItem> userTaskActivityItems =
+            (List<UserTaskActivityItem>) getFamstackDataAccessObjectManager().executeQuery(
+                HQLStrings.getString("allUnBilledUserActivityItemsFromDatetoDate"), dataMap);
+        logDebug("Non billabletask activity items" + userTaskActivityItems);
+        Map<String, Map<Integer, Integer>> nonBillableTaskActivityItems = new HashMap<>();
+
+        for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+            Map<Integer, Integer> userTaskTimeMap =
+                nonBillableTaskActivityItems.get(userTaskActivityItem.getTaskActCategory());
+            if (userTaskTimeMap == null) {
+                userTaskTimeMap = new HashMap<>();
+            }
+            nonBillableTaskActivityItems.put(userTaskActivityItem.getTaskActCategory(), userTaskTimeMap);
+
+            int userId = userTaskActivityItem.getUserActivityItem().getUserItem().getId();
+
+            Integer userTaskActTime = userTaskTimeMap.get(userId);
+
+            if (userTaskActTime != null) {
+                userTaskActTime += userTaskActivityItem.getDurationInMinutes();
+            } else {
+                userTaskActTime = userTaskActivityItem.getDurationInMinutes();
+            }
+            userTaskTimeMap.put(userId, userTaskActTime);
+        }
+
+        return nonBillableTaskActivityItems;
     }
 
     public UserTaskActivityItem deleteTaskActivity(int activityId)
@@ -597,4 +632,5 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         return userTaskActivityItem;
     }
+
 }

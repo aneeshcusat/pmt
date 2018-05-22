@@ -44,8 +44,7 @@ public class FamstackXLSExportManager extends BaseFamstackManager
      * @param employeeUtilizationData
      * @param request the request
      */
-    public void exportXLS(String processorName, String dateString, List<ProjectDetails> exportDataList,
-        Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData, HttpServletRequest request,
+    public void exportXLS(String processorName, Map<String, Object> dataMap, HttpServletRequest request,
         HttpServletResponse response)
     {
         String fullPath =
@@ -66,15 +65,23 @@ public class FamstackXLSExportManager extends BaseFamstackManager
             List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
             ExecutorService executorService = Executors.newFixedThreadPool(2);
             List<Future> futures = Collections.synchronizedList(new ArrayList<Future>());
+            List<ProjectDetails> exportDataList = (List<ProjectDetails>) dataMap.get("exportDataList");
+            String dateString = (String) dataMap.get("dateString");
+            Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData =
+                (Map<String, Map<Integer, UserWorkDetails>>) dataMap.get("employeeUtilizationData");
 
             if (exportDataList != null) {
 
                 FamstackBaseXLSExportProcessor baseXLSExportProcessor = exportProcessorMap.get(processorName);
                 if (baseXLSExportProcessor != null) {
 
+                    dataMap.put("workBook", workbook);
+                    dataMap.put("sheet", sheet);
+                    dataMap.put("teamName", teamName);
+                    dataMap.put("employees", employees);
+
                     ExportProjectWorkerThread projectWorkerThred =
-                        new ExportProjectWorkerThread(baseXLSExportProcessor, workbook, sheet, teamName,
-                            exportDataList, dateString, employees);
+                        new ExportProjectWorkerThread(dataMap, baseXLSExportProcessor);
                     // workbook.setSheetName(0, dateString);
                     Future future = executorService.submit(projectWorkerThred);
                     futures.add(future);
@@ -87,7 +94,8 @@ public class FamstackXLSExportManager extends BaseFamstackManager
 
             }
 
-            if (!employeeUtilizationData.isEmpty() && !"default".equalsIgnoreCase(processorName)) {
+            if (employeeUtilizationData != null && !employeeUtilizationData.isEmpty()
+                && !"default".equalsIgnoreCase(processorName)) {
                 logDebug("Getting employee utilization export processor");
                 FamstackXLSEmployeeUtilisationProcessor employeeUtilisationProcessor =
                     (FamstackXLSEmployeeUtilisationProcessor) exportProcessorMap.get("famstackEmpUtilisation");

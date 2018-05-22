@@ -55,13 +55,22 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
     private int maxThread;
 
     @Override
-    public void renderReport(XSSFWorkbook workBook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
-        String dateString, List<EmployeeDetails> employees)
+    public void renderReport(Map<String, Object> dataMap)
 
     {
+
+        XSSFWorkbook workBook = (XSSFWorkbook) dataMap.get("workBook");
+        Sheet sheet = (Sheet) dataMap.get("sheet");
+        String teamName = (String) dataMap.get("teamName");
+        List<ProjectDetails> exportDataList = (List<ProjectDetails>) dataMap.get("exportDataList");
+        String dateString = (String) dataMap.get("dateString");
+        List<EmployeeDetails> employees = (List<EmployeeDetails>) dataMap.get("employees");
+        Map<String, Map<Integer, Integer>> nonBillableTaskActivities =
+            (Map<String, Map<Integer, Integer>>) dataMap.get("nonBillableTaskActivities");
+
         logDebug("Rendering reoprt for  FamstackXLSExportProcessor11");
 
-        int holidayHours = 8;
+        int holidayHours = 0;
 
         XSSFColor myColorIndexYellow = getColor(255, 192, 0, workBook);
         XSSFColor myColorIndexGray = getColor(217, 217, 217, workBook);
@@ -83,7 +92,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             employees);
         createBody(workBook, sheet, exportDataList, employees, xssfCellProjectTotalStyle, xssfCellTextWrapStyle,
             xssfCellProjectTaskHrsStyle, xssfCellProjectGrandTotalStyle, xssfCellUtilizationStyle,
-            availableWorkingDayHours, holidayHours);
+            availableWorkingDayHours, holidayHours, nonBillableTaskActivities);
 
     }
 
@@ -124,7 +133,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         final List<EmployeeDetails> employees, final CellStyle xssfCellProjectTotalStyle,
         final CellStyle xssfCellTextWrapStyle, CellStyle xssfCellProjectTaskHrsStyle,
         CellStyle xssfCellProjectGrandTotalStyle, CellStyle xssfCellUtilizationStyle, int availableWorkingDayHours,
-        int holidayHours)
+        int holidayHours, Map<String, Map<Integer, Integer>> nonBillableTaskActivities)
     {
         int projectDetailsRowCount = 6;
         if (exportDataList != null) {
@@ -137,17 +146,44 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             }
         }
 
-        Map nonBillableListMap = null;
+        if (nonBillableTaskActivities != null) {
+            // Row blankRow = sheet.getRow((++projectDetailsRowCount) + 1);
+            // createProjectSumFunctionCell(blankRow, 11 + employees.size(), xssfCellProjectTotalStyle);
+            Map<Integer, Integer> leaveDataMap = nonBillableTaskActivities.get("Leave");
+            nonBillableTaskActivities.remove("Leave");
 
-        Map nonBillableMap = null;
-        // foreach
-        createNonBillableDetailsRow(workBook, sheet, ++projectDetailsRowCount, nonBillableMap, employees,
-            xssfCellTextWrapStyle, xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle);
-        // foreachend
+            projectDetailsRowCount++;
+            for (String taskCategory : nonBillableTaskActivities.keySet()) {
+                createNonBillableDetailsRow(workBook, sheet, projectDetailsRowCount, taskCategory,
+                    nonBillableTaskActivities.get(taskCategory), employees, xssfCellTextWrapStyle,
+                    xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle);
+
+                projectDetailsRowCount++;
+            }
+            fillLeaveDetails(workBook, sheet, projectDetailsRowCount, leaveDataMap, employees, xssfCellTextWrapStyle,
+                xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle);
+        }
 
         createTotalSummaryDetailsRows(workBook, sheet, projectDetailsRowCount, employees, xssfCellTextWrapStyle,
             xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle, xssfCellProjectGrandTotalStyle,
             xssfCellUtilizationStyle, availableWorkingDayHours, holidayHours);
+
+    }
+
+    private void fillLeaveDetails(XSSFWorkbook workBook, Sheet sheet, int projectDetailsRowCount,
+        Map<Integer, Integer> leaveDataMap, List<EmployeeDetails> employees, CellStyle xssfCellTextWrapStyle,
+        CellStyle xssfCellProjectTotalStyle, CellStyle xssfCellProjectTaskHrsStyle)
+    {
+
+        if (leaveDataMap != null) {
+            Row leaveRow = sheet.getRow(projectDetailsRowCount + 2);
+            List<Integer> employeeIndexList = getEmployeeIndexList(employees);
+            for (Integer userId : leaveDataMap.keySet()) {
+                int userCellIndex = employeeIndexList.indexOf(userId);
+                createTaskTimeCell(sheet, 11 + userCellIndex, leaveDataMap.get(userId), leaveRow,
+                    xssfCellProjectTaskHrsStyle);
+            }
+        }
 
     }
 
@@ -159,7 +195,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
 
         Row totalUserProjectHoursRow = sheet.getRow(rowCount);
         Row holidayRow = sheet.getRow(rowCount + 1);
-        Row leaveRow = sheet.getRow(rowCount + 2);
+
         Row excessWorkingHrsRow = sheet.getRow(rowCount + 3);
         Row utilizationRow = sheet.getRow(rowCount + 4);
         Row availableHrsRow = sheet.getRow(rowCount + 5);
@@ -178,9 +214,6 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             Cell holidayCell = getCell(holidayRow, columnNumber);
             holidayCell.setCellStyle(xssfCellProjectTaskHrsStyle);
             holidayCell.setCellValue(convertToActualTimeString(holidayHours * 60));
-
-            Cell leaveCell = getCell(leaveRow, columnNumber);
-            leaveCell.setCellStyle(xssfCellProjectTaskHrsStyle);
 
             Cell availableHrsCell = getCell(availableHrsRow, columnNumber);
             availableHrsCell.setCellStyle(xssfCellProjectTaskHrsStyle);
@@ -224,25 +257,31 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         projectGrandTotalCell.setCellFormula(strFormula);
     }
 
-    private void createNonBillableDetailsRow(XSSFWorkbook workBook, Sheet sheet, int rowCount, Map nonBillableMap,
-        List<EmployeeDetails> employees, CellStyle xssfCellTextWrapStyle, CellStyle xssfCellProjectTotalStyle,
-        CellStyle xssfCellProjectTaskHrsStyle)
+    private void createNonBillableDetailsRow(XSSFWorkbook workBook, Sheet sheet, int rowCount, String taskCategory,
+        Map<Integer, Integer> nonBillableMap, List<EmployeeDetails> employees, CellStyle xssfCellTextWrapStyle,
+        CellStyle xssfCellProjectTotalStyle, CellStyle xssfCellProjectTaskHrsStyle)
     {
 
         if (nonBillableMap != null) {
-            int nonBillableDetailsColumnCount = 10;
+            int nonBillableDetailsColumnCount = 11;
             sheet.shiftRows(rowCount, sheet.getLastRowNum() + 1, 1, true, true);
             Row nonBillableItemRow = getRow(sheet, rowCount++);
 
             createProjectDetailsColoumn(sheet, 6, "NON_BILLABLE", nonBillableItemRow, xssfCellTextWrapStyle);
-            createProjectDetailsColoumn(sheet, 7, "Category", nonBillableItemRow, xssfCellTextWrapStyle);
+            createProjectDetailsColoumn(sheet, 7, taskCategory, nonBillableItemRow, xssfCellTextWrapStyle);
 
             List<Integer> employeeIndexList = getEmployeeIndexList(employees);
 
-            int userCellIndex = employeeIndexList.indexOf(1);
+            for (Integer userId : nonBillableMap.keySet()) {
+                int userCellIndex = employeeIndexList.indexOf(userId);
 
-            createTaskTimeCell(sheet, nonBillableDetailsColumnCount + userCellIndex, 1, nonBillableItemRow,
-                xssfCellProjectTaskHrsStyle);
+                createTaskTimeCell(sheet, nonBillableDetailsColumnCount + userCellIndex, nonBillableMap.get(userId),
+                    nonBillableItemRow, xssfCellProjectTaskHrsStyle);
+            }
+
+            createProjectSumFunctionCell(nonBillableItemRow, nonBillableDetailsColumnCount + employees.size(),
+                xssfCellProjectTotalStyle);
+
         }
 
     }

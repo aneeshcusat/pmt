@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.export.processors;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -28,10 +29,13 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
     private static CellStyle xssfCellTextStyle;
 
     @Override
-    public void renderReport(XSSFWorkbook workBook, Sheet sheet, String teamName, List<ProjectDetails> exportDataList,
-        String dateString, List<EmployeeDetails> employees)
+    public void renderReport(Map<String, Object> dataMap)
 
     {
+        XSSFWorkbook workBook = (XSSFWorkbook) dataMap.get("workBook");
+        Sheet sheet = (Sheet) dataMap.get("sheet");
+        List<ProjectDetails> exportDataList = (List<ProjectDetails>) dataMap.get("exportDataList");
+
         xssfCellTextStyle = null;
         createBody(workBook, sheet, exportDataList);
 
