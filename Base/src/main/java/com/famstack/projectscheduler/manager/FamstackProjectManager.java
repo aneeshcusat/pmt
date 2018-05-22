@@ -769,6 +769,10 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setTaskActivityDuration((Integer) data[13]);
             projectTaskActivityDetails.setUserId((Integer) data[14]);
 
+            projectTaskActivityDetails.setTaskId((Integer) data[15]);
+            projectTaskActivityDetails.setTaskActivityId((Integer) data[16]);
+            projectTaskActivityDetails.setTaskActivityEndTime((Date) data[17]);
+
             projectDetailsList.add(projectTaskActivityDetails);
         }
     }

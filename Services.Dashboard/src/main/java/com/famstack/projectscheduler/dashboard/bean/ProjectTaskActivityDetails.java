@@ -40,6 +40,12 @@ public class ProjectTaskActivityDetails
 
     private Integer userId;
 
+    private Integer taskActivityId;
+
+    private Integer taskId;
+
+    private Date taskActivityEndTime;
+
     public String getProjectCode()
     {
         return projectCode;
@@ -220,5 +226,35 @@ public class ProjectTaskActivityDetails
         int hours = taskActivityDuration / 60; // since both are ints, you get an int
         int minutes = taskActivityDuration % 60;
         return String.format("%d:%02d", hours, minutes);
+    }
+
+    public Integer getTaskActivityId()
+    {
+        return taskActivityId;
+    }
+
+    public void setTaskActivityId(Integer taskActivityId)
+    {
+        this.taskActivityId = taskActivityId;
+    }
+
+    public Integer getTaskId()
+    {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId)
+    {
+        this.taskId = taskId;
+    }
+
+    public Date getTaskActivityEndTime()
+    {
+        return taskActivityEndTime;
+    }
+
+    public void setTaskActivityEndTime(Date taskActivityEndTime)
+    {
+        this.taskActivityEndTime = taskActivityEndTime;
     }
 }

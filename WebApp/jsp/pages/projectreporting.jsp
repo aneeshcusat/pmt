@@ -14,6 +14,22 @@
     float: right;
     margin-left: 25px;
 }
+
+.durationTxt{
+	font-weight: bold;
+    width: 20px;
+    height: 20px;
+    line-height: 18px;
+    box-shadow: none;
+    -webkit-appearance: none;
+    border: 1px solid #D5D5D5;
+    background: #F9F9F9;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    border-radius: 4px;
+    color: #555;
+    font-size: 8px;
+    padding: 0px 2px 2px 5px;
+}
 </style>
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
@@ -114,6 +130,52 @@ $(function() {
     $('input[name="daterange"]').daterangepicker();
     loadAllProjectDetails('${dateRange}','${reportFormat}');
 });
+
+
+var showTaskActActualTimeEdit = function(taskActId) {
+	$("."+taskActId+"taskTimeEditLink").hide();
+	$("."+taskActId+"taskTimeEdit").show();	
+	$("."+taskActId+"taskActTimeEdit").show();	
+}
+
+var hideTaskActActualTimeEdit = function(taskActId) {
+	$("."+taskActId+"taskTimeEditLink").show();
+	$("."+taskActId+"taskTimeEdit").hide();	
+	$("."+taskActId+"taskActTimeEdit").hide();	
+}
+
+var taskActActualTimeSubmit = function(taskId, activityId) {
+	var hours=$("#taskActHHTimeEdit"+activityId).val();
+	var mins=$("#taskActMMTimeEdit"+activityId).val();
+	
+	
+	$("#taskActHHTimeEdit"+taskId).removeClass("error");
+	$("#taskActMMTimeEdit"+taskId).removeClass("error");
+	
+	var error = false;
+	if (hours == "" || !$.isNumeric(hours)) {
+		$("#taskActHHTimeEdit"+taskId).addClass("error");
+		error = true;
+	}
+	
+	if (mins == "" || !$.isNumeric(mins) || parseInt(mins) >= 60) {
+		$("#taskActMMTimeEdit"+taskId).addClass("error");
+		error = true;
+	}
+	
+	if(error){
+		return;
+	}
+	
+	var newDuration = (parseInt(hours) * 60) +parseInt(mins);
+	var startTime ="";
+	var endTime ="";
+	doAjaxRequest("POST", "${applicationHome}/adjustTaskActivityTime", {"activityId":activityId,"taskId":taskId,"newDuration":newDuration,"startTime":startTime,"endTime":endTime},  function(response) {
+		$("."+activityId+"taskTimeEditLinkHrs").html(hours+":"+mins);
+		hideTaskActActualTimeEdit(activityId);
+	}, function(e) {
+	});
+}
 
 $(document).ready(function(){
 	
