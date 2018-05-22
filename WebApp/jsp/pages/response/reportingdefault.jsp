@@ -60,7 +60,7 @@
 					<td><span class="label label-${projectState}" style="${statusColor}">${project.projectStatus}</span></td>
 					<td>${userDetailsMap[project.userId].firstName}</td>
 					<td>${project.taskName}</td>
-					<td>${project.taskActivityDuration}</td>
+					<td>${project.durationInHours}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
