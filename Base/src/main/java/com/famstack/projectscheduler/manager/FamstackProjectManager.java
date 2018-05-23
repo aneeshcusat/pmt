@@ -749,6 +749,9 @@ public class FamstackProjectManager extends BaseFamstackManager
          * userId
          */
 
+        Map<String, ProjectTaskActivityDetails> projectCacheMap = new HashMap<>();
+        ProjectTaskActivityDetails projectTaskActivityDetailsTmp;
+
         for (int i = 0; i < projectItemList.size(); i++) {
             ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
             Object[] data = projectItemList.get(i);
@@ -772,8 +775,19 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setTaskId((Integer) data[15]);
             projectTaskActivityDetails.setTaskActivityId((Integer) data[16]);
             projectTaskActivityDetails.setTaskActivityEndTime((Date) data[17]);
+            String key = "D" + DateUtils.format((Date) data[0], DateUtils.DATE_FORMAT);
+            key += "T" + data[15];
+            key += "U" + data[14];
 
-            projectDetailsList.add(projectTaskActivityDetails);
+            projectTaskActivityDetailsTmp = projectCacheMap.get(key);
+            if (projectTaskActivityDetailsTmp != null) {
+                projectTaskActivityDetailsTmp.addToChildProjectActivityDetailsMap(projectTaskActivityDetails);
+                projectTaskActivityDetailsTmp.setTaskActivityDuration(projectTaskActivityDetailsTmp
+                    .getTaskActivityDuration() + projectTaskActivityDetails.getTaskActivityDuration());
+            } else {
+                projectCacheMap.put(key, projectTaskActivityDetails);
+                projectDetailsList.add(projectTaskActivityDetails);
+            }
         }
     }
 

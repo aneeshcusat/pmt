@@ -62,20 +62,20 @@
 					<td>${userDetailsMap[project.userId].firstName}</td>
 					<td>${project.taskName}</td>
 					<td><span class="${project.taskActivityId}taskTimeEditLink ${project.taskActivityId}taskTimeEditLinkHrs">${project.durationInHours}</span>
-					
-					<span class="${project.taskActivityId}taskTimeEdit" style="display: none">
-						<input type="text" placeholder="hh" class="durationTxt" id="taskActHHTimeEdit${project.taskActivityId}"/>
-						<input type="text" value="0" placeholder="mm" class="durationTxt" id="taskActMMTimeEdit${project.taskActivityId}"/> 
-					</span>
-					<span style="text-align:right; display:none" class="${project.taskActivityId}taskActTimeEdit">
-						<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmit(${project.taskId},'${project.taskActivityId}')" value="Save"><i class="fa fa-check" style="color: green" aria-hidden="true"></i></button>
-						<button style="background-color: transparent; border: 0px;" onclick="hideTaskActActualTimeEdit('${project.taskActivityId}')" value="Cancel"><i class="fa fa-undo" style="color: gray" aria-hidden="true"></i></button>
-					</span>
-					<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty project.taskActivityEndTime}">
-						<a href="javascript:void(0)" class=" ${project.taskActivityId}taskTimeEditLink" onclick="showTaskActActualTimeEdit('${project.taskActivityId}')"  style="margin-left: 10px">
-						<span class="fa fa-pencil"></span></a>
+					<c:if test="${empty project.childs}">
+						<span class="${project.taskActivityId}taskTimeEdit" style="display: none">
+							<input type="text" placeholder="hh" class="durationTxt" id="taskActHHTimeEdit${project.taskActivityId}"/>
+							<input type="text" value="0" placeholder="mm" class="durationTxt" id="taskActMMTimeEdit${project.taskActivityId}"/> 
+						</span>
+						<span style="text-align:right; display:none" class="${project.taskActivityId}taskActTimeEdit">
+							<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmit(${project.taskId},'${project.taskActivityId}')" value="Save"><i class="fa fa-check" style="color: green" aria-hidden="true"></i></button>
+							<button style="background-color: transparent; border: 0px;" onclick="hideTaskActActualTimeEdit('${project.taskActivityId}')" value="Cancel"><i class="fa fa-undo" style="color: gray" aria-hidden="true"></i></button>
+						</span>
+						<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty project.taskActivityEndTime}">
+							<a href="javascript:void(0)" class=" ${project.taskActivityId}taskTimeEditLink" onclick="showTaskActActualTimeEdit('${project.taskActivityId}')"  style="margin-left: 10px">
+							<span class="fa fa-pencil"></span></a>
+						</c:if>
 					</c:if>
-					
 					</td>
 				</tr>
 			</c:forEach>

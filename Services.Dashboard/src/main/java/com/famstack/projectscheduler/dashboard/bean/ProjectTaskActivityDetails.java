@@ -1,6 +1,8 @@
 package com.famstack.projectscheduler.dashboard.bean;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
@@ -45,6 +47,8 @@ public class ProjectTaskActivityDetails
     private Integer taskId;
 
     private Date taskActivityEndTime;
+
+    private List<ProjectTaskActivityDetails> childs;
 
     public String getProjectCode()
     {
@@ -256,5 +260,18 @@ public class ProjectTaskActivityDetails
     public void setTaskActivityEndTime(Date taskActivityEndTime)
     {
         this.taskActivityEndTime = taskActivityEndTime;
+    }
+
+    public void addToChildProjectActivityDetailsMap(ProjectTaskActivityDetails projectTaskActivityDetails)
+    {
+        if (childs == null) {
+            childs = new ArrayList<>();
+        }
+        childs.add(projectTaskActivityDetails);
+    }
+
+    public List<ProjectTaskActivityDetails> getChilds()
+    {
+        return childs;
     }
 }
