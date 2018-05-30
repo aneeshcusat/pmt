@@ -533,7 +533,7 @@ public class FamstackDashboardManager extends BaseFamstackService
         Date startTime = getFamstackUserSessionConfiguration().getDashboardViewStartDate();
 
         if (projectStatus == ProjectStatus.MISSED) {
-            return projectManager.getAllMissedTimeLineProjectDetails(startTime);
+            return projectManager.getMissedTimeLineProjectDetails(startTime);
         }
         return projectManager.getAllProjectDetailsList(projectStatus, startTime);
     }

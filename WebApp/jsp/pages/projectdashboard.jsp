@@ -1121,7 +1121,15 @@ var createNewAssignSection = function(projectId) {
 		$("#projectTaskCloneDIv"+projectId).append(taskDetailsHidden);
 	}
 	
-var createDuplicateProjectWithTask = function(projectId, projectCode) {
+
+function createDuplicateProjectWithTask(projectId, projectCode) {
+	$(".msgConfirmText").html("Do you really want to duplicate the project and tasks");
+	$(".msgConfirmText1").html(projectCode);
+	$("#confirmYesId").prop("href","javascript:createDuplicateProjectWithTaskAction('"+projectId+"','"+projectCode+"')");
+}
+
+
+var createDuplicateProjectWithTaskAction = function(projectId, projectCode) {
 	
 	var taskDetails = "";
 	var projectName = $("#prjName"+projectId).val();
@@ -1210,6 +1218,7 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
 	}
 	
 	if (isError){
+		$(".message-box").removeClass("open");
 		return;
 	}
 	
@@ -1225,6 +1234,7 @@ var createDuplicateProjectWithTask = function(projectId, projectCode) {
         famstacklog("ERROR: ", e);
         famstackalert(e);
     });
+	$(".message-box").removeClass("open");
 }
 
 
@@ -1399,4 +1409,29 @@ var persistDateFilter = function(value){
 	
 }
 
+
+$(document).ready(function(){
+	/* MESSAGE BOX */
+	$(document).on("click",".quickProjectDuplicateMsg",function(){
+	    var box = $($(this).data("box"));
+	    if(box.length > 0){
+	        box.toggleClass("open");
+	        
+	        var sound = box.data("sound");
+	        
+	        if(sound === 'alert')
+	            playAudio('alert');
+	        
+	        if(sound === 'fail')
+	            playAudio('fail');
+	        
+	    }        
+	    return false;
+	});
+	$(document).on("click",".mb-control-close",function(){
+	   $(this).parents(".message-box").removeClass("open");
+	   return false;
+	});    
+	/* END MESSAGE BOX */
+});
 </script>

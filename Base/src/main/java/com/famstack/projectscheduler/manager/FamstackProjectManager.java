@@ -530,6 +530,22 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetailsList;
     }
 
+    public List<ProjectDetails> getMissedTimeLineProjectDetails(Date startTime)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        List<ProjectDetails> projectDetailsList = new ArrayList<>();
+        dataMap.put("status", ProjectStatus.COMPLETED);
+        dataMap.put("completionDate", new Date());
+        dataMap.put("startTime", startTime);
+
+        List<?> projectItemList =
+            famstackDataAccessObjectManager
+                .executeQuery(HQLStrings.getString("getMissedTimeLineProjectItems"), dataMap);
+        getProjectsList(projectDetailsList, projectItemList, false);
+
+        return projectDetailsList;
+    }
+
     public List<ProjectDetails> getAllMissedTimeLineProjectDetails(Date startTime)
     {
         Map<String, Object> dataMap = new HashMap<>();

@@ -411,7 +411,12 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             userCell.setCellStyle(cellStyle);
         }
         sheet.autoSizeColumn(columnIndex);
-        Double cellValueTime = userCell.getNumericCellValue();
+        Double cellValueTime = 0d;
+        try {
+            cellValueTime = userCell.getNumericCellValue();
+        } catch (Exception e) {
+            logError("unable to get cellvalue" + e.getMessage());
+        }
         double time = convertToActualTimeString(userTaskTime);
         if (cellValueTime != null && cellValueTime > 0) {
             logDebug("COL" + columnIndex + " ROWL" + projectDetailsRow.getRowNum() + " timeCellL" + cellValueTime

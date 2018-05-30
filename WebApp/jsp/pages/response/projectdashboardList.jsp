@@ -205,7 +205,7 @@
 												<span class="help-block"></span>
 											</div>
 											<div class="col-md-12 col-xs-12">
-												<a href="javascript:void(0)" onclick="createDuplicateProjectWithTask('${project.id}','${project.code}');" style="color:green">
+												<a href="javascript:void(0)" class="mb-control quickProjectDuplicateMsg" data-box="#confirmationbox"  onclick="createDuplicateProjectWithTask('${project.id}','${project.code}');" style="color:green">
 													<span class="fa fa-save fa-3x"></span>
 												</a>
 											</div>
