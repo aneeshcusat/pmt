@@ -1,5 +1,6 @@
 <%@include file="includes/header.jsp"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="userDetailsMap"
 	value="${applicationScope.applicationConfiguraion.userMap}" />
 <ul class="breadcrumb">
@@ -190,17 +191,23 @@
 								</div>
 							</div>
 							
-					<div class="col-md-3">
-						<c:if test="${not empty modelViewMap.taskOwners}">
-						<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
-						<option value="">All</option>
-							  <c:forEach var="taskOwner" items="${modelViewMap.taskOwners}"
-								varStatus="taskOwnerIndex">
-								<option value="userId${taskOwner}">${userDetailsMap[taskOwner].firstName}</option>
-							</c:forEach>
-						</select>
-						</c:if>
-					</div>
+							<div class="col-md-3">
+								<c:if test="${not empty modelViewMap.taskOwners}">
+								<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
+									<option value="">All</option>
+										 <c:if test="${not empty userMap}">
+											<c:forEach var="user" items="${userMap}">
+												 <c:if test="${currentUser.id eq user.id}">
+												 	<option selected="selected" value="userId${user.id}">${user.firstName}</option>
+												 </c:if>
+												  <c:if test="${currentUser.id ne user.id}">
+												  <option value="userId${user.id}">${user.firstName}</option>
+												  </c:if>
+							  				</c:forEach>
+							  			</c:if>
+									</select>
+								</c:if>
+							</div>
 				
 							<div class="col-md-3">
 								  
@@ -1040,14 +1047,15 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#taskStartComments").val("");
 }//unbilled task end
 
-$(document).ready(function () {
+ $(document).ready(function () {
 	try{
-	   sortSelect('#taskAssigneeId', 'text', 'asc');
-	   $("#taskAssigneeId").val("userId${currentUser.id}");
+	   // sortSelect('#taskAssigneeId', 'text', 'asc');
+	   //$("#taskAssigneeId").val("userId${currentUser.id}");
 	   $("#taskAssigneeId").selectpicker('refresh');
+	   $('#taskAssigneeId').trigger('change');
 	} catch(err){
 		
 	}
-});
+}); 
 
 </script>

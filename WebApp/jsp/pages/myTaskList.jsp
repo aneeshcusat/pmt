@@ -363,15 +363,18 @@
 							 <div class="col-md-3">
 							  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 								<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
-								<option value="">All</option>
-									 <c:if test="${not empty userMap}">
-										<c:forEach var="user" items="${userMap}">
-											<c:if test="${user.role != 'SUPERADMIN'}">
-												<option value="userId${user.id}">${user.firstName}</option>
-											</c:if>
-						  				</c:forEach>
-						  			</c:if>
-								</select>
+									<option value="">All</option>
+										 <c:if test="${not empty userMap}">
+											<c:forEach var="user" items="${userMap}">
+												 <c:if test="${currentUser.id eq user.id}">
+												 	<option selected="selected" value="userId${user.id}">${user.firstName}</option>
+												 </c:if>
+												  <c:if test="${currentUser.id ne user.id}">
+												  <option value="userId${user.id}">${user.firstName}</option>
+												  </c:if>
+							  				</c:forEach>
+							  			</c:if>
+									</select>
 								</c:if>
 							</div>
 							<div class="col-md-3">
@@ -705,4 +708,14 @@ $(document).ready(function(){
 	/* END MESSAGE BOX */
 });
 
+$(document).ready(function () {
+	try{
+	   // sortSelect('#taskAssigneeId', 'text', 'asc');
+	   //$("#taskAssigneeId").val("userId${currentUser.id}");
+	   $("#taskAssigneeId").selectpicker('refresh');
+	   $('#taskAssigneeId').trigger('change');
+	} catch(err){
+		
+	}
+}); 
 </script>

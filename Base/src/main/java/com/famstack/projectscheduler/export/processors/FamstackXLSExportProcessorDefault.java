@@ -411,31 +411,10 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             userCell.setCellStyle(cellStyle);
         }
         sheet.autoSizeColumn(columnIndex);
-        Double cellValueTime = 0d;
-        try {
-            cellValueTime = userCell.getNumericCellValue();
-        } catch (Exception e) {
-            logError("unable to get cellvalue" + e.getMessage());
-        }
         double time = convertToActualTimeString(userTaskTime);
-        if (cellValueTime != null && cellValueTime > 0) {
-            logDebug("COL" + columnIndex + " ROWL" + projectDetailsRow.getRowNum() + " timeCellL" + cellValueTime
-                + " time" + time + "userTaskTime" + userTaskTime);
-            time = (userTaskTime == null ? 0 : time) + cellValueTime;
-            logDebug("ADD TIME " + time);
-        }
-
         if (time > 0) {
             userCell.setCellValue(time);
         }
-    }
-
-    private Integer convertToInt(String cellValue)
-    {
-        String[] time = cellValue.split("[:]");
-        int hour = Integer.parseInt(time[0]);
-        int mins = Integer.parseInt(time[1]);
-        return (hour * 60) + mins;
     }
 
     private void createHeader(XSSFWorkbook workBook, Sheet sheet, String dateString, String teamName,

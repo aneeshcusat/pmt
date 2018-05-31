@@ -153,7 +153,7 @@ var templatePlugins = function(){
             if(order === 'asc'){
                 $(select).html($(select).children('option').sort(function (x, y) {
                 	if ($(x).text() == 'All') {
-                		return 0;
+                		return -1;
                 	}
                     return $(x).text().toUpperCase() < $(y).text().toUpperCase() ? -1 : 1;
                 }));
