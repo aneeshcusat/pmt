@@ -503,7 +503,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return userTaskActivityItemMap;
     }
 
-    public List<TaskDetails> getBaklogProjectTasks(Integer userId)
+    public List<TaskDetails> getBaklogProjectTasks(Integer userId, int dayfilter)
     {
         Map<Integer, TaskItem> taskItemMap = new HashMap<>();
         List<TaskDetails> userTaskActivityList = new ArrayList<>();
@@ -513,7 +513,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             dataMap.put("userId", userId);
             queryTobeExecuted = "getBackLogUserActivities";
         }
-        dataMap.put("startTime", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -15));
+        dataMap.put("startTime", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), dayfilter * -1));
         dataMap.put("endTime", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), -1));
 
         List<?> userActivityItemlist =

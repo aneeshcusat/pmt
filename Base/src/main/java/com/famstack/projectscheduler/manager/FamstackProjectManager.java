@@ -622,10 +622,10 @@ public class FamstackProjectManager extends BaseFamstackManager
         return getAllProjectDetailsList(projectCode, projectId, includeArchive);
     }
 
-    public Map<String, List<TaskDetails>> getProjectTasksDataList(Integer userId)
+    public Map<String, List<TaskDetails>> getProjectTasksDataList(Integer userId, int dayfilter)
     {
         Map<String, List<TaskDetails>> projectTaskDetailsMap = famstackProjectTaskManager.getAllProjectTask(userId);
-        List<TaskDetails> backLogTasks = famstackProjectTaskManager.getBaklogProjectTasks(userId);
+        List<TaskDetails> backLogTasks = famstackProjectTaskManager.getBaklogProjectTasks(userId, dayfilter);
         moveInProgressBackLogTasksToInProgress(projectTaskDetailsMap, backLogTasks);
         projectTaskDetailsMap.put("BACKLOG", backLogTasks);
 

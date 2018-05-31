@@ -113,6 +113,9 @@
      50% { opacity: 0.0; }
      100% { opacity: 1.0; }
      }
+.task-item{
+	display: none;
+}
 </style>
 <script>
  var taskTimerMap = {};
@@ -182,7 +185,7 @@
 				<div class="panel-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<div class="col-md-6">
+							<div class="col-md-5">
 								<div class="input-group">
 									<div class="input-group-addon">
 										<span class="fa fa-search"></span>
@@ -191,7 +194,7 @@
 								</div>
 							</div>
 							
-							<div class="col-md-3">
+							<div class="col-md-2">
 								<c:if test="${not empty modelViewMap.taskOwners}">
 								<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
 									<option value="">All</option>
@@ -207,6 +210,23 @@
 							  			</c:if>
 									</select>
 								</c:if>
+							</div>
+							
+							<div class="col-md-2"> 
+								<div class="form-group">
+                                <div class="col-md-10">                                            
+                                       <select id="taskFilterDayId" name="taskFilterDayId" class="form-control select" data-live-search="true">
+											<c:forEach begin="15" end="100" varStatus="loop" step="5">
+												<c:if test="${param.dayfilter eq loop.current}">
+                                        		<option value="${loop.current}" selected="selected">Last ${loop.current} Days Tasks</option>
+                                        		</c:if>
+                                        		<c:if test="${param.dayfilter ne loop.current}">
+                                        		<option value="${loop.current}">Last ${loop.current} Days Tasks</option>
+                                        		</c:if>
+                                 			</c:forEach>
+										</select>
+                                </div>
+                            </div>
 							</div>
 				
 							<div class="col-md-3">
@@ -1056,6 +1076,12 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	} catch(err){
 		
 	}
+	
 }); 
+
+
+ $("#taskFilterDayId").on("change", function(){
+	 window.location = "/bops/dashboard/tasks?dayfilter="+$("#taskFilterDayId").val();
+ });
 
 </script>

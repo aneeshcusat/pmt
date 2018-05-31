@@ -415,9 +415,9 @@ public class FamstackDashboardManager extends BaseFamstackService
         return FamstackUtils.getJsonFromObject(groupMessageDetails);
     }
 
-    public Map<String, List<TaskDetails>> getProjectTasksDataList(Integer userId)
+    public Map<String, List<TaskDetails>> getProjectTasksDataList(Integer userId, int dayfilter)
     {
-        Map<String, List<TaskDetails>> taskDetailsMap = projectManager.getProjectTasksDataList(userId);
+        Map<String, List<TaskDetails>> taskDetailsMap = projectManager.getProjectTasksDataList(userId, dayfilter);
         sortTaskDeailsList(taskDetailsMap);
         return taskDetailsMap;
     }
@@ -452,7 +452,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     public String getProjectTasksDataListJson(int userId)
     {
-        Map<String, List<TaskDetails>> taskMap = projectManager.getProjectTasksDataList(userId);
+        Map<String, List<TaskDetails>> taskMap = projectManager.getProjectTasksDataList(userId, 15);
         return FamstackUtils.getJsonFromObject(taskMap);
     }
 

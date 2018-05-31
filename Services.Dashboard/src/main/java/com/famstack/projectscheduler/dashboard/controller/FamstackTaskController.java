@@ -75,7 +75,7 @@ public class FamstackTaskController extends BaseFamstackService
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
-    public ModelAndView listTasks()
+    public ModelAndView listTasks(@RequestParam(value = "dayfilter", defaultValue = "15") int dayfilter)
     {
 
         UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
@@ -84,7 +84,8 @@ public class FamstackTaskController extends BaseFamstackService
             || currentUserItem.getUserRole() == UserRole.TEAMLEAD) {
             userId = null;
         }
-        Map<String, List<TaskDetails>> taskDetailsMap = famstackDashboardManager.getProjectTasksDataList(userId);
+        Map<String, List<TaskDetails>> taskDetailsMap =
+            famstackDashboardManager.getProjectTasksDataList(userId, dayfilter);
         Map<String, Object> modelViewMap = new HashMap<String, Object>();
         modelViewMap.put("projectTaskDetailsData", taskDetailsMap);
         if (userId == null) {
