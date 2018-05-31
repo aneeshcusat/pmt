@@ -352,7 +352,7 @@
 				<div class="panel-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<div class="col-md-6">
+							<div class="col-md-5">
 								<div class="input-group">
 									<div class="input-group-addon">
 										<span class="fa fa-search"></span>
@@ -360,7 +360,7 @@
 									<input type="text" class="form-control" id="taskActivitySearchId" placeholder="Search for a task activity">
 								</div>
 							</div>
-							 <div class="col-md-3">
+							 <div class="col-md-2">
 							  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 								<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
 									<option value="">All</option>
@@ -376,6 +376,22 @@
 							  			</c:if>
 									</select>
 								</c:if>
+							</div>
+							<div class="col-md-2"> 
+								<div class="form-group">
+                                <div class="col-md-12">                                            
+                                       <select id="taskFilterDayId" name="taskFilterDayId" class="form-control select" data-live-search="true">
+											<c:forEach begin="10" end="100" varStatus="loop" step="5">
+												<c:if test="${param.dayfilter eq loop.current}">
+                                        		<option value="${loop.current}" selected="selected">Last ${loop.current} Days Activity</option>
+                                        		</c:if>
+                                        		<c:if test="${param.dayfilter ne loop.current}">
+                                        		<option value="${loop.current}">Last ${loop.current} Days Activity</option>
+                                        		</c:if>
+                                 			</c:forEach>
+										</select>
+                                </div>
+                            </div>
 							</div>
 							<div class="col-md-3">
 								  
@@ -568,8 +584,14 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 //unbilled task end
 
 var getAssignJsonData = function(){
-	doAjaxRequest("GET", "${applicationHome}/userTaskActivityJson", {},  function(jsonData) {
+	var taskFilterDay = $("#taskFilterDayId").val();
+	doAjaxRequest("GET", "${applicationHome}/userTaskActivityJson?dayfilter=" + taskFilterDay, {},  function(jsonData) {
 		fillTableFromJson(jsonData);
+		var assigneeId = "";
+		if ($("#taskAssigneeId").length > 0) {
+			assigneeId = $("#taskAssigneeId").val();
+		}
+		filterTaskActivities(assigneeId);
 	   }, function(e) {
 	   });
 };
@@ -642,6 +664,10 @@ $(".taskOwnersList").on("click", function(){
 
 $("#taskAssigneeId").on("change", function(){
 	var assigneeSelectionId = $(this).val();
+	filterTaskActivities(assigneeSelectionId);
+});
+
+function filterTaskActivities(assigneeSelectionId){
 	if (assigneeSelectionId != "") {
 		$(".taskact-item").hide();
 		$(".taskact-item." + assigneeSelectionId).show();
@@ -651,7 +677,7 @@ $("#taskAssigneeId").on("change", function(){
 		activeUserId="";
 	}
 	performSearch();
-});
+}
 
 
 function performSearch(){
@@ -708,14 +734,7 @@ $(document).ready(function(){
 	/* END MESSAGE BOX */
 });
 
-$(document).ready(function () {
-	try{
-	   // sortSelect('#taskAssigneeId', 'text', 'asc');
-	   //$("#taskAssigneeId").val("userId${currentUser.id}");
-	   $("#taskAssigneeId").selectpicker('refresh');
-	   $('#taskAssigneeId').trigger('change');
-	} catch(err){
-		
-	}
-}); 
+$("#taskFilterDayId").on("change", function(){
+	getAssignJsonData();
+});
 </script>

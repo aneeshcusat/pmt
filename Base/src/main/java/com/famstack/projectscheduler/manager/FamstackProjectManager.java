@@ -351,9 +351,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         updateProjectStatusBasedOnTaskStatus(projectId);
     }
 
-    public String getUserTaskActivityJson()
+    public String getUserTaskActivityJson(Integer userId, int dayfilter)
     {
-        return famstackProjectTaskManager.getUserTaskActivityJson();
+        return famstackProjectTaskManager.getUserTaskActivityJson(userId, dayfilter);
     }
 
     public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem)
@@ -692,9 +692,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     }
 
-    public String getUserTaskActivityForCalenderJson(String startDate, String endDate)
+    public String getUserTaskActivityForCalenderJson(String startDate, String endDate, int userId)
     {
-        return famstackProjectTaskManager.getUserTaskActivityJson(startDate, endDate);
+        return famstackProjectTaskManager.getUserTaskActivityJson(startDate, endDate, userId);
     }
 
     public String getProjectNameJson(String query)

@@ -359,9 +359,9 @@ public class FamstackDashboardManager extends BaseFamstackService
         triggerTaskNotification(NotificationType.TASK_DELETED, taskDetails);
     }
 
-    public String getUserTaskActivityJson()
+    public String getUserTaskActivityJson(Integer userId, int dayfilter)
     {
-        return projectManager.getUserTaskActivityJson();
+        return projectManager.getUserTaskActivityJson(userId, dayfilter);
     }
 
     public void createGroup(GroupDetails groupDetails)
@@ -557,9 +557,9 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectCounts;
     }
 
-    public String getAjaxFullcalendar(String startDate, String endDate)
+    public String getAjaxFullcalendar(String startDate, String endDate, int userId)
     {
-        return projectManager.getUserTaskActivityForCalenderJson(startDate, endDate);
+        return projectManager.getUserTaskActivityForCalenderJson(startDate, endDate, userId);
     }
 
     public List<AccountDetails> getAccountDataList()

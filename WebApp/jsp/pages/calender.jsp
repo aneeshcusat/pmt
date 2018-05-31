@@ -29,11 +29,32 @@
         <div class="page-title">                    
             <h2><span class="fa fa-calendar"></span> Calendar</h2>
         </div>  
-        <div class="pull-right">
+        <div class="pull-right col-md-10">
+        <div class="col-md-6">
+        </div>
+         <div class="col-md-3">
+							  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
+								<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
+									<option value="-1">All</option>
+										 <c:if test="${not empty userMap}">
+											<c:forEach var="user" items="${userMap}">
+												 <c:if test="${currentUser.id eq user.id}">
+												 	<option selected="selected" value="${user.id}">${user.firstName}</option>
+												 </c:if>
+												  <c:if test="${currentUser.id ne user.id}">
+												  <option value="${user.id}">${user.firstName}</option>
+												  </c:if>
+							  				</c:forEach>
+							  			</c:if>
+									</select>
+								</c:if>
+							</div>
+							<div class="col-md-3">
         <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
 									Record Non-billable Time.
 		</a>
+		</div>
         </div>                                                                                
     </div>
     <!-- END CONTENT FRAME TOP -->
@@ -83,6 +104,9 @@
 
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>            
+ <script type="text/javascript"
+	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+ 
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js"></script>
 <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js"></script>
 <script>
@@ -163,4 +187,19 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#completionDateRange").val("");
 	$("#taskStartComments").val("");
 }
+
+$("#taskAssigneeId").on("change",function(){
+	var userId = $("#taskAssigneeId").val();
+	var events = {
+	        url: "getAjaxFullcalendar",
+	        type: 'GET',
+	        data: {
+	        	userId: userId
+	        }
+	    }
+	$('#calendar').fullCalendar('removeEventSource', events);
+    $('#calendar').fullCalendar('addEventSource', events);
+    $('#calendar').fullCalendar('refetchEvents');
+});
+
 </script>

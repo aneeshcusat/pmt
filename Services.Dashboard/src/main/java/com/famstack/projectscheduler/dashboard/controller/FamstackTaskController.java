@@ -44,9 +44,10 @@ public class FamstackTaskController extends BaseFamstackService
 
     @RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
     @ResponseBody
-    public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate)
+    public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate,
+        @RequestParam(value = "userId", defaultValue = "0") int userId)
     {
-        return famstackDashboardManager.getAjaxFullcalendar(startDate, endDate);
+        return famstackDashboardManager.getAjaxFullcalendar(startDate, endDate, userId);
     }
 
     @RequestMapping(value = "/createTask", method = RequestMethod.POST)
@@ -168,9 +169,15 @@ public class FamstackTaskController extends BaseFamstackService
 
     @RequestMapping(method = RequestMethod.GET, value = "/userTaskActivityJson")
     @ResponseBody
-    public String userTaskActivityJson()
+    public String userTaskActivityJson(@RequestParam(value = "dayfilter", defaultValue = "10") int dayfilter)
     {
-        return famstackDashboardManager.getUserTaskActivityJson();
+        UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
+        Integer userId = currentUserItem.getId();
+        if (currentUserItem.getUserRole() == UserRole.ADMIN || currentUserItem.getUserRole() == UserRole.SUPERADMIN
+            || currentUserItem.getUserRole() == UserRole.TEAMLEAD) {
+            userId = null;
+        }
+        return famstackDashboardManager.getUserTaskActivityJson(userId, dayfilter);
     }
 
     @RequestMapping(value = "/adjustTaskTime", method = RequestMethod.POST)

@@ -113,9 +113,6 @@
      50% { opacity: 0.0; }
      100% { opacity: 1.0; }
      }
-.task-item{
-	display: none;
-}
 </style>
 <script>
  var taskTimerMap = {};
@@ -195,7 +192,7 @@
 							</div>
 							
 							<div class="col-md-2">
-								<c:if test="${not empty modelViewMap.taskOwners}">
+								 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 								<select id="taskAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
 									<option value="">All</option>
 										 <c:if test="${not empty userMap}">

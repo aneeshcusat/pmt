@@ -227,10 +227,18 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
     }
 
-    public List<TaskActivityDetails> getAllTaskActivities(String startDateString, String completionDateString)
+    public List<TaskActivityDetails> getAllTaskActivities(String startDateString, String completionDateString,
+        int userId)
     {
         List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
-        int currentUserId = getFamstackApplicationConfiguration().getCurrentUserId();
+        int currentUserId = userId;
+        if (userId == 0) {
+            currentUserId = getFamstackApplicationConfiguration().getCurrentUserId();
+            if (getFamstackApplicationConfiguration().getCurrentUser().getUserGroupId() != getFamstackApplicationConfiguration()
+                .getCurrentUserGroupId()) {
+                currentUserId = -1;
+            }
+        }
         List<?> userActivityItems = getAllTaskActivityItems(startDateString, completionDateString, currentUserId, true);
 
         getAllTaskActivitiesFromUserActivity(taskActivitiesList, userActivityItems);
@@ -259,7 +267,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         String queryKey = "userActivityItemsFromDatetoDate";
         if ((userRole == UserRole.ADMIN || userRole == UserRole.SUPERADMIN || userRole == UserRole.TEAMLEAD)
-            && isFullLoad) {
+            && isFullLoad && currentUserId == -1) {
             queryKey = "allUserActivityItemsFromDatetoDate";
         } else {
             dataMap.put("userId", currentUserId);
@@ -270,17 +278,23 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return userActivityItems;
     }
 
-    public List<TaskActivityDetails> getAllTaskActivities()
+    public List<TaskActivityDetails> getAllTaskActivities(Integer userId, int dayfilter)
     {
-        Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -30);
+        String queryTobeExecuted = "allUserActivityItemsFromToday";
+
+        Date dayStartDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), -1 * dayfilter);
         List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("calenderDateStart", dayStartDate);
         logDebug("dayStartDate : " + dayStartDate);
 
+        if (userId != null) {
+            dataMap.put("userId", userId);
+            queryTobeExecuted = "userActivityItemsFromToday";
+        }
+
         List<?> userActivityItems =
-            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("allUserActivityItemsFromToday"),
-                dataMap);
+            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString(queryTobeExecuted), dataMap);
 
         getAllTaskActivitiesFromUserActivity(taskActivitiesList, userActivityItems);
         return taskActivitiesList;
