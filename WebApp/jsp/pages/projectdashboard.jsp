@@ -981,6 +981,7 @@ var taskLinkclick = function(projectId, e){
         	$('#taskDetailsDiv').css({'top':e.pageY+10,'left':e.pageX-500, 'position':'absolute', 'border':'1px solid gray', 'padding':'5px'});
         	$('#taskDetailsDiv').show();
         }
+        initializePopOver();
     }, function(e) {
         famstacklog("ERROR: ", e);
         famstackalert(e);
@@ -1356,46 +1357,91 @@ refreshRecurringSpin();
 });
 
 
-var showTaskActualTimeEdit = function(taskId){
-	$("."+taskId+"taskTimeEdit").show();
-	$("."+taskId+"taskTimeEditLink").hide();
+var showTaskActActualTimeEdit = function(taskActId) {
+	$("."+taskActId+"taskTimeEditLink").hide();
+	$("."+taskActId+"taskTimeEdit").show();	
+	$("."+taskActId+"taskActTimeEdit").show();	
 }
 
-var hideTaskActualTimeEdit = function(taskId){
-	$("."+taskId+"taskTimeEdit").hide();
-	$("."+taskId+"taskTimeEditLink").show();
+var hideTaskActActualTimeEdit = function(taskActId) {
+	$("."+taskActId+"taskTimeEditLink").show();
+	$("."+taskActId+"taskTimeEdit").hide();	
+	$("."+taskActId+"taskActTimeEdit").hide();	
 }
 
-var taskActualTimeSubmit = function(taskId) {
-	var hours=$("#taskDetailsDiv #taskHHTimeEdit"+taskId).val();
-	var mins=$("#taskDetailsDiv #taskMMTimeEdit"+taskId).val();
+function taskActActualTimeSubmit(taskId, activityId){
+	var hours=$(".taskActHHTimeEdit"+activityId).val();
+	var mins=$(".taskActMMTimeEdit"+activityId).val();
 	
-	$("#taskDetailsDiv #taskHHTimeEdit"+taskId).removeClass("error");
-	$("#taskDetailsDiv #taskMMTimeEdit"+taskId).removeClass("error");
+	taskActActualTimeSubmitAction(taskId, activityId, hours, mins, true)
+}
+
+
+function taskActActualTimeSubmitPop(taskId, activityId, thisVar){
+	var hours= $(thisVar).closest("div").find("input.taskActHHTimeEdit"+activityId).val();
+	var mins= $(thisVar).closest("div").find("input.taskActMMTimeEdit"+activityId).val();
+	if (taskActActualTimeSubmitAction(taskId, activityId, hours, mins, false) == true) {
+		var newDuration = (parseInt(hours) * 60) +parseInt(mins);
+		
+		var originalActTime = $("input.taskActOriginalTime"+activityId).val();
+		var originalTaskTime =  $("input.taskOriginalTime"+taskId).val();
+		
+		var newTaskDuration = (newDuration - parseInt(originalActTime)) + parseInt(originalTaskTime);
+		var newTaskHr = parseInt(newTaskDuration/60);
+		var newTaskMins = (newTaskDuration%60);
+		
+		$("input.taskOriginalTime"+taskId).val(newTaskDuration);
+		$("input.taskActOriginalTime"+activityId).val(newDuration);
+		
+		$("." + taskId +"taskActTaskTimeHrs").html(newTaskHr + ":" + (newTaskMins < 10 ? "0"+ newTaskMins : newTaskMins));
+	}
+}
+
+var taskActActualTimeSubmitAction = function(taskId, activityId, hours, mins, isHide) {
+	
+	$(".taskActHHTimeEdit"+activityId).removeClass("error");
+	$(".taskActMMTimeEdit"+activityId).removeClass("error");
+	
 	var error = false;
 	if (hours == "" || !$.isNumeric(hours)) {
-		$("#taskDetailsDiv #taskHHTimeEdit"+taskId).addClass("error");
+		$(".taskActHHTimeEdit"+activityId).addClass("error");
 		error = true;
 	}
 	
 	if (mins == "" || !$.isNumeric(mins) || parseInt(mins) >= 60) {
-		$("#taskDetailsDiv #taskMMTimeEdit"+taskId).addClass("error");
+		$(".taskActMMTimeEdit"+activityId).addClass("error");
 		error = true;
 	}
 	
 	if(error){
-		return;
+		return false;
 	}
 	
 	var newDuration = (parseInt(hours) * 60) +parseInt(mins);
-	
-	doAjaxRequest("POST", "${applicationHome}/adjustTaskTime", {"taskId":taskId,"newDuration":newDuration},  function() {
-		hideTaskActualTimeEdit(taskId);
-		$("."+taskId+"taskActTimeHrs").html((hours.length > 1 ? hours : "0" + hours) + ":" + (mins.length > 1 ? mins : "0" + mins));
+	var startTime ="";
+	var endTime ="";
+	doAjaxRequest("POST", "${applicationHome}/adjustTaskActivityTime", {"activityId":activityId,"taskId":taskId,"newDuration":newDuration,"startTime":startTime,"endTime":endTime},  function(response) {
+		$("."+activityId+"taskTimeEditLinkHrs").html(hours+":"+(mins < 10 ? "0"+ mins : mins));
+		if (isHide) {
+			hideTaskActActualTimeEdit(activityId);
+		}
 	}, function(e) {
 	});
+	
+	return true;
 }
 
+function initializePopOver() {
+	$("[data-toggle=popover]").each(function(i, obj) {
+		$(this).popover({
+		  html: true,
+		  content: function() {
+		    var id = $(this).attr('id');
+		    return $('#popover-' + id).html();
+		  }
+		});
+	});
+}
 $(".ranges ul li").on("click",function(){
 	persistDateFilter($(this).html());
 });

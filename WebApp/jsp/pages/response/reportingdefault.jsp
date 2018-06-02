@@ -61,11 +61,11 @@
 					<td><span class="label label-${projectState}" style="${statusColor}">${project.projectStatus}</span></td>
 					<td>${userDetailsMap[project.userId].firstName}</td>
 					<td>${project.taskName}</td>
-					<td><span class="${project.taskActivityId}taskTimeEditLink ${project.taskActivityId}taskTimeEditLinkHrs">${project.durationInHours}</span>
 					<c:if test="${empty project.childs}">
+						<td><span class="${project.taskActivityId}taskTimeEditLink ${project.taskActivityId}taskTimeEditLinkHrs">${project.durationInHours}</span>
 						<span class="${project.taskActivityId}taskTimeEdit" style="display: none">
-							<input type="text" placeholder="hh" class="durationTxt" id="taskActHHTimeEdit${project.taskActivityId}"/>
-							<input type="text" value="0" placeholder="mm" class="durationTxt" id="taskActMMTimeEdit${project.taskActivityId}"/> 
+							<input type="text" placeholder="hh" class="durationTxt taskActHHTimeEdit${project.taskActivityId}"/>
+							<input type="text" value="0" placeholder="mm" class="durationTxt taskActMMTimeEdit${project.taskActivityId}"/> 
 						</span>
 						<span style="text-align:right; display:none" class="${project.taskActivityId}taskActTimeEdit">
 							<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmit(${project.taskId},'${project.taskActivityId}')" value="Save"><i class="fa fa-check" style="color: green" aria-hidden="true"></i></button>
@@ -75,8 +75,72 @@
 							<a href="javascript:void(0)" class=" ${project.taskActivityId}taskTimeEditLink" onclick="showTaskActActualTimeEdit('${project.taskActivityId}')"  style="margin-left: 10px">
 							<span class="fa fa-pencil"></span></a>
 						</c:if>
+						</td>
 					</c:if>
-					</td>
+					
+					<c:if test="${not empty project.childs}">
+						<td>
+						<input type="hidden" class="taskOriginalTime${project.taskId}" value="${project.taskActivityDuration}"/>
+						<span class="${project.taskId}taskActTaskTimeHrs" >${project.durationInHours}</span>
+						<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}">
+						<a data-toggle="popover" data-container="body" data-placement="left" type="button" data-html="true" href="javascript:initPopOver(this);" id="taskActPopOver${project.taskId}" style="margin-left: 10px"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+						</c:if>
+						 <div id="popover-taskActPopOver${project.taskId}" class="hide">
+					        <div class="form-group"> 
+					        <table style="width: 250px;font-size: 8pt">
+					        <tr>
+					        		<td colspan="3">
+					       			</td>
+					       			<td style="width: 5px"><a href="javascript:$('#taskActPopOver${project.taskId}').popover('hide');" style="margin-top: -10px;" class="pull-right"><i class="fa fa-times fa-lg" style="color: red" aria-hidden="true"></i></a>
+					       			</td>
+					        </tr>
+					        
+					       	<tr>
+					        		<td style="width: 25%"><fmt:formatDate pattern = "yyyy/MM/dd" value = "${project.taskActivityStartTime}"/></td>
+					        		<td style="width: 25%x">${userDetailsMap[project.userId].firstName}</td>
+					        		<td style="width: 18%">
+					        		<span class="${project.taskActivityId}taskTimeEditLink ${project.taskActivityId}taskTimeEditLinkHrs">${project.actDurationInHours}</span>
+					        		</td>
+					        		<td  style="width: 32%">
+					        		<span>
+					        		<input type="hidden" class="taskActOriginalTime${project.taskActivityId}" value="${project.taskActActivityDuration}"/>
+									<input type="text" placeholder="hh" class="durationTxt taskActHHTimeEdit${project.taskActivityId}"/>
+									<input type="text" value="0" placeholder="mm" class="durationTxt taskActMMTimeEdit${project.taskActivityId}"/> 
+								</span>
+								<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty project.taskActivityEndTime}">
+								<span style="text-align:right;" class="${project.taskActivityId}taskActTimeEdit">
+									<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmitPop(${project.taskId},'${project.taskActivityId}',$(this))" value="Save"><i class="fa fa-check  fa-lg" style="color: green" aria-hidden="true"></i></button>
+								</span>
+								</c:if>
+					        		</td>
+					        	</tr>
+					        	
+					        <c:forEach var="taskActivity" items="${project.childs}">
+					        	<tr>
+					        		<td style="width: 25%"><fmt:formatDate pattern = "yyyy/MM/dd" value = "${taskActivity.taskActivityStartTime}"/></td>
+					        		<td style="width: 25%x">${userDetailsMap[taskActivity.userId].firstName}</td>
+					        		<td style="width: 18%"><span class="${taskActivity.taskActivityId}taskTimeEditLink ${taskActivity.taskActivityId}taskTimeEditLinkHrs">${taskActivity.durationInHours}</span>
+					        		</td>
+					        		<td  style="width: 32%">
+					        		<span>
+					        		<input type="hidden" class="taskActOriginalTime${taskActivity.taskActivityId}" value="${taskActivity.taskActivityDuration}"/>
+									<input type="text" placeholder="hh" class="durationTxt taskActHHTimeEdit${taskActivity.taskActivityId}"/>
+									<input type="text" value="0" placeholder="mm" class="durationTxt taskActMMTimeEdit${taskActivity.taskActivityId}"/> 
+								</span>
+								<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty taskActivity.taskActivityEndTime}">
+								<span style="text-align:right;" class="${taskActivity.taskActivityId}taskActTimeEdit">
+									<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmitPop(${taskActivity.taskId},'${taskActivity.taskActivityId}',$(this))" value="Save"><i class="fa fa-check fa-lg" style="color: green" aria-hidden="true"></i></button>
+								</span>
+								</c:if>
+					        		</td>
+					        	</tr>
+					          </c:forEach>
+					        </table>
+					        </div>
+					    </div>
+ 					 </td>
+					</c:if>
+					
 				</tr>
 			</c:forEach>
 		</tbody>

@@ -40,6 +40,8 @@ public class ProjectTaskActivityDetails
 
     private Integer taskActivityDuration;
 
+    private Integer taskActActivityDuration;
+
     private Integer userId;
 
     private Integer taskActivityId;
@@ -227,8 +229,21 @@ public class ProjectTaskActivityDetails
         if (taskActivityDuration == null) {
             return "";
         }
-        int hours = taskActivityDuration / 60; // since both are ints, you get an int
-        int minutes = taskActivityDuration % 60;
+        return getTimeInHrs(taskActivityDuration);
+    }
+
+    public String getActDurationInHours()
+    {
+        if (taskActActivityDuration == null) {
+            return "";
+        }
+        return getTimeInHrs(taskActActivityDuration);
+    }
+
+    private String getTimeInHrs(int timeInMinutes)
+    {
+        int hours = timeInMinutes / 60; // since both are ints, you get an int
+        int minutes = timeInMinutes % 60;
         return String.format("%d:%02d", hours, minutes);
     }
 
@@ -273,5 +288,15 @@ public class ProjectTaskActivityDetails
     public List<ProjectTaskActivityDetails> getChilds()
     {
         return childs;
+    }
+
+    public Integer getTaskActActivityDuration()
+    {
+        return taskActActivityDuration;
+    }
+
+    public void setTaskActActivityDuration(Integer taskActActivityDuration)
+    {
+        this.taskActActivityDuration = taskActActivityDuration;
     }
 }

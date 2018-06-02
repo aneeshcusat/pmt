@@ -660,7 +660,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
         for (Object taskItemObj : projectTaskList) {
             TaskItem taskItem = (TaskItem) taskItemObj;
-            TaskDetails taskDetails = mapTask(taskItem, false);
+            TaskDetails taskDetails = mapTask(taskItem, true);
             taskDetailsList.add(taskDetails);
         }
         return taskDetailsList;

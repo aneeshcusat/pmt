@@ -49,7 +49,7 @@
     <!-- END CONTENT FRAME TOP -->
     <!-- body-->
     <div class="row">
-	<div class="col-md-12" >
+	<div class="col-md-12" style="min-height: 700px;">
 		<div class="row" id="assignTableId"  style="margin-top:10px">
 		<!-- START DEFAULT TABLE EXPORT -->
                             <div class="panel panel-default">
@@ -118,14 +118,21 @@ var loadAllProjectDetails = function(daterange, format) {
             buttons: [
                  'copy', 'csv', 'print'
             ],
-            "pageLength": 100
-        });
+            "pageLength": 100,
+            "fnDrawCallback": function( oSettings ) {
+            	initializePopOver();
+              }
+        }).on( 'draw', function () {
+        	initializePopOver();
+        } );;
         
+		       
 	}, function(e) {
         famstacklog("ERROR: ", e);
         famstackalert(e);
     });
 }
+
 $(function() {
     $('input[name="daterange"]').daterangepicker();
     loadAllProjectDetails('${dateRange}','${reportFormat}');
@@ -144,40 +151,92 @@ var hideTaskActActualTimeEdit = function(taskActId) {
 	$("."+taskActId+"taskActTimeEdit").hide();	
 }
 
-var taskActActualTimeSubmit = function(taskId, activityId) {
-	var hours=$("#taskActHHTimeEdit"+activityId).val();
-	var mins=$("#taskActMMTimeEdit"+activityId).val();
+function taskActActualTimeSubmit(taskId, activityId){
+	var hours=$(".taskActHHTimeEdit"+activityId).val();
+	var mins=$(".taskActMMTimeEdit"+activityId).val();
 	
+	taskActActualTimeSubmitAction(taskId, activityId, hours, mins, true)
+}
+
+
+function taskActActualTimeSubmitPop(taskId, activityId, thisVar){
+	var hours= $(thisVar).closest("div").find("input.taskActHHTimeEdit"+activityId).val();
+	var mins= $(thisVar).closest("div").find("input.taskActMMTimeEdit"+activityId).val();
+	if (taskActActualTimeSubmitAction(taskId, activityId, hours, mins, false) == true) {
+		var newDuration = (parseInt(hours) * 60) +parseInt(mins);
+		
+		var originalActTime = $("input.taskActOriginalTime"+activityId).val();
+		var originalTaskTime =  $("input.taskOriginalTime"+taskId).val();
+		
+		var newTaskDuration = (newDuration - parseInt(originalActTime)) + parseInt(originalTaskTime);
+		var newTaskHr = parseInt(newTaskDuration/60);
+		var newTaskMins = (newTaskDuration%60);
+		
+		$("input.taskOriginalTime"+taskId).val(newTaskDuration);
+		$("input.taskActOriginalTime"+activityId).val(newDuration);
+		
+		$("." + taskId +"taskActTaskTimeHrs").html(newTaskHr + ":" + (newTaskMins < 10 ? "0"+ newTaskMins : newTaskMins));
+	}
+}
+
+var taskActActualTimeSubmitAction = function(taskId, activityId, hours, mins, isHide) {
 	
-	$("#taskActHHTimeEdit"+taskId).removeClass("error");
-	$("#taskActMMTimeEdit"+taskId).removeClass("error");
+	$(".taskActHHTimeEdit"+activityId).removeClass("error");
+	$(".taskActMMTimeEdit"+activityId).removeClass("error");
 	
 	var error = false;
 	if (hours == "" || !$.isNumeric(hours)) {
-		$("#taskActHHTimeEdit"+taskId).addClass("error");
+		$(".taskActHHTimeEdit"+activityId).addClass("error");
 		error = true;
 	}
 	
 	if (mins == "" || !$.isNumeric(mins) || parseInt(mins) >= 60) {
-		$("#taskActMMTimeEdit"+taskId).addClass("error");
+		$(".taskActMMTimeEdit"+activityId).addClass("error");
 		error = true;
 	}
 	
 	if(error){
-		return;
+		return false;
 	}
 	
 	var newDuration = (parseInt(hours) * 60) +parseInt(mins);
 	var startTime ="";
 	var endTime ="";
 	doAjaxRequest("POST", "${applicationHome}/adjustTaskActivityTime", {"activityId":activityId,"taskId":taskId,"newDuration":newDuration,"startTime":startTime,"endTime":endTime},  function(response) {
-		$("."+activityId+"taskTimeEditLinkHrs").html(hours+":"+mins);
-		hideTaskActActualTimeEdit(activityId);
+		$("."+activityId+"taskTimeEditLinkHrs").html(hours+":"+(mins < 10 ? "0"+ mins : mins));
+		if (isHide) {
+			hideTaskActActualTimeEdit(activityId);
+		}
 	}, function(e) {
 	});
+	
+	return true;
 }
 
 $(document).ready(function(){
 	
 });
+function initializePopOver() {
+	$("[data-toggle=popover]").each(function(i, obj) {
+		$(this).popover({
+		  html: true,
+		  content: function() {
+		    var id = $(this).attr('id');
+		    return $('#popover-' + id).html();
+		  }
+		});
+	});
+}
+
+function initPopOver(thisVar){
+	$(thisVar).popover({
+		  html: true,
+		  content: function() {
+		    var id = $(thisVar).attr('id');
+		    return $('#popover-' + id).html();
+		  }
+		});
+}
+
+
 </script>
