@@ -214,7 +214,6 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
                 notificationEmailItem.setSubscriberList(getSubscribersIdForProjectUpdates(projectDetails));
             }
             notificationEmailItem.getToList().addAll(getToListForTaskUpdate(taskDetails));
-            notificationEmailItem.getSubscriberList().addAll(getSubscribersIdForProjectUpdates(taskDetails));
 
             notificationEmailItem.getData().put("id", taskDetails.getTaskId());
             notificationEmailItem.getData().put("projectId", taskDetails.getProjectId());
@@ -289,21 +288,6 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         }
         toList.add(reporterId);
         logDebug("getSubscribersIdForProjectUpdates" + toList);
-        return toList;
-    }
-
-    private Set<Integer> getSubscribersIdForProjectUpdates(TaskDetails taskDetails)
-    {
-        Set<Integer> toList = new HashSet<>();
-        String helpers = taskDetails.getHelpersList();
-        if (StringUtils.isNotBlank(helpers)) {
-            String[] helperArray = helpers.split(",");
-            for (String helper : helperArray) {
-                toList.add(Integer.parseInt(helper.trim()));
-            }
-            toList.add(taskDetails.getAssignee());
-        }
-        logDebug("getSubscribersIdForProjecttaskUpdates" + toList);
         return toList;
     }
 

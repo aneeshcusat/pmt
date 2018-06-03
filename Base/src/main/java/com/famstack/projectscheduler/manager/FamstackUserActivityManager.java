@@ -134,6 +134,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
     public void updateAllUserAvailableTime()
     {
+        logDebug("updated available time for users ");
         for (Object userActivityItemObj : getTodaysUserActivity()) {
             UserActivityItem userActivityItem = (UserActivityItem) userActivityItemObj;
 
@@ -148,7 +149,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             Timestamp availableTime = getUserAvailableTime(userActivityItem.getUserTaskActivities());
 
             if (employeeDetails != null) {
-                logDebug("updated available time for user " + userActivityItem.getId());
                 employeeDetails.setUserAvailableTime(availableTime);
             }
         }
@@ -157,7 +157,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     private Timestamp getUserAvailableTime(Set<UserTaskActivityItem> userTaskActivityItems)
     {
         Timestamp userAvailableTime = null;
-        logDebug("updating user available time ");
         for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
             userAvailableTime = getUserAvaliableTime(userAvailableTime, userTaskActivityItem);
         }
@@ -168,7 +167,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
     private Timestamp getUserAvaliableTime(Timestamp userAvailableTime, UserTaskActivityItem userTaskActivityItem)
     {
-        logDebug("getUserAvaliableTime task : " + userTaskActivityItem.getTaskId());
         Timestamp actualEndTime = userTaskActivityItem.getActualEndTime();
         Timestamp startTime = userTaskActivityItem.getStartTime();
         int durationInMinutes = userTaskActivityItem.getDurationInMinutes();
@@ -191,7 +189,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             }
 
         }
-        logDebug("getUserAvaliableTime time : " + userAvailableTime);
         return userAvailableTime;
     }
 
@@ -311,7 +308,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
                 UserActivityItem userActivityItem = (UserActivityItem) userActivityItemObj;
                 Set<UserTaskActivityItem> userTaskActivityItems = userActivityItem.getUserTaskActivities();
-                logDebug("userActivityItem.getId() :" + userActivityItem.getId());
                 if (!userActivityItems.isEmpty()) {
                     for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
                         TaskActivityDetails taskActivityDetails = mapUserTaskActivityItem(userTaskActivityItem);

@@ -117,10 +117,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         hqlQuery += " and userGroupId = " + userGroupId;
         hqlQuery += " " + orderedBy;
         Query<?> query = session.createQuery(hqlQuery).setCacheable(true);
-        logDebug("executeQuery :" + hqlQuery);
         if (dataMap != null) {
-            logDebug("dataMap :" + dataMap.keySet());
-            logDebug("dataMap values :" + dataMap.values());
             for (String paramName : dataMap.keySet()) {
                 query.setParameter(paramName, dataMap.get(paramName));
             }
@@ -145,10 +142,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Transaction tx = session.beginTransaction();
         hqlQuery += " and userGroupId = " + userGroupId;
         Query<?> query = session.createQuery(hqlQuery).setCacheable(true);
-        logDebug("executeQuery :" + hqlQuery);
         if (dataMap != null) {
-            logDebug("dataMap :" + dataMap.keySet());
-            logDebug("dataMap values :" + dataMap.values());
             for (String paramName : dataMap.keySet()) {
                 query.setParameter(paramName, dataMap.get(paramName));
             }
@@ -165,10 +159,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         Query<?> query = session.createQuery(hqlQuery).setCacheable(true);
-        logDebug("executeQuery :" + hqlQuery);
         if (dataMap != null) {
-            logDebug("dataMap :" + dataMap.keySet());
-            logDebug("dataMap values :" + dataMap.values());
             for (String paramName : dataMap.keySet()) {
                 query.setParameter(paramName, dataMap.get(paramName));
             }
@@ -189,10 +180,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         SQLQuery query = session.createSQLQuery(sqlQuery);
-        logDebug("executeSQLQuery :" + sqlQuery);
         if (dataMap != null) {
-            logDebug("dataMap :" + dataMap.keySet());
-            logDebug("dataMap values :" + dataMap.values());
             for (String paramName : dataMap.keySet()) {
                 query.setParameter(paramName, dataMap.get(paramName));
             }
@@ -209,10 +197,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Session session = getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         SQLQuery query = session.createSQLQuery(sqlQuery);
-        logDebug("executeSQLQuery :" + sqlQuery);
         if (dataMap != null) {
-            logDebug("dataMap :" + dataMap.keySet());
-            logDebug("dataMap values :" + dataMap.values());
             for (String paramName : dataMap.keySet()) {
                 query.setParameter(paramName, dataMap.get(paramName));
             }
@@ -229,10 +214,7 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Transaction tx = session.beginTransaction();
         hqlQuery += " and userGroupId = " + getFamstackUserSessionConfiguration().getUserGroupId();
         Query<?> query = session.createQuery(hqlQuery).setCacheable(true);
-        logDebug("executeQuery :" + hqlQuery);
         if (dataMap != null) {
-            logDebug("dataMap :" + dataMap.keySet());
-            logDebug("dataMap values :" + dataMap.values());
             for (String paramName : dataMap.keySet()) {
                 query.setParameter(paramName, dataMap.get(paramName));
             }
@@ -250,8 +232,6 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery(hqlQuery);
         if (dataMap != null) {
-            logDebug("dataMap :" + dataMap.keySet());
-            logDebug("dataMap values :" + dataMap.values());
             for (String paramName : dataMap.keySet()) {
                 query.setParameter(paramName, dataMap.get(paramName));
             }
@@ -267,8 +247,6 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         Transaction tx = session.beginTransaction();
         Query query = session.createSQLQuery(sqlQuery);
         if (dataMap != null) {
-            logDebug("dataMap :" + dataMap.keySet());
-            logDebug("dataMap values :" + dataMap.values());
             for (String paramName : dataMap.keySet()) {
                 query.setParameter(paramName, dataMap.get(paramName));
             }

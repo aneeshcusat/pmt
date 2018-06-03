@@ -279,7 +279,6 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         logDebug("updating user ping check" + userId);
         if (!userMap.isEmpty() && userMap.get(userId) != null) {
             userMap.get(userId).setLastPing(new Timestamp(new Date().getTime()));
-            logDebug("updated user ping check" + userId);
         }
     }
 
