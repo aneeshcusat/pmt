@@ -803,4 +803,28 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     }
 
+    public List<TaskItem> pauseAllProjectTaskExceedsTimeLimit(Date timeLimitTime)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        List<TaskItem> taskItemList = new ArrayList<>();
+        dataMap.put("timeLimitTime", timeLimitTime);
+
+        List<?> projectTaskActivityList =
+            getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("getAllTimeExceedsProjectTasks"), dataMap);
+
+        for (Object userTaskActivityItemObj : projectTaskActivityList) {
+            UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
+            int taskId = userTaskActivityItem.getTaskId();
+            TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager.getItemById(taskId, TaskItem.class);
+
+            if (taskItem.getTaskPausedTime() == null) {
+                logInfo("Auto pausing task :" + taskId);
+                taskItem.setTaskPausedTime(new Timestamp(new Date().getTime()));
+                famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+                taskItemList.add(taskItem);
+            }
+        }
+        return taskItemList;
+    }
 }

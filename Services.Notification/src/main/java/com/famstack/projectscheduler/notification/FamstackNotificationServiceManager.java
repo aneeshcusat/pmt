@@ -102,6 +102,11 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
                 notificationEmailItem = getProjectTaskStatusNotificationItem(object);
                 notificationEmailItem.setTemplates(Templates.TASK_DELETED);
                 break;
+            case TASK_AUTO_PAUSED:
+                notificationEmailItem = getProjectTaskStatusNotificationItem(object);
+                notificationEmailItem.setTemplates(Templates.TASK_AUTO_PAUSED);
+                break;
+
             case TASK_COMPLETED:
                 notificationEmailItem = getProjectTaskStatusNotificationItem(object);
                 notificationEmailItem.setTemplates(Templates.TASK_COMPLETED);

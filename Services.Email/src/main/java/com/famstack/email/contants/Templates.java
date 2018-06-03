@@ -75,7 +75,9 @@ public enum Templates
     /** The task start reminder. */
     TASK_START_REMINDER("projectTaskStatus", "projectTaskStartReminder"),
 
-    TASK_RE_ASSIGNED("projectTaskStatus", "projectTaskAssigned");
+    TASK_RE_ASSIGNED("projectTaskStatus", "projectTaskAssigned"),
+
+    TASK_AUTO_PAUSED("projectTaskStatus", "projectTaskPaused");
 
     /** The subjectkey. */
     private String subjectkey;

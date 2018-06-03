@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.NotificationType;
+import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
@@ -49,6 +50,7 @@ public class FamstackScheduler extends BaseFamstackService
         checkTaskDeadlineMissed();
         setTaskRemainingTimeJob();
         deleteOlderProjects();
+        autoPauseTaskExceedsTimeLimitHrs(10);
     }
 
     @Async
@@ -204,4 +206,26 @@ public class FamstackScheduler extends BaseFamstackService
         }
         logDebug("Running scheduler completed - checkTaskDeadlineMissed");
     }
+
+    @Async
+    private void autoPauseTaskExceedsTimeLimitHrs(int timeInHrs)
+    {
+        logDebug("Running scheduler - autoPauseTaskExceedsTimeLimitHrs");
+        try {
+            List<TaskItem> taskItemList =
+                famstackProjectTaskManager.pauseAllProjectTaskExceedsTimeLimit(DateUtils.getNextPreviousDate(
+                    DateTimePeriod.HOUR, new Date(), -1 * timeInHrs));
+            for (TaskItem taskItem : taskItemList) {
+                TaskDetails taskDetails = famstackProjectTaskManager.mapTask(taskItem);
+                Map<String, Object> dataMap = new HashMap<>();
+                dataMap.put("taskDetails", taskDetails);
+                famstackNotificationServiceManager.notifyAll(NotificationType.TASK_AUTO_PAUSED, dataMap, null);
+            }
+        } catch (Exception e) {
+            logError(e.getMessage(), e);
+        }
+        logDebug("Running scheduler completed - autoPauseTaskExceedsTimeLimitHrs");
+
+    }
+
 }
