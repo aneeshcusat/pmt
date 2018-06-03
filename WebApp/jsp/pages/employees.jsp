@@ -7,6 +7,12 @@
  </ul>
  <!-- END BREADCRUMB -->  
 <style>
+.dataTables_filter,.dataTables_length{
+	display: none;
+}
+.blueColor{
+	color:blue !important;
+}
     @media screen and (min-width: 800px) {
     #registerusermodal .modal-dialog  {width:65%;}
     .cropit-preview {
@@ -91,11 +97,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                              <c:if test="${currentUser.userGroupId == '1012'}">
                            		 <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
                                <span class="fa fa-plus"></span> Register a new Employee</a>
                              </c:if>
+                            </div>
+                            <div class="col-md-1">
+                            <c:if test="${currentUser.userGroupId == '1012'}">
+                            	<a href="javascript:showGridEmployeeDetails();" id="employeesDetailsGridLink"  style="margin-right: 10px;" class="blueColor"><span class="fa fa-th-large fa-3x"></span></a>
+                            	<a href="javascript:showListEmployeeDetails();" id="employeesDetailsListLink"><span class="fa fa-tasks fa-3x"></span></a>
+                            </c:if>
                             </div>
                         </div>
                     </form>                                    
@@ -105,25 +117,13 @@
         </div>
     </div>
     
-    <div class="row">
-    <c:if test="${currentUser.userGroupId != '1012'}">
-	    <c:if test="${not empty userMap}">
-	    <c:forEach var="user" items="${userMap}">
-	        	<%@include file="fagments/employeeDetails.jspf" %>
-	    </c:forEach>
-	    </c:if>
-    </c:if> 
-    
-     <c:if test="${currentUser.userGroupId == '1012'}">
-	    <c:if test="${not empty employeeMap}">
-	    <c:forEach var="employeeItem" items="${employeeMap}">
-	    		<c:set var="user" value="${employeeItem.value}"></c:set>
-	        	<%@include file="fagments/employeeDetails.jspf" %>
-	    </c:forEach>
-	    </c:if>
-    </c:if> 
-                </div>
-               
+    <div class="row" id="employeesDetailsGridDiv">
+   		<%@include file="response/employeeList.jsp" %>
+   </div>
+   <c:if test="${currentUser.userGroupId == '1012'}">
+    <div class="row hide" id="employeesDetailsListDiv">
+   	</div>
+   </c:if>       
             </div>
             
             <div class="modal fade" id="registerusermodal" tabindex="-1"
@@ -158,7 +158,10 @@
 <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
 <script type="text/javascript" src="${js}/plugins/tagsinput/jquery.tagsinput.min.js"></script>
 <script type="text/javascript" src="${js}/plugins/fileinput/fileinput.min.js"></script> 
-
+<script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js"></script> 
+<script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js"></script>   
+<script type="text/javascript" src="${js}/plugins/datatables/buttons.html5.min.js"></script>   
+<script type="text/javascript" src="${js}/plugins/datatables/jszip.min.js"></script>    
 <script>
   
 jQuery.validator.addMethod("validEmail", function(value, element) {
@@ -353,8 +356,14 @@ $(function() {
     $('.image-editor').cropit();
   });
 
-function performSearch(){
+function performSearch(e){
 	var serarchText = $('#employeeSearch').val();
+	
+	if (!$("#employeesDetailsListDiv").hasClass("hide")) {
+		$("input[type='search']").val(serarchText);
+		$("input[type='search']").trigger(e);
+		return;
+	}
 	famstacklog(serarchText);
 	if (serarchText != "") {
 	 $('.contact-name').hide();
@@ -368,12 +377,12 @@ function performSearch(){
 	}
 }
 
-$('#employeeSearch').keydown(function(){
-	performSearch();
+$('#employeeSearch').keydown(function(e){
+	performSearch(e);
 });
 
-$('#employeeSearch').keyup(function(){
-	performSearch();
+$('#employeeSearch').keyup(function(e){
+	performSearch(e);
 });
 
 $.datetimepicker.setLocale('en');
@@ -385,4 +394,58 @@ $('.dateTimePicker').datetimepicker({
 	format:'Y-m-d',
 	formatDate:'Y/m/d',
 });
+
+function showGridEmployeeDetails() {
+	$("#employeesDetailsGridDiv").removeClass("hide");
+	$("#employeesDetailsListDiv").addClass("hide");
+	
+	$("#employeesDetailsGridLink").addClass("blueColor");
+	$("#employeesDetailsListLink").removeClass("blueColor");
+}
+
+
+function reloadEmployeeDetails(){
+	var pageName = "employeeGridPage";
+	if ($("#employeesDetailsListDiv").hasClass("hide")){
+		pageName = "employeeGridPage";
+	} else if ($("#employeesDetailsGridDiv").hasClass("hide")){
+		pageName = "employeeListPage";
+	}
+	
+	doAjaxRequest("GET", "${applicationHome}/" +pageName, {}, function(data) {
+
+		if ($("#employeesDetailsListDiv").hasClass("hide")){
+			$("#employeesDetailsGridDiv").html(data);
+		} else if ($("#employeesDetailsGridDiv").hasClass("hide")){
+			$("#employeesDetailsListDiv").html(data);
+			  $('.employeeDataTable').DataTable({ 
+				  	dom: 'Bfrtip',
+			        buttons: [
+			             {
+			                extend: 'excel',
+			                text: 'Download as Excel'
+			            },
+			        ],
+			    	responsive: true,
+			        "pageLength": 20,
+			        "ordering": true,
+			        "order": [[ 11, 'asc' ]]
+			    
+			    });
+		}
+		
+    }, function(e) {
+        famstacklog("ERROR: ", e);
+    });
+	
+}
+
+function showListEmployeeDetails() {
+	$("#employeesDetailsGridDiv").addClass("hide");
+	$("#employeesDetailsGridLink").removeClass("blueColor");
+	$("#employeesDetailsListLink").addClass("blueColor");
+	$("#employeesDetailsListDiv").removeClass("hide");
+	reloadEmployeeDetails();
+}
+
 </script>        

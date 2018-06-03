@@ -29,6 +29,8 @@ public class EmployeeDetails
 
     private Boolean temporaryEmployee;
 
+    private Boolean needPasswordReset;
+
     private String password;
 
     private String confirmPassword;
@@ -324,6 +326,16 @@ public class EmployeeDetails
     public void setTemporaryEmployee(Boolean temporaryEmployee)
     {
         this.temporaryEmployee = temporaryEmployee;
+    }
+
+    public Boolean getNeedPasswordReset()
+    {
+        return needPasswordReset == null ? false : needPasswordReset;
+    }
+
+    public void setNeedPasswordReset(Boolean needPasswordReset)
+    {
+        this.needPasswordReset = needPasswordReset;
     }
 
 }

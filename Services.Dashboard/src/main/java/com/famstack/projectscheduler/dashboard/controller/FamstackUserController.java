@@ -127,6 +127,22 @@ public class FamstackUserController extends BaseFamstackService
         return new ModelAndView("employees", "command", new EmployeeDetails()).addObject("accountData", accountData);
     }
 
+    @RequestMapping(value = "/employeeGridPage", method = RequestMethod.GET)
+    public ModelAndView employeeGridPage()
+    {
+        List<AccountDetails> accountData = famstackDashboardManager.getAccountDataList();
+        return new ModelAndView("response/employeeList", "command", new EmployeeDetails()).addObject("accountData",
+            accountData);
+    }
+
+    @RequestMapping(value = "/employeeListPage", method = RequestMethod.GET)
+    public ModelAndView employeeListPage()
+    {
+        List<AccountDetails> accountData = famstackDashboardManager.getAccountDataList();
+        return new ModelAndView("response/employeeTableList", "command", new EmployeeDetails()).addObject(
+            "accountData", accountData);
+    }
+
     @RequestMapping(value = "/profile/{userId}", method = RequestMethod.GET)
     public ModelAndView getProfile(@PathVariable(value = "userId") int userId)
     {

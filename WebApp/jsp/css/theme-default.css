@@ -6919,9 +6919,6 @@ ul.jqueryFileTree a:hover {
 li.directory {
   background: url(../img/filetree/directory.png) left top no-repeat;
 }
-li.expanded {
-  background: url(../img/filetree/folder_open.png) left top no-repeat;
-}
 li.file {
   background: url(../img/filetree/file.png) left top no-repeat;
 }

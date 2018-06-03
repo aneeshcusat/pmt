@@ -249,6 +249,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
 
             employeeDetails.setEmpCode(userItem.getEmpCode());
             employeeDetails.setTemporaryEmployee(userItem.getTemporaryEmployee());
+            employeeDetails.setNeedPasswordReset(userItem.getNeedPasswordReset());
 
             if (userItem.getReportertingManager() != null) {
                 employeeDetails.setReportingManger(userItem.getReportertingManager().getId());
