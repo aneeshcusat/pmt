@@ -237,24 +237,31 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         if (StringUtils.isNotBlank(helpers)) {
             String[] helperArray = helpers.split(",");
             for (String helper : helperArray) {
-                EmployeeDetails employeeDetails =
-                    getFamstackApplicationConfiguration().getUserMap().get(Integer.parseInt(helper.trim()));
-
-                if (employeeDetails != null) {
-                    toList.add(employeeDetails.getEmail());
-                }
+                int userId = Integer.parseInt(helper.trim());
+                EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getUserMap().get(userId);
+                addToToList(toList, employeeDetails, userId);
             }
         }
 
         EmployeeDetails employeeDetails =
             getFamstackApplicationConfiguration().getUserMap().get(taskDetails.getAssignee());
-
-        if (employeeDetails != null) {
-            toList.add(employeeDetails.getEmail());
-        }
+        int taskAssignee = taskDetails.getAssignee();
+        addToToList(toList, employeeDetails, taskAssignee);
 
         logDebug("getToListForTaskUpdate" + toList);
         return toList;
+    }
+
+    private void addToToList(Set<String> toList, EmployeeDetails employeeDetails, int taskAssignee)
+    {
+        if (employeeDetails != null) {
+            if (taskAssignee != employeeDetails.getId()) {
+                logError("Invalid user found for emailing : assignee - " + taskAssignee + "  emp id -"
+                    + employeeDetails.getId());
+            } else {
+                toList.add(employeeDetails.getEmail());
+            }
+        }
     }
 
     private Set<String> getToListForProjectUpdates(ProjectDetails projectDetails)
