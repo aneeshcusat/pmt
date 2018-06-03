@@ -79,6 +79,9 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "prj_task_type")
     private ProjectTaskType projectTaskType;
 
+    @Column(name = "can_recure")
+    private Boolean canRecure;
+
     @Column(name = "start_time")
     private Timestamp startTime;
 
@@ -318,6 +321,16 @@ public class TaskItem implements FamstackBaseItem
     public void setContributers(String contributers)
     {
         this.contributers = contributers;
+    }
+
+    public Boolean getCanRecure()
+    {
+        return canRecure == null ? true : canRecure;
+    }
+
+    public void setCanRecure(Boolean canRecure)
+    {
+        this.canRecure = canRecure;
     }
 
 }

@@ -46,6 +46,8 @@ public class TaskDetails
 
     private ProjectTaskType projectTaskType;
 
+    private Boolean canRecure;
+
     private String helpersList;
 
     private TaskStatus status;
@@ -424,5 +426,15 @@ public class TaskDetails
     public void setPriorityInt(int priorityInt)
     {
         this.priorityInt = priorityInt;
+    }
+
+    public Boolean getCanRecure()
+    {
+        return canRecure == null ? true : canRecure;
+    }
+
+    public void setCanRecure(Boolean canRecure)
+    {
+        this.canRecure = canRecure;
     }
 }

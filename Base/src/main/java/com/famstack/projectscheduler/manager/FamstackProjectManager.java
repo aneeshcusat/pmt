@@ -41,6 +41,7 @@ import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.util.TimeInType;
 import com.famstack.projectscheduler.utils.FamstackUtils;
 
@@ -106,6 +107,7 @@ public class FamstackProjectManager extends BaseFamstackManager
                         TaskDetails taskDetails = new TaskDetails();
                         taskDetails.setAssignee(Integer.parseInt(task[0]));
                         taskDetails.setName(task[1]);
+                        taskDetails.setCanRecure(true);
                         taskDetails.setStartTime(task[2]);
                         taskDetails.setDuration(Integer.parseInt(task[3]));
                         taskDetails.setProjectTaskType(ProjectTaskType.valueOf(task[4]));
@@ -999,6 +1001,10 @@ public class FamstackProjectManager extends BaseFamstackManager
             recurringProjectDetails.setProjectCode(recurringProjectItem.getProjectCode());
             recurringProjectDetails.setRequestedBy(recurringProjectItem.getRequestedBy());
             recurringProjectDetails.setUserGroupId(recurringProjectItem.getUserGroupId());
+            Date endDate = recurringProjectItem.getEndDate();
+            if (endDate != null) {
+                recurringProjectDetails.setEndDateString(DateUtils.format(endDate, DateUtils.DATE_FORMAT));
+            }
         }
         return recurringProjectDetails;
     }
@@ -1052,12 +1058,15 @@ public class FamstackProjectManager extends BaseFamstackManager
         return null;
     }
 
-    public RecurringProjectDetails createRecurringProject(String projectCode, int projectId, String cronExpression)
+    public RecurringProjectDetails createRecurringProject(String projectCode, int projectId, String cronExpression,
+        String recurringEndDate)
     {
-        return mapRecurringProjectItem(saveOrUpdateRecurringProject(projectCode, projectId, cronExpression));
+        return mapRecurringProjectItem(saveOrUpdateRecurringProject(projectCode, projectId, cronExpression,
+            recurringEndDate));
     }
 
-    private RecurringProjectItem saveOrUpdateRecurringProject(String projectCode, int projectId, String cronExpression)
+    private RecurringProjectItem saveOrUpdateRecurringProject(String projectCode, int projectId, String cronExpression,
+        String recurringEndDate)
     {
         RecurringProjectItem recurringProjectItem = getRecurringProjectItem(projectCode, projectId);
         if (recurringProjectItem == null) {
@@ -1079,7 +1088,13 @@ public class FamstackProjectManager extends BaseFamstackManager
 
             newCronExpression = cronExpression + "|" + secondCronExpression;
         }
-
+        if (StringUtils.isNotBlank(recurringEndDate)) {
+            Date recurringEndTime = DateUtils.tryParse(recurringEndDate, DateUtils.DATE_FORMAT);
+            recurringEndTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, recurringEndTime, 0);
+            recurringProjectItem.setEndDate(new Timestamp(recurringEndTime.getTime()));
+        } else {
+            recurringProjectItem.setEndDate(null);
+        }
         recurringProjectItem.setCronExpression(newCronExpression);
         recurringProjectItem.setNextRun(nextRun == null ? null : new Timestamp(nextRun.getTime()));
         recurringProjectItem.setName(projectCode);
@@ -1119,7 +1134,11 @@ public class FamstackProjectManager extends BaseFamstackManager
         if (recurringProjectItems != null) {
             for (RecurringProjectItem recurringProjectItem : recurringProjectItems) {
                 String projectCode = recurringProjectItem.getProjectCode();
-
+                if (recurringProjectItem.getEndDate() != null
+                    && new Date().after(new Date(recurringProjectItem.getEndDate().getTime()))) {
+                    famstackDataAccessObjectManager.deleteItem(recurringProjectItem);
+                    continue;
+                }
                 ProjectItem projectItem = getLatestProjectByCode(projectCode);
                 logDebug("recurring Project code :" + projectCode);
                 if (projectItem != null) {
@@ -1137,7 +1156,7 @@ public class FamstackProjectManager extends BaseFamstackManager
                         new Timestamp(DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, projectStartTime,
                             projectDuration).getTime());
 
-                    List<TaskDetails> taskItemList = getUpdatedTaskDetailsList(projectItem);
+                    List<TaskDetails> taskItemList = getUpdatedRecureTaskDetailsList(projectItem);
 
                     quickDuplicateProject(projectItem, projectItem.getName(), projectItem.getDurationHrs(),
                         projectStartTime, projectEndTime, taskItemList);
@@ -1170,21 +1189,23 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     }
 
-    private List<TaskDetails> getUpdatedTaskDetailsList(ProjectItem projectItem)
+    private List<TaskDetails> getUpdatedRecureTaskDetailsList(ProjectItem projectItem)
     {
         List<TaskDetails> taskDetailsList = new ArrayList<>();
 
         for (TaskItem taskItem : projectItem.getTaskItems()) {
             Date taskStartTime = getNewTimeForDuplicate(taskItem.getStartTime());
-
-            TaskDetails taskDetails = new TaskDetails();
-            taskDetails.setAssignee(taskItem.getAssignee());
-            taskDetails.setName(taskItem.getName());
-            taskDetails.setDescription(taskItem.getDescription());
-            taskDetails.setStartTime(DateUtils.format(taskStartTime, DateUtils.DATE_TIME_FORMAT));
-            taskDetails.setDuration(taskItem.getDuration());
-            taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
-            taskDetailsList.add(taskDetails);
+            if (taskItem.getCanRecure()) {
+                TaskDetails taskDetails = new TaskDetails();
+                taskDetails.setAssignee(taskItem.getAssignee());
+                taskDetails.setName(taskItem.getName());
+                taskDetails.setCanRecure(taskItem.getCanRecure());
+                taskDetails.setDescription(taskItem.getDescription());
+                taskDetails.setStartTime(DateUtils.format(taskStartTime, DateUtils.DATE_TIME_FORMAT));
+                taskDetails.setDuration(taskItem.getDuration());
+                taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
+                taskDetailsList.add(taskDetails);
+            }
 
         }
         return taskDetailsList;

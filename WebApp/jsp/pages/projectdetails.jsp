@@ -601,6 +601,7 @@ width: 60%;
 	        <li>Collaborators : <b><span id="popup-HelperName"></span></b></li>
 	        <li>Task Type : <b><span id="popup-projectTaskType"></span></b></li>
 	        <li>Priority : <b><span id="popup-priority"></span></b></li>
+	        <li>Recurring : <b><span id="popup-canRecure"></span></b></li>
 	    </ul>
     </div>
 <!-- task pop up window end -->
@@ -722,7 +723,15 @@ width: 60%;
    			$("#popup-HelperName").html($("#"+taskId+"helperNames").val());
    			$("#popup-projectTaskType").html($("#"+taskId+"projectTaskType").val());
    			$("#popup-priority").html($("#"+taskId+"priority").val());
-    		 	
+   			
+   			var canRecureValue = $("#"+taskId+"canRecure").val();
+   			if (canRecureValue == 'true'){
+   				canRecureValue = 'Yes';
+   			} else {
+   				canRecureValue = 'No';
+   			}
+   			$("#popup-canRecure").html(canRecureValue);
+   			
     	     $('div#task-pop-up').show()
     	     .css('top', e.pageY + moveDown)
     	      .css('left', e.pageX + moveLeft)
@@ -757,6 +766,8 @@ var clearTaskDetails = function(){
 	$("#description").val("");
 	$("#projectTaskType").prop("selectedIndex", 0);
 	$("#priority").prop("selectedIndex", 0);
+	$("select.canRecure").prop("selectedIndex", 0);
+	
 	$("#createOrUpdateTaskId span").html("Save");
     $('#createTaskFormId').prop("action", "${applicationHome}/createTask");
     //createTaskDurationList(${projectDetails.unAssignedDuration});
@@ -765,6 +776,8 @@ var clearTaskDetails = function(){
     $("select.assigneeSelectName").val("");
 	$("select.assigneeSelectName").selectpicker('refresh');
     
+	
+	
     $("#estCompleteTime").html(getEstimatedCompletionTime($("#estStartTime").val(), ${projectDetails.unAssignedDuration}));
     $("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
     $("#assignTableId").hide(1000);
@@ -818,6 +831,10 @@ var loadTaskDetails = function(taskId){
  	$("#description").val($("#"+taskId+"description").val());
  	$("#priority").val($("#"+taskId+"priority").val());
  	$('#priority').selectpicker('refresh');
+ 	
+ 	$("select.canRecure").val($("#"+taskId+"canRecure").val());
+	$("select.canRecure").selectpicker('refresh');
+	
 	$("#createOrUpdateTaskId span").html("Update");
     $('#createTaskFormId').prop("action", "${applicationHome}/updateTask");
     //createTaskDurationList(${projectDetails.unAssignedDuration}+parseInt($("#"+taskId+"duration").val()));
@@ -952,13 +969,13 @@ var toggleAssignTask = function(){
 		$("#toggleAssignTask").html("Assign task later");
 		resetAssignTable();
 		fillTableFromJson();
-		$("#assigneeSelectId").hide();
+		$(".assigneeSelectId").hide();
 	} else {
 		$("#assignTableId").hide(1000);
 		$("#toggleAssignTask").html("Assign task");
 		resetAssignTable();
 		$('input:radio[name=assigneeId]').each(function () { $(this).prop('checked', false); });
-		$("#assigneeSelectId").show();
+		$(".assigneeSelectId").show();
 	}
 	
 	$("select.assigneeSelectName").val("");

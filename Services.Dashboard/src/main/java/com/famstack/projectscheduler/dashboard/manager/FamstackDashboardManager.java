@@ -947,10 +947,10 @@ public class FamstackDashboardManager extends BaseFamstackService
         return recurringProjectDetails != null ? FamstackUtils.getJsonFromObject(recurringProjectDetails) : "";
     }
 
-    public String createRecurringProject(String projectCode, int projectId, String cronExp)
+    public String createRecurringProject(String projectCode, int projectId, String cronExp, String recurringEndDate)
     {
         RecurringProjectDetails recurringProjectDetails =
-            projectManager.createRecurringProject(projectCode, projectId, cronExp);
+            projectManager.createRecurringProject(projectCode, projectId, cronExp, recurringEndDate);
         return recurringProjectDetails != null ? FamstackUtils.getJsonFromObject(recurringProjectDetails) : "";
     }
 

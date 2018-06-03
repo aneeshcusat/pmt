@@ -23,6 +23,8 @@
 	value="${taskDetails.duration}" />
 <input id="${taskDetails.taskId}priority" type="hidden"
 	value="${taskDetails.priority}" />
+<input id="${taskDetails.taskId}canRecure" type="hidden"
+	value="${taskDetails.canRecure}" />
 <input id="${taskDetails.taskId}assignee" type="hidden"
 	value="${taskDetails.assignee}" />
 <input id="${taskDetails.taskId}assigneeName" type="hidden"
@@ -68,6 +70,12 @@
 										</p>
 		</c:if>
 		<p>Priority : ${taskDetails.priority}</p>
+		<c:if test="${taskDetails.canRecure == 'true' }">
+		<p>Recurring : Yes</p>
+		</c:if>
+		<c:if test="${taskDetails.canRecure == 'false' }">
+		<p>Recurring : No</p>
+		</c:if>
 	</ul>
 
 	<c:if test="${not empty taskDetails.taskActivityDetails}">

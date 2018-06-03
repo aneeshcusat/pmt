@@ -20,6 +20,8 @@ public class RecurringProjectDetails
 
     private String projectCode;
 
+    private String endDateString;
+
     private Integer requestedBy;
 
     private String userGroupId;
@@ -136,6 +138,16 @@ public class RecurringProjectDetails
     public void setProjectId(int projectId)
     {
         this.projectId = projectId;
+    }
+
+    public String getEndDateString()
+    {
+        return endDateString == null ? "" : endDateString;
+    }
+
+    public void setEndDateString(String endDateString)
+    {
+        this.endDateString = endDateString;
     }
 
 }

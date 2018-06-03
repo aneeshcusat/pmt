@@ -113,12 +113,13 @@
                              <option>UI/UX</option>
                             </c:if>
                         </select>
+                        <span class="help-block">Task category change will modify task name</span>
                     </div>
                 </div>
 				
-				<div class="form-group" id="assigneeSelectId">
-				<label class="col-md-2 control-label">Assignee</label>
-                     <div class="col-md-10">
+				<div class="form-group">
+				<label class="col-md-2 control-label assigneeSelectId">Assignee</label>
+                     <div class="col-md-4 assigneeSelectId">
                           <c:if test="${not empty userMap}">
                           	 <form:select path="assignee" class="assigneeSelectName form-control select" data-live-search="true">
 								<option value="">- select -</option>
@@ -132,8 +133,16 @@
 								</form:select>
            					</c:if>
                      </div>
+                     <label class="col-md-2 control-label">Recurring?</label>
+                     <div class="col-md-4">
+                         <form:select class="form-control select canRecure" path="canRecure" id="canRecure">
+                            <option value="true" selected="selected">YES</option>
+							<option value="false">NO</option>
+                          </form:select>
+                          <span class="help-block">Select NO if not auto recurring</span>
+                     </div>
 				</div>
-				
+				 
 			</div>
 
 		</div>

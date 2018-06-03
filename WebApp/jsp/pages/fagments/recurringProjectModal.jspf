@@ -15,6 +15,17 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="col-md-12 recurringEndTimeDiv"  style="margin-bottom: 10px">
+			<div class="form-group">
+					<label class="col-md-4 control-label">End Date</label>
+					<div class="col-md-8">
+						 <input style="width:100px;" type="text" min="1"  class="gentleinputstyle recurringEndTime" id="recurringEndDate"/>
+						  <span class="help-block">Select only it has an end date</span>
+					</div>
+				</div>
+			</div>
+	
 	<div class="col-md-12 recurringTimeDiv hide">
 	<div class="form-group">
 			<label class="col-md-4 control-label">Last Execution Time</label>

@@ -89,6 +89,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         if (taskItemNew == null) {
             taskItemNew = new TaskItem();
             taskItemNew.setName("Project extra time");
+            taskItemNew.setCanRecure(false);
             taskItemNew.setStatus(TaskStatus.COMPLETED);
             taskItemNew.setDescription(taskDetails.getDescription());
             taskItemNew.setCompletionTime(projectItem.getCompletionTime());
@@ -184,6 +185,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     {
         taskItem.setDescription(taskDetails.getDescription());
         taskItem.setName(taskDetails.getName());
+        taskItem.setCanRecure(taskDetails.getCanRecure());
         taskItem.setPriority(taskDetails.getPriority());
         taskItem.setProjectItem(projectItem);
         taskItem.setUserGroupId(projectItem.getUserGroupId());
@@ -376,6 +378,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setTaskRemainingTime(taskItem.getTaskRemainingTime());
             taskDetails.setTaskId(taskItem.getTaskId());
             taskDetails.setName(taskItem.getName());
+            taskDetails.setCanRecure(taskItem.getCanRecure());
             taskDetails.setDuration(taskItem.getDuration());
             taskDetails.setTaskPausedTime(taskItem.getTaskPausedTime());
             String startDateString = DateUtils.format(taskItem.getStartTime(), DateUtils.DATE_TIME_FORMAT);

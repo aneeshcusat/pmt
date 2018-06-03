@@ -111,6 +111,19 @@ div#taskDetailsDiv {
     padding: 0px 2px 2px 2px;
 }
 
+.gentleinputstyle {
+    padding: 1px 5px 1px;
+    background-color: #eee;
+    border: 2px solid #ddd;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+    color: #555;
+    white-space: nowrap;
+}
 </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame margin5" style="min-height: 500px">
@@ -1254,6 +1267,7 @@ function refreshProjectDetails(){
 			} else {
 				$(".recurringTimeDiv").addClass("hide");
 				$(".recurringDelete").addClass("hide");
+				$(".recurringEndTime").val("");
 				$("#RPABCreatOrUpdate").html("Create");
 				initializeCron("0 5 0 * * ?");
 			}
@@ -1284,6 +1298,7 @@ function loadRecurringProjectDetails(projectId, projectCode, responseJson){
 	$("#RPABCreatOrUpdate").html("Upate");
 	$(".recurringTimeDiv").removeClass("hide");
 	$(".recurringDelete").removeClass("hide");
+	$(".recurringEndTime").val(responseJson.endDateString);
 	$("#recurringCronExpressionValue").val(responseJson.cronExpression);
 	initializeCron(responseJson.cronExpression);
 	$("#recurringNET").html(responseJson.nextRun);
@@ -1297,7 +1312,15 @@ function loadRecurringProjectDetails(projectId, projectCode, responseJson){
 
 function createRecurringProject(projectCode, projectId) {
 	var cronExp = $("#recurringCronExpressionValue").val();
-	var dataString = {"projectCode": projectCode, "projectId": projectId, "cronExp":cronExp};
+	var recurringEndDate = $("#recurringEndDate").val();
+	$("#recurringEndDate").css("border", " 0px solid red");
+	
+	if (new Date(recurringEndDate) < new Date()) {
+		$("#recurringEndDate").css("border", " 1px solid red");
+		return;
+	}
+	
+	var dataString = {"projectCode": projectCode, "projectId": projectId, "cronExp":cronExp, "recurringEndDate":recurringEndDate};
 	doAjaxRequest("POST", "${applicationHome}/createRecurringProject", dataString, function(data) {
 			famstacklog(data);
 			if (data != ""){
@@ -1329,6 +1352,7 @@ function deleteRecuringProjectDetails(recurringId, projectCode) {
 			$("#RPABCreatOrUpdate").html("Create");
 			$(".recurringTimeDiv").addClass("hide");
 			$(".recurringDelete").addClass("hide");
+			$(".recurringEndTime").val("");
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
 	        famstackalert(e);
@@ -1454,6 +1478,13 @@ var persistDateFilter = function(value){
 	}
 	
 }
+
+$('.recurringEndTime').datetimepicker({
+	timepicker:false,
+	formatDate:'Y/m/d',
+	format:'Y/m/d',
+	minDate:new Date()
+});
 
 
 $(document).ready(function(){

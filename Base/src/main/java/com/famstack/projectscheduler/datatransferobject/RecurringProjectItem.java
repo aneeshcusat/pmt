@@ -46,6 +46,9 @@ public class RecurringProjectItem implements FamstackBaseItem
     @Column(name = "project_code")
     private String projectCode;
 
+    @Column(name = "end_date")
+    private Timestamp endDate;
+
     @Column(name = "requested_by")
     private Integer requestedBy;
 
@@ -171,6 +174,16 @@ public class RecurringProjectItem implements FamstackBaseItem
     public void setProjectId(int projectId)
     {
         this.projectId = projectId;
+    }
+
+    public Timestamp getEndDate()
+    {
+        return endDate;
+    }
+
+    public void setEndDate(Timestamp endDate)
+    {
+        this.endDate = endDate;
     }
 
 }

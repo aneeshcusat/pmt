@@ -514,9 +514,10 @@ public class FamstackProjectController extends BaseFamstackService
     @RequestMapping(value = "/createRecurringProject", method = RequestMethod.POST)
     @ResponseBody
     public String createRecurringProject(@RequestParam("projectCode") String projectCode,
-        @RequestParam("projectId") int projectId, @RequestParam("cronExp") String cronExp)
+        @RequestParam("projectId") int projectId, @RequestParam("cronExp") String cronExp,
+        @RequestParam("recurringEndDate") String recurringEndDate)
     {
-        return famstackDashboardManager.createRecurringProject(projectCode, projectId, cronExp);
+        return famstackDashboardManager.createRecurringProject(projectCode, projectId, cronExp, recurringEndDate);
     }
 
     @RequestMapping(value = "/deleteRecuringProjectDetails", method = RequestMethod.POST)
