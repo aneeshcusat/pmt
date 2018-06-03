@@ -20,7 +20,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
-import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.export.processors.FamstackBaseXLSExportProcessor;
 import com.famstack.projectscheduler.export.processors.FamstackXLSEmployeeUtilisationProcessor;
@@ -65,10 +64,16 @@ public class FamstackXLSExportManager extends BaseFamstackManager
             List<EmployeeDetails> employees = getFamstackApplicationConfiguration().getUserList();
             ExecutorService executorService = Executors.newFixedThreadPool(2);
             List<Future> futures = Collections.synchronizedList(new ArrayList<Future>());
-            List<ProjectDetails> exportDataList = (List<ProjectDetails>) dataMap.get("exportDataList");
+            Object exportDataList = dataMap.get("exportDataList");
             String dateString = (String) dataMap.get("dateString");
             Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData =
                 (Map<String, Map<Integer, UserWorkDetails>>) dataMap.get("employeeUtilizationData");
+
+            if ("useractivity".equalsIgnoreCase(processorName)) {
+                Map<Integer, EmployeeDetails> allEmployeeData = getFamstackApplicationConfiguration().getUserMap();
+                dataMap.put("allEmployeeData", allEmployeeData);
+                teamName = "EmployeeSiteActivity";
+            }
 
             if (exportDataList != null) {
 

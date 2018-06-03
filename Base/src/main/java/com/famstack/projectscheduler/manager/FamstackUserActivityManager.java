@@ -668,4 +668,36 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         }
 
     }
+
+    public Map<Integer, Map<String, String>> getAllUserSiteActivities(Date startDate, Date endDate)
+    {
+        Date startCalenderDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0);
+        Date endCalenderDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0);
+        Map<Integer, Map<String, String>> userSiteActivityMap = new HashMap<>();
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("startCalenderDate", startCalenderDate);
+        dataMap.put("endCalenderDate", endCalenderDate);
+
+        List<UserUsageActivityItem> userUsageActivityItems =
+            (List<UserUsageActivityItem>) getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("getUserSiteActivityByDate"), dataMap);
+
+        for (UserUsageActivityItem userUsageActivityItem : userUsageActivityItems) {
+            Map<String, String> userSiteDateActivity = userSiteActivityMap.get(userUsageActivityItem.getUserId());
+
+            if (userSiteDateActivity == null) {
+                userSiteDateActivity = new HashMap<>();
+                userSiteActivityMap.put(userUsageActivityItem.getUserId(), userSiteDateActivity);
+            }
+            String dateString =
+                DateUtils.format(new Date(userUsageActivityItem.getCalenderDate().getTime()), DateUtils.DATE_FORMAT);
+            logDebug("User activity user id : " + userUsageActivityItem.getUserId() + " Date :" + dateString);
+            userSiteDateActivity.put(dateString, "Active");
+
+        }
+
+        return userSiteActivityMap;
+
+    }
 }

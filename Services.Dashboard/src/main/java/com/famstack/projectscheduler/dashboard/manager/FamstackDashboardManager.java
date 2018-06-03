@@ -981,4 +981,9 @@ public class FamstackDashboardManager extends BaseFamstackService
         famstackUserActivityManager.createUserSiteActivities(userId);
     }
 
+    public Map<Integer, Map<String, String>> getAllUserSiteActivities(Date startDate, Date endDate)
+    {
+        return famstackUserActivityManager.getAllUserSiteActivities(startDate, endDate);
+    }
+
 }

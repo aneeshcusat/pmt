@@ -86,7 +86,7 @@
                     <p>Use search to find contacts. You can search by: name, address, phone. Or use the advanced search.</p>
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <div class="col-md-8">
+                            <div class="col-md-5">
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <span class="fa fa-search"></span>
@@ -97,17 +97,31 @@
                                     </div>
                                 </div>
                             </div>
+                           
+                            <div class="col-md-1">
+                            <c:if test="${currentUser.userGroupId == '1012'}">
+                            <a href="javascript:showGridEmployeeDetails();" id="employeesDetailsGridLink"  style="margin-right: 10px;" class="blueColor"><span class="fa fa-th-large fa-3x"></span></a>
+                            <a href="javascript:showListEmployeeDetails();" id="employeesDetailsListLink"><span class="fa fa-tasks fa-3x"></span></a>
+							</c:if>
+                            </div>
                             <div class="col-md-3">
+                            <c:if test="${currentUser.userGroupId == '1012'}">
+                            	<a id="userSiteActivityLink" href='javascript:$("#userSiteActivityLink").hide();$("#userSiteActivityDiv").show();'>Download Activity</a>
+								<span id="userSiteActivityDiv" style="display: none">                            
+	                           		<span id="exportDateRange" class="dtrange">                                            
+	           							<span></span><b class="caret"></b>
+	       							</span>
+	       							<input type="hidden" id="daterangeText" value="hello" /> 
+	       							<a href="javascript:exportReport('useractivity');" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i>Download Activity</a>
+                          		</span>
+                           </c:if>
+                            </div>
+                            
+                             <div class="col-md-3">
                              <c:if test="${currentUser.userGroupId == '1012'}">
                            		 <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
                                <span class="fa fa-plus"></span> Register a new Employee</a>
                              </c:if>
-                            </div>
-                            <div class="col-md-1">
-                            <c:if test="${currentUser.userGroupId == '1012'}">
-                            	<a href="javascript:showGridEmployeeDetails();" id="employeesDetailsGridLink"  style="margin-right: 10px;" class="blueColor"><span class="fa fa-th-large fa-3x"></span></a>
-                            	<a href="javascript:showListEmployeeDetails();" id="employeesDetailsListLink"><span class="fa fa-tasks fa-3x"></span></a>
-                            </c:if>
                             </div>
                         </div>
                     </form>                                    
@@ -448,4 +462,22 @@ function showListEmployeeDetails() {
 	reloadEmployeeDetails();
 }
 
+if($("#exportDateRange").length > 0){   
+    $("#exportDateRange").daterangepicker({                    
+        ranges: filterDateMap,
+        opens: 'left',
+        buttonClasses: ['btn btn-default'],
+        applyClass: 'btn-small btn-primary',
+        cancelClass: 'btn-small',
+        format: 'MM.DD.YYYY',
+        separator: ' to ',
+        startDate:moment().subtract(6, 'days'),
+        endDate:  moment()         
+      },function(start, end) {
+    	  $("#daterangeText").val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+    	  $("#exportDateRange span").html($("#daterangeText").val());
+    });
+    $("#daterangeText").val(moment().subtract(6, 'days').format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+    $("#exportDateRange span").html($("#daterangeText").val());
+}
 </script>        
