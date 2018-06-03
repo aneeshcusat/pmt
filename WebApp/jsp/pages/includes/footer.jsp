@@ -1,4 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="userAccessedSystemToday" value="${applicationScope.applicationConfiguraion.userAccessedSystemToday}"/>
+<c:set var="currentUserId" value="${applicationScope.applicationConfiguraion.currentUserId}"/>
             </div>            
             <!-- END PAGE CONTENT -->
                
@@ -282,5 +285,17 @@ function sortOnlineStatus(){
 	      return (contentA > contentB) ? -1 : (contentA < contentB) ? 1 : 0;
 	   }));
 }
+
+if(${userAccessedSystemToday}){
+	invokeUserActivityTracker(${currentUserId});
+}
+
+function invokeUserActivityTracker(userId){
+	doAjaxRequestWithGlobal("GET", "${applicationHome}/trackUserActivity",  {"userId":userId},function(data) {
+	},function(error) {
+    	famstacklog("ERROR: ", error);
+    },false);
+}
+
 
 </script>

@@ -20,6 +20,7 @@ import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
+import com.famstack.projectscheduler.datatransferobject.UserUsageActivityItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
@@ -647,4 +648,28 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return userTaskActivityItem;
     }
 
+    public void createUserSiteActivities(Integer userId)
+    {
+        Date startCalenderDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), 0);
+        Date endCalenderDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), 0);
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("startCalenderDate", startCalenderDate);
+        dataMap.put("endCalenderDate", endCalenderDate);
+        dataMap.put("userId", userId);
+
+        List<UserUsageActivityItem> userUsageActivityItems =
+            (List<UserUsageActivityItem>) getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("getUserSiteActivity"), dataMap);
+
+        if (userUsageActivityItems == null || userUsageActivityItems.size() == 0) {
+            logInfo("Recoring user site activity userId : " + userId);
+            UserUsageActivityItem userUsageActivityItem = new UserUsageActivityItem();
+            userUsageActivityItem.setUserId(userId);
+            userUsageActivityItem.setCalenderDate(new Timestamp(System.currentTimeMillis()));
+            famstackDataAccessObjectManager.saveOrUpdateItem(userUsageActivityItem);
+            getFamstackUserSessionConfiguration().setUserLastActivityDate(new Date());
+        }
+
+    }
 }

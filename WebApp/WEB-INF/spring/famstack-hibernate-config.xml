@@ -37,6 +37,7 @@
 				<value>com.famstack.projectscheduler.datatransferobject.ProjectItem</value>
 				<value>com.famstack.projectscheduler.datatransferobject.TaskItem</value>
 				<value>com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.UserUsageActivityItem</value>
 				
 				<value>com.famstack.projectscheduler.datatransferobject.AccountItem</value>
 				<value>com.famstack.projectscheduler.datatransferobject.ClientItem</value>

@@ -94,13 +94,13 @@ public final class DateUtils extends BaseFamstackService
             cal.add(Calendar.MINUTE, nextOrPrevious);
         } else if (DateTimePeriod.DAY_START == previousTimePeriod) {
             cal.add(Calendar.DAY_OF_MONTH, nextOrPrevious);
-            cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0);
+            cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         } else if (DateTimePeriod.DAY_END == previousTimePeriod) {
             cal.add(Calendar.DAY_OF_MONTH, nextOrPrevious);
-            cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59);
+            cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
         } else if (DateTimePeriod.CALENDER_DAY_START == previousTimePeriod) {
             cal.add(Calendar.DAY_OF_MONTH, nextOrPrevious);
-            cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 12, 0);
+            cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 12, 0, 0);
         }
         return cal.getTime();
     }
@@ -225,5 +225,18 @@ public final class DateUtils extends BaseFamstackService
         } while (startCal.getTimeInMillis() <= endCal.getTimeInMillis()); // excluding end date
 
         return workDays;
+    }
+
+    public static boolean isTodayDate(Date userLastActivityDate)
+    {
+
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(userLastActivityDate);
+
+        Calendar today = Calendar.getInstance();
+        today.setTime(new Date());
+        return startCal.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+            && startCal.get(Calendar.MONTH) == today.get(Calendar.MONTH)
+            && startCal.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH);
     }
 }

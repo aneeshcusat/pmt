@@ -976,4 +976,9 @@ public class FamstackDashboardManager extends BaseFamstackService
             + subject, messageBody);
     }
 
+    public void trackUserSiteActivity(Integer userId)
+    {
+        famstackUserActivityManager.createUserSiteActivities(userId);
+    }
+
 }

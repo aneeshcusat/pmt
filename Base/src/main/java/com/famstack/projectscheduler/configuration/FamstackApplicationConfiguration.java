@@ -21,6 +21,7 @@ import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
+import com.famstack.projectscheduler.util.DateUtils;
 
 public class FamstackApplicationConfiguration extends BaseFamstackService
 {
@@ -249,6 +250,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     public UserItem getCurrentUser()
     {
         return getFamstackUserSessionConfiguration().getCurrentUser();
+    }
+
+    public Boolean getUserAccessedSystemToday()
+    {
+        Date userLastActivityDate = getFamstackUserSessionConfiguration().getUserLastActivityDate();
+        return userLastActivityDate == null || !DateUtils.isTodayDate(userLastActivityDate);
     }
 
     public String getCurrentUserGroupId()

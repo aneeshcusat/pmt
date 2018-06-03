@@ -184,4 +184,11 @@ public class FamstackDashboardController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/trackUserActivity", method = RequestMethod.GET)
+    @ResponseBody
+    public String trackUserSiteActivity(@RequestParam("userId") Integer userId)
+    {
+        famstackDashboardManager.trackUserSiteActivity(userId);
+        return "{\"status\": true}";
+    }
 }

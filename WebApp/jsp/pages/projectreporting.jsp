@@ -3,6 +3,10 @@
 <c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 
 <style>
+.dataTables_filter,.dataTables_length{
+	display: none;
+}
+
 .dt-buttons a{
     width: 65px;
     height: 34px;
@@ -55,7 +59,19 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                 
-                                	<div class="col-md-6" >
+                                	<div class="col-md-5" >
+                                		<div class="col-md-12">
+										<div class="input-group">
+											<div class="input-group-addon">
+												<span class="fa fa-search"></span>
+											</div>
+											<input type="text" class="form-control" id="projectSearchBoxId"
+												placeholder="Search for a project.." />
+											<div class="input-group-btn">
+												<button class="btn btn-primary hide">Search</button>
+											</div>
+										</div>
+									</div>
                                  	</div>
                                  	<div class="col-md-2" >
 					                 <span style="margin-top: 9px;margin-right:  10px;float:right"></>Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;</span>
@@ -68,13 +84,13 @@
         							</span>
         								<input style="margin-left:10px" class="btn btn-default" type="button" onclick="getProjectReportingData('${param.format}');" value="Search"></input>
         							</div>
-        							<div class="col-md-1" >
+        							<div class="col-md-2" >
         								<c:set var="reportFormat" value="${param.format}"/>
         								<c:if test="${not empty param.format  && (param.format eq 'format1' || param.format eq 'default')}">
-        									<button onclick="exportReport('${param.format}')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
+        									<button onclick="exportReport('${param.format}')" class="btn btn-danger pull-right" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
         								</c:if>
         								<c:if test="${empty param.format || (param.format ne 'format1' && param.format ne 'default')}">
-        									<button onclick="exportReport('default')" class="btn btn-danger" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
+        									<button onclick="exportReport('default')" class="btn btn-danger  pull-right" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
         									<c:set var="reportFormat" value="default"/>
         								</c:if>
         							</div>
@@ -113,13 +129,11 @@ var loadAllProjectDetails = function(daterange, format) {
 	doAjaxRequest("GET", "${applicationHome}/projectreportingResponse", dataString, function(data) {
         $("#reportingBodyDiv").html(data);
         document.title = "Export_" + daterange;
-        $('#projectsTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                 'copy', 'csv', 'print'
-            ],
-            "pageLength": 100,
-            "fnDrawCallback": function( oSettings ) {
+        $('#projectsTable').DataTable({ 
+        responsive: true,
+        "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],
+        "ordering": true,
+        "fnDrawCallback": function( oSettings ) {
             	initializePopOver();
               }
         }).on( 'draw', function () {
@@ -237,6 +251,16 @@ function initPopOver(thisVar){
 		  }
 		});
 }
+
+$("#projectSearchBoxId").keydown(function(e){
+	$("input[type='search']").val($("#projectSearchBoxId").val());
+	$("input[type='search']").trigger(e);
+});
+
+$("#projectSearchBoxId").keyup(function(e){
+	$("input[type='search']").val($("#projectSearchBoxId").val());
+	$("input[type='search']").trigger(e);
+});
 
 
 </script>

@@ -32,6 +32,8 @@ public class FamstackUserSessionConfiguration implements Serializable
     /** The login result. */
     private LoginResult loginResult;
 
+    private Date userLastActivityDate;
+
     /** The auto refresh. */
     private boolean autoRefresh = true;
 
@@ -135,6 +137,16 @@ public class FamstackUserSessionConfiguration implements Serializable
     public void setUserGroupIdSelection(String userGroupIdSelection)
     {
         this.userGroupIdSelection = userGroupIdSelection;
+    }
+
+    public Date getUserLastActivityDate()
+    {
+        return userLastActivityDate;
+    }
+
+    public void setUserLastActivityDate(Date userLastActivityDate)
+    {
+        this.userLastActivityDate = userLastActivityDate;
     }
 
 }
