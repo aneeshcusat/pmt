@@ -53,6 +53,10 @@
 	color: wheat;
 }
 
+.actualTaskStartTime{
+display: none;
+}
+
 .list-group-horizontal .list-group-item {
 	display: inline-block;
 }
@@ -116,9 +120,8 @@
 </style>
 <script>
  var taskTimerMap = {};
- 
- var getRemaining = function(taskId) {
-	 
+  
+ function getCompletedTaskTime(taskId){
 	 if (!$(".taskPlayPause"+taskId).hasClass("fa-pause")){
 		 return;
 	 }
@@ -126,21 +129,16 @@
 	 $("."+taskId+".durationDiv").remove();
 	 $("."+taskId+".taskRemainingDiv").show();
 	 
-	 var hour = parseInt($("."+taskId+".taskRemainingDiv .taskHour").html());
-	 var minutes =  parseInt($("."+taskId+".taskRemainingDiv .taskMinutes").html());
-	 var second =  parseInt($("."+taskId+".taskRemainingDiv .taskSeconds").html());
+	 var actualTaskStartTime = new Date($("."+taskId+".taskRemainingDiv .actualTaskStartTime").html()).getTime();
+	 var currentTime = new Date().getTime();
 	 
-	 if (second <= 0){
-		second =59;
-		minutes-=1;
-	}
-	second = second-1;
-	if (minutes <=0){
-		minutes =59;
-		hour-=1;
-	}
-	
-	if (minutes < 10) {
+	 var timeDiff =  Math.abs(currentTime - actualTaskStartTime);
+	 
+	 var hour = parseInt(timeDiff/(3600*1000));
+	 var minutes =  parseInt((timeDiff/(60*1000))%60);
+	 var second = parseInt((timeDiff/(1000))%60);
+	 
+	 if (minutes < 10) {
 		minutes = "0" + minutes;
 	}
 	
@@ -151,11 +149,11 @@
 	if (hour <10) {
 		hour = "0" + hour;
 	}
-	
+	 
 	$("."+taskId+".taskRemainingDiv .taskHour").html(hour);
 	$("."+taskId+".taskRemainingDiv .taskMinutes").html(minutes);
 	$("."+taskId+".taskRemainingDiv .taskSeconds").html(second);
- 	
+	 	
  }
  </script>
 <!-- START CONTENT FRAME -->
@@ -291,9 +289,11 @@
 										onclick="taskPlayOrPause(${tasks.taskId});"></span></a><span
 										class="durationDiv ${tasks.taskId}">${tasks.duration}
 										Hours</span> <span class="${tasks.taskId} taskRemainingDiv"
-										style="display: none"><span class="taskHour">${tasks.taskActivityDetails[0].timeTakenToCompleteHour}</span>:<span
-										class="taskMinutes">${tasks.taskActivityDetails[0].timeTakenToCompleteMinute}</span>:<span
-										class="taskSeconds">${tasks.taskActivityDetails[0].timeTakenToCompleteSecond}</span></span>
+										style="display: none">
+										<span class="actualTaskStartTime"></span>
+										<span class="taskHour"></span>:<span
+										class="taskMinutes"></span>:<span
+										class="taskSeconds"></span></span>
 								</div>
 								<div class="pull-left">
 									<span class="startDateTimeDiv">Est Start Time :
@@ -364,9 +364,11 @@
 										onclick="taskPlayOrPause(${tasks.taskId});"></span></a><span
 										class="durationDiv ${tasks.taskId}"> ${tasks.duration}
 										Hours</span> <span class="${tasks.taskId} taskRemainingDiv"
-										style="display: none"><span class="taskHour">${tasks.taskActivityDetails[0].timeTakenToCompleteHour}</span>:<span
-										class="taskMinutes">${tasks.taskActivityDetails[0].timeTakenToCompleteMinute}</span>:<span
-										class="taskSeconds">${tasks.taskActivityDetails[0].timeTakenToCompleteSecond}</span></span>
+										style="display: none">
+										<span class="actualTaskStartTime"></span>
+										<span class="taskHour"></span>:<span
+										class="taskMinutes"></span>:<span
+										class="taskSeconds"></span></span>
 								</div>
 								<div class="pull-left">
 									<span class="startDateTimeDiv">Est Start Time :
@@ -447,10 +449,12 @@
 										<fmt:formatDate pattern="yyyy/MM/dd HH:mm"	value="${tasks.taskPausedTime}" />
 										</c:if>
 										</span> <span
-										class="${tasks.taskId} taskRemainingDiv" style="display: none"><span
-										class="taskHour">${tasks.taskActivityDetails[0].timeTakenToCompleteHour}</span>:<span
-										class="taskMinutes">${tasks.taskActivityDetails[0].timeTakenToCompleteMinute}</span>:<span
-										class="taskSeconds">${tasks.taskActivityDetails[0].timeTakenToCompleteSecond}</span></span>
+										class="${tasks.taskId} taskRemainingDiv" style="display: none">
+										<span class="actualTaskStartTime"><fmt:formatDate pattern="yyyy/MM/dd HH:mm" value="${tasks.taskActivityDetails[0].actualStartTime}" /></span>
+										<span
+										class="taskHour"></span>:<span
+										class="taskMinutes"></span>:<span
+										class="taskSeconds"></span></span>
 								</div>
 								<div class="pull-left">
 									<span class="startDateTimeDiv">Started at : <fmt:formatDate
@@ -474,7 +478,7 @@
 							<c:if test="${empty tasks.taskPausedTime}">
 								<script>
                         taskTimerMap["${tasks.taskId}"] = window.setInterval(function(){
-                			getRemaining("${tasks.taskId}");
+                        	getCompletedTaskTime("${tasks.taskId}");
                 		}, 1000);
                         </script>
 							</c:if>
@@ -735,7 +739,7 @@ var taskStart = function(){
 	var dataString = {"taskId":taskId,"taskStatus": "INPROGRESS","comments":comments, "adjustStartTime":adjustStartTime, "adjustCompletionTime":""}
 	updateTaskStatus(dataString, false);
 	taskTimerMap[taskId] = window.setInterval(function(taskId){
-		getRemaining(taskId);
+		getCompletedTaskTime(taskId);
 	}, 1000, taskId);
 	$(".task-item" + taskId).find("input.taskStatus").val("INPROGRESS");
 	$(".taskPlayPause"+taskId).removeClass("fa-clock-o");
@@ -796,6 +800,8 @@ var updateTaskStatus = function(dataString, isComplete){
         			labelDate = $("#adjustCompletionTime").val();
         		}
         	}
+        	lastMovedItem.item.find(".task-footer").find(".actualTaskStartTime").html(labelDate);
+        	
     		lastMovedItem.item.find(".task-footer").find(".startDateTimeDiv").html(label + " at : " + labelDate);
     		lastMovedItem.item.find(".task-footer").find("input.startTime").val(labelDate);
         	return true;
@@ -957,15 +963,17 @@ function playTask(taskId){
 		$(".taskPlayPause"+taskId).addClass("fa-pause");
 		$(".taskPlayPause"+taskId).attr("data-task-state", "running");
 		$(".blink"+taskId).html("");
-			
-		$("."+taskId+".taskRemainingDiv .taskHour").html(responseJson.startHour);
+		$("."+taskId+".taskRemainingDiv .actualTaskStartTime").html(getTodayDateTime(new Date()))
+		$(".task-item" + taskId).find(".startDateTimeDiv").html("Started" + " at : " + getTodayDateTime(new Date()));
+		/* $("."+taskId+".taskRemainingDiv .taskHour").html(responseJson.startHour);
 		$("."+taskId+".taskRemainingDiv .taskMinutes").html(responseJson.startMins);
-		$("."+taskId+".taskRemainingDiv .taskSeconds").html(responseJson.startSecs);
+		$("."+taskId+".taskRemainingDiv .taskSeconds").html(responseJson.startSecs); */
+		
 		
 		$(".task-item" + taskId).find("input.taskActivityId").val(responseJson.taskActivityId);
 		$(".task-item" + taskId).find("input.startTime").val(getTodayDateTime(new Date()));
 		window.setInterval(function(taskId){
-			getRemaining(taskId);
+			getCompletedTaskTime(taskId);
 		}, 1000, taskId);
 
        
