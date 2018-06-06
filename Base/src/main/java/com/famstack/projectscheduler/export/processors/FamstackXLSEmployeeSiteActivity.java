@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
@@ -34,7 +35,7 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
             (Map<Integer, Map<String, String>>) dataMap.get("exportDataList");
         String dateString = (String) dataMap.get("dateString");
         Map<Integer, EmployeeDetails> employees = (Map<Integer, EmployeeDetails>) dataMap.get("allEmployeeData");
-
+        Map<String, UserGroupDetails> userGroupMap = (Map<String, UserGroupDetails>) dataMap.get("userGroupMap");
         logDebug("Rendering employee utilisation");
         String[] dateRanges;
 
@@ -57,15 +58,20 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
                     for (Integer userId : employees.keySet()) {
                         int colIndex = 0;
                         Row row = getRow(sheet, rowIndex);
-                        Cell cell = getCell(row, colIndex++);
+                        Cell cell = getCell(sheet, row, colIndex++);
+
                         cell.setCellValue(employees.get(userId).getFirstName());
+                        cell = getCell(sheet, row, colIndex++);
+
+                        UserGroupDetails userGroupDetails = userGroupMap.get(employees.get(userId).getUserGroupId());
+                        cell.setCellValue(userGroupDetails == null ? "" : userGroupDetails.getName());
                         Map<String, String> userActivity = exportDataList.get(userId);
 
                         if (userActivity != null) {
 
                             for (String userActiveDate : userActivity.keySet()) {
-                                colIndex = dateList.indexOf(userActiveDate) + 1;
-                                cell = getCell(row, colIndex);
+                                colIndex = dateList.indexOf(userActiveDate) + 2;
+                                cell = getCell(sheet, row, colIndex);
                                 cell.setCellValue("Active");
                             }
                         }
@@ -81,19 +87,24 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
     {
         int colIndex = 0;
         Row row = getRow(sheet, 0);
-        Cell cell = getCell(row, colIndex++);
+        Cell cell = getCell(sheet, row, colIndex++);
         cell.setCellValue("Employee Names");
+        cell = getCell(sheet, row, colIndex++);
+        cell.setCellValue("Team Name");
         for (String headerDate : dateList) {
-            cell = getCell(row, colIndex++);
+            cell = getCell(sheet, row, colIndex++);
             cell.setCellValue(headerDate);
         }
     }
 
-    private Cell getCell(Row row, int cellNumber)
+    private Cell getCell(Sheet sheet, Row row, int cellNumber)
     {
         Cell cell = row.getCell(cellNumber);
         if (cell == null) {
             cell = row.createCell(cellNumber);
+        }
+        if (cellNumber == 0 || cellNumber == 1 || row.getRowNum() == 0) {
+            sheet.autoSizeColumn(cellNumber);
         }
         return cell;
     }
