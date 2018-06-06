@@ -1137,6 +1137,7 @@ public class FamstackProjectManager extends BaseFamstackManager
                 if (recurringProjectItem.getEndDate() != null
                     && new Date().after(new Date(recurringProjectItem.getEndDate().getTime()))) {
                     famstackDataAccessObjectManager.deleteItem(recurringProjectItem);
+                    logInfo("Deleting recurring project after expiry : " + projectCode);
                     continue;
                 }
                 ProjectItem projectItem = getLatestProjectByCode(projectCode);
