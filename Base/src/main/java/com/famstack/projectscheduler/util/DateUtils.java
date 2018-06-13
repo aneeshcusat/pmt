@@ -210,7 +210,7 @@ public final class DateUtils extends BaseFamstackService
 
         int workDays = 0;
         if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
-            return 0;
+            return 1;
         }
         if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
             startCal.setTime(endDate);

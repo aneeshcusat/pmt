@@ -198,7 +198,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
 
         Row totalUserProjectHoursRow = sheet.getRow(rowCount);
         Row holidayRow = sheet.getRow(rowCount + 1);
-
+        Row LeaveHrsRow = sheet.getRow(rowCount + 2);
         Row excessWorkingHrsRow = sheet.getRow(rowCount + 3);
         Row utilizationRow = sheet.getRow(rowCount + 4);
         Row availableHrsRow = sheet.getRow(rowCount + 5);
@@ -224,8 +224,10 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
 
             Cell totalHrsCell = getCell(totalHrsRow, columnNumber);
             totalHrsCell.setCellStyle(xssfCellProjectTaskHrsStyle);
-            strFormula =
-                "" + cellLetter + (availableHrsRow.getRowNum() + 1) + "-" + cellLetter + (holidayRow.getRowNum() + 1);
+            String totalHrsCalString =
+                cellLetter + (availableHrsRow.getRowNum() + 1) + "-(" + cellLetter + (holidayRow.getRowNum() + 1) + "+"
+                    + cellLetter + (LeaveHrsRow.getRowNum() + 1) + ")";
+            strFormula = "IF(" + totalHrsCalString + "> 0, " + totalHrsCalString + ",0)";
             totalHrsCell.setCellType(CellType.FORMULA);
             totalHrsCell.setCellFormula(strFormula);
 
@@ -352,9 +354,9 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             cell = projectDetailsRow.createCell(columnIndex);
         }
         cell.setCellStyle(xssfCellProjectTotalStyle);
-        String cellLetter = CellReference.convertNumToColString(columnIndex - 2);
+        String cellLetter = CellReference.convertNumToColString(columnIndex - 1);
         int rowNumber = projectDetailsRow.getRowNum() + 1;
-        String strFormula = "SUM(K" + rowNumber + ":" + cellLetter + rowNumber + ")";
+        String strFormula = "SUM(M" + rowNumber + ":" + cellLetter + rowNumber + ")";
         cell.setCellType(CellType.FORMULA);
         cell.setCellFormula(strFormula);
     }

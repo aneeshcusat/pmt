@@ -136,10 +136,10 @@
                      <label class="col-md-2 control-label">Recurring?</label>
                      <div class="col-md-4">
                          <form:select class="form-control select canRecure" path="canRecure" id="canRecure">
-                            <option value="true" selected="selected">YES</option>
-							<option value="false">NO</option>
+                            <option value="false" selected="selected">NO</option>
+							<option value="true">YES</option>
                           </form:select>
-                          <span class="help-block">Select NO if not auto recurring</span>
+                          <span class="help-block">Select YES if task auto recurring</span>
                      </div>
 				</div>
 				 
