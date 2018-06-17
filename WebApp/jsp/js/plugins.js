@@ -483,10 +483,23 @@ $(function() {
                     minTime: "09:00:00",
                     events:events_array,
                     eventRender: function(event, element) {
-                        element.prepend( "<span class='closeon' style='float: right;'>X</span>" );
+                       /* element.prepend( "<span class='closeon' style='float: right;'>X</span>" );
                         element.find(".closeon").click(function() {
                            $('#calendar').fullCalendar('removeEvents',event._id);
-                        });
+                        });*/
+                    	
+                    	 element.popover({
+                	        title: event.taskName,
+                	        content: function () {
+                                return "<table class='calenderEventPopOver'><tbody><tr><td>Task Status</td><td>"+event.taskStatus+"</td></tr><tr><td>Task Category</td><td>"+event.taskActCategory+"</td></tr><tr><td>TaskType</td><td>"+event.projectType+"</td></tr><tr><td>Assignee</td><td>"+event.assigneeName+"</td></tr><tr><td>Project Id</td><td>"+event.projectId+"</td></tr><tr><td>Est Task Start Time</td><td>"+event.estTaskStartTime+"</td></tr><tr><td>Est Task End Time</td><td>"+event.estTaskEndTime+"</td></tr><tr><td>Act Task Start Time</td><td>"+event.taskActActualStartTime+"</td></tr><tr><td>Act Task End Time</td><td>"+event.taskActActualEndTime+"</td></tr></tbody></table>";
+                            },
+                	        animation:true,
+                            delay: 300,
+                	        trigger: 'hover',
+                	        placement: 'top',
+                	        container: 'body',
+                	        html: 'true',
+                	      });
                     },
                     select: function(start, end, allDay) {
                        /* var title = prompt('Event Title:');

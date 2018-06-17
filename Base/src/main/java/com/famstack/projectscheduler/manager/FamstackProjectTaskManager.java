@@ -24,10 +24,12 @@ import com.famstack.projectscheduler.contants.ProjectTaskType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
+import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.util.DateTimePeriod;
@@ -415,26 +417,189 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return FamstackUtils.getJsonFromObject(famstackUserActivityManager.getAllTaskActivities(userId, dayfilter));
     }
 
-    public String getUserTaskActivityJson(String startDate, String endDate, int userId)
+    public String getUserTaskActivityJson(String startDateString, String endDateString, int userId)
     {
         JSONArray jsonArray = new JSONArray();
-        for (TaskActivityDetails taskActivityDetails : famstackUserActivityManager.getAllTaskActivities(startDate,
-            endDate, userId)) {
+        Date startDate = DateUtils.tryParse(startDateString, DateUtils.DATE_FORMAT_CALENDER);
+        Date endDate = DateUtils.tryParse(endDateString, DateUtils.DATE_FORMAT_CALENDER);
+
+        for (ProjectTaskActivityDetails projectTaskActivityDetails : getAllProjectTaskAssigneeData(startDate, endDate,
+            userId == -1 ? null : userId)) {
+
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("title", taskActivityDetails.getTaskName());
-            jsonObject.put("start",
-                DateUtils.format(taskActivityDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT_CALENDER));
 
-            Date completionDate =
-                DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, taskActivityDetails.getStartTime(),
-                    taskActivityDetails.getDurationInMinutes() / 60);
+            String titlePrefix = "[B] ";
 
-            jsonObject.put("end", DateUtils.format(completionDate, DateUtils.DATE_TIME_FORMAT_CALENDER));
-            jsonObject.put("tip", taskActivityDetails.getUserTaskType());
+            if (projectTaskActivityDetails.getTaskActProjType() == ProjectType.NON_BILLABLE) {
+                titlePrefix = "[NB] ";
+            }
+
+            jsonObject.put("title", titlePrefix + projectTaskActivityDetails.getTaskName());
+            jsonObject.put("taskName", projectTaskActivityDetails.getTaskName());
+
+            jsonObject.put("start", getTaskCalStartTime(projectTaskActivityDetails));
+            jsonObject.put("end", getTaskCalEndTime(projectTaskActivityDetails));
+
+            if (projectTaskActivityDetails.getTaskStatus() != null) {
+                jsonObject.put("taskStatus", projectTaskActivityDetails.getTaskStatus());
+            } else {
+                jsonObject.put("taskStatus", "COMPLETED");
+            }
+            jsonObject.put("projectType", projectTaskActivityDetails.getTaskActProjType());
+
+            if (projectTaskActivityDetails.getProjectId() != null) {
+                jsonObject.put("projectId", projectTaskActivityDetails.getProjectId());
+                jsonObject.put("projectName", projectTaskActivityDetails.getProjectName());
+            } else {
+                jsonObject.put("projectId", "NA");
+                jsonObject.put("projectName", "NA");
+            }
+            jsonObject.put("estTaskStartTime", DateUtils.formatTime(projectTaskActivityDetails.getTaskStartTime()));
+            jsonObject.put("estTaskEndTime", DateUtils.formatTime(projectTaskActivityDetails.getTaskCompletionTime()));
+            jsonObject.put("assignee", projectTaskActivityDetails.getUserId());
+            EmployeeDetails employeeDetails =
+                getFamstackApplicationConfiguration().getUserMap().get(projectTaskActivityDetails.getUserId());
+            jsonObject.put("assigneeName", employeeDetails != null ? employeeDetails.getFirstName() : "");
+
+            if (projectTaskActivityDetails.getTaskActCategory() != null) {
+                jsonObject.put("taskActCategory", projectTaskActivityDetails.getTaskActCategory());
+            } else {
+                jsonObject.put("taskActCategory", projectTaskActivityDetails.getTaskActType());
+            }
+
+            jsonObject.put("taskActActualStartTime",
+                DateUtils.formatTime(projectTaskActivityDetails.getTaskActivityStartTime()));
+            jsonObject.put("taskActActualEndTime",
+                DateUtils.formatTime(projectTaskActivityDetails.getTaskActivityEndTime()));
+
+            String color = "blue";
+            String textColor = "white";
+            if (projectTaskActivityDetails.getTaskStatus() == null
+                || projectTaskActivityDetails.getTaskStatus() == TaskStatus.COMPLETED) {
+                color = "green";
+            } else if (projectTaskActivityDetails.getTaskStatus() == TaskStatus.ASSIGNED) {
+                color = "blue";
+            } else if (projectTaskActivityDetails.getTaskStatus() == TaskStatus.INPROGRESS) {
+                color = "yellow";
+                textColor = "black";
+            }
+            jsonObject.put("textColor", textColor);
+            jsonObject.put("color", color);
+
             jsonArray.put(jsonObject);
         }
 
         return jsonArray.toString();
+    }
+
+    private String getTaskCalEndTime(ProjectTaskActivityDetails projectTaskActivityDetails)
+    {
+        Date endTime = projectTaskActivityDetails.getTaskActivityEndTime();
+
+        if (projectTaskActivityDetails.getTaskActivityEndTime() == null) {
+            endTime = projectTaskActivityDetails.getTaskCompletionTime();
+        } else {
+            endTime =
+                DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE,
+                    projectTaskActivityDetails.getTaskActivityStartTime(),
+                    projectTaskActivityDetails.getTaskActivityDuration());
+
+        }
+        return DateUtils.format(endTime, DateUtils.DATE_TIME_FORMAT_CALENDER);
+    }
+
+    private String getTaskCalStartTime(ProjectTaskActivityDetails projectTaskActivityDetails)
+    {
+        Date startTime = projectTaskActivityDetails.getTaskActivityStartTime();
+        if (projectTaskActivityDetails.getTaskActivityStartTime() == null) {
+            startTime = projectTaskActivityDetails.getTaskStartTime();
+        }
+        return DateUtils.format(startTime, DateUtils.DATE_TIME_FORMAT_CALENDER);
+    }
+
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, Integer userId)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("startDate", startDate);
+        dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+
+        List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
+
+        String sqlQuery = HQLStrings.getString("projectTeamAssigneeCalanderSQL");
+        String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+        sqlQuery += " and utai.user_grp_id = " + userGroupId;
+        if (userId != null) {
+            sqlQuery += " and uai.id = " + userId;
+        }
+        List<Object[]> projectItemList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
+        logDebug("projectItemList" + projectItemList);
+        logDebug("startDate" + startDate);
+        logDebug("endDate" + endDate);
+        mapProjectsList(projectDetailsList, projectItemList);
+        return projectDetailsList;
+    }
+
+    private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<Object[]> projectItemList)
+    {
+
+        Map<String, ProjectTaskActivityDetails> projectCacheMap = new HashMap<>();
+        ProjectTaskActivityDetails projectTaskActivityDetailsTmp;
+
+        for (int i = 0; i < projectItemList.size(); i++) {
+            ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
+            Object[] data = projectItemList.get(i);
+            projectTaskActivityDetails.setProjectStartTime((Date) data[0]);
+            projectTaskActivityDetails.setProjectCompletionTime((Date) data[1]);
+            projectTaskActivityDetails.setProjectCode((String) data[2]);
+            projectTaskActivityDetails.setProjectId((Integer) data[3]);
+            projectTaskActivityDetails.setProjectNumber((String) data[4]);
+            projectTaskActivityDetails.setProjectName((String) data[5]);
+            if (data[6] != null) {
+                projectTaskActivityDetails.setProjectStatus(ProjectStatus.valueOf((String) data[6]));
+            }
+            if (data[7] != null) {
+                projectTaskActivityDetails.setProjectType(ProjectType.valueOf((String) data[7]));
+            }
+            projectTaskActivityDetails.setProjectCategory((String) data[8]);
+            projectTaskActivityDetails.setProjectTeamId((Integer) data[9]);
+            projectTaskActivityDetails.setProjectClientId((Integer) data[10]);
+
+            projectTaskActivityDetails.setTaskName((String) data[11]);
+            projectTaskActivityDetails.setTaskActivityStartTime((Date) data[12]);
+            projectTaskActivityDetails.setTaskActivityDuration((Integer) data[13]);
+            projectTaskActivityDetails.setTaskActActivityDuration((Integer) data[13]);
+
+            projectTaskActivityDetails.setUserId((Integer) data[14]);
+
+            projectTaskActivityDetails.setTaskId((Integer) data[15]);
+            projectTaskActivityDetails.setTaskActivityId((Integer) data[16]);
+            projectTaskActivityDetails.setTaskActivityEndTime((Date) data[17]);
+
+            if (data[18] != null) {
+                projectTaskActivityDetails.setTaskStatus(TaskStatus.valueOf((String) data[18]));
+            }
+            projectTaskActivityDetails.setTaskActType(UserTaskType.valueOf((String) data[19]));
+            projectTaskActivityDetails.setTaskActProjType(ProjectType.valueOf((String) data[20]));
+            projectTaskActivityDetails.setTaskActCategory((String) data[21]);
+            projectTaskActivityDetails.setTaskStartTime((Date) data[22]);
+            projectTaskActivityDetails.setTaskCompletionTime((Date) data[23]);
+            if (data[24] != null) {
+                projectTaskActivityDetails.setTaskDuration((Integer) data[24]);
+            }
+            String key = "D" + DateUtils.format((Date) data[0], DateUtils.DATE_FORMAT);
+            key += "T" + data[15];
+            key += "U" + data[14];
+
+            projectTaskActivityDetailsTmp = projectCacheMap.get(key);
+            if (projectTaskActivityDetailsTmp != null) {
+                projectTaskActivityDetailsTmp.addToChildProjectActivityDetailsMap(projectTaskActivityDetails);
+                projectTaskActivityDetailsTmp.setTaskActivityDuration(projectTaskActivityDetailsTmp
+                    .getTaskActivityDuration() + projectTaskActivityDetails.getTaskActivityDuration());
+            } else {
+                projectCacheMap.put(key, projectTaskActivityDetails);
+                projectDetailsList.add(projectTaskActivityDetails);
+            }
+        }
     }
 
     public Map<String, List<TaskDetails>> getAllProjectTask(Integer userId)

@@ -239,4 +239,12 @@ public final class DateUtils extends BaseFamstackService
             && startCal.get(Calendar.MONTH) == today.get(Calendar.MONTH)
             && startCal.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH);
     }
+
+    public static String formatTime(Date date)
+    {
+        if (date != null) {
+            return DateUtils.format(date, DateUtils.DATE_TIME_FORMAT);
+        }
+        return "NA";
+    }
 }

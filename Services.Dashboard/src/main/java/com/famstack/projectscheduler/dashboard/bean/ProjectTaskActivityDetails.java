@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
+import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.employees.bean.ClientDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
@@ -49,6 +51,20 @@ public class ProjectTaskActivityDetails
     private Integer taskId;
 
     private Date taskActivityEndTime;
+
+    private TaskStatus taskStatus;
+
+    private UserTaskType taskActType;
+
+    private ProjectType taskActProjType;
+
+    private String taskActCategory;
+
+    private Date taskStartTime;
+
+    private Date taskCompletionTime;
+
+    private int taskDuration;
 
     private List<ProjectTaskActivityDetails> childs;
 
@@ -298,5 +314,75 @@ public class ProjectTaskActivityDetails
     public void setTaskActActivityDuration(Integer taskActActivityDuration)
     {
         this.taskActActivityDuration = taskActActivityDuration;
+    }
+
+    public TaskStatus getTaskStatus()
+    {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(TaskStatus taskStatus)
+    {
+        this.taskStatus = taskStatus;
+    }
+
+    public UserTaskType getTaskActType()
+    {
+        return taskActType;
+    }
+
+    public void setTaskActType(UserTaskType taskActType)
+    {
+        this.taskActType = taskActType;
+    }
+
+    public ProjectType getTaskActProjType()
+    {
+        return taskActProjType;
+    }
+
+    public void setTaskActProjType(ProjectType taskActProjType)
+    {
+        this.taskActProjType = taskActProjType;
+    }
+
+    public String getTaskActCategory()
+    {
+        return taskActCategory;
+    }
+
+    public void setTaskActCategory(String taskActCategory)
+    {
+        this.taskActCategory = taskActCategory;
+    }
+
+    public Date getTaskStartTime()
+    {
+        return taskStartTime;
+    }
+
+    public void setTaskStartTime(Date taskStartTime)
+    {
+        this.taskStartTime = taskStartTime;
+    }
+
+    public Date getTaskCompletionTime()
+    {
+        return taskCompletionTime;
+    }
+
+    public void setTaskCompletionTime(Date taskCompletionTime)
+    {
+        this.taskCompletionTime = taskCompletionTime;
+    }
+
+    public int getTaskDuration()
+    {
+        return taskDuration;
+    }
+
+    public void setTaskDuration(int taskDuration)
+    {
+        this.taskDuration = taskDuration;
     }
 }

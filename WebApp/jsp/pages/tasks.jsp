@@ -211,11 +211,17 @@ display: none;
 								<div class="form-group">
                                 <div class="col-md-10">                                            
                                        <select id="taskFilterDayId" name="taskFilterDayId" class="form-control select" data-live-search="true">
-											<c:forEach begin="15" end="100" varStatus="loop" step="5">
-												<c:if test="${param.dayfilter eq loop.current}">
+                                      		<c:if test="${empty param.dayfilter}">
+												<c:set var="dayfilterParam" value="15"/>
+											</c:if>
+											<c:if test="${not empty param.dayfilter}">
+												<c:set var="dayfilterParam" value="${param.dayfilter}"/>
+											</c:if>
+											<c:forEach begin="1" end="365" varStatus="loop" step="1">
+												<c:if test="${dayfilterParam eq loop.current}">
                                         		<option value="${loop.current}" selected="selected">Last ${loop.current} Days Tasks</option>
                                         		</c:if>
-                                        		<c:if test="${param.dayfilter ne loop.current}">
+                                        		<c:if test="${dayfilterParam ne loop.current}">
                                         		<option value="${loop.current}">Last ${loop.current} Days Tasks</option>
                                         		</c:if>
                                  			</c:forEach>

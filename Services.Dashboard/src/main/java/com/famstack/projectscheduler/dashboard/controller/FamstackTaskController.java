@@ -45,7 +45,7 @@ public class FamstackTaskController extends BaseFamstackService
     @RequestMapping(value = "/getAjaxFullcalendar", method = RequestMethod.GET)
     @ResponseBody
     public String getAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate,
-        @RequestParam(value = "userId", defaultValue = "0") int userId)
+        @RequestParam(value = "userId", defaultValue = "-1") int userId)
     {
         return famstackDashboardManager.getAjaxFullcalendar(startDate, endDate, userId);
     }

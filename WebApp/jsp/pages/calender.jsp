@@ -6,6 +6,10 @@
      <li class="active">Calender</li>
  </ul>
 <style>
+
+.calenderEventPopOver{
+	font-size: 10pt;
+}
 .disabled .fc-day-content {
     background-color: #123959;
     color: #FFFFFF;
@@ -14,6 +18,8 @@
 #unbillableTaskCreationModal .modal-dialog {
 	width: 50%;
 }
+
+
 
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }

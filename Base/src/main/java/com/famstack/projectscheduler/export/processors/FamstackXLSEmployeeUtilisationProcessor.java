@@ -95,7 +95,7 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
             if (dateRanges != null && dateRanges.length > 1) {
                 Date startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
                 Date endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
-
+                endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, endDate, 1);
                 List<String> dateList = new ArrayList<>();
                 while (startDate.before(endDate)) {
                     dateList.add(DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP));
@@ -175,13 +175,17 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
         int mins = timeInMins % 60;
 
         String timeString = "";
-        if (hours < 10) {
+        if (hours < 10 && hours >= 0) {
             timeString += "0";
         }
         timeString += hours;
 
         timeString += ":";
-        if (mins < 10) {
+        if (mins < 0) {
+            mins *= -1;
+        }
+
+        if (mins < 10 && mins >= 0) {
             timeString += "0";
         }
         timeString += mins;
