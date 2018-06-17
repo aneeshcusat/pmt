@@ -234,8 +234,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         if (taskStatus == TaskStatus.ASSIGNED) {
             famstackUserActivityManager.deleteAllUserTaskActivities(taskDetails.getTaskId());
         } else if (taskStatus == TaskStatus.INPROGRESS) {
-            famstackUserActivityManager.setProjectTaskActivityActualTime(taskDetails.getTaskId(), new Date(),
-                "re assigned", TaskStatus.COMPLETED, currentUserTaskActivityItem.getActualStartTime(), null);
+            famstackUserActivityManager.setProjectTaskActivityActualTime(taskDetails.getTaskId(), "re assigned",
+                TaskStatus.COMPLETED, currentUserTaskActivityItem.getActualStartTime(), null);
             startDate = new Date();
             durationInMinutes -=
                 (int) ((new Date().getTime() - currentUserTaskActivityItem.getActualStartTime().getTime()) / (1000 * 60));
@@ -753,7 +753,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskItem.setStatus(taskStatus);
             // TODO: change user activity date on start.
             Map<String, Object> taskActivities =
-                famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, new Date(), comments, taskStatus,
+                famstackUserActivityManager.setProjectTaskActivityActualTime(taskId, comments, taskStatus,
                     adjustStartTime, adjustCompletionTimeDate);
 
             Integer actualTimeTaken = (Integer) taskActivities.get(TASK_ACTUAL_DURATION);

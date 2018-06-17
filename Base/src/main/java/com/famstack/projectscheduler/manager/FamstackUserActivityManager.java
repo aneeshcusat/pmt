@@ -383,19 +383,21 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return null;
     }
 
-    public Map<String, Object> setProjectTaskActivityActualTime(int taskId, Date date, String comment,
-        TaskStatus taskStatus, Date adjustStartTime, Date adjustCompletionTimeDate)
+    public Map<String, Object> setProjectTaskActivityActualTime(int taskId, String comment, TaskStatus taskStatus,
+        Date adjustStartTime, Date adjustCompletionTimeDate)
     {
         Integer actualDuration = 0;
+
+        Date currentDate = new Date();
 
         List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
         List<Integer> contributersList = new ArrayList<>();
 
         if (adjustStartTime == null) {
-            adjustStartTime = date;
+            adjustStartTime = currentDate;
         }
         if (adjustCompletionTimeDate == null) {
-            adjustCompletionTimeDate = date;
+            adjustCompletionTimeDate = currentDate;
         }
         for (Object userTaskActivityItemObj : userTaskActivityItems) {
             UserTaskActivityItem userTaskActivityItem = (UserTaskActivityItem) userTaskActivityItemObj;
@@ -408,12 +410,16 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                 if (taskStatus == TaskStatus.INPROGRESS) {
                     userTaskActivityItem.setInprogressComment(comment);
                     userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
-                    userTaskActivityItem.setRecordedStartTime(new Timestamp(date.getTime()));
+                    userTaskActivityItem.setRecordedStartTime(new Timestamp(currentDate.getTime()));
                 } else if (taskStatus == TaskStatus.COMPLETED) {
                     userTaskActivityItem.setCompletionComment(comment);
                     userTaskActivityItem.setActualStartTime(new Timestamp(adjustStartTime.getTime()));
                     userTaskActivityItem.setActualEndTime(new Timestamp(adjustCompletionTimeDate.getTime()));
-                    userTaskActivityItem.setRecordedEndTime(new Timestamp(date.getTime()));
+
+                    if (userTaskActivityItem.getRecordedStartTime() == null) {
+                        userTaskActivityItem.setRecordedStartTime(new Timestamp(currentDate.getTime()));
+                    }
+                    userTaskActivityItem.setRecordedEndTime(new Timestamp(currentDate.getTime()));
 
                     Date completionTime = userTaskActivityItem.getActualEndTime();
                     Date startTime = userTaskActivityItem.getActualStartTime();
