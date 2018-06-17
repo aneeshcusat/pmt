@@ -59,9 +59,6 @@ table tr td.markable span {
         <div class="page-title">                    
             <h2><span class="fa fa-list"></span> Task Scheduler</h2>
         </div>  
-        <div class="pull-right">
-            <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
-        </div>                                                                                
     </div>
     <!-- END CONTENT FRAME TOP -->
     <!-- body-->

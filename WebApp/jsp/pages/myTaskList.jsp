@@ -342,9 +342,6 @@
         <div class="page-title">                    
             <h2><span class="fa fa-tasks"></span> Task Activities</h2>
         </div>                                                
-        <div class="pull-right">
-            <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
-        </div>                                
     </div> 
 <div class="col-md-12">
 
