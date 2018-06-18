@@ -31,11 +31,11 @@
 				<div class="">
 				<label class="col-md-5 control-label text-left">Time Taken </label>
                      <div class="col-md-7" style="margin-top: 7px;">
-                      	<b id="completedTimeHrs">0</b> Mins
+                      	<b id="completedTimeHrs">0</b>
                      </div>
 				</div>
 				<div class="">
-				<label class="col-md-5 control-label text-left">Recored Completion Time </label>
+				<label class="col-md-5 control-label text-left">Recorded Completion Time </label>
                      <div class="col-md-7" style="margin-top: 7px;">
                      <b class="completedTime">0</b>
                      </div>

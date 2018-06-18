@@ -8,7 +8,9 @@
 	<li class="active">Tasks</li>
 </ul>
 <style>
-
+.blueColor{
+	color:blue !important;
+}
 #unbillableTaskCreationModal .modal-dialog {
 	width: 50%;
 }
@@ -40,6 +42,10 @@
 
 .taskName {
 	color: #2BD5D0;
+}
+
+.task-item {
+	display: none;
 }
 
 .taskLabel {
@@ -165,11 +171,6 @@ display: none;
 				<span class="fa fa-tasks"></span> Tasks
 			</h2>
 		</div>
-		<div class="pull-right">
-			<button class="btn btn-default content-frame-left-toggle">
-				<span class="fa fa-bars"></span>
-			</button>
-		</div>
 	</div>
 	<!-- END CONTENT FRAME TOP -->
 	
@@ -180,7 +181,7 @@ display: none;
 				<div class="panel-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<div class="col-md-5">
+							<div class="col-md-4">
 								<div class="input-group">
 									<div class="input-group-addon">
 										<span class="fa fa-search"></span>
@@ -229,7 +230,10 @@ display: none;
                                 </div>
                             </div>
 							</div>
-				
+							<div class="col-md-1"> 
+				            <a href="javascript:showGridEmployeeDetails();" id="employeesDetailsGridLink"  style="margin-right: 10px;" class="blueColor hide"><span class="fa fa-th-large fa-3x"></span></a>
+                            <a href="javascript:showListEmployeeDetails();" id="employeesDetailsListLink" class="hide"><span class="fa fa-tasks fa-3x"></span></a>
+							</div>
 							<div class="col-md-3">
 								  
 								  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
@@ -732,8 +736,9 @@ $('#taskActivitySearchId').keyup(function(){
 
 function reloadTime() {
 	 var completedTime = getTodayDateTime(new Date());
-	 $(".completedTime").html(completedTime);
+	 validateTaskCompletionTime();
   	 $(".recordedStartTime").html(completedTime);
+  	$(".completedTime").html(completedTime);
 }
 window.setInterval(reloadTime, 1000);
 
@@ -753,17 +758,48 @@ var taskStart = function(){
 	$(".taskPlayPause"+taskId).attr("data-task-state", "running");
 }
 
-var taskComplete = function(){
-	$("#adjustCompletionTime").removeClass("error");
-	$("#adjustStartTime1").removeClass("error");
-	var comments =$("#taskCompletionComments").val();
-	var taskId = $(lastMovedItem.item).find("input.taskId").val();
+var validateTaskCompletionTime = function(){
 	var adjustCompletionTime =$("#adjustCompletionTime").val();
 	var adjustStartTime =$("#adjustStartTime1").val();
+	$("#adjustCompletionTime").removeClass("error");
+	$("#adjustStartTime1").removeClass("error");
+	if (adjustStartTime != "" && adjustCompletionTime != "") {
+		if (new Date(adjustCompletionTime) > new Date(adjustStartTime)) {
+			var diffTime = (new Date(adjustCompletionTime) - new Date(adjustStartTime)) /(60*1000);
+			fillTaskCompletionTime(diffTime);
+			return true;
+		}
+	}
+	$("#adjustCompletionTime").addClass("error");
+	$("#adjustStartTime1").addClass("error");
+	$("#completedTimeHrs").html("Invalid");
+	$("#taskComplete").html("Complete");
+	return false;
+}
+
+var fillTaskCompletionTime =function(diffTime){
+	var timeMsg = "";
+	if (diffTime > 59) {
+		var diffTimeHrs = diffTime/60;
+		var diffTimeMins = diffTime%60;
+		timeMsg = Math.round(diffTimeHrs) + " Hrs " + diffTimeMins + " Mins";
+		$("#completedTimeHrs").html(timeMsg);
+	} else {
+		$("#completedTimeHrs").html(Math.round(diffTime) + " Mins");
+	}
 	
-	if (new Date(adjustCompletionTime) < new Date(adjustStartTime)) {
-		$("#adjustCompletionTime").addClass("error");
-		$("#adjustStartTime1").addClass("error");
+	if (diffTime > 480){
+		$("#taskComplete").html("Confirm & Complete " + timeMsg + " Task");
+	} else {
+		$("#taskComplete").html("Complete");
+	}
+}
+
+var taskComplete = function(){
+	var comments =$("#taskCompletionComments").val();
+	var taskId = $(lastMovedItem.item).find("input.taskId").val();
+	
+	if (!validateTaskCompletionTime()) {
 		return;
 	}
 	var dataString = {"taskId":taskId,"taskStatus": "COMPLETED","comments":comments, "adjustStartTime":adjustStartTime, "adjustCompletionTime":adjustCompletionTime}
@@ -822,11 +858,14 @@ var updateTaskStatus = function(dataString, isComplete){
 	
 }
 
-$("#adjustCompletionTime").on("change", function(){
-	var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
-	var adjustStartTimeDate = new Date(adjustStartTime);
-	var diffTime = (new Date() - adjustStartTimeDate) /(60*1000);
-	$(".completedTimeHrs").val(diffTime);
+$(document).ready(function () {
+	$("#adjustCompletionTime").on("change", function(){
+		validateTaskCompletionTime();
+	});
+	
+	$("#adjustStartTime1").on("change", function(){
+		validateTaskCompletionTime();
+	});
 });
 
 var lastMovedItem ;
@@ -850,16 +889,23 @@ $(function(){
             	
             	if(this.id == "tasks_completed"){
             		var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
-                	$("#adjustStartTime1").val(adjustStartTime);
+            		var completionDate = new Date();
+            		if (adjustStartTime == "") {
+            			adjustStartTime = getTodayDateTime(new Date());
+            			completionDate.setTime(completionDate.getTime() + 1000 * 60);
+            		}
+                	$("#adjustStartTime1").val(adjustStartTime);              	
+                	$("#adjustCompletionTime").val(getTodayDateTime(completionDate));
                 	var adjustStartTimeDate = new Date(adjustStartTime);
-                	var diffTime = (new Date() - adjustStartTimeDate) /(60*1000);
+                	var diffTime = (completionDate - adjustStartTimeDate) /(60*1000);
                 	famstacklog(diffTime);
-                	$("#completedTimeHrs").html(Math.round(diffTime));
+                	fillTaskCompletionTime(diffTime);
                 	$("#adjustCompletionTime").removeClass("error");
                 	$("#adjustStartTime1").removeClass("error");
                 	$(".taskCompletionLink").click();
                 }
                 if(this.id == "tasks_progreess"){
+                	$("#adjustStartTime").val(getTodayDateTime(new Date()));
                 	$(".taskStartLink").click();
                 }                
                 page_content_onresize();
