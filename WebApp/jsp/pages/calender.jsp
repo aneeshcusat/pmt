@@ -178,6 +178,7 @@ var createUnbillableTask = function(){
         var responseJson = JSON.parse(data);
         if (responseJson.status){
         	$(".modal").modal('hide');
+        	refreshCalendar();
         } else {
         	return false;
         }
@@ -194,7 +195,8 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#taskStartComments").val("");
 }
 
-$("#taskAssigneeId").on("change",function(){
+
+var refreshCalendar = function() {
 	var userId = $("#taskAssigneeId").val();
 	var events = {
 	        url: "getAjaxFullcalendar",
@@ -206,6 +208,10 @@ $("#taskAssigneeId").on("change",function(){
 	$('#calendar').fullCalendar('removeEventSource', events);
     $('#calendar').fullCalendar('addEventSource', events);
     $('#calendar').fullCalendar('refetchEvents');
+}
+
+$("#taskAssigneeId").on("change",function(){
+	refreshCalendar();
 });
 
 </script>

@@ -373,7 +373,7 @@ $(function() {
 function performSearch(e){
 	var serarchText = $('#employeeSearch').val();
 	
-	if (!$("#employeesDetailsListDiv").hasClass("hide")) {
+	if ($("#employeesDetailsListDiv").length > 0 && (!$("#employeesDetailsListDiv").hasClass("hide"))) {
 		$("input[type='search']").val(serarchText);
 		$("input[type='search']").trigger(e);
 		return;

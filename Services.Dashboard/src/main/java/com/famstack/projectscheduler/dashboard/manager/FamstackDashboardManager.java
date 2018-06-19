@@ -872,9 +872,9 @@ public class FamstackDashboardManager extends BaseFamstackService
                 durationInMinutes = 480;
             }
 
-            if (durationInMinutes > 480) {
-                durationInMinutes = 480;
-            }
+            /*
+             * if (durationInMinutes > 480) { durationInMinutes = 480; }
+             */
 
             String taskName =
                 durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + taskActCategory + " "

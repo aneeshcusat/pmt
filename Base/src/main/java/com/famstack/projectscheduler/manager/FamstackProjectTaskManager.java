@@ -502,7 +502,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             endTime =
                 DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE,
                     projectTaskActivityDetails.getTaskActivityStartTime(),
-                    projectTaskActivityDetails.getTaskActivityDuration());
+                    projectTaskActivityDetails.getTaskActActivityDuration());
 
         }
         return DateUtils.format(endTime, DateUtils.DATE_TIME_FORMAT_CALENDER);
@@ -541,9 +541,6 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<Object[]> projectItemList)
     {
-
-        Map<String, ProjectTaskActivityDetails> projectCacheMap = new HashMap<>();
-        ProjectTaskActivityDetails projectTaskActivityDetailsTmp;
 
         for (int i = 0; i < projectItemList.size(); i++) {
             ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
@@ -586,19 +583,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             if (data[24] != null) {
                 projectTaskActivityDetails.setTaskDuration((Integer) data[24]);
             }
-            String key = "D" + DateUtils.format((Date) data[0], DateUtils.DATE_FORMAT);
-            key += "T" + data[15];
-            key += "U" + data[14];
-
-            projectTaskActivityDetailsTmp = projectCacheMap.get(key);
-            if (projectTaskActivityDetailsTmp != null) {
-                projectTaskActivityDetailsTmp.addToChildProjectActivityDetailsMap(projectTaskActivityDetails);
-                projectTaskActivityDetailsTmp.setTaskActivityDuration(projectTaskActivityDetailsTmp
-                    .getTaskActivityDuration() + projectTaskActivityDetails.getTaskActivityDuration());
-            } else {
-                projectCacheMap.put(key, projectTaskActivityDetails);
-                projectDetailsList.add(projectTaskActivityDetails);
-            }
+            projectDetailsList.add(projectTaskActivityDetails);
         }
     }
 
