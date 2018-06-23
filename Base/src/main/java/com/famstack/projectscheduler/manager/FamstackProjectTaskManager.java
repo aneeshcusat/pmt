@@ -427,13 +427,20 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             userId == -1 ? null : userId)) {
 
             JSONObject jsonObject = new JSONObject();
+            String taskTimeString = "";
+            if (projectTaskActivityDetails.getTaskActivityEndTime() != null) {
 
-            String titlePrefix = "[B] ";
-
-            if (projectTaskActivityDetails.getTaskActProjType() == ProjectType.NON_BILLABLE) {
-                titlePrefix = "[NB] ";
+                Integer taskActActivityDuration = projectTaskActivityDetails.getTaskActActivityDuration();
+                taskActActivityDuration = taskActActivityDuration == null ? 0 : taskActActivityDuration;
+                taskTimeString =
+                    " - " + String.format("%02d:%02d", taskActActivityDuration / 60, taskActActivityDuration % 60)
+                        + " Hrs";
             }
 
+            String titlePrefix = "[B" + taskTimeString + "] ";
+            if (projectTaskActivityDetails.getTaskActProjType() == ProjectType.NON_BILLABLE) {
+                titlePrefix = "[NB" + taskTimeString + "] ";
+            }
             jsonObject.put("title", titlePrefix + projectTaskActivityDetails.getTaskName());
             jsonObject.put("taskName", projectTaskActivityDetails.getTaskName());
 
@@ -456,6 +463,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             }
             jsonObject.put("estTaskStartTime", DateUtils.formatTime(projectTaskActivityDetails.getTaskStartTime()));
             jsonObject.put("estTaskEndTime", DateUtils.formatTime(projectTaskActivityDetails.getTaskCompletionTime()));
+
             jsonObject.put("assignee", projectTaskActivityDetails.getUserId());
             EmployeeDetails employeeDetails =
                 getFamstackApplicationConfiguration().getUserMap().get(projectTaskActivityDetails.getUserId());
