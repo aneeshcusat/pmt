@@ -31,6 +31,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
+import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -291,6 +292,9 @@ public class FamstackProjectController extends BaseFamstackService
         } else if ("useractivity".equalsIgnoreCase(templateName)) {
             Map<Integer, Map<String, String>> userSiteActivityMap =
                 famstackDashboardManager.getAllUserSiteActivities(startDate, endDate);
+            Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap =
+                famstackDashboardManager.getAllNonBillabileActivities(startDate, endDate);
+            dataMap.put("nonBillativityMap", nonBillativityMap);
             dataMap.put("exportDataList", userSiteActivityMap);
         } else {
             List<ProjectDetails> projectData = famstackDashboardManager.getAllProjectDetailsList(startDate, endDate);

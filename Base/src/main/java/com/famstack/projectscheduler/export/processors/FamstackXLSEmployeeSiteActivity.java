@@ -6,14 +6,23 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFComment;
+import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.contants.UserTaskType;
+import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.util.DateTimePeriod;
@@ -30,9 +39,11 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
     {
 
         XSSFWorkbook workBook = (XSSFWorkbook) dataMap.get("workBook");
-        Sheet sheet = (Sheet) dataMap.get("sheet");
+        XSSFSheet sheet = (XSSFSheet) dataMap.get("sheet");
         Map<Integer, Map<String, String>> exportDataList =
             (Map<Integer, Map<String, String>>) dataMap.get("exportDataList");
+        Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap =
+            (Map<Integer, Map<String, UserTaskActivityItem>>) dataMap.get("nonBillativityMap");
         String dateString = (String) dataMap.get("dateString");
         Map<Integer, EmployeeDetails> employees = (Map<Integer, EmployeeDetails>) dataMap.get("allEmployeeData");
         Map<String, UserGroupDetails> userGroupMap = (Map<String, UserGroupDetails>) dataMap.get("userGroupMap");
@@ -66,7 +77,7 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
                         UserGroupDetails userGroupDetails = userGroupMap.get(employees.get(userId).getUserGroupId());
                         cell.setCellValue(userGroupDetails == null ? "" : userGroupDetails.getName());
                         Map<String, String> userActivity = exportDataList.get(userId);
-
+                        Map<String, UserTaskActivityItem> nonBillableTaskItem = nonBillativityMap.get(userId);
                         if (userActivity != null) {
 
                             for (String userActiveDate : userActivity.keySet()) {
@@ -75,12 +86,50 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
                                 cell.setCellValue("Active");
                             }
                         }
+
+                        if (nonBillableTaskItem != null) {
+                            for (String userNonBillableDate : nonBillableTaskItem.keySet()) {
+                                colIndex = dateList.indexOf(userNonBillableDate) + 2;
+                                cell = getCell(sheet, row, colIndex);
+                                UserTaskActivityItem userTaskActivityItem =
+                                    nonBillableTaskItem.get(userNonBillableDate);
+
+                                if (userTaskActivityItem != null
+                                    && (userTaskActivityItem.getType() != UserTaskType.OTHER || "Training"
+                                        .equalsIgnoreCase(userTaskActivityItem.getTaskActCategory()))) {
+
+                                    cell.setCellValue(userTaskActivityItem.getTaskActCategory());
+                                    String startTimeString =
+                                        DateUtils.format(new Date(userTaskActivityItem.getActualStartTime().getTime()),
+                                            DateUtils.DATE_TIME_FORMAT);
+                                    String endTimeString =
+                                        DateUtils.format(new Date(userTaskActivityItem.getActualEndTime().getTime()),
+                                            DateUtils.DATE_TIME_FORMAT);
+                                    Comment comment =
+                                        getComment(workBook, sheet, userTaskActivityItem.getTaskName() + ", Time : "
+                                            + startTimeString + " - " + endTimeString);
+                                    logDebug("Creating cell c-" + colIndex + " r-" + rowIndex + " comment : " + comment);
+                                    cell.setCellComment(comment);
+                                }
+                            }
+                        }
                         rowIndex++;
                     }
                 }
             }
         }
 
+    }
+
+    private Comment getComment(XSSFWorkbook workBook, XSSFSheet sheet, String commentString)
+    {
+        XSSFCreationHelper richTextFactory = workBook.getCreationHelper();
+        XSSFDrawing drawing = sheet.createDrawingPatriarch();
+        XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 5, 10, 15);
+        XSSFComment comment1 = drawing.createCellComment(anchor);
+        XSSFRichTextString rtf1 = richTextFactory.createRichTextString(commentString);
+        comment1.setString(rtf1);
+        return comment1;
     }
 
     private void createHeader(Sheet sheet, List<String> dateList)

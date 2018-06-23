@@ -11,6 +11,9 @@
 .blueColor{
 	color:blue !important;
 }
+.colorRed {
+background-color: red !important;
+}
 #unbillableTaskCreationModal .modal-dialog {
 	width: 50%;
 }
@@ -42,10 +45,6 @@
 
 .taskName {
 	color: #2BD5D0;
-}
-
-.task-item {
-	display: none;
 }
 
 .taskLabel {
@@ -123,6 +122,11 @@ display: none;
      50% { opacity: 0.0; }
      100% { opacity: 1.0; }
      }
+<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
+.task-item {
+	display: none;
+}
+</c:if>
 </style>
 <script>
  var taskTimerMap = {};
@@ -252,309 +256,12 @@ display: none;
 		</div>
 
 	<!-- START CONTENT FRAME BODY -->
-	<div class="row ">
-		<div class="col-md-3">
-			<h5>Backlog</h5>
-			<div class="tasks" id="tasks">
-				<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
-					<c:forEach var="tasks"
-						items="${modelViewMap.projectTaskDetailsData['BACKLOG']}"
-						varStatus="taskIndex">
-						<div
-							class='task-item task-danger task-primary userId${tasks.taskActivityDetails[0].userId} task-item${tasks.taskId}'>
-							<div class="task-text col-md-12">
-								<div class="col-md-10">
-									<span class="taskName clearfix"><b>${tasks.name}</b></span>
-								</div>
-								<div class="col-md-2">
-									<span style="background-color: blue" class="taskLabel">
-										<c:if test="${tasks.projectTaskType == 'PRODUCTIVE' }">
-											P
-										</c:if>
-										<c:if test="${tasks.projectTaskType == 'REVIEW' }">
-											R
-										</c:if>
-										<c:if test="${tasks.projectTaskType == 'ITERATION' }">
-											I
-										</c:if>
-									</span>
-								</div>
-								<div class="col-md-12">
-									<span class="taskDescription  clearfix"><i>${tasks.description}</i></span>
-								</div>
-							</div>
-							<div class="task-text">
-								<a target="_new"
-									href="${applicationHome}/project/${tasks.projectId}"
-									style="float: left">Show project</a> <a href="#"
-									style="float: right"
-									onclick="openTaskDetails('${tasks.taskId}');">View task</a>
-							</div>
-							<div class="task-footer">
-								<div class="pull-right">
-									<span class="blink_text blink${tasks.taskId}"></span><a
-										href="javascript:void(0)"><span
-										class="fa fa-clock-o taskPlayPause${tasks.taskId}"
-										data-task-state="notstarted" 
-										onclick="taskPlayOrPause(${tasks.taskId});"></span></a><span
-										class="durationDiv ${tasks.taskId}">${tasks.duration}
-										Hours</span> <span class="${tasks.taskId} taskRemainingDiv"
-										style="display: none">
-										<span class="actualTaskStartTime"></span>
-										<span class="taskHour"></span>:<span
-										class="taskMinutes"></span>:<span
-										class="taskSeconds"></span></span>
-								</div>
-								<div class="pull-left">
-									<span class="startDateTimeDiv">Est Start Time :
-										${tasks.startTime}</span>
-								</div>
-							</div>
-							<input type="hidden" class="estStartTime"
-								value="${tasks.startTime}" /> <input type="hidden"
-								class="startTime"
-								value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails[0].actualStartTime}"/>' />
-							<input type="hidden" class="duration" value="${tasks.duration}" />
-							<input type="hidden" class="taskPriority" value="${tasks.priority}" />
-							<input type="hidden" class="assignee"
-								value="${tasks.taskActivityDetails[0].userId}" /> <input
-								type="hidden" class="taskStatus" value="${tasks.status}" /> <input
-								type="hidden" class="taskId" value="${tasks.taskId}" /> <input
-								type="hidden" class="projectId" value="${tasks.projectId}" /> <input
-								type="hidden" class="taskActivityId"
-								value="${tasks.taskActivityDetails[0].taskActivityId}" />
-						</div>
-					</c:forEach>
-				</c:if>
-			</div>
+	    <div class="row ">
+			<%@include file="fagments/tasksInfoDetailsGrid.jspf"%>
 		</div>
-		<div class="col-md-3">
-			<h5>Today's To Do</h5>
-			<div class="tasks" id="tasks">
-				<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
-					<c:forEach var="tasks"
-						items="${modelViewMap.projectTaskDetailsData['ASSIGNED']}"
-						varStatus="taskIndex">
-						<div
-							class='task-item task-info task-primary userId${tasks.taskActivityDetails[0].userId} task-item${tasks.taskId}'>
-							<div class="task-text col-md-12">
-								<div class="col-md-10">
-									<span class="taskName clearfix"><b>${tasks.name}</b></span>
-								</div>
-								<div class="col-md-2">
-									<span style="background-color: blue" class="taskLabel">
-										<c:if test="${tasks.projectTaskType == 'PRODUCTIVE' }">
-											P
-										</c:if>
-										<c:if test="${tasks.projectTaskType == 'REVIEW' }">
-											R
-										</c:if>
-										<c:if test="${tasks.projectTaskType == 'ITERATION' }">
-											I
-										</c:if>
-									</span>
-								</div>
-								<div class="col-md-12">
-									<span class="taskDescription  clearfix"><i>${tasks.description}</i></span>
-								</div>
-							</div>
-							<div class="task-text">
-								<a target="_new"
-									href="${applicationHome}/project/${tasks.projectId}"
-									style="float: left">Show project</a> <a href="#"
-									style="float: right"
-									onclick="openTaskDetails('${tasks.taskId}');">View task</a>
-							</div>
-							<div class="task-footer">
-								<div class="pull-right">
-									<span class="blink_text blink${tasks.taskId}"></span><a
-										href="javascript:void(0)"><span
-										class="fa fa-clock-o taskPlayPause${tasks.taskId}"
-										data-task-state="notstarted"
-										onclick="taskPlayOrPause(${tasks.taskId});"></span></a><span
-										class="durationDiv ${tasks.taskId}"> ${tasks.duration}
-										Hours</span> <span class="${tasks.taskId} taskRemainingDiv"
-										style="display: none">
-										<span class="actualTaskStartTime"></span>
-										<span class="taskHour"></span>:<span
-										class="taskMinutes"></span>:<span
-										class="taskSeconds"></span></span>
-								</div>
-								<div class="pull-left">
-									<span class="startDateTimeDiv">Est Start Time :
-										${tasks.startTime}</span>
-								</div>
-								<input type="hidden" class="estStartTime"
-									value="${tasks.startTime}" /> <input type="hidden"
-									class="startTime" value="" /> <input type="hidden"
-									class="duration" value="${tasks.duration}" /> 
-									<input type="hidden" class="taskPriority" value="${tasks.priority}" />
-									<input
-									type="hidden" class="assignee"
-									value="${tasks.taskActivityDetails[0].userId}" /> <input
-									type="hidden" class="projectId" value="${tasks.projectId}" /> <input
-									type="hidden" class="taskStatus" value="${tasks.status}" /> <input
-									type="hidden" class="taskId" value="${tasks.taskId}" /> <input
-									type="hidden" class="taskActivityId"
-									value="${tasks.taskActivityDetails[0].taskActivityId}" />
-							</div>
-						</div>
-					</c:forEach>
-				</c:if>
-			</div>
+		 <div class="row ">
+			<%@include file="fagments/tasksInfoDetailsList.jspf"%>
 		</div>
-		<div class="col-md-3">
-			<h5>In Progress</h5>
-			<div class="tasks" id="tasks_progreess">
-				<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
-					<c:forEach var="tasks"
-						items="${modelViewMap.projectTaskDetailsData['INPROGRESS']}"
-						varStatus="taskIndex">
-						<div
-							class='task-item task-warning task-primary userId${tasks.taskActivityDetails[0].userId} task-item${tasks.taskId}'>
-							<div class="task-text col-md-12">
-								<div class="col-md-10">
-									<span class="taskName clearfix"><b>${tasks.name}</b></span>
-								</div>
-								<div class="col-md-2">
-									<span style="background-color: blue" class="taskLabel">
-										<c:if test="${tasks.projectTaskType == 'PRODUCTIVE' }">
-											P
-										</c:if>
-										<c:if test="${tasks.projectTaskType == 'REVIEW' }">
-											R
-										</c:if>
-										<c:if test="${tasks.projectTaskType == 'ITERATION' }">
-											I
-										</c:if>
-									</span>
-								</div>
-								<div class="col-md-12">
-									<span class="taskDescription  clearfix"><i>${tasks.description}</i></span>
-								</div>
-							</div>
-							<div class="task-text">
-								<a target="_new"
-									href="${applicationHome}/project/${tasks.projectId}"
-									style="float: left">Show project</a> <a href="#"
-									style="float: right"
-									onclick="openTaskDetails('${tasks.taskId}');">View task</a>
-							</div>
-							<div class="task-footer">
-								<div class="pull-right">
-									<c:if test="${not empty tasks.taskPausedTime}">
-										<span class="blink_text blink${tasks.taskId}">PAUSED</span>
-									</c:if>
-									<c:if test="${empty tasks.taskPausedTime}">
-										<span class="blink_text blink${tasks.taskId}"></span>
-									</c:if>
-									<a href="javascript:void(0)"><span
-										class='fa <c:if test="${not empty tasks.taskPausedTime}">fa-play</c:if>
-										<c:if test="${empty tasks.taskPausedTime}">fa-pause</c:if> taskPlayPause${tasks.taskId}'
-										<c:if test="${not empty tasks.taskPausedTime}"> data-task-state="paused"</c:if>
-										<c:if test="${empty tasks.taskPausedTime}"> data-task-state="running"</c:if>
-										onclick="taskPlayOrPause(${tasks.taskId});"></span></a><span
-										class="durationDiv ${tasks.taskId}">
-										<c:if test="${not empty tasks.taskPausedTime}">
-										<fmt:formatDate pattern="yyyy/MM/dd HH:mm"	value="${tasks.taskPausedTime}" />
-										</c:if>
-										</span> <span
-										class="${tasks.taskId} taskRemainingDiv" style="display: none">
-										<span class="actualTaskStartTime"><fmt:formatDate pattern="yyyy/MM/dd HH:mm" value="${tasks.taskActivityDetails[0].actualStartTime}" /></span>
-										<span
-										class="taskHour"></span>:<span
-										class="taskMinutes"></span>:<span
-										class="taskSeconds"></span></span>
-								</div>
-								<div class="pull-left">
-									<span class="startDateTimeDiv">Started at : <fmt:formatDate
-											pattern="yyyy/MM/dd HH:mm"
-											value="${tasks.taskActivityDetails[0].actualStartTime}" /></span>
-								</div>
-							</div>
-							<input type="hidden" class="estStartTime"
-								value="${tasks.startTime}" /> <input type="hidden"
-								class="startTime"
-								value="<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskActivityDetails[0].actualStartTime}" />" />
-							<input type="hidden" class="duration" value="${tasks.duration}" />
-							<input type="hidden" class="taskPriority" value="${tasks.priority}" />
-							<input type="hidden" class="assignee"
-								value="${tasks.taskActivityDetails[0].userId}" /> <input
-								type="hidden" class="taskId" value="${tasks.taskId}" /> <input
-								type="hidden" class="taskStatus" value="${tasks.status}" /> <input
-								type="hidden" class="projectId" value="${tasks.projectId}" /> <input
-								type="hidden" class="taskActivityId"
-								value="${tasks.taskActivityDetails[0].taskActivityId}" />
-							<c:if test="${empty tasks.taskPausedTime}">
-								<script>
-                        taskTimerMap["${tasks.taskId}"] = window.setInterval(function(){
-                        	getCompletedTaskTime("${tasks.taskId}");
-                		}, 1000);
-                        </script>
-							</c:if>
-							<c:if test="${not empty tasks.taskPausedTime}">
-							<script>
-								//updatePausedTaskTime('${tasks.taskId}', '<fmt:formatDate pattern="yyyy/MM/dd HH:mm"	value="${tasks.taskPausedTime}" />', '<fmt:formatDate pattern="yyyy/MM/dd HH:mm"	value="${tasks.taskActivityDetails[0].actualStartTime}" />');
-							</script>
-							</c:if>
-						</div>
-					</c:forEach>
-				</c:if>
-				<div class="task-drop push-down-10 inprogressDropDown"
-					style="display: none;">
-					<span class="fa fa-cloud"></span> Drag your task here to start
-					tracking time
-				</div>
-			</div>
-		</div>
-		<div class="col-md-3">
-			<h5>Completed</h5>
-			<div class="tasks" id="tasks_completed">
-				<div class="task-drop completeDropDown" style="display: none;">
-					<span class="fa fa-cloud"></span> Drag your task here to finish it
-				</div>
-				<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
-					<c:forEach var="tasks"
-						items="${modelViewMap.projectTaskDetailsData['COMPLETED']}"
-						varStatus="taskIndex">
-						<div
-							class='task-item task-complete task-success userId${tasks.taskActivityDetails[0].userId}'>
-							<div class="task-text col-md-12">
-								<div class="col-md-10">
-									<span class="taskName clearfix"><b>${tasks.name}</b></span>
-								</div>
-								<div class="col-md-2">
-									<span style="background-color: blue" class="taskLabel">
-										<c:if test="${tasks.projectTaskType == 'PRODUCTIVE' }">
-											P
-										</c:if>
-										<c:if test="${tasks.projectTaskType == 'REVIEW' }">
-											R
-										</c:if>
-										<c:if test="${tasks.projectTaskType == 'ITERATION' }">
-											I
-										</c:if>
-									</span>
-								</div>
-								<div class="col-md-12">
-									<span class="taskDescription  clearfix"><i>${tasks.description}</i></span>
-								</div>
-							</div>
-							<div class="task-text">
-								<a target="_new"
-									href="${applicationHome}/project/${tasks.projectId}"
-									style="float: left">Show project</a>
-							</div>
-							<div class="task-footer">
-								<div class="pull-left">
-									<span class="fa fa-clock-o"></span>${tasks.taskActivityDetails[0].timeTakenToComplete}</div>
-							</div>
-						</div>
-					</c:forEach>
-				</c:if>
-			</div>
-		</div>
-	</div>
 	<!-- END CONTENT FRAME BODY -->
 </div>
 <!-- END CONTENT FRAME -->
@@ -782,13 +489,14 @@ var fillTaskCompletionTime =function(diffTime){
 	if (diffTime > 59) {
 		var diffTimeHrs = diffTime/60;
 		var diffTimeMins = diffTime%60;
-		timeMsg = Math.round(diffTimeHrs) + " Hrs " + diffTimeMins + " Mins";
+		timeMsg = parseInt(diffTimeHrs) + " Hrs " + parseInt(diffTimeMins) + " Mins";
 		$("#completedTimeHrs").html(timeMsg);
 	} else {
 		$("#completedTimeHrs").html(Math.round(diffTime) + " Mins");
 	}
-	
+	$("#taskComplete").parent().removeClass("colorRed");
 	if (diffTime > 480){
+		$("#taskComplete").parent().addClass("colorRed");
 		$("#taskComplete").html("Confirm & Complete " + timeMsg + " Task");
 	} else {
 		$("#taskComplete").html("Complete");
@@ -802,6 +510,9 @@ var taskComplete = function(){
 	if (!validateTaskCompletionTime()) {
 		return;
 	}
+	var adjustCompletionTime =$("#adjustCompletionTime").val();
+	var adjustStartTime =$("#adjustStartTime1").val();
+
 	var dataString = {"taskId":taskId,"taskStatus": "COMPLETED","comments":comments, "adjustStartTime":adjustStartTime, "adjustCompletionTime":adjustCompletionTime}
 	updateTaskStatus(dataString, true);
 	window.clearInterval(taskTimerMap[taskId]);
@@ -889,14 +600,14 @@ $(function(){
             	
             	if(this.id == "tasks_completed"){
             		var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
-            		var completionDate = new Date();
+            		var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
             		if (adjustStartTime == "") {
-            			adjustStartTime = getTodayDateTime(new Date());
-            			completionDate.setTime(completionDate.getTime() + 1000 * 60);
+            			adjustStartTime = estStartTime
             		}
                 	$("#adjustStartTime1").val(adjustStartTime);              	
-                	$("#adjustCompletionTime").val(getTodayDateTime(completionDate));
+					adjustStartTimeChanged();                	
                 	var adjustStartTimeDate = new Date(adjustStartTime);
+                	var completionDate = new Date($("#adjustCompletionTime").val());
                 	var diffTime = (completionDate - adjustStartTimeDate) /(60*1000);
                 	famstacklog(diffTime);
                 	fillTaskCompletionTime(diffTime);
@@ -905,7 +616,8 @@ $(function(){
                 	$(".taskCompletionLink").click();
                 }
                 if(this.id == "tasks_progreess"){
-                	$("#adjustStartTime").val(getTodayDateTime(new Date()));
+                	var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
+                	$("#adjustStartTime").val(estStartTime);
                 	$(".taskStartLink").click();
                 }                
                 page_content_onresize();
@@ -1044,7 +756,17 @@ function taskPlayOrPause(taskId){
 
 $('#adjustCompletionTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
 $('#adjustStartTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
-$('#adjustStartTime1').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+$('#adjustStartTime1').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'}).on('dp.change', function(e) {
+   adjustStartTimeChanged();
+});;
+
+
+var adjustStartTimeChanged=function(){
+	var adjustTime = $('#adjustStartTime1').val();
+    var taskDuration = parseInt($(lastMovedItem.item).find("input.duration").val());
+    var newCompletionDate = getTodayDateTime(new Date(adjustTime).addHours(taskDuration));
+    $('#adjustCompletionTime').val(newCompletionDate);
+}
 
 //unbilled task start
 $("#taskType").on("change", function(){

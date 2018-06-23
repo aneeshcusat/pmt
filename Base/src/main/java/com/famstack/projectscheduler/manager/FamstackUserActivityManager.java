@@ -574,6 +574,38 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return nonBillableTaskActivityItems;
     }
 
+    public Map<Integer, Map<String, UserTaskActivityItem>> getAllNonBillabileActivities(Date startDate, Date endDate)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("calenderDateStart", startDate);
+        dataMap.put("calenderDateEnd", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+        List<UserTaskActivityItem> userTaskActivityItems =
+            (List<UserTaskActivityItem>) getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("allUnBilledUserActivityItemsFromDatetoDate"), dataMap);
+        logDebug("Non billabletask activity items" + userTaskActivityItems);
+        Map<Integer, Map<String, UserTaskActivityItem>> nonBillableTaskActivityItems = new HashMap<>();
+
+        for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+            Integer userId = userTaskActivityItem.getUserActivityItem().getUserItem().getId();
+            String dateString =
+                DateUtils.format(new Date(userTaskActivityItem.getActualStartTime().getTime()), DateUtils.DATE_FORMAT);
+
+            Map<String, UserTaskActivityItem> userTaskDateMap = nonBillableTaskActivityItems.get(userId);
+            if (userTaskDateMap == null) {
+                userTaskDateMap = new HashMap<>();
+            }
+            nonBillableTaskActivityItems.put(userId, userTaskDateMap);
+
+            UserTaskActivityItem userActivityItem = userTaskDateMap.get(dateString);
+
+            if (userActivityItem == null || userActivityItem.getType() == UserTaskType.LEAVE) {
+                userTaskDateMap.put(dateString, userTaskActivityItem);
+            }
+        }
+
+        return nonBillableTaskActivityItems;
+    }
+
     public UserTaskActivityItem deleteTaskActivity(int activityId)
     {
         UserTaskActivityItem userTaskActivityItem =
@@ -706,4 +738,5 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return userSiteActivityMap;
 
     }
+
 }

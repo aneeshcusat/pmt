@@ -601,6 +601,11 @@ public class FamstackDashboardManager extends BaseFamstackService
         return famstackUserActivityManager.getAllNonBillableTaskActivityList(startDate, endDate);
     }
 
+    public Map<Integer, Map<String, UserTaskActivityItem>> getAllNonBillabileActivities(Date startDate, Date endDate)
+    {
+        return famstackUserActivityManager.getAllNonBillabileActivities(startDate, endDate);
+    }
+
     public void updateProject(ProjectDetails projectDetails)
     {
         projectManager.updateProjectItem(projectDetails);
