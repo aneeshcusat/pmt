@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 		<div class="col-md-3">
-			<h5>Backlog</h5>
+			<h5 class="hidden-xs hidden-sm">Backlog</h5>
 			<div class="tasks" id="tasks">
 				<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 					<c:forEach var="tasks"
@@ -76,7 +76,7 @@
 			</div>
 		</div>
 		<div class="col-md-3">
-			<h5>Today's To Do</h5>
+			<h5 class="hidden-xs hidden-sm">Today's To Do</h5>
 			<div class="tasks" id="tasks">
 				<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 					<c:forEach var="tasks"
@@ -151,7 +151,7 @@
 			</div>
 		</div>
 		<div class="col-md-3">
-			<h5>In Progress</h5>
+			<h5 class="hidden-xs hidden-sm">In Progress</h5>
 			<div class="tasks" id="tasks_progreess">
 				<c:if test="${not empty modelViewMap.projectTaskDetailsData}">
 					<c:forEach var="tasks"
@@ -255,7 +255,7 @@
 			</div>
 		</div>
 		<div class="col-md-3">
-			<h5>Completed</h5>
+			<h5 class="hidden-xs hidden-sm">Completed</h5>
 			<div class="tasks" id="tasks_completed">
 				<div class="task-drop completeDropDown" style="display: none;">
 					<span class="fa fa-cloud"></span> Drag your task here to finish it

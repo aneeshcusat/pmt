@@ -50,7 +50,7 @@
 				<div class="form-group">
 				<label class="col-md-2 control-label">Est Start Time</label>
                      <div class="col-md-4">
-                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/> 
+                            <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"  autocomplete="off"/> 
                          <span class="help-block">required estimated start time</span>
                      </div>
 					<label class="col-md-2 control-label">Duration</label>

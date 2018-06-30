@@ -4264,7 +4264,6 @@ background: #1caf9a !important;
 .tasks {
   float: left;
   width: 100%;
-  min-height: 570px;
   background-color: #E3E7E7;
 }
 .tasks .task-item {

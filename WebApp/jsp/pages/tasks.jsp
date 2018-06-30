@@ -14,9 +14,6 @@
 .colorRed {
 background-color: red !important;
 }
-#unbillableTaskCreationModal .modal-dialog {
-	width: 50%;
-}
 
 .fa-clock-o,.fa-pause,.fa-play {
 	margin-right: 6px;
@@ -30,19 +27,25 @@ background-color: red !important;
 .changeBackground {
 	border: 1px dotted #FF0000;
 }
-
-#taskCompletionModal .modal-dialog {
-	width: 75%;
+@media screen and (min-width: 700px) {
+	#taskCompletionModal .modal-dialog {
+		width: 75%;
+	}
+	
+	#taskStartModal  .modal-dialog {
+		width: 75%;
+	}
+	
+	#taskDetailsModal  .modal-dialog {
+		width: 30%;
+	}
+	#unbillableTaskCreationModal .modal-dialog {
+		width: 50%;
+	}
+	.tasks{
+		min-height: 570px;
+	}
 }
-
-#taskStartModal  .modal-dialog {
-	width: 75%;
-}
-
-#taskDetailsModal  .modal-dialog {
-	width: 30%;
-}
-
 .taskName {
 	color: #2BD5D0;
 }

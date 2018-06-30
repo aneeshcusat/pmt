@@ -217,14 +217,14 @@
                             <div class="form-group">
 							<label class="col-md-3 control-label">Est Start Time</label>
 							<div class="col-md-9">
-								 <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"/>
+								 <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"  autocomplete="off"/>
 								 <span class="help-block">required estimated start time</span>
 							</div>
 							</div>
 							<div class="form-group">
 							<label class="col-md-3 control-label">Est Completion Time</label>
                                 <div class="col-md-9">
-                                       <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"/> 
+                                       <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"  autocomplete="off"/> 
                                     <span class="help-block">required estimated completion time</span>
                                 </div>
 							</div>
