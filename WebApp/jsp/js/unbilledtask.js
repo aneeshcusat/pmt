@@ -96,7 +96,7 @@ var createUnbillableTask = function(){
 	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
 	
 	var dataString = {skipWeekEnd:isSkipWeekEnds,userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
-	doAjaxRequest("POST", "/bops/dashboard//createNonBillableTask", dataString, function(data) {
+	doAjaxRequest("POST", "/bops/dashboard/createNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){
         	$(".modal").modal('hide');
@@ -120,7 +120,7 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 
 
 var deleteTaskActivityAjax = function(activityId) {
-	doAjaxRequest("POST", "/bops/dashboard//deleteTaskActivity", {activityId:activityId},  function() {
+	doAjaxRequest("POST", "/bops/dashboard/deleteTaskActivity", {activityId:activityId},  function() {
 		getAssignJsonData();
 		$(".mb-control-close").click();
 	}, function(e) {
@@ -133,5 +133,18 @@ function deleteTaskActivity(activityId, taskName){
 	$("#confirmYesId").prop("href","javascript:deleteTaskActivityAjax('"+activityId+"')");
 }
 
+
+var reloadTaskActivities = function(){
+	var taskFilterDay = $("#taskFilterDayId").val();
+	doAjaxRequest("GET", "/bops/dashboard/userTaskActivity?dayfilter=" + taskFilterDay, {},  function(data) {
+		$(".userTaskActivites").html(data);
+		var assigneeId = "";
+		if ($("#taskAssigneeId").length > 0) {
+			assigneeId = $("#taskAssigneeId").val();
+		}
+		filterTaskActivities(assigneeId);
+	   }, function(e) {
+	   });
+};
 
 //unbilled task end

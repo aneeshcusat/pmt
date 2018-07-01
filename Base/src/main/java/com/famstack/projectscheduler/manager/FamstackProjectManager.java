@@ -358,6 +358,11 @@ public class FamstackProjectManager extends BaseFamstackManager
         return famstackProjectTaskManager.getUserTaskActivityJson(userId, dayfilter);
     }
 
+    public List<TaskActivityDetails> getUserTaskActivity(Integer userId, int dayfilter)
+    {
+        return famstackProjectTaskManager.getUserTaskActivity(userId, dayfilter);
+    }
+
     public ProjectDetails mapProjectItemToProjectDetails(ProjectItem projectItem)
     {
         return mapProjectItemToProjectDetails(projectItem, true);

@@ -1,0 +1,38 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<c:if test="${(taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER') || itemType == 'ALL'}">
+	<li class="list-group-item taskact-item userId${taskActivites.userId}">
+		<div class="task-item">
+			<div class="task-today pull-left">
+				<a href="#" class="ttip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mark Today">
+					<i class="fa fa-star"></i>
+				</a>
+			</div>
+			<h3 class="task-title">
+			<c:if test="${taskActivites.userTaskType != 'LEAVE' && taskActivites.userTaskType != 'MEETING' && taskActivites.userTaskType != 'OTHER'}">
+			${taskActivites.taskId} :
+			</c:if>
+			 ${taskActivites.taskName}
+			</h3>
+		</div>
+	
+		<div class="task-meta">
+			<span class="task-date color-danger">${taskActivites.dateId}</span>
+			<span class="label label-danger"></span>
+		</div>
+	
+		<div class="task-assignee">
+			<a href="#" class="ttip" data-toggle="tooltip" data-placement="top" title="">
+				<img alt="image" class="assignee" src="/bops/dashboard/image/${taskActivites.userId}" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
+			</a>
+		</div>
+		
+		<div class="task-edit">
+			<c:if test="${taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER'}">
+				<a href="#" onclick="deleteTaskActivity('${taskActivites.taskActivityId}','${taskActivites.taskName}')"  data-box="#confirmationbox" class="deleteTask mb-control1 profile-control-right btn btn-danger btn-rounded btn-sm">
+					<i class="fa fa-trash-o fa-1" style="color:red" aria-hidden="true"></i>
+				</a>
+			</c:if>
+		</div>
+	</li>
+</c:if>

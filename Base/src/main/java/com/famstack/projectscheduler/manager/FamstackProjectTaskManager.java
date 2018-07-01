@@ -417,6 +417,11 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return FamstackUtils.getJsonFromObject(famstackUserActivityManager.getAllTaskActivities(userId, dayfilter));
     }
 
+    public List<TaskActivityDetails> getUserTaskActivity(Integer userId, int dayfilter)
+    {
+        return famstackUserActivityManager.getAllTaskActivities(userId, dayfilter);
+    }
+
     public String getUserTaskActivityJson(String startDateString, String endDateString, int userId)
     {
         JSONArray jsonArray = new JSONArray();

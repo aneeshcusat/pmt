@@ -479,8 +479,8 @@ $(function() {
                     droppable: false,
                     selectable: false,
                     selectHelper: false,
-                    maxTime: "22:00:00",
-                    minTime: "09:00:00",
+                    maxTime: "23:00:00",
+                    minTime: "05:00:00",
                     events:events_array,
                     eventRender: function(event, element) {
                        /* element.prepend( "<span class='closeon' style='float: right;'>X</span>" );

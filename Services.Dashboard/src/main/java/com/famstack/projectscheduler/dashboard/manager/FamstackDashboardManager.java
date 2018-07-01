@@ -364,6 +364,32 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectManager.getUserTaskActivityJson(userId, dayfilter);
     }
 
+    public Map getUserTaskActivity(Integer userId, int dayfilter)
+    {
+        List<TaskActivityDetails> taskActivities = projectManager.getUserTaskActivity(userId, dayfilter);
+        Map<String, List<TaskActivityDetails>> taskActivitiesMap = new HashMap<>();
+
+        if (taskActivities != null) {
+            taskActivitiesMap.put("TODAY", new ArrayList<TaskActivityDetails>());
+            taskActivitiesMap.put("UPCOMING", new ArrayList<TaskActivityDetails>());
+            taskActivitiesMap.put("PAST", new ArrayList<TaskActivityDetails>());
+
+            String todaysDate = DateUtils.format(new Date(), DateUtils.DATE_FORMAT);
+
+            for (TaskActivityDetails taskActivityDetails : taskActivities) {
+                if (todaysDate.compareTo(taskActivityDetails.getDateId()) < 0) {
+                    taskActivitiesMap.get("UPCOMING").add(taskActivityDetails);
+                } else if (todaysDate.compareTo(taskActivityDetails.getDateId()) > 0) {
+                    taskActivitiesMap.get("PAST").add(taskActivityDetails);
+                } else {
+                    taskActivitiesMap.get("TODAY").add(taskActivityDetails);
+                }
+            }
+        }
+        sortTaskActivityDeailsList(taskActivitiesMap);
+        return taskActivitiesMap;
+    }
+
     public void createGroup(GroupDetails groupDetails)
     {
         groupMessageManager.createGroupItem(groupDetails);
@@ -436,6 +462,34 @@ public class FamstackDashboardManager extends BaseFamstackService
 
                         Date date1 = DateUtils.tryParse(taskDetails1.getStartTime(), DateUtils.DATE_TIME_FORMAT);
                         Date date2 = DateUtils.tryParse(taskDetails2.getStartTime(), DateUtils.DATE_TIME_FORMAT);
+
+                        if (date1.before(date2)) {
+                            return -1;
+                        } else if (date1.after(date2)) {
+                            return 1;
+                        }
+                        return 0;
+                    }
+
+                });
+            }
+        }
+    }
+
+    private void sortTaskActivityDeailsList(Map<String, List<TaskActivityDetails>> taskActivityDetailsMap)
+    {
+        for (String key : taskActivityDetailsMap.keySet()) {
+
+            List<TaskActivityDetails> taskActivityDetails = taskActivityDetailsMap.get(key);
+            if (taskActivityDetails != null) {
+                Collections.sort(taskActivityDetails, new Comparator<TaskActivityDetails>()
+                {
+                    @Override
+                    public int compare(TaskActivityDetails taskActiryDetails1, TaskActivityDetails taskActiryDetails2)
+                    {
+
+                        Date date1 = taskActiryDetails1.getStartTime();
+                        Date date2 = taskActiryDetails2.getStartTime();
 
                         if (date1.before(date2)) {
                             return -1;

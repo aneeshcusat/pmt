@@ -23,6 +23,7 @@ import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.security.user.UserRole;
 
@@ -177,8 +178,27 @@ public class FamstackTaskController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/userTaskActivity")
+    public ModelAndView userTaskActivity(@RequestParam(value = "dayfilter", defaultValue = "10") int dayfilter,
+        @RequestParam(value = "itemType", defaultValue = "ALL") String itemType)
+    {
+        UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
+        Integer userId = currentUserItem.getId();
+        if (currentUserItem.getUserRole() == UserRole.ADMIN || currentUserItem.getUserRole() == UserRole.SUPERADMIN
+            || currentUserItem.getUserRole() == UserRole.TEAMLEAD) {
+            userId = null;
+        }
+
+        Map<String, List<TaskActivityDetails>> taskActivitiesMap =
+            famstackDashboardManager.getUserTaskActivity(userId, dayfilter);
+
+        return new ModelAndView("response/unbilledTaskDetails").addObject("taskActivitiesMap", taskActivitiesMap)
+            .addObject("itemType", itemType);
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/userTaskActivityJson")
     @ResponseBody
+    @Deprecated
     public String userTaskActivityJson(@RequestParam(value = "dayfilter", defaultValue = "10") int dayfilter)
     {
         UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();

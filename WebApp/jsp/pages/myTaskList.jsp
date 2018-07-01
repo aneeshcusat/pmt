@@ -415,32 +415,9 @@ background-color: red !important;
 
 		</div>
     
-		    <div class="row">
-		        <div class="col-md-12">
-				<div class="inner no-pad-t">
-						
-			<div class="task-list-container">
-		
-			<div class="title-separator">
-				<h2 class="separator-heading">Todays</h2>
-			</div>
-			<ul class="list-group task-list" id="todaysTask">
-			
-			</ul>
-			
-			<div class="title-separator">
-				<h2 class="separator-heading">Upcoming</h2>
-			</div>
-			<ul class="list-group task-list" id="upcomingTask">
-			</ul>
-		
-			<div class="title-separator">
-				<h2 class="separator-heading">Last months</h2>
-			</div>
-			<ul class="list-group task-list" id="oldTask">
-			</ul>	
-			
-			</div>
+<div class="row">
+   <div class="col-md-12">
+		<div class="inner no-pad-t userTaskActivites">
 		</div>
     </div>
 </div>
@@ -512,50 +489,8 @@ background-color: red !important;
 <script type="text/javascript" src="${js}/unbilledtask.js"></script>
 <script>
 
-var getAssignJsonData = function(){
-	var taskFilterDay = $("#taskFilterDayId").val();
-	doAjaxRequest("GET", "${applicationHome}/userTaskActivityJson?dayfilter=" + taskFilterDay, {},  function(jsonData) {
-		fillTableFromJson(jsonData);
-		var assigneeId = "";
-		if ($("#taskAssigneeId").length > 0) {
-			assigneeId = $("#taskAssigneeId").val();
-		}
-		filterTaskActivities(assigneeId);
-	   }, function(e) {
-	   });
-};
-
-
-var fillTableFromJson = function(jsonAssignData) {
-	$("#todaysTask").html("");
-	$("#oldTask").html("");
-	$("#upcomingTask").html("");
-	$.each(JSON.parse(jsonAssignData), function(idx, elem){
-		
-		var taskData = $("#taskTemplate").clone();
-		$(taskData).find(".taskact-item").addClass("userId" + elem.userId);
-		$(taskData).find(".task-title").html(elem.taskId + " : " +elem.taskName);
-		$(taskData).find(".task-date").html(elem.dateId);
-		$(taskData).find(".deleteTask").attr("onclick", "deleteTaskActivity('" +elem.taskActivityId + "','"+elem.taskName+"' )" );
-		$(taskData).find(".assignee").attr("src", "/bops/dashboard/image/" + elem.userId );
-		
-		if (elem.userTaskType == "LEAVE" || elem.userTaskType == "MEETING" || elem.userTaskType == "OTHER") {
-			 $(taskData).find(".deleteTask").removeClass("hide");
-			 $(taskData).find(".task-title").html(elem.taskName);
-  		}
-		
-		if (getTodayDate(new Date()) == elem.dateId) {
-			$("#todaysTask").append($(taskData).html());
-		} else if (getTodayDate(new Date()) > elem.dateId) {
-			$("#oldTask").append($(taskData).html());
-		} else if (getTodayDate(new Date()) < elem.dateId) {
-			$("#upcomingTask").append($(taskData).html());
-		}
-	});
-}
-
 $(document).ready(function(){
-	getAssignJsonData();
+	reloadTaskActivities();
 });
 
 var activeUserId = "";
@@ -649,7 +584,7 @@ $(document).ready(function(){
 });
 
 $("#taskFilterDayId").on("change", function(){
-	getAssignJsonData();
+	reloadTaskActivities();
 });
 function refreshCalendar(){}
 </script>
