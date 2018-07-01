@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.employees.bean;
 
 import java.util.Date;
 
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.UserTaskType;
 
 public class TaskActivityDetails
@@ -32,6 +33,8 @@ public class TaskActivityDetails
     private Date recordedEndTime;
 
     private UserTaskType userTaskType;
+
+    private ProjectType projectType;
 
     private String taskActCategory;
 
@@ -289,5 +292,15 @@ public class TaskActivityDetails
     public void setTaskActCategory(String taskActCategory)
     {
         this.taskActCategory = taskActCategory;
+    }
+
+    public ProjectType getProjectType()
+    {
+        return projectType;
+    }
+
+    public void setProjectType(ProjectType projectType)
+    {
+        this.projectType = projectType;
     }
 }

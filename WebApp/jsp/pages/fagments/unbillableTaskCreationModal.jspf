@@ -8,7 +8,7 @@
 			<div class="col-md-6">
 			  <c:choose>
   				<c:when  test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
-			<div class="form-group">
+			<div class="form-group unbilledOnBehalfOfDiv">
 				<label class="col-md-3 control-label">On Behalf of</label>
                      <div class="col-md-9">
                          <select path="userId" id="userId" name="userId" class="form-control" data-live-search="true">

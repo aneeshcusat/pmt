@@ -92,7 +92,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">Create Non-billable time</h4>
+					<h4 class="modal-title" id="unbilledModelTitle">Create Non-billable time</h4>
 				</div>
 				<div class="modal-body">
 					<%@include file="fagments/unbillableTaskCreationModal.jspf"%>
@@ -101,7 +101,7 @@
 					<button type="button" class="btn btn-secondary createUnbillableCancel"
 						data-dismiss="modal">Cancel</button>
 					<button type="button" id="taskCreate" onclick="createUnbillableTask()"
-						class="btn btn-primary" style="display: none">
+						class="btn btn-primary taskActCreateBtn" style="display: none">
 						<span class="nonBillableTaskCreateText" >Create</span>
 					</button>
 				</div>

@@ -377,6 +377,24 @@ public class FamstackDashboardManager extends BaseFamstackService
             String todaysDate = DateUtils.format(new Date(), DateUtils.DATE_FORMAT);
 
             for (TaskActivityDetails taskActivityDetails : taskActivities) {
+
+                String taskTimeString = "";
+                if (taskActivityDetails.getActualEndTime() != null) {
+
+                    Integer taskActActivityDuration = taskActivityDetails.getDurationInMinutes();
+                    taskActActivityDuration = taskActActivityDuration == null ? 0 : taskActActivityDuration;
+                    taskTimeString =
+                        " - " + String.format("%02d:%02d", taskActActivityDuration / 60, taskActActivityDuration % 60)
+                            + " Hrs";
+                }
+
+                String titlePrefix = "[B" + taskTimeString + "] ";
+                if (taskActivityDetails.getProjectType() == ProjectType.NON_BILLABLE) {
+                    titlePrefix = "[NB" + taskTimeString + "] ";
+                }
+
+                taskActivityDetails.setTaskName(titlePrefix + taskActivityDetails.getTaskName());
+
                 if (todaysDate.compareTo(taskActivityDetails.getDateId()) < 0) {
                     taskActivitiesMap.get("UPCOMING").add(taskActivityDetails);
                 } else if (todaysDate.compareTo(taskActivityDetails.getDateId()) > 0) {
@@ -901,6 +919,13 @@ public class FamstackDashboardManager extends BaseFamstackService
             }
         }
         return taskOwners;
+    }
+
+    public void updateNonBillableTask(int taskActId, int userId, String type, String taskActCategory, String startDate,
+        String endDate, String comments, Boolean skipWeekEnd)
+    {
+        UserTaskActivityItem userTaskActivityItem = famstackUserActivityManager.deleteTaskActivity(taskActId);
+        createNonBillableTask(userId, type, taskActCategory, startDate, endDate, comments, skipWeekEnd);
     }
 
     public void createNonBillableTask(int userId, String type, String taskActCategory, String startDateString,

@@ -10,9 +10,13 @@
 			</div>
 			<h3 class="task-title">
 			<c:if test="${taskActivites.userTaskType != 'LEAVE' && taskActivites.userTaskType != 'MEETING' && taskActivites.userTaskType != 'OTHER'}">
-			${taskActivites.taskId} :
+			${taskActivites.taskId} :  ${taskActivites.taskName}
 			</c:if>
-			 ${taskActivites.taskName}
+			<c:if test="${taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER'}">
+				 <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="editUnbillableFormForCreate(${taskActivites.taskActivityId}, ${taskActivites.userId},'${taskActivites.taskActCategory }','${taskActivites.actualStartTime }','${taskActivites.actualEndTime }' )">
+					 ${taskActivites.taskName}
+				</a>
+			</c:if>
 			</h3>
 		</div>
 	

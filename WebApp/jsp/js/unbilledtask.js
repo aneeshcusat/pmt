@@ -43,7 +43,7 @@ function reloadNBTime() {
 }
 
 window.setInterval(reloadNBTime, 1000);
-
+var unBilledButtonAction = "Create";
 var fillNBTaskCompletionTime =function(diffTime){
 	var timeMsg = "";
 	if (diffTime > 59) {
@@ -57,9 +57,9 @@ var fillNBTaskCompletionTime =function(diffTime){
 	$("#taskCreate").parent().removeClass("colorRed");
 	if (diffTime > 480){
 		$(".nonBillableTaskCreateText").parent().addClass("colorRed");
-		$(".nonBillableTaskCreateText").html("Confirm & Create " + timeMsg + " " + $("#taskType").val());
+		$(".nonBillableTaskCreateText").html("Confirm & "+unBilledButtonAction+" " + timeMsg + " " + $("#taskType").val());
 	} else {
-		$(".nonBillableTaskCreateText").html("Create");
+		$(".nonBillableTaskCreateText").html(unBilledButtonAction);
 	}
 }
 
@@ -109,13 +109,92 @@ var createUnbillableTask = function(){
     });
 }
 
+
+var editUnbillableTask = function(taskActId){
+	var endDate = "";
+	var startDate = "";
+	$("#userId").removeClass("error");
+	if ($("#taskType").val() != "") {
+		startDate = $("#startDateRange").val();
+		endDate = $("#completionDateRange").val();
+		if (!validateStartAndEndUBTtime()){
+			return;
+		}
+	}
+    
+	if ($("#userId").val() == "" || $("#taskType").val() == "") {
+		$("#userId").addClass("error");
+		return;
+	}
+    
+	var taskType = $("#taskType").val();
+	var taskActCategory = "";
+	
+	if (taskType == "LEAVE"){
+		taskActCategory = "Leave";
+		
+	} else if (taskType == "MEETING"){
+		taskActCategory = "Meeting";
+	} else {
+		taskActCategory = taskType;
+		taskType = "OTHER";
+	}
+	
+	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
+	
+	var dataString = {taskActId:taskActId,skipWeekEnd:isSkipWeekEnds,userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
+	doAjaxRequest("POST", "/bops/dashboard/updateNonBillableTask", dataString, function(data) {
+        var responseJson = JSON.parse(data);
+        if (responseJson.status){
+        	$(".modal").modal('hide');
+			refreshCalendar();
+        } else {
+        	return false;
+        }
+       
+    }, function(e) {
+    });
+
+}
+
 var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#userId").val(currentUserId);
+	if ($("select#userId").length >0){
+		$(".unbilledOnBehalfOfDiv").show();
+	}
+	$(".taskActCreateBtn").attr("onclick", "createUnbillableTask()");
 	$("#taskType").prop("selectedIndex",0);
 	$("#startDateRange").val(getTodayDate(new Date()) + " 9:00");
 	$("#completionDateRange").val(getTodayDate(new Date()) + " 17:00");
 	$("#skipWeekEnds").prop("checked", true);
 	$("#taskStartComments").val("");
+	unBilledButtonAction = "Create";
+	$(".nonBillableTaskCreateText").html("Create");
+	$("#unbilledModelTitle").html("Create Non-billable time");
+	$("#taskCreate").hide();
+}
+
+var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, startTime, endTime) {
+	$("#userId").val(taskActUserId);
+	$(".unbilledOnBehalfOfDiv").hide();
+	
+	if (taskType == 'Leave') {
+		taskType = "LEAVE";
+	}
+	
+	if (taskType == 'Meeting') {
+		taskType = "MEETING";
+	}
+	$("#unbilledModelTitle").html("Update Non-billable time");
+	$("#taskType").val(taskType);
+	$(".taskActCreateBtn").attr("onclick", "editUnbillableTask("+taskActId+")");
+	$("#startDateRange").val(getTodayDateTime(new Date(startTime)));
+	$("#completionDateRange").val(getTodayDateTime(new Date(endTime)));
+	$("#skipWeekEnds").prop("checked", false);
+	$("#taskStartComments").val("");
+	$(".nonBillableTaskCreateText").html("Update");
+	unBilledButtonAction = "Update";
+	$("#taskCreate").show();
 }
 
 

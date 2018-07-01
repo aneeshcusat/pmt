@@ -334,6 +334,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         taskActivityDetails.setActualEndTime(userTaskActivityItem.getActualEndTime());
         taskActivityDetails.setDurationInMinutes(userTaskActivityItem.getDurationInMinutes());
         taskActivityDetails.setUserTaskType(userTaskActivityItem.getType());
+        taskActivityDetails.setProjectType(userTaskActivityItem.getProjectType());
         taskActivityDetails.setTaskActCategory(userTaskActivityItem.getTaskActCategory());
         taskActivityDetails.setStartHour(userTaskActivityItem.getStartHour());
         taskActivityDetails.setInprogressComment((userTaskActivityItem.getInprogressComment()));
