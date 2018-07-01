@@ -557,7 +557,7 @@ var updateTaskStatus = function(dataString, isComplete){
         		}
         	}
         	lastMovedItem.item.find(".task-footer").find(".actualTaskStartTime").html(labelDate);
-        	
+        	lastMovedItem.item.find("a.taskCompleted").remove();
     		lastMovedItem.item.find(".task-footer").find(".startDateTimeDiv").html(label + " at : " + labelDate);
     		lastMovedItem.item.find(".task-footer").find("input.startTime").val(labelDate);
         	return true;
@@ -647,6 +647,31 @@ $(function(){
     	$(lastMovedItem.sender).sortable('cancel');
     });
 });
+
+
+function moveToCompleteTask(taskId){
+	var taskState = $(".taskPlayPause"+taskId).attr("data-task-state");
+	if (taskState == 'paused') {
+		return;
+	}
+	lastMovedItem = new Object();
+	lastMovedItem.item = $(".task-item"+ taskId);
+	var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
+	var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
+	if (adjustStartTime == "") {
+		adjustStartTime = estStartTime
+	}
+	$("#adjustStartTime1").val(adjustStartTime);              	
+	adjustStartTimeChanged();                	
+	var adjustStartTimeDate = new Date(adjustStartTime);
+	var completionDate = new Date($("#adjustCompletionTime").val());
+	var diffTime = (completionDate - adjustStartTimeDate) /(60*1000);
+	famstacklog(diffTime);
+	fillTaskCompletionTime(diffTime);
+	$("#adjustCompletionTime").removeClass("error");
+	$("#adjustStartTime1").removeClass("error");
+	$(".taskCompletionLink").click();
+}
 
 $("#taskAssignee").on("change", function(){
 		if ($("#taskAssignee").val() != $("#taskAssigneeHidden").val()) {

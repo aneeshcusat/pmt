@@ -33,9 +33,12 @@
 							<div class="task-text">
 								<a target="_new"
 									href="${applicationHome}/project/${tasks.projectId}"
-									style="float: left">Show project</a> <a href="#"
-									style="float: right"
-									onclick="openTaskDetails('${tasks.taskId}');">View task</a>
+									style="float: left">Show project</a>
+									 <a href="#" 
+									style="float: left"
+									onclick="openTaskDetails('${tasks.taskId}');">|View task</a>
+									<a href="javascript:void(0)" class="hidden-md hidden-lg taskCompleted"
+									style="float: right" onclick="moveToCompleteTask('${tasks.taskId}');">Complete Task</a>
 							</div>
 							<div class="task-footer">
 								<div class="pull-right">
@@ -108,9 +111,12 @@
 							<div class="task-text">
 								<a target="_new"
 									href="${applicationHome}/project/${tasks.projectId}"
-									style="float: left">Show project</a> <a href="#"
-									style="float: right"
-									onclick="openTaskDetails('${tasks.taskId}');">View task</a>
+									style="float: left">Show project</a>
+									 <a href="#" 
+									style="float: left"
+									onclick="openTaskDetails('${tasks.taskId}');">|View task</a>
+									<a href="javascript:void(0)" class="hidden-md hidden-lg taskCompleted"
+									style="float: right" onclick="moveToCompleteTask('${tasks.taskId}');">Complete Task</a>
 							</div>
 							<div class="task-footer">
 								<div class="pull-right">
@@ -183,9 +189,12 @@
 							<div class="task-text">
 								<a target="_new"
 									href="${applicationHome}/project/${tasks.projectId}"
-									style="float: left">Show project</a> <a href="#"
-									style="float: right"
-									onclick="openTaskDetails('${tasks.taskId}');">View task</a>
+									style="float: left">Show project</a>
+									 <a href="#" 
+									style="float: left"
+									onclick="openTaskDetails('${tasks.taskId}');">|View task</a>
+									<a href="javascript:void(0)" class="hidden-md hidden-lg taskCompleted"
+									style="float: right" onclick="moveToCompleteTask('${tasks.taskId}');">Complete Task</a>
 							</div>
 							<div class="task-footer">
 								<div class="pull-right">
