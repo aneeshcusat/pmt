@@ -473,7 +473,7 @@ $(function() {
                     },
                     height: 500,
                     defaultView: 'agendaDay',
-                    weekends: false,
+                    weekends: true,
                     editable: false,
                     eventSources: {url: "getAjaxFullcalendar"},
                     droppable: false,

@@ -5,6 +5,10 @@
 	width: 50%;
 }
 
+.colorRed {
+background-color: red !important;
+}
+
 .event-list,
 .icon-w-list,
 .minified-task-list {
@@ -459,7 +463,7 @@
 						data-dismiss="modal">Cancel</button>
 					<button type="button" id="taskCreate" onclick="createUnbillableTask()"
 						class="btn btn-primary" style="display: none">
-						<span >Create</span>
+						<span class="nonBillableTaskCreateText" >Create</span>
 					</button>
 				</div>
 			</div>
@@ -505,86 +509,8 @@
  <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js"></script>       
 <script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
-
+<script type="text/javascript" src="${js}/unbilledtask.js"></script>
 <script>
-//unbilled task start
-$("#taskType").on("change", function(){
-	$("#taskCreate").show();
-	if($("#taskType").val() == "") {
-		$("#taskCreate").hide();
-	}
-	
-});
-
-$('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 8:00"});
-$('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 18:00"});
-
-var validateStartAndEndUBTtime = function(){
-	var startDate = $('#startDateRange').val();
-	var endDate = $('#completionDateRange').val();
-	$('#startDateRange').removeClass("error");
-	$('#completionDateRange').removeClass("error");
-	if (startDate != "" && endDate != "") {
-		if (new Date(startDate) >= new Date(endDate)) {
-			$('#startDateRange').addClass("error");
-			$('#completionDateRange').addClass("error");
-			return false;
-		}
-	}
-	return true;
-}
-
-var createUnbillableTask = function(){
-	var endDate = "";
-	var startDate = "";
-	$("#userId").removeClass("error");
-	if ($("#taskType").val() != "") {
-		startDate = $("#startDateRange").val();
-		endDate = $("#completionDateRange").val();
-		if (!validateStartAndEndUBTtime()){
-			return;
-		}
-	}
-    
-	if ($("#userId").val() == "" || $("#taskType").val() == "") {
-		$("#userId").addClass("error");
-		return;
-	}
-    
-	var taskType = $("#taskType").val();
-	var taskActCategory = "";
-	
-	if (taskType == "LEAVE"){
-		taskActCategory = "Leave";
-		
-	} else if (taskType == "MEETING"){
-		taskActCategory = "Meeting";
-	} else {
-		taskActCategory = taskType;
-		taskType = "OTHER";
-	}
-	
-	var dataString = {userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
-	doAjaxRequest("POST", "${applicationHome}/createNonBillableTask", dataString, function(data) {
-        var responseJson = JSON.parse(data);
-        if (responseJson.status){
-        	$(".modal").modal('hide');
-        } else {
-        	return false;
-        }
-       
-    }, function(e) {
-    });
-}
-
-var clearUnbillableFormForCreate = function(currentUserId) {
-	$("#userId").val(currentUserId);
-	$("#taskType").prop("selectedIndex",0);
-	$("#startDateRange").val("");
-	$("#completionDateRange").val("");
-	$("#taskStartComments").val("");
-}
-//unbilled task end
 
 var getAssignJsonData = function(){
 	var taskFilterDay = $("#taskFilterDayId").val();
@@ -631,21 +557,6 @@ var fillTableFromJson = function(jsonAssignData) {
 $(document).ready(function(){
 	getAssignJsonData();
 });
-
-var deleteTaskActivityAjax = function(activityId) {
-	doAjaxRequest("POST", "${applicationHome}/deleteTaskActivity", {activityId:activityId},  function() {
-		getAssignJsonData();
-		$(".mb-control-close").click();
-	}, function(e) {
-	});
-}
-
-function deleteTaskActivity(activityId, taskName){
-	$(".msgConfirmText").html("Delete task activity");
-	$(".msgConfirmText1").html(taskName);
-	$("#confirmYesId").prop("href","javascript:deleteTaskActivityAjax('"+activityId+"')");
-}
-
 
 var activeUserId = "";
 
@@ -740,4 +651,5 @@ $(document).ready(function(){
 $("#taskFilterDayId").on("change", function(){
 	getAssignJsonData();
 });
+function refreshCalendar(){}
 </script>

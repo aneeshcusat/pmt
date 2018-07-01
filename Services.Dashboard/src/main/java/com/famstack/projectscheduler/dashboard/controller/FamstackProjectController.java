@@ -298,7 +298,6 @@ public class FamstackProjectController extends BaseFamstackService
             dataMap.put("exportDataList", userSiteActivityMap);
         } else {
             List<ProjectDetails> projectData = famstackDashboardManager.getAllProjectDetailsList(startDate, endDate);
-            nonBillableTaskActivities = famstackDashboardManager.getAllNonBillableTaskActivityList(startDate, endDate);
             employeeUtilizationData = famstackDashboardManager.getAllEmployeeUtilizationList(startDate, endDate);
             dataMap.put("exportDataList", projectData);
             dataMap.put("employeeUtilizationData", employeeUtilizationData);

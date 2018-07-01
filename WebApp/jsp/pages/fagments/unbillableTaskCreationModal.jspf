@@ -63,6 +63,12 @@
                      	 <input type='text' class="form-control dateTimePicker" id='completionDateRange' autocomplete="off"/>
                      </div>
 				</div>
+				<div class="form-group">
+				<label class="col-md-4 control-label ">Skip Weekends </label>
+                     <div class="col-md-8" style="margin-top: 7px;">
+                     	 <input type="checkbox" class="" id='skipWeekEnds' checked="checked"/>
+                     </div>
+				</div>
 			</div>
 		</div>
 	</div>

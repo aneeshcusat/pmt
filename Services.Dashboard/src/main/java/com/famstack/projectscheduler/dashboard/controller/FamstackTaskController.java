@@ -152,9 +152,11 @@ public class FamstackTaskController extends BaseFamstackService
     @ResponseBody
     public String createNonBillableTask(@RequestParam("userId") int userId, @RequestParam("type") String type,
         @RequestParam("taskActCategory") String taskActCategory, @RequestParam("startDate") String startDate,
-        @RequestParam("endDate") String endDate, @RequestParam("comments") String comments)
+        @RequestParam("endDate") String endDate, @RequestParam("comments") String comments,
+        @RequestParam(value = "skipWeekEnd", defaultValue = "true") Boolean skipWeekEnd)
     {
-        famstackDashboardManager.createNonBillableTask(userId, type, taskActCategory, startDate, endDate, comments);
+        famstackDashboardManager.createNonBillableTask(userId, type, taskActCategory, startDate, endDate, comments,
+            skipWeekEnd);
         return "{\"status\": true}";
     }
 

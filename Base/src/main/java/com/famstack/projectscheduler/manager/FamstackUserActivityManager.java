@@ -513,28 +513,46 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("calenderDateStart", startDate);
         dataMap.put("calenderDateEnd", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
-        List<UserActivityItem> userActivityItems =
-            (List<UserActivityItem>) getFamstackDataAccessObjectManager().executeQuery(
-                HQLStrings.getString("allUserActivityItemsFromDatetoDate"), dataMap);
+        List<UserTaskActivityItem> userTaskActivityItems =
+            (List<UserTaskActivityItem>) getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                HQLStrings.getString("allUserTaskActivityItemsFromDatetoDate"), dataMap);
 
         Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationMap = new HashMap<>();
 
-        for (UserActivityItem userActivityItem : userActivityItems) {
-            String dateStringKey = DateUtils.format(userActivityItem.getCalenderDate(), DateUtils.DATE_FORMAT_DP);
+        for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+            String dateStringKey =
+                DateUtils.format(userTaskActivityItem.getActualStartTime(), DateUtils.DATE_FORMAT_DP);
+
             Map<Integer, UserWorkDetails> userWorkList = employeeUtilizationMap.get(dateStringKey);
 
             if (userWorkList == null) {
                 userWorkList = new HashMap<>();
                 employeeUtilizationMap.put(dateStringKey, userWorkList);
             }
-
-            UserWorkDetails userWorkDetails = new UserWorkDetails();
-            userWorkDetails.setBillableMins(userActivityItem.getBillableMins());
-            userWorkDetails.setNonBillableMins(userActivityItem.getNonBillableMins());
-            userWorkDetails.setUserId(userActivityItem.getUserItem().getId());
-            userWorkDetails.setLeaveMins(userActivityItem.getLeaveMins());
-            userWorkDetails.setCalenderDate(userActivityItem.getCalenderDate());
-            userWorkList.put(userWorkDetails.getUserId(), userWorkDetails);
+            Integer userId = 0;
+            if (userTaskActivityItem.getUserActivityItem() != null
+                && userTaskActivityItem.getUserActivityItem().getUserItem() != null) {
+                userId = userTaskActivityItem.getUserActivityItem().getUserItem().getId();
+            }
+            UserWorkDetails userWorkDetails = userWorkList.get(userId);
+            if (userWorkDetails == null) {
+                userWorkDetails = new UserWorkDetails();
+                userWorkList.put(userId, userWorkDetails);
+                userWorkDetails.setUserId(userId);
+                userWorkDetails.setCalenderDate(userTaskActivityItem.getActualStartTime());
+            }
+            ProjectType projectType = userTaskActivityItem.getProjectType();
+            Integer durationInMinutes = userTaskActivityItem.getDurationInMinutes();
+            durationInMinutes = durationInMinutes == null ? 0 : durationInMinutes;
+            if (projectType == ProjectType.BILLABLE) {
+                userWorkDetails.setBillableMins(durationInMinutes + userWorkDetails.getBillableMins());
+            } else if (projectType == ProjectType.NON_BILLABLE) {
+                if (UserTaskType.LEAVE == userTaskActivityItem.getType()) {
+                    userWorkDetails.setLeaveMins(durationInMinutes + userWorkDetails.getLeaveMins());
+                } else {
+                    userWorkDetails.setNonBillableMins(durationInMinutes + userWorkDetails.getNonBillableMins());
+                }
+            }
         }
         return employeeUtilizationMap;
     }

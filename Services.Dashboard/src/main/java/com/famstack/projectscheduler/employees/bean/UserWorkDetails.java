@@ -90,7 +90,7 @@ public class UserWorkDetails
 
     public Integer getBillableMins()
     {
-        return billableMins;
+        return billableMins == null ? 0 : billableMins;
     }
 
     public void setBillableMins(Object billableMins)
@@ -100,7 +100,7 @@ public class UserWorkDetails
 
     public Integer getNonBillableMins()
     {
-        return nonBillableMins;
+        return nonBillableMins == null ? 0 : nonBillableMins;
     }
 
     public void setNonBillableMins(Object nonBillableMins)
@@ -110,7 +110,7 @@ public class UserWorkDetails
 
     public Integer getLeaveMins()
     {
-        return leaveMins;
+        return leaveMins == null ? 0 : leaveMins;
     }
 
     public void setLeaveMins(Object leaveMins)

@@ -1112,8 +1112,8 @@ var dateDisplayLogic = function( currentDateTime ){
 
 $.datetimepicker.setLocale('en');
 $('.dateTimePicker').datetimepicker({onGenerate:function( ct ){
-	$(this).find('.xdsoft_date.xdsoft_weekend')
-	.addClass('xdsoft_disabled');
+	/* $(this).find('.xdsoft_date.xdsoft_weekend')
+	.addClass('xdsoft_disabled'); */
 	},
 	minDate:startProjectTime, // yesterday is minimum date
 	maxDate:completionProjectTime,
@@ -1584,8 +1584,8 @@ var showTaskActualTimeEditDate = function(taskActId) {
 	$("."+taskActId+"taskActTimeEdit").show();	
 	
 	$("."+taskActId+"taskTimeEditDate").datetimepicker({onGenerate:function( ct ){
-		$(this).find('.xdsoft_date.xdsoft_weekend')
-		.addClass('xdsoft_disabled');
+		/* $(this).find('.xdsoft_date.xdsoft_weekend')
+		.addClass('xdsoft_disabled'); */
 		},
 		minDate:startProjectTime, // yesterday is minimum date
 		maxDate:completionProjectTime,

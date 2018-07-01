@@ -850,7 +850,7 @@ public class FamstackDashboardManager extends BaseFamstackService
     }
 
     public void createNonBillableTask(int userId, String type, String taskActCategory, String startDateString,
-        String endDateString, String comments)
+        String endDateString, String comments, Boolean skipWeekEnd)
     {
         Date startTime = DateUtils.tryParse(startDateString, DateUtils.DATE_TIME_FORMAT);
         Date endTime = DateUtils.tryParse(endDateString, DateUtils.DATE_TIME_FORMAT);
@@ -859,41 +859,54 @@ public class FamstackDashboardManager extends BaseFamstackService
         int durationInMinutes = 0;
 
         int index = 0;
+
+        boolean isWeekEnd = false;
+
         do {
+            Calendar startTimeCal = Calendar.getInstance();
+            startTimeCal.setTime(startTime);
 
-            if (numberOfDays == 0) {
-                durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
-            } else if (index == 0) {
-
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(startTime);
-                cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 17, 0);
-                Date sameDayEndDate = cal.getTime();
-
-                durationInMinutes = (int) ((sameDayEndDate.getTime() - startTime.getTime()) / (1000 * 60));
-            } else if (numberOfDays == index) {
-                durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
+            if ((startTimeCal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || startTimeCal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+                && skipWeekEnd) {
+                isWeekEnd = true;
             } else {
-                durationInMinutes = 480;
+                isWeekEnd = false;
             }
 
-            /*
-             * if (durationInMinutes > 480) { durationInMinutes = 480; }
-             */
+            if (!isWeekEnd) {
+                if (numberOfDays == 0) {
+                    durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
+                } else if (index == 0) {
 
-            String taskName =
-                durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + taskActCategory + " "
-                    + comments;
-            famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName,
-                durationInMinutes, UserTaskType.valueOf(type), taskActCategory, ProjectType.NON_BILLABLE, comments);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startTime);
+                    cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 17, 0);
+                    Date sameDayEndDate = cal.getTime();
 
+                    durationInMinutes = (int) ((sameDayEndDate.getTime() - startTime.getTime()) / (1000 * 60));
+                } else if (numberOfDays == index) {
+                    durationInMinutes = (int) ((endTime.getTime() - startTime.getTime()) / (1000 * 60));
+                } else {
+                    durationInMinutes = 480;
+                }
+
+                /*
+                 * if (durationInMinutes > 480) { durationInMinutes = 480; }
+                 */
+
+                String taskName =
+                    durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + taskActCategory + " "
+                        + comments;
+                famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName,
+                    durationInMinutes, UserTaskType.valueOf(type), taskActCategory, ProjectType.NON_BILLABLE, comments);
+            }
             Calendar cal = Calendar.getInstance();
             cal.setTime(startTime);
             cal.add(Calendar.DAY_OF_MONTH, 1);
             cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 9, 0);
             startTime = cal.getTime();
-
             index++;
+
         } while (index <= numberOfDays);
     }
 
