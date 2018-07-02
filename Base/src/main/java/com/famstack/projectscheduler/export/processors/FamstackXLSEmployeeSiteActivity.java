@@ -95,8 +95,7 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
                                     nonBillableTaskItem.get(userNonBillableDate);
 
                                 if (userTaskActivityItem != null
-                                    && (userTaskActivityItem.getType() != UserTaskType.OTHER || "Training"
-                                        .equalsIgnoreCase(userTaskActivityItem.getTaskActCategory()))) {
+                                    && (userTaskActivityItem.getType() == UserTaskType.LEAVE)) {
 
                                     cell.setCellValue(userTaskActivityItem.getTaskActCategory());
                                     String startTimeString =
