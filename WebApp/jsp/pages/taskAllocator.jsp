@@ -207,8 +207,9 @@ table tr td.markable span {
                 <th>09:00 - 10:00</th>
                 <th>10:01 - 11:00</th>
                 <th>11:01 - 12:00</th>
-                <th>12:01 - 01:00</th>
-                <th style="background-color: gray; width: 25px"></th>
+                <th>12:01 - 13:00</th>
+                <th>13:01 - 14:00</th>
+                <!-- <th style="background-color: gray; width: 25px"></th> -->
                 <th>14:01 - 15:00</th>
                 <th>15:01 - 16:00</th>
                 <th>16:01 - 17:00</th>
@@ -234,7 +235,8 @@ table tr td.markable span {
 		                <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
 		                <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
 		                <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-		                <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false" isassigned="false"></td>
+		                <!-- <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false" isassigned="false"></td> -->
+		                <td class="markable" id="${user.id}-13" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
 		                <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
 		                <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
 		                <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
@@ -485,7 +487,7 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 	
 	for (var index = 0; index < duration; index++) {
 		if(startTimeHour ==  breakTime){
-			startTimeHour++;
+			//startTimeHour++;
 		}
 		famstacklog("index :" + index);
 		famstacklog("startTimeHour :" + startTimeHour);
@@ -675,7 +677,7 @@ var isPreMarked = function(thisVarId){
 	if (time <= 21 && 8 < time) {
 		var tmpTime = time - 1;
 		if (time == breakTime+1) {
-			tmpTime--;
+			//tmpTime--;
 		}
 		famstacklog("pre cell id :" + userId+"-"+tmpTime);
 		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
@@ -698,7 +700,7 @@ var isNextMarked = function(thisVarId){
 	if (time >= 8 && 21 > time) {
 		var tmpTime = time + 1;
 		if (time == breakTime-1) {
-			tmpTime++;
+			//tmpTime++;
 		}
 		famstacklog("next cell id :" + userId+"-"+tmpTime);
 		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
@@ -908,7 +910,7 @@ var fillTableFromJson = function(){
 				famstacklog("style :" + style);
 				
 				if (starthour == breakTime) {
-					starthour++;
+					//starthour++;
 				}
 				var cellId = $("#"+elem.userId+"-"+starthour);
 				famstacklog(cellId);

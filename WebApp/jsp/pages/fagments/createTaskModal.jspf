@@ -156,8 +156,9 @@
                 <th>09:00 - 10:00</th>
                 <th>10:01 - 11:00</th>
                 <th>11:01 - 12:00</th>
-                <th>12:01 - 01:00</th>
-                <th style="background-color: gray; width: 25px"></th>
+                <th>12:01 - 13:00</th>
+                <th>13:01 - 14:00</th>
+                <!-- <th style="background-color: gray; width: 25px"></th> -->
                 <th>14:01 - 15:00</th>
                 <th>15:01 - 16:00</th>
                 <th>16:01 - 17:00</th>
@@ -183,7 +184,8 @@
                 <td class="markable" id="${user.id}-10" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
                 <td class="markable" id="${user.id}-11" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
                 <td class="markable" id="${user.id}-12" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
-                <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false" isassigned="false"></td>
+                <td class="markable" id="${user.id}-13" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
+                <!-- <td class="nonmarkable" style="background-color: gray; width: 25px" cellmarked="false" celleditable="false" isassigned="false"></td> -->
                 <td class="markable" id="${user.id}-14" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
                 <td class="markable" id="${user.id}-15" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>
                 <td class="markable" id="${user.id}-16" cellcolor="" cellmarked="false" celleditable="true" modified="false" isassigned="false"></td>

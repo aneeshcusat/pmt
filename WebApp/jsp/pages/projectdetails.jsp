@@ -1047,7 +1047,7 @@ var markTableFields = function(userId, startTimeHour, duration, color, helper, r
 	for (var index = 0; index < duration; index++) {
 		famstacklog("duration :" + duration);
 		if(startTimeHour ==  breakTime){
-			startTimeHour++;
+			//startTimeHour++;
 		}
 		var getCell = $("#"+userId+"-"+startTimeHour);
 		$("#estStartTime").css("border", "1px solid #D5D5D5");
@@ -1223,7 +1223,7 @@ var isPreMarked = function(thisVarId){
 	if (time <= 21 && 8 < time) {
 		var tmpTime = time - 1;
 		if (time == breakTime+1) {
-			tmpTime--;
+			//tmpTime--;
 		}
 		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
 		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
@@ -1244,7 +1244,7 @@ var isNextMarked = function(thisVarId){
 	if (time >= 8 && 21 > time) {
 		var tmpTime = time + 1;
 		if (time == breakTime-1) {
-			tmpTime++;
+			//tmpTime++;
 		}
 		var celleditable = $("#"+userId+"-"+tmpTime).attr("celleditable");
 		var cellmarked	= $("#"+userId+"-"+tmpTime).attr("cellmarked");
@@ -1443,7 +1443,7 @@ var fillTableFromJson = function(){
 				famstacklog("style :" + style);
 				
 				if (starthour == breakTime) {
-					starthour++;
+					//starthour++;
 				}
 				var cellId = $("#"+elem.userId+"-"+starthour);
 				famstacklog(cellId);
