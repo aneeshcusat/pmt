@@ -792,14 +792,29 @@ public class FamstackProjectManager extends BaseFamstackManager
 
             projectTaskActivityDetails.setTaskName((String) data[11]);
             projectTaskActivityDetails.setTaskActivityStartTime((Date) data[12]);
-            projectTaskActivityDetails.setTaskActivityDuration((Integer) data[13]);
-            projectTaskActivityDetails.setTaskActActivityDuration((Integer) data[13]);
+            projectTaskActivityDetails.setTaskActivityEndTime((Date) data[17]);
+
+            projectTaskActivityDetails.setTaskPausedTime((Date) data[18]);
+            projectTaskActivityDetails.setTaskStatus(TaskStatus.valueOf((String) data[19]));
+            Integer taskActivityDuration = (Integer) data[13];
+
+            if (projectTaskActivityDetails.getTaskStatus() != TaskStatus.COMPLETED
+                && projectTaskActivityDetails.getTaskActivityEndTime() == null
+                && projectTaskActivityDetails.getTaskPausedTime() != null) {
+
+                taskActivityDuration =
+                    DateUtils.getTimeDifference(TimeInType.MINS, projectTaskActivityDetails.getTaskPausedTime()
+                        .getTime(), projectTaskActivityDetails.getTaskActivityStartTime().getTime());
+
+            }
+            projectTaskActivityDetails.setTaskActivityDuration(taskActivityDuration);
+            projectTaskActivityDetails.setTaskActActivityDuration(taskActivityDuration);
 
             projectTaskActivityDetails.setUserId((Integer) data[14]);
 
             projectTaskActivityDetails.setTaskId((Integer) data[15]);
             projectTaskActivityDetails.setTaskActivityId((Integer) data[16]);
-            projectTaskActivityDetails.setTaskActivityEndTime((Date) data[17]);
+
             String key = "D" + DateUtils.format((Date) data[0], DateUtils.DATE_FORMAT);
             key += "T" + data[15];
             key += "U" + data[14];

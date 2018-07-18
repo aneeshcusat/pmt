@@ -33,6 +33,7 @@ import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.GroupDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
+import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManager;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
 import com.famstack.projectscheduler.util.StringUtils;
@@ -266,6 +267,26 @@ public class FamstackUserController extends BaseFamstackService
     {
         famstackDashboardManager.sendMessage(groupId, message);
         return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/getTempPass", method = RequestMethod.GET)
+    @ResponseBody
+    public String getTempPassword(@RequestParam("emailId") String emailId)
+    {
+        UserItem userItem = famstackDashboardManager.getUserItem(emailId);
+        String tempPass = FamstackSecurityTokenManager.decrypt(userItem.getPassword(), userItem.getHashkey());
+        return "{\"status\": \"" + tempPass + "\"}";
+    }
+
+    @RequestMapping(value = "/unblockUser", method = RequestMethod.GET)
+    @ResponseBody
+    public String unblockUser(@RequestParam("emailId") String emailId)
+    {
+        UserItem userItem = famstackDashboardManager.unblockUser(emailId);
+        if (userItem != null) {
+            return "{\"deletedFlag\":" + userItem.getDeleted() + "}";
+        }
+        return "{\"status\": \"error\"}";
     }
 
     @RequestMapping(value = "/messageAfter", method = RequestMethod.GET)

@@ -54,6 +54,8 @@ public class ProjectTaskActivityDetails
 
     private TaskStatus taskStatus;
 
+    private Date taskPausedTime;
+
     private UserTaskType taskActType;
 
     private ProjectType taskActProjType;
@@ -384,5 +386,15 @@ public class ProjectTaskActivityDetails
     public void setTaskDuration(int taskDuration)
     {
         this.taskDuration = taskDuration;
+    }
+
+    public Date getTaskPausedTime()
+    {
+        return taskPausedTime;
+    }
+
+    public void setTaskPausedTime(Date taskPausedTime)
+    {
+        this.taskPausedTime = taskPausedTime;
     }
 }

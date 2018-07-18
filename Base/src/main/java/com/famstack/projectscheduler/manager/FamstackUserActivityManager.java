@@ -736,10 +736,16 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         dataMap.put("startCalenderDate", startCalenderDate);
         dataMap.put("endCalenderDate", endCalenderDate);
 
-        List<UserUsageActivityItem> userUsageActivityItems =
-            (List<UserUsageActivityItem>) getFamstackDataAccessObjectManager().executeAllGroupQuery(
-                HQLStrings.getString("getUserSiteActivityByDate"), dataMap);
-
+        List<UserUsageActivityItem> userUsageActivityItems = null;
+        if ("1012".equalsIgnoreCase(getFamstackApplicationConfiguration().getCurrentUserGroupId())) {
+                userUsageActivityItems =
+                (List<UserUsageActivityItem>) getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                    HQLStrings.getString("getUserSiteActivityByDate"), dataMap);
+        } else {
+            userUsageActivityItems =
+                (List<UserUsageActivityItem>) getFamstackDataAccessObjectManager().executeQuery(
+                    HQLStrings.getString("getUserSiteActivityByDate"), dataMap);
+        }
         for (UserUsageActivityItem userUsageActivityItem : userUsageActivityItems) {
             Map<String, String> userSiteDateActivity = userSiteActivityMap.get(userUsageActivityItem.getUserId());
 

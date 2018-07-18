@@ -268,6 +268,20 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         return userMap;
     }
 
+    public Map<Integer, EmployeeDetails> getCurrentGroupUserMap()
+    {
+        Map<Integer, EmployeeDetails> currentUserGroup = new HashMap();
+        if (userMap != null) {
+            for (Integer userId : userMap.keySet()) {
+                if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
+                    userMap.get(userId).getUserGroupId())) {
+                    currentUserGroup.put(userId, userMap.get(userId));
+                }
+            }
+        }
+        return currentUserGroup;
+    }
+
     public Map<String, UserGroupDetails> getUserGroupMap()
     {
         return userGroupMap;

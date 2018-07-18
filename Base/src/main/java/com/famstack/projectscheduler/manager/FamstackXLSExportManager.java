@@ -70,7 +70,13 @@ public class FamstackXLSExportManager extends BaseFamstackManager
                 (Map<String, Map<Integer, UserWorkDetails>>) dataMap.get("employeeUtilizationData");
 
             if ("useractivity".equalsIgnoreCase(processorName)) {
-                Map<Integer, EmployeeDetails> allEmployeeData = getFamstackApplicationConfiguration().getUserMap();
+                Map<Integer, EmployeeDetails> allEmployeeData = null;
+
+                if ("1012".equalsIgnoreCase(getFamstackApplicationConfiguration().getCurrentUserGroupId())) {
+                    allEmployeeData = getFamstackApplicationConfiguration().getUserMap();
+                } else {
+                    allEmployeeData = getFamstackApplicationConfiguration().getCurrentGroupUserMap();
+                }
                 dataMap.put("allEmployeeData", allEmployeeData);
                 dataMap.put("userGroupMap", getFamstackApplicationConfiguration().getUserGroupMap());
                 teamName = "EmployeeSiteActivity";

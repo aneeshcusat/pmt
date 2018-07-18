@@ -1083,4 +1083,14 @@ public class FamstackDashboardManager extends BaseFamstackService
         return famstackUserActivityManager.getAllUserSiteActivities(startDate, endDate);
     }
 
+    public UserItem getUserItem(String emailId)
+    {
+        return userProfileManager.getUserItem(emailId);
+    }
+
+    public UserItem unblockUser(String emailId)
+    {
+        return userProfileManager.unblockUser(emailId);
+    }
+
 }

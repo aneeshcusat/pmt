@@ -299,4 +299,14 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         }
         return false;
     }
+
+    public UserItem unblockUser(String emailId)
+    {
+        UserItem userItem = getUserItem(emailId);
+        if (userItem != null) {
+            userItem.setDeleted(false);
+            userItem = (UserItem) famstackDataAccessObjectManager.saveOrUpdateItem(userItem);
+        }
+        return userItem;
+    }
 }

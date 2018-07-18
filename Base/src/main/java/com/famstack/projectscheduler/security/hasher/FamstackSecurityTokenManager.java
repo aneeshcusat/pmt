@@ -86,7 +86,7 @@ public class FamstackSecurityTokenManager extends BaseFamstackService
      * @param hashKey the hash key
      * @return the string
      */
-    private static String decrypt(String securityToken, String hashKey)
+    public static String decrypt(String securityToken, String hashKey)
     {
         String decryptedString = null;
         if (StringUtils.isNotBlank(securityToken) && StringUtils.isNotBlank(hashKey)) {

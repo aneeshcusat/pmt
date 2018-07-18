@@ -401,7 +401,7 @@ public class FamstackXLSExportProcessorFormat2 extends BaseFamstackService imple
         if (cellStyle != null) {
             // userCell.setCellStyle(cellStyle);
         }
-        sheet.autoSizeColumn(projectDetailsColumnCount);
+        // sheet.autoSizeColumn(projectDetailsColumnCount);
         userCell.setCellValue(value);
     }
 
@@ -420,7 +420,7 @@ public class FamstackXLSExportProcessorFormat2 extends BaseFamstackService imple
         if (cellStyle != null) {
             userCell.setCellStyle(cellStyle);
         }
-        sheet.autoSizeColumn(columnIndex);
+        // sheet.autoSizeColumn(columnIndex);
         Double cellValueTime = userCell.getNumericCellValue();
         double time = convertToActualTimeString(userTaskTime);
         if (cellValueTime != null && cellValueTime > 0) {

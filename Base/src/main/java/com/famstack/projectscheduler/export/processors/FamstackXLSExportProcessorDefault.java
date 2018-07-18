@@ -249,7 +249,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             utilizationCell.setCellType(CellType.FORMULA);
             utilizationCell.setCellFormula(strFormula);
 
-            sheet.autoSizeColumn(columnNumber);
+            // sheet.autoSizeColumn(columnNumber);
             columnNumber++;
         }
 
@@ -393,7 +393,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         if (cellStyle != null) {
             // userCell.setCellStyle(cellStyle);
         }
-        sheet.autoSizeColumn(projectDetailsColumnCount);
+        // sheet.autoSizeColumn(projectDetailsColumnCount);
         userCell.setCellValue(value);
     }
 
@@ -412,7 +412,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         if (cellStyle != null) {
             userCell.setCellStyle(cellStyle);
         }
-        sheet.autoSizeColumn(columnIndex);
+        // sheet.autoSizeColumn(columnIndex);
         double time = convertToActualTimeString(userTaskTime);
         if (time > 0) {
             userCell.setCellValue(time);

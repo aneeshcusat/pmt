@@ -105,7 +105,7 @@
 							</c:if>
                             </div>
                             <div class="col-md-3">
-                            <c:if test="${currentUser.userGroupId == '1012'}">
+                       		<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userGroupId == '1012'}">
                             	<a id="userSiteActivityLink" href='javascript:$("#userSiteActivityLink").hide();$("#userSiteActivityDiv").show();'>Download Activity</a>
 								<span id="userSiteActivityDiv" style="display: none">                            
 	                           		<span id="exportDateRange" class="dtrange">                                            
