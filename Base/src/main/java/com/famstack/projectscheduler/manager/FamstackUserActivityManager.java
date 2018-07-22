@@ -738,7 +738,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         List<UserUsageActivityItem> userUsageActivityItems = null;
         if ("1012".equalsIgnoreCase(getFamstackApplicationConfiguration().getCurrentUserGroupId())) {
-                userUsageActivityItems =
+            userUsageActivityItems =
                 (List<UserUsageActivityItem>) getFamstackDataAccessObjectManager().executeAllGroupQuery(
                     HQLStrings.getString("getUserSiteActivityByDate"), dataMap);
         } else {

@@ -138,6 +138,6 @@ public class FamstackSecurityTokenManager extends BaseFamstackService
 
     public static void main(String[] args)
     {
-        System.out.println(decrypt("Wx8kYFJ51zGckpLSETE5+w==", "O$RmKRYE4dhFXuM=+xWIM%8Px7HTBtz)"));
+        System.out.println(decrypt("X3FL6/I1TSPTH5uFGi8HeA==", "NGNW#zcc+N@RY%kSK#46DO+Rzt@j)Ylm"));
     }
 }

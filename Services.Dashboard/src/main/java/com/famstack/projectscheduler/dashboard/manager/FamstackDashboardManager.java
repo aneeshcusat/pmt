@@ -996,7 +996,7 @@ public class FamstackDashboardManager extends BaseFamstackService
             int taskId = userTaskActivityItem.getTaskId();
             TaskItem taskItem = famstackProjectTaskManager.getTaskItemById(taskId);
             if (taskItem != null) {
-                taskItem.setDuration(taskItem.getDuration() - (userTaskActivityItem.getDurationInMinutes() / 60));
+                // taskItem.setDuration(taskItem.getDuration() - (userTaskActivityItem.getDurationInMinutes() / 60));
                 taskItem
                     .setActualTimeTaken(taskItem.getActualTimeTaken() - userTaskActivityItem.getDurationInMinutes());
                 famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);

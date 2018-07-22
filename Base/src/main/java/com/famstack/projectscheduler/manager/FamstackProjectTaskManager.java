@@ -263,9 +263,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     {
         TaskItem taskItem =
             (TaskItem) famstackDataAccessObjectManager.getItemById(taskDetails.getTaskId(), TaskItem.class);
-        taskItem.setTaskPausedTime(new Timestamp(new Date().getTime()));
-
-        famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+        if (taskItem.getTaskPausedTime() == null) {
+            taskItem.setTaskPausedTime(new Timestamp(new Date().getTime()));
+            famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+        }
     }
 
     private void updateUserActivity(TaskDetails taskDetails, Date startDate, ProjectType projectType, String userGroupId)
@@ -889,41 +890,69 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             for (Object taskItemObj : projectTaskList) {
                 try {
                     TaskItem taskItem = (TaskItem) taskItemObj;
-                    int timeRemainingInMinute = 0;
-                    List<UserTaskActivityItem> userTaskActivityItems =
-                        (List<UserTaskActivityItem>) famstackUserActivityManager
-                            .getUserTaskActivityItemByTaskId(taskItem.getTaskId());
+                    if (taskItem.getTaskPausedTime() == null) {
+                        int timeRemainingInMinute = 0;
+                        List<UserTaskActivityItem> userTaskActivityItems =
+                            (List<UserTaskActivityItem>) famstackUserActivityManager
+                                .getUserTaskActivityItemByTaskId(taskItem.getTaskId());
 
-                    if (userTaskActivityItems != null) {
-                        Date actualStartTime = null;
-                        int actualTimeTaken = 0;
-                        for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
-                            if (userTaskActivityItem.getActualEndTime() == null) {
-                                actualStartTime = userTaskActivityItem.getActualStartTime();
-                                int diffInMinute = userTaskActivityItem.getDurationInMinutes();
-                                if (actualStartTime != null) {
-                                    double diff = new Date().getTime() - actualStartTime.getTime();
+                        if (userTaskActivityItems != null) {
+                            Date actualStartTime = null;
+                            int actualTimeTaken = 0;
+                            TaskStatus currentTaskStatus = TaskStatus.COMPLETED;
+                            for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+                                if (userTaskActivityItem.getActualEndTime() == null) {
+                                    currentTaskStatus = taskItem.getStatus();
+                                    actualStartTime = userTaskActivityItem.getActualStartTime();
+                                    int diffInMinute = userTaskActivityItem.getDurationInMinutes();
+                                    if (actualStartTime != null) {
+                                        double diff = new Date().getTime() - actualStartTime.getTime();
 
-                                    if (timeRemainingInMinute > 0) {
-                                        timeRemainingInMinute =
-                                            (int) (((diffInMinute * 60 * 1000) - diff) / (60 * 1000));
-                                        actualTimeTaken += (diffInMinute - timeRemainingInMinute);
-                                    } else {
-                                        actualTimeTaken += (diff / (60 * 1000));
+                                        if (timeRemainingInMinute > 0) {
+                                            timeRemainingInMinute =
+                                                (int) (((diffInMinute * 60 * 1000) - diff) / (60 * 1000));
+                                            actualTimeTaken += (diffInMinute - timeRemainingInMinute);
+                                        } else {
+                                            actualTimeTaken += (diff / (60 * 1000));
+                                        }
                                     }
+                                } else {
+                                    actualTimeTaken += userTaskActivityItem.getDurationInMinutes();
                                 }
-                            } else {
-                                actualTimeTaken += userTaskActivityItem.getDurationInMinutes();
                             }
+                            taskItem.setStatus(currentTaskStatus);
+                            taskItem.setActualTimeTaken(actualTimeTaken);
+
                         }
-                        taskItem.setActualTimeTaken(actualTimeTaken);
+                        taskItem.setTaskRemainingTime(timeRemainingInMinute);
+                        famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+                        updateProjectStatus(taskItem.getProjectItem().getProjectId());
                     }
-                    taskItem.setTaskRemainingTime(timeRemainingInMinute);
-                    famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
-
                 } catch (Exception e) {
-
+                    logError("Unable to change task status :" + e.getMessage());
                 }
+            }
+        }
+
+    }
+
+    private void updateProjectStatus(int projectId)
+    {
+        ProjectItem projectItem =
+            (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class);
+
+        if (projectItem != null) {
+            boolean canUpdateProject = true;
+            for (TaskItem projectTaskItem : projectItem.getTaskItems()) {
+                TaskStatus taskStatus = projectTaskItem.getStatus();
+                if (taskStatus != TaskStatus.COMPLETED) {
+                    canUpdateProject = false;
+                }
+            }
+
+            if (canUpdateProject) {
+                projectItem.setStatus(ProjectStatus.COMPLETED);
+                famstackDataAccessObjectManager.saveOrUpdateItem(projectItem);
             }
         }
 

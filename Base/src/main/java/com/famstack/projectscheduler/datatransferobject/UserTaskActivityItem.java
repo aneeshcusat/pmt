@@ -250,7 +250,7 @@ public class UserTaskActivityItem implements FamstackBaseItem
 
     public int getDurationInMinutes()
     {
-        return durationInMinutes;
+        return  durationInMinutes < 0 ? 0 : durationInMinutes;
     }
 
     public void setDurationInMinutes(int durationInMinutes)

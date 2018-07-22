@@ -17,7 +17,7 @@ public class EmailSenderTest
     {
 
         final String username = "famstack.support@blueoceanmi.com";
-        final String password = "Mob95449";
+        final String password = "Cou@123$#11";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -40,7 +40,7 @@ public class EmailSenderTest
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("famstack.support@blueoceanmi.com"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("famstack.bops@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("famstack.support@blueoceanmi.com"));
             message.setSubject("Testing Subject");
             message.setText("Dear Mail Crawler," + "\n\n No spam to my email, please!");
 

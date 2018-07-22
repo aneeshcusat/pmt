@@ -203,7 +203,7 @@ public class TaskItem implements FamstackBaseItem
 
     public Integer getDuration()
     {
-        return duration;
+        return duration != null && duration < 0 ? 0 : duration;
     }
 
     public void setDuration(Integer duration)
@@ -275,7 +275,7 @@ public class TaskItem implements FamstackBaseItem
 
     public Integer getActualTimeTaken()
     {
-        return actualTimeTaken == null ? 0 : actualTimeTaken;
+        return actualTimeTaken == null || actualTimeTaken < 0 ? 0 : actualTimeTaken;
     }
 
     public void setActualTimeTaken(Integer actualTimeTaken)
@@ -285,7 +285,7 @@ public class TaskItem implements FamstackBaseItem
 
     public Integer getTaskRemainingTime()
     {
-        return taskRemainingTime == null ? 0 : taskRemainingTime;
+        return taskRemainingTime == null || taskRemainingTime < 0 ? 0 : taskRemainingTime;
     }
 
     public void setTaskRemainingTime(Integer taskRemainingTime)

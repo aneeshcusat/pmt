@@ -4,7 +4,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="nonBillableCategories" value="${applicationScope.applicationConfiguraion.nonBillableCategories}"/>
 <c:if test="${not empty nonBillableCategories}">
-
+		<tr class="clickable">
+			<td>Leave</td>
+			<td></td>
+		</tr>
+		<tr class="clickable">
+			<td>Meeting</td>
+			<td></td>
+		</tr>
         <c:forEach var="nonBillableCategoryConf" items="${nonBillableCategories}">
 		<tr class="clickable">
 			<td>${nonBillableCategoryConf.name}</td>

@@ -806,7 +806,16 @@ public class FamstackProjectManager extends BaseFamstackManager
                     DateUtils.getTimeDifference(TimeInType.MINS, projectTaskActivityDetails.getTaskPausedTime()
                         .getTime(), projectTaskActivityDetails.getTaskActivityStartTime().getTime());
 
+            } else if (projectTaskActivityDetails.getTaskStatus() == TaskStatus.INPROGRESS
+                && projectTaskActivityDetails.getTaskActivityEndTime() == null
+                && projectTaskActivityDetails.getTaskPausedTime() == null) {
+
+                taskActivityDuration =
+                    DateUtils.getTimeDifference(TimeInType.MINS, new Date().getTime(), projectTaskActivityDetails
+                        .getTaskActivityStartTime().getTime());
+
             }
+
             projectTaskActivityDetails.setTaskActivityDuration(taskActivityDuration);
             projectTaskActivityDetails.setTaskActActivityDuration(taskActivityDuration);
 
