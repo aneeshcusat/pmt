@@ -75,8 +75,9 @@
  }
     
     function invokeForgotPasswordAjax(){
-    	famstacklog("jello");
-    	var dataString = {"email": $('#emailId').val()};
+    	var emailId = $('#emailId').val();
+    	famstacklog("emailId - " + emailId);
+    	var dataString = {"email": emailId.trim()};
     	
 		doAjaxRequest("POST", "/bops/dashboard/forgotPassword", dataString,
 		function(response) {

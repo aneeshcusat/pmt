@@ -275,7 +275,7 @@ public class FamstackUserController extends BaseFamstackService
     {
         UserItem userItem = famstackDashboardManager.getUserItem(emailId);
         String tempPass = FamstackSecurityTokenManager.decrypt(userItem.getPassword(), userItem.getHashkey());
-        return "{\"status\": \"" + tempPass + "\"}";
+        return "pwd:" + tempPass ;
     }
 
     @RequestMapping(value = "/unblockUser", method = RequestMethod.GET)

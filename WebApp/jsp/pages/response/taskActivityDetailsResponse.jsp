@@ -129,7 +129,7 @@
 					</c:if>
 				</c:if>
 				<c:if test="${not empty taskActivityDetail.actualEndTime}">
-					<p>Time Taken : <span class="${taskActivityDetail.taskActivityId}taskTimeEditLink"> ${taskActivityDetail.actualTimeTakenInHrs} Hours </span>
+					<p>Time Taken : <span class="${taskActivityDetail.taskActivityId}taskTimeEditLink ${taskActivityDetail.taskActivityId}taskTimeEditLinkHours"> ${taskActivityDetail.actualTimeTakenInHrs} Hours </span>
 					<span class="${taskActivityDetail.taskActivityId}taskTimeEdit" style="display: none">
 						<input type="text" placeholder="hh" class="durationTxt" id="taskActHHTimeEdit${taskActivityDetail.taskActivityId}"/>
 						<input type="text" value="0" placeholder="mm" class="durationTxt" id="taskActMMTimeEdit${taskActivityDetail.taskActivityId}"/> 

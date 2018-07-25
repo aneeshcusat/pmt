@@ -1660,12 +1660,13 @@ var taskActActualTimeSubmit = function(taskId, activityId) {
 	if(error){
 		return;
 	}
-	
+	var activityIdTmp = activityId;
 	var newDuration = (parseInt(hours) * 60) +parseInt(mins);
 	var startTime ="";
 	var endTime ="";
 	doAjaxRequest("POST", "${applicationHome}/adjustTaskActivityTime", {"activityId":activityId,"taskId":taskId,"newDuration":newDuration,"startTime":startTime,"endTime":endTime},  function(activityId) {
-		 window.location.reload(true);
+		$("."+activityIdTmp+"taskTimeEditLinkHours").html(hours+":"+mins+" hours");
+		hideTaskActActualTimeEdit(activityIdTmp);
 	}, function(e) {
 	});
 }
