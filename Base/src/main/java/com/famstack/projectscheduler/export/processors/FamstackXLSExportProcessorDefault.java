@@ -434,10 +434,10 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         if (employees != null) {
             userRow.getCell(1).setCellValue(employees.size());
             for (EmployeeDetails employeeDetails : employees) {
-                Cell userHeaderCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 11);
+                Cell userHeaderCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 12);
                 userHeaderCell.setCellValue(employeeDetails.getFirstName());
                 userHeaderCell.setCellStyle(xssfCellUserHeaderStyle);
-                sheet.autoSizeColumn(userDetailsColumnCount + 11);
+                sheet.autoSizeColumn(userDetailsColumnCount + 12);
                 userDetailsColumnCount++;
             }
 
@@ -447,8 +447,8 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
              * projectTotalAdjustmentCell.setCellStyle(xssfCellUserHeaderStyle);
              * projectTotalAdjustmentCell.setCellValue("Adjustment");
              */
-            Cell projectTotalCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 11);
-            sheet.autoSizeColumn(userDetailsColumnCount + 11);
+            Cell projectTotalCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 12);
+            sheet.autoSizeColumn(userDetailsColumnCount + 12);
             projectTotalCell.setCellStyle(xssfCellUserHeaderStyle);
             projectTotalCell.setCellValue("Project Total Hrs");
         }
