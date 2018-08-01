@@ -824,7 +824,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setTaskId((Integer) data[15]);
             projectTaskActivityDetails.setTaskActivityId((Integer) data[16]);
 
-            String key = "D" + DateUtils.format((Date) data[0], DateUtils.DATE_FORMAT);
+            String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
             key += "T" + data[15];
             key += "U" + data[14];
 

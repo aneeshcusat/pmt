@@ -11,6 +11,7 @@ import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.employees.bean.ClientDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
+import com.famstack.projectscheduler.util.DateUtils;
 
 public class ProjectTaskActivityDetails
 {
@@ -396,5 +397,12 @@ public class ProjectTaskActivityDetails
     public void setTaskPausedTime(Date taskPausedTime)
     {
         this.taskPausedTime = taskPausedTime;
+    }
+    
+    public String getTaksUserDateKey(){
+		 String key = "D" + DateUtils.format(taskActivityStartTime, DateUtils.DATE_FORMAT_CALENDER);
+		 key += "T" + taskId;
+		 key += "U" + userId;
+		 return key;
     }
 }

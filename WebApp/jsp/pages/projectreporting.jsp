@@ -170,23 +170,23 @@ function taskActActualTimeSubmit(taskId, activityId){
 }
 
 
-function taskActActualTimeSubmitPop(taskId, activityId, thisVar){
+function taskActActualTimeSubmitPop(taskId, activityId, taskKey, thisVar){
 	var hours= $(thisVar).closest("div").find("input.taskActHHTimeEdit"+activityId).val();
 	var mins= $(thisVar).closest("div").find("input.taskActMMTimeEdit"+activityId).val();
 	if (taskActActualTimeSubmitAction(taskId, activityId, hours, mins, false) == true) {
 		var newDuration = (parseInt(hours) * 60) +parseInt(mins);
 		
 		var originalActTime = $("input.taskActOriginalTime"+activityId).val();
-		var originalTaskTime =  $("input.taskOriginalTime"+taskId).val();
+		var originalTaskTime =  $("input.taskOriginalTime"+taskKey).val();
 		
 		var newTaskDuration = (newDuration - parseInt(originalActTime)) + parseInt(originalTaskTime);
 		var newTaskHr = parseInt(newTaskDuration/60);
 		var newTaskMins = (newTaskDuration%60);
 		
-		$("input.taskOriginalTime"+taskId).val(newTaskDuration);
+		$("input.taskOriginalTime"+taskKey).val(newTaskDuration);
 		$("input.taskActOriginalTime"+activityId).val(newDuration);
 		
-		$("." + taskId +"taskActTaskTimeHrs").html(newTaskHr + ":" + (newTaskMins < 10 ? "0"+ newTaskMins : newTaskMins));
+		$("." + taskKey +"taskActTaskTimeHrs").html(newTaskHr + ":" + (newTaskMins < 10 ? "0"+ newTaskMins : newTaskMins));
 	}
 }
 

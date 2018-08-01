@@ -80,18 +80,18 @@
 					
 					<c:if test="${not empty project.childs}">
 						<td>
-						<input type="hidden" class="taskOriginalTime${project.taskId}" value="${project.taskActivityDuration}"/>
-						<span class="${project.taskId}taskActTaskTimeHrs" >${project.durationInHours}</span>
+						<input type="hidden" class="taskOriginalTime${project.taksUserDateKey}" value="${project.taskActivityDuration}"/>
+						<span class="${project.taksUserDateKey}taskActTaskTimeHrs" >${project.durationInHours}</span>
 						<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}">
-						<a data-toggle="popover" data-container="body" data-placement="left" type="button" data-html="true" href="javascript:initPopOver(this);" id="taskActPopOver${project.taskId}" style="margin-left: 10px"><span class="fa fa-pencil-square-o fa-lg"></span></a>
+						<a data-toggle="popover" data-container="body" data-placement="left" type="button" data-html="true" href="javascript:initPopOver(this);" id="taskActPopOver${project.taksUserDateKey}" style="margin-left: 10px"><span class="fa fa-pencil-square-o fa-lg"></span></a>
 						</c:if>
-						 <div id="popover-taskActPopOver${project.taskId}" class="hide">
+						 <div id="popover-taskActPopOver${project.taksUserDateKey}" class="hide">
 					        <div class="form-group"> 
 					        <table style="width: 250px;font-size: 8pt">
 					        <tr>
 					        		<td colspan="3">
 					       			</td>
-					       			<td style="width: 5px"><a href="javascript:$('#taskActPopOver${project.taskId}').popover('hide');" style="margin-top: -10px;" class="pull-right"><i class="fa fa-times fa-lg" style="color: red" aria-hidden="true"></i></a>
+					       			<td style="width: 5px"><a href="javascript:$('#taskActPopOver${project.taksUserDateKey}').popover('hide');" style="margin-top: -10px;" class="pull-right"><i class="fa fa-times fa-lg" style="color: red" aria-hidden="true"></i></a>
 					       			</td>
 					        </tr>
 					        
@@ -109,7 +109,7 @@
 								</span>
 								<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty project.taskActivityEndTime}">
 								<span style="text-align:right;" class="${project.taskActivityId}taskActTimeEdit">
-									<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmitPop(${project.taskId},'${project.taskActivityId}',$(this))" value="Save"><i class="fa fa-check  fa-lg" style="color: green" aria-hidden="true"></i></button>
+									<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmitPop(${project.taskId},'${project.taskActivityId}','${project.taksUserDateKey}',$(this))" value="Save"><i class="fa fa-check  fa-lg" style="color: green" aria-hidden="true"></i></button>
 								</span>
 								</c:if>
 					        		</td>
@@ -129,7 +129,7 @@
 								</span>
 								<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty taskActivity.taskActivityEndTime}">
 								<span style="text-align:right;" class="${taskActivity.taskActivityId}taskActTimeEdit">
-									<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmitPop(${taskActivity.taskId},'${taskActivity.taskActivityId}',$(this))" value="Save"><i class="fa fa-check fa-lg" style="color: green" aria-hidden="true"></i></button>
+									<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmitPop(${taskActivity.taskId},'${taskActivity.taskActivityId}','${project.taksUserDateKey}',$(this))" value="Save"><i class="fa fa-check fa-lg" style="color: green" aria-hidden="true"></i></button>
 								</span>
 								</c:if>
 					        		</td>
