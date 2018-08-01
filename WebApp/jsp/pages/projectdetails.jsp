@@ -511,15 +511,12 @@ width: 60%;
                                   <li>Estimated start time:<b> ${projectDetails.startTime}</b></li>
                                   <li>Estimated completion time:<b> ${projectDetails.completionTime}</b></li>
                                   <li>Project Duration : <b>${projectDetails.durationHrs} hours</b></li>
-                                   <c:if test="${projectDetails.status == 'COMPLETED' }">
 								         <li>Actual Duration : <b>${projectDetails.actualDurationInHrs} hours</b>
 								        <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 									        <a data-toggle="modal"  data-backdrop="static" data-target="#taskAddExtraTimeModal" onclick="addTaskExtraTime(${projectDetails.id},'${projectDetails.durationHrs}', '${projectDetails.actualDurationInHrs}' );" class="btn btn-info btn-rounded" href="#" style="display: inline;padding: 0 0;margin-left: 26px;"> <span class="fa fa-plus"></span><span class="fa fa-clock-o"></span></a>
 								        </c:if> 
 								         
 								         </li>
-					              </c:if>
-                                  
                                    
                                   <li>Unassinged Duration : <b>${projectDetails.unAssignedDuration} hours</b></li>
                               </ul>
@@ -1666,6 +1663,21 @@ var taskActActualTimeSubmit = function(taskId, activityId) {
 	var endTime ="";
 	doAjaxRequest("POST", "${applicationHome}/adjustTaskActivityTime", {"activityId":activityId,"taskId":taskId,"newDuration":newDuration,"startTime":startTime,"endTime":endTime},  function(activityId) {
 		$("."+activityIdTmp+"taskTimeEditLinkHours").html(hours+":"+mins+" hours");
+		
+		/* var activityOriDuration = $("."+activityIdTmp+"tskActTimeTakenInMins").val();
+		var taskOriDuration = $("#"+taskId+"timeTakenInMins").val();
+		
+		var newActDurationDiff = parseInt(newDuration) - parseInt(activityOriDuration); 
+		var taskNewDuration = parseInt(newActDurationDiff) + parseInt(taskOriDuration);
+		
+		$("."+activityIdTmp+"tskActTimeTakenInMins").val(newDuration);
+		$("."+taskId+"timeTakenInMins").val(taskNewDuration);
+		
+		var taskHrs = parseInt(taskNewDuration)/60;
+		var taskMins = parseInt(taskNewDuration)%60;
+		
+		$("."+taskId+"actualTimeTakenInHrs").html(taskHrs+":"+taskMins);
+		 */
 		hideTaskActActualTimeEdit(activityIdTmp);
 	}, function(e) {
 	});

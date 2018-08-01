@@ -13,6 +13,8 @@
 	value="${taskDetails.priority}" />
 <input id="${taskDetails.taskId}timeTaken" type="hidden"
 	value="${taskDetails.actualTimeTakenInHrs}" />
+	<input id="${taskDetails.taskId}timeTakenInMins" type="hidden"
+	value="${taskDetails.actualTimeTaken}" />
 <input id="${taskDetails.taskId}description" type="hidden"
 	value="${taskDetails.description}" />
 <input id="${taskDetails.taskId}startTime" type="hidden"
@@ -101,6 +103,10 @@
 					</c:when>
 				</c:choose>
 				<p>Assignee : <b>${employeeMap[taskActivityDetail.userId].firstName}</b></p>
+				<c:if test="${taskDetails.extraTimeTask}">
+					<p>	Recorded start Time : <b>${taskActivityDetail.recordedStartTime}</b></p>
+					<p>Recorded end time : ${taskActivityDetail.recordedEndTime}</p>
+				</c:if>
 				<c:if test="${not taskDetails.extraTimeTask}">
 				
 					<c:if test="${not empty taskActivityDetail.recordedStartTime}">
@@ -129,6 +135,7 @@
 					</c:if>
 				</c:if>
 				<c:if test="${not empty taskActivityDetail.actualEndTime}">
+					<input type="hidden" class="${taskActivityDetail.taskActivityId}tskActTimeTakenInMins" value="${taskActivityDetail.durationInMinutes}"/>
 					<p>Time Taken : <span class="${taskActivityDetail.taskActivityId}taskTimeEditLink ${taskActivityDetail.taskActivityId}taskTimeEditLinkHours"> ${taskActivityDetail.actualTimeTakenInHrs} Hours </span>
 					<span class="${taskActivityDetail.taskActivityId}taskTimeEdit" style="display: none">
 						<input type="text" placeholder="hh" class="durationTxt" id="taskActHHTimeEdit${taskActivityDetail.taskActivityId}"/>
