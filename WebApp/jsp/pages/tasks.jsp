@@ -604,11 +604,12 @@ $(function(){
             	
             	if(this.id == "tasks_completed"){
             		var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
-            		var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
+            		//var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
             		if (adjustStartTime == "") {
-            			adjustStartTime = estStartTime
+            			adjustStartTime = getTodayDateTime(new Date());//estStartTime
             		}
-                	$("#adjustStartTime1").val(adjustStartTime);              	
+                	$("#adjustStartTime1").val(adjustStartTime);  
+                	$('#adjustCompletionTime').val(getTodayDateTime(new Date()));
 					adjustStartTimeChanged();                	
                 	var adjustStartTimeDate = new Date(adjustStartTime);
                 	var completionDate = new Date($("#adjustCompletionTime").val());
@@ -620,8 +621,8 @@ $(function(){
                 	$(".taskCompletionLink").click();
                 }
                 if(this.id == "tasks_progreess"){
-                	var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
-                	$("#adjustStartTime").val(estStartTime);
+                	//var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
+                	$("#adjustStartTime").val(getTodayDateTime(new Date()));
                 	$(".taskStartLink").click();
                 }                
                 page_content_onresize();
@@ -658,11 +659,12 @@ function moveToCompleteTask(taskId){
 	lastMovedItem = new Object();
 	lastMovedItem.item = $(".task-item"+ taskId);
 	var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
-	var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
+	//var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
 	if (adjustStartTime == "") {
-		adjustStartTime = estStartTime
+		adjustStartTime = getTodayDateTime(new Date());
 	}
-	$("#adjustStartTime1").val(adjustStartTime);              	
+	$("#adjustStartTime1").val(adjustStartTime);   
+	$('#adjustCompletionTime').val(getTodayDateTime(new Date()));           	
 	adjustStartTimeChanged();                	
 	var adjustStartTimeDate = new Date(adjustStartTime);
 	var completionDate = new Date($("#adjustCompletionTime").val());
@@ -794,7 +796,7 @@ var adjustStartTimeChanged=function(){
 	var adjustTime = $('#adjustStartTime1').val();
     var taskDuration = parseInt($(lastMovedItem.item).find("input.duration").val());
     var newCompletionDate = getTodayDateTime(new Date(adjustTime).addHours(taskDuration));
-    $('#adjustCompletionTime').val(newCompletionDate);
+   // $('#adjustCompletionTime').val(newCompletionDate);
 }
 
 $(document).ready(function () {
