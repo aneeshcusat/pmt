@@ -217,11 +217,11 @@ public final class DateUtils extends BaseFamstackService
             endCal.setTime(startDate);
         }
         do {
-            startCal.add(Calendar.DAY_OF_MONTH, 1);
             if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
                 && startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                 ++workDays;
             }
+            startCal.add(Calendar.DAY_OF_MONTH, 1);
         } while (startCal.getTimeInMillis() <= endCal.getTimeInMillis()); // excluding end date
 
         return workDays;

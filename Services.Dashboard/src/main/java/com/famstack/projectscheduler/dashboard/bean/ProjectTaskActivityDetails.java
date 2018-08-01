@@ -8,6 +8,7 @@ import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
+import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ClientDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
@@ -32,7 +33,9 @@ public class ProjectTaskActivityDetails
     private ProjectType projectType;
 
     private String projectCategory;
-
+    
+    private Integer projectAccountId;
+    
     private Integer projectTeamId;
 
     private Integer projectClientId;
@@ -226,6 +229,12 @@ public class ProjectTaskActivityDetails
         ClientDetails clientDetails = FamstackAccountManager.getClientmap().get(projectClientId);
         return clientDetails != null ? clientDetails.getName() : "";
     }
+    
+    public String getAccountName()
+    {
+        AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(projectAccountId);
+        return accountDetails != null ? accountDetails.getName() : "";
+    }
 
     public String getTeamName()
     {
@@ -405,4 +414,12 @@ public class ProjectTaskActivityDetails
 		 key += "U" + userId;
 		 return key;
     }
+
+	public Integer getProjectAccountId() {
+		return projectAccountId;
+	}
+
+	public void setProjectAccountId(Integer projectAccountId) {
+		this.projectAccountId = projectAccountId;
+	}
 }
