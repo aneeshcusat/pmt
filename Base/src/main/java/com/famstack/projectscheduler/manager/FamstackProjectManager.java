@@ -280,6 +280,7 @@ public class FamstackProjectManager extends BaseFamstackManager
     {
         ProjectItem projectItem = getProjectItemById(taskDetails.getProjectId());
         famstackProjectTaskManager.createExtraTaskItem(taskDetails, projectItem);
+        updateProjectStatusBasedOnTaskStatus(taskDetails.getProjectId());
     }
 
     public void reAssignTask(TaskDetails taskDetails, int newUserId, int taskActivityId, TaskStatus taskStatus)

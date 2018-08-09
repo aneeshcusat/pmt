@@ -979,6 +979,19 @@ var toggleAssignTask = function(){
 	$("select.assigneeSelectName").selectpicker('refresh');
 }
 
+var jvalidate = $("#createExtraTaskFormId").validate({
+	 ignore: ".ignorevalidation",
+ rules: {                                            
+	 assignee: {
+	       required: true,
+	  	},
+	  	startTime: {
+		   	 required: true
+		}
+  	}
+});
+
+
 function doAjaxCreateExtraTaskForm() {
 	$('#createExtraTaskFormId').submit();
 }

@@ -34,6 +34,7 @@ import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.utils.FamstackUtils;
 
 @Component
@@ -75,7 +76,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     public void createExtraTaskItem(TaskDetails taskDetails, ProjectItem projectItem)
     {
         Set<TaskItem> taskItems = projectItem.getTaskItems();
-        UserTaskActivityItem userTaskActivityItemOld = null;
+       // UserTaskActivityItem userTaskActivityItemOld = null;
         int durationNewMinutes = taskDetails.getDuration();
 
         TaskItem taskItemNew = null;
@@ -112,7 +113,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskItemNew.setHelpers(helpers);
 
             int durationInMins = taskItemNew.getDuration() * 60 + durationNewMinutes;
-            List<UserTaskActivityItem> userTaskActivityItems =
+           /* List<UserTaskActivityItem> userTaskActivityItems =
                 (List<UserTaskActivityItem>) famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItemNew
                     .getTaskId());
             if (userTaskActivityItems != null) {
@@ -123,24 +124,24 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                         break;
                     }
                 }
-            }
+            }*/
 
             taskItemNew.setDuration(durationInMins / 60);
         }
 
         taskItemNew = (TaskItem) famstackDataAccessObjectManager.saveOrUpdateItem(taskItemNew);
-
-        if (userTaskActivityItemOld == null) {
+        Date startTime = StringUtils.isNotBlank(taskDetails.getStartTime())?DateUtils.tryParse(taskDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT) : projectItem.getStartTime();
+       // if (userTaskActivityItemOld == null) {
             famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(),
-                projectItem.getStartTime(), taskItemNew.getTaskId(), taskItemNew.getName(), durationNewMinutes,
+            		startTime, taskItemNew.getTaskId(), taskItemNew.getName(), durationNewMinutes,
                 UserTaskType.EXTRATIME, null, projectItem.getType(), taskDetails.getDescription());
-        } else {
+        /*} else {
             userTaskActivityItemOld.setDurationInMinutes(durationNewMinutes);
             userTaskActivityItemOld.setTaskName(taskDetails.getName());
             userTaskActivityItemOld.setTaskName(taskDetails.getName());
             userTaskActivityItemOld.setCompletionComment(taskDetails.getDescription());
             famstackDataAccessObjectManager.saveOrUpdateItem(userTaskActivityItemOld);
-        }
+        }*/
 
         updateTaskActualDurationFromActivities(taskItemNew);
         calculateBillableAndNonBillableTime(taskItemNew.getTaskId());

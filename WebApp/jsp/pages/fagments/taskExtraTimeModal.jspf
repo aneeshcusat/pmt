@@ -19,6 +19,12 @@
 		</div>
 	</div>
 	<div class="col-md-12" style="margin-bottom: 5px">
+		<label class="col-md-5 control-label text-left">Extra Time Date</label>
+		<div class="col-md-7">
+			<form:input type="text" class="form-control dateTimePicker" id="extraTimeDatePicker" path="startTime" autocomplete="off"/> 
+		</div>
+	</div>
+	<div class="col-md-12" style="margin-bottom: 5px">
 			<label class="col-md-5 control-label text-left">Extra Duration (Minutes)</label>
 			<div class="col-md-7">
 				<form:select class="form-control select" id="duration" path="duration"  data-live-search="true">

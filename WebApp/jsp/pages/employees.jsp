@@ -63,11 +63,11 @@
 <div class="page-title">                    
     <h2><span class="fa fa-users"></span> Employees <small>
     
-     <c:if test="${currentUser.userGroupId != '1012'}">
+     <c:if test="${currentUser.userGroupId != '1012' && currentUser.userGroupId != '99999'}">
     	${fn:length(userMap)} 
 	</c:if>
 	
-	 <c:if test="${currentUser.userGroupId == '1012'}">
+	 <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
     	${fn:length(employeeMap)} 
 	</c:if>    
     
@@ -99,7 +99,7 @@
                             </div>
                            
                             <div class="col-md-1">
-                            <c:if test="${currentUser.userGroupId == '1012'}">
+                            <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
                             <a href="javascript:showGridEmployeeDetails();" id="employeesDetailsGridLink"  style="margin-right: 10px;" class="blueColor"><span class="fa fa-th-large fa-3x"></span></a>
                             <a href="javascript:showListEmployeeDetails();" id="employeesDetailsListLink"><span class="fa fa-tasks fa-3x"></span></a>
 							</c:if>
@@ -118,7 +118,7 @@
                             </div>
                             
                              <div class="col-md-3">
-                             <c:if test="${currentUser.userGroupId == '1012'}">
+                             <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
                            		 <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
                                <span class="fa fa-plus"></span> Register a new Employee</a>
                              </c:if>
@@ -134,7 +134,7 @@
     <div class="row" id="employeesDetailsGridDiv">
    		<%@include file="response/employeeList.jsp" %>
    </div>
-   <c:if test="${currentUser.userGroupId == '1012'}">
+   <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
     <div class="row hide" id="employeesDetailsListDiv">
    	</div>
    </c:if>       
