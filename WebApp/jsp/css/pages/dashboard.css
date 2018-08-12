@@ -1,0 +1,371 @@
+.dashboard .dbwidget {
+    min-height: 1px;
+  padding-left: 5px; 
+  padding-right: 5px;
+}
+.dashboard .panel{
+margin-bottom: 5px;
+}
+.dashboard .panel .panel-default{
+	text-align: center !important;
+}
+.dashboard .panel .panel-title-box{
+	float: none !important;
+	text-align:center !important;
+}
+
+.dashboard .panel .panel-heading .panel-title-box span{
+font-size: 12px;
+}
+
+.dashboard .panel .panel-heading{
+	background-color: white;
+	padding: 3px !important;
+}
+
+.dashboard .panel .panel-heading .panel-title-box h3{
+	font-size:1.5em !important;
+	color:#686868;
+	font-weight: 700;	
+}
+.dashboard .panel .panel-heading .dbheading{
+    font-size: 1.5em !important;
+    font-weight: 700;
+    line-height: 18px;
+    color: #686868;
+    padding: 0px;
+    margin: 0px;
+ }
+
+.dashboard .dbwidget .dbcontentbox{
+	box-shadow: 1px 1px 5px #888888;
+}
+
+
+.dashboard .projectsummary {
+    text-align: center;
+	padding: 5px;
+	cursor: pointer;
+}
+
+.dashboard .projectsummary.totalprojectcount {
+	color: #B5B5B5;
+}
+
+.dashboard .projectsummary.totalprojectcount.active {
+	 background-color: #B5B5B5;
+}
+
+.dashboard .projectsummary.backlogcount {
+	color: #E45F56;
+}
+
+.dashboard .projectsummary.backlogcount.active {
+	background-color: #E45F56;
+}
+
+.dashboard .projectsummary.unassignedcount {
+	color: #f37e28;
+}
+.dashboard .projectsummary.unassignedcount.active {
+	background-color: #f37e28;
+}
+
+.dashboard .projectsummary.inprogress {
+	color: #52bf8a;
+}
+
+.dashboard .projectsummary.inprogress.active {
+	background-color: #52bf8a;
+}
+
+.dashboard .projectsummary.completed {
+	color: #26a65b;
+}
+
+.dashboard .projectsummary.completed.active {
+	background-color: #26a65b;
+}
+
+.dashboard .projectsummary.upcoming {
+	color: #376ccb;
+}
+
+.dashboard .projectsummary.upcoming.active {
+	background-color: #376ccb;
+}
+
+.dashboard .projectsummary.active{
+	 color: white; 
+}
+
+.dashboard input.searchbox, select.searchbox {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  border-bottom: 1px solid #B5B5B5;
+  margin-right: 15px;
+  min-width: 100px;
+}
+
+span.searchboxlabel {
+  margin-right: 15px;
+  min-width: 100px;
+}
+
+.dashboard .projecttitleblock{
+	background-color: #EDEDED;
+}
+
+.dashboard .legend{
+	width: 7px;
+	height: 5px;
+	margin-left: 5px;
+	margin-top: 5px;
+	margin-right: 2px;
+	display: inline-block;
+}
+
+.dashboard .legend.dot{
+	width: 6px;
+	height: 6px;
+	border-radius:20px;
+}
+
+.dashboard .legendtext{
+    font-size: 8px;
+    color: darkgray;
+    font-weight: 600;
+
+}
+
+.dashboard .projectsummary .total{
+    display: block;
+    font-size: .9em;
+    font-weight: bold;
+    padding-top: 2px;
+}
+
+.dashboard .projectsummary .numberofproject{
+    display: block;
+     font-size: 2.5em;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.dashboard .projectsummary .hours{
+    display: block;
+}
+
+.dsfilter{
+    background-color: white;
+    height: 26px;
+    margin: 2px 0 5px 0;
+    margin-right: 50px;
+}
+.dashboard{
+	padding-left: 0px !important;
+}
+
+.dashboard .fixedheadertable {
+padding-left: 5px;
+}
+.dashboard .fixedheadertable table {
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 0px;
+    }
+
+.dashboard .fixedheadertable thead, .dashboard .fixedheadertable tbody, .dashboard .fixedheadertable tr, .dashboard .fixedheadertable td, .dashboard .fixedheadertable th { 
+	display: block; 
+}
+
+.dashboard .fixedheadertable tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.dashboard .fixedheadertable thead th {
+    height: 25px;
+ 	background: #fff;
+    color: #56688A;
+    font-size: 10px;   
+}
+
+.xdsoft_datetimepicker .xdsoft_datepicker.active{
+width: 100%;
+margin-left: 2px;
+}
+
+.dashboard div.xdsoft_calendar,.dashboard .xdsoft_datetimepicker .xdsoft_monthpicker{
+	width: 100%;
+	z-index: 100;
+}
+.dashboard .xdsoft_datetimepicker .xdsoft_month
+{
+	width: 38%;
+}
+
+.dashboard .xdsoft_datetimepicker .xdsoft_year {
+    width: 40px;
+    margin-left: 3px;
+}
+
+.dashboard .xdsoft_datetimepicker .xdsoft_next, .dashboard .xdsoft_datetimepicker .xdsoft_prev, .dashboard .xdsoft_datetimepicker .xdsoft_today_button
+{
+	width: 16px;
+}
+.xdsoft_datetimepicker .xdsoft_label{
+	font-size: 9px;
+	line-height: 15px;
+}
+.dashboard .fixedheadertable tbody {
+    height: 200px;
+    overflow-y: auto;
+}
+
+.dashboard .fixedheadertable thead {
+}
+
+
+.dashboard .fixedheadertable tbody td, .dashboard .fixedheadertable thead th {
+    width: 14%;
+    float: left;
+}
+
+.dashboard .panel-fullscreened .fixedheadertable tbody td, .dashboard .panel-fullscreened .fixedheadertable thead th {
+    width: 8%;
+    float: left;
+}
+
+
+.dashboard .rtborder {
+	border-right: 1px #E5E5E5 solid;
+}
+
+ 
+ ::-webkit-scrollbar {
+    width: 7px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.02); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0, 0, 0, 0.02); 
+}
+
+.dashboard .fixedheadertable td.emputilization{
+	width: 20%; 
+	height:41px;
+	text-align:center;
+	vertical-align:middle;
+	padding: 0px;
+	border-top:none;
+	border: 1px solid #E5E5E5;
+}
+
+.dashboard .userdetails{
+	padding-top: 5px;
+	display: inline-block;
+	padding-right: 5px;
+}
+.dashboard .percentage{
+	margin-top: 10px;
+	display: block;
+}
+
+.dashboard .projectdetails{
+	height: 320px;
+}
+
+.dashboard .panel-fullscreened .projectdetails{
+	height: 621px;
+}
+
+.dashboard .panel-fullscreened .fixedheadertable tbody {
+    height: 505px;
+    overflow-y: auto;
+}
+
+.dashboard .projectdetails .projectfilter{
+	height: 20px;
+	font-size: 11px;
+	font-weight: 600;
+	padding-top: 2px;
+	display: inline-block;
+    padding: 2px 15px;
+    background-color: #e3e3e3;
+    color: darkgray
+}
+
+.dashboard .projectdetails .projectfilter.active{
+	background-color: #747678;
+	color: white;
+	text-decoration: none;
+}
+
+
+.viewprjsummary{
+    float: right;
+    background-color: #B5B5B5;
+    border-radius: 20px;
+    padding: 1px 10px 1px 10px;
+    margin-bottom: 4px;
+    font-size: 8px;
+    color: white;
+}
+
+.dashboard #fullcaledar {
+	margin:0px 10px 0px 10px;
+}
+
+.dashboard .fc th.fc-widget-header {
+    font-size: 8px;
+    line-height: 17px;
+    border: none;
+    background-color: white;
+    text-transform: none;
+}
+
+.dashboard .fc-day-number{
+	font-weight: bold;
+}
+
+.dashboard td.fc-widget-header {
+	border: none;
+}
+
+.dashboard .fc-toolbar{
+	margin-bottom: 0;
+	line-height:0;
+}
+
+.dashboard .fc-toolbar h2{
+	font-size: 9px;
+	text-transform: none;
+	display: inline-block; 
+}
+
+.dashboard .fc-toolbar button {
+    border: none;
+    box-shadow: none;
+}
+.dashboard .fc-toolbar button.fc-state-active
+{
+	border-bottom: 2px solid darkgray;
+}
+
+.dashboard .legenddateview{
+	padding-right: 5px;
+    font-size: 8px;
+}
