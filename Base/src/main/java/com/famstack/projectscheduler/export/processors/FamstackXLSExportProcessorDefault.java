@@ -67,10 +67,8 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             (List<ProjectTaskActivityDetails>) dataMap.get("exportDataList");
         String dateString = (String) dataMap.get("dateString");
         List<EmployeeDetails> employees = (List<EmployeeDetails>) dataMap.get("employees");
-        EmployeeDetails otherEmp = new EmployeeDetails();
-        otherEmp.setId(0);
-        otherEmp.setFirstName("Unknown User");
-        employees.add(otherEmp);
+        List<EmployeeDetails> deletedEmployees = getDeletedEmployees(employees, exportDataList);
+        employees.addAll(deletedEmployees);
         Map<String, Map<Integer, Integer>> nonBillableTaskActivities =
             (Map<String, Map<Integer, Integer>>) dataMap.get("nonBillableTaskActivities");
 
@@ -358,6 +356,32 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             employeeIndexList.add(employeeDetails.getId());
         }
         return employeeIndexList;
+    }
+    
+    private List<EmployeeDetails> getDeletedEmployees(List<EmployeeDetails> employees, List<ProjectTaskActivityDetails> exportDataList){
+    	List<Integer> availableIdList = getEmployeeIndexList(employees);
+    	List<EmployeeDetails> deletedEmployeeList = new ArrayList<>();
+    	Map<Integer, EmployeeDetails> allEmployeesMap = getFamstackApplicationConfiguration().getAllUsersMap();
+    	boolean otherAdded = false;
+    	if (exportDataList != null) {
+    		for (ProjectTaskActivityDetails projectTaskActivityDetail : exportDataList) {
+    			if (!availableIdList.contains(projectTaskActivityDetail.getUserId())){
+    				EmployeeDetails employeeDetails = allEmployeesMap.get(projectTaskActivityDetail.getUserId());
+    				if (employeeDetails != null) {
+    						if (!deletedEmployeeList.contains(employeeDetails)) {
+    							deletedEmployeeList.add(employeeDetails);	
+    						}
+    				} else if (!otherAdded) {
+    					EmployeeDetails otherEmp = new EmployeeDetails();
+				        otherEmp.setId(0);
+				        otherEmp.setFirstName("Unknown User");
+				        deletedEmployeeList.add(otherEmp);
+				        otherAdded = true;
+    				}
+    			}
+    		}
+    	}
+		return deletedEmployeeList;
     }
 
     private void createProjectSumFunctionCell(Row projectDetailsRow, int columnIndex,
