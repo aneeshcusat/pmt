@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.dashboard.controller;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +20,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
+import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.employees.bean.AccountDetails;
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
+import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
 import com.famstack.projectscheduler.security.user.UserRole;
+import com.famstack.projectscheduler.util.DateTimePeriod;
+import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.StringUtils;
 
 @Controller
 @SessionAttributes
@@ -41,8 +50,66 @@ public class FamstackDashboardController extends BaseFamstackService
         logDebug("Request path :" + path);
         return path;
     }
+    
+    @RequestMapping(value = "/newindex", method = RequestMethod.GET)
+    public ModelAndView newindex()
+    {
+    	Map<Integer, AccountDetails> accountData = FamstackAccountManager.getAccountmap();
+        Map<String, Object> dashboardData = new HashMap<String, Object>();
+        getDefaultDateRange();
+        dashboardData.put("accountData", accountData);
+        return new ModelAndView("newindex").addObject("dashboardData", dashboardData).addObject("dateDashBoardRange", getDefaultDateRange());
+    }
+    
+    @RequestMapping("/dashboardEmpBW")
+    public ModelAndView dashboardEmpBW(@RequestParam("groupId") String groupId, Model model)
+    {
+    	List<EmployeeDetails> userList = getFamstackApplicationConfiguration().getUserList(groupId);
+        return new ModelAndView("response/dashboardEmpBW").addObject("usersList", userList);
+    }
+    
+    @RequestMapping("/dashboardEmpLeave")
+    public ModelAndView dashboardEmpLeave(@RequestParam("groupId") String groupId, Model model)
+    {
+    	List<EmployeeDetails> userList = getFamstackApplicationConfiguration().getUserList(groupId);
+        return new ModelAndView("response/dashboardEmpLeave").addObject("usersList", userList);
+    }
+    
+    @RequestMapping("/dashboardProjectDetails")
+    public ModelAndView dashboardProjectDetails(@RequestParam("groupId") String groupId,@RequestParam("filters") String filters,@RequestParam("dateRange") String dateRange, Model model)
+    {
+    	 String[] dateRanges;
+         Date startDate = null;
+         Date endDate = null;
+         if (StringUtils.isNotBlank(dateRange)) {
+             dateRanges = dateRange.split("-");
 
-    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+             if (dateRanges != null && dateRanges.length > 1) {
+                 startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                 endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+             }
+         } else {
+             startDate =
+                 DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+             endDate = startDate;
+        }
+         List<ProjectTaskActivityDetails> projectTaskAssigneeDataList =
+                 famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate, groupId);
+         
+         return new ModelAndView("response/dashboardProjectDetails")
+                 .addObject("projectData", projectTaskAssigneeDataList).addObject("dateRange", dateRange);
+    }
+    
+  
+
+    private String getDefaultDateRange() {
+    	Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), 0);
+    	return  DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP) + " - "
+    	                + DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP);
+		
+	}
+
+	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ModelAndView index()
     {
         UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();

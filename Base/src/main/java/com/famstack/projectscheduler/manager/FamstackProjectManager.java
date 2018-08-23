@@ -743,6 +743,27 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetailsList;
     }
 
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, String groupId)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("startDate", startDate);
+        dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+
+        List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
+
+        String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
+        String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+        sqlQuery += " and utai.user_grp_id = " + userGroupId;
+        sqlQuery += " " + HQLStrings.getString("projectTeamAssigneeReportSQL-OrderBy");
+
+        List<Object[]> projectItemList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
+        logDebug("projectItemList" + projectItemList);
+        logDebug("startDate" + startDate);
+        logDebug("endDate" + endDate);
+        mapProjectsList(projectDetailsList, projectItemList);
+        return projectDetailsList;
+    }
+    
     public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
     {
         Map<String, Object> dataMap = new HashMap<>();

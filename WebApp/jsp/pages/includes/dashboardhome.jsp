@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!-- PAGE CONTENT WRAPPER -->
 <div class="dashboard col-md-12 dashboadhome" style="padding-right: 5px;">
 <div class="col-md-10 dbwidget">
@@ -31,13 +32,26 @@
 					</div>
 				</div>
 				<div class="panel-body padding-0">
-					<div class="dbcontentbox" style="height: 175px;">
+					<div class="dbcontentbox accountsdiv" style="height: 175px;">
 					<div class="col-md-12 center-block" style="height: 10px;text-align: center;">
 						<span style="background-color: #0BB4C1;" class="legend"></span><span class="legendtext">Billable</span>
 						<span style="background-color: #E3E3E3;" class="legend"></span><span class="legendtext">Non Billable</span>
 					</div>
 					<div class="utilizationChart" style="height: 150px">
-					
+						<div class="col-md-12">
+						<div class="row">
+							  <c:forEach var="i" begin="0" end="5" step="1">
+							  <div class="myprogress">
+								  <p class="vprogresslabel">${i}%</p>
+								  <div class="progress progress-bar-vertical">
+								    <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="height: 30%;">
+								    </div>
+								  </div> 
+								  <p class="vprogresslabel">Name${1}</p>
+							  </div>
+							  </c:forEach>
+							   </div>
+					 	 </div>
 					</div>
 					</div>
 				</div>
@@ -51,7 +65,28 @@
 					</div>
 				</div>
 				<div class="panel-body padding-0">
-					<div class="dbcontentbox" style="height: 175px;"></div>
+					<div class="dbcontentbox resutildiv"  style="height: 175px;overflow: scroll;overflow-x: auto;">
+						<div class="col-md-12">
+							 <c:forEach var="i" begin="0" end="15" step="1">
+						   	<div class="row"  style="margin-top: 10px">
+								<div class="col-md-1">
+									Name${i}
+								</div>
+								<div class="col-md-10">
+									<div class="progress">
+								        <div class="progress-bar billable" style="width: 40%">
+								        </div>
+								        <div class="progress-bar nonbillable" style="width: 25%">
+								        </div>
+								    </div>
+							    </div>
+							    <div class="col-md-1">
+									${i}%
+								</div>
+						    </div>
+						    </c:forEach>
+						 </div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -70,7 +105,7 @@
 					<div class="panel-title-box" style="width: 100%">
 						<span class="dbheading" style="float: left">Project Summary</span>
 						<span style="float: right;"><span class="fa fa-search fa-3x"></span>
-						<input style="min-width: 225px;margin-right: 5px;" class="searchbox" type="text" placeholder="Search for projects by Id, team, PO etc.."/>
+						<input style="min-width: 225px;margin-right: 5px;" id="projectSearchInput" class="searchbox" type="text" placeholder="Search for projects by Id, team, PO etc.."/>
 						<a href="#" class="panel-fullscreen"><img  style="width: 17px;margin-right: 5px;" alt="image" src="${assets}/images/fullscreenimg.png"></a>
 						</span>
 						
@@ -84,45 +119,45 @@
 						</div>
 						<div class="col-md-12 projecttitleblock">
 						<div class="col-md-2">
-							<div class="projectsummary totalprojectcount active">
+							<div class="projectsummary totalprojectcount active" data-type="ALL">
 								<span class="total">Total Projects</span>
-								<span class="numberofproject">25</span>
-								<span class="hours">(125 Hrs)</span>
+								<span class="numberofproject">0</span>
+								<span class="hours"></span>
 							</div>
 						</div>
 						<div class="col-md-2">
-							<div class="projectsummary backlogcount" style="">
+							<div class="projectsummary backlogcount"  data-type="BACKLOG">
 								<span class="total">Backlogs</span>
-								<span class="numberofproject">05</span>
-								<span class="hours">(125 Hrs)</span>
+								<span class="numberofproject">0</span>
+								<span class="hours"></span>
 							</div>
 						</div>
 						<div class="col-md-2">
 							<div class="projectsummary unassignedcount">
 								<span class="total">Unassigned</span>
-								<span class="numberofproject">06</span>
-								<span class="hours">(125 Hrs)</span>
+								<span class="numberofproject">0</span>
+								<span class="hours"></span>
 							</div>
 						</div>
 						<div class="col-md-2">
-							<div class="projectsummary inprogress">
+							<div class="projectsummary inprogress"  data-type="INPROGRESS">
 								<span class="total">In Progress</span>
-								<span class="numberofproject">10</span>
-								<span class="hours">(125 Hrs)</span>
+								<span class="numberofproject">0</span>
+								<span class="hours"></span>
 							</div>
 						</div>
 						<div class="col-md-2">
-							<div class="projectsummary completed">
+							<div class="projectsummary completed"  data-type="COMPLETED">
 								<span class="total">Completed</span>
-								<span class="numberofproject">14</span>
-								<span class="hours">(125 Hrs)</span>
+								<span class="numberofproject">0</span>
+								<span class="hours"></span>
 							</div>
 						</div>
 						<div class="col-md-2">
-							<div class="projectsummary upcoming">
+							<div class="projectsummary upcoming" data-type="UPCOMING">
 								<span class="total">Upcomming</span>
-								<span class="numberofproject">02</span>
-								<span class="hours">(125 Hrs)</span>
+								<span class="numberofproject">0</span>
+								<span class="hours"></span>
 							</div>
 						</div>
 					</div>
@@ -144,23 +179,8 @@
 						        <th>Status</th>
 						    </tr>
 						    </thead>
-						    <tbody>
-						      <c:forEach var="i" begin="0" end="30" step="1">
-						    <tr>
-						        <td class="filterable-cell rtborder">Projects</td>
-						        <td class="panelHideTD" style="display: none">PO Id</td>
-						        <td class="filterable-cell">Team</td>
-						        <td class="filterable-cell">Sub Team</td>
-						        <td class="panelHideTD" style="display: none">Account</td>
-		    				    <td class="panelHideTD" style="display: none">Client</td>
-						        <td class="filterable-cell">Project Lead</td>
-						        <td class="filterable-cell">Assigned To</td>
-		    				    <td class="panelHideTD" style="display: none">Type</td>
-								<td class="panelHideTD" style="display: none">Category</td>
-						        <td class="filterable-cell">10:00</td>
-						        <td class="filterable-cell">INPROGRESS</td>
-						    </tr>
-						    </c:forEach>
+						    <tbody class="dashboardProjDetailsDiv">
+						     
 						    </tbody>
 						</table>
 						</div>
@@ -185,22 +205,13 @@
 					<table class="table">
 				    <thead>
 				    <tr>
-				    	<th style="width: 50%;text-align: center;border-bottom: 0;"><span style="font-size: 11px;color: #57BF9E;font-weight: bold;">All (45)</span></th>
+				    	<th style="width: 50%;text-align: center;border-bottom: 0;"><span style="font-size: 11px;color: #57BF9E;font-weight: bold;">All (${fn:length(userMap)})</span></th>
 				        <th style="width: 25%; text-align: center;border-bottom: 0;"><span style="font-size: 8px">Last Day</span></th>
 				        <th style="width: 25%; text-align: center;border-bottom: 0;"><span style="font-size: 8px">Today</span></th>
 				    </tr>
 				    </thead>
-				    <tbody style="height: 210px" >
-				    <c:forEach var="i" begin="0" end="30" step="1">
-					    <tr style="padding-bottom: 0px;margin-top: 0px; border-bottom: 1px solid #dddddd">
-					        <td class="filterable-cell" style="width: 60%;padding: 0px;border-top:0">
-					        <span class="userdetails">
-					        	<img  style="width: 30px;border-radius: 20px;" alt="image" src="${assets}/images/users/user-online.png"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
-					        </span><b>test user</b></td>
-					        <td class="filterable-cell emputilization" style="background-color: #ececec;border-top:0"><span class="percentage">${i} %</span></td>
-					        <td class="filterable-cell emputilization" style="background-color: #d7d7d7;border-top:0"><span class="percentage">--%</span></td>
-					    </tr>
-					</c:forEach>
+				    <tbody style="height: 210px" class="dashboardEmpBWDiv">
+			
 				    </tbody>
 				    </table>
 					</div>
@@ -208,18 +219,11 @@
 					<table class="table">
 				    <thead>
 				    <tr>
-				    	<th style="width: 100%;border-bottom:0"><span style="font-size: 13px;color: red;font-weight: 500;">On Leave (45)</span></th>
+				    	<th style="width: 100%;border-bottom:0"><span style="font-size: 13px;color: red;font-weight: 500;">On Leave (${fn:length(userMap)})</span></th>
 				    </tr>
 				    </thead>
-				    <tbody style="height: 80px" >
-				    <c:forEach var="i" begin="0" end="30" step="1">
-					    <tr style="padding-bottom: 0px;margin-top: 0px; border-bottom: 1px solid #dddddd">
-					        <td class="filterable-cell" style="width: 60%;padding: 0px;;border-top:0">
-					        <span class="userdetails" style="margin-bottom: 5px">
-					        <img  style="width: 30px;border-radius: 20px;" alt="image" src="${assets}/images/users/user-offline.png"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
-					        </span><b>test user</b></td>
-					    </tr>
-					</c:forEach>
+				    <tbody style="height: 80px" class="dashboardEmpLeaveDiv">
+				     
 				    </tbody>
 				    </table>				
 				    </div>

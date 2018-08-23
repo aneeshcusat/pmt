@@ -10,7 +10,7 @@
         	    defaultView: 'month',
         	    weekends: true,
         	    editable: false,
-        	    eventSources: {url: "assets/ajax_fullcalendar.jsp"},
+        	    eventSources: {url: "getAjaxFullcalendar.jsp"},
         	    droppable: false,
         	    selectable: false,
         	    selectHelper: false,
@@ -47,7 +47,23 @@
         	            if (date.get('date') == end.get('date')) {
         	                cell.css("background", "darkgray");
         	 			}
-        			}
+        			},
+        			eventRender: function(event, element) {
+                     	 element.popover({
+                 	        title: event.taskName,
+                 	        content: function () {
+                                 return "<table class='calenderEventPopOver'><tbody><tr><td>Task Status</td><td>"+event.taskStatus+"</td></tr><tr><td>Task Category</td><td>"+event.taskActCategory+"</td></tr><tr><td>TaskType</td><td>"+event.projectType+"</td></tr><tr><td>Assignee</td><td>"+event.assigneeName+"</td></tr><tr><td>Project Id</td><td>"+event.projectId+"</td></tr><tr><td>Est Task Start Time</td><td>"+event.estTaskStartTime+"</td></tr><tr><td>Est Task End Time</td><td>"+event.estTaskEndTime+"</td></tr><tr><td>Act Task Start Time</td><td>"+event.taskActActualStartTime+"</td></tr><tr><td>Act Task End Time</td><td>"+event.taskActActualEndTime+"</td></tr></tbody></table>";
+                             },
+                 	        animation:true,
+                             delay: 300,
+                 	        trigger: 'hover',
+                 	        placement: 'top',
+                 	        container: 'body',
+                 	        html: 'true',
+                 	      });
+                     },
+        	    
+        	    
         	});
 
         }

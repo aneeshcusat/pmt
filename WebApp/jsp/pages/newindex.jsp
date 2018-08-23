@@ -2,44 +2,73 @@
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/dashboard.css"/>
  <div class="col-md-12 dsfilter">
  <div class="col-md-12">
- <span style="float: right;display: none">
- 	<span class="searchboxlabel">Select Account</span>
- 	<span class="searchboxlabel">Select Team</span>
- 	<span class="searchboxlabel">Select Sub Team</span>
- 	<span class="searchboxlabel">Select Resource</span>
- 	<span class="searchboxlabel">Select Date</span>
- </span>
  </div>
  <div class="col-md-12">
  <span style="float: left;font-size: 13px;margin-top: 1px;">
  	Dashboard
  </span>
  	<span style="float: right">
- 	<select class="searchbox">
- 		<option>Select Division</option>
- 		<option>All</option>
+ 		<select class="searchbox dashboadgroup">
+ 			<option value="-1" disabled>Select Division</option>
+        	<c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
+                <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
+        	</c:forEach>
+ 		</select>
+ 	<select class="searchbox accountInfo">
+ 		<option value="-1" disabled selected>Select Account</option>
+ 		<option value="0">All</option>
+		<c:if test="${not empty dashboardData.accountData}">  
+	        <c:forEach var="account" items="${dashboardData.accountData}"  varStatus="accountStatus">
+	 			<option class='<c:if test="${currentUserGroupId != account.value.userGoupId}">hide</c:if> AC${account.key} UG${account.value.userGoupId}' value="${account.key}">${account.value.name}</option>
+			</c:forEach>
+		</c:if>
+ 	</select>	
+ 	<select class="searchbox projectTeamInfo">
+ 		<option value="-1" disabled selected>Select Team</option>
+		<option value="0">All</option>
+		<c:if test="${not empty dashboardData.accountData}">  
+	        <c:forEach var="account" items="${dashboardData.accountData}"  varStatus="accountStatus">
+	        	 <c:if test="${not empty account.value.projectTeams}"> 
+	        	 	 <c:forEach var="projectTeam" items="${account.value.projectTeams}">
+	 					<option class='hide AC${account.key} PT${projectTeam.teamId}' value="${projectTeam.teamId}">${projectTeam.name}</option>
+	 				</c:forEach>
+	 			</c:if>
+			</c:forEach>
+		</c:if>
  	</select>
- 	<select class="searchbox">
- 		<option>Select Account</option>
- 		<option>All</option>
+ 	<select class="searchbox projectSubTeamInfo">
+ 		<option value="-1" disabled selected>Select Sub Team</option>
+ 		<option value="0">All</option>
+ 		<c:if test="${not empty dashboardData.accountData}">  
+	        <c:forEach var="account" items="${dashboardData.accountData}"  varStatus="accountStatus">
+	        	 <c:if test="${not empty account.value.projectTeams}"> 
+	        	 	 <c:forEach var="projectTeam" items="${account.value.projectTeams}">
+	        	 	 	 <c:if test="${not empty projectTeam.projectSubTeams}">  
+		                    <c:forEach var="projectSubTeam" items="${projectTeam.projectSubTeams}">
+	 							<option class='hide AC${account.key} PT${projectTeam.teamId} PST${projectSubTeam.subTeamId}' value="${projectSubTeam.subTeamId}">${projectSubTeam.name}</option>
+	 						</c:forEach>
+	 					</c:if>
+	 				</c:forEach>
+	 			</c:if>
+			</c:forEach>
+		</c:if>
  	</select>
- 	<select class="searchbox">
- 		<option>Select Team</option>
- 		<option>All</option>
+ 	<select class="searchbox resourceInfo">
+ 		<option value="0">All</option>
+ 		 <c:if test="${not empty employeeMap}">
+	    <c:forEach var="employeeItem" items="${employeeMap}">
+	    	<option  class='<c:if test="${currentUserGroupId != employeeItem.value.userGroupId}">hide</c:if> UG${employeeItem.value.userGroupId}' <c:if test="${currentUser.id == employeeItem.value.id && currentUserGroupId == employeeItem.value.userGroupId}">selected="selected"</c:if> value="${employeeItem.value.id}">${employeeItem.value.firstName}</option>
+	    </c:forEach>
+	    </c:if>
  	</select>
- 	<select class="searchbox">
- 		<option>Select Sub Team</option>
- 		<option>All</option>
- 	</select>
- 	<select class="searchbox">
- 		<option>Select Resource</option>
- 		<option>All</option>
- 	</select>
- 	<select class="searchbox">
- 		<option>Select Date</option>
- 		<option>All</option>
- 	</select>
- 	<i class="fas fa-expand"></i></span>
+ 	 <input type="text" name="daterange" id="daterangeText" style="display: none" value="${dateDashBoardRange}" /> 
+ 	<span id="dashboarddatepicker" class="dateFilterbox">                                            
+    	<span>${dateDashBoardRange}</span><b class="caret"></b>
+	</span>
+ 	<a href="javascript:refreshDashboard()" title="Filter the dashboard">
+ 		<i class="fa fa-filter fa-2x"></i>
+ 	</a>
+ 	</span>
  	</div>
 </div>
 <div class="dashboardcontainer">
@@ -50,71 +79,4 @@
 <%@include file="includes/footer.jsp" %>
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js"></script>
 <script type="text/javascript" src="${js}/famstack.calender.js"></script>
-<script>
-$(document).ready(function() {
-	jQuery('.calenderdiv').datetimepicker({
-	  format:'d.m.Y',
-	  timepicker:false,
-	  inline:true,
-	  startDate: new Date(),
-	  lang:'en'
-	});
-});
-
-function showBandWidth(){
-	
-	$(".dashboadhome").hide();
-	$(".dashboadtu").hide();
-	$(".dashboardbandwidth").show();
-	fullCalendar.initbs();
-	
-}
-
-function showHome(){
-	$(".dashboadhome").show();
-	$(".dashboadtu").hide();
-	$(".dashboardbandwidth").hide();
-}
-
-function showTu(){
-	$(".dashboadhome").hide();
-	$(".dashboadtu").show();
-	$(".dashboardbandwidth").hide();
-	fullCalendar.inittu();
-}
-
-function showMyProjects()
-{
-	if(!$(".myprojectslink").hasClass("active")){
-		$(".myprojectslink").addClass("active");
-		$(".totalprojectslink").removeClass("active")
-	}
-}
-
-
-function showTotalProjects()
-{
-	if(!$(".totalprojectslink").hasClass("active")){
-		$(".totalprojectslink").addClass("active");
-		$(".myprojectslink").removeClass("active")
-	}
-}
-
-
-$(".projectsummary").on("click",function(){
-	$(".projectsummary").removeClass("active");
-	$(this).addClass("active");
-});
-
-
-Morris.Donut({
-    element: 'utilizationChart',
-    data: [{label: "Billable", value: 80},
-    	  {label: "Non Billable", value: 20}],
-    colors: ['#0BB4C1',
-             '#E3E3E3'],
-    resize: true,
-    formatter:function (y, data) { return y + "%" }
-});
-
-</script>
+<script type="text/javascript" src="${js}/famstack.dashboard.js"></script>

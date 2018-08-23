@@ -22,7 +22,29 @@
 						</span>
 					</div>
 					<div class="tatalutilizationChart" style="height: 140px">
-					
+						<div class="col-md-12">
+						<div class="row">
+							  <c:forEach var="i" begin="0" end="22" step="1">
+							  <div class="myprogress">
+								  <p class="vprogresslabel">${i}%</p>
+								  <div class="progress progress-bar-vertical">
+								    <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="height: 30%;">
+								      <span class="sr-only">30% Complete</span>
+								    </div>
+								  </div> 
+								  <p class="vprogresslabel">Name${1}</p>
+							  </div>
+							  </c:forEach>
+							   <!-- <div class="col-xs-1">
+						            <p class="progressTitle">Probe</p>
+						            <div class="progress progress-bar-vertical">
+						                <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="height: 32%;">
+						                </div>
+						            </div>
+						            <p class="valSpan">51</p>
+						        </div> -->
+							   </div>
+					 	 </div>
 					</div>
 					
 					</div>

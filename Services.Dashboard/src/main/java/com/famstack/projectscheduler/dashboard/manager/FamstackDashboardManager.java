@@ -655,7 +655,13 @@ public class FamstackDashboardManager extends BaseFamstackService
         List<ProjectDetails> projectDetailsList = projectManager.getAllProjectDetailsList(startDate, endDate);
         return projectDetailsList;
     }
-
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate,
+			Date endDate, String groupId) 
+    {
+        List<ProjectTaskActivityDetails> projectDetailsList =
+            projectManager.getAllProjectTaskAssigneeData(startDate, endDate);
+        return projectDetailsList;
+    }
     public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
     {
         List<ProjectTaskActivityDetails> projectDetailsList =
@@ -1092,5 +1098,6 @@ public class FamstackDashboardManager extends BaseFamstackService
     {
         return userProfileManager.unblockUser(emailId);
     }
+
 
 }

@@ -67,6 +67,10 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             (List<ProjectTaskActivityDetails>) dataMap.get("exportDataList");
         String dateString = (String) dataMap.get("dateString");
         List<EmployeeDetails> employees = (List<EmployeeDetails>) dataMap.get("employees");
+        EmployeeDetails otherEmp = new EmployeeDetails();
+        otherEmp.setId(0);
+        otherEmp.setFirstName("Unknown User");
+        employees.add(otherEmp);
         Map<String, Map<Integer, Integer>> nonBillableTaskActivities =
             (Map<String, Map<Integer, Integer>>) dataMap.get("nonBillableTaskActivities");
 
@@ -183,6 +187,9 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             List<Integer> employeeIndexList = getEmployeeIndexList(employees);
             for (Integer userId : leaveDataMap.keySet()) {
                 int userCellIndex = employeeIndexList.indexOf(userId);
+                if(userCellIndex < 0) {
+                	userCellIndex = employeeIndexList.indexOf(0);
+                }
                 createTaskTimeCell(sheet, 13 + userCellIndex, leaveDataMap.get(userId), leaveRow,
                     xssfCellProjectTaskHrsStyle);
             }
@@ -279,6 +286,10 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             for (Integer userId : nonBillableMap.keySet()) {
                 int userCellIndex = employeeIndexList.indexOf(userId);
 
+                if(userCellIndex < 0) {
+                	userCellIndex = employeeIndexList.indexOf(0);
+                }
+                
                 createTaskTimeCell(sheet, nonBillableDetailsColumnCount + userCellIndex, nonBillableMap.get(userId),
                     nonBillableItemRow, xssfCellProjectTaskHrsStyle);
             }
@@ -324,9 +335,11 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
 
             List<Integer> employeeIndexList = getEmployeeIndexList(employees);
             int userCellIndex = employeeIndexList.indexOf(projectDetails.getUserId());
+            if(userCellIndex < 0) {
+            	userCellIndex = employeeIndexList.indexOf(0);
+            }
             createTaskTimeCell(sheet, projectDetailsUserColumnCount + userCellIndex,
                 projectDetails.getTaskActivityDuration(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
-
             createProjectSumFunctionCell(projectDetailsRow, projectDetailsUserColumnCount + employees.size(),
                 xssfCellProjectTotalStyle);
 

@@ -149,15 +149,18 @@ var templatePlugins = function(){
     
 
     var sortSelect = function (select, attr, order) {
+    	var preSelectedIndex =  $(select).get(0).selectedIndex;
         if(attr === 'text'){
             if(order === 'asc'){
                 $(select).html($(select).children('option').sort(function (x, y) {
-                	if ($(x).text() == 'All') {
+                	if ($(x).val() == '0' || $(x).val() == '-1') {
                 		return -1;
                 	}
                     return $(x).text().toUpperCase() < $(y).text().toUpperCase() ? -1 : 1;
                 }));
-                $(select).get(0).selectedIndex = 0;
+                if (preSelectedIndex == 0) {
+                	$(select).get(0).selectedIndex = 0;
+                }
             }// end asc
             if(order === 'desc'){
                 $(select).html($(select).children('option').sort(function (y, x) {
