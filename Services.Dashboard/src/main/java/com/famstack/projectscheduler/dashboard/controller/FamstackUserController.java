@@ -165,7 +165,8 @@ public class FamstackUserController extends BaseFamstackService
     {
         try {
             famstackDashboardManager.createUser(employeeDetails);
-            getFamstackApplicationConfiguration().initialize();
+            getFamstackApplicationConfiguration().initializeUserMap(
+                    getFamstackApplicationConfiguration().getFamstackUserProfileManager().getAllEmployeeDataList());
         } catch (Exception e) {
             return "{\"status\": false,\"errorCode\": \"Duplicate\"}";
         }
@@ -180,7 +181,8 @@ public class FamstackUserController extends BaseFamstackService
     {
         try {
             famstackDashboardManager.updateUser(employeeDetails);
-            getFamstackApplicationConfiguration().initialize();
+            getFamstackApplicationConfiguration().initializeUserMap(
+                    getFamstackApplicationConfiguration().getFamstackUserProfileManager().getAllEmployeeDataList());
         } catch (Exception e) {
             return "{\"status\": false,\"errorCode\": \"Duplicate\"}";
         }
@@ -192,7 +194,8 @@ public class FamstackUserController extends BaseFamstackService
     public String deleteEmployee(@RequestParam("userId") int userId)
     {
         famstackDashboardManager.deleteUser(userId);
-        getFamstackApplicationConfiguration().initialize();
+        getFamstackApplicationConfiguration().initializeUserMap(
+                getFamstackApplicationConfiguration().getFamstackUserProfileManager().getAllEmployeeDataList());
         return "{\"status\": true}";
     }
 
@@ -280,10 +283,12 @@ public class FamstackUserController extends BaseFamstackService
 
     @RequestMapping(value = "/unblockUser", method = RequestMethod.GET)
     @ResponseBody
-    public String unblockUser(@RequestParam("emailId") String emailId)
+    public String unblockUser(@RequestParam("userId") int userId)
     {
-        UserItem userItem = famstackDashboardManager.unblockUser(emailId);
+        UserItem userItem = famstackDashboardManager.unblockUser(userId);
         if (userItem != null) {
+        	 getFamstackApplicationConfiguration().initializeUserMap(
+                     getFamstackApplicationConfiguration().getFamstackUserProfileManager().getAllEmployeeDataList());
             return "{\"deletedFlag\":" + userItem.getDeleted() + "}";
         }
         return "{\"status\": \"error\"}";

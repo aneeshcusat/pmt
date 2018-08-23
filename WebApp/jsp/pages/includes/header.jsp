@@ -12,6 +12,7 @@
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
 <c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
+<c:set var="allUsersMap" value="${applicationScope.applicationConfiguraion.allUsersMap}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="userGroupMap" value="${applicationScope.applicationConfiguraion.userGroupMap}"/>
 <c:set var="appConfigMap" value="${applicationScope.applicationConfiguraion.appConfigMap}"/>

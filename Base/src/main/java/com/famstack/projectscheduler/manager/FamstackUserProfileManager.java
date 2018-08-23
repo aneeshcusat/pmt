@@ -210,7 +210,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         return userItem.isDeleted() ? null : mapEmployeeDetails(userItem);
     }
 
-    public List<EmployeeDetails> getEmployeeDataList()
+    public List<EmployeeDetails> getAllEmployeeDataList()
     {
         List<EmployeeDetails> employeeDetailsList = new ArrayList<EmployeeDetails>();
         List<?> userItemList = getAllUserItems();
@@ -227,15 +227,16 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         return employeeDetailsList;
 
     }
-
+    
     public EmployeeDetails mapEmployeeDetails(UserItem userItem)
     {
-        if (userItem != null && !userItem.isDeleted()) {
+        if (userItem != null) {
             EmployeeDetails employeeDetails = new EmployeeDetails();
             if (userItem.getDob() != null) {
                 employeeDetails.setDateOfBirth(sdf.format(userItem.getDob()));
             }
             employeeDetails.setDesignation(userItem.getDesignation());
+            employeeDetails.setDeleted(userItem.isDeleted());
             employeeDetails.setEmail(userItem.getUserId());
             employeeDetails.setFirstName(userItem.getFirstName());
             employeeDetails.setGender(userItem.getGender());
@@ -268,7 +269,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             // getFamstackDataAccessObjectManager().deleteItem(userItem);
             userItem.setDeleted(true);
             famstackDataAccessObjectManager.updateItem(userItem);
-            getFamstackApplicationConfiguration().initializeUserMap(getEmployeeDataList());
+            getFamstackApplicationConfiguration().initializeUserMap(getAllEmployeeDataList());
         }
     }
 
@@ -300,13 +301,14 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         return false;
     }
 
-    public UserItem unblockUser(String emailId)
+    public UserItem unblockUser(int userId)
     {
-        UserItem userItem = getUserItem(emailId);
+        UserItem userItem = getUserItemById(userId);
         if (userItem != null) {
             userItem.setDeleted(false);
             userItem = (UserItem) famstackDataAccessObjectManager.saveOrUpdateItem(userItem);
         }
         return userItem;
     }
+
 }

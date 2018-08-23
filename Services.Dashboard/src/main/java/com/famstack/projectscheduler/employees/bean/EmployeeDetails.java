@@ -60,8 +60,18 @@ public class EmployeeDetails
     private LeaveType leave;
 
     private Integer userAccessCode;
+    
+    private boolean deleted;
 
-    public String getFirstName()
+    public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getFirstName()
     {
         return firstName;
     }

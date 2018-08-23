@@ -1094,9 +1094,9 @@ public class FamstackDashboardManager extends BaseFamstackService
         return userProfileManager.getUserItem(emailId);
     }
 
-    public UserItem unblockUser(String emailId)
+    public UserItem unblockUser(int userId)
     {
-        return userProfileManager.unblockUser(emailId);
+        return userProfileManager.unblockUser(userId);
     }
 
 

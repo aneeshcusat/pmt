@@ -1,9 +1,10 @@
 <c:if test="${user.role != 'SUPERADMIN' || currentUser.userRole == 'SUPERADMIN'}">
-<div class="col-md-3 contact-name userDetails${user.id}">
+<div class='col-md-3 <c:if test="${!user.deleted}">contact-name</c:if> userDetails${user.id}   <c:if test="${user.deleted}">deletedUser</c:if>'>
             <!-- CONTACT ITEM -->
-            <div class="panel panel-default">
+            <div class='panel panel-default '>
                 <div class="panel-body profile">
                  	<a href="${applicationHome}/profile/${user.id}">
+                 	 <c:if test="${user.deleted}"><span class="hide">deleted</span></c:if>
                     <div class="profile-image">
                         <img src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                     </div>
@@ -14,12 +15,14 @@
                     </div>
                     <div class="profile-controls">
                         <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit"></span></a>
-                         <c:if test="${currentUser.userGroupId == '1012'}">
-                        	<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}','${user.lastName} ${user.firstName}')"><span class="fa fa-times"></span></a>
+                         <c:if test="${currentUser.userGroupId == '1012'  || currentUser.userGroupId == '99999'}">
+                         	<c:if test="${!user.deleted}">
+                        		<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}','${user.lastName} ${user.firstName}')"><span class="fa fa-times"></span></a>
+                    		</c:if>
+                    		<c:if test="${user.deleted}">
+                    			<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:undoDeleteUser('${user.id}', '${user.email}','${user.lastName} ${user.firstName}')"><span class="fa fa-undo"></span></a>
+                    		</c:if>
                     	</c:if>
-                    	 <c:if test="${currentUser.userGroupId != '1012'}">
-                    	 	<span class="fa fa-times"></span>
-                    	 </c:if>
                     </div>
                 </div>                                
                 <div class="panel-body">                                    

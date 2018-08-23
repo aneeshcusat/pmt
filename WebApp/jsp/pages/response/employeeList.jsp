@@ -7,8 +7,8 @@
     </c:if> 
     
      <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
-	    <c:if test="${not empty employeeMap}">
-	    <c:forEach var="employeeItem" items="${employeeMap}">
+	    <c:if test="${not empty allUsersMap}">
+	    <c:forEach var="employeeItem" items="${allUsersMap}">
 	    		<c:set var="user" value="${employeeItem.value}"></c:set>
 	        	<%@include file="../fagments/employeeDetails.jspf" %>
 	    </c:forEach>

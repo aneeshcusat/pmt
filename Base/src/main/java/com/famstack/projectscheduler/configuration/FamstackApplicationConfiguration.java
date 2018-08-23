@@ -42,6 +42,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     private String protocol;
 
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
+    
+    public static Map<Integer, EmployeeDetails> allUsersMap = new HashMap<>();
 
     private static Map<String, UserGroupDetails> userGroupMap = new HashMap<>();
 
@@ -55,7 +57,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     {
 
         logDebug("Initializing FamstackApplicationConfiguration...");
-        initializeUserMap(famstackUserProfileManager.getEmployeeDataList());
+        initializeUserMap(famstackUserProfileManager.getAllEmployeeDataList());
         initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
         initializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
         initializeConfigurations();
@@ -69,7 +71,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         userGroupMap.clear();
         configSettings.clear();
 
-        initializeUserMap(famstackUserProfileManager.getEmployeeDataList());
+        initializeUserMap(famstackUserProfileManager.getAllEmployeeDataList());
         initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
         initializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
         initializeConfigurations();
@@ -109,18 +111,24 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     public synchronized void initializeUserMap(List<EmployeeDetails> employeeDetailsList)
     {
         Map<Integer, EmployeeDetails> userMapTemp = new HashMap<>();
+        Map<Integer, EmployeeDetails> allUserMapTemp = new HashMap<>();
         Map<String, Integer> userIdMapTemp = new HashMap<>();
 
         for (EmployeeDetails employeeDetails : employeeDetailsList) {
-            userMapTemp.put(employeeDetails.getId(), employeeDetails);
+        	allUserMapTemp.put(employeeDetails.getId(), employeeDetails);
+        	if (!employeeDetails.isDeleted()) {
+        		userMapTemp.put(employeeDetails.getId(), employeeDetails);
+        	}
             userIdMapTemp.put(employeeDetails.getEmail(), employeeDetails.getId());
         }
+        allUsersMap.clear();
         userMap.clear();
         userIdMap.clear();
         userMap.putAll(userMapTemp);
         userIdMap.putAll(userIdMapTemp);
+        allUsersMap.putAll(allUserMapTemp);
     }
-
+    
     /**
      * Initialize configurations.
      */
@@ -284,6 +292,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         return userMap;
     }
 
+    public Map<Integer, EmployeeDetails> getAllUsersMap()
+    {
+        return allUsersMap;
+    }
+
+    
     public Map<Integer, EmployeeDetails> getCurrentGroupUserMap()
     {
         Map<Integer, EmployeeDetails> currentUserGroup = new HashMap();

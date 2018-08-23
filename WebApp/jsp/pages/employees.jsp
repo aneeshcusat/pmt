@@ -58,6 +58,10 @@
 
 }
 
+.deletedUser{
+	background-color: red;
+	display: none;
+}
 </style>         
 <!-- PAGE TITLE -->
 <div class="page-title">                    
@@ -86,7 +90,7 @@
                     <p>Use search to find contacts. You can search by: name, address, phone. Or use the advanced search.</p>
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <span class="fa fa-search"></span>
@@ -98,10 +102,11 @@
                                 </div>
                             </div>
                            
-                            <div class="col-md-1">
+                            <div class="col-md-2">
                             <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
                             <a href="javascript:showGridEmployeeDetails();" id="employeesDetailsGridLink"  style="margin-right: 10px;" class="blueColor"><span class="fa fa-th-large fa-3x"></span></a>
                             <a href="javascript:showListEmployeeDetails();" id="employeesDetailsListLink"><span class="fa fa-tasks fa-3x"></span></a>
+							<span style="float: left; margin-right: 5px">Deleted<input type="checkbox" class="showDeletedCheckBox" value="show Deleted" style="margin-left: 10px;"/></span>
 							</c:if>
                             </div>
                             <div class="col-md-3">
@@ -281,6 +286,22 @@ function deleteUser(userId, userName){
 	$("#confirmYesId").prop("href","javascript:doAjaxDeleteUser('"+userId+"')");
 }
 
+function undoDeleteUser(userId, emailId, userName){
+	$(".msgConfirmText").html("Undo deleted user");
+	$(".msgConfirmText1").html(userName);
+	$("#confirmYesId").prop("href","javascript:doAjaxUndoDeleteUser('"+userId+"','"+emailId+"')");
+}
+
+function doAjaxUndoDeleteUser(userId, emailId) {
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/unblockUser", {"userId":userId}, function(data) {
+		  $(".userDetails"+userId).removeClass("deletedUser");
+          $(".message-box").removeClass("open");
+	}, function(e) {
+	   famstacklog("ERROR: ", e);
+	   famstackalert(e);
+	}, false);
+}
+
 function doAjaxDeleteUser(userId) {
     $.ajax({
         type : "GET",
@@ -292,7 +313,7 @@ function doAjaxDeleteUser(userId) {
             famstacklog("SUCCESS: ", data);
             var responseJson = JSON.parse(data);
             if (responseJson.status){
-                $(".userDetails"+userId).remove();
+            	$(".userDetails"+userId).addClass("deletedUser");
                 $(".message-box").removeClass("open");
             }
         },
@@ -480,4 +501,16 @@ if($("#exportDateRange").length > 0){
     $("#daterangeText").val(moment().subtract(6, 'days').format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
     $("#exportDateRange span").html($("#daterangeText").val());
 }
+
+$(".showDeletedCheckBox").on("change",function(e){
+	if($(".showDeletedCheckBox").is(':checked')){
+		$(".deletedUser").addClass("contact-name");
+		$(".deletedUser").show();
+	} else {
+		$(".deletedUser").removeClass("contact-name");
+		$(".deletedUser").hide();
+	}
+	performSearch(e);
+});
+
 </script>        

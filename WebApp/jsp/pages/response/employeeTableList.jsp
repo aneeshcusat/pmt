@@ -2,9 +2,10 @@
 <c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="userGroupMap" value="${applicationScope.applicationConfiguraion.userGroupMap}"/>
+<c:set var="allUsersMap" value="${applicationScope.applicationConfiguraion.allUsersMap}"/>
 
-<c:if test="${currentUser.userGroupId == '1012'}">
-<c:if test="${not empty employeeMap}">
+<c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
+<c:if test="${not empty allUsersMap}">
 <table class="table table-hover p-table employeeDataTable ">
 		<thead>
 			<tr>
@@ -27,10 +28,12 @@
 		</thead> 
 		
 		<tbody>
-		<c:forEach var="employeeItem" items="${employeeMap}">
+		<c:forEach var="employeeItem" items="${allUsersMap}">
 		<c:set var="user" value="${employeeItem.value}"></c:set>
-		<tr class="contact-name userDetails${user.id}">
-				<td>${user.id}</td>
+		
+		
+		<tr class=' <c:if test="${!user.deleted}">contact-name</c:if> userDetails${user.id}  <c:if test="${user.deleted}">deletedUser</c:if>' >
+				<td>${user.id} <c:if test="${user.deleted}"><span class="hide">deleted</span></c:if></td>
 				<td>${user.empCode}</td>
 				<td>${user.firstName}</td>
 				<td>${user.email}</td>
