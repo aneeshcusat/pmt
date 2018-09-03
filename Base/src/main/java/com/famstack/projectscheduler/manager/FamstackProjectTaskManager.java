@@ -424,14 +424,14 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return famstackUserActivityManager.getAllTaskActivities(userId, dayfilter);
     }
 
-    public String getUserTaskActivityJson(String startDateString, String endDateString, int userId)
+    public String getUserTaskActivityJson(String startDateString, String endDateString, int userId, String userGroupId)
     {
         JSONArray jsonArray = new JSONArray();
         Date startDate = DateUtils.tryParse(startDateString, DateUtils.DATE_FORMAT_CALENDER);
         Date endDate = DateUtils.tryParse(endDateString, DateUtils.DATE_FORMAT_CALENDER);
 
         for (ProjectTaskActivityDetails projectTaskActivityDetails : getAllProjectTaskAssigneeData(startDate, endDate,
-            userId == -1 ? null : userId)) {
+            userId == -1 ? null : userId, userGroupId)) {
 
             JSONObject jsonObject = new JSONObject();
             String taskTimeString = "";
@@ -450,6 +450,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             }
             jsonObject.put("title", titlePrefix + projectTaskActivityDetails.getTaskName());
             jsonObject.put("taskName", projectTaskActivityDetails.getTaskName());
+            jsonObject.put("accountId", projectTaskActivityDetails.getProjectAccountId());
+            jsonObject.put("teamId", projectTaskActivityDetails.getProjectTeamId());
+            jsonObject.put("subTeamId", projectTaskActivityDetails.getSubTeamId());
+            jsonObject.put("clientId", projectTaskActivityDetails.getProjectClientId());
 
             jsonObject.put("start", getTaskCalStartTime(projectTaskActivityDetails));
             jsonObject.put("end", getTaskCalEndTime(projectTaskActivityDetails));
@@ -532,7 +536,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return DateUtils.format(startTime, DateUtils.DATE_TIME_FORMAT_CALENDER);
     }
 
-    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, Integer userId)
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, Integer userId, String userGroupId)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startDate", startDate);
@@ -541,7 +545,6 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
 
         String sqlQuery = HQLStrings.getString("projectTeamAssigneeCalanderSQL");
-        String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
         sqlQuery += " and utai.user_grp_id = " + userGroupId;
         if (userId != null) {
             sqlQuery += " and uai.id = " + userId;
@@ -598,6 +601,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             if (data[24] != null) {
                 projectTaskActivityDetails.setTaskDuration((Integer) data[24]);
             }
+            projectTaskActivityDetails.setProjectAccountId((Integer) data[25]);
             projectDetailsList.add(projectTaskActivityDetails);
         }
     }

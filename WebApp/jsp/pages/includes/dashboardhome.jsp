@@ -12,7 +12,7 @@
 				</div>
 				<div class="panel-body padding-0">
 					<div class="dbcontentbox" style="height: 175px;">
-					<div id="utilizationChart" style="height: 150px">
+					<div id="utilizationChart" class="utilizationChart" style="height: 150px">
 					</div>
 					
 					<div class="col-md-12 center-block"" style="height: 10px;">
@@ -28,7 +28,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="panel-title-box">
-						<h3>Accounts</h3>
+						<h3 class="accountUtilizationChartLabel">Accounts</h3>
 					</div>
 				</div>
 				<div class="panel-body padding-0">
@@ -37,21 +37,7 @@
 						<span style="background-color: #0BB4C1;" class="legend"></span><span class="legendtext">Billable</span>
 						<span style="background-color: #E3E3E3;" class="legend"></span><span class="legendtext">Non Billable</span>
 					</div>
-					<div class="utilizationChart" style="height: 150px">
-						<div class="col-md-12">
-						<div class="row">
-							  <c:forEach var="i" begin="0" end="5" step="1">
-							  <div class="myprogress">
-								  <p class="vprogresslabel">${i}%</p>
-								  <div class="progress progress-bar-vertical">
-								    <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="height: 30%;">
-								    </div>
-								  </div> 
-								  <p class="vprogresslabel">Name${1}</p>
-							  </div>
-							  </c:forEach>
-							   </div>
-					 	 </div>
+					<div class="col-md-12 accountUtilizationChart autiloutercontent" style="height: 165px">
 					</div>
 					</div>
 				</div>
@@ -66,26 +52,7 @@
 				</div>
 				<div class="panel-body padding-0">
 					<div class="dbcontentbox resutildiv"  style="height: 175px;overflow: scroll;overflow-x: auto;">
-						<div class="col-md-12">
-							 <c:forEach var="i" begin="0" end="15" step="1">
-						   	<div class="row"  style="margin-top: 10px">
-								<div class="col-md-1">
-									Name${i}
-								</div>
-								<div class="col-md-10">
-									<div class="progress">
-								        <div class="progress-bar billable" style="width: 40%">
-								        </div>
-								        <div class="progress-bar nonbillable" style="width: 25%">
-								        </div>
-								    </div>
-							    </div>
-							    <div class="col-md-1">
-									${i}%
-								</div>
-						    </div>
-						    </c:forEach>
-						 </div>
+						
 					</div>
 				</div>
 			</div>
@@ -133,7 +100,7 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<div class="projectsummary unassignedcount">
+							<div class="projectsummary unassignedcount" data-type="UNASSIGNED">
 								<span class="total">Unassigned</span>
 								<span class="numberofproject">0</span>
 								<span class="hours"></span>
@@ -200,12 +167,12 @@
 				</div>
 			</div>
 			<div class="panel-body padding-0">
-				<div class="dbcontentbox" style="height: 540px;">
+				<div class="dbcontentbox" style="height: 560px;">
 					<div class="fixedheadertable">
 					<table class="table">
 				    <thead>
 				    <tr>
-				    	<th style="width: 50%;text-align: center;border-bottom: 0;"><span style="font-size: 11px;color: #57BF9E;font-weight: bold;">All (${fn:length(userMap)})</span></th>
+				    	<th style="width: 50%;text-align: center;border-bottom: 0;"><span style="font-size: 11px;color: #57BF9E;font-weight: bold;">All <span class="allUserCount">(0)</span></span></th>
 				        <th style="width: 25%; text-align: center;border-bottom: 0;"><span style="font-size: 8px">Last Day</span></th>
 				        <th style="width: 25%; text-align: center;border-bottom: 0;"><span style="font-size: 8px">Today</span></th>
 				    </tr>
@@ -219,7 +186,7 @@
 					<table class="table">
 				    <thead>
 				    <tr>
-				    	<th style="width: 100%;border-bottom:0"><span style="font-size: 13px;color: red;font-weight: 500;">On Leave (${fn:length(userMap)})</span></th>
+				    	<th style="width: 100%;border-bottom:0"><span style="font-size: 13px;color: red;font-weight: 500;">On Leave <span class="allLeaveUserCount">(0)</span></span></th>
 				    </tr>
 				    </thead>
 				    <tbody style="height: 80px" class="dashboardEmpLeaveDiv">

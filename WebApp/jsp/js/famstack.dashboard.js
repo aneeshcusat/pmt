@@ -1,20 +1,6 @@
 //$("td[data-date='1'][data-month='7']").css("background-color","red");
 
-$(document).ready(function() {
-	jQuery('.calenderdiv').datetimepicker({
-	  format:'d.m.Y',
-	  timepicker:false,
-	  inline:true,
-	  startDate: new Date(),
-	  lang:'en'
-	});
-
-	sortSelect('.dashboadgroup', 'text', 'asc');
-	sortSelect('.resourceInfo', 'text', 'asc');
-	refreshEmployeeDetails();
-	refreshProjectDetails();
-});
-
+//Filters
 $(".dashboadgroup").on("change", function(){
 	$(".accountInfo option:not([class*='hide'])").addClass("hide");
 	$(".accountInfo option:first").removeClass("hide");
@@ -29,6 +15,7 @@ $(".dashboadgroup").on("change", function(){
 	$(".resourceInfo").prop("selectedIndex",0);
 	$(".resourceInfo" ).trigger( "change" );
 	refreshEmployeeDetails();
+	refreshProjectDetails();
 });
 
 $(".accountInfo").on("change", function(){
@@ -47,12 +34,68 @@ $(".projectTeamInfo").on("change", function(){
 	$(".projectSubTeamInfo option.PT"+$(this).val()).removeClass("hide");
 	$(".projectSubTeamInfo").prop("selectedIndex",0);
 	$(".projectSubTeamInfo" ).trigger( "change" );
-	
+});
+
+$(".projectSubTeamInfo").on("change", function(){
+	filterProjectDetails();
 });
 
 $(".resourceInfo").on("change", function(){
-	
+	filterProjectDetails();
 });
+
+$("#dashboarddatepicker").daterangepicker({                    
+    ranges: filterDateMap,
+    opens: 'left',
+    buttonClasses: ['btn btn-default'],
+    applyClass: 'btn-small btn-primary',
+    cancelClass: 'btn-small',
+    format: 'MM.DD.YYYY',
+    separator: ' to ',
+    startDate: filterDateMap['Today'][0],
+    endDate: filterDateMap['Today'][1]          
+  },function(start, end) {
+	  $("#daterangeText").val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+	  $("#dashboarddatepicker span").html($("#daterangeText").val());
+	  refreshProjectDetails();
+	  refreshResouceUtilDiv();
+	  refreshOverAllUtilization();
+	  refreshAccountDiv();
+});
+
+
+function filterProjectDetails(){
+
+	$(".projectDetailsRow").addClass("hide");
+	$(".projectDetailsRow").removeClass("filteredRow");
+	
+	var filter =".projectDetailsRow";
+	
+	if($(".resourceInfo").prop("selectedIndex") > 0){
+		filter = filter+".prjUserId" + $(".resourceInfo").val();
+	} 
+	if($(".projectSubTeamInfo").prop("selectedIndex") > 1){
+		filter = filter+".prjSubTeam" + $(".projectSubTeamInfo").val();
+	} 
+	
+	if($(".projectTeamInfo").prop("selectedIndex") > 1){
+		filter = filter+".prjTeam" +$(".projectTeamInfo").val();
+	} 
+	if($(".accountInfo").prop("selectedIndex") > 1){
+		filter = filter+".prjAccount" + $(".accountInfo").val();
+	} 
+	console.log("filter : " + filter);
+	
+	$(filter).removeClass("hide");
+	if (!$(filter).hasClass("filteredRow")){
+		$(filter).addClass("filteredRow");
+	}
+	refreshUtilizationCalendar();
+	refreshOverAllUtilization();
+	refreshAccountDiv();
+	refreshResouceUtilDiv();
+	performProjectSearch();
+}
 
 function refreshEmployeeDetails(){
 	var groupId = $(".dashboadgroup").val();
@@ -86,7 +129,7 @@ function refreshProjectDetails(){
 	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardProjectDetails", {"groupId":groupId,"filters":filters, "dateRange":dateRange}, function(data) {
 		 $('.dashboardProjDetailsDiv').html(data);
 		 loadStatusForDivEnd("dashboardProjDetailsDiv");
-		 performSearch();
+		 performProjectSearch();
 	}, function(e) {
         famstacklog("ERROR: ", e);
         famstackalert(e);
@@ -97,49 +140,120 @@ function refreshProjectDetails(){
 
 
 var refreshUtilizationCalendar = function() {
-	var userId = 0;
-	var events = {
-	        url: "getAjaxFullcalendar",
-	        type: 'GET',
-	        data: {
-	        	userId: userId
-	        }
-	    }
-	$('#fullcaledartu').fullCalendar('removeEventSource', events);
-	$('#fullcaledartu').fullCalendar('addEventSource', events);
-	$('#fullcaledartu').fullCalendar('refetchEvents');
+	loadStatusForDivStart("fullcaledarbs");
+		$('#fullcaledartu').fullCalendar('refetchEvents');
+	loadStatusForDivEnd("fullcaledarbs");
+};
+
+var refreshOverAllUtilization = function() {
+	var dataString = getDashboardFilterDataJson();
+	loadStatusForDivStart("utilizationChart");
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardOverAllUtilization",dataString , function(responseData) {
+		 var responseJson = JSON.parse(responseData);
+		 $("#utilizationChart").html("");
+		 var data = [];
+		 if (responseJson.billable != 0 ||  responseJson.nonBillable != 0) {
+		  data = [{label: "Billable", value: responseJson.billable},{label: "Non Billable", value: responseJson.nonBillable}];
+		 }
+			Morris.Donut({
+			    element: 'utilizationChart',
+			    data: data.length ? data : [ { label:"No Data", value:100 } ],
+			    colors: ['#0BB4C1',
+			             '#E3E3E3'],
+			    resize: true,
+			    formatter:function (y, data) { return y + "%"; }
+			});
+		 loadStatusForDivEnd("utilizationChart");
+	}, function(e) {
+        famstacklog("ERROR: ", e);
+        famstackalert(e);
+        loadStatusForDivEnd("utilizationChart");
+    }, false);
+};
+
+
+function refreshAccountDiv(){
+	var dataString = getDashboardFilterDataJson();
+	loadStatusForDivStart("accountUtilizationChart");
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardAccountUtilizationChart",dataString , function(responseData) {
+		$(".accountUtilizationChart").html(responseData);
+		 loadStatusForDivEnd("accountUtilizationChart");
+	}, function(e) {
+        famstacklog("ERROR: ", e);
+        famstackalert(e);
+        loadStatusForDivEnd("accountUtilizationChart");
+    }, false);
+
+}
+
+function refreshResouceUtilDiv(){
+	var dataString = getDashboardFilterDataJson();
+	loadStatusForDivStart("resutildiv");
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardResourceUtilizationChart",dataString , function(responseData) {
+		$(".resutildiv").html(responseData);
+		 loadStatusForDivEnd("resutildiv");
+	}, function(e) {
+        famstacklog("ERROR: ", e);
+        famstackalert(e);
+        loadStatusForDivEnd("resutildiv");
+    }, false);
+
+}
+
+
+function getDashboardFilterDataJson(){
+	var dateRange = $("#daterangeText").val();
+	var groupId = $(".dashboadgroup").val();
+	var accountId = "";
+	var teamId = "";
+	var subTeamId = "";
+	var userId = "";
+	if($(".resourceInfo").prop("selectedIndex") > 0){
+		userId = $(".resourceInfo").val();
+	} 
+	if($(".projectSubTeamInfo").prop("selectedIndex") > 1){
+		subTeamId = $(".projectSubTeamInfo").val();
+	} 
+	if($(".projectTeamInfo").prop("selectedIndex") > 1){
+		teamId= $(".projectTeamInfo").val();
+	} 
+	if($(".accountInfo").prop("selectedIndex") > 1){
+		accountId = $(".accountInfo").val();
+	} 
+	
+	return {"userGroupId":groupId,"dateRange":dateRange,"accountId":accountId,"teamId":teamId,"subTeamId":subTeamId,"userId":userId};
 }
 
 $('#projectSearchInput').keydown(function(e){
-	performSearch();
+	performProjectSearch();
 });
 
 $('#projectSearchInput').keyup(function(e){
-	performSearch();
+	performProjectSearch();
 });
 
-function performSearch(){
+function performProjectSearch(){
 	var serarchText = $('#projectSearchInput').val();
 	if (serarchText != "") {
-	$('.projectDetailsRow').addClass("hide");
-    $('.projectDetailsRow').each(function(){
+	$('.projectDetailsRow.filteredRow').addClass("hide");
+    $('.projectDetailsRow.filteredRow').each(function(){
        if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
            $(this).removeClass("hide");
        }
     });
 	} else {
-		$('.projectDetailsRow').removeClass("hide");
+		$('.projectDetailsRow.filteredRow').removeClass("hide");
 	}
 	countProjectDetailsItem();
 }
 
 function countProjectDetailsItem(){
-	var totalprojectcount = $(".projectDetailsRow:not([class*='hide'])").length;
-	var backlogcount = $(".projectDetailsRow.BACKLOG:not([class*='hide'])").length;
-	var unassignedcount = $(".projectDetailsRow.UNASSIGNED:not([class*='hide'])").length;
-	var inprogress = $(".projectDetailsRow.INPROGRESS:not([class*='hide'])").length;
-	var completed = $(".projectDetailsRow.COMPLETED:not([class*='hide'])").length;
-	var upcoming = $(".projectDetailsRow.UPCOMING:not([class*='hide'])").length;
+	var totalprojectcount = $(".projectDetailsRow.filteredRow:not([class*='hide'])").length;
+	var backlogcount = $(".projectDetailsRow.filteredRow.BACKLOG:not([class*='hide'])").length;
+	var unassignedcount = $(".projectDetailsRow.filteredRow.UNASSIGNED:not([class*='hide'])").length;
+	var inprogress = $(".projectDetailsRow.filteredRow.INPROGRESS:not([class*='hide'])").length;
+	var completed = $(".projectDetailsRow.filteredRow.COMPLETED:not([class*='hide'])").length;
+	var upcoming = $(".projectDetailsRow.filteredRow.UPCOMING:not([class*='hide'])").length;
 	
 	$('.projectsummary.totalprojectcount .numberofproject').html(totalprojectcount);
 	$('.projectsummary.backlogcount .numberofproject').html(backlogcount);
@@ -187,7 +301,7 @@ function showMyProjects()
 {
 	if(!$(".myprojectslink").hasClass("active")){
 		$(".myprojectslink").addClass("active");
-		$(".totalprojectslink").removeClass("active")
+		$(".totalprojectslink").removeClass("active");
 	}
 }
 
@@ -196,7 +310,7 @@ function showTotalProjects()
 {
 	if(!$(".totalprojectslink").hasClass("active")){
 		$(".totalprojectslink").addClass("active");
-		$(".myprojectslink").removeClass("active")
+		$(".myprojectslink").removeClass("active");
 	}
 }
 
@@ -210,41 +324,34 @@ $(".projectsummary").on("click",function(){
 
 function showProjectDetails(type){
 	if (type == "ALL") {
-		 $(".projectDetailsRow").addClass("activeRow");
+		 $(".projectDetailsRow.filteredRow").addClass("activeRow");
+		 $(".projectDetailsRow.filteredRow").removeClass("hide");
 	} else {
-		$('.projectDetailsRow').removeClass("activeRow");
-		$(".projectDetailsRow."+type).addClass("activeRow");
+		$('.projectDetailsRow.filteredRow').removeClass("activeRow");
+		$('.projectDetailsRow.filteredRow').addClass("hide");
+		$(".projectDetailsRow.filteredRow."+type).addClass("activeRow");
+		$(".projectDetailsRow.filteredRow."+type).removeClass("hide");
 	}
-	performSearch();
 }
 
-$("#dashboarddatepicker").daterangepicker({                    
-    ranges: filterDateMap,
-    opens: 'left',
-    buttonClasses: ['btn btn-default'],
-    applyClass: 'btn-small btn-primary',
-    cancelClass: 'btn-small',
-    format: 'MM.DD.YYYY',
-    separator: ' to ',
-    startDate: filterDateMap['Today'][0],
-    endDate: filterDateMap['Today'][1]          
-  },function(start, end) {
-	  $("#daterangeText").val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-	  $("#dashboarddatepicker span").html($("#daterangeText").val());
-	  refreshProjectDetails();
+function refreshDashBoard(){
+	refreshEmployeeDetails();
+	refreshProjectDetails();
+	refreshOverAllUtilization();
+	refreshAccountDiv();
+	refreshResouceUtilDiv();
+}
+
+$(document).ready(function() {
+	jQuery('.calenderdiv').datetimepicker({
+	  format:'d.m.Y',
+	  timepicker:false,
+	  inline:true,
+	  startDate: new Date(),
+	  lang:'en'
+	});
+
+	//sortSelect('.dashboadgroup', 'text', 'asc');
+	//sortSelect('.resourceInfo', 'text', 'asc');
+	refreshDashBoard();
 });
-
-
-Morris.Donut({
-    element: 'utilizationChart',
-    data: [{label: "Billable", value: 80},
-    	  {label: "Non Billable", value: 20}],
-    colors: ['#0BB4C1',
-             '#E3E3E3'],
-    resize: true,
-    formatter:function (y, data) { return y + "%" }
-});
-
-
-
-

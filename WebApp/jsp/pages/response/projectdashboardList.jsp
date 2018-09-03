@@ -113,15 +113,6 @@
 								onclick="loadProjectForUpdate('${project.id}')">
 								<span class="fa fa-pencil  fa-2x"></span>
 							</a>
-							<%-- <a href="#" data-box="#confirmationbox" style="color:red""  title="Delete this project" class="deleteProject mb-control profile-control-right" 
-								onclick="deleteProject('${project.id}','${project.name}');">
-								<span class="fa fa-trash-o  fa-2x"></span>
-							</a>
-							
-							<a href="#" data-box="#confirmationbox" style="margin-left:7px; color:orange;"  title="Archive this project" class="deleteProject mb-control profile-control-right" 
-									onclick="archiveProject('${project.id}','${project.name}');">
-									<i class="fa fa-ban fa-2x" aria-hidden="true"></i>
-							</a> --%>
 							
 							<a href="#" style="margin-left: 7px;color:blue"  title="Recurring Project"  data-toggle="modal" data-target="#recurringprojectmodal" 
 								onclick="recurringProjectModel('${project.code}', '${project.id}')">
@@ -189,9 +180,9 @@
 										</div>
 										<div class="col-md-5">
 											<!-- task assign start -->
-											
-											<%@include file="quicktaskreassign.jsp"%>
-											
+											<div class="row" id="projectTaskCloneDIv${project.id}">
+											<%-- <%@include file="quicktaskreassign.jsp"%> --%>
+											</div>
 											<!-- task assign start -->
 										</div>
 										<div class="col-md-1">

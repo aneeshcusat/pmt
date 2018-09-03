@@ -138,3 +138,6 @@
                     <!-- END TASKS -->
                 </ul>
                 <!-- END X-NAVIGATION VERTICAL -->                     
+<script type="text/javascript">
+var ajaxStartLabelDisabled=false;
+</script>

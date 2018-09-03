@@ -10,60 +10,63 @@
         	    defaultView: 'month',
         	    weekends: true,
         	    editable: false,
-        	    eventSources: {url: "getAjaxFullcalendar.jsp"},
+        	   eventSources: {url: "getEmpUtlAjaxFullcalendar/"+$(".dashboadgroup").val()},
         	    droppable: false,
         	    selectable: false,
         	    selectHelper: false,
         	    maxTime: "23:59:59",
         	    minTime: "0:00:00",
-        	    events: [{
-        	            title: 'Tracker study',
-        	            start: '2018-08-14',
-        	            textColor: '#fff',
-        	            color:'#20CEC9'
-        	          },
-        	          {
-        	              title: 'Template Creation',
-        	              start: '2018-08-14',
-        	              textColor: '#fff',
-        	              color:'#20CEC9'
-        	          },
-        	          {
-        	              title: 'Template Creation1',
-        	              start: '2018-08-14',
-        	              textColor: '#fff',
-        	              color:'#20CEC9'
-        	          },
-        	          {
-        	              title: 'Template Creation2',
-        	              start: '2018-08-14',
-        	              textColor: '#fff',
-        	              color:'#20CEC9'
-        	          }
-        	        ],
+        	    events: [],
         	        dayRender: function(date, cell) {
-        	            var today = $.fullCalendar.moment();
+        	            /*var today = $.fullCalendar.moment();
         	            var end = $.fullCalendar.moment().add(1, 'days');
         	            if (date.get('date') == end.get('date')) {
         	                cell.css("background", "darkgray");
-        	 			}
+        	 			}*/
         			},
         			eventRender: function(event, element) {
-                     	 element.popover({
-                 	        title: event.taskName,
-                 	        content: function () {
-                                 return "<table class='calenderEventPopOver'><tbody><tr><td>Task Status</td><td>"+event.taskStatus+"</td></tr><tr><td>Task Category</td><td>"+event.taskActCategory+"</td></tr><tr><td>TaskType</td><td>"+event.projectType+"</td></tr><tr><td>Assignee</td><td>"+event.assigneeName+"</td></tr><tr><td>Project Id</td><td>"+event.projectId+"</td></tr><tr><td>Est Task Start Time</td><td>"+event.estTaskStartTime+"</td></tr><tr><td>Est Task End Time</td><td>"+event.estTaskEndTime+"</td></tr><tr><td>Act Task Start Time</td><td>"+event.taskActActualStartTime+"</td></tr><tr><td>Act Task End Time</td><td>"+event.taskActActualEndTime+"</td></tr></tbody></table>";
-                             },
-                 	        animation:true,
-                             delay: 300,
-                 	        trigger: 'hover',
-                 	        placement: 'top',
-                 	        container: 'body',
-                 	        html: 'true',
-                 	      });
-                     },
-        	    
-        	    
+        				var elementVisible = true;
+        				if($(".resourceInfo").prop("selectedIndex") > 0){
+        					if (event.assignee != $(".resourceInfo").val()) {
+        						element.addClass("hide");
+        						elementVisible= false;
+        					}
+        				} 
+        				if($(".projectSubTeamInfo").prop("selectedIndex") > 1){
+        					if (event.subTeamId != $(".projectSubTeamInfo").val()) {
+        						element.addClass("hide");
+        						elementVisible= false;
+        					}
+        				} 
+        				
+        				if($(".projectTeamInfo").prop("selectedIndex") > 1){
+        					if (event.teamId != $(".projectTeamInfo").val()) {
+        						element.addClass("hide");
+        						elementVisible= false;
+        					}
+        				} 
+        				if($(".accountInfo").prop("selectedIndex") > 1){
+        					if (event.accountId != $(".accountInfo").val()) {
+        						element.addClass("hide");
+        						elementVisible= false;
+        					}
+        				} 
+        				if (elementVisible) {
+	                     	 element.popover({
+	                 	        title: event.taskName,
+	                 	        content: function () {
+	                                 return "<table class='calenderEventPopOver'><tbody><tr><td>Task Status</td><td>"+event.taskStatus+"</td></tr><tr><td>Task Category</td><td>"+event.taskActCategory+"</td></tr><tr><td>TaskType</td><td>"+event.projectType+"</td></tr><tr><td>Assignee</td><td>"+event.assigneeName+"</td></tr><tr><td>Project Id</td><td>"+event.projectId+"</td></tr><tr><td>Est Task Start Time</td><td>"+event.estTaskStartTime+"</td></tr><tr><td>Est Task End Time</td><td>"+event.estTaskEndTime+"</td></tr><tr><td>Act Task Start Time</td><td>"+event.taskActActualStartTime+"</td></tr><tr><td>Act Task End Time</td><td>"+event.taskActActualEndTime+"</td></tr></tbody></table>";
+	                             },
+	                 	        animation:true,
+	                             delay: 300,
+	                 	        trigger: 'hover',
+	                 	        placement: 'top',
+	                 	        container: 'body',
+	                 	        html: 'true',
+	                 	      });
+        				}
+        		}
+        				
         	});
 
         }

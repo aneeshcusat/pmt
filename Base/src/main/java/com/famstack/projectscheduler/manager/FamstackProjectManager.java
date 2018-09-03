@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.manager;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +26,8 @@ import com.famstack.projectscheduler.contants.ProjectTaskType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
+import com.famstack.projectscheduler.dashboard.bean.DashBoardProjectDetails;
+import com.famstack.projectscheduler.dashboard.bean.DashboardUtilizationDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
@@ -702,7 +705,13 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     public String getUserTaskActivityForCalenderJson(String startDate, String endDate, int userId)
     {
-        return famstackProjectTaskManager.getUserTaskActivityJson(startDate, endDate, userId);
+    	String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+        return famstackProjectTaskManager.getUserTaskActivityJson(startDate, endDate, userId, userGroupId);
+    } 
+    
+    public String getUserTaskActivityForEmpUtlCalenderJson(String startDate, String endDate, String userGroupId)
+    {
+        return famstackProjectTaskManager.getUserTaskActivityJson(startDate, endDate, -1, userGroupId);
     }
 
     public String getProjectNameJson(String query)
@@ -743,28 +752,115 @@ public class FamstackProjectManager extends BaseFamstackManager
         return projectDetailsList;
     }
 
-    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, String groupId)
+    public List<DashBoardProjectDetails> getDashboardProjectData(Date startDate, Date endDate, String userGroupId)
     {
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("startDate", startDate);
-        dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+    	 Map<String, Object> dataMap = new HashMap<>();
+         dataMap.put("startDate", startDate);
+         dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
 
-        List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
+         List<DashBoardProjectDetails> dashBoardProjectDetailsList = new ArrayList<>();
 
-        String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
-        String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
-        sqlQuery += " and utai.user_grp_id = " + userGroupId;
-        sqlQuery += " " + HQLStrings.getString("projectTeamAssigneeReportSQL-OrderBy");
+         String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
+         sqlQuery += " and utai.user_grp_id = " + userGroupId;
 
-        List<Object[]> projectItemList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
-        logDebug("projectItemList" + projectItemList);
-        logDebug("startDate" + startDate);
-        logDebug("endDate" + endDate);
-        mapProjectsList(projectDetailsList, projectItemList);
-        return projectDetailsList;
+         List<Object[]> projectItemList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
+         logDebug("projectItemList" + projectItemList);
+         logDebug("startDate" + startDate);
+         logDebug("endDate" + endDate);
+         mapDashBoardProjectsList(dashBoardProjectDetailsList, projectItemList);
+         return dashBoardProjectDetailsList;
+
     }
     
-    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
+
+	public List<DashboardUtilizationDetails> dashboardAllUtilization(Date startDate, Date endDate,
+			String userGroupId, String accountId, String teamId, String subTeamId, String userId, boolean isResouceUtilization) {
+		 Map<String, Object> dataMap = new HashMap<>();
+         dataMap.put("startDate", startDate);
+         dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+         String type;
+         String sqlQuery = HQLStrings.getString("projectOverAllUtilizationSQL");
+         String groupBy = " group by ";
+         if (StringUtils.isNotBlank(userId) && !isResouceUtilization) {
+        	 sqlQuery += " and uai.id = " + userId;
+        	 groupBy += "pi.account_id";
+        	 type = "Accounts";
+         } else if (StringUtils.isNotBlank(subTeamId)) {
+        	 sqlQuery += " and pi.team_id = " + subTeamId;
+        	 groupBy += "pi.team_id";
+        	 type = "Sub Teams";
+         } else if (StringUtils.isNotBlank(teamId)) {
+        	 sqlQuery += " and pi.account_id = " + accountId;
+        	 groupBy += "pi.team_id";
+        	 type = "Sub Teams";
+         } else  if (StringUtils.isNotBlank(accountId)) {
+        	 sqlQuery += " and pi.account_id = " + accountId;
+        	 groupBy += "pi.team_id";
+        	 type = "Teams";
+         }  else {
+        	 groupBy += "pi.account_id";
+        	 type = "Accounts";
+         }
+         
+         if (isResouceUtilization) {
+        	 groupBy = " group by uai.id";
+         }
+         
+       	 sqlQuery += " and utai.user_grp_id = " + userGroupId;
+       	 logInfo("dashboardAllUtilization Date " + dataMap);
+       	 logInfo("dashboardAllUtilization : " + sqlQuery + groupBy);
+       	 
+         List<Object[]> overAllUtilization = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery + groupBy, dataMap);
+         return mapDashboardUtilizationDetails(overAllUtilization, type);
+         
+	}
+
+    private List<DashboardUtilizationDetails> mapDashboardUtilizationDetails(
+			List<Object[]> overAllUtilization, String type) {
+    	List<DashboardUtilizationDetails> dashboardUtilizationDetailsList = new ArrayList<>();
+    	for (int i = 0; i < overAllUtilization.size(); i++) {
+    		DashboardUtilizationDetails dashboardUtilizationDetails = new DashboardUtilizationDetails();
+            Object[] data = overAllUtilization.get(i);
+            dashboardUtilizationDetails.setActualTaskStartTime((Date) data[0]);
+            if (data[1] != null) {
+            	dashboardUtilizationDetails.setBillableMins(Double.valueOf(((BigDecimal)data[1]).doubleValue()));
+            }
+            if (data[2] != null) {
+            	dashboardUtilizationDetails.setNonBillableMins(Double.valueOf(((BigDecimal)data[2]).doubleValue()));
+            }
+            dashboardUtilizationDetails.setAccountId((Integer) data[3]);
+            dashboardUtilizationDetails.setSubTeamId((Integer) data[4]);
+            dashboardUtilizationDetails.setUserId((Integer) data[5]);
+            dashboardUtilizationDetails.setType(type);
+            ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(dashboardUtilizationDetails.getSubTeamId());
+            if (projectSubTeamDetails != null) {
+            	 dashboardUtilizationDetails.setTeamId(projectSubTeamDetails.getTeamId());
+            }
+            dashboardUtilizationDetailsList.add(dashboardUtilizationDetails);
+        }
+    	return dashboardUtilizationDetailsList;
+	}
+
+	@Deprecated
+    private String getFilterQuery(String filters) {
+    	String query = null;
+    	if (StringUtils.isNotBlank(filters)) {
+    		String filter[] = filters.split("#");
+    		if (filter.length > 0) {
+    			for (String filterData : filter) {
+    				String filterItem[] =filterData.split("$");
+    				if (filterItem.length > 0) {
+    					query +=" and pi.";
+    					query+=filterItem[0] + "=" + filterItem[1];
+    				}
+    			}
+    		}
+    	}
+    	logDebug("Dashboard Filter query "+ query);
+    	return query == null ? "" : query;
+	}
+
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startDate", startDate);
@@ -859,6 +955,78 @@ public class FamstackProjectManager extends BaseFamstackManager
             } else {
                 projectCacheMap.put(key, projectTaskActivityDetails);
                 projectDetailsList.add(projectTaskActivityDetails);
+            }
+        }
+    }
+    
+    private void mapDashBoardProjectsList(List<DashBoardProjectDetails> projectDetailsList, List<Object[]> projectItemList)
+    {
+
+        Map<String, DashBoardProjectDetails> projectCacheMap = new HashMap<>();
+        DashBoardProjectDetails projectTaskActivityDetailsTmp;
+
+        for (int i = 0; i < projectItemList.size(); i++) {
+        	DashBoardProjectDetails dashBoardProjectDetails = new DashBoardProjectDetails();
+            Object[] data = projectItemList.get(i);
+            dashBoardProjectDetails.setProjectStartTime((Date) data[0]);
+            dashBoardProjectDetails.setProjectCompletionTime((Date) data[1]);
+            dashBoardProjectDetails.setProjectCode((String) data[2]);
+            dashBoardProjectDetails.setProjectId((Integer) data[3]);
+            dashBoardProjectDetails.setProjectNumber((String) data[4]);
+            dashBoardProjectDetails.setProjectName((String) data[5]);
+            dashBoardProjectDetails.setProjectStatus(ProjectStatus.valueOf((String) data[6]));
+            dashBoardProjectDetails.setProjectType(ProjectType.valueOf((String) data[7]));
+            dashBoardProjectDetails.setProjectCategory((String) data[8]);
+            dashBoardProjectDetails.setProjectTeamId((Integer) data[9]);
+            dashBoardProjectDetails.setProjectClientId((Integer) data[10]);
+
+            dashBoardProjectDetails.setTaskName((String) data[11]);
+            dashBoardProjectDetails.setTaskActivityStartTime((Date) data[12]);
+            dashBoardProjectDetails.setTaskActivityEndTime((Date) data[17]);
+
+            dashBoardProjectDetails.setTaskPausedTime((Date) data[18]);
+            dashBoardProjectDetails.setTaskStatus(TaskStatus.valueOf((String) data[19]));
+            Integer taskActivityDuration = (Integer) data[13];
+
+            if (dashBoardProjectDetails.getTaskStatus() != TaskStatus.COMPLETED
+                && dashBoardProjectDetails.getTaskActivityEndTime() == null
+                && dashBoardProjectDetails.getTaskPausedTime() != null) {
+
+                taskActivityDuration =
+                    DateUtils.getTimeDifference(TimeInType.MINS, dashBoardProjectDetails.getTaskPausedTime()
+                        .getTime(), dashBoardProjectDetails.getTaskActivityStartTime().getTime());
+
+            } else if (dashBoardProjectDetails.getTaskStatus() == TaskStatus.INPROGRESS
+                && dashBoardProjectDetails.getTaskActivityEndTime() == null
+                && dashBoardProjectDetails.getTaskPausedTime() == null) {
+
+                taskActivityDuration =
+                    DateUtils.getTimeDifference(TimeInType.MINS, new Date().getTime(), dashBoardProjectDetails
+                        .getTaskActivityStartTime().getTime());
+
+            }
+
+            dashBoardProjectDetails.setTaskActivityDuration(taskActivityDuration);
+            dashBoardProjectDetails.setTaskActActivityDuration(taskActivityDuration);
+
+            dashBoardProjectDetails.setUserId((Integer) data[14]);
+            dashBoardProjectDetails.getAssigneeIdList().add( dashBoardProjectDetails.getUserId());
+            dashBoardProjectDetails.setTaskId((Integer) data[15]);
+            dashBoardProjectDetails.setTaskActivityId((Integer) data[16]);
+            dashBoardProjectDetails.setProjectAccountId((Integer) data[20]);
+            dashBoardProjectDetails.setProjectLead((Integer) data[21]);
+
+            String key = "PRJ" + dashBoardProjectDetails.getProjectId();
+
+            projectTaskActivityDetailsTmp = projectCacheMap.get(key);
+            if (projectTaskActivityDetailsTmp != null) {
+            	projectTaskActivityDetailsTmp.getAssigneeIdList().add(dashBoardProjectDetails.getUserId());
+                projectTaskActivityDetailsTmp.addToChildProjectActivityDetailsMap(dashBoardProjectDetails);
+                projectTaskActivityDetailsTmp.setTaskActivityDuration(projectTaskActivityDetailsTmp
+                    .getTaskActivityDuration() + dashBoardProjectDetails.getTaskActivityDuration());
+            } else {
+                projectCacheMap.put(key, dashBoardProjectDetails);
+                projectDetailsList.add(dashBoardProjectDetails);
             }
         }
     }

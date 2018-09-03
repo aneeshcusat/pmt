@@ -71,6 +71,8 @@ public class ProjectTaskActivityDetails
     private Date taskCompletionTime;
 
     private int taskDuration;
+    
+    private Integer projectLead;
 
     private List<ProjectTaskActivityDetails> childs;
 
@@ -234,6 +236,19 @@ public class ProjectTaskActivityDetails
     {
         AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(projectAccountId);
         return accountDetails != null ? accountDetails.getName() : "";
+    }
+    
+    public Integer getTeamId()
+    {
+        ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(projectTeamId);
+        if (projectSubTeamDetails != null) {
+            return projectSubTeamDetails.getTeamId();
+        }
+        return -1;
+    }
+    
+    public Integer getSubTeamId(){
+    	return projectTeamId;
     }
 
     public String getTeamName()
@@ -421,5 +436,13 @@ public class ProjectTaskActivityDetails
 
 	public void setProjectAccountId(Integer projectAccountId) {
 		this.projectAccountId = projectAccountId;
+	}
+
+	public Integer getProjectLead() {
+		return projectLead;
+	}
+
+	public void setProjectLead(Integer projectLead) {
+		this.projectLead = projectLead;
 	}
 }

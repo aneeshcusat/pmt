@@ -20,11 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
-import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
+import com.famstack.projectscheduler.dashboard.bean.DashBoardProjectDetails;
+import com.famstack.projectscheduler.dashboard.bean.DashboardUtilizationDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
-import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.EmployeeBWDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
@@ -64,19 +65,20 @@ public class FamstackDashboardController extends BaseFamstackService
     @RequestMapping("/dashboardEmpBW")
     public ModelAndView dashboardEmpBW(@RequestParam("groupId") String groupId, Model model)
     {
-    	List<EmployeeDetails> userList = getFamstackApplicationConfiguration().getUserList(groupId);
-        return new ModelAndView("response/dashboardEmpBW").addObject("usersList", userList);
+    	List<EmployeeBWDetails> empUtilizationList = famstackDashboardManager.getEmployeesBandWithTodayAndYesterDay(groupId);
+        return new ModelAndView("response/dashboardEmpBW").addObject("usersList", empUtilizationList);
     }
     
     @RequestMapping("/dashboardEmpLeave")
     public ModelAndView dashboardEmpLeave(@RequestParam("groupId") String groupId, Model model)
     {
-    	List<EmployeeDetails> userList = getFamstackApplicationConfiguration().getUserList(groupId);
-        return new ModelAndView("response/dashboardEmpLeave").addObject("usersList", userList);
+    	List<EmployeeBWDetails> empLeaveList = famstackDashboardManager.getEmployeesOnLeaveToday(groupId);
+        return new ModelAndView("response/dashboardEmpLeave").addObject("usersList", empLeaveList);
     }
     
     @RequestMapping("/dashboardProjectDetails")
-    public ModelAndView dashboardProjectDetails(@RequestParam("groupId") String groupId,@RequestParam("filters") String filters,@RequestParam("dateRange") String dateRange, Model model)
+    public ModelAndView dashboardProjectDetails(@RequestParam("groupId") String groupId,@RequestParam("filters") String filters,
+    		@RequestParam("dateRange") String dateRange, Model model)
     {
     	 String[] dateRanges;
          Date startDate = null;
@@ -93,14 +95,11 @@ public class FamstackDashboardController extends BaseFamstackService
                  DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
              endDate = startDate;
         }
-         List<ProjectTaskActivityDetails> projectTaskAssigneeDataList =
-                 famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate, groupId);
-         
+         List<DashBoardProjectDetails> dashBoardProjectDetailsList =
+                 famstackDashboardManager.getDashboardProjectData(startDate, endDate, groupId);
          return new ModelAndView("response/dashboardProjectDetails")
-                 .addObject("projectData", projectTaskAssigneeDataList).addObject("dateRange", dateRange);
-    }
-    
-  
+                 .addObject("projectData", dashBoardProjectDetailsList).addObject("dateRange", dateRange);
+    }  
 
     private String getDefaultDateRange() {
     	Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), 0);
@@ -108,6 +107,97 @@ public class FamstackDashboardController extends BaseFamstackService
     	                + DateUtils.format(startDate, DateUtils.DATE_FORMAT_DP);
 		
 	}
+    
+    @RequestMapping(value = "/getEmpUtlAjaxFullcalendar/{userGroupId}", method = RequestMethod.GET)
+    @ResponseBody
+    public String getEmpUtlAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate,
+    		@PathVariable(value = "userGroupId") String userGroupId)
+    {
+    	System.out.println(userGroupId);
+        return famstackDashboardManager.getEmpUtlAjaxFullcalendar(startDate, endDate, userGroupId);
+    }
+    
+    @RequestMapping(value = "/dashboardOverAllUtilization", method = RequestMethod.GET)
+    @ResponseBody
+    public String dashboardOverAllUtilization(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
+    		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
+    {
+    	 String[] dateRanges;
+         Date startDate = null;
+         Date endDate = null;
+         if (StringUtils.isNotBlank(dateRange)) {
+             dateRanges = dateRange.split("-");
+
+             if (dateRanges != null && dateRanges.length > 1) {
+                 startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                 endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+             }
+         } else {
+             startDate =
+                 DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+             endDate = startDate;
+        }
+        return famstackDashboardManager.dashboardOverAllUtilization(startDate, endDate, userGroupId, accountId, teamId, subTeamId,userId);
+    }
+
+    @RequestMapping(value = "/dashboardAccountUtilizationChart", method = RequestMethod.GET)
+    public ModelAndView dashboardAccountUtilizationChart(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
+    		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
+    {
+    	 String[] dateRanges;
+         Date startDate = null;
+         Date endDate = null;
+         if (StringUtils.isNotBlank(dateRange)) {
+             dateRanges = dateRange.split("-");
+
+             if (dateRanges != null && dateRanges.length > 1) {
+                 startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                 endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+             }
+         } else {
+             startDate =
+                 DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+             endDate = startDate;
+        }
+        List<DashboardUtilizationDetails> dashboardOverAllutilizationList = famstackDashboardManager.dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId,userId, false);
+        Double totalDashBoardTime = famstackDashboardManager.getTotalDashboardFilterdutilizationList(dashboardOverAllutilizationList);
+        for (DashboardUtilizationDetails dashboardUtilizationDetails :dashboardOverAllutilizationList)
+        {
+        	dashboardUtilizationDetails.setGrandTotal(totalDashBoardTime);
+        }
+        return new ModelAndView("response/dashboardAccountUtilizationChart").addObject("dashboadAccountUtilization", dashboardOverAllutilizationList);
+    }
+
+    @RequestMapping(value = "/dashboardResourceUtilizationChart", method = RequestMethod.GET)
+    public ModelAndView dashboardResourceUtilizationChart(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
+    		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
+    {
+    	 String[] dateRanges;
+         Date startDate = null;
+         Date endDate = null;
+         if (StringUtils.isNotBlank(dateRange)) {
+             dateRanges = dateRange.split("-");
+
+             if (dateRanges != null && dateRanges.length > 1) {
+                 startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                 endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+             }
+         } else {
+             startDate =
+                 DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+             endDate = startDate;
+        }
+         
+        List<DashboardUtilizationDetails> dashboardOverAllutilizationList = famstackDashboardManager.dashboarResourceUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId,userId);
+        Double totalDashBoardTime = famstackDashboardManager.getTotalDashboardFilterdutilizationList(dashboardOverAllutilizationList);
+        Integer workingHours = DateUtils.getWorkingDaysBetweenTwoDates(startDate, endDate);
+        Double workingHoursInMins = (double) (workingHours * 8 * 60);
+        for (DashboardUtilizationDetails dashboardUtilizationDetails :dashboardOverAllutilizationList) {
+        	dashboardUtilizationDetails.setGrandTotal(totalDashBoardTime);
+        	dashboardUtilizationDetails.setTotalWorkingHoursInMis(workingHoursInMins);
+        }
+        return new ModelAndView("response/dashboardResourceUtilizationChart").addObject("dashboadResourceUtilization", dashboardOverAllutilizationList);
+    }
 
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ModelAndView index()

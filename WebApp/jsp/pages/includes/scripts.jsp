@@ -122,6 +122,23 @@ var site_settings = "";
     <!-- END SCRIPTS --> 
     <script>
 
+    $( document ).ajaxStart(function() {
+    	if(!ajaxStartLabelDisabled) {
+   		 $(".page-container").waitMe({
+   			effect : "bounce",
+   			text : "",
+   			bg : 'rgba(255,255,255,0.7)',
+   			color : "#000"
+   			});
+    	}
+   	}).ajaxStop(function() {
+   		if(!ajaxStartLabelDisabled) {
+   			$(".page-container").waitMe('hide');
+   		}
+   	});
+
+    
+    
     $(".menuExpandLink").on("click", function(){
 		if(!$(this).hasClass("expanded")) {
 			setTimeout( function () {

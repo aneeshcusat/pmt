@@ -225,7 +225,7 @@ margin-left: 2px;
 	line-height: 15px;
 }
 .dashboard .fixedheadertable tbody {
-    height: 200px;
+    height: 230px;
     overflow-y: auto;
 }
 
@@ -236,6 +236,7 @@ margin-left: 2px;
 .dashboard .fixedheadertable tbody td, .dashboard .fixedheadertable thead th {
     width: 14%;
     float: left;
+    word-wrap: break-word;
 }
 
 .dashboard .panel-fullscreened .fixedheadertable tbody td, .dashboard .panel-fullscreened .fixedheadertable thead th {
@@ -251,6 +252,7 @@ margin-left: 2px;
  
  ::-webkit-scrollbar {
     width: 7px;
+    height: 7px;
 }
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
@@ -282,13 +284,19 @@ margin-left: 2px;
 	display: inline-block;
 	padding-right: 5px;
 }
+
+.dashboard b.wraptext{
+	float: right;
+	width: 80px;
+	margin-top: 5px;	
+}
 .dashboard .percentage{
 	margin-top: 10px;
 	display: block;
 }
 
 .dashboard .projectdetails{
-	height: 320px;
+	height: 345px;
 }
 
 .dashboard .panel-fullscreened .projectdetails{
@@ -381,13 +389,14 @@ margin-left: 2px;
 	border-radius:0;
 }
 .accountsdiv .progress-bar-vertical {
-  width: 20px;
-  min-height: 110px;
-  display: flex;
-  align-items: flex-end;
-  float: left;
-  margin-left:25px;
-  margin-bottom: 2px;
+	width: 20px;
+    min-height: 110px;
+    display: flex;
+    align-items: flex-end;
+    float: left;
+    margin-left: 25px;
+    margin-bottom: 2px;
+    margin-right: 25px;
 }
 
 .accountsdiv .progress-bar-vertical .progress-bar {
@@ -404,9 +413,10 @@ margin-left: 2px;
  }
  
 .accountsdiv p.vprogresslabel{
- 	margin-left: 20px;
- 	margin-bottom: 2px;
- 	text-align: center;
+ 	margin-left: 10px;
+    margin-bottom: 2px;
+    text-align: center;
+    width: 50px;
  }
 
 .tatalutilizationChart .progress-bar{
@@ -452,6 +462,7 @@ margin-left: 2px;
 	height: 12px;
 	border-radius:0;
 	margin-bottom: 2px;
+	margin-left: 5px;
 }
 
 .resutildiv .progress-bar.billable{
@@ -469,4 +480,12 @@ background-color: #E3E3E3;
 }
 .dashboard .fixedheadertable tr.projectDetailsRow.activeRow{
 	display: block;
+}
+
+.dashboard .autiloutercontent { 
+		overflow: scroll;
+		overflow-y:hidden 
+}
+.dashboard .autilinnercontent {
+	padding-left: 0px;
 }

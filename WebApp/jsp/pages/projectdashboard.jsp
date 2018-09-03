@@ -1061,6 +1061,14 @@ var loadDuplicateProjects = function(projectId, projectCode, isForce) {
 	        famstacklog("ERROR: ", e);
 	        famstackalert(e);
 	    }, false);
+		
+		dataString = {"projectId" : projectId};
+		doAjaxRequestWithGlobal("GET", "${applicationHome}/projectTaskCloneJson", dataString, function(data) {
+	        $("#projectTaskCloneDIv"+projectId).html(data);
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	        famstackalert(e);
+	    }, false);
 	}
 	if(!isForce) {
 		if ($("#projectOpenLink" + projectId).hasClass("fa-chevron-right")) {

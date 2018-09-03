@@ -25,19 +25,6 @@ var doAjaxRequest = function(requestType, requestUrl, requestJsonData, successCa
 	doAjaxRequestWithGlobal(requestType, requestUrl, requestJsonData, successCallBackMethod, errorCallBackMethod, true);
 }
 
-
-
-$( document ).ajaxStart(function() {
-	 $(".page-container").waitMe({
-			effect : "bounce",
-			text : "",
-			bg : 'rgba(255,255,255,0.7)',
-			color : "#000"
-			});
-	}).ajaxStop(function() {
-		$(".page-container").waitMe('hide');
-	});
-
 Date.prototype.addHours = function(h) {    
 	   this.setTime(this.getTime() + (h*60*60*1000)); 
 	   return this;   

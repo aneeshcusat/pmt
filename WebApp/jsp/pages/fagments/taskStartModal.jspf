@@ -27,7 +27,7 @@
                      	 <b class="recordedStartTime">0</b>
                      </div>
 				</div>
-				<div class="">
+				<div class="hide">
 				<label class="col-md-5 control-label text-left">Adjust Start Time </label>
                      <div class="col-md-7" style="margin-top: 7px;">
                      	 <input type='text' class="form-control" id='adjustStartTime' />

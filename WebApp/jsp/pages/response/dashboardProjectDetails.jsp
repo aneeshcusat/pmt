@@ -3,23 +3,32 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
-<c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
+<c:set var="allUsersMap" value="${applicationScope.applicationConfiguraion.allUsersMap}"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <c:if test="${not empty projectData}">
 	  <c:forEach var="project" items="${projectData}">
-	    <tr class="projectDetailsRow activeRow ${project.projectStatus}">
-	        <td class="filterable-cell rtborder">${project.projectName}</td>
+	    <tr class='projectDetailsRow activeRow filteredRow ${project.projectStatusLabel} <c:if test="${not empty project.assigneeIdList}"><c:forEach var="assigneeId" items="${project.assigneeIdList}" varStatus="assigneeIdIndex"> prjUserId${assigneeId}</c:forEach></c:if> prjAccount${project.projectAccountId} prjTeam${project.teamId} prjSubTeam${project.subTeamId} prjClient${project.projectClientId}'>
+	        <td class="filterable-cell rtborder"><strong><a href="${applicationHome}/project/${project.projectId}">${project.projectName}</a></strong></td>
 	        <td class="panelHideTD" style="display: none">${project.projectNumber}</td>
 	        <td class="filterable-cell">${project.teamName}</td>
 	        <td class="filterable-cell">${project.subTeamName}</td>
 	        <td class="panelHideTD" style="display: none">${project.accountName}</td>
  				    <td class="panelHideTD" style="display: none">${project.clientName}</td>
-	        <td class="filterable-cell">Project Lead</td>
-	        <td class="filterable-cell">Assigned To</td>
+	        <td class="filterable-cell"><c:if test="${not empty project.projectLead }">${allUsersMap[project.projectLead].firstName}</c:if></td>
+	        <td class="filterable-cell">
+	        	<c:if test="${not empty project.assigneeIdList}">
+          			<c:forEach var="assigneeId" items="${project.assigneeIdList}" varStatus="assigneeIdIndex"> 
+	                 <span class="project_team">
+	                    <a href="#"><img  style="width:20px" alt="image" title="${allUsersMap[assigneeId].firstName}" src="${applicationHome}/image/${assigneeId}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
+	                 </span>
+	               </c:forEach>
+               </c:if>
+				</td>
+	        </td>
  				    <td class="panelHideTD" style="display: none">${project.projectType}</td>
 			<td class="panelHideTD" style="display: none">${project.projectCategory}</td>
-	        <td class="filterable-cell">10:00</td>
+	        <td class="filterable-cell">${project.durationInHours}</td>
 	        <td class="filterable-cell">${project.projectStatus}</td>
 	    </tr>
 	    </c:forEach>

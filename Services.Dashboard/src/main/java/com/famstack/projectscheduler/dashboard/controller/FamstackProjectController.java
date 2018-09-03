@@ -358,6 +358,13 @@ public class FamstackProjectController extends BaseFamstackService
         return new ModelAndView("response/projecttaskdetails").addObject("taskDetailsData", taskDetails).addObject(
             "projectId", projectId);
     }
+    
+    @RequestMapping(value = "/projectTaskCloneJson", method = RequestMethod.GET)
+    public ModelAndView projectTaskCloneJson(@RequestParam("projectId") int projectId, Model model)
+    {
+    	ProjectDetails projectDetails = famstackDashboardManager.getProjectDetais(projectId);
+        return new ModelAndView("response/quicktaskreassign").addObject("project", projectDetails);
+    }
 
     @RequestMapping(value = "/quickDuplicateProject", method = RequestMethod.POST)
     @ResponseBody

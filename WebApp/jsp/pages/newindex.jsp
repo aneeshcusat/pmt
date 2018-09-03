@@ -65,7 +65,7 @@
  	<span id="dashboarddatepicker" class="dateFilterbox">                                            
     	<span>${dateDashBoardRange}</span><b class="caret"></b>
 	</span>
- 	<a href="javascript:refreshDashboard()" title="Filter the dashboard">
+ 	<a href="javascript:refreshDashBoard();" title="Filter the dashboard">
  		<i class="fa fa-filter fa-2x"></i>
  	</a>
  	</span>
@@ -76,6 +76,9 @@
 <%@include file="includes/dashboardtu.jsp" %>
 <%@include file="includes/dashboardbandwidth.jsp" %> 
 </div>
+<script type="text/javascript">
+	ajaxStartLabelDisabled=true;
+</script>
 <%@include file="includes/footer.jsp" %>
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js"></script>
 <script type="text/javascript" src="${js}/famstack.calender.js"></script>

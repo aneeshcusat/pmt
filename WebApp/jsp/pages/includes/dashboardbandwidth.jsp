@@ -12,7 +12,7 @@
 				</div>
 				<div class="panel-body padding-0">
 					<div class="dbcontentbox" style="height: 550px;">
-						<div class="calendar">                                
+						<div class="calendar fullcaledarbs">                                
                     		<div id="fullcaledarbs"></div>                            
                 		</div>
 					</div>
