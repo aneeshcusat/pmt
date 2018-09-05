@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +22,16 @@ import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeBWDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
+import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManager;
 import com.famstack.projectscheduler.security.hasher.generator.PasswordTokenGenerator;
 import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
+import com.famstack.projectscheduler.util.DateTimePeriod;
+import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
+import com.sun.org.apache.regexp.internal.recompile;
 
 /**
  * The Class UserProfileManager.
@@ -313,32 +319,81 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         return userItem;
     }
 
-	public List<EmployeeBWDetails> getEmployeesBandWithTodayAndYesterDay(String userGroupId) {
-		 	Map<String, Object> dataMap = new HashMap<>();
-	        String sqlQuery = HQLStrings.getString("dashboardEmployeesUtilizationSQL");
-	        sqlQuery += " and t1.user_grp_id = " + userGroupId;
+	public List<EmployeeBWDetails> getEmployeesBandWithTodayAndYesterDay(String userGroupId, Date date) {
+			Map<Integer, EmployeeBWDetails> employeesBWMap = new HashMap<>();
+			Map<String, Object> dataMap = new HashMap<>();
+		 	dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, date, 0));
+		 	dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, date, 0));
+	        
+		 	String sqlQuery = HQLStrings.getString("dashboardEmployeesUtilizationSQL");
+	        sqlQuery += " and utai.user_grp_id = " + userGroupId;
 	        sqlQuery += " " + HQLStrings.getString("dashboardEmployeesUtilizationSQL-OrderBy");
-	        List<Object[]> employeeBWList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
-	        List<EmployeeBWDetails> empUtilizationList = new ArrayList<>();
-	        for (int i = 0; i < employeeBWList.size(); i++) {
+	        List<Object[]> employeeBWListCurrentDayList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
+	        
+	        date = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, date, -1);
+	        dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, date, 0));
+		 	dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, date, 0));
+	        
+	        List<Object[]> employeeBWListLastDayList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
+	        for (int i = 0; i < employeeBWListCurrentDayList.size(); i++) {
 	        	EmployeeBWDetails employeeBWDetails = new EmployeeBWDetails();
-	            Object[] data = employeeBWList.get(i);
+	            Object[] data = employeeBWListCurrentDayList.get(i);
 	            
 	            employeeBWDetails.setUserId((Integer) data[0]);
 	            if (data[1] != null) {
 	            	employeeBWDetails.setTodayUtilization(Integer.valueOf(((BigDecimal)data[1]).intValue()));
 	            }
-	            if (data[2] != null) {
-	            	employeeBWDetails.setYesterdayUtilization(Integer.valueOf(((BigDecimal)data[2]).intValue()));
-	            }
-	            employeeBWDetails.setFirstName((String) data[3]);
-	            empUtilizationList.add(employeeBWDetails);
+	            employeesBWMap.put((Integer) data[0], employeeBWDetails);
 	        }
+	        
+	        for (int i = 0; i < employeeBWListLastDayList.size(); i++) {
+	            Object[] data = employeeBWListLastDayList.get(i);
+	            Integer userId = (Integer) data[0];
+	            EmployeeBWDetails employeeBWDetails = null;
+	            if (employeesBWMap.get(userId) != null) {
+	            	employeeBWDetails = employeesBWMap.get(userId);
+	            } else {
+	            	employeeBWDetails = new EmployeeBWDetails();
+	            	employeeBWDetails.setUserId(userId);
+	            	employeesBWMap.put(userId, employeeBWDetails);
+	            }
+	            if (data[1] != null) {
+	            	employeeBWDetails.setYesterdayUtilization(Integer.valueOf(((BigDecimal)data[1]).intValue()));
+	            }
+	        }
+	        
+	        Map<Integer, EmployeeDetails> employeeDetailsMap = getFamstackApplicationConfiguration().getUserMap();
+	        
+	        List<EmployeeBWDetails> empUtilizationList = new ArrayList<>();
+	        for (Integer userId : employeeDetailsMap.keySet()){
+	        	  if (employeeDetailsMap.get(userId).getUserGroupId().equalsIgnoreCase(userGroupId)){
+			        	EmployeeBWDetails employeeBWDetails = employeesBWMap.get(userId);
+			        	if (employeeBWDetails == null) {
+			        		employeeBWDetails = new EmployeeBWDetails();
+			        		employeeBWDetails.setUserId(userId);
+			        	}
+			        	employeeBWDetails.setFirstName(employeeDetailsMap.get(userId).getFirstName());
+			            empUtilizationList.add(employeeBWDetails);
+	        	  }
+	        }
+	        
+	        Collections.sort(empUtilizationList, new Comparator<EmployeeBWDetails>()
+            {
+                @Override
+                public int compare(EmployeeBWDetails employeeBWDetails1, EmployeeBWDetails employeeBWDetails2)
+                {
+                	return employeeBWDetails1.getFirstName().compareTo(employeeBWDetails2.getFirstName());
+                }
+            });
+    
 	        return empUtilizationList;
 	}
 	
-	public List<EmployeeBWDetails> getEmployeesOnLeaveToday(String userGroupId) {
+	public List<EmployeeBWDetails> getEmployeesOnLeaveToday(String userGroupId, Date date) {
 	 	Map<String, Object> dataMap = new HashMap<>();
+	 	dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, date, 0));
+	 	dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, date, 0));
+	 	
         String sqlQuery = HQLStrings.getString("dashboardEmployeesLeaveSQL");
         sqlQuery += " and ui.user_grp_id = " + userGroupId;
         sqlQuery += " " + HQLStrings.getString("dashboardEmployeesLeaveSQL-OrderBy");
@@ -352,5 +407,28 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             empLeaveList.add(employeeBWDetails);
         }
         return empLeaveList;
-}
+	}
+	
+	public List<EmployeeBWDetails> getEmployeesOnLeaveAndFreeDateToDate(String userGroupId, Date startDate, Date endDate) {
+	 	Map<String, Object> dataMap = new HashMap<>();
+	 	dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0));
+	 	dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+	 	
+        String sqlQuery = HQLStrings.getString("dashboardEmployeesCalendarLeaveSQL");
+        sqlQuery += " and ui.user_grp_id = " + userGroupId;
+        sqlQuery += " " + HQLStrings.getString("dashboardEmployeesCalendarLeaveSQL-OrderBy");
+        List<Object[]> employeeBWList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
+        List<EmployeeBWDetails> empLeaveList = new ArrayList<>();
+        for (int i = 0; i < employeeBWList.size(); i++) {
+        	EmployeeBWDetails employeeBWDetails = new EmployeeBWDetails();
+            Object[] data = employeeBWList.get(i);
+            employeeBWDetails.setUserId((Integer) data[0]);
+            employeeBWDetails.setFirstName((String) data[1]);
+            employeeBWDetails.setTaskType("Leave");
+            employeeBWDetails.setDateString((String) data[2]);
+            empLeaveList.add(employeeBWDetails);
+        }
+        System.out.println(empLeaveList);
+        return empLeaveList;
+	}
 }

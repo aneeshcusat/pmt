@@ -774,7 +774,7 @@ public class FamstackProjectManager extends BaseFamstackManager
     
 
 	public List<DashboardUtilizationDetails> dashboardAllUtilization(Date startDate, Date endDate,
-			String userGroupId, String accountId, String teamId, String subTeamId, String userId, boolean isResouceUtilization) {
+			String userGroupId, String accountId, String teamId, String subTeamId, String userId, boolean isResouceUtilization, boolean isTotalUtilization) {
 		 Map<String, Object> dataMap = new HashMap<>();
          dataMap.put("startDate", startDate);
          dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
@@ -805,6 +805,11 @@ public class FamstackProjectManager extends BaseFamstackManager
          if (isResouceUtilization) {
         	 groupBy = " group by uai.id";
          }
+         
+         if (isTotalUtilization) {
+        	 groupBy += ", DATE_FORMAT(utai.actual_start_time, '%Y-%m-%d')";
+         }
+         
          
        	 sqlQuery += " and utai.user_grp_id = " + userGroupId;
        	 logInfo("dashboardAllUtilization Date " + dataMap);

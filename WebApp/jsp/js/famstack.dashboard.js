@@ -1,4 +1,4 @@
-//$("td[data-date='1'][data-month='7']").css("background-color","red");
+//
 
 //Filters
 $(".dashboadgroup").on("change", function(){
@@ -42,6 +42,18 @@ $(".projectSubTeamInfo").on("change", function(){
 
 $(".resourceInfo").on("change", function(){
 	filterProjectDetails();
+	if ($(".resourceInfo").prop("selectedIndex") > 0) {
+		$(".accountDivWidget").removeClass("col-md-4");
+		$(".accountDivWidget").addClass("col-md-10");
+		$(".resourceUtilDivWidget").removeClass("col-md-6");
+		$(".resourceUtilDivWidget").hide();
+	} else {
+		$(".accountDivWidget").removeClass("col-md-10");
+		$(".accountDivWidget").addClass("col-md-4");
+		$(".resourceUtilDivWidget").addClass("col-md-6");
+		$(".resourceUtilDivWidget").show();
+	}
+	
 });
 
 $("#dashboarddatepicker").daterangepicker({                    
@@ -61,8 +73,9 @@ $("#dashboarddatepicker").daterangepicker({
 	  refreshResouceUtilDiv();
 	  refreshOverAllUtilization();
 	  refreshAccountDiv();
+	  refreshTotalUtilizationDiv("month");
+	  fillDateBackGroupInDatePicker();
 });
-
 
 function filterProjectDetails(){
 
@@ -91,8 +104,10 @@ function filterProjectDetails(){
 		$(filter).addClass("filteredRow");
 	}
 	refreshUtilizationCalendar();
+	refreshBandwidthCalendar();
 	refreshOverAllUtilization();
 	refreshAccountDiv();
+	refreshTotalUtilizationDiv("month");
 	refreshResouceUtilDiv();
 	performProjectSearch();
 }
@@ -102,6 +117,7 @@ function refreshEmployeeDetails(){
 	loadStatusForDivStart("dashboardEmpBWDiv");
 	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardEmpBW", {"groupId":groupId}, function(data) {
 		 $('.dashboardEmpBWDiv').html(data);
+		 refreshUpdateUserStatus();
 		 loadStatusForDivEnd("dashboardEmpBWDiv");
 	}, function(e) {
         famstacklog("ERROR: ", e);
@@ -140,8 +156,14 @@ function refreshProjectDetails(){
 
 
 var refreshUtilizationCalendar = function() {
-	loadStatusForDivStart("fullcaledarbs");
+	loadStatusForDivStart("fullcaledartu");
 		$('#fullcaledartu').fullCalendar('refetchEvents');
+	loadStatusForDivEnd("fullcaledartu");
+};
+
+var refreshBandwidthCalendar = function() {
+	loadStatusForDivStart("fullcaledarbs");
+		$('#fullcaledarbs').fullCalendar('refetchEvents');
 	loadStatusForDivEnd("fullcaledarbs");
 };
 
@@ -186,20 +208,35 @@ function refreshAccountDiv(){
 
 }
 
-function refreshResouceUtilDiv(){
+function refreshTotalUtilizationDiv(type){
 	var dataString = getDashboardFilterDataJson();
-	loadStatusForDivStart("resutildiv");
-	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardResourceUtilizationChart",dataString , function(responseData) {
-		$(".resutildiv").html(responseData);
-		 loadStatusForDivEnd("resutildiv");
+	loadStatusForDivStart("tatalutilizationChart");
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardTotalUtilizationChart/"+type,dataString , function(responseData) {
+		$(".tatalutilizationChart").html(responseData);
+		 loadStatusForDivEnd("tatalutilizationChart");
 	}, function(e) {
         famstacklog("ERROR: ", e);
         famstackalert(e);
-        loadStatusForDivEnd("resutildiv");
+        loadStatusForDivEnd("tatalutilizationChart");
     }, false);
 
 }
 
+function refreshResouceUtilDiv(){
+	if ($(".resourceUtilDivWidget").is(':visible')) {
+		var dataString = getDashboardFilterDataJson();
+		loadStatusForDivStart("resutildiv");
+		doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardResourceUtilizationChart",dataString , function(responseData) {
+			$(".resutildiv").html(responseData);
+			$('[data-toggle="tooltip"]').tooltip();
+			 loadStatusForDivEnd("resutildiv");
+		}, function(e) {
+	        famstacklog("ERROR: ", e);
+	        famstackalert(e);
+	        loadStatusForDivEnd("resutildiv");
+	    }, false);
+	}
+}
 
 function getDashboardFilterDataJson(){
 	var dateRange = $("#daterangeText").val();
@@ -339,7 +376,38 @@ function refreshDashBoard(){
 	refreshProjectDetails();
 	refreshOverAllUtilization();
 	refreshAccountDiv();
+	refreshTotalUtilizationDiv("month");
 	refreshResouceUtilDiv();
+}
+
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+};
+
+function fillDateBackGroupInDatePicker() {
+	var dateString = $("#daterangeText").val();
+	startDate = new Date(dateString.split("-")[0].trim());
+	stopDate = new Date(dateString.split("-")[1].trim());
+    var currentDate = new Date(startDate);
+    $(".dscolor-filter").css('background-color','white');
+    $(".xdsoft_current").css('background-color','#3af');
+    fillCalendarColor(startDate, "darkgray");
+    while (currentDate < stopDate) {
+        currentDate = currentDate.addDays(1);
+        fillCalendarColor(currentDate, "lightgray");
+    }
+    fillCalendarColor(stopDate, "darkgray");
+    $(".xdsoft_current").css('background-color','#3af');
+}
+
+function fillCalendarColor(currentDate, color){
+	var date = currentDate.getDate();
+	var month = currentDate.getMonth();
+	var year = currentDate.getFullYear();
+	$("td[data-date='"+date+"'][data-month='"+month+"'][data-year='"+year+"']").css('background-color',color);
+	$("td[data-date='"+date+"'][data-month='"+month+"'][data-year='"+year+"']").addClass("dscolor-filter");
 }
 
 $(document).ready(function() {
@@ -348,10 +416,116 @@ $(document).ready(function() {
 	  timepicker:false,
 	  inline:true,
 	  startDate: new Date(),
-	  lang:'en'
+	  lang:'en',
+	  onChangeDateTime:function(dp,$input){
+		 // fillDateBackGroupInDatePicker();
+	  }
 	});
 
 	//sortSelect('.dashboadgroup', 'text', 'asc');
 	//sortSelect('.resourceInfo', 'text', 'asc');
 	refreshDashBoard();
+	window.setInterval(fillDateBackGroupInDatePicker, 1000);
 });
+
+
+function refreshUpdateUserStatus(){
+	var groupId = $(".dashboadgroup").val();
+	doAjaxRequestWithGlobal("POST", "/bops/dashboard/userPingCheck",  {"groupId":groupId},function(data) {
+    	var userStatus = JSON.parse(data);
+    	$.each(userStatus, function(idx, elem){
+    		changeDashBoardOnlineStatus(elem.userId, elem.userAvailableMsg, elem.status);
+    	});
+    },function(error) {
+    	famstacklog("ERROR: ", error);
+    },false);
+}
+
+/*
+ * #content{
+  position:relative;
+}
+.mydiv{
+  border:1px solid #368ABB;
+  background-color:#43A4DC;
+  position:absolute;
+}
+.mydiv:after{
+  content:no-close-quote;
+  position:absolute;
+  top:50%;
+  left:50%;
+  background-color:black;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  margin-left:-2px;
+  margin-top:-2px;
+}
+#div1{
+  left:200px;
+  top:200px;
+  width:50px;
+  height:50px;
+}
+#div2{
+  left:0px;
+  top:500px;
+  width:50px;
+  height:40px;
+}
+#line{
+  position:absolute;
+  width:2px;
+  margin-top:-1px;
+  background-color:red;
+}
+
+ * <div id="content">
+  <div id="div1" class="mydiv"></div>
+  <div id="div2" class="mydiv"></div>
+  <div id="line"></div>
+</div>
+ * function adjustLine(from, to, line){
+
+	var fT = from.offsetTop;
+  var tT = to.offsetTop;// 	 + to.offsetHeight;
+  var fL = from.offsetLeft;// + from.offsetWidth;
+  var tL = to.offsetLeft;//	 + to.offsetWidth;
+  
+  var CA   = Math.abs(tT - fT);
+  var CO   = Math.abs(tL - fL);
+  var H    = Math.sqrt(CA*CA + CO*CO);
+  var ANG  = 180 / Math.PI * Math.acos( CA/H );
+
+  if(tT > fT){
+      var top  = (tT-fT)/2 + fT;
+  }else{
+      var top  = (fT-tT)/2 + tT;
+  }
+  if(tL > fL){
+      var left = (tL-fL)/2 + fL;
+  }else{
+      var left = (fL-tL)/2 + tL;
+  }
+
+  if(( fT < tT && fL < tL) || ( tT < fT && tL < fL) || (fT > tT && fL > tL) || (tT > fT && tL > fL)){
+    ANG *= -1;
+  }
+  top-= H/2;
+
+  line.style["-webkit-transform"] = 'rotate('+ ANG +'deg)';
+  line.style["-moz-transform"] = 'rotate('+ ANG +'deg)';
+  line.style["-ms-transform"] = 'rotate('+ ANG +'deg)';
+  line.style["-o-transform"] = 'rotate('+ ANG +'deg)';
+  line.style["-transform"] = 'rotate('+ ANG +'deg)';
+  line.style.top    = top+'px';
+  line.style.left   = left+'px';
+  line.style.height = H + 'px';
+}
+adjustLine(
+  document.getElementById('div1'), 
+  document.getElementById('div2'),
+  document.getElementById('line')
+);
+*/

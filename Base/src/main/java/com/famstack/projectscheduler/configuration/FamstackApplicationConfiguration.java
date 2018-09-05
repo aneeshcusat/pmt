@@ -22,6 +22,7 @@ import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.StringUtils;
 
 public class FamstackApplicationConfiguration extends BaseFamstackService
 {
@@ -208,12 +209,16 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         });
     }
 
-    public Map<Integer, EmployeeDetails> getFilterdUserMap()
+    public Map<Integer, EmployeeDetails> getFilterdUserMap(String groupId)
     {
+    	if (!StringUtils.isNotBlank(groupId)){
+    		groupId = getFamstackUserSessionConfiguration().getUserGroupId();
+    	}
+    	
         Map<Integer, EmployeeDetails> userFiltedMap = new HashMap<>();
         if (userMap != null) {
             for (Integer userId : userMap.keySet()) {
-                if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
+                if (groupId.equalsIgnoreCase(
                     userMap.get(userId).getUserGroupId())) {
                     userFiltedMap.put(userId, userMap.get(userId));
                 }

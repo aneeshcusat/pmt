@@ -69,11 +69,37 @@ function userPingCheck(){
     			$(".userOnline"+elem.userId).addClass("status-online");
     		}
     		$("#availableAfter"+elem.userId).html(elem.userAvailableMsg);
+    		changeDashBoardOnlineStatus(elem.userId, elem.userAvailableMsg, elem.status);
     	});
     	sortOnlineStatus();
     },function(error) {
     	famstacklog("ERROR: ", error);
     },false);
+}
+
+function changeDashBoardOnlineStatus(userId, userAvailableMsg, status){
+	
+	$(".onlineStatus"+userId).removeClass("red");
+	$(".onlineStatus"+userId).removeClass("green");
+	
+	$(".availabilityStatus"+userId).removeClass("red");
+	$(".availabilityStatus"+userId).removeClass("green");
+	
+	if ("Available" == userAvailableMsg){
+		$(".onlineStatus"+userId).addClass("green");
+	} else {
+		$(".onlineStatus"+userId).addClass("red");
+	}
+	
+	if (status == 0) {
+		$(".availabilityStatus"+userId).addClass("gray");
+	} else if (status == 1) {
+		$(".availabilityStatus"+userId).addClass("yellow");
+	} else if (status == 5) {
+		$(".availabilityStatus"+userId).addClass("green");
+	}
+	
+	$(".onlineStatus"+userId).attr("title", userAvailableMsg);	
 }
 
 function userNotifications(){

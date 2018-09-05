@@ -24,7 +24,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4 dbwidget">
+		<div class="col-md-4 dbwidget accountDivWidget">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="panel-title-box">
@@ -43,7 +43,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6 dbwidget">
+		<div class="col-md-6 dbwidget resourceUtilDivWidget">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="panel-title-box">
@@ -51,7 +51,7 @@
 					</div>
 				</div>
 				<div class="panel-body padding-0">
-					<div class="dbcontentbox resutildiv"  style="height: 175px;overflow: scroll;overflow-x: auto;">
+					<div class="dbcontentbox resutildiv"  style="height: 175px;overflow: auto;overflow-x: hidden;">
 						
 					</div>
 				</div>
@@ -163,7 +163,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<div class="panel-title-box">
-					<span class="dbheading">Bandwidth</span><span style="float: right"><a href="javascript:showBandWidth();">View summary</a></span>
+					<span class="dbheading">Bandwidth</span><span style="float: right;font-size: 9px;margin-top: 0px;"><a href="javascript:showBandWidth();">View summary</a></span>
 				</div>
 			</div>
 			<div class="panel-body padding-0">

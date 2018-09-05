@@ -63,16 +63,28 @@ public class FamstackDashboardController extends BaseFamstackService
     }
     
     @RequestMapping("/dashboardEmpBW")
-    public ModelAndView dashboardEmpBW(@RequestParam("groupId") String groupId, Model model)
+    public ModelAndView dashboardEmpBW(@RequestParam("groupId") String groupId, @RequestParam(name="date", defaultValue="") String dateString, Model model)
     {
-    	List<EmployeeBWDetails> empUtilizationList = famstackDashboardManager.getEmployeesBandWithTodayAndYesterDay(groupId);
+    	Date date = null;
+    	if (!StringUtils.isNotBlank(dateString)){
+    		date = new Date();
+    	} else {
+    		date = DateUtils.tryParse(dateString, DateUtils.DATE_FORMAT);
+    	}
+    	List<EmployeeBWDetails> empUtilizationList = famstackDashboardManager.getEmployeesBandWithTodayAndYesterDay(groupId, date);
         return new ModelAndView("response/dashboardEmpBW").addObject("usersList", empUtilizationList);
     }
     
     @RequestMapping("/dashboardEmpLeave")
-    public ModelAndView dashboardEmpLeave(@RequestParam("groupId") String groupId, Model model)
+    public ModelAndView dashboardEmpLeave(@RequestParam("groupId") String groupId, @RequestParam(name="date", defaultValue="") String dateString, Model model)
     {
-    	List<EmployeeBWDetails> empLeaveList = famstackDashboardManager.getEmployeesOnLeaveToday(groupId);
+    	Date date = null;
+    	if (!StringUtils.isNotBlank(dateString)){
+    		date = new Date();
+    	} else {
+    		date = DateUtils.tryParse(dateString, DateUtils.DATE_FORMAT);
+    	}
+    	List<EmployeeBWDetails> empLeaveList = famstackDashboardManager.getEmployeesOnLeaveToday(groupId, date);
         return new ModelAndView("response/dashboardEmpLeave").addObject("usersList", empLeaveList);
     }
     
@@ -113,8 +125,15 @@ public class FamstackDashboardController extends BaseFamstackService
     public String getEmpUtlAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate,
     		@PathVariable(value = "userGroupId") String userGroupId)
     {
-    	System.out.println(userGroupId);
         return famstackDashboardManager.getEmpUtlAjaxFullcalendar(startDate, endDate, userGroupId);
+    }
+    
+    @RequestMapping(value = "/getEmpBWAjaxFullcalendar/{userGroupId}", method = RequestMethod.GET)
+    @ResponseBody
+    public String getEmpBWAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate,
+    		@PathVariable(value = "userGroupId") String userGroupId)
+    {
+        return famstackDashboardManager.getEmpBWAjaxFullcalendar(startDate, endDate, userGroupId);
     }
     
     @RequestMapping(value = "/dashboardOverAllUtilization", method = RequestMethod.GET)
@@ -159,7 +178,7 @@ public class FamstackDashboardController extends BaseFamstackService
                  DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
              endDate = startDate;
         }
-        List<DashboardUtilizationDetails> dashboardOverAllutilizationList = famstackDashboardManager.dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId,userId, false);
+        List<DashboardUtilizationDetails> dashboardOverAllutilizationList = famstackDashboardManager.dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId,userId, false,false);
         Double totalDashBoardTime = famstackDashboardManager.getTotalDashboardFilterdutilizationList(dashboardOverAllutilizationList);
         for (DashboardUtilizationDetails dashboardUtilizationDetails :dashboardOverAllutilizationList)
         {
@@ -168,6 +187,35 @@ public class FamstackDashboardController extends BaseFamstackService
         return new ModelAndView("response/dashboardAccountUtilizationChart").addObject("dashboadAccountUtilization", dashboardOverAllutilizationList);
     }
 
+    @RequestMapping(value = "/dashboardTotalUtilizationChart/{viewType}", method = RequestMethod.GET)
+    public ModelAndView dashboardTotalUtilizationChart(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
+    		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId, @PathVariable("viewType") String viewType)
+    {
+    	 String[] dateRanges;
+         Date startDate = null;
+         Date endDate = null;
+         if (StringUtils.isNotBlank(dateRange)) {
+             dateRanges = dateRange.split("-");
+
+             if (dateRanges != null && dateRanges.length > 1) {
+                 startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                 endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+             }
+         } else {
+             startDate =
+                 DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+             endDate = startDate;
+        }
+        List<DashboardUtilizationDetails> dashboardTotalUtilizationList = famstackDashboardManager.dashboardTotalUtilizationChart(startDate, endDate, userGroupId, accountId, teamId, subTeamId,userId,viewType);
+        Double totalDashBoardTime = famstackDashboardManager.getTotalDashboardFilterdutilizationList(dashboardTotalUtilizationList);
+        for (DashboardUtilizationDetails dashboardUtilizationDetails :dashboardTotalUtilizationList)
+        {
+        	dashboardUtilizationDetails.setGrandTotal(totalDashBoardTime);
+        }
+        return new ModelAndView("response/dashboardTotalUtilizationChart").addObject("dashboadTotalUtilization", dashboardTotalUtilizationList);
+    }
+    
+    
     @RequestMapping(value = "/dashboardResourceUtilizationChart", method = RequestMethod.GET)
     public ModelAndView dashboardResourceUtilizationChart(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
@@ -229,10 +277,10 @@ public class FamstackDashboardController extends BaseFamstackService
 
     @RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)
     @ResponseBody
-    public String userPingCheck()
+    public String userPingCheck(@RequestParam(name="groupId", defaultValue="") String groupId)
     {
         getFamstackApplicationConfiguration().updateLastPing();
-        return famstackDashboardManager.getUserStatusJson();
+        return famstackDashboardManager.getUserStatusJson(groupId);
     }
 
     @RequestMapping(value = "/getNotifications", method = RequestMethod.GET)

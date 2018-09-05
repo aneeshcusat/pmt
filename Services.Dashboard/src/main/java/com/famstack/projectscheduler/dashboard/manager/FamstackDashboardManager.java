@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -647,6 +648,30 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectManager.getUserTaskActivityForEmpUtlCalenderJson(startDate, endDate, userGroupId);
     }
 
+    
+    public String getEmpBWAjaxFullcalendar(String startDateString, String endDateString, String userGroupId)
+    {
+    	 Date startDate = DateUtils.tryParse(startDateString, DateUtils.DATE_FORMAT_CALENDER);
+         Date endDate = DateUtils.tryParse(endDateString, DateUtils.DATE_FORMAT_CALENDER);
+         
+         List<EmployeeBWDetails> employeeBWCalenderList = userProfileManager.getEmployeesOnLeaveAndFreeDateToDate(userGroupId, startDate, endDate);
+         JSONArray jsonArray = new JSONArray();
+         
+         if (employeeBWCalenderList != null) {
+        	 
+        	 for (EmployeeBWDetails employeeBWDetails : employeeBWCalenderList){
+        		  JSONObject jsonObject = new JSONObject();
+        		  jsonObject.put("title", employeeBWDetails.getFirstName());
+                  jsonObject.put("color", "#EF8175");
+                  jsonObject.put("start", employeeBWDetails.getDateString());
+                  jsonObject.put("textColor","#fff");
+                  jsonArray.put(jsonObject);
+        	 }
+         }
+         return jsonArray.toString();
+    }
+    
+    
     public List<AccountDetails> getAccountDataList()
     {
         return famstackAccountManager.getAllAccountDetails();
@@ -682,7 +707,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 			String subTeamId, String userId) {
 		Double billableMins = 0.0;
 		Double nonBillableMins = 0.0;
-		List<DashboardUtilizationDetails> dashboardOverAllutilizationList = dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, false);
+		List<DashboardUtilizationDetails> dashboardOverAllutilizationList = dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, false, false);
 		for(DashboardUtilizationDetails dashboardOverAllutilization : dashboardOverAllutilizationList) {
 			billableMins +=dashboardOverAllutilization.getBillableMins();
 			nonBillableMins += dashboardOverAllutilization.getNonBillableMins();
@@ -702,10 +727,10 @@ public class FamstackDashboardManager extends BaseFamstackService
 	
 	public List<DashboardUtilizationDetails> dashboarAllUtilizationList(Date startDate, Date endDate,
 			String userGroupId, String accountId, String teamId,
-			String subTeamId, String userId, boolean isResouceUtilization) {
+			String subTeamId, String userId, boolean isResouceUtilization, boolean isTotalUtilization) {
 		
 		List<DashboardUtilizationDetails> dashboardFilterdutilizationList  = new ArrayList<>();
-		List<DashboardUtilizationDetails> dashboardAllutilizationList = projectManager.dashboardAllUtilization(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, isResouceUtilization);
+		List<DashboardUtilizationDetails> dashboardAllutilizationList = projectManager.dashboardAllUtilization(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, isResouceUtilization, isTotalUtilization);
 		System.out.println(dashboardAllutilizationList);
 		for(DashboardUtilizationDetails dashboardOverAllutilization : dashboardAllutilizationList) {
 			if (StringUtils.isNotBlank(teamId) && !StringUtils.isNotBlank(subTeamId)){
@@ -725,7 +750,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 	public List<DashboardUtilizationDetails> dashboarResourceUtilizationList(
 			Date startDate, Date endDate, String userGroupId, String accountId,
 			String teamId, String subTeamId, String userId) {
-		return dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, true);
+		return dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, true,false);
 	}
 	
 	public Double getTotalDashboardFilterdutilizationList(List<DashboardUtilizationDetails> dashboardOverAllutilizationList){
@@ -750,6 +775,51 @@ public class FamstackDashboardManager extends BaseFamstackService
 		return dashboardOverAllutilization;
 	}
     
+
+	public List<DashboardUtilizationDetails> dashboardTotalUtilizationChart(
+			Date startDate, Date endDate, String userGroupId, String accountId,
+			String teamId, String subTeamId, String userId, String viewType) {
+		 List<DashboardUtilizationDetails> dashboardOverAllutilizationList = dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId,userId, false,true);
+		 List<DashboardUtilizationDetails> dashboardOverAllutilizationFilterdList = new ArrayList<>();
+		 Map<String, DashboardUtilizationDetails> itemCacheMap = new HashMap<>();
+		 
+		 for(DashboardUtilizationDetails dashboardUtilizationDetails : dashboardOverAllutilizationList) {
+			 Date date = dashboardUtilizationDetails.getActualTaskStartTime();
+			 Calendar calendar = Calendar.getInstance();
+			 calendar.setTime(date);
+			 String key ="";
+			 if ("month".equalsIgnoreCase(viewType)) {
+				 key ="" +  calendar.get(Calendar.YEAR) +" - "+ (calendar.get(Calendar.MONTH)+1);
+			 } else if ("week".equalsIgnoreCase(viewType)) {
+				 key ="" +  calendar.get(Calendar.YEAR) +" - Week "+ calendar.get(Calendar.WEEK_OF_MONTH);;
+			 } else if ("day".equalsIgnoreCase(viewType)) {
+				 key ="" +  calendar.get(Calendar.YEAR) +" - "+ (calendar.get(Calendar.MONTH)+1)  +"-"+ (calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0"+calendar.get(Calendar.DAY_OF_MONTH):calendar.get(Calendar.DAY_OF_MONTH));
+			 }
+			 
+			 DashboardUtilizationDetails newDashboardUtilizationDetails = itemCacheMap.get(key);
+			 if (newDashboardUtilizationDetails == null) {
+				 newDashboardUtilizationDetails = new DashboardUtilizationDetails();
+				 newDashboardUtilizationDetails.setBillableMins(dashboardUtilizationDetails.getBillableMins());
+				 newDashboardUtilizationDetails.setNonBillableMins(dashboardUtilizationDetails.getNonBillableMins());
+				 newDashboardUtilizationDetails.setType(key);
+				 itemCacheMap.put(key, newDashboardUtilizationDetails);
+			 } else {
+				Double billableMins = dashboardUtilizationDetails.getBillableMins() + newDashboardUtilizationDetails.getBillableMins();
+				Double nonBillableMins = dashboardUtilizationDetails.getNonBillableMins() + newDashboardUtilizationDetails.getNonBillableMins();
+				newDashboardUtilizationDetails.setBillableMins(billableMins);
+				newDashboardUtilizationDetails.setNonBillableMins(nonBillableMins);
+			 }
+		 }
+		 
+		 List sortedKeys=new ArrayList(itemCacheMap.keySet());
+		 Collections.sort(sortedKeys);
+		 for (Object key : sortedKeys) {
+			 dashboardOverAllutilizationFilterdList.add(itemCacheMap.get(key));
+		 }
+		 
+		 return dashboardOverAllutilizationFilterdList;
+	}
+	
     public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
     {
         List<ProjectTaskActivityDetails> projectDetailsList =
@@ -823,7 +893,7 @@ public class FamstackDashboardManager extends BaseFamstackService
         Map<Object, UserWorkDetails> userWorkDetailsMap =
             famstackUserActivityManager.getUserBillableProductiveHours(startTime, endTime);
 
-        Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getFilterdUserMap();
+        Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getFilterdUserMap("");
 
         for (int userId : empMap.keySet()) {
             UserWorkDetails userDetails = userWorkDetailsMap.get(userId);
@@ -885,12 +955,12 @@ public class FamstackDashboardManager extends BaseFamstackService
         return clientProjectDetailsList;
     }
 
-    public String getUserStatusJson()
+    public String getUserStatusJson(String groupId)
     {
 
         List<UserStatus> userStatusList = new ArrayList<UserStatus>();
 
-        Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getFilterdUserMap();
+        Map<Integer, EmployeeDetails> empMap = getFamstackApplicationConfiguration().getFilterdUserMap(groupId);
         for (Integer userId : empMap.keySet()) {
             String availableMessage = "Busy till";
             EmployeeDetails employeeDetails = empMap.get(userId);
@@ -1187,12 +1257,12 @@ public class FamstackDashboardManager extends BaseFamstackService
         return userProfileManager.unblockUser(userId);
     }
 
-	public List<EmployeeBWDetails> getEmployeesBandWithTodayAndYesterDay(String groupId) {
-		return userProfileManager.getEmployeesBandWithTodayAndYesterDay(groupId);
+	public List<EmployeeBWDetails> getEmployeesBandWithTodayAndYesterDay(String groupId, Date date) {
+		return userProfileManager.getEmployeesBandWithTodayAndYesterDay(groupId, date);
 	}
 
-	public List<EmployeeBWDetails> getEmployeesOnLeaveToday(String groupId) {
-		return userProfileManager.getEmployeesOnLeaveToday(groupId);
+	public List<EmployeeBWDetails> getEmployeesOnLeaveToday(String groupId, Date date) {
+		return userProfileManager.getEmployeesOnLeaveToday(groupId, date);
 	}
 
 }

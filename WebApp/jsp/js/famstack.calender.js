@@ -6,7 +6,7 @@
         	        center: 'prev,title,next',
         	        right: 'agendaDay,agendaWeek,month'
         	    },
-        	    height: 375,
+        	    height: 475,
         	    defaultView: 'month',
         	    weekends: true,
         	    editable: false,
@@ -69,7 +69,7 @@
         				
         	});
 
-        }
+        };
         var calendarbs = function(){
         	$('#fullcaledarbs').fullCalendar({
         	    header: {
@@ -81,42 +81,24 @@
         	    defaultView: 'month',
         	    weekends: true,
         	    editable: false,
-        	    eventSources: {url: "assets/ajax_fullcalendar.jsp"},
+        	    eventSources: {url: "getEmpBWAjaxFullcalendar/"+$(".dashboadgroup").val()},
         	    droppable: false,
         	    selectable: false,
         	    selectHelper: false,
         	    maxTime: "23:59:59",
         	    minTime: "0:00:00",
-        	    events: [{
-        	            title: 'Amit',
-        	            start: '2018-08-14',
-        	            textColor: '#fff',
-        	            color:'#EF8175'
-        	          },
-        	          {
+        	    events: [
+        	         /* {
         	              title: 'Vinay',
         	              start: '2018-08-14',
         	              textColor: '#fff',
         	              color:'#E5E5E5'
-        	          },
-        	          {
-        	              title: 'Udhay',
-        	              start: '2018-08-15',
-        	              textColor: '#fff',
-        	              color:'#EF8175'
-        	          },
-        	          {
-        	              title: 'Vinay',
-        	              start: '2018-08-16',
-        	              textColor: '#fff',
-        	              color:'#E5E5E5'
-        	          }
-        	        ],
+        	          }	        */],
         	        eventAfterRender: function(event, element, view) {
         	            $(element).css('width','50px');
         	         }
         	});          
-        }
+        };
         return {
             initbs: function(){
                 calendarbs();
@@ -124,5 +106,5 @@
             inittu: function(){
                 calendartu();
             }
-        }
+        };
     }();

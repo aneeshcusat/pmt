@@ -786,7 +786,7 @@ function taskPlayOrPause(taskId){
 }
 
 $('#adjustCompletionTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
-$('#adjustStartTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
+$('#adjustStartTime').datetimepicker({ sideBySide: true,maxDate:new Date(), format: 'YYYY/MM/DD HH:mm'});
 $('#adjustStartTime1').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'}).on('dp.change', function(e) {
    adjustStartTimeChanged();
 });;

@@ -285,10 +285,11 @@ margin-left: 2px;
 	padding-right: 5px;
 }
 
-.dashboard b.wraptext{
+.dashboard b.wraptext, p.wraptext{
 	float: right;
 	width: 80px;
-	margin-top: 5px;	
+	margin-top: 5px;
+	font-size:10px;	
 }
 .dashboard .percentage{
 	margin-top: 10px;
@@ -390,7 +391,7 @@ margin-left: 2px;
 }
 .accountsdiv .progress-bar-vertical {
 	width: 20px;
-    min-height: 110px;
+    min-height: 100px;
     display: flex;
     align-items: flex-end;
     float: left;
@@ -429,7 +430,7 @@ margin-left: 2px;
  
 .tatalutilizationChart .progress-bar-vertical {
   width: 20px;
-  min-height: 90px;
+  min-height: 130px;
   display: flex;
   align-items: flex-end;
   float: left;
@@ -483,9 +484,65 @@ background-color: #E3E3E3;
 }
 
 .dashboard .autiloutercontent { 
-		overflow: scroll;
+		overflow: auto;
 		overflow-y:hidden 
 }
 .dashboard .autilinnercontent {
 	padding-left: 0px;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td, .xdsoft_datetimepicker .xdsoft_calendar th {
+    background: white;
+	border: 0px solid #ddd;
+}
+
+.xdsoft_date.xdsoft_weekend {
+	color: red !important;	
+}
+
+.img-header {
+    position: relative;
+    margin-top: 0px;
+    margin-right: 5px;
+    float: left;
+}
+.img {
+    width: 30px;
+    height: 30px;
+    border-radius: 20px
+    object-fit: cover;
+    vertical-align: super;
+}
+.onlinestatus {
+    width: 12px;
+    position: absolute;
+    right: -2px;
+    top: 20px;
+    height: 12px;
+    border-radius: 20px;
+}
+
+.availabilityStatus {
+    width: 5px;
+    position: absolute;
+    right: 3px;
+    top: 2px;
+    height: 5px;
+    border-radius: 20px;
+}
+
+.onlinestatus.green, .availabilityStatus.green {
+    background-color: #57BF9E;
+}
+
+.availabilityStatus.gray {
+    background-color: lightgray;
+}
+
+.availabilityStatus.yellow {
+    background-color: yellow;
+}
+
+.onlinestatus.red,.availabilityStatus.red {
+    background-color: red;
 }

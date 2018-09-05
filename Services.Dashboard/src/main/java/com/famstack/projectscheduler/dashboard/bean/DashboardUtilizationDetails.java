@@ -2,6 +2,9 @@ package com.famstack.projectscheduler.dashboard.bean;
 
 import java.util.Date;
 
+import com.famstack.projectscheduler.employees.bean.AccountDetails;
+import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
+import com.famstack.projectscheduler.employees.bean.ProjectTeamDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 
 
@@ -51,11 +54,14 @@ public class DashboardUtilizationDetails {
 	public String getLabel(){
 		
 		if ("Accounts".equalsIgnoreCase(type)){
-			return FamstackAccountManager.getAccountmap().get(accountId).getName();
+			AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(accountId);
+			return accountDetails != null ? accountDetails.getName() : "Acc" + accountId;
 		} else if  ("Teams".equalsIgnoreCase(type)){
-			return FamstackAccountManager.getTeammap().get(teamId).getName();
+			ProjectTeamDetails projectTeamDetails = FamstackAccountManager.getTeammap().get(teamId);
+			return projectTeamDetails != null ? projectTeamDetails.getName() : "Team" + teamId;
 		} else if  ("Sub Teams".equalsIgnoreCase(type)){
-			return FamstackAccountManager.getSubteammap().get(subTeamId).getName();
+			ProjectSubTeamDetails projectSubTeamDetails =FamstackAccountManager.getSubteammap().get(subTeamId);
+			return projectSubTeamDetails != null ? projectSubTeamDetails.getName() : "SubTeam" + subTeamId;
 		}
 		return "";
 		
@@ -81,14 +87,26 @@ public class DashboardUtilizationDetails {
 		return billableMins;
 	}
 	public void setBillableMins(Double billableMins) {
-		this.billableMins = billableMins;
+		this.billableMins = billableMins > 0? billableMins : 0;
 	}
 	public Double getNonBillableMins() {
 		return nonBillableMins;
 	}
 	public void setNonBillableMins(Double nonBillableMins) {
-		this.nonBillableMins = nonBillableMins;
+		this.nonBillableMins = nonBillableMins > 0? nonBillableMins : 0;;
 	}
+	
+	public String getNonBillableHrs(){
+        int hours = (int) (nonBillableMins / 60); // since both are ints, you get an int
+        int minutes = (int) (nonBillableMins % 60);
+        return String.format("%d:%02d", hours, minutes);
+    }
+	public String getBillableHrs(){
+        int hours = (int) (billableMins / 60); // since both are ints, you get an int
+        int minutes = (int) (billableMins % 60);
+        return String.format("%d:%02d", hours, minutes);
+    }
+	
 	public void setGrandTotal(Double grandTotal) {
 		this.grandTotal = grandTotal;
 	}
@@ -111,6 +129,12 @@ public class DashboardUtilizationDetails {
 	public Double getFreeMins(){
 		Double totalFreeMins = totalWorkingHoursInMis - (billableMins+nonBillableMins);
 		return totalFreeMins >= 0 ? totalFreeMins : 0;
+	}
+	
+	public String getFreeHrs(){
+		 int hours = (int) (getFreeMins() / 60); // since both are ints, you get an int
+	     int minutes = (int) (getFreeMins() % 60);
+	     return String.format("%d:%02d", hours, minutes);
 	}
 	
 	public int getResourceNonBillablePercentage(){

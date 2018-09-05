@@ -8,14 +8,14 @@
 	<div class="col-md-12">
 		<c:forEach var="resourceUtilization" items="${dashboadResourceUtilization}">
 			 <div class="row"  style="margin-top: 10px">
-				<div class="col-md-1" style="text-align: right;">
-					<span>${allUsersMap[resourceUtilization.userId].firstName}</span>
+				<div class="col-md-1" style="text-align: right;padding: 0;margin: 0">
+					<span class="legendtext">${allUsersMap[resourceUtilization.userId].firstName}</span>
 				</div>
 				<div class="col-md-10">
-					<div class="progress" title="Free Mins - ${resourceUtilization.freeMins}">
-				        <div class="progress-bar billable" title="Billable Mins - ${resourceUtilization.billableMins}" style="width: ${resourceUtilization.resourceBillablePercentage}%">
+					<div class="progress" data-toggle="tooltip" data-placement="bottom"  title="Free : ${resourceUtilization.freeHrs} Hrs">
+				        <div class="progress-bar billable" data-toggle="tooltip" data-placement="bottom" title="Billable : ${resourceUtilization.billableHrs} Hrs" style="width: ${resourceUtilization.resourceBillablePercentage}%">
 				        </div>
-				        <div class="progress-bar nonbillable" title="Non Billable Mins - ${resourceUtilization.nonBillableMins}" style="width: ${resourceUtilization.resourceNonBillablePercentage}%">
+				        <div class="progress-bar nonbillable" data-toggle="tooltip" data-placement="bottom" title="Non Billable : ${resourceUtilization.nonBillableHrs} Hrs" style="width: ${resourceUtilization.resourceNonBillablePercentage}%">
 				        </div>
 				    </div>
 			    </div>

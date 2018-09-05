@@ -11,9 +11,13 @@
 			   <c:forEach var="user" items="${usersList}">
     <tr style="padding-bottom: 0px;margin-top: 0px; border-bottom: 1px solid #dddddd">
         <td class="filterable-cell" style="width: 60%;padding: 0px;border-top:0">
-        <span class="userdetails">
-        	<img  style="width: 30px;border-radius: 20px;" alt="image" src="${applicationHome}/image/${user.userId}"  onerror="this.src='${assets}/images/users/user-offline.png'"></a>
-        </span><b class="wraptext">${user.firstName}</b></td>
+        <div class="img-header">
+	        <img  class="img" style="width: 30px;border-radius: 20px;" alt="image" src="${applicationHome}/image/${user.userId}"  onerror="this.src='${assets}/images/users/user-offline.png'">
+	        <span class="onlinestatus onlineStatus${user.userId}"></span>
+	        <span class="availabilityStatus availabilityStatus${user.userId}"></span>
+	    </div>
+	    <b class="wraptext legendtext">${user.firstName}</b>
+	    </td>
     </tr>
 </c:forEach>
 </c:if>
