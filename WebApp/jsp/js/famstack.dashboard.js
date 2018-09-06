@@ -13,9 +13,10 @@ $(".dashboadgroup").on("change", function(){
 	$(".resourceInfo option:first").removeClass("hide");
 	$(".resourceInfo option.UG"+$(this).val()).removeClass("hide");
 	$(".resourceInfo").prop("selectedIndex",0);
-	$(".resourceInfo" ).trigger( "change" );
+	checkResourceChange();
 	refreshEmployeeDetails();
 	refreshProjectDetails();
+	reinitializeCalenders();
 });
 
 $(".accountInfo").on("change", function(){
@@ -37,11 +38,15 @@ $(".projectTeamInfo").on("change", function(){
 });
 
 $(".projectSubTeamInfo").on("change", function(){
-	filterProjectDetails();
+	filterProjectDetails(true);
 });
 
 $(".resourceInfo").on("change", function(){
-	filterProjectDetails();
+	filterProjectDetails(true);
+	checkResourceChange();	
+});
+
+function checkResourceChange(){
 	if ($(".resourceInfo").prop("selectedIndex") > 0) {
 		$(".accountDivWidget").removeClass("col-md-4");
 		$(".accountDivWidget").addClass("col-md-10");
@@ -53,8 +58,7 @@ $(".resourceInfo").on("change", function(){
 		$(".resourceUtilDivWidget").addClass("col-md-6");
 		$(".resourceUtilDivWidget").show();
 	}
-	
-});
+}
 
 $("#dashboarddatepicker").daterangepicker({                    
     ranges: filterDateMap,
@@ -70,23 +74,26 @@ $("#dashboarddatepicker").daterangepicker({
 	  $("#daterangeText").val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
 	  $("#dashboarddatepicker span").html($("#daterangeText").val());
 	  refreshProjectDetails();
-	  refreshResouceUtilDiv();
-	  refreshOverAllUtilization();
-	  refreshAccountDiv();
-	  refreshTotalUtilizationDiv("month");
+	  filterProjectDetails(true);
 	  fillDateBackGroupInDatePicker();
 });
 
-function filterProjectDetails(){
+function filterProjectDetails(isAdmin){
 
 	$(".projectDetailsRow").addClass("hide");
 	$(".projectDetailsRow").removeClass("filteredRow");
 	
 	var filter =".projectDetailsRow";
 	
-	if($(".resourceInfo").prop("selectedIndex") > 0){
-		filter = filter+".prjUserId" + $(".resourceInfo").val();
-	} 
+	if (isAdmin){
+		if($(".resourceInfo").prop("selectedIndex") > 0){
+			filter = filter+".prjUserId" + $(".resourceInfo").val();
+		} 
+	} else {
+		if(!$(".totalprojectslink").hasClass("active")){
+			filter = filter+".prjUserId" + $(".resourceInfo").val();
+		}
+	}
 	if($(".projectSubTeamInfo").prop("selectedIndex") > 1){
 		filter = filter+".prjSubTeam" + $(".projectSubTeamInfo").val();
 	} 
@@ -103,16 +110,22 @@ function filterProjectDetails(){
 	if (!$(filter).hasClass("filteredRow")){
 		$(filter).addClass("filteredRow");
 	}
-	refreshUtilizationCalendar();
-	refreshBandwidthCalendar();
-	refreshOverAllUtilization();
-	refreshAccountDiv();
-	refreshTotalUtilizationDiv("month");
-	refreshResouceUtilDiv();
+	
+	if(isAdmin) {
+		refreshUtilizationCalendar();
+		refreshBandwidthCalendar();
+		refreshOverAllUtilization();
+		refreshAccountDiv();
+		refreshTotalUtilizationDiv("month");
+		refreshResouceUtilDiv();
+	}
 	performProjectSearch();
 }
 
 function refreshEmployeeDetails(){
+	if (!isDashBoardHome()){
+		return;
+	}
 	var groupId = $(".dashboadgroup").val();
 	loadStatusForDivStart("dashboardEmpBWDiv");
 	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardEmpBW", {"groupId":groupId}, function(data) {
@@ -138,6 +151,9 @@ function refreshEmployeeDetails(){
 
 
 function refreshProjectDetails(){
+	if (!isDashBoardHome()){
+		return;
+	}
 	loadStatusForDivStart("dashboardProjDetailsDiv");
 	var groupId = $(".dashboadgroup").val();
 	var filters = "";
@@ -145,6 +161,7 @@ function refreshProjectDetails(){
 	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardProjectDetails", {"groupId":groupId,"filters":filters, "dateRange":dateRange}, function(data) {
 		 $('.dashboardProjDetailsDiv').html(data);
 		 loadStatusForDivEnd("dashboardProjDetailsDiv");
+		 filterProjectDetails(false);
 		 performProjectSearch();
 	}, function(e) {
         famstacklog("ERROR: ", e);
@@ -154,20 +171,28 @@ function refreshProjectDetails(){
 	
 }
 
-
 var refreshUtilizationCalendar = function() {
+	if (!isDashBoardTu()){
+		return;
+	}
 	loadStatusForDivStart("fullcaledartu");
 		$('#fullcaledartu').fullCalendar('refetchEvents');
 	loadStatusForDivEnd("fullcaledartu");
 };
 
 var refreshBandwidthCalendar = function() {
+	if (!isDashBoardBW()){
+		return;
+	}
 	loadStatusForDivStart("fullcaledarbs");
 		$('#fullcaledarbs').fullCalendar('refetchEvents');
 	loadStatusForDivEnd("fullcaledarbs");
 };
 
 var refreshOverAllUtilization = function() {
+	if (!isDashBoardHome()){
+		return;
+	}
 	var dataString = getDashboardFilterDataJson();
 	loadStatusForDivStart("utilizationChart");
 	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardOverAllUtilization",dataString , function(responseData) {
@@ -195,6 +220,9 @@ var refreshOverAllUtilization = function() {
 
 
 function refreshAccountDiv(){
+	if (!isDashBoardHome()){
+		return;
+	}
 	var dataString = getDashboardFilterDataJson();
 	loadStatusForDivStart("accountUtilizationChart");
 	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardAccountUtilizationChart",dataString , function(responseData) {
@@ -209,6 +237,9 @@ function refreshAccountDiv(){
 }
 
 function refreshTotalUtilizationDiv(type){
+	if (!isDashBoardTu()){
+		return;
+	}
 	var dataString = getDashboardFilterDataJson();
 	loadStatusForDivStart("tatalutilizationChart");
 	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardTotalUtilizationChart/"+type,dataString , function(responseData) {
@@ -223,6 +254,9 @@ function refreshTotalUtilizationDiv(type){
 }
 
 function refreshResouceUtilDiv(){
+	if (!isDashBoardHome()){
+		return;
+	}
 	if ($(".resourceUtilDivWidget").is(':visible')) {
 		var dataString = getDashboardFilterDataJson();
 		loadStatusForDivStart("resutildiv");
@@ -319,12 +353,15 @@ function showBandWidth(){
 	$(".dashboadtu").hide();
 	$(".dashboardbandwidth").show();
 	fullCalendar.initbs();
+	refreshDashBoard();
+	
 }
 
 function showHome(){
 	$(".dashboadhome").show();
 	$(".dashboadtu").hide();
 	$(".dashboardbandwidth").hide();
+	refreshDashBoard();
 }
 
 function showTu(){
@@ -332,6 +369,17 @@ function showTu(){
 	$(".dashboadtu").show();
 	$(".dashboardbandwidth").hide();
 	fullCalendar.inittu();
+	refreshDashBoard();
+}
+
+function reinitializeCalenders(){
+	if (isDashBoardTu()){
+		$('#fullcaledartu').fullCalendar('destroy');
+		fullCalendar.inittu();
+	} else if (isDashBoardBW()){
+		$('#fullcaledarbs').fullCalendar('destroy');
+		fullCalendar.initbs();		
+	}
 }
 
 function showMyProjects()
@@ -340,6 +388,7 @@ function showMyProjects()
 		$(".myprojectslink").addClass("active");
 		$(".totalprojectslink").removeClass("active");
 	}
+	filterProjectDetails(false);
 }
 
 
@@ -349,6 +398,7 @@ function showTotalProjects()
 		$(".totalprojectslink").addClass("active");
 		$(".myprojectslink").removeClass("active");
 	}
+	filterProjectDetails(false);
 }
 
 
@@ -374,10 +424,7 @@ function showProjectDetails(type){
 function refreshDashBoard(){
 	refreshEmployeeDetails();
 	refreshProjectDetails();
-	refreshOverAllUtilization();
-	refreshAccountDiv();
-	refreshTotalUtilizationDiv("month");
-	refreshResouceUtilDiv();
+	 filterProjectDetails(true);
 }
 
 Date.prototype.addDays = function(days) {
@@ -387,6 +434,9 @@ Date.prototype.addDays = function(days) {
 };
 
 function fillDateBackGroupInDatePicker() {
+	if (!isDashBoardHome()){
+		return;
+	}
 	var dateString = $("#daterangeText").val();
 	startDate = new Date(dateString.split("-")[0].trim());
 	stopDate = new Date(dateString.split("-")[1].trim());
@@ -430,6 +480,9 @@ $(document).ready(function() {
 
 
 function refreshUpdateUserStatus(){
+	if (!isDashBoardHome()){
+		return;
+	}
 	var groupId = $(".dashboadgroup").val();
 	doAjaxRequestWithGlobal("POST", "/bops/dashboard/userPingCheck",  {"groupId":groupId},function(data) {
     	var userStatus = JSON.parse(data);
@@ -440,6 +493,27 @@ function refreshUpdateUserStatus(){
     	famstacklog("ERROR: ", error);
     },false);
 }
+
+function isDashBoardHome(){
+	if ($(".dashboadhome").is(':visible')) {
+		return true;
+	}
+	return false;
+}
+
+function isDashBoardTu(){
+	if ($(".dashboadtu").is(':visible')) {
+		return true;
+	}
+	return false;
+}
+function isDashBoardBW(){
+	if ($(".dashboardbandwidth").is(':visible')) {
+		return true;
+	}
+	return false;
+}
+
 
 /*
  * #content{

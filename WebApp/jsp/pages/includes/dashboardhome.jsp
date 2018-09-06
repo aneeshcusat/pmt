@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!-- PAGE CONTENT WRAPPER -->
 <div class="dashboard col-md-12 dashboadhome" style="padding-right: 5px;">
 <div class="col-md-10 dbwidget">
@@ -81,8 +82,14 @@
 				<div class="panel-body padding-0" style="overflow: hidden;">
 					<div class="dbcontentbox projectdetails">
 						<div class="col-md-12" style="height: 20px;background-color: #e3e3e3;padding-left: 0px;">
+						<c:if test="${isAdmin}"> 
+							<a href="javascript:showMyProjects()" class="projectfilter myprojectslink hide" style="">My Projects</a>
+							<a href="javascript:showTotalProjects()" class="projectfilter totalprojectslink active hide"style="">Total Projects</a>
+						</c:if>
+						<c:if test="${!isAdmin}"> 
 							<a href="javascript:showMyProjects()" class="projectfilter myprojectslink active" style="">My Projects</a>
 							<a href="javascript:showTotalProjects()" class="projectfilter totalprojectslink"style="">Total Projects</a>
+						</c:if>
 						</div>
 						<div class="col-md-12 projecttitleblock">
 						<div class="col-md-2">

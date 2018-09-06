@@ -791,9 +791,9 @@ public class FamstackDashboardManager extends BaseFamstackService
 			 if ("month".equalsIgnoreCase(viewType)) {
 				 key ="" +  calendar.get(Calendar.YEAR) +" - "+ (calendar.get(Calendar.MONTH)+1);
 			 } else if ("week".equalsIgnoreCase(viewType)) {
-				 key ="" +  calendar.get(Calendar.YEAR) +" - Week "+ calendar.get(Calendar.WEEK_OF_MONTH);;
+				 key ="" +  calendar.get(Calendar.YEAR) +"-W"+ calendar.get(Calendar.WEEK_OF_MONTH);;
 			 } else if ("day".equalsIgnoreCase(viewType)) {
-				 key ="" +  calendar.get(Calendar.YEAR) +" - "+ (calendar.get(Calendar.MONTH)+1)  +"-"+ (calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0"+calendar.get(Calendar.DAY_OF_MONTH):calendar.get(Calendar.DAY_OF_MONTH));
+				 key ="" +  calendar.get(Calendar.YEAR) +" - "+ (calendar.get(Calendar.MONTH) + 1 < 10 ? "0"+(calendar.get(Calendar.MONTH) +1):(calendar.get(Calendar.MONTH)+1))  +"-"+ (calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0"+calendar.get(Calendar.DAY_OF_MONTH):calendar.get(Calendar.DAY_OF_MONTH));
 			 }
 			 
 			 DashboardUtilizationDetails newDashboardUtilizationDetails = itemCacheMap.get(key);

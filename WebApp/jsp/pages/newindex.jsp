@@ -1,8 +1,13 @@
 <%@include file="includes/header.jsp"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/dashboard.css"/>
  <div class="col-md-12 dsfilter">
  <div class="col-md-12">
  </div>
+ <c:set var="isAdmin" value="false" scope="page"/>
+ <c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}"> 
+  <c:set var="isAdmin" value="true"/>
+ </c:if>
  <div class="col-md-12">
  <span style="float: left;font-size: 13px;margin-top: 1px;">
  	Dashboard
@@ -10,8 +15,15 @@
  	<span style="float: right">
  		<select class="searchbox dashboadgroup">
  			<option value="-1" disabled>Select Division</option>
-        	<c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
+        	<c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex">
+        	<c:if test="${isAdmin}"> 
                 <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
+        	</c:if>
+        	<c:if test="${!isAdmin}">
+	        	<c:if test="${currentUserGroupId == userGroup.value.userGroupId}">
+	        	  <option selected="selected" value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
+	        	</c:if>
+        	</c:if> 
         	</c:forEach>
  		</select>
  	<select class="searchbox accountInfo">
@@ -57,7 +69,14 @@
  		<option value="0">All</option>
  		 <c:if test="${not empty employeeMap}">
 	    <c:forEach var="employeeItem" items="${employeeMap}">
-	    	<option  class='<c:if test="${currentUserGroupId != employeeItem.value.userGroupId}">hide</c:if> UG${employeeItem.value.userGroupId}' <c:if test="${currentUser.id == employeeItem.value.id && currentUserGroupId == employeeItem.value.userGroupId}">selected="selected"</c:if> value="${employeeItem.value.id}">${employeeItem.value.firstName}</option>
+	   		<c:if test="${isAdmin}"> 
+	    		<option  class='<c:if test="${currentUserGroupId != employeeItem.value.userGroupId}">hide</c:if> UG${employeeItem.value.userGroupId}' <c:if test="${currentUser.id == employeeItem.value.id && currentUserGroupId == employeeItem.value.userGroupId}">selected="selected"</c:if> value="${employeeItem.value.id}">${employeeItem.value.firstName}</option>
+	    	</c:if>
+	    	<c:if test="${!isAdmin}"> 
+	    		<c:if test="${currentUser.id == employeeItem.value.id && currentUserGroupId == employeeItem.value.userGroupId}">
+	    			<option  class='UG${employeeItem.value.userGroupId}' selected="selected" value="${employeeItem.value.id}">${employeeItem.value.firstName}</option>
+	    		</c:if>
+	    	</c:if>
 	    </c:forEach>
 	    </c:if>
  	</select>
@@ -80,6 +99,10 @@
 	ajaxStartLabelDisabled=true;
 </script>
 <%@include file="includes/footer.jsp" %>
+<script type="text/javascript">
+	//var fullcaledartuSource = "/bops/dashboard/getEmpUtlAjaxFullcalendar/"+$(".dashboadgroup").val();
+	//var fullcaledarBsSource = "/bops/dashboard/getEmpBWAjaxFullcalendar/"+$(".dashboadgroup").val();
+</script>
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js"></script>
 <script type="text/javascript" src="${js}/famstack.calender.js"></script>
 <script type="text/javascript" src="${js}/famstack.dashboard.js"></script>
