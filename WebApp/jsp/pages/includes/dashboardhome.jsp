@@ -16,7 +16,7 @@
 					<div id="utilizationChart" class="utilizationChart" style="height: 150px">
 					</div>
 					
-					<div class="col-md-12 center-block"" style="height: 10px;">
+					<div class="col-md-12 center-block"" style="height: 10px;text-align: center;">
 						<span style="background-color: #0BB4C1;" class="legend dot"></span><span class="legendtext">Billable</span>
 						<span style="background-color: #E3E3E3;" class="legend dot"></span><span class="legendtext">Non Billable</span>
 					</div>
@@ -61,7 +61,12 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<a href="javascript:showTu();"><span class="viewprjsummary">View summary</span></a>
+			<c:if test="${!isAdmin}"> 
+				<a href="javascript:showTu();"><span class="viewprjsummary">View summary</span></a>
+			</c:if>
+			<c:if test="${isAdmin}"> 
+				<a href="javascript:showCompare();"><span class="viewprjsummary">View summary</span></a>
+			</c:if>
 		</div>
 	</div>	
 		

@@ -2,7 +2,9 @@ package com.famstack.projectscheduler.dashboard.bean;
 
 import java.util.Date;
 
+import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectTeamDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
@@ -48,7 +50,7 @@ public class DashboardUtilizationDetails {
 	
 	@Override
 	public String toString() {
-		return "[accountId:"+accountId+", teamId:"+teamId+", teamId:"+teamId+", subTeam:"+subTeamId+"]";
+		return "[accountId:"+accountId+", teamId:"+teamId+", teamId:"+teamId+", subTeam:"+subTeamId+", userId:"+userId+", Bmins:"+billableMins+", NBMins:"+nonBillableMins+"]";
 	}
 	
 	public String getLabel(){
@@ -60,10 +62,13 @@ public class DashboardUtilizationDetails {
 			ProjectTeamDetails projectTeamDetails = FamstackAccountManager.getTeammap().get(teamId);
 			return projectTeamDetails != null ? projectTeamDetails.getName() : "Team" + teamId;
 		} else if  ("Sub Teams".equalsIgnoreCase(type)){
-			ProjectSubTeamDetails projectSubTeamDetails =FamstackAccountManager.getSubteammap().get(subTeamId);
+			ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(subTeamId);
 			return projectSubTeamDetails != null ? projectSubTeamDetails.getName() : "SubTeam" + subTeamId;
-		}
-		return "";
+		} else if  ("user".equalsIgnoreCase(type)){
+			EmployeeDetails employeeDetails = FamstackApplicationConfiguration.allUsersMap.get(userId);
+			return employeeDetails != null ? employeeDetails.getFirstName() : "User" + userId;
+		} 
+		return "Unknown";
 		
 	} 
 	

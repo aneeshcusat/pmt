@@ -7,16 +7,25 @@ $(".dashboadgroup").on("change", function(){
 	$(".accountInfo option:nth-child(2)").removeClass("hide");
 	$(".accountInfo option.UG"+$(this).val()).removeClass("hide");
 	$(".accountInfo").prop("selectedIndex",0);
-	$( ".accountInfo" ).trigger( "change" );
 	
 	$(".resourceInfo option:not([class*='hide'])").addClass("hide");
 	$(".resourceInfo option:first").removeClass("hide");
 	$(".resourceInfo option.UG"+$(this).val()).removeClass("hide");
 	$(".resourceInfo").prop("selectedIndex",0);
+
+	$( ".accountInfo" ).trigger( "change" );
+
 	checkResourceChange();
 	refreshEmployeeDetails();
 	refreshProjectDetails();
 	reinitializeCalenders();
+	
+	refreshAllCompare();
+	
+	$(".dbcheckbox:not([class*='hide'])").addClass("hide");
+	$('.dbcheckbox input:checkbox').removeAttr('checked');
+	$(".dashboadaccountcompare .dbcheckbox.UG"+$(this).val()).removeClass("hide");
+	$(".dbrescompare .dbcheckbox.UG"+$(this).val()).removeClass("hide");
 });
 
 $(".accountInfo").on("change", function(){
@@ -44,6 +53,40 @@ $(".projectSubTeamInfo").on("change", function(){
 $(".resourceInfo").on("change", function(){
 	filterProjectDetails(true);
 	checkResourceChange();	
+});
+
+$(".acccbutfilter").on("click",function(){
+	var itemChecked = $(this).is(':checked');
+	var itemCheckedValue = $(this).val();
+	if (itemChecked){
+		$(".dbptcompare .ACCB"+itemCheckedValue).removeClass("hide");
+	} else {
+		$(".dbptcompare .ACCB"+itemCheckedValue).addClass("hide");
+	}
+	refreshAllCompare();
+});
+
+$(".ptcbutfilter").on("click",function(){
+	var itemChecked = $(this).is(':checked');
+	var itemCheckedValue = $(this).val();
+	if (itemChecked){
+		$(".dbstcompare .PTCB"+itemCheckedValue).removeClass("hide");
+	} else {
+		$(".dbstcompare .PTCB"+itemCheckedValue).addClass("hide");
+	}
+	refreshAllCompare();
+});
+
+$(".stcbutfilter").on("click",function(){
+	refreshAllCompare();
+});
+
+$(".rescbutfilter").on("click",function(){
+	refreshResourceCompareChart();
+});
+
+$(".dbCompareUtilization").on("change",function(){
+	refreshAllCompare();
 });
 
 function checkResourceChange(){
@@ -76,6 +119,7 @@ $("#dashboarddatepicker").daterangepicker({
 	  refreshProjectDetails();
 	  filterProjectDetails(true);
 	  fillDateBackGroupInDatePicker();
+	  refreshAllCompare();
 });
 
 function filterProjectDetails(isAdmin){
@@ -253,6 +297,119 @@ function refreshTotalUtilizationDiv(type){
 
 }
 
+var chartTeamContainer;
+var chartResourceContainer;
+
+function initizalizeLineChart(id, data, yKeys, labels, colors){
+	return Morris.Line({
+		  element: id,//'chartTeamContainer',
+		  data: [/*           
+	             {month:'2015-01-10', "sale":'20',  "cash":'25',  "cheque":'41', "void": '8', "declined": '13'},             
+	             {month:'2015-03-10', "sale":'56',  "cash":'12',  "cheque":'25', "void": '18', "declined": '8'},             
+	             {month:'2015-05-10', "sale":'56',  "cash":'36',  "cheque":'11', "void": '5', "declined": '6'},             
+	    */],
+	    xkey: 'month', 
+	    ykeys: yKeys,
+	    labels: labels,
+	    lineColors:colors,
+	    parseTime:true,
+	    grid:false,
+	    ymax:'100',
+	    postUnits:'%',
+	    hideHover:true,
+	    //hoverCallback: function (index, options, content, row) {},
+	    pointSize:1,
+	    smooth:false,
+	    lineWidth:"1px",
+	    stacked: true,
+	    gridTextSize:'9px',
+	    xLabelFormat: function(d) {
+	 	   console.log(d);
+	 	   return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov', 'Dec'][d.getMonth()] + ", " + d.getFullYear();
+			}
+	 }).on('click', function(i, row){
+	   console.log(row);
+	});
+}
+
+
+function refreshTotalUtilizationCompare(){
+	if (!isDashBoardCompare()){
+		return;
+	}
+	var dataString = getDashboardCompareFilterDataJson();
+	loadStatusForDivStart("totalUtilizationComparediv");
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardTotalUtilizationCompare",dataString , function(responseData) {
+		$(".totalUtilizationComparediv").html(responseData);
+		 loadStatusForDivEnd("totalUtilizationComparediv");
+	}, function(e) {
+        famstacklog("ERROR: ", e);
+        famstackalert(e);
+        loadStatusForDivEnd("totalUtilizationComparediv");
+    }, false);
+
+}
+
+function refreshTeamCompareChart(){
+	if (!isDashBoardCompare()){
+		return;
+	}
+
+	if ("" == getAllCheckedAccounts()){
+		return;
+	}
+	
+	var dataString = getDashboardCompareFilterDataJson();
+	var type = $(".dbCompareUtilization").val();
+	loadStatusForDivStart("chartTeamContainer");
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardChartTeamsCompare/"+type,dataString , function(responseData) {
+		var responseDataJson = JSON.parse(responseData);
+		if(!chartTeamContainer){
+			chartTeamContainer = initizalizeLineChart("chartTeamContainer", responseDataJson.data, responseDataJson.ykeys, responseDataJson.labels,responseDataJson.lineColors);
+		} else {
+			chartTeamContainer.options.ykeys =responseDataJson.ykeys;
+			chartTeamContainer.options.labels =responseDataJson.labels;
+			chartTeamContainer.options.lineColors =responseDataJson.lineColors;
+			chartTeamContainer.setData(responseDataJson.data);
+		}
+		loadStatusForDivEnd("chartTeamContainer");
+	}, function(e) {
+        famstacklog("ERROR: ", e);
+        famstackalert(e);
+        loadStatusForDivEnd("chartTeamContainer");
+    }, false);
+}
+
+function refreshResourceCompareChart(){
+	if (!isDashBoardCompare()){
+		return;
+	}
+	
+	if ("" == getAllCheckedResources()){
+		return;
+	}
+	
+	var dataString = getDashboardCompareFilterDataJson();
+	loadStatusForDivStart("chartResourceContainer");
+	var type = $(".dbCompareUtilization").val();
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardChartResourcesCompare/"+type,dataString , function(responseData) {
+		var responseDataJson = JSON.parse(responseData);
+		if(!chartResourceContainer){
+			chartResourceContainer = initizalizeLineChart("chartResourceContainer", responseDataJson.data, responseDataJson.ykeys, responseDataJson.labels,responseDataJson.lineColors);
+		} else {
+			chartResourceContainer.options.ykeys =responseDataJson.ykeys;
+			chartResourceContainer.options.labels =responseDataJson.labels;
+			chartResourceContainer.options.lineColors =responseDataJson.lineColors;
+			chartResourceContainer.setData(responseDataJson.data);
+		}
+		loadStatusForDivEnd("chartResourceContainer");
+	}, function(e) {
+        famstacklog("ERROR: ", e);
+        famstackalert(e);
+        loadStatusForDivEnd("chartResourceContainer");
+    }, false);
+}
+
 function refreshResouceUtilDiv(){
 	if (!isDashBoardHome()){
 		return;
@@ -271,6 +428,19 @@ function refreshResouceUtilDiv(){
 	    }, false);
 	}
 }
+
+
+function getDashboardCompareFilterDataJson(){
+	var dateRange = $("#daterangeText").val();
+	var groupId = $(".dashboadgroup").val();
+	var accountIds = getAllCheckedAccounts();
+	var teamIds = getAllCheckedTeams();
+	var subTeamIds = getAllCheckedSubTeams();
+	var userIds = getAllCheckedResources();
+	
+	return {"userGroupId":groupId,"dateRange":dateRange,"accountIds":accountIds,"teamIds":teamIds,"subTeamIds":subTeamIds,"userIds":userIds};
+}
+
 
 function getDashboardFilterDataJson(){
 	var dateRange = $("#daterangeText").val();
@@ -348,6 +518,12 @@ function loadStatusForDivEnd(containerClass){
 	 $("."+containerClass).waitMe("hide");
 }
 
+function refreshAllCompare(){
+	refreshTotalUtilizationCompare();
+	refreshResourceCompareChart();
+	refreshTeamCompareChart();
+}
+
 function showBandWidth(){
 	$(".dashboadhome").hide();
 	$(".dashboadtu").hide();
@@ -361,6 +537,7 @@ function showHome(){
 	$(".dashboadhome").show();
 	$(".dashboadtu").hide();
 	$(".dashboardbandwidth").hide();
+	$(".dashboadcompare").hide();
 	refreshDashBoard();
 }
 
@@ -371,6 +548,13 @@ function showTu(){
 	fullCalendar.inittu();
 	refreshDashBoard();
 }
+
+function showCompare(){
+	$(".dashboadhome").hide();
+	$(".dashboadcompare").show();
+	refreshAllCompare();
+}
+
 
 function reinitializeCalenders(){
 	if (isDashBoardTu()){
@@ -494,6 +678,8 @@ function refreshUpdateUserStatus(){
     },false);
 }
 
+
+
 function isDashBoardHome(){
 	if ($(".dashboadhome").is(':visible')) {
 		return true;
@@ -512,6 +698,63 @@ function isDashBoardBW(){
 		return true;
 	}
 	return false;
+}
+
+
+function isDashBoardCompare(){
+	if ($(".dashboadcompare").is(':visible')) {
+		return true;
+	}
+	return false;
+}
+
+function getAllCheckedAccounts(){
+	var accountIds = "";
+	$('.acccbutfilter:checked').each(function(){
+		if (accountIds != "") {
+			accountIds+="#";
+		}
+		accountIds += $(this).val();
+	});
+	
+	return accountIds;
+}
+
+function getAllCheckedTeams(){
+	var teamIds = "";
+	$('.ptcbutfilter:checked').each(function(){
+		if (teamIds != "") {
+			teamIds+="#";
+		}
+		teamIds += $(this).val();
+	});
+	
+	return teamIds;
+}
+
+function getAllCheckedSubTeams(){
+	var subTeamIds = "";
+	$('.stcbutfilter:checked').each(function(){
+		if (subTeamIds != "") {
+			subTeamIds+="#";
+		}
+		subTeamIds += $(this).val();
+	});
+	
+	return subTeamIds;
+}
+
+
+function getAllCheckedResources(){
+	var resourceIds = "";
+	$('.rescbutfilter:checked').each(function(){
+		if (resourceIds != "") {
+			resourceIds+="#";
+		}
+		resourceIds += $(this).val();
+	});
+	
+	return resourceIds;
 }
 
 

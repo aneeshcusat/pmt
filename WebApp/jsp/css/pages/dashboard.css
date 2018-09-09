@@ -457,7 +457,45 @@ margin-left: 2px;
  	text-align: center;
  }
  
+
+.totalUtilizationComparediv .progress-bar{
+	background-color: #0BB4C1;
+}
+.totalUtilizationComparediv .progress{
+	background-color: #E3E3E3;
+	border-radius:0;
+}
+.totalUtilizationComparediv .progress-bar-vertical {
+	width: 20px;
+    min-height: 330px;
+    display: flex;
+    align-items: flex-end;
+    float: left;
+    margin-left: 25px;
+    margin-bottom: 2px;
+    margin-right: 25px;
+}
+
+.totalUtilizationComparediv .progress-bar-vertical .progress-bar {
+  width: 100%;
+  height: 0;
+  -webkit-transition: height 0.6s ease;
+  -o-transition: height 0.6s ease;
+  transition: height 0.6s ease;
+}
  
+ .totalUtilizationComparediv .myprogress{
+ 	float: left;
+ 	margin-top: 10px;
+ }
+ 
+.totalUtilizationComparediv p.vprogresslabel{
+ 	margin-left: 10px;
+    margin-bottom: 2px;
+    text-align: center;
+    width: 50px;
+ }
+
 .resutildiv .progress{
 	width: 100%;
 	height: 12px;
@@ -545,4 +583,133 @@ background-color: #E3E3E3;
 
 .onlinestatus.red,.availabilityStatus.red {
     background-color: red;
+}
+
+.dashboard span.tucompareheading{
+	 font-size: 1.3em !important;
+    font-weight: 700;
+    line-height: 10px;
+    color: #686868;
+    padding: 0px;
+    margin: 0px;
+}
+
+.checkbox {
+	padding-left: 20px;
+	margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.checkbox label {
+	display: inline-block;
+	position: relative;
+	padding-left: 0px;
+}
+
+.checkbox label::before {
+	content: "";
+	display: inline-block;
+	position: absolute;
+	width: 13px;
+	height: 13px;
+	left: 0;
+	margin-left: -20px;
+	border: 2px solid #fff;
+	border-radius: 3px;
+	background-color: #fff;
+	-webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+	-o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+	transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.checkbox label::after {
+	display: inline-block;
+	position: absolute;
+	width: 12px;
+	height: 12px;
+	left: 0;
+	top: 0;
+	margin-left: -20px;
+	padding-left: 3px;
+	padding-top: 1px;
+	font-size: 11px;
+	color: #555555;
+}
+
+.checkbox input[type="checkbox"] {
+	z-index: 1;
+	opacity: 0;
+}
+
+.checkbox input[type="checkbox"]:focus+label::before {
+	outline: thin dotted;
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
+}
+
+.checkbox input[type="checkbox"]:checked+label::after {
+	font-family: 'FontAwesome';
+	content: "";
+}
+
+.checkbox input[type="checkbox"]:disabled+label {
+	opacity: 0.65;
+}
+
+.checkbox input[type="checkbox"]:disabled+label::before {
+	background-color: #eeeeee;
+	cursor: not-allowed;
+}
+
+.checkbox.checkbox-circle label::before {
+	border-radius: 50%;
+}
+
+.checkbox.checkbox-inline {
+	margin-top: 0;
+}
+
+.checkbox-primary input[type="checkbox"]:checked+label::before {
+	background-color: #428bca;
+	border-color: #428bca;
+}
+
+.checkbox-primary input[type="checkbox"]:checked+label::after {
+	color: #fff;
+}
+
+.checkbox-danger input[type="checkbox"]:checked+label::before {
+	background-color: #d9534f;
+	border-color: #d9534f;
+}
+
+.checkbox-danger input[type="checkbox"]:checked+label::after {
+	color: #fff;
+}
+
+.checkbox-info input[type="checkbox"]:checked+label::before {
+	background-color: #000;
+	border-color: #fff;
+}
+
+.checkbox-info input[type="checkbox"]:checked+label::after {
+	color: #fff;
+}
+
+.checkbox-warning input[type="checkbox"]:checked+label::before {
+	background-color: #f0ad4e;
+	border-color: #f0ad4e;
+}
+
+.checkbox-warning input[type="checkbox"]:checked+label::after {
+	color: #fff;
+}
+
+.checkbox-success input[type="checkbox"]:checked+label::before {
+	background-color: #5cb85c;
+	border-color: #5cb85c;
+}
+
+.checkbox-success input[type="checkbox"]:checked+label::after {
+	color: #fff;
 }

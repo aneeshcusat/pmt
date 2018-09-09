@@ -773,28 +773,41 @@ public class FamstackProjectManager extends BaseFamstackManager
     }
     
 
+	private List<String> getArrayToList(String ids) {
+		List<String>  idList = null;
+		if (StringUtils.isNotBlank(ids)){
+			 idList = new ArrayList(java.util.Arrays.asList(ids.split("#")));
+		}
+		return idList;
+	}
+	
+
 	public List<DashboardUtilizationDetails> dashboardAllUtilization(Date startDate, Date endDate,
 			String userGroupId, String accountId, String teamId, String subTeamId, String userId, boolean isResouceUtilization, boolean isTotalUtilization) {
 		 Map<String, Object> dataMap = new HashMap<>();
          dataMap.put("startDate", startDate);
          dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
          String type;
+         List<String> accountIdsList = getArrayToList(accountId);
+         List<String> subTeamIdsList = getArrayToList(subTeamId);
+         List<String> resourceIdsList = getArrayToList(userId);
+         
          String sqlQuery = HQLStrings.getString("projectOverAllUtilizationSQL");
          String groupBy = " group by ";
          if (StringUtils.isNotBlank(userId) && !isResouceUtilization) {
-        	 sqlQuery += " and uai.id = " + userId;
+        	 sqlQuery += " and "+getCompareQuery("uai.id", resourceIdsList);
         	 groupBy += "pi.account_id";
         	 type = "Accounts";
          } else if (StringUtils.isNotBlank(subTeamId)) {
-        	 sqlQuery += " and pi.team_id = " + subTeamId;
+        	 sqlQuery += " and "+getCompareQuery("pi.team_id", subTeamIdsList);
         	 groupBy += "pi.team_id";
         	 type = "Sub Teams";
          } else if (StringUtils.isNotBlank(teamId)) {
-        	 sqlQuery += " and pi.account_id = " + accountId;
+        	 sqlQuery += " and "+getCompareQuery("pi.account_id", accountIdsList);
         	 groupBy += "pi.team_id";
         	 type = "Sub Teams";
          } else  if (StringUtils.isNotBlank(accountId)) {
-        	 sqlQuery += " and pi.account_id = " + accountId;
+        	 sqlQuery += " and "+getCompareQuery("pi.account_id", accountIdsList);
         	 groupBy += "pi.team_id";
         	 type = "Teams";
          }  else {
@@ -820,7 +833,27 @@ public class FamstackProjectManager extends BaseFamstackManager
          
 	}
 
-    private List<DashboardUtilizationDetails> mapDashboardUtilizationDetails(
+    private String getCompareQuery(String coloumn, List<String> IdsList) {
+    	String query ="";
+    	if (IdsList != null) {
+    		if (IdsList.size() == 1) {
+    			return coloumn+"="+IdsList.get(0);
+    		} else {
+    			for(String id : IdsList){
+    				if (query == "") {
+    					query+="(";
+    				} else {
+    					query+=" or ";
+    				}
+    				query += coloumn+" = "+id;
+    			}
+    			query+=")";
+    		}
+    	}
+    	return query;
+	}
+
+	private List<DashboardUtilizationDetails> mapDashboardUtilizationDetails(
 			List<Object[]> overAllUtilization, String type) {
     	List<DashboardUtilizationDetails> dashboardUtilizationDetailsList = new ArrayList<>();
     	for (int i = 0; i < overAllUtilization.size(); i++) {

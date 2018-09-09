@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.dashboard.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -187,7 +188,83 @@ public class FamstackDashboardController extends BaseFamstackService
         return new ModelAndView("response/dashboardAccountUtilizationChart").addObject("dashboadAccountUtilization", dashboardOverAllutilizationList);
     }
 
-    @RequestMapping(value = "/dashboardTotalUtilizationChart/{viewType}", method = RequestMethod.GET)
+    @RequestMapping(value = "/dashboardTotalUtilizationCompare", method = RequestMethod.GET)
+    public ModelAndView dashboardTotalUtilizationCompare(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
+    		@RequestParam("accountIds") String accountIds,@RequestParam("teamIds") String teamIds,@RequestParam("subTeamIds") String subTeamIds,@RequestParam("userIds") String userIds)
+    {
+    	 String[] dateRanges;
+         Date startDate = null;
+         Date endDate = null;
+         if (StringUtils.isNotBlank(dateRange)) {
+             dateRanges = dateRange.split("-");
+
+             if (dateRanges != null && dateRanges.length > 1) {
+                 startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                 endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+             }
+         } else {
+             startDate =
+                 DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+             endDate = startDate;
+        }
+        List<DashboardUtilizationDetails> dashboardOverAllutilizationList = famstackDashboardManager.dashboardTotalUtilizationChart(startDate, endDate, userGroupId, accountIds, teamIds, subTeamIds,"", "month");
+        Double totalDashBoardTime = famstackDashboardManager.getTotalDashboardFilterdutilizationList(dashboardOverAllutilizationList);
+        for (DashboardUtilizationDetails dashboardUtilizationDetails :dashboardOverAllutilizationList)
+        {
+        	dashboardUtilizationDetails.setGrandTotal(totalDashBoardTime);
+        }
+        return new ModelAndView("response/dashboardTotalUtilizationCompare").addObject("dashboardOverAllutilization", dashboardOverAllutilizationList);
+    }
+
+    
+    @RequestMapping(value = "/dashboardChartTeamsCompare/{type}", method = RequestMethod.GET)
+    @ResponseBody
+    public String dashboardChartTeamsCompare(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
+    		@RequestParam("accountIds") String accountIds,@RequestParam("teamIds") String teamIds,@RequestParam("subTeamIds") String subTeamIds,@RequestParam("userIds") String userIds, @PathVariable("type") String type)
+    {
+    	return dashboardChartResourcesCompare(userGroupId, dateRange, accountIds, teamIds, subTeamIds, "", type);
+    }
+    
+    @RequestMapping(value = "/dashboardChartResourcesCompare/{type}", method = RequestMethod.GET)
+    @ResponseBody
+    public String dashboardChartResourcesCompare(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
+    		@RequestParam("accountIds") String accountIds,@RequestParam("teamIds") String teamIds,@RequestParam("subTeamIds") String subTeamIds,@RequestParam("userIds") String userIds, @PathVariable("type") String type)
+    {
+    	 String[] dateRanges;
+         Date startDate = null;
+         Date endDate = null;
+         if (StringUtils.isNotBlank(dateRange)) {
+             dateRanges = dateRange.split("-");
+
+             if (dateRanges != null && dateRanges.length > 1) {
+                 startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                 endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+             }
+         } else {
+             startDate =
+                 DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+             endDate = startDate;
+        }
+         Map<String,  Map<String, DashboardUtilizationDetails>> dashboardOverAllutilizationMap = famstackDashboardManager.dashboarAllUtilizationListCompare(startDate, endDate, userGroupId, accountIds, teamIds, subTeamIds,userIds,type);
+        
+         if (dashboardOverAllutilizationMap != null) {
+        	 for (String key : dashboardOverAllutilizationMap.keySet()) {
+        		 Map<String, DashboardUtilizationDetails> dbudMap = dashboardOverAllutilizationMap.get(key);
+;		         Double totalDashBoardTime = famstackDashboardManager.getTotalDashboardFilterdutilizationList(new ArrayList<DashboardUtilizationDetails>(dbudMap.values()));
+		         for (DashboardUtilizationDetails dashboardUtilizationDetails :dbudMap.values())
+		         {
+		         	dashboardUtilizationDetails.setGrandTotal(totalDashBoardTime);
+		         }
+        	 }
+        	 return famstackDashboardManager.covertdashboardOverAllutilizationMapJson(dashboardOverAllutilizationMap, type);
+         }
+    
+         
+         return "{\"lineColors\":[],\"data\":[],\"ykeys\":[],\"labels\":[]}";
+    }
+
+
+	@RequestMapping(value = "/dashboardTotalUtilizationChart/{viewType}", method = RequestMethod.GET)
     public ModelAndView dashboardTotalUtilizationChart(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId, @PathVariable("viewType") String viewType)
     {

@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.dashboard.manager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -730,12 +732,14 @@ public class FamstackDashboardManager extends BaseFamstackService
 			String subTeamId, String userId, boolean isResouceUtilization, boolean isTotalUtilization) {
 		
 		List<DashboardUtilizationDetails> dashboardFilterdutilizationList  = new ArrayList<>();
+		
 		List<DashboardUtilizationDetails> dashboardAllutilizationList = projectManager.dashboardAllUtilization(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, isResouceUtilization, isTotalUtilization);
 		System.out.println(dashboardAllutilizationList);
 		for(DashboardUtilizationDetails dashboardOverAllutilization : dashboardAllutilizationList) {
 			if (StringUtils.isNotBlank(teamId) && !StringUtils.isNotBlank(subTeamId)){
+				List<String> teamIdsList = getArrayToList(teamId);
 				dashboardOverAllutilization = filterDashboardUtilizationDetails(
-						"", teamId, "", dashboardOverAllutilization);
+						null, teamIdsList, null, dashboardOverAllutilization);
 			}
 			
 			if(dashboardOverAllutilization != null) {
@@ -744,6 +748,14 @@ public class FamstackDashboardManager extends BaseFamstackService
 		}
 		System.out.println("Filtered DAUList : " + dashboardAllutilizationList);
 		return dashboardFilterdutilizationList;
+	}
+
+	private List<String> getArrayToList(String ids) {
+		List<String>  idList = null;
+		if (StringUtils.isNotBlank(ids)){
+			 idList = new ArrayList(Arrays.asList(ids.split("#")));
+		}
+		return idList;
 	}
 	
 
@@ -761,20 +773,109 @@ public class FamstackDashboardManager extends BaseFamstackService
 		}
 		return totalTime;
 	}
+	
+
+	public Double getTotalDashboardFilterdutilizationList(
+			Map<String, Map<String, DashboardUtilizationDetails>> dashboardOverAllutilizationMap) {
+		Double totalTime = 0.0;
+		
+		return totalTime;
+	}
 
 	private DashboardUtilizationDetails filterDashboardUtilizationDetails(
-			String accountId, String teamId, String subTeamId,
+			List accountIdList, List teamIdList, List subTeamIdList,
 			DashboardUtilizationDetails dashboardOverAllutilization) {
-		if (StringUtils.isNotBlank(accountId) && !accountId.equalsIgnoreCase(""+dashboardOverAllutilization.getAccountId()) ) {
+		if (accountIdList != null && !accountIdList.contains(""+dashboardOverAllutilization.getAccountId()) ) {
 			dashboardOverAllutilization = null;
-		} else if (StringUtils.isNotBlank(teamId) && !teamId.equalsIgnoreCase(""+dashboardOverAllutilization.getTeamId())) {
+		} else if (teamIdList != null && !teamIdList.contains(""+dashboardOverAllutilization.getTeamId())) {
 			dashboardOverAllutilization = null;
-		} else if (StringUtils.isNotBlank(subTeamId) && !subTeamId.equalsIgnoreCase(""+dashboardOverAllutilization.getSubTeamId())) {
+		} else if (subTeamIdList != null && !subTeamIdList.contains(""+dashboardOverAllutilization.getSubTeamId())) {
 			dashboardOverAllutilization = null;
 		}
 		return dashboardOverAllutilization;
 	}
     
+
+	public  Map<String,  Map<String, DashboardUtilizationDetails>> dashboarAllUtilizationListCompare(
+			Date startDate, Date endDate, String userGroupId,
+			String accountIds, String teamIds, String subTeamIds, String userIds, String type) {
+		 List<DashboardUtilizationDetails> dashboardOverAllutilizationList = dashboarAllUtilizationList(startDate, endDate, userGroupId, accountIds, teamIds, subTeamIds,userIds, false,true);
+		 Map<String,  Map<String, DashboardUtilizationDetails>> itemCacheMap = new HashMap<>();
+		 
+		 List<String> accountIdsList = getArrayToList(accountIds);
+		 List<String> teamIdsList = getArrayToList(teamIds);
+		 List<String> subTeamIdsList = getArrayToList(subTeamIds);
+		 List<String> userIdsLIst = getArrayToList(userIds);
+		 
+		 for(DashboardUtilizationDetails dashboardUtilizationDetails : dashboardOverAllutilizationList) {
+			 Date date = dashboardUtilizationDetails.getActualTaskStartTime();
+			 Calendar calendar = Calendar.getInstance();
+			 calendar.setTime(date);
+			 String key = "" +  calendar.get(Calendar.YEAR) +"-"+ (calendar.get(Calendar.MONTH)+1);
+			 
+			 Map<String, DashboardUtilizationDetails> newDashboardUtilizationDetailsMap = itemCacheMap.get(key);
+			 if (newDashboardUtilizationDetailsMap == null) {
+				 Map<String, DashboardUtilizationDetails> dbUlDataListMap = new HashMap<>();
+				 List<String> tempList = null;
+				 if (userIdsLIst != null) {
+					 tempList = userIdsLIst;
+				 } else if (subTeamIdsList != null) {
+					 tempList = subTeamIdsList;
+				 }else if (teamIdsList != null) {
+					 tempList = teamIdsList;
+				 }else if (accountIdsList != null) {
+					 tempList = accountIdsList;
+				 } else {
+					 return null;
+				 }
+				 
+				 for (String id : tempList) {
+					 DashboardUtilizationDetails tempDashboardUtilizationDetails = new DashboardUtilizationDetails();
+					 if (userIdsLIst != null) {
+						 tempDashboardUtilizationDetails.setUserId(Integer.parseInt(id));
+						 tempDashboardUtilizationDetails.setType("user");
+					 } else if (subTeamIdsList != null) {
+						 tempDashboardUtilizationDetails.setSubTeamId(Integer.parseInt(id));
+						 tempDashboardUtilizationDetails.setType("Sub Teams");
+					 }else if (teamIdsList != null) {
+						 tempDashboardUtilizationDetails.setTeamId(Integer.parseInt(id));
+						 tempDashboardUtilizationDetails.setType("Teams");
+					 }else if (accountIdsList != null) {
+						 tempDashboardUtilizationDetails.setAccountId(Integer.parseInt(id));
+						 tempDashboardUtilizationDetails.setType("Accounts");
+					 } 
+					 tempDashboardUtilizationDetails.setBillableMins(0d);
+					 tempDashboardUtilizationDetails.setNonBillableMins(0d);
+					 dbUlDataListMap.put(id, tempDashboardUtilizationDetails);
+				 }
+				 
+				 itemCacheMap.put(key, dbUlDataListMap);
+			 }
+			 DashboardUtilizationDetails newpDashboardUtilizationDetails = null;
+			 if (userIdsLIst != null) {
+				 newpDashboardUtilizationDetails = itemCacheMap.get(key).get(""+dashboardUtilizationDetails.getUserId());
+			 } else if (subTeamIdsList != null) {
+				 newpDashboardUtilizationDetails = itemCacheMap.get(key).get(""+dashboardUtilizationDetails.getSubTeamId());
+			 }else if (teamIdsList != null) {
+				 newpDashboardUtilizationDetails = itemCacheMap.get(key).get(""+dashboardUtilizationDetails.getTeamId());
+			 }else if (accountIdsList != null) {
+				 newpDashboardUtilizationDetails = itemCacheMap.get(key).get(""+dashboardUtilizationDetails.getAccountId());
+			 } 
+			 
+			 if (newpDashboardUtilizationDetails != null) {
+				Double billableMins = dashboardUtilizationDetails.getBillableMins() + newpDashboardUtilizationDetails.getBillableMins();
+				Double nonBillableMins = dashboardUtilizationDetails.getNonBillableMins() + newpDashboardUtilizationDetails.getNonBillableMins();
+				newpDashboardUtilizationDetails.setBillableMins(billableMins);
+				newpDashboardUtilizationDetails.setNonBillableMins(nonBillableMins);
+				newpDashboardUtilizationDetails.setUserId(dashboardUtilizationDetails.getUserId());
+				newpDashboardUtilizationDetails.setAccountId(dashboardUtilizationDetails.getAccountId());
+				newpDashboardUtilizationDetails.setTeamId(dashboardUtilizationDetails.getTeamId());
+				newpDashboardUtilizationDetails.setSubTeamId(dashboardUtilizationDetails.getSubTeamId());
+			 }
+		 }
+		 return itemCacheMap;
+	}
+
 
 	public List<DashboardUtilizationDetails> dashboardTotalUtilizationChart(
 			Date startDate, Date endDate, String userGroupId, String accountId,
@@ -1169,6 +1270,55 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     }
 
+    private String getRandomColor(){
+        Random random = new Random();
+        int nextInt = random.nextInt(0xffffff + 1);
+       return String.format("#%06x", nextInt);
+    }
+    
+    public String covertdashboardOverAllutilizationMapJson(
+			Map<String, Map<String, DashboardUtilizationDetails>> dashboardOverAllutilizationMap, String type) {
+    	 JSONObject dbCompareJson =new JSONObject();
+    	JSONArray jsonArray = new JSONArray();
+    	JSONArray colorsJSonArray = new JSONArray();;
+    	JSONArray labelsJSonArray = new JSONArray();
+    	JSONArray ykeysJSonArray = null;
+         if (dashboardOverAllutilizationMap != null) {
+        	 for (String key : dashboardOverAllutilizationMap.keySet()){
+        		 JSONObject jsonObject = new JSONObject();
+        		 jsonObject.put("month", key+"-31");
+        		 Map<String, DashboardUtilizationDetails> dashboardUtilizationDetailsMao = dashboardOverAllutilizationMap.get(key);
+
+    			 if (ykeysJSonArray == null) {
+    				 ykeysJSonArray = new JSONArray();
+    				 for (String itemKey : dashboardUtilizationDetailsMao.keySet()){
+    					 ykeysJSonArray.put(itemKey);
+    					 labelsJSonArray.put(dashboardUtilizationDetailsMao.get(itemKey).getLabel());
+    					 colorsJSonArray.put(getRandomColor());
+    				 }
+    			 }
+    			 
+        		 for (String itemKey : dashboardUtilizationDetailsMao.keySet()){
+        			 if ("All".equalsIgnoreCase(type)) {
+        				 jsonObject.put(itemKey, dashboardUtilizationDetailsMao.get(itemKey).getGrandTotalPercentage());
+        			 } else if ("BILLABLE".equalsIgnoreCase(type)) {
+        				 jsonObject.put(itemKey, dashboardUtilizationDetailsMao.get(itemKey).getBillablePercentage());
+        			 } else {
+        				 jsonObject.put(itemKey, dashboardUtilizationDetailsMao.get(itemKey).getNonBillablePercentage());
+        			 }
+        			
+        		 }
+                 jsonArray.put(jsonObject);
+        	 }
+         }
+         dbCompareJson.put("data", jsonArray);
+         dbCompareJson.put("ykeys", ykeysJSonArray);
+         dbCompareJson.put("labels", labelsJSonArray);
+         dbCompareJson.put("lineColors", colorsJSonArray);
+         
+         return dbCompareJson.toString();
+	}
+    
     public List<TaskDetails> loadProjectTaskDetails(int projectId)
     {
         return projectManager.getProjectTaskDetails(projectId);
@@ -1264,5 +1414,6 @@ public class FamstackDashboardManager extends BaseFamstackService
 	public List<EmployeeBWDetails> getEmployeesOnLeaveToday(String groupId, Date date) {
 		return userProfileManager.getEmployeesOnLeaveToday(groupId, date);
 	}
+
 
 }

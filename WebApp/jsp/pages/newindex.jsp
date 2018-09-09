@@ -12,7 +12,7 @@
  <span style="float: left;font-size: 13px;margin-top: 1px;">
  	Dashboard
  </span>
- 	<span style="float: right">
+ 	<span style="float: right" class="dashboardmainfilter">
  		<select class="searchbox dashboadgroup">
  			<option value="-1" disabled>Select Division</option>
         	<c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex">
@@ -94,6 +94,7 @@
 <%@include file="includes/dashboardhome.jsp" %>
 <%@include file="includes/dashboardtu.jsp" %>
 <%@include file="includes/dashboardbandwidth.jsp" %> 
+<%@include file="includes/dashboardtucompare.jsp" %> 
 </div>
 <script type="text/javascript">
 	ajaxStartLabelDisabled=true;
