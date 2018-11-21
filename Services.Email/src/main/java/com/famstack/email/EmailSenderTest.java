@@ -16,14 +16,14 @@ public class EmailSenderTest
     public static void main(String[] args)
     {
 
-        final String username = "famstack.support@blueoceanmi.com";
-        final String password = "Cou@123$#11";
+        final String username = "famstack.bops@gmail.com";
+        final String password = "Famstack123";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "Smtp.office365.com");
-        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.host", "smtp.gmail.com");//Smtp.office365.com");
+        props.put("mail.smtp.port", "25");//587");
         props.put("mail.debug", "true");
 
         System.out.println("Sending email");
@@ -39,8 +39,8 @@ public class EmailSenderTest
         try {
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("famstack.support@blueoceanmi.com"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("famstack.support@blueoceanmi.com"));
+            message.setFrom(new InternetAddress("eshopper@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("famstack.bops@gmail.com"));
             message.setSubject("Testing Subject");
             message.setText("Dear Mail Crawler," + "\n\n No spam to my email, please!");
 

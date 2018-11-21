@@ -8,7 +8,7 @@
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <c:if test="${not empty projectData}">
 	  <c:forEach var="project" items="${projectData}">
-	    <tr class='projectDetailsRow activeRow filteredRow ${project.projectStatusLabel} <c:if test="${not empty project.assigneeIdList}"><c:forEach var="assigneeId" items="${project.assigneeIdList}" varStatus="assigneeIdIndex"> prjUserId${assigneeId}</c:forEach></c:if> prjAccount${project.projectAccountId} prjTeam${project.teamId} prjSubTeam${project.subTeamId} prjClient${project.projectClientId}'>
+	    <tr class='projectDetailsRow activeRow filteredRow ${project.projectStatusLabel} <c:if test="${not empty project.assigneeIdList}"><c:forEach var="assigneeId" items="${project.assigneeIdList}" varStatus="assigneeIdIndex"> prjUserId${assigneeId}</c:forEach></c:if> prjAccount${project.projectAccountId} prjTeam${project.teamId} prjSubTeam${project.subTeamId} prjClient${project.projectClientId}' data-duration="${project.taskActivityDuration}">
 	        <td class="filterable-cell rtborder"><strong><a href="${applicationHome}/project/${project.projectId}">${project.projectName}</a></strong></td>
 	        <td class="panelHideTD" style="display: none">${project.projectNumber}</td>
 	        <td class="filterable-cell">${project.teamName}</td>

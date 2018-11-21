@@ -502,6 +502,19 @@ function countProjectDetailsItem(){
 	$('.projectsummary.inprogress .numberofproject').html(inprogress);
 	$('.projectsummary.completed .numberofproject').html(completed);
 	$('.projectsummary.upcoming .numberofproject').html(upcoming);
+	var totalDuration = 0;
+	$(".projectDetailsRow.filteredRow:not([class*='hide'])").each(function () {
+		var duration = $(this).attr("data-duration");
+		if(duration != "") {
+			totalDuration = totalDuration+parseInt(duration);
+		}
+	});
+	
+	if (totalDuration > 0) {
+		var hours = parseInt(totalDuration / 60); // since both are ints, you get an int
+		var minutes = parseInt(totalDuration % 60);
+		$('.projectsummary.totalprojectcount .hours').html("("+hours+":"+minutes +" Hrs)");
+	}
 }
 
 

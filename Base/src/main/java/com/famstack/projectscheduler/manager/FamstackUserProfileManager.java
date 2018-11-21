@@ -142,7 +142,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
 
     public void updateUserItem(EmployeeDetails employeeDetails)
     {
-        UserItem userItem = getUserItem(employeeDetails.getEmail());
+        UserItem userItem = getUserItemById(employeeDetails.getId());
         if (userItem != null) {
             saveUserItem(employeeDetails, userItem);
         }
