@@ -1481,7 +1481,7 @@ $(".ranges ul li").on("click",function(){
 var persistDateFilter = function(value){
 	var name = ${currentUser.id} + "_filterDate";
 	
-	if ("Custom Range" != value) {
+	if ("Custom Range" != value && filterDateMap.hasOwnProperty(value)) {
 		doAjaxEnableSettings(name,value);
 	}
 	
