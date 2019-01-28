@@ -52,6 +52,18 @@
     </body>
 </html>
 <script>
+
+if(${userAccessedSystemToday}){
+	invokeUserActivityTracker(${currentUserId});
+}
+
+function invokeUserActivityTracker(userId){
+	doAjaxRequestWithGlobal("GET", "${applicationHome}/trackUserActivity",  {"userId":userId},function(data) {
+	},function(error) {
+    	famstacklog("ERROR: ", error);
+    },false);
+}
+
 function userPingCheck(){
 	doAjaxRequestWithGlobal("POST", "${applicationHome}/userPingCheck",  {},function(data) {
     	var userStatus = JSON.parse(data);
@@ -310,17 +322,6 @@ function sortOnlineStatus(){
 	      var contentB =parseInt( $(b).attr('data-sort'));
 	      return (contentA > contentB) ? -1 : (contentA < contentB) ? 1 : 0;
 	   }));
-}
-
-if(${userAccessedSystemToday}){
-	invokeUserActivityTracker(${currentUserId});
-}
-
-function invokeUserActivityTracker(userId){
-	doAjaxRequestWithGlobal("GET", "${applicationHome}/trackUserActivity",  {"userId":userId},function(data) {
-	},function(error) {
-    	famstacklog("ERROR: ", error);
-    },false);
 }
 
 

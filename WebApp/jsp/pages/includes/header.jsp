@@ -7,7 +7,7 @@
 <spring:url value="/jsp/image" var="image" htmlEscape="true"/>
 <spring:url value="/jsp/js" var="js" htmlEscape="true"/>
 <spring:url value="/jsp/audio" var="audio" htmlEscape="true"/>
-
+<c:set var="famstackbaseurl" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}" />
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
@@ -21,7 +21,8 @@
 <%@include file="accessCheck.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
-    <head>        
+    <head>       
+    	<!-- Famstack URL : ${famstackbaseurl} -->
         <!-- META SECTION -->
         <title>Famstack - Project scheduler</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -66,10 +67,8 @@
                     </li>
                     <!-- END TOGGLE NAVIGATION -->
                     <!-- SEARCH -->
-                    <li class="xn-search hide">
-                        <form role="form">
-                            <input type="text" name="search" placeholder="Search..."/>
-                        </form>
+                    <li class="dashboardtitle">
+                       DASHBOARD
                     </li>   
                     <!-- END SEARCH -->
                     <!-- SIGN OUT -->

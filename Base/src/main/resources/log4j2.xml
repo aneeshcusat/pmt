@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn">
 	<Properties>
-		<Property name="di-log-path">c:/apps/famstack</Property>
+		<Property name="di-log-path">${env:LOG_FILE_LOCATION}</Property>
 	</Properties>
 	<Appenders>
 		<Console name="console-log" target="SYSTEM_OUT">
@@ -9,8 +9,8 @@
 				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n" />
 		</Console>
 		<RollingRandomAccessFile name="Rollingfamstacklogfile"
-                                 fileName="${di-log-path}/bops-log/bops.log"
-                                 filePattern="${di-log-path}/bops-log/bops.log.%d{yyyy-MM-dd-hh-mm}.gz">
+                                 fileName="${di-log-path}/bops-log/bops_${env:LOG_FILE_NAME}.log"
+                                 filePattern="${di-log-path}/bops-log/bops_${env:LOG_FILE_NAME}.log.%d{yyyy-MM-dd-hh-mm}.gz">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] %c{1} - %msg%n"/>
             <Policies>
                <TimeBasedTriggeringPolicy interval="1440"

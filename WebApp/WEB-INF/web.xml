@@ -9,7 +9,7 @@
     <param-value>/famstack</param-value>
   </context-param>
   <session-config>
-    <session-timeout>-1</session-timeout>
+    <session-timeout>1440</session-timeout>
   </session-config>
   
   <context-param>
@@ -73,4 +73,24 @@
        <error-code>500</error-code>
        <location>/dashboard/dashboard</location>
     </error-page>
+    <filter>
+		<filter-name>javamelody</filter-name>
+		<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+		<init-param>
+			<param-name>log</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<async-supported>true</async-supported>
+	</filter>
+	<filter-mapping>
+		<filter-name>javamelody</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ASYNC</dispatcher>
+	</filter-mapping>
+	<listener>
+		<listener-class>net.bull.javamelody.SessionListener</listener-class>
+	</listener>
+    <distributable/>
+    
 </web-app>
