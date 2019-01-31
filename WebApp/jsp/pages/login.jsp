@@ -2,8 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<spring:url value="/jsp/css" var="css" htmlEscape="true"/>
-<spring:url value="/jsp/js" var="js" htmlEscape="true"/>
+<c:set var="staticFilesLocation" value="${applicationScope.applicationConfiguraion.staticFilesLocation}"/>
+<c:set value="${staticFilesLocation}/css" var="css"/>
+<c:set value="${staticFilesLocation}/image" var="image"/>
+<c:set value="${staticFilesLocation}/js" var="js"/>
 <!DOCTYPE html>
 <html lang="en" class="body-full-height">
     <head>        
@@ -13,7 +15,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         
-        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="${fn:escapeXml(image)}/favicon.ico" type="image/x-icon" />
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        

@@ -134,5 +134,7 @@
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/spring-security-taglibs-4.1.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/stax-api-1.0.1.jar"/>
 	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/javamelody-core-1.76.0.jar"/>
+	<classpathentry kind="lib" path="WebApp/WEB-INF/lib/jrobin-1.5.9.jar"/>
 	<classpathentry kind="output" path="WebApp/WEB-INF/classes"/>
 </classpath>

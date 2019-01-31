@@ -483,7 +483,7 @@ background-color: red !important;
 
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>     
- <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js"></script>       
+ <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js"></script>       
 <script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
 <script type="text/javascript" src="${js}/unbilledtask.js"></script>

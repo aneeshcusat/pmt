@@ -35,22 +35,26 @@ public class FamstackScheduler extends BaseFamstackService
 
     @Resource
     private FamstackNotificationServiceManager famstackNotificationServiceManager;
+    
+    private boolean enabled;
 
     @Async
     public void scheduleJob()
     {
-        logInfo("Running scheduleJob scheduler");
-        userTaskStatusRefresh();
-        creatingRecurringProjects();
-        checkProjectDeadlineMissed();
-        checkProjectStartTimeReminder();
-        checkProjectEndTimeReminder();
-        checkTaskStartTimeReminder();
-        checkTaskEndTimeReminder();
-        checkTaskDeadlineMissed();
-        setTaskRemainingTimeJob();
-        deleteOlderProjects();
-        autoPauseTaskExceedsTimeLimitHrs(10);
+    	if (enabled) {
+	        logInfo("Running scheduleJob scheduler");
+	        userTaskStatusRefresh();
+	        creatingRecurringProjects();
+	        checkProjectDeadlineMissed();
+	        checkProjectStartTimeReminder();
+	        checkProjectEndTimeReminder();
+	        checkTaskStartTimeReminder();
+	        checkTaskEndTimeReminder();
+	        checkTaskDeadlineMissed();
+	        setTaskRemainingTimeJob();
+	        deleteOlderProjects();
+	        autoPauseTaskExceedsTimeLimitHrs(10);
+    	}
     }
 
     @Async
@@ -227,5 +231,13 @@ public class FamstackScheduler extends BaseFamstackService
         logDebug("Running scheduler completed - autoPauseTaskExceedsTimeLimitHrs");
 
     }
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 }

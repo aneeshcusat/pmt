@@ -709,21 +709,31 @@ public class FamstackDashboardManager extends BaseFamstackService
 			String subTeamId, String userId) {
 		Double billableMins = 0.0;
 		Double nonBillableMins = 0.0;
-		List<DashboardUtilizationDetails> dashboardOverAllutilizationList = dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, false, false);
+		List<DashboardUtilizationDetails> dashboardOverAllutilizationList = dashboarAllUtilizationList(startDate, endDate, userGroupId, "", "", "", "", false, false);
 		for(DashboardUtilizationDetails dashboardOverAllutilization : dashboardOverAllutilizationList) {
 			billableMins +=dashboardOverAllutilization.getBillableMins();
 			nonBillableMins += dashboardOverAllutilization.getNonBillableMins();
 		}
 		
-		int billablePercentage = 0;
+		/*int billablePercentage = 0;
 		int nonBillablePercentage = 0;
 		if (billableMins >0) {
 		 billablePercentage = (int) ((billableMins/(billableMins+nonBillableMins))*100);
 		}
 		if (nonBillableMins > 0) {
 		 nonBillablePercentage = (int) ((nonBillableMins/(billableMins+nonBillableMins))*100);
+		}*/
+		int billableHrs = (int) (billableMins/60);
+		int nonBillableHrs = (int) (nonBillableMins/60);
+		int totalBillableHours = (int) (billableMins + nonBillableMins);
+		int numberOfWorkingDays = DateUtils.getWorkingDaysBetweenTwoDates(startDate, endDate);
+		int numberOfWorkingHrs = (numberOfWorkingDays * 8 * getFamstackApplicationConfiguration().getAllUserList().size());
+		int totalHrsPercentage = 0;
+		if (totalBillableHours > 0) {
+			 totalHrsPercentage = (int) ((totalBillableHours/numberOfWorkingHrs)*100);
 		}
-		return "{\"billable\":"+billablePercentage+",\"nonBillable\":"+nonBillablePercentage+"}";
+		
+		return "{\"billableHrs\":"+billableHrs+",\"nonBillableHrs\":"+nonBillableHrs+",\"totalHrsPercentage\":"+totalHrsPercentage+"}";
 	
 	}
 	
@@ -1387,9 +1397,9 @@ public class FamstackDashboardManager extends BaseFamstackService
             + subject, messageBody);
     }
 
-    public void trackUserSiteActivity(Integer userId)
+    public void trackUserSiteActivity(Integer userId, Date activityDate, boolean status)
     {
-        famstackUserActivityManager.createUserSiteActivities(userId);
+        famstackUserActivityManager.createUserSiteActivities(userId, activityDate, status);
     }
 
     public Map<Integer, Map<String, String>> getAllUserSiteActivities(Date startDate, Date endDate)

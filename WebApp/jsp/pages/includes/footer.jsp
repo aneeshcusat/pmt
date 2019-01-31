@@ -64,6 +64,14 @@ function invokeUserActivityTracker(userId){
     },false);
 }
 
+function updateUserActivity(userId, activityDateString, status){
+	doAjaxRequestWithGlobal("GET", "${applicationHome}/trackUserActivity",  {"userId":userId,"activityDateString":activityTime,"status":status},function(data) {
+	},function(error) {
+    	famstacklog("ERROR: ", error);
+    },false);
+}
+
+
 function userPingCheck(){
 	doAjaxRequestWithGlobal("POST", "${applicationHome}/userPingCheck",  {},function(data) {
     	var userStatus = JSON.parse(data);

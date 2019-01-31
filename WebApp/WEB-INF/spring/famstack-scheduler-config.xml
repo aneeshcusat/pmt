@@ -10,25 +10,24 @@
         http://www.springframework.org/schema/task
         http://www.springframework.org/schema/task/spring-task.xsd">
  
+<context:property-placeholder location="classpath:properties/famstack-application-default.properties, classpath:properties/famstack-application-${bopsprofile}.properties" ignore-unresolvable="true" />
 
 <context:component-scan base-package="com.famstack.projectscheduler.scheduling" />
 
-<bean id="famstackProjectScheduler" class="com.famstack.projectscheduler.scheduling.FamstackScheduler" />
+<bean id="famstackProjectScheduler" class="com.famstack.projectscheduler.scheduling.FamstackScheduler">
+	<property name="enabled" value="${scheduler.enabled}"/>
+</bean>
 
 <task:scheduler id="taskScheduler" pool-size="10" />
-<!-- 
-<task:scheduled-tasks>
-    <task:scheduled ref="" method="" cron="10 */5 * * * *"/>
-</task:scheduled-tasks>
- -->
  
  <!-- Start the Triggers -->
-<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+<bean id="scheduler" class="com.famstack.projectscheduler.scheduling.FamstackSchedulerFactoryBean">
     <property name="triggers">
         <list>
             <ref bean="scheduleTrigger"/>
         </list>
     </property>
+    <property name="enableQuartzTasks" value="${scheduler.enabled}"/>
 </bean>
 
 <!-- Cron Triggers -->

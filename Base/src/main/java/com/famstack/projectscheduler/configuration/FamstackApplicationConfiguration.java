@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.configuration;
 
+import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,8 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.Query;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
@@ -41,6 +47,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     private int portNumber;
 
     private String protocol;
+    
+    private String staticFilesLocation;
 
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
     
@@ -479,4 +487,27 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         }
         return appConfValueDetails;
     }
+    
+    public String getInstanceName(){
+		try {
+
+	        MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
+	        Set<ObjectName> objectNames = beanServer.queryNames(new ObjectName("*:type=Connector,*"),
+	                Query.match(Query.attr("protocol"), Query.value("HTTP/1.1")));
+	        String host = InetAddress.getLocalHost().getHostAddress();
+	        String port = objectNames.iterator().next().getKeyProperty("port");
+	        return host + ":" + port;
+	        
+		} catch (Exception e) {
+		}
+		return "unknown";
+    }
+
+	public String getStaticFilesLocation() {
+		return staticFilesLocation;
+	}
+
+	public void setStaticFilesLocation(String staticFilesLocation) {
+		this.staticFilesLocation = staticFilesLocation;
+	}
 }

@@ -33,7 +33,7 @@
         <script type="text/javascript" src="${js}/plugins/jquery/jquery.form.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/blockui/jquery.blockUI.js"></script>
         <script type="text/javascript" src="${js}/plugins/jeditable/jquery.jeditable.js"></script>
-        <script type="text/javascript" src="${js}/plugins/datepicker/jquery.datetimepicker.full.js"></script>
+        <script type="text/javascript" src="${js}/plugins/datepicker/jquery.datetimepicker.full.min.js"></script>
         <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js"></script>
         <script type="text/javascript" src=" ${js}/plugins/desktopnotification/push_notification.min.js"></script>
         <!-- END THIS PAGE PLUGINS-->        
@@ -174,6 +174,12 @@ var site_settings = "";
 	function famstacklog(code, message){
     	if (famstackLogEnabled) {
     		console.log(code, message);
+    	}
+    	
+    	if (code.indexOf("ERROR") != -1) {
+    		if (message.status == 401) {
+    			window.location = "${applicationHome}/login";
+    		}
     	}
     }
     

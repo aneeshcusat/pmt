@@ -20,6 +20,7 @@
         <property name="validationQuery" value="SELECT 1"/>
 		<property name="testOnBorrow" value="true"/>
 		<property name="testWhileIdle" value="true"/>
+		<property name="initialSize" value="50"/>
 	</bean>
 
 

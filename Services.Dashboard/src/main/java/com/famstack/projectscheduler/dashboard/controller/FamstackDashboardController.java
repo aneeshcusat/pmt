@@ -327,29 +327,32 @@ public class FamstackDashboardController extends BaseFamstackService
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ModelAndView index()
     {
-        UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
-        if (userRole != UserRole.SUPERADMIN && userRole != UserRole.ADMIN && userRole != UserRole.TEAMLEAD) {
-            return new ModelAndView("redirect:tasks");
-        }
-
-        Map<String, Long> projectCountBasedOnStatus = famstackDashboardManager.getProjectsCounts();
-
-        String userBillableProductiveJson = famstackDashboardManager.getUserBillableProductiveJson();
-
-        String projectTypeJson = famstackDashboardManager.getProjectTypeJson();
-
-        String teamUtilizationJson = famstackDashboardManager.getTeamUtilizationJson();
-
-        String projectCategoryJson = famstackDashboardManager.getProjectCategoryJson();
-
-        List<ClientProjectDetails> clientProject = famstackDashboardManager.getClientProject();
-
-        List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
-
-        return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
-            .addObject("projectDetails", projectDetails).addObject("employeeUtilization", userBillableProductiveJson)
-            .addObject("projectTypeJson", projectTypeJson).addObject("teamUtilizationJson", teamUtilizationJson)
-            .addObject("projectCategoryJson", projectCategoryJson).addObject("clientProject", clientProject);
+		if (getFamstackApplicationConfiguration() != null && getFamstackApplicationConfiguration().getCurrentUser() != null) {
+			UserRole userRole = getFamstackApplicationConfiguration().getCurrentUser().getUserRole();
+	        if (userRole != null && userRole != UserRole.SUPERADMIN && userRole != UserRole.ADMIN && userRole != UserRole.TEAMLEAD) {
+	            return new ModelAndView("redirect:tasks");
+	        }
+	
+	        Map<String, Long> projectCountBasedOnStatus = famstackDashboardManager.getProjectsCounts();
+	
+	        String userBillableProductiveJson = famstackDashboardManager.getUserBillableProductiveJson();
+	
+	        String projectTypeJson = famstackDashboardManager.getProjectTypeJson();
+	
+	        String teamUtilizationJson = famstackDashboardManager.getTeamUtilizationJson();
+	
+	        String projectCategoryJson = famstackDashboardManager.getProjectCategoryJson();
+	
+	        List<ClientProjectDetails> clientProject = famstackDashboardManager.getClientProject();
+	
+	        List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
+	
+	        return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
+	            .addObject("projectDetails", projectDetails).addObject("employeeUtilization", userBillableProductiveJson)
+	            .addObject("projectTypeJson", projectTypeJson).addObject("teamUtilizationJson", teamUtilizationJson)
+	            .addObject("projectCategoryJson", projectCategoryJson).addObject("clientProject", clientProject);
+		}
+		return  new ModelAndView("login");
     }
 
     @RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)
@@ -468,9 +471,14 @@ public class FamstackDashboardController extends BaseFamstackService
 
     @RequestMapping(value = "/trackUserActivity", method = RequestMethod.GET)
     @ResponseBody
-    public String trackUserSiteActivity(@RequestParam("userId") Integer userId)
+    public String trackUserSiteActivity(@RequestParam("userId") Integer userId, @RequestParam(name="activityDateString", defaultValue="") String activityDateString, @RequestParam(name="status", defaultValue="true") boolean status)
     {
-        famstackDashboardManager.trackUserSiteActivity(userId);
+    	Date activityDate = new Date();
+    	if (StringUtils.isNotBlank(activityDateString)) {
+    		activityDate = DateUtils.tryParse(activityDateString, DateUtils.DATE_FORMAT);
+    		activityDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, activityDate, 8);
+    	}
+        famstackDashboardManager.trackUserSiteActivity(userId, activityDate, status);
         return "{\"status\": true}";
     }
 }

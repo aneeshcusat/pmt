@@ -1,13 +1,15 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<spring:url value="/jsp/css" var="css" htmlEscape="true"/>
-<spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
-<spring:url value="/jsp/image" var="image" htmlEscape="true"/>
-<spring:url value="/jsp/js" var="js" htmlEscape="true"/>
-<spring:url value="/jsp/audio" var="audio" htmlEscape="true"/>
-<c:set var="famstackbaseurl" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}" />
+<c:set var="staticFilesLocation" value="${applicationScope.applicationConfiguraion.staticFilesLocation}"/>
+<c:set value="${staticFilesLocation}/css" var="css"/>
+<c:set value="${staticFilesLocation}/assets" var="assets"/>
+<c:set value="${staticFilesLocation}/image" var="image"/>
+<c:set value="${staticFilesLocation}/js" var="js"/>
+<c:set value="${staticFilesLocation}/audio" var="audio"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
@@ -18,11 +20,12 @@
 <c:set var="appConfigMap" value="${applicationScope.applicationConfiguraion.appConfigMap}"/>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="expandedPage" value="${applicationScope.applicationConfiguraion.expandedPage}"/>
+<c:set var="serverInstanceName" value="${applicationScope.applicationConfiguraion.instanceName}"/>
 <%@include file="accessCheck.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>       
-    	<!-- Famstack URL : ${famstackbaseurl} -->
+    	<!-- Famstack serverInstanceName : ${serverInstanceName} -->
         <!-- META SECTION -->
         <title>Famstack - Project scheduler</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

@@ -106,12 +106,7 @@
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js"></script> 
-<script type="text/javascript" src="${js}/plugins/datatables/buttons.print.min.js"></script>    
-<script type="text/javascript" src="${js}/plugins/datatables/buttons.html5.min.js"></script>    
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js"></script>    
-<script type="text/javascript" src="${js}/plugins/datatables/jszip.min.js"></script>    
-<script type="text/javascript" src="${js}/plugins/datatables/pdfmake.min.js"></script>  
-<script type="text/javascript" src="${js}/plugins/datatables/vfs_fonts.js"></script>    
 
 <script type="text/javascript">
         

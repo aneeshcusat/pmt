@@ -1,3 +1,6 @@
+.dashboardtitle{
+	display: none;
+}
 .disabled .fc-day-content {
     background-color: #123959;
     color: #FFFFFF;

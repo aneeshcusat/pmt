@@ -701,10 +701,10 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return userTaskActivityItem;
     }
 
-    public void createUserSiteActivities(Integer userId)
+    public void createUserSiteActivities(Integer userId, Date activityDate, boolean status)
     {
-        Date startCalenderDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), 0);
-        Date endCalenderDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, new Date(), 0);
+        Date startCalenderDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, activityDate, 0);
+        Date endCalenderDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, activityDate, 0);
 
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startCalenderDate", startCalenderDate);
@@ -716,12 +716,14 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                 HQLStrings.getString("getUserSiteActivity"), dataMap);
 
         if (userUsageActivityItems == null || userUsageActivityItems.size() == 0) {
-            logInfo("Recoring user site activity userId : " + userId);
+            logInfo("Recording user site activity userId : " + userId +", Date : "+DateUtils.formatTime(activityDate));
             UserUsageActivityItem userUsageActivityItem = new UserUsageActivityItem();
             userUsageActivityItem.setUserId(userId);
-            userUsageActivityItem.setCalenderDate(new Timestamp(System.currentTimeMillis()));
+            userUsageActivityItem.setCalenderDate(new Timestamp(activityDate.getTime()));
             famstackDataAccessObjectManager.saveOrUpdateItem(userUsageActivityItem);
             getFamstackUserSessionConfiguration().setUserLastActivityDate(new Date());
+        } else if (!status) {
+        	famstackDataAccessObjectManager.deleteItem(userUsageActivityItems.get(0));
         }
 
     }
