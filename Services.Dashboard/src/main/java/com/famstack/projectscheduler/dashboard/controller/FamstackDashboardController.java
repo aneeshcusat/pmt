@@ -441,8 +441,12 @@ public class FamstackDashboardController extends BaseFamstackService
             getFamstackApplicationConfiguration().forceInitializeUserGroup(
                 famstackApplicationConfManager.getUserGroupList());
             logInfo("intizlized : " + itemName);
-        } else if (itemName != null && "full".equalsIgnoreCase(itemName)) {
+        } else if (itemName != null && "account".equalsIgnoreCase(itemName)) {
+        	famstackDashboardManager.initializeAccounts();
+            logInfo("intizlized : " + itemName);
+        }else if (itemName != null && "full".equalsIgnoreCase(itemName)) {
             getFamstackApplicationConfiguration().forceInitialize();
+            famstackDashboardManager.initializeAccounts();
             logInfo("intizlized : " + itemName);
         }
 

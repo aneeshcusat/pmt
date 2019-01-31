@@ -1424,6 +1424,9 @@ public class FamstackDashboardManager extends BaseFamstackService
 	public List<EmployeeBWDetails> getEmployeesOnLeaveToday(String groupId, Date date) {
 		return userProfileManager.getEmployeesOnLeaveToday(groupId, date);
 	}
-
+	
+	public void initializeAccounts(){
+		famstackAccountManager.forceInitialize();
+	}
 
 }

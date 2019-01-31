@@ -81,6 +81,10 @@ public class FamstackAccountManager extends BaseFamstackManager
         return accountDetails;
 
     }
+    
+    public void forceInitialize() {
+    	initialize();
+    }
 
     public void initialize()
     {
