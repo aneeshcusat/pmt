@@ -68,6 +68,20 @@ public class FamstackDataAccessObjectManager extends BaseFamstackDataAccessObjec
         session.close();
         return updateItem;
     }
+    
+    public FamstackBaseItem saveOrUpdateItemNoGroup(FamstackBaseItem updateItem)
+    {
+        if (updateItem.getCreatedDate() == null) {
+            updateItem.setCreatedDate(new Timestamp(new Date().getTime()));
+        }
+        updateItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
+        Session session = getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        session.saveOrUpdate(updateItem);
+        tx.commit();
+        session.close();
+        return updateItem;
+    }
 
     @Override
     public Object getItemById(int id, Class<?> className)

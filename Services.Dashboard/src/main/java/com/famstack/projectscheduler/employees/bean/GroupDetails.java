@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * The Class GroupDetails.
  * 
- * @author Kiran Thankaraj
+ * @author Aneeshkumar
  * @version 1.0
  */
 

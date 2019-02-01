@@ -16,6 +16,7 @@ import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.manager.FamstackProjectManager;
 import com.famstack.projectscheduler.manager.FamstackProjectTaskManager;
+import com.famstack.projectscheduler.manager.FamstackRemoteServiceRefreshManager;
 import com.famstack.projectscheduler.manager.FamstackUserActivityManager;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
@@ -32,6 +33,9 @@ public class FamstackScheduler extends BaseFamstackService
 
     @Resource
     private FamstackProjectTaskManager famstackProjectTaskManager;
+    
+    @Resource
+    private FamstackRemoteServiceRefreshManager famstackRemoteServiceRefreshManager;
 
     @Resource
     private FamstackNotificationServiceManager famstackNotificationServiceManager;
@@ -54,10 +58,21 @@ public class FamstackScheduler extends BaseFamstackService
 	        setTaskRemainingTimeJob();
 	        deleteOlderProjects();
 	        autoPauseTaskExceedsTimeLimitHrs(10);
+	        refreshRemoteCachedItems();
     	}
     }
 
     @Async
+    private void refreshRemoteCachedItems() {
+    	logDebug("Running refreshRemoteCachedItems scheduler");
+        try {
+        	famstackRemoteServiceRefreshManager.triggerRemoteItemRefresh();
+        } catch (Exception e) {
+            logError("Unable to run refreshRemoteCachedItems", e);
+        }
+	}
+
+	@Async
     private void deleteOlderProjects()
     {
         logDebug("Running deleteOlderProjects scheduler");

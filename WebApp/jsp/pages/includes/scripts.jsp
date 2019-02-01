@@ -153,18 +153,18 @@ var site_settings = "";
     
     var famstackLogEnabled = false;
     function famstacklog(message){
-    	famstacklog("", message);
+    	famstacklog("INFO", message);
     }
     
     function famstackalert(error){
     
     	if(error.status == 401) {
-    		window.location = "/bops/dashboard/login";
+    		window.location.reload(true);
     	} else {
-       	var subject = error.status +" : "+ error.statusText;
-    	var message = "error has occured - user name - ${currentUser.firstName} - ${currentUser.userId} " ;
-    	doAjaxRequestWithGlobal("GET", "${applicationHome}/sendMail",  {subject:subject,body:message},function(data) {
-			famstacklog("data: ", data);
+	       	var subject = error.status +" : "+ error.statusText;
+	    	var message = "error has occured - user name - ${currentUser.firstName} - ${currentUser.userId} " ;
+	    	doAjaxRequestWithGlobal("GET", "${applicationHome}/sendMail",  {subject:subject,body:message},function(data) {
+				famstacklog("data: ", data);
 	    },function(error) {
 	    	famstacklog("ERROR: ", error);
 	    },false);
@@ -175,12 +175,18 @@ var site_settings = "";
     	if (famstackLogEnabled) {
     		console.log(code, message);
     	}
-    	
-    	if (code.indexOf("ERROR") != -1) {
-    		if (message.status == 401) {
-    			window.location = "${applicationHome}/login";
-    		}
-    	}
+    }
+	
+	function famstackLoginCheck(code, message){
+    	try{
+	    	if (code.indexOf("ERROR") != -1) {
+	    		if (message.status == 401) {
+	    			window.location = "${applicationHome}/login";
+	    		}
+	    	}
+		}catch(err){
+			
+		}
     }
     
     $('input[type="checkbox"].icheckbox').change(function () {

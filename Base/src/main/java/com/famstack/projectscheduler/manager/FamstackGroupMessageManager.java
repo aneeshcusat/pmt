@@ -28,7 +28,7 @@ import com.famstack.projectscheduler.util.DateUtils;
 /**
  * The Class FamstackGroupMessageManager.
  * 
- * @author Kiran Thankaraj
+ * @author Aneeshkumar
  * @version 1.0
  */
 @Component

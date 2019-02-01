@@ -93,7 +93,7 @@ function userPingCheck(){
     	});
     	sortOnlineStatus();
     },function(error) {
-    	famstacklog("ERROR: ", error);
+    	famstackLoginCheck("ERROR: ", error);
     },false);
 }
 

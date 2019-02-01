@@ -51,7 +51,7 @@ import com.famstack.projectscheduler.utils.FamstackUtils;
 /**
  * The Class FamstackProjectManager.
  * 
- * @author Kiran Thankaraj
+ * @author Aneeshkumar
  * @version 1.0
  */
 @Component

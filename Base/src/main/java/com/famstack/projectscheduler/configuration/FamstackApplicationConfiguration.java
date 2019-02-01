@@ -26,6 +26,7 @@ import com.famstack.projectscheduler.employees.bean.AppConfValueDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
+import com.famstack.projectscheduler.manager.FamstackRemoteServiceRefreshManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
@@ -41,6 +42,9 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     @Resource
     FamstackDataAccessObjectManager famstackDataAccessObjectManager;
+    
+    @Resource
+    FamstackRemoteServiceRefreshManager famstackRemoteServiceRefreshManager;
 
     private String hostName;
 
@@ -49,6 +53,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     private String protocol;
     
     private String staticFilesLocation;
+    
+    private String instanceName;
 
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
     
@@ -62,25 +68,13 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     private final Map<String, String> configSettings = new HashMap<>();
 
-    public void initialize()
-    {
-
-        logDebug("Initializing FamstackApplicationConfiguration...");
-        initializeUserMap(famstackUserProfileManager.getAllEmployeeDataList());
-        initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
-        initializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
-        initializeConfigurations();
-        logDebug("END : Initializing FamstackApplicationConfiguration...");
-
-    }
-
     public void forceInitialize()
     {
         appConfigMap.clear();
         userGroupMap.clear();
         configSettings.clear();
 
-        initializeUserMap(famstackUserProfileManager.getAllEmployeeDataList());
+        forceInitializeUserMap(famstackUserProfileManager.getAllEmployeeDataList());
         initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
         initializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
         initializeConfigurations();
@@ -117,6 +111,11 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         }
     }
 
+    public synchronized void forceInitializeUserMap(List<EmployeeDetails> employeeDetailsList)
+    {
+    	initializeUserMap(employeeDetailsList);
+    	famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "user", false);
+    }
     public synchronized void initializeUserMap(List<EmployeeDetails> employeeDetailsList)
     {
         Map<Integer, EmployeeDetails> userMapTemp = new HashMap<>();
@@ -136,6 +135,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         userMap.putAll(userMapTemp);
         userIdMap.putAll(userIdMapTemp);
         allUsersMap.putAll(allUserMapTemp);
+        famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "user", true);
     }
     
     /**
@@ -489,18 +489,20 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     }
     
     public String getInstanceName(){
-		try {
-
-	        MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
-	        Set<ObjectName> objectNames = beanServer.queryNames(new ObjectName("*:type=Connector,*"),
-	                Query.match(Query.attr("protocol"), Query.value("HTTP/1.1")));
-	        String host = InetAddress.getLocalHost().getHostAddress();
-	        String port = objectNames.iterator().next().getKeyProperty("port");
-	        return host + ":" + port;
-	        
-		} catch (Exception e) {
-		}
-		return "unknown";
+    	
+    	if (instanceName == null) {
+			try {
+		        MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
+		        Set<ObjectName> objectNames = beanServer.queryNames(new ObjectName("*:type=Connector,*"),
+		                Query.match(Query.attr("protocol"), Query.value("HTTP/1.1")));
+		        String host = InetAddress.getLocalHost().getHostAddress();
+		        String port = objectNames.iterator().next().getKeyProperty("port");
+		        instanceName = host + ":" + port;
+			} catch (Exception e) {
+				return "unknown";
+			}
+    	}
+    	return instanceName;
     }
 
 	public String getStaticFilesLocation() {

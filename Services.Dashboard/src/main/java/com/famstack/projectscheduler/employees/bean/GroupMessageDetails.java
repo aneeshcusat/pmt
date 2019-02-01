@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**
  * The Class GroupMessageDetails.
  * 
- * @author Kiran Thankaraj
+ * @author Aneeshkumar
  * @version 1.0
  */
 

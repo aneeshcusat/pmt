@@ -10,7 +10,7 @@
  
    <context:component-scan base-package="com.famstack.projectscheduler" />
    
-   <bean id="famstackApplicationConfiguration" class="com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration" init-method="initialize">
+   <bean id="famstackApplicationConfiguration" class="com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration" init-method="forceInitialize">
    		<property name="protocol" value="${famstack.protocol}"/>
    		<property name="hostName" value="${famstack.hostName}"/>
    		<property name="portNumber" value="${famstack.portNumber}"/>
@@ -25,7 +25,7 @@
     </property>
 	</bean>
 
-   <bean id="famstackAccountManager" class="com.famstack.projectscheduler.manager.FamstackAccountManager" init-method="initialize">
+   <bean id="famstackAccountManager" class="com.famstack.projectscheduler.manager.FamstackAccountManager" init-method="forceInitialize">
 	</bean>
 	
 	 <bean id="famstackUserActivityManager" class="com.famstack.projectscheduler.manager.FamstackUserActivityManager" init-method="initialize">

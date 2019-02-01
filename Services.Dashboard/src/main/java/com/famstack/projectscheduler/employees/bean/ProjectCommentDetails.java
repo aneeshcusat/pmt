@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * The Class ProjectCommentDetails.
  * 
- * @author Kiran Thankaraj
+ * @author Aneeshkumar
  * @version 1.0
  */
 

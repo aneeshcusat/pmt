@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import com.famstack.projectscheduler.datatransferobject.AccountItem;
 import com.famstack.projectscheduler.datatransferobject.ClientItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectSubTeamItem;
@@ -18,6 +20,8 @@ import com.famstack.projectscheduler.employees.bean.ProjectTeamDetails;
 
 public class FamstackAccountManager extends BaseFamstackManager
 {
+	 @Resource
+	 private FamstackRemoteServiceRefreshManager famstackRemoteServiceRefreshManager;
 
     private static final Map<Integer, AccountDetails> accountMap = new HashMap<>();
 
@@ -84,9 +88,10 @@ public class FamstackAccountManager extends BaseFamstackManager
     
     public void forceInitialize() {
     	initialize();
+    	famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "account", false);
     }
 
-    public void initialize()
+    public synchronized void initialize()
     {
 
         accountDetailsList.clear();
@@ -105,6 +110,8 @@ public class FamstackAccountManager extends BaseFamstackManager
                 }
             }
         }
+        
+        famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "account", true);
     }
 
     public List<AccountDetails> getAllAccountDetails()

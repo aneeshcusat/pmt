@@ -16,7 +16,7 @@ import com.famstack.projectscheduler.employees.bean.ProjectCommentDetails;
 /**
  * The Class FamstackProjectCommentManager.
  * 
- * @author Kiran Thankaraj
+ * @author Aneeshkumar
  * @version 1.0
  */
 @Component

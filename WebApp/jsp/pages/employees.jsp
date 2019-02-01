@@ -180,7 +180,6 @@
 <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js"></script>   
 <script type="text/javascript" src="${js}/plugins/datatables/buttons.html5.min.js"></script>   
-<script type="text/javascript" src="${js}/plugins/datatables/jszip.min.js"></script>    
 <script>
   
 jQuery.validator.addMethod("validEmail", function(value, element) {
@@ -245,7 +244,6 @@ function createEmployeeDetails(){
 function doAjaxUpdateUserForm(){
 	var imageData = $('.image-editor').cropit('export');
 	$('#filePhoto').val(imageData);
-	famstacklog(imageData);
 	$('#createUserFormId').prop("action", "updateEmployee");
     $('#createUserFormId').submit();
 }
@@ -401,12 +399,12 @@ function performSearch(e){
 	}
 	famstacklog(serarchText);
 	if (serarchText != "") {
-	 $('.contact-name').hide();
-    $('.contact-name').each(function(){
-       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
-           $(this).show();
-       }
-    });
+		$('.contact-name').hide();
+	    $('.contact-name').each(function(){
+	       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
+	           $(this).show();
+	       }
+	    });
 	} else {
 		$('.contact-name').show();
 	}

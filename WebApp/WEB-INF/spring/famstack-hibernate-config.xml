@@ -54,6 +54,8 @@
 				<value>com.famstack.projectscheduler.datatransferobject.AppConfItem</value>
 				<value>com.famstack.projectscheduler.datatransferobject.AppConfValueItem</value>
 				
+				<value>com.famstack.projectscheduler.datatransferobject.RemoteItemRefreshItem</value>
+				
 			</list>
 		</property>
 		<property name="hibernateProperties">
