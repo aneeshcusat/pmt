@@ -423,14 +423,14 @@ public class FamstackDashboardController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
-    @RequestMapping(value = "/initalize/{itemName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/initialize/{itemName}", method = RequestMethod.GET)
     @ResponseBody
     public String initalizeConfiguration(@PathVariable("itemName") String itemName)
     {
 
         logInfo("Initializing : " + itemName);
         if (itemName != null && "user".equalsIgnoreCase(itemName)) {
-            getFamstackApplicationConfiguration().initializeUserMap(
+            getFamstackApplicationConfiguration().forceInitializeUserMap(
                 getFamstackApplicationConfiguration().getFamstackUserProfileManager().getAllEmployeeDataList());
             logInfo("intizlized : " + itemName);
         } else if (itemName != null && "application".equalsIgnoreCase(itemName)) {
