@@ -76,17 +76,14 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
         forceInitializeUserMap(famstackUserProfileManager.getAllEmployeeDataList());
         initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
-        initializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
+        forceInitializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
         initializeConfigurations();
     }
-
-    public void initializeAppConfigMap(List<AppConfDetails> appConfigList)
+    
+    public void forceInitializeAppConfigMap(List<AppConfDetails> appConfigList)
     {
-        logInfo("Initializing app config value" + appConfigList);
-        if (appConfigMap.isEmpty()) {
-            reInitializeAppConfigMap(appConfigList);
-        }
-
+    	reInitializeAppConfigMap(appConfigList);
+    	famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "application", false);
     }
 
     public void reInitializeAppConfigMap(List<AppConfDetails> appConfigList)
@@ -95,6 +92,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         for (AppConfDetails appConfDetails : appConfigList) {
             appConfigMap.put(appConfDetails.getType(), appConfDetails);
         }
+        famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "application", true);
     }
 
     public void initializeUserGroupMap(List<UserGroupDetails> userGroupList)
