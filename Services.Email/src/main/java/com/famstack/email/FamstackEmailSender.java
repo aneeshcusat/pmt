@@ -16,7 +16,7 @@ public class FamstackEmailSender extends BaseFamstackService
 
     /** The java mail sender. */
     @Autowired
-    private JavaMailSender javaMailSender;
+    private FamstackJavaMailSenderImpl javaMailSender;
 
     /** The delivery interface email template renderer service. */
     @Autowired

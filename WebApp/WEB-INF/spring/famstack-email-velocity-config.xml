@@ -17,7 +17,7 @@
   <property name="mailTo" value="${email.mailTo}" />
  </bean>
 
- <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+ <bean id="javaMailSender" class="com.famstack.email.FamstackJavaMailSenderImpl">
   <property name="host" value="${email.host}" />
   <property name="port" value="${email.port}" />
   <property name="username" value="${email.username}" /> 

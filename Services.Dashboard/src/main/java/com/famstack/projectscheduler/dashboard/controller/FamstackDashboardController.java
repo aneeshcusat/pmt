@@ -465,9 +465,9 @@ public class FamstackDashboardController extends BaseFamstackService
         return new ModelAndView("response/appConfigNonBillableCategories");
     }
 
-    @RequestMapping(value = "/sendMail", method = RequestMethod.GET)
+    @RequestMapping(value = "/triggerEmail", method = RequestMethod.GET)
     @ResponseBody
-    public String sendMail(@RequestParam("subject") String subject, @RequestParam("body") String body)
+    public String sendMail(@RequestParam(name="subject", defaultValue="Test Subject") String subject, @RequestParam(name="body", defaultValue="TestBody") String body)
     {
         famstackDashboardManager.sendMail(subject, body);
         return "{\"status\": true}";
