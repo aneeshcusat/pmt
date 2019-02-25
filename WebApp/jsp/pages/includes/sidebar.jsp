@@ -70,6 +70,7 @@
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
                             <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
                             <li><a href="${applicationHome}/applicationConfig"><span class="fa fa-cog"></span>Application config</a></li>
+                            <li><a href="${applicationHome}/userSiteActivity"><span class="fa fa-calendar"></span>User Site Activity</a></li>
                             <li><a href="${applicationHome}/faq"><span class="fa fa-arrow-circle-o-left"></span>FAQ</a></li>
                         </ul>
                     </li>
@@ -86,6 +87,7 @@
  							<li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
+                            <li><a href="${applicationHome}/userSiteActivity"><span class="fa fa-calendar"></span>User Site Activity</a></li>
                             <li><a href="${applicationHome}/faq"><span class="fa fa-arrow-circle-o-left"></span>FAQ</a></li>
                         </ul>
                     </li>

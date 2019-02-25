@@ -65,7 +65,7 @@ function invokeUserActivityTracker(userId){
 }
 
 function updateUserActivity(userId, activityDateString, status){
-	doAjaxRequestWithGlobal("GET", "${applicationHome}/trackUserActivity",  {"userId":userId,"activityDateString":activityTime,"status":status},function(data) {
+	doAjaxRequestWithGlobal("GET", "${applicationHome}/trackUserActivity",  {"userId":userId,"activityDateString":activityDateString,"status":status},function(data) {
 	},function(error) {
     	famstacklog("ERROR: ", error);
     },false);

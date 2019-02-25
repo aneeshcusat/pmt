@@ -285,8 +285,8 @@ display: none;
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary taskWindowCancel"
 						data-dismiss="modal">Cancel</button>
-					<button type="button" onclick="" class="btn btn-primary">
-						<span id="taskComplete" onclick="taskComplete()">Complete</span>
+					<button type="button" onclick="taskComplete()" class="btn btn-primary">
+						<span id="taskComplete" >Complete</span>
 					</button>
 				</div>
 			</div>
@@ -311,8 +311,8 @@ display: none;
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary taskWindowCancel"
 						data-dismiss="modal">Cancel</button>
-					<button type="button" onclick="" class="btn btn-primary">
-						<span id="taskStart" onclick="taskStart()">Start</span>
+					<button type="button" onclick="taskStart()" class="btn btn-primary">
+						<span id="taskStart" >Start</span>
 					</button>
 				</div>
 			</div>
@@ -332,8 +332,8 @@ display: none;
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-				<button id="taskReassign" type="button" class="btn btn-primary hide">
-					<span onclick="reAssignTask()">Re Assign Task</span>
+				<button id="taskReassign" onclick="reAssignTask()" type="button" class="btn btn-primary hide">
+					<span >Re Assign Task</span>
 				</button>
 			</div>
 		</div>

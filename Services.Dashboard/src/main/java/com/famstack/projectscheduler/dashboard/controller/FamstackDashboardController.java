@@ -25,6 +25,7 @@ import com.famstack.projectscheduler.dashboard.bean.DashBoardProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.DashboardUtilizationDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeBWDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -479,10 +480,28 @@ public class FamstackDashboardController extends BaseFamstackService
     {
     	Date activityDate = new Date();
     	if (StringUtils.isNotBlank(activityDateString)) {
-    		activityDate = DateUtils.tryParse(activityDateString, DateUtils.DATE_FORMAT);
+    		activityDate = DateUtils.tryParse(activityDateString, DateUtils.DATE_FORMAT_CALENDER);
     		activityDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, activityDate, 8);
     	}
         famstackDashboardManager.trackUserSiteActivity(userId, activityDate, status);
         return "{\"status\": true}";
     }
+    
+    @RequestMapping(value = "/getUserSiteActivityCalendarJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String getUserSiteActivityCalendarJson(@RequestParam("start") String startDateString, @RequestParam("end") String endDateString,
+        @RequestParam(value = "userId", defaultValue = "-1") int userId)
+    {
+    	if (userId != -1) {
+    	  Date startDate = DateUtils.tryParse(startDateString, DateUtils.DATE_FORMAT_CALENDER);
+          Date endDate = DateUtils.tryParse(endDateString, DateUtils.DATE_FORMAT_CALENDER);
+          return famstackDashboardManager.getUserSiteActivityJson(startDate, endDate, userId);
+    	}
+        return "{}";
+    }
+    
+    
+   
+    
+    
 }

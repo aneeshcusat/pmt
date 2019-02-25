@@ -1393,7 +1393,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     public void sendMail(String subject, String messageBody)
     {
-        famstackEmailSender.sendTextMessage("famstack.bops@gmail.com", "famstack.bops@gmail.com", "ALERT: ERROR - "
+        famstackEmailSender.sendTextMessage("famstack.support@course5i.com", "famstack.bops@gmail.com", "ALERT: ERROR - "
             + subject, messageBody);
     }
 
@@ -1427,6 +1427,40 @@ public class FamstackDashboardManager extends BaseFamstackService
 	
 	public void initializeAccounts(){
 		famstackAccountManager.forceInitialize();
+	}
+
+	public String getUserSiteActivityJson(Date startDate, Date endDate,
+			int userId) {
+		JSONArray jsonArray = new JSONArray();
+		 Map<Integer, Map<String, String>> userSiteActivityMap =
+                 getAllUserSiteActivities(startDate, endDate);
+         Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap =
+                 getAllNonBillabileActivities(startDate, endDate);
+         
+         Map<String, String> userSiteActivities = userSiteActivityMap.get(userId);
+         Map<String, UserTaskActivityItem> nonBillativities = nonBillativityMap.get(userId);
+         
+         JSONObject jsonObject = null;
+         if (userSiteActivities != null) {
+        	 for(String dateString : userSiteActivities.keySet()) {
+        	  jsonObject = new JSONObject();
+        	  jsonObject.put("start", dateString.replace("/","-"));
+        	  jsonObject.put("dateString", dateString.replace("/","-"));
+        	  jsonObject.put("type", "activity");
+        	  jsonArray.put(jsonObject);
+        	 }
+         }
+         
+         if (nonBillativities != null) {
+        	 for(String dateString : nonBillativities.keySet()) {
+           	  jsonObject = new JSONObject();
+           	  jsonObject.put("start", dateString.replace("/","-"));
+           	  jsonObject.put("dateString", dateString.replace("/","-"));
+           	  jsonObject.put("type", "leave");
+           	  jsonArray.put(jsonObject);
+           	 }
+         }
+         return jsonArray.toString();
 	}
 
 }
