@@ -1,12 +1,11 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import scala.actors.threadpool.Arrays;
 
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.ProjectComplexity;

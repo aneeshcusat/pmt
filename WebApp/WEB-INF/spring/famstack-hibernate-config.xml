@@ -11,7 +11,7 @@
 
     <context:property-placeholder location="classpath:properties/famstack-application-default.properties, classpath:properties/famstack-application-${bopsprofile}.properties" ignore-unresolvable="true" />
 
-	<bean id="dataSource" class="com.famstack.projectscheduler.dataaccess.FamstackBasicDataSource"
+	<bean id="dataSourceDBCP" class="com.famstack.projectscheduler.dataaccess.FamstackBasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${hibernate.driverClassName}"/>
         <property name="url" value="${hibernate.url}"/>
@@ -20,14 +20,46 @@
         <property name="validationQuery" value="SELECT 1"/>
 		<property name="testOnBorrow" value="true"/>
 		<property name="testWhileIdle" value="true"/>
-		<property name="initialSize" value="50"/>
+		<property name="initialSize" value="100"/>
+		<property name="maxTotal" value="-1"/>
+		<property name="maxWaitMillis" value="60000"/>
 	</bean>
-
+	
+	<bean id="dataSourceTomcatPooling" class="com.famstack.projectscheduler.dataaccess.FamstackBasicDataSourceTomcatPooling"
+		destroy-method="close">
+		<property name="driverClassName" value="${hibernate.driverClassName}"/>
+        <property name="url" value="${hibernate.url}"/>
+        <property name="username" value="${hibernate.username}"/>
+        <property name="password" value="${hibernate.password}"/>
+        <property name="validationQuery" value="SELECT 1"/>
+		<property name="testOnBorrow" value="true"/>
+		<property name="testWhileIdle" value="true"/>
+		<property name="testOnReturn" value="false"/>
+		<property name="validationInterval" value="30000"/>
+		<property name="initialSize" value="100"/>
+		<property name="removeAbandonedTimeout" value="60"/>
+		<property name="removeAbandoned" value="true"/>
+		<property name="timeBetweenEvictionRunsMillis" value="30000"/>
+		<property name="maxActive" value="1000"/>
+		<property name="minIdle" value="100"/>
+		<property name="maxWait" value="60000"/>
+		<property name="logAbandoned" value="true"/>
+		<property name="minEvictableIdleTimeMillis" value="30000"/>
+		<property name="jdbcInterceptors" value="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"/>
+		<property name="jmxEnabled" value="true"/>
+		<!-- <property name="maxTotal" value="-1"/>
+		<property name="maxWaitMillis" value="60000"/>
+		 -->
+	</bean>
+	
+	<bean id="wrappedDataSource" class="net.bull.javamelody.SpringDataSourceFactoryBean">
+		<property name="targetName" value="dataSourceTomcatPooling" />
+	</bean>
 
 <!-- Hibernate 4 SessionFactory Bean definition -->
 <bean id="hibernate4AnnotatedSessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="wrappedDataSource" />
 		<property name="annotatedClasses">
 			<list>
 				<value>com.famstack.projectscheduler.datatransferobject.UserItem</value>

@@ -267,13 +267,18 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
     private Set<String> getToListForProjectUpdates(ProjectDetails projectDetails)
     {
         Set<String> toList = new HashSet<>();
-        String reporterEmail = projectDetails.getEmployeeDetails().getEmail();
+        String reporterEmail = null;
+        if (projectDetails !=null && projectDetails.getEmployeeDetails() != null) {
+         reporterEmail = projectDetails.getEmployeeDetails().getEmail();
+        }
         String watchers = projectDetails.getWatchers();
         if (StringUtils.isNotBlank(watchers)) {
             String[] watchersArray = watchers.split(",");
             toList.addAll(Arrays.asList(watchersArray));
         }
-        toList.add(reporterEmail);
+        if (reporterEmail !=null) {
+        	toList.add(reporterEmail);
+        }
         logDebug("getToListForProjectUpdates" + toList);
         return toList;
     }
@@ -281,7 +286,11 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
     private Set<Integer> getSubscribersIdForProjectUpdates(ProjectDetails projectDetails)
     {
         Set<Integer> toList = new HashSet<>();
-        int reporterId = projectDetails.getEmployeeDetails().getId();
+        Integer reporterId = null;
+        if (projectDetails !=null && projectDetails.getEmployeeDetails() != null) {
+        	reporterId = projectDetails.getEmployeeDetails().getId();
+         }
+
         String watchers = projectDetails.getWatchers();
         if (StringUtils.isNotBlank(watchers)) {
             String[] watchersArray = watchers.split(",");
@@ -293,7 +302,9 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
                 }
             }
         }
-        toList.add(reporterId);
+        if (reporterId != null) {
+        	toList.add(reporterId);
+        }
         logDebug("getSubscribersIdForProjectUpdates" + toList);
         return toList;
     }

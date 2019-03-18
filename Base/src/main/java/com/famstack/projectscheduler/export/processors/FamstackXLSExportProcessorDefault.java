@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.export.processors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,8 +28,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import scala.actors.threadpool.Arrays;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;

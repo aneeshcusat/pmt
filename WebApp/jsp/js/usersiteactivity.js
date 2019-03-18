@@ -48,7 +48,9 @@ $('#fullcaledarusersiteactivity').fullCalendar({
         	        	if ($(this).attr("data-active") == undefined){
         	        		if (!($(this).hasClass("fc-sat") || $(this).hasClass("fc-sun"))) {
         	        			$(this).css('background', "red");
-        	        		}
+        	        		} else{
+								$(this).css('background', "");
+							}
         	        		if ($("#userSiteActivityAssigneeId").prop("selectedIndex") > 0) {
         	        			$(this).append('<a class="marksiteactivity" style="color:green" href="javascript:updateUserActivityAjax(\''+$("#userSiteActivityAssigneeId").val()+'\',\''+$(this).attr("data-date")+'\', true);"><span class="fa fa-plus fa-2x"></span></a>');
         	        		} else if ($("#userSiteActivityAssigneeId").val() == "-1") {
@@ -79,6 +81,7 @@ $('#fullcaledarusersiteactivity').fullCalendar({
 
 var refreshCalendar = function() {
 	var userId = $("#userSiteActivityAssigneeId").val();
+	$('#fullcaledarusersiteactivity .fc-day').removeAttr("data-active");
 	var events = {
 	        url: "getUserSiteActivityCalendarJson",
 	        type: 'GET',

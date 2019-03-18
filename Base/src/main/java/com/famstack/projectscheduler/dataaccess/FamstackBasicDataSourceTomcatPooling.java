@@ -1,10 +1,10 @@
 package com.famstack.projectscheduler.dataaccess;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.tomcat.jdbc.pool.DataSource;
 
 import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManager;
 
-public class FamstackBasicDataSource extends BasicDataSource {
+public class FamstackBasicDataSourceTomcatPooling extends DataSource {
 
 	private static final String HASHKEY = "NGNW#zcc+N@RY%kSK#46DO+Rzt@j)Ylm";
 	

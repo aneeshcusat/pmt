@@ -90,7 +90,9 @@ dependencies {
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.2.1.Final'
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.1.Final'
 	compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+	compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.6.0'
 	compile group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.2.1.Final'
+	
 	
 	//Rest Json
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.7.1'

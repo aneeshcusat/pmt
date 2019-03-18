@@ -14,7 +14,7 @@
   
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/spring/famstack-application-config.xml,/WEB-INF/spring/famstack-notification-config.xml,/WEB-INF/spring/famstack-security-config.xml,/WEB-INF/spring/famstack-hibernate-config.xml,/WEB-INF/spring/famstack-email-velocity-config.xml,/WEB-INF/spring/famstack-scheduler-config.xml</param-value>
+    <param-value>/WEB-INF/spring/famstack-application-config.xml,/WEB-INF/spring/famstack-notification-config.xml,/WEB-INF/spring/famstack-security-config.xml,classpath:net/bull/javamelody/monitoring-spring.xml,/WEB-INF/spring/famstack-hibernate-config.xml,/WEB-INF/spring/famstack-email-velocity-config.xml,/WEB-INF/spring/famstack-scheduler-config.xml</param-value>
     <!--<param-value>/WEB-INF/spring/ApplicationContext.xml</param-value> -->
   </context-param>
   
@@ -76,11 +76,11 @@
     <filter>
 		<filter-name>javamelody</filter-name>
 		<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+		<async-supported>true</async-supported>
 		<init-param>
 			<param-name>log</param-name>
 			<param-value>false</param-value>
 		</init-param>
-		<async-supported>true</async-supported>
 	</filter>
 	<filter-mapping>
 		<filter-name>javamelody</filter-name>

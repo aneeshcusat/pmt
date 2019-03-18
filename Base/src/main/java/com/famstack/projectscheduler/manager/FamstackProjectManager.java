@@ -941,7 +941,9 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setProjectNumber((String) data[4]);
             projectTaskActivityDetails.setProjectName((String) data[5]);
             projectTaskActivityDetails.setProjectStatus(ProjectStatus.valueOf((String) data[6]));
-            projectTaskActivityDetails.setProjectType(ProjectType.valueOf((String) data[7]));
+            if ( data[7] != null) {
+            	projectTaskActivityDetails.setProjectType(ProjectType.valueOf((String) data[7]));
+            }
             projectTaskActivityDetails.setProjectCategory((String) data[8]);
             projectTaskActivityDetails.setProjectTeamId((Integer) data[9]);
             projectTaskActivityDetails.setProjectClientId((Integer) data[10]);

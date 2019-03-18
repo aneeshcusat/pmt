@@ -22,7 +22,6 @@ import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeBWDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
-import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManager;
 import com.famstack.projectscheduler.security.hasher.generator.PasswordTokenGenerator;
@@ -31,8 +30,6 @@ import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
-import com.sun.org.apache.regexp.internal.recompile;
-
 /**
  * The Class UserProfileManager.
  * 
