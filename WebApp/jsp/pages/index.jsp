@@ -6,6 +6,12 @@
 		height: 10px;
 	}
 }
+.dashboardtitle{
+    font-size: 12pt;
+    color: white;
+    margin-top: 13px !important;
+    font-weight: bold;
+}
 </style>
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">

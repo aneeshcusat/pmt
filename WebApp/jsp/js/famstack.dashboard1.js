@@ -133,19 +133,15 @@ function filterProjectDetails(isAdmin){
 		if($(".resourceInfo").prop("selectedIndex") > 0){
 			filter = filter+".prjUserId" + $(".resourceInfo").val();
 		} 
-	} else {
-		if(!$(".totalprojectslink").hasClass("active")){
-			filter = filter+".prjUserId" + $(".resourceInfo").val();
-		}
-	}
+	} 
 	if($(".projectSubTeamInfo").prop("selectedIndex") > 1){
 		filter = filter+".prjSubTeam" + $(".projectSubTeamInfo").val();
 	} 
 	
-	if($(".projectTeamInfo").prop("selectedIndex") > 1){
+	if($(".projectTeamInfo").prop("selectedIndex") > 0){
 		filter = filter+".prjTeam" +$(".projectTeamInfo").val();
 	} 
-	if($(".accountInfo").prop("selectedIndex") > 1){
+	if($(".accountInfo").prop("selectedIndex") > 0){
 		filter = filter+".prjAccount" + $(".accountInfo").val();
 	} 
 	console.log("filter : " + filter);
@@ -238,27 +234,17 @@ var refreshOverAllUtilization = function() {
 		return;
 	}
 	var dataString = getDashboardFilterDataJson();
-	loadStatusForDivStart("utilizationChart");
-	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardOverAllUtilizationPercentage",dataString , function(responseData) {
+	loadStatusForDivStart("utilizationDonutChart");
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/dashboardOverAllUtilization",dataString , function(responseData) {
 		 var responseJson = JSON.parse(responseData);
-		 $("#utilizationChart").html("");
-		 var data = [];
-		 if (responseJson.billable != 0 ||  responseJson.nonBillable != 0) {
-		  data = [{label: "Billable", value: responseJson.billable},{label: "Non Billable", value: responseJson.nonBillable}];
-		 }
-			Morris.Donut({
-			    element: 'utilizationChart',
-			    data: data.length ? data : [ { label:"No Data", value:100 } ],
-			    colors: ['#0BB4C1',
-			             '#E3E3E3'],
-			    resize: true,
-			    formatter:function (y, data) { return y + "%"; }
-			});
-		 loadStatusForDivEnd("utilizationChart");
+		 $(".billableUtilizationhrs").html(responseJson.billableHrs + " Hrs");
+		 $(".nonBillableUtilizationhrs").html(responseJson.nonBillableHrs + " Hrs"); 
+		 updateDonutChart('#specificChart', responseJson.totalHrsPercentage, true);
+		 loadStatusForDivEnd("utilizationDonutChart");
 	}, function(e) {
         famstacklog("ERROR: ", e);
         famstackalert(e);
-        loadStatusForDivEnd("utilizationChart");
+        loadStatusForDivEnd("utilizationDonutChart");
     }, false);
 };
 
@@ -452,13 +438,13 @@ function getDashboardFilterDataJson(){
 	if($(".resourceInfo").prop("selectedIndex") > 0){
 		userId = $(".resourceInfo").val();
 	} 
-	if($(".projectSubTeamInfo").prop("selectedIndex") > 1){
+	if($(".projectSubTeamInfo").prop("selectedIndex") > 0){
 		subTeamId = $(".projectSubTeamInfo").val();
 	} 
-	if($(".projectTeamInfo").prop("selectedIndex") > 1){
+	if($(".projectTeamInfo").prop("selectedIndex") > 0){
 		teamId= $(".projectTeamInfo").val();
 	} 
-	if($(".accountInfo").prop("selectedIndex") > 1){
+	if($(".accountInfo").prop("selectedIndex") > 0){
 		accountId = $(".accountInfo").val();
 	} 
 	
@@ -522,7 +508,7 @@ function loadStatusForDivStart(containerClass){
 	 $("."+containerClass).waitMe({
 			effect : "roundBounce",
 			text : "",
-			bg : 'rgba(255,255,255,0.7)',
+			bg : 'rgba(255,255,255,0.1)',
 			color : "#0BB4C1"
 	});
 }
@@ -579,26 +565,6 @@ function reinitializeCalenders(){
 	}
 }
 
-function showMyProjects()
-{
-	if(!$(".myprojectslink").hasClass("active")){
-		$(".myprojectslink").addClass("active");
-		$(".totalprojectslink").removeClass("active");
-	}
-	filterProjectDetails(false);
-}
-
-
-function showTotalProjects()
-{
-	if(!$(".totalprojectslink").hasClass("active")){
-		$(".totalprojectslink").addClass("active");
-		$(".myprojectslink").removeClass("active");
-	}
-	filterProjectDetails(false);
-}
-
-
 $(".projectsummary").on("click",function(){
 	$(".projectsummary").removeClass("active");
 	$(this).addClass("active");
@@ -631,6 +597,7 @@ Date.prototype.addDays = function(days) {
 };
 
 function fillDateBackGroupInDatePicker() {
+	return;
 	if (!isDashBoardHome()){
 		return;
 	}
@@ -769,6 +736,80 @@ function getAllCheckedResources(){
 	
 	return resourceIds;
 }
+
+
+//Flot Pie Chart
+$(function() {
+
+    var data = [{
+        label: "Series 0",
+        billable: "34",
+        nonbillable:"45",
+        totalhrs:"230",
+        data: 10,
+        color:"#f00"
+    }, {
+        label: "Series 1",
+        billable: "34",
+        nonbillable:"45",
+        totalhrs:"780",
+        data: 20,
+        color:"#f0f"
+    }, {
+        label: "Series 2",
+        billable: "34",
+        nonbillable:"45",
+        totalhrs:"20",
+        data: 30,
+        color:"#ff0"
+    }, {
+        label: "Series 3",
+        billable: "34",
+        nonbillable:"45",
+        billable: "340",
+        totalhrs:"30",
+        data: 40,
+        color:"#00f"
+    }];
+
+    var plotObj = $.plot($(".accountUtilizationPieChart"), data, {
+        series: {
+            pie: {
+                show: true,
+                stroke:{
+                	width: 0
+                },
+                radius: 1,
+                label: {
+                  show: false,
+                  radius: 3/4,
+                  // formatter: labelFormatter,
+                  background: {
+                    opacity: 0.5,
+                    color: '#000'
+                  }
+                }
+            }
+        },
+        grid: {
+            hoverable: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false,
+            onHover:function(flotItem, $tooltipEl){
+            	var htmlContent = '<div style="border: 1px sold #ccc;border: 1px solid #ccc;width: 100px;"><span style="background-color: darkgray;display: block;color: #fff;font-size: 7pt;font-weight: bold;padding-left:3px;">'+flotItem.series.label+' '+(flotItem.series.data)+'% ('+flotItem.series.totalhrs+'Hrs)</span><span style="background-color: lightgray;padding-left:3px;display: block;">Billable : '+flotItem.series.billable+'</span><span style="background-color: lightgray;padding-left:3px;display: block;">Non Billable : '+flotItem.series.nonbillable+'</span>';
+            	$tooltipEl.html(htmlContent);
+            }
+        }
+    });
+
+});
 
 
 /*

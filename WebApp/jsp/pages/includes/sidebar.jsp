@@ -49,7 +49,14 @@
                         <a href="${applicationHome}/index"><span class="fa fa-list-alt"></span> <span class="xn-text">Home Page</span></a>                        
                     </li>
                     <li>
-                        <a href="${applicationHome}/dashboard"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
+                     <c:set var="dashboardView" value='dashboardview${currentUserGroupId}'/> 
+                     <c:set var="dashboardViewName" value='dashboard'/>   
+					  <c:if test="${not empty appConfigMap[dashboardView] && not empty appConfigMap[dashboardView].appConfValueDetails}">
+					  <c:forEach var="dashboardViewConf" items="${appConfigMap[dashboardView].appConfValueDetails}">
+					  		<c:set var="dashboardViewName" value='${dashboardViewConf.value}'/>  
+					  </c:forEach>
+					  </c:if>
+                        <a href="${applicationHome}/${dashboardViewName}"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>                        
                     </li>
                     <li>
                     	<a href="${applicationHome}/tasks"><span class="fa fa-tasks"></span><span class="xn-text">Manage Tasks</span></a>

@@ -3,8 +3,13 @@
     color: white;
     margin-top: 13px !important;
     font-weight: bold;
+	
 }
 
+.page-container  .page-content{
+    background-color: white;
+    background-image: none;
+}
 .dashboard .dbwidget {
     min-height: 1px;
   padding-left: 5px; 
@@ -16,9 +21,11 @@ margin-bottom: 5px;
 .dashboard .panel .panel-default{
 	text-align: center !important;
 }
-.dashboard .panel .panel-title-box{
-	float: none !important;
-	text-align:center !important;
+.dashboard .panel .paneltitlebox{
+	font-size: 10pt;
+    font-weight: 600;
+    padding: 5px 0 0 5px;
+    color: darkgray;
 }
 
 .dashboard .panel .panel-heading .panel-title-box span{
@@ -35,20 +42,50 @@ font-size: 12px;
 	color:#686868;
 	font-weight: 700;	
 }
-.dashboard .panel .panel-heading .dbheading{
-    font-size: 1.5em !important;
-    font-weight: 700;
+.dashboard .panel .panel-heading .bandwidthtitle{
     line-height: 18px;
-    color: #686868;
-    padding: 0px;
     margin: 0px;
+    font-size: 10pt;
+    font-weight: 600;
+    padding: 5px 0 0 5px;
+    color: #fff;
  }
-
+ 
 .dashboard .dbwidget .dbcontentbox{
-	box-shadow: 1px 1px 5px #888888;
+	 box-shadow: 0px 0px 0px #888888;
+}
+.accountUtilizationPieChart .legend {
+	display:none;
+}
+.flotTip 
+    {
+      padding: 3px 5px;
+      z-index: 100;
+      #opacity: .7;
+}
+.pietooltip{
+	color: red;
 }
 
+.dashboard .utilization.border{
+	border-right: 2px solid lightgray;height: 56px;
+}
 
+.dashboard .utilization .utilizationtext{
+	display: block;
+    text-align: center;
+    margin-top: 3px;
+    font-size: 1.2em;
+    color: #b8b4b4;
+    font-weight: 600;
+}
+.dashboard .utilization .utilizationhrs{
+    font-size: 2em;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+    color: #747474;
+}
 .dashboard .projectsummary {
     text-align: center;
 	padding: 5px;
@@ -56,50 +93,50 @@ font-size: 12px;
 }
 
 .dashboard .projectsummary.totalprojectcount {
-	color: #B5B5B5;
+	color: #7c7c7c;
 }
 
 .dashboard .projectsummary.totalprojectcount.active {
-	 background-color: #B5B5B5;
+	 background-color: #00af9b;
 }
 
 .dashboard .projectsummary.backlogcount {
-	color: #E45F56;
+	color: #7c7c7c;
 }
 
 .dashboard .projectsummary.backlogcount.active {
-	background-color: #E45F56;
+	background-color: #00af9b;
 }
 
 .dashboard .projectsummary.unassignedcount {
-	color: #f37e28;
+	color: #7c7c7c;
 }
 .dashboard .projectsummary.unassignedcount.active {
-	background-color: #f37e28;
+	background-color: #00af9b;
 }
 
 .dashboard .projectsummary.inprogress {
-	color: #52bf8a;
+	color: #7c7c7c;
 }
 
 .dashboard .projectsummary.inprogress.active {
-	background-color: #52bf8a;
+	background-color: #00af9b;
 }
 
 .dashboard .projectsummary.completed {
-	color: #26a65b;
+	color: #7c7c7c;
 }
 
 .dashboard .projectsummary.completed.active {
-	background-color: #26a65b;
+	background-color: #00af9b;
 }
 
 .dashboard .projectsummary.upcoming {
-	color: #376ccb;
+	color: #7c7c7c;
 }
 
 .dashboard .projectsummary.upcoming.active {
-	background-color: #376ccb;
+	background-color: #00af9b;
 }
 
 .dashboard .projectsummary.active{
@@ -107,7 +144,7 @@ font-size: 12px;
 }
 
 .dashboard .projectsummary .hours{
-	 height: 13px;
+	 height: 12px;
 }
 .dashboard input.searchbox, select.searchbox, .dateFilterbox {
   border: 0;
@@ -115,7 +152,18 @@ font-size: 12px;
   background: transparent;
   border-bottom: 1px solid #B5B5B5;
   margin-right: 15px;
-  width: 125px;
+  width: 150px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #918989;
+}
+
+select.dashboadgroup{
+	 width: 175px;
+}
+
+.dashboard input.projectSearchInput{
+	min-width: 225px;margin-right: 5px;font-size: 11px;font-weight: 600;opacity: 0.7;
 }
 
 span.searchboxlabel {
@@ -124,53 +172,47 @@ span.searchboxlabel {
 }
 
 .dashboard .projecttitleblock{
-	background-color: #EDEDED;
+	background-color: #434954;
+	padding-left:0;
+	padding-right:0;
 }
-
-.dashboard .legend{
-	width: 7px;
-	height: 5px;
-	margin-left: 5px;
-	margin-top: 5px;
-	margin-right: 2px;
-	display: inline-block;
-}
-
-.dashboard .legend.dot{
-	width: 6px;
-	height: 6px;
-	border-radius:20px;
-}
-
+.dashboard .projecttitleblock .col-md-2{
+	padding: 0;
+	}
 .dashboard .legendtext{
     font-size: 8px;
     color: darkgray;
     font-weight: 600;
 
 }
-
+.dashboard .resUtilName{
+font-size: 10px;
+    color: darkgray;
+    font-weight: 500;
+}
 .dashboard .projectsummary .total{
-    display: block;
-    font-size: .9em;
-    font-weight: bold;
-    padding-top: 2px;
+      display: block;
+    font-size: 1.1em;
+    font-weight: 600;
 }
 
 .dashboard .projectsummary .numberofproject{
-    display: block;
-     font-size: 2.5em;
-    font-weight: bold;
+  	display: block;
+    font-size: 2.5em;
+    font-weight: 600;
     line-height: 1;
+    margin-top: 5px;
 }
 
 .dashboard .projectsummary .hours{
     display: block;
 }
 
+
 .dsfilter{
     background-color: white;
-    height: 26px;
-    margin: 2px 0 5px 0;
+    height: 22px;
+    margin: 0px 0 5px 0;
     margin-right: 50px;
 }
 .dashboard{
@@ -179,10 +221,11 @@ span.searchboxlabel {
 
 .dashboard .fixedheadertable {
 padding-left: 5px;
+    padding-right: 0px
 }
 .dashboard .fixedheadertable table {
         width: 100%;
-        margin-top: 5px;
+        margin-top: 0px;
         margin-bottom: 0px;
     }
 
@@ -206,9 +249,104 @@ padding-left: 5px;
 
 .xdsoft_datetimepicker .xdsoft_datepicker.active{
 width: 100%;
-margin-left: 2px;
+margin-left: 0px;
 }
 
+.xdsoft_datetimepicker .xdsoft_calendar  td, .xdsoft_datetimepicker .xdsoft_calendar  th {
+    background-color: #6e6e6e;
+	border: 0px solid #ddd;
+	color: #fff;
+	text-align: center;
+	height: 21px;
+}
+
+.xdsoft_datetimepicker .xdsoft_prev {
+    float: left;
+    background-position: 0;
+    margin-left: 15px;
+    background-image: url(../../img/angle-left.png);
+    background-size: 10px;
+    opacity: .9;
+    width: 10px;
+}
+
+.xdsoft_datetimepicker .xdsoft_next {
+    float: left;
+    background-position: 0;
+    background-image: url(../../img/angle-right.png);
+    background-size: 10px;
+     opacity: .9;
+      width: 10px;
+}
+.xdsoft_datetimepicker .xdsoft_month {
+    width: 80px;
+}
+.xdsoft_datetimepicker .xdsoft_full_button{
+	background-color: transparent;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    display: block;
+    opacity: .8;
+    white-space: nowrap;
+    width: 22px;
+    min-width: 0;
+    background-image: url(../../img/fullscreenimg.png);
+    height: 20px;
+    background-size: 16px;
+    float: right;
+}
+
+
+.xdsoft_datetimepicker .xdsoft_year {
+    width: 50px
+}
+
+.xdsoft_datetimepicker .xdsoft_today_button {
+    background-position: -70px -7px;
+}
+
+.xdsoft_datetimepicker .xdsoft_label {
+    padding: 2px;
+}
+.xdsoft_datetimepicker .xdsoft_date.xdsoft_weekend {
+	color: #b1b1b1 !important;	
+}
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_other_month{
+	color: #848484 !important;	
+	opacity:1;
+}
+
+.xdsoft_datetimepicker .xdsoft_next, .xdsoft_datetimepicker .xdsoft_prev, .xdsoft_datetimepicker .xdsoft_today_button {
+    height: 20px;
+}
+.xdsoft_datetimepicker.xdsoft_inline{
+	width: 100%;
+	background-color: #545454;
+}
+.xdsoft_datetimepicker {
+	border: 0;
+	padding: 0;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar th {
+    font-weight: 500;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current{
+	background: #6e6e6e;
+	box-shadow:none;
+	font-weight: 500;
+}
+.xdsoft_datetimepicker .xdsoft_calendar td>div {
+    padding-right: 0px;
+}
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_today div{
+	border-radius: 20px;
+    background-color: #000;
+    height: 100%;
+    padding-top: 3px;
+}
+/*
 .dashboard div.xdsoft_calendar,.dashboard .xdsoft_datetimepicker .xdsoft_monthpicker{
 	width: 100%;
 	z-index: 100;
@@ -226,13 +364,15 @@ margin-left: 2px;
 .dashboard .xdsoft_datetimepicker .xdsoft_next, .dashboard .xdsoft_datetimepicker .xdsoft_prev, .dashboard .xdsoft_datetimepicker .xdsoft_today_button
 {
 	width: 16px;
-}
+}*/
 .xdsoft_datetimepicker .xdsoft_label{
-	font-size: 9px;
+	font-size: 12px;
 	line-height: 15px;
+	background-color: #545454;
+	color:#fff;
 }
 .dashboard .fixedheadertable tbody {
-    height: 230px;
+    height: 185px;
     overflow-y: auto;
 }
 
@@ -244,6 +384,7 @@ margin-left: 2px;
     width: 14%;
     float: left;
     word-wrap: break-word;
+    padding: 5px;
 }
 
 .dashboard .panel-fullscreened .fixedheadertable tbody td, .dashboard .panel-fullscreened .fixedheadertable thead th {
@@ -298,13 +439,43 @@ margin-left: 2px;
 	margin-top: 5px;
 	font-size:10px;	
 }
+.dashboard .bwwraptext{
+    float: right;
+    width: 80px;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 400;
+ }
 .dashboard .percentage{
-	margin-top: 10px;
-	display: block;
+	margin-top: 7px;
+    font-size: 10px;
+    color: #fff;
+    font-weight: bold;
 }
 
+.dashboard .percentagetxt{
+	margin-top: 7px;
+    display: block;
+    font-size: 13px;
+    color: #fff;
+    font-weight: bold;
+}
+
+
 .dashboard .projectdetails{
-	height: 345px;
+	height: 295px;
+}
+
+.dashboard input.bandwidthsearch{
+	width: 97%;
+    border-radius: 20px;
+    padding-left: 5px;
+    font-size: 8pt;
+    margin-left: 3px;
+    border: 0;
+    height: 15px;
+    opacity:.9;
 }
 
 .dashboard .panel-fullscreened .projectdetails{
@@ -505,17 +676,24 @@ margin-left: 2px;
 
 .resutildiv .progress{
 	width: 100%;
-	height: 12px;
-	border-radius:0;
-	margin-bottom: 2px;
-	margin-left: 5px;
+    height: 5px;
+    border-radius: 0;
+    margin-bottom: 0px;
+    margin-left: 5px;
+    margin-top: 4px;
 }
 
 .resutildiv .progress-bar.billable{
 background-color: #0BB4C1;
 }
 .resutildiv .progress-bar.nonbillable{
-background-color: #E3E3E3;
+background-color: #fbb03b;
+}
+
+.resutildiv .progress-bar.freehours{
+background-color: #f5f5f5;
+box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+overflow: hidden;
 }
 
 .theme-settings {
@@ -536,18 +714,10 @@ background-color: #E3E3E3;
 	padding-left: 0px;
 }
 
-.xdsoft_datetimepicker .xdsoft_calendar td, .xdsoft_datetimepicker .xdsoft_calendar th {
-    background: white;
-	border: 0px solid #ddd;
-}
-
-.xdsoft_date.xdsoft_weekend {
-	color: red !important;	
-}
 
 .img-header {
     position: relative;
-    margin-top: 0px;
+    margin-top: 5px;
     margin-right: 5px;
     float: left;
 }
@@ -565,6 +735,7 @@ background-color: #E3E3E3;
     top: 20px;
     height: 12px;
     border-radius: 20px;
+    border: 1px solid #fff;
 }
 
 .availabilityStatus {
@@ -577,7 +748,7 @@ background-color: #E3E3E3;
 }
 
 .onlinestatus.green, .availabilityStatus.green {
-    background-color: #57BF9E;
+    background-color: #39b54a;
 }
 
 .availabilityStatus.gray {

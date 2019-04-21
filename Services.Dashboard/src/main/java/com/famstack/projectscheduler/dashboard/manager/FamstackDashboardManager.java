@@ -703,7 +703,30 @@ public class FamstackDashboardManager extends BaseFamstackService
         return dashBoardProjectDetailsList;
     }
     
-
+    public String dashboardOverAllUtilizationPercentage(Date startDate, Date endDate,
+			String userGroupId, String accountId, String teamId,
+			String subTeamId, String userId) {
+		Double billableMins = 0.0;
+		Double nonBillableMins = 0.0;
+		List<DashboardUtilizationDetails> dashboardOverAllutilizationList = dashboarAllUtilizationList(startDate, endDate, userGroupId, accountId, teamId, subTeamId, userId, false, false);
+		for(DashboardUtilizationDetails dashboardOverAllutilization : dashboardOverAllutilizationList) {
+			billableMins +=dashboardOverAllutilization.getBillableMins();
+			nonBillableMins += dashboardOverAllutilization.getNonBillableMins();
+		}
+		
+		int billablePercentage = 0;
+		int nonBillablePercentage = 0;
+		if (billableMins >0) {
+		 billablePercentage = (int) ((billableMins/(billableMins+nonBillableMins))*100);
+		}
+		if (nonBillableMins > 0) {
+		 nonBillablePercentage = (int) ((nonBillableMins/(billableMins+nonBillableMins))*100);
+		}
+		return "{\"billable\":"+billablePercentage+",\"nonBillable\":"+nonBillablePercentage+"}";
+	
+	}
+    
+    
 	public String dashboardOverAllUtilization(Date startDate, Date endDate,
 			String userGroupId, String accountId, String teamId,
 			String subTeamId, String userId) {

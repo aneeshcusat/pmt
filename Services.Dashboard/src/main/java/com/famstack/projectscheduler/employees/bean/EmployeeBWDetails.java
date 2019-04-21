@@ -19,7 +19,9 @@ public class EmployeeBWDetails {
 		return firstName;
 	}
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		if (firstName != null){
+			this.firstName = firstName.trim();
+		}
 	}
 	public String getTodayUtilization() {
 		return todayUtilization== null ? "--" :""+ todayUtilization;
@@ -45,5 +47,12 @@ public class EmployeeBWDetails {
 	public void setTaskType(String taskType) {
 		this.taskType = taskType;
 	}
+	
+	public String getOnlyFirstName() {
+		if (firstName != null &&  firstName.indexOf(" ") > 0) {
+			return  firstName.substring(0, firstName.indexOf(" "))+" " + firstName.substring(firstName.indexOf(" ") +1 , firstName.indexOf(" ")+2);
+		}  
+		return firstName;
+    }
 
 }

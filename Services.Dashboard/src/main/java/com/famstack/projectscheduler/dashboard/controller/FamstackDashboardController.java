@@ -64,6 +64,16 @@ public class FamstackDashboardController extends BaseFamstackService
         return new ModelAndView("newindex").addObject("dashboardData", dashboardData).addObject("dateDashBoardRange", getDefaultDateRange());
     }
     
+    @RequestMapping(value = "/newdashboard", method = RequestMethod.GET)
+    public ModelAndView newDashboard()
+    {
+    	Map<Integer, AccountDetails> accountData = FamstackAccountManager.getAccountmap();
+        Map<String, Object> dashboardData = new HashMap<String, Object>();
+        getDefaultDateRange();
+        dashboardData.put("accountData", accountData);
+        return new ModelAndView("dashboard1").addObject("dashboardData", dashboardData).addObject("dateDashBoardRange", getDefaultDateRange());
+    }
+    
     @RequestMapping("/dashboardEmpBW")
     public ModelAndView dashboardEmpBW(@RequestParam("groupId") String groupId, @RequestParam(name="date", defaultValue="") String dateString, Model model)
     {
@@ -136,6 +146,29 @@ public class FamstackDashboardController extends BaseFamstackService
     		@PathVariable(value = "userGroupId") String userGroupId)
     {
         return famstackDashboardManager.getEmpBWAjaxFullcalendar(startDate, endDate, userGroupId);
+    }
+    
+    @RequestMapping(value = "/dashboardOverAllUtilizationPercentage", method = RequestMethod.GET)
+    @ResponseBody
+    public String dashboardOverAllUtilizationPercentage(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
+    		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
+    {
+    	 String[] dateRanges;
+         Date startDate = null;
+         Date endDate = null;
+         if (StringUtils.isNotBlank(dateRange)) {
+             dateRanges = dateRange.split("-");
+
+             if (dateRanges != null && dateRanges.length > 1) {
+                 startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                 endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+             }
+         } else {
+             startDate =
+                 DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+             endDate = startDate;
+        }
+        return famstackDashboardManager.dashboardOverAllUtilizationPercentage(startDate, endDate, userGroupId, accountId, teamId, subTeamId,userId);
     }
     
     @RequestMapping(value = "/dashboardOverAllUtilization", method = RequestMethod.GET)

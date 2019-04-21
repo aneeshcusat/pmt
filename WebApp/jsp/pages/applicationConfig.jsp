@@ -79,6 +79,9 @@ tr.clickable:hover {
 				   	<tr class="clickable">
 				   		<td colspan="2"><a href="#tab4" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Reports</a></td>
 				   	</tr>
+				   	<tr class="clickable">
+				   		<td colspan="2"><a href="#tab5" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Dashboard View</a></td>
+				   	</tr>
 			   	 	</tbody>
 			     </table>
 				</div>
@@ -164,6 +167,27 @@ tr.clickable:hover {
 							</tbody>
 						</table>
 					</div>
+					<div class='row tab-pane ' id="tab5">
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Dashboard View</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+									<select class="form-control select" id="dashboardSelectId">
+										<option value="dashboard">Default</option>
+										<option value="newindex">Dashboard 1</opiton>
+										<!-- <option value="newdashboard">Dashboard 2</opiton> -->
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="createDashboardApplicationConfig()" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>                    
@@ -209,6 +233,16 @@ tr.clickable:hover {
   	 </script>
   </c:forEach>
   </c:if>
+  
+  <c:set var="dashboardView" value='dashboardview${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[dashboardView] && not empty appConfigMap[dashboardView].appConfValueDetails}">
+  <c:forEach var="dashboardViewConf" items="${appConfigMap[dashboardView].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#dashboardSelectId").val('${dashboardViewConf.value}');
+  	 	//$("#reportingSelectId").refresh();
+  	 </script>
+  </c:forEach>
+  </c:if>
  
  <script type="text/javascript">
  
@@ -248,11 +282,22 @@ tr.clickable:hover {
 	 var type = "reporting";
 	 var dataString = {input1: input1, input2: input1,type: type};
 	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
-		 $('#createAppModel').modal('hide');
 	    },function(error) {
 	    	famstacklog("ERROR: ", error);
 	    });
  }
+ 
+ function createDashboardApplicationConfig(){
+	 var input1 = $("#dashboardSelectId").val();
+	 var type = "dashboardview";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
+ 
  
  function doAjaxDeleteAppConfigVal(id) {
 	 var dataString = {"id" : id};

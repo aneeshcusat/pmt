@@ -142,6 +142,15 @@ public class DashboardUtilizationDetails {
 	     return String.format("%d:%02d", hours, minutes);
 	}
 	
+	public int getResourceFreePercentage(){
+		Double freeMins = getFreeMins();
+		Double totalMins = billableMins+nonBillableMins;
+		if (freeMins > 0) {
+			totalMins += freeMins;
+			return (int) ((freeMins/(totalMins))*100);
+		}
+		return 0;
+	}
 	public int getResourceNonBillablePercentage(){
 		Double freeMins = getFreeMins();
 		Double totalMins = billableMins+nonBillableMins;
