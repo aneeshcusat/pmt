@@ -201,8 +201,8 @@ function processTaskNotification(notifications){
 
 
 var messagesMap = [
-{key:"default",value:"famstack notification!"},
-{key:"userRegistraion",value:"You have been registered in famstack"},
+{key:"default",value:"Notification!"},
+{key:"userRegistraion",value:"You have been registered in system"},
 {key:"resetPassword",value:"Your account password has been reset!"},
 {key:"forgotPassword",value:"Your account password has been reset!"},
 {key:"userDetailsUpdate",value:"Your account details have been updated!"},

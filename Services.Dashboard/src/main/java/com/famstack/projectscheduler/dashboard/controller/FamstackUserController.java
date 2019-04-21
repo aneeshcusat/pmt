@@ -103,8 +103,8 @@ public class FamstackUserController extends BaseFamstackService
     @ResponseBody
     public String forgotPassword(@RequestParam("email") String username)
     {
-        famstackDashboardManager.forgotPassword(username);
-        return "{\"status\": true}";
+        boolean status = famstackDashboardManager.forgotPassword(username);
+        return "{\"status\": "+status+"}";
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)

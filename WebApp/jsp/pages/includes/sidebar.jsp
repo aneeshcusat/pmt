@@ -13,28 +13,35 @@
 		         <c:if test="${expandedPage == false}">
 		        	<ul class="x-navigation x-navigation-custom x-navigation-minimized">
 		        </c:if>
+		       	 	<c:if test="${tracopusConfigEnabled == false}">
                     <li class="xn-logo">
                         <a href="index">famstack</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
+                    </c:if>
+                    <c:if test="${tracopusConfigEnabled == true}">
+                      <li class="xn-logo">
+                        <a href="index"> <img src="${image}/tracopuslogo.png" style="height: 35px"/></a>
+                        <a href="#" class="x-navigation-control"></a>
+                    </li>
+                    </c:if>
                     <li class="xn-profile">
                         <a href="javascript:void(0)" class="profile-mini">
                           <img src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                         </a>
                         <div class="profile" >
-                            <div class="profile-image">
-                               <img src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
+                            <div class="profile-image" style="float: left;text-align: left;width: 25%;padding-right: 0px;">
+                               <img style="border-radius: 20%; width: 50px;" src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                             </div>
 						 <a href="${applicationHome}/profile/${currentUser.id}">
-                            <div class="profile-data">
-                                <div class="profile-data-name">${currentUser.firstName}</div>
-                                <div class="profile-data-title">${currentUser.designation}</div>
+                            <div class="profile-data" style="width: 75%;text-align: left;">
+                                <div class="profile-data-name" style="margin-left: 10px;word-break: break-word;">${currentUser.firstName}</div>
+                                <div class="profile-data-title" style="margin-left: 10px;">${currentUser.designation}</div>
                                 <c:set var="userGroupId" value="${currentUser.userGroupId}"/>
-                      			<div class="profile-data-title">${userGroupMap[userGroupId].name}</div>
+                      			<div class="profile-data-title" style="margin-left: 10px;">${userGroupMap[userGroupId].name}</div>
                             </div>
                         </a>
-                        
-                        </div>      
+                        </div>    
                     </li>
                     <li class="xn-title">Navigation</li>
                     <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">

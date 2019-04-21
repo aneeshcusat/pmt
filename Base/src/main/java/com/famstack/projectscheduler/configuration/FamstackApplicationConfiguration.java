@@ -55,6 +55,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     private String staticFilesLocation;
     
     private String instanceName;
+    
+    private boolean tracopusConfigEnabled;
 
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
     
@@ -509,5 +511,13 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
 	public void setStaticFilesLocation(String staticFilesLocation) {
 		this.staticFilesLocation = staticFilesLocation;
+	}
+
+	public boolean isTracopusConfigEnabled() {
+		return tracopusConfigEnabled;
+	}
+
+	public void setTracopusConfigEnabled(boolean tracopusConfigEnabled) {
+		this.tracopusConfigEnabled = tracopusConfigEnabled;
 	}
 }

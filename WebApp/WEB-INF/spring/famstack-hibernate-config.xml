@@ -11,20 +11,6 @@
 
     <context:property-placeholder location="classpath:properties/famstack-application-default.properties, classpath:properties/famstack-application-${bopsprofile}.properties" ignore-unresolvable="true" />
 
-	<bean id="dataSourceDBCP" class="com.famstack.projectscheduler.dataaccess.FamstackBasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="${hibernate.driverClassName}"/>
-        <property name="url" value="${hibernate.url}"/>
-        <property name="username" value="${hibernate.username}"/>
-        <property name="password" value="${hibernate.password}"/>
-        <property name="validationQuery" value="SELECT 1"/>
-		<property name="testOnBorrow" value="true"/>
-		<property name="testWhileIdle" value="true"/>
-		<property name="initialSize" value="100"/>
-		<property name="maxTotal" value="-1"/>
-		<property name="maxWaitMillis" value="60000"/>
-	</bean>
-	
 	<bean id="dataSourceTomcatPooling" class="com.famstack.projectscheduler.dataaccess.FamstackBasicDataSourceTomcatPooling"
 		destroy-method="close">
 		<property name="driverClassName" value="${hibernate.driverClassName}"/>
@@ -36,7 +22,7 @@
 		<property name="testWhileIdle" value="true"/>
 		<property name="testOnReturn" value="false"/>
 		<property name="validationInterval" value="30000"/>
-		<property name="initialSize" value="100"/>
+		<property name="initialSize" value="${hibernate.initialSize}"/>
 		<property name="removeAbandonedTimeout" value="60"/>
 		<property name="removeAbandoned" value="true"/>
 		<property name="timeBetweenEvictionRunsMillis" value="30000"/>
@@ -52,6 +38,21 @@
 		 -->
 	</bean>
 	
+	<!-- <bean id="dataSourceDBCP" class="com.famstack.projectscheduler.dataaccess.FamstackBasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${hibernate.driverClassName}"/>
+        <property name="url" value="${hibernate.url}"/>
+        <property name="username" value="${hibernate.username}"/>
+        <property name="password" value="${hibernate.password}"/>
+        <property name="validationQuery" value="SELECT 1"/>
+		<property name="testOnBorrow" value="true"/>
+		<property name="testWhileIdle" value="true"/>
+		<property name="initialSize" value="100"/>
+		<property name="maxTotal" value="-1"/>
+		<property name="maxWaitMillis" value="60000"/>
+	</bean>
+	 -->
+
 	<bean id="wrappedDataSource" class="net.bull.javamelody.SpringDataSourceFactoryBean">
 		<property name="targetName" value="dataSourceTomcatPooling" />
 	</bean>

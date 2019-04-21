@@ -127,7 +127,7 @@ body {
   float: left;
   width: 100%;
   line-height: 30px;
-  padding: 13px 15px 15px;
+  padding: 10px 10px 10px;
   background: rgba(0, 0, 0, 0.02);
   border-bottom: 1px solid #DDD;
   border-top: 1px solid #DDD;
@@ -138,7 +138,7 @@ body {
 }
 .page-container .page-content .content-frame .content-frame-top .page-title h2 {
   margin-bottom: 0px;
-  font-size: 22px;
+  font-size: 18px;
 }
 .page-container .page-content .content-frame .content-frame-left {
   float: left;
@@ -1059,7 +1059,7 @@ body.page-container-boxed .page-container {
 .profile {
   width: 100%;
   float: left;
-  padding: 15px 10px;
+  padding: 5px 5px;
   position: relative;
   background: #080a0e;
 }
@@ -1070,7 +1070,7 @@ body.page-container-boxed .page-container {
   text-align: center;
 }
 .profile .profile-image img {
-  width: 100px;
+  width: 75px;
   border: 3px solid #FFF;
   -moz-border-radius: 20%;
   -webkit-border-radius: 20%;
@@ -1172,7 +1172,7 @@ body.page-container-boxed .page-container {
   float: left;
   width: 100%;
   background: #e8e8e8;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
   padding: 6px 15px 7px;
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
@@ -2546,7 +2546,7 @@ label.valid {
 }
 .page-title h2 {
   float: left;
-  line-height: 30px;
+  line-height: 0px;
 }
 h1,
 h2,
@@ -2573,8 +2573,8 @@ h1,
 }
 h2,
 .h2 {
-  margin-bottom: 15px;
-  font-size: 26px;
+  margin-bottom: 5px;
+  font-size: 18px;
   font-weight: 400;
 }
 h3,
@@ -3094,7 +3094,7 @@ blockquote.pull-right {
 .table > thead > tr > th {
   background: #f1f5f9;
   color: #56688A;
-  font-size: 12px;
+  font-size: 10px;
 }
 .panel-body.panel-body-table {
   padding: 0px;

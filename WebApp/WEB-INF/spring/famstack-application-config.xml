@@ -15,6 +15,7 @@
    		<property name="hostName" value="${famstack.hostName}"/>
    		<property name="portNumber" value="${famstack.portNumber}"/>
    		<property name="staticFilesLocation" value="${famstack.staticFilesLocation}"/>
+   		<property name="tracopusConfigEnabled" value="${famstack.tracopusConfigEnabled}"/>
    </bean>
    
    <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">

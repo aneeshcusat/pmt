@@ -987,12 +987,15 @@ public class FamstackDashboardManager extends BaseFamstackService
         return "{}";
     }
 
-    public void forgotPassword(String userName)
+    public boolean forgotPassword(String userName)
     {
         EmployeeDetails employeeDetails = userProfileManager.updateUserPasswordForReset(userName);
 
         if (employeeDetails != null) {
             notifyAll(NotificationType.FORGOT_PASSWORD, employeeDetails);
+            return true;
+        } else {
+        	return false;
         }
 
     }

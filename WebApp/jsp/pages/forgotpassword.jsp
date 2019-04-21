@@ -1,70 +1,99 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
+<c:set var="tracopusConfigEnabled" value="${applicationScope.applicationConfiguraion.tracopusConfigEnabled}"/>
 <c:set var="staticFilesLocation" value="${applicationScope.applicationConfiguraion.staticFilesLocation}"/>
 <c:set value="${staticFilesLocation}/css" var="css"/>
 <c:set value="${staticFilesLocation}/image" var="image"/>
 <c:set value="${staticFilesLocation}/js" var="js"/>
 <!DOCTYPE html>
-<html lang="en" class="body-full-height">
+<html lang="en">
     <head>        
         <!-- META SECTION -->
-        <title>Famstack - Project Scheduler</title>            
+        <title><c:if test="${tracopusConfigEnabled == false}">Famstack</c:if><c:if test="${tracopusConfigEnabled == true}">Tracopus</c:if> - Project Scheduler</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+           <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link rel="icon" href="${fn:escapeXml(image)}/favicon.ico" type="image/x-icon" />
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        
-        <link rel="stylesheet" type="text/css" id="theme" href="${css}/theme-white.css"/>
+       <link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/bootstrap/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/waitme/waitMe.min.css"/>
-        <!-- EOF CSS INCLUDE -->                                    
+        <link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/login.css"/>
+        <!-- EOF CSS INCLUDE -->                
+       <style type="text/css">
+		.login_content .btn:hover, .login_content a {
+    		text-decoration: none;
+			}
+		.login_content h1 {
+		    font: 400 21px Helvetica,Arial,sans-serif;
+		    opacity: .8;
+		}
+		.login_content form input[type=text], .login_content form input[type=email], .login_content form input[type=password] {
+			margin: 20px 0 0px;	
+		}
+        </style>
     </head>
-    <body>
-        
-        <div class="login-container">
-        
-            <div class="login-box animated fadeInDown">
-                <div class="login-famstack_logo"><h2 class="text-center">Project scheduler</h2></div>
-                <div class="login-body">
-                    <div class="login-title"><strong>Reset</strong>, login password</div>
-                    <form class="form-horizontal" method="post">
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <input type="text" class="form-control" placeholder="Email id" id="emailId"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                           <a class="btn btn-info btn-block" href="javascript:invokeForgotPasswordAjax()">Reset</a>
-                        </div>
-                    </div>
-                    </form>
+  <body class="login">
+    <div>
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+              <form class="form-horizontal" method="post" id="forgotForm">
+              <h1>Reset Your Password</h1>
+             <div>
+                <input type="email" class="form-control" placeholder="Email id" id="emailId" name="email"/>
+              </div>
+              <span id="invalidLoginSpan" style="color: red;display: none">Unable to recognize email id</span>
+              <div>
+                <a class="btn btn-info btn-block submit" href="javascript:invokeForgotPasswordAjax()">Reset</a>
+                 <a class="reset_pass" href="/bops/dashboard/login">Remember your password?</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <div class="clearfix"></div>
+                <br>
+
+                <div>
+                  <h1><img alt="" src="${fn:escapeXml(image)}/favicon.ico" style="width: 20px;height: 20px;margin-top: 0;margin-right: 5px;padding-top: 0;"/><span  style="opacity:.3"><c:if test="${tracopusConfigEnabled == false}">Famstack</c:if><c:if test="${tracopusConfigEnabled == true}">Tracopus</c:if> Project Scheduler</span></h1>
+ 				  <p style="opacity:.7">©2016 All Rights Reserved. Powered by <c:if test="${tracopusConfigEnabled == true}">Infleca Innovation  Pvt Ltd</c:if><c:if test="${tracopusConfigEnabled == false}">Credencia Business Solutions LLP</c:if>, Privacy and Terms</p>
                 </div>
-                <div class="login-footer">
-                    <div class="pull-left">
-                        &copy; 2016 famstack
-                    </div>
-                    <div class="pull-right">
-                        <a href="#">About</a> |
-                        <a href="#">Privacy</a> |
-                        <a href="#">Contact Us</a>
-                    </div>
-                </div>
-            </div>
-            
+              </div>
+            </form>
+          </section>
         </div>
+    </div>
+  </div>
        <!-- START PLUGINS -->
         <script type="text/javascript" src="${js}/plugins/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js"></script>
         <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script>
         <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js"></script>
-        <script type="text/javascript" src="${js}/famstack.ajax.js"></script>   
+        <script type="text/javascript" src="${js}/famstack.ajax.js"></script>  
+        <script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.min.js'></script> 
         <!-- END PLUGINS -->  
- <script type="text/javascript">
+  <script type="text/javascript">
+  
+  var jvalidate = $("#forgotForm").validate({
+	     ignore: [],
+	     rules: {                                            
+	    	 email: {
+	                     required: true,
+	                     email: true
+	             }
+	     	}
+	     });
+	    
+	    $('#emailId').keypress(function(e) {
+	        if(e.which == 10 || e.which == 13) {
+	        	invokeForgotPasswordAjax();
+	        }
+	    });
+	    
  var famstackLogEnabled = false;
  function famstacklog(message){
  	famstacklog("", message);
@@ -77,6 +106,9 @@
  }
     
     function invokeForgotPasswordAjax(){
+    	if(!$("#forgotForm").valid()) {
+    		return;
+    	}
     	var emailId = $('#emailId').val();
     	famstacklog("emailId - " + emailId);
     	var dataString = {"email": emailId.trim()};
@@ -95,11 +127,4 @@
 		});
 		}
 	</script>
-        
-    </body>
-</html>
-
-
-
-
-
+</body></html>

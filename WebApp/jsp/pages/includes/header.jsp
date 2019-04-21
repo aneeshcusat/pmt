@@ -19,18 +19,20 @@
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="expandedPage" value="${applicationScope.applicationConfiguraion.expandedPage}"/>
 <c:set var="serverInstanceName" value="${applicationScope.applicationConfiguraion.instanceName}"/>
+<c:set var="tracopusConfigEnabled" value="${applicationScope.applicationConfiguraion.tracopusConfigEnabled}"/>
 <%@include file="accessCheck.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>       
     	<!-- Famstack serverInstanceName : ${serverInstanceName} -->
         <!-- META SECTION -->
-        <title>Famstack - Project scheduler</title>            
+        <title><c:if test="${tracopusConfigEnabled == false}">Famstack</c:if><c:if test="${tracopusConfigEnabled == true}">Tracopus</c:if> - Project scheduler</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <link rel="icon" href="${fn:escapeXml(image)}/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="${fn:escapeXml(image)}/favicon.ico" type="image/x-icon" />
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        

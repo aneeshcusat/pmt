@@ -48,3 +48,5 @@ update user_task_activity_info utai set task_act_category="Admin", type="OTHER" 
 
 update user_task_activity_info utai set task_act_category="Leave" where type="LEAVE";
 update user_task_activity_info utai set task_act_category="Meeting" where type="MEETING";
+
+

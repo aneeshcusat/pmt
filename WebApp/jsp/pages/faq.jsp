@@ -87,7 +87,7 @@
             <div class="panel panel-primary">
                 <div class="panel-body">
                     <h3>Contact</h3>
-                    <p>Feel free to contact us for any issues you might have with famstack.</p>
+                    <p>Feel free to contact us for any issues you might have with application.</p>
                     <div class="form-group">
                         <label>E-mail</label>
                         <input type="email" class="form-control" placeholder="youremail@blueoceanmi.com">
