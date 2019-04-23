@@ -23,13 +23,13 @@
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/waitme/waitMe.min.css"/>
         <link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/login.css"/>
         <!-- EOF CSS INCLUDE -->                
-          <style type="text/css">
-		  .login_content .btn:hover, .login_content a {
+        <style type="text/css">
+		.login_content .btn:hover, .login_content a {
     		text-decoration: none;
-			}
+		}
 		.login_content h1 {
-		    font: 400 21px Helvetica,Arial,sans-serif;
-		    opacity: .8;
+		    font-size:18px;
+		    opacity: .5;
 		}
 		.login_content form input[type=text], .login_content form input[type=email], .login_content form input[type=password] {
 			margin: 20px 0 0px;	
@@ -41,8 +41,12 @@
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
+          	   <div>
+                 <c:if test="${tracopusConfigEnabled == false}"><img alt="" src="${fn:escapeXml(image)}/favicon.ico" style="width: 25px;height: 25px;margin-top: 0;margin-right: 5px;padding-top: 0;vertical-align: unset"/><span style="font-size: 35px;color: gray;font-weight: 200;opacity:.7">famstack</span></c:if>
+                 <c:if test="${tracopusConfigEnabled == true}"><img style="height: 40px" alt="" src="${fn:escapeXml(image)}/tracopus_logo_trans.png"/></c:if>
+               </div>
               <form class="form-horizontal" method="post" id="loginForm">
-              <h1>Welcome, Please Login</h1>
+              <h1>Welcome, Please Sign In</h1>
              <div>
                 <input type="email" class="form-control" placeholder="Email id" id="emailId" name="email"/>
               </div>
@@ -66,7 +70,7 @@
                 <br>
 
                 <div>
-                  <h1><img alt="" src="${fn:escapeXml(image)}/favicon.ico" style="width: 25px;height: 25px;margin-top: 0;margin-right: 5px;padding-top: 0;"/><span  style="opacity:.3"><c:if test="${tracopusConfigEnabled == false}">Famstack</c:if><c:if test="${tracopusConfigEnabled == true}">Tracopus</c:if> Project Scheduler</span></h1>
+				  <h1><span  style="opacity:.5;font-size: 18px"> Project Scheduler</span></h1>
                   <p style="opacity:.7">©2016 All Rights Reserved. Powered by <c:if test="${tracopusConfigEnabled == true}">Infleca Innovation  Pvt Ltd</c:if><c:if test="${tracopusConfigEnabled == false}">Credencia Business Solutions LLP</c:if>, Privacy and Terms</p>
                 </div>
               </div>
