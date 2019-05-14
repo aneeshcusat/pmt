@@ -15,13 +15,13 @@
 		        </c:if>
 		       	 	<c:if test="${tracopusConfigEnabled == false}">
                     <li class="xn-logo">
-                        <a href="index">famstack</a>
+                        <a href="index"><img alt="" src="${image}/favicon.ico" style="width: 25px;"/> famstack</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     </c:if>
                     <c:if test="${tracopusConfigEnabled == true}">
                       <li class="xn-logo">
-                        <a href="index"> <img src="${image}/tracopuslogo.png" style="height: 35px"/></a>
+                        <a href="index" style="text-align: center;"> <img src="${image}/tracopuslogo.png" style="height: 30px"/></a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     </c:if>
@@ -30,7 +30,7 @@
                           <img src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                         </a>
                         <div class="profile" >
-                            <div class="profile-image" style="float: left;text-align: left;width: 25%;padding-right: 0px;">
+                            <div class="profile-image" style="float: left;text-align: left;width: 50px;padding-right: 0px;">
                                <img style="border-radius: 20%; width: 50px;" src="${applicationHome}/image/${currentUser.id}" alt="${currentUser.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                             </div>
 						 <a href="${applicationHome}/profile/${currentUser.id}">

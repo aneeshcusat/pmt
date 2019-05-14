@@ -7,9 +7,9 @@
 	}
 }
 .dashboardtitle{
-    font-size: 12pt;
+    font-size: 10pt;
     color: white;
-    margin-top: 13px !important;
+    margin-top: 10px !important;
     font-weight: bold;
 }
 </style>

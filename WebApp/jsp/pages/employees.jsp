@@ -1,5 +1,10 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@include file="includes/header.jsp" %>           
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="includes/header.jsp" %>
+<c:set var="employeeAccess" value="false"/>
+<c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
+<c:set var="employeeAccess" value="true"/> 
+</c:if>           
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
@@ -123,7 +128,7 @@
                             </div>
                             
                              <div class="col-md-3">
-                             <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
+                             <c:if test="${employeeAccess == 'true'}">
                            		 <a data-toggle="modal" data-target="#registerusermodal" class="btn btn-success btn-block" onclick="createEmployeeDetails()">
                                <span class="fa fa-plus"></span> Register a new Employee</a>
                              </c:if>

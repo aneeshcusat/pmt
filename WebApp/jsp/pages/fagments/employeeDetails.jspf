@@ -15,7 +15,7 @@
                     </div>
                     <div class="profile-controls">
                         <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit"></span></a>
-                         <c:if test="${currentUser.userGroupId == '1012'  || currentUser.userGroupId == '99999'}">
+                         <c:if test="${employeeAccess == 'true'}">
                          	<c:if test="${!user.deleted}">
                         		<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteUser('${user.id}','${user.lastName} ${user.firstName}')"><span class="fa fa-times"></span></a>
                     		</c:if>
