@@ -50,14 +50,12 @@
     <!-- END CONTENT FRAME TOP -->
     <!-- body-->
     <div class="row">
-	<div class="col-md-12" style="min-height: 700px;">
-		<div class="row" id="assignTableId"  style="margin-top:10px">
+	<div class="col-md-12">
+		<div class="row" id="assignTableId">
 		<!-- START DEFAULT TABLE EXPORT -->
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                
+                                <div class="panel-body">
                                 	<div class="col-md-5" >
-                                		<div class="col-md-12">
 										<div class="input-group">
 											<div class="input-group-addon">
 												<span class="fa fa-search"></span>
@@ -68,7 +66,6 @@
 												<button class="btn btn-primary hide">Search</button>
 											</div>
 										</div>
-									</div>
                                  	</div>
                                  	<div class="col-md-2" >
 					                 <span style="margin-top: 9px;margin-right:  10px;float:right"></>Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;</span>
@@ -92,12 +89,14 @@
         								</c:if>
         							</div>
                                 </div>
-                                <div class="panel-body panel-body-table" id="reportingBodyDiv">
-                                    
-                                </div>
+                              
                             </div>
                             <!-- END DEFAULT TABLE EXPORT -->
 		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12" id="reportingBodyDiv">
 	</div>
 </div>
     <!-- body end -->

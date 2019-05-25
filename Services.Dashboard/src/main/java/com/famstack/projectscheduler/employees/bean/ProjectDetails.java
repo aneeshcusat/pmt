@@ -1,7 +1,10 @@
 package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -304,6 +307,28 @@ public class ProjectDetails
     public Set<TaskDetails> getProjectTaskDeatils()
     {
         return projectTaskDeatils;
+    }
+    
+    public List<TaskDetails> getSortProjectTaskDeatils()
+    {
+    	List<TaskDetails> sortedTaskDetailsList =  null;
+    	if (getProjectTaskDeatils() != null) {
+    	 sortedTaskDetailsList = new ArrayList<>(getProjectTaskDeatils());
+    	 Collections.sort(sortedTaskDetailsList , new Comparator<TaskDetails>()
+    	            {
+    	                @Override
+    	                public int compare(TaskDetails taskDetails1, TaskDetails taskDetails2)
+    	                {
+    	                    if (taskDetails1.getTaskId() > taskDetails2.getTaskId()) {
+    	                        return -1;
+    	                    } else if (taskDetails1.getTaskId() < taskDetails2.getTaskId()) {
+    	                        return 1;
+    	                    }
+    	                    return 0;
+    	                }
+    	            });
+    	}
+        return sortedTaskDetailsList;
     }
 
     public Set<TaskDetails> getProjectActualTaskDeatils()

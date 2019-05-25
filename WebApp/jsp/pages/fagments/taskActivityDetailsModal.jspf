@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-	<div class="list-group list-group-contacts" id="projectActivityModalContent" style="overflow: auto;height: 450px">                                
+	<div class="list-group list-group-contacts" id="projectActivityModalContent" style="overflow: auto;min-height: 450px">                                
                                         
      </div>

@@ -151,6 +151,10 @@ width: 60%;
 	width: 100px;
 	margin-bottom: 5px;
 }
+
+.taskDetailsTable.table tbody tr td {
+	padding:5px 5px 5px 0px;
+}
 	</style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
@@ -443,65 +447,85 @@ width: 60%;
                   </div>
                   <div class="col-md-4">
                       <section class="panel">
-                          <div class="panel-body">
+                          <div class="panel-body" style="padding: 5px">
                            <div class="row padding-bottom-5" >
-                          <div class="col-md-7">
-                           <h5 class="bold">Tasks</h5>
+                          <div class="col-md-3">
+                           <h5 class="bold">Tasks (${projectDetails.noOfTasks})</h5>
                           </div>
-                           <div class="col-md-5 text-right">
+                          
+                           <div class="col-md-4 text-right">
                             <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                             <a data-toggle="modal"  data-backdrop="static" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
                             >
                                <span class="fa fa-plus"></span> Create a Task</a>
                                </c:if>
                             </div>
+                            
+                          <div class="col-md-5">
+								<div class="input-group text-right">
+									<input type="text" class="form-control" id="taskDetailsSearch" style="height: 25px" placeholder="Search for a task...">
+								</div>
+							</div>
+                          
                           </div>
-                              <table class="table">
+                              <table class="table taskDetailsTable" >
                                         <tbody>
                                         
-                                        <c:if test="${not empty projectDetails.projectTaskDeatils}">
-                                 			<c:forEach var="taskDetails" items="${projectDetails.projectTaskDeatils}" varStatus="taskIndex"> 
-                                 			<tr>
-                                             <td width="5%">1</td>
-                                                <td class="task_progress"><a href="#" id="${taskDetails.taskId}" class="trigger" 
+                                        <c:if test="${not empty projectDetails.sortProjectTaskDeatils}">
+                                 			<c:forEach var="taskDetails" items="${projectDetails.sortProjectTaskDeatils}" varStatus="taskIndex"> 
+                                 			<tr class="taskDetailsSection">
+                                              <td class="task_progress" width="">
+                                              <span style="font-weight: bold;">[${taskDetails.taskId}]</span>
+                                              <a href="#" id="${taskDetails.taskId}" class="trigger" 
                                                 data-toggle="modal"  data-backdrop="static" data-target="#taskActivityDetailsModal" onclick="loadTaskActivityDetails(${taskDetails.taskId})"
-                                                >${taskDetails.name}</a> 
+                                                > ${taskDetails.name}</a> 
+                                                 
+                                                   <c:set var="taskHealth" value="info"/>
                                                  
                                                  <c:set var="progressTaskState" value="striped"/>
 					                  				<c:if test="${taskDetails.status == 'INPROGRESS' }">
 					                   					<c:set var="progressTaskState" value="striped active"/>
+					                   					<c:if test="${taskDetails.taskRemainingTime < 0 }">
+		                                                <c:set var="taskHealth" value="danger"/>
+		                                                 </c:if>
 					                  				</c:if>
 					                  				<c:if test="${taskDetails.status == 'COMPLETED' }">
 					                   					<c:set var="progressTaskState" value=""/>
+					                   					 <c:set var="taskHealth" value="success"/>
 					                  				</c:if>
 			                  				
-                                                 <div class="progress progress-small progress-${progressTaskState}">
-                                                 <c:set var="taskHealth" value="info"/>
-                                                 <c:if test="${taskDetails.taskRemainingTime < 0 }">
-                                                  <c:set var="taskHealth" value="danger"/>
-                                                 </c:if>
-                                                  <c:if test="${taskDetails.taskRemainingTime == 0 }">
-                                                  <c:set var="taskHealth" value="success"/>
-                                                 </c:if>
-                                        			<div class="progress-bar progress-bar-${taskHealth}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: ${taskDetails.percentageOfTaskCompleted}%;"></div>
-                                    				 <small>${taskDetails.percentageOfTaskCompleted}% Complete</small>
+                                                 <div class="progress progress-small progress-${progressTaskState}" style="height: 5px">
+                                               
+                                        			<div title="${taskDetails.percentageOfTaskCompleted}% Complete" class="progress-bar progress-bar-${taskHealth}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: ${taskDetails.percentageOfTaskCompleted}%;"></div>
+                                    				 <span style="font-size: 5px;float: left;">${taskDetails.percentageOfTaskCompleted}% Complete</span>
                                     			</div>
                                                 </td>
                                                <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>
                                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
-                                               <td width="5%">
-                                               <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});"><i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a>
+                                               <td width="1%">
+                                               <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});">
+                                               <i class="fa fa-times fa-lg" style="color:red" aria-hidden="true"></i></a>
+                                              
+                                              <div  class="hide taskSearchData">
+                                              	<span>${userDetailsMap[taskDetails.assignee].firstName} ${userDetailsMap[taskDetails.assignee].lastName}</span>
+                                             	<span>${taskDetails.name}</span>
+                                             	<span>${taskDetails.status}</span>
+                                             	<span>${taskDetails.duration}</span>
+                                             	<span>${taskDetails.actualTimeTakenInHrs}</span>
+                                              </div>
+                                              
                                               </td>
                                               
-                                               <td width="5%">
+                                               <td width="1%">
                                                <c:if test="${not taskDetails.extraTimeTask && taskDetails.status != 'INPROGRESS' &&  taskDetails.status != 'COMPLETED'}">
-                                                <a data-toggle="modal" data-backdrop="static" data-target="#createtaskmodal" class="btn btn-primary btn-rounded" onclick="loadTaskDetails('${taskDetails.taskId}');"
-                                                 href="#"><i class="fa fa-pencil fa-1x" style="" aria-hidden="true"></i></a>
+                                                <a data-toggle="modal" data-backdrop="static" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');"
+                                                 href="#"><i class="fa fa-pencil fa-lg" style="" aria-hidden="true"></i></a>
                                                	</c:if>
                                                </td>
                                             	</c:if>
+                                            	<%@include file="response/taskActivityDetailsResponse.jsp"%>
                                             </tr>
-                                            <%@include file="response/taskActivityDetailsResponse.jsp"%>
+                                            
                                  			</c:forEach>
                                  		</c:if>
                                        </tbody>
@@ -550,14 +574,14 @@ width: 60%;
                               <br>
                                <c:if test="${not empty projectDetails.duplicateProjects}">
                                <h5 class="bold">Duplicate Projects</h5>
-                               <ul class="list-unstyled p-files" id="duplicateProjects">
+                               <ul class="list-unstyled p-files" id="duplicateProjects" style="height: 280px; overflow-y: scroll;">
                                  <c:forEach var="duplicateProject" items="${projectDetails.duplicateProjects}" varStatus="fileNameIndex"> 
                                  	<li><a href="${applicationHome}/project/${duplicateProject.id}">${duplicateProject.name}</a></li> 
                                  </c:forEach>
                               </ul>
-                              <br>
                                </c:if>
 							 <c:if test="${not empty projectDetails.tags}">
+							 	 <br>
 	                             <h5 class="bold">Project Tags</h5>
 	                             <ul class="list-tags">
 		                             <c:set var="tags" value="${fn:split(projectDetails.tags, ',')}" />
@@ -566,8 +590,9 @@ width: 60%;
 									 </c:forEach>
 	                        	</ul>
                         	</c:if>
-                        	  <br>
+                        	 
                         	<c:if test="${not empty projectDetails.watchers}">
+                        	 	<br>
 	                             <h5 class="bold">Watchers</h5>
 	                             <ul class="list-tags">
 		                             <c:set var="watchers" value="${fn:split(projectDetails.watchers, ',')}" />
@@ -1695,5 +1720,29 @@ var taskActActualTimeSubmit = function(taskId, activityId) {
 	}, function(e) {
 	});
 }
+
+
+function performProjectSearch(){
+	var searchText = $('#taskDetailsSearch').val();
+	famstacklog(searchText);
+	if (searchText != "") {
+		$('.taskDetailsSection').hide();
+	    $('.taskDetailsSection .taskSearchData').each(function(){
+	       if($(this).text().toUpperCase().indexOf(searchText.toUpperCase()) != -1){
+	           $(this).closest('.taskDetailsSection').show();
+	       }
+	    });
+	} else {
+		$('.taskDetailsSection').show();
+	}
+}
+
+$("#taskDetailsSearch").keydown(function(e){
+	performProjectSearch();
+});
+
+$("#taskDetailsSearch").keyup(function(e){
+	performProjectSearch();
+});
 </script>
 

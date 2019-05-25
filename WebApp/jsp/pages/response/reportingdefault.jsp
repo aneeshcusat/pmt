@@ -8,7 +8,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard" />
-<table id="projectsTable" class="table table-striped">
+<table id="projectsTable" class="table table-responsive table-hover">
 	<thead>
 		<tr>
 			<th>Date</th>

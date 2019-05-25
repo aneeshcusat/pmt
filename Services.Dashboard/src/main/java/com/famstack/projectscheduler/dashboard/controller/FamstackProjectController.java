@@ -117,6 +117,12 @@ public class FamstackProjectController extends BaseFamstackService
                         DateUtils.getNextPreviousDate(DateTimePeriod.DAY, endDate, -1 * numberOfDaysInLastMOnth);
 
                     break;
+                case "Last 3 Month":
+                	startDate = DateUtils.getNextPreviousDate(DateTimePeriod.MONTH, new Date(), -3);
+                    break;
+                case "Last 6 Month":
+                	startDate = DateUtils.getNextPreviousDate(DateTimePeriod.MONTH, new Date(), -6);
+                    break;
                 default:
                     break;
             }
