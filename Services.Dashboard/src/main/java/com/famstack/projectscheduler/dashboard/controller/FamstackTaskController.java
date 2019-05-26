@@ -192,18 +192,17 @@ public class FamstackTaskController extends BaseFamstackService
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/userTaskActivity")
-    public ModelAndView userTaskActivity(@RequestParam(value = "dayfilter", defaultValue = "10") int dayfilter,
-        @RequestParam(value = "itemType", defaultValue = "ALL") String itemType)
+    public ModelAndView userTaskActivity(@RequestParam("monthFilter") String monthFilter,
+        @RequestParam(value = "itemType", defaultValue = "ALL") String itemType, @RequestParam(value="userId", defaultValue="0") Integer userId)
     {
         UserItem currentUserItem = getFamstackUserSessionConfiguration().getCurrentUser();
-        Integer userId = currentUserItem.getId();
-        if (currentUserItem.getUserRole() == UserRole.ADMIN || currentUserItem.getUserRole() == UserRole.SUPERADMIN
-            || currentUserItem.getUserRole() == UserRole.TEAMLEAD) {
+        if ((currentUserItem.getUserRole() == UserRole.ADMIN || currentUserItem.getUserRole() == UserRole.SUPERADMIN
+            || currentUserItem.getUserRole() == UserRole.TEAMLEAD) && userId == 0) {
             userId = null;
         }
 
         Map<String, List<TaskActivityDetails>> taskActivitiesMap =
-            famstackDashboardManager.getUserTaskActivity(userId, dayfilter);
+            famstackDashboardManager.getUserTaskActivity(userId, monthFilter);
 
         return new ModelAndView("response/unbilledTaskDetails").addObject("taskActivitiesMap", taskActivitiesMap)
             .addObject("itemType", itemType);

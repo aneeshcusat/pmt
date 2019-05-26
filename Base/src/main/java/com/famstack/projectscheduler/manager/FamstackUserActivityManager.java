@@ -298,6 +298,49 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return taskActivitiesList;
     }
 
+    
+    public List<TaskActivityDetails> getAllTaskActivities(Integer userId, String monthFilter)
+    {
+        String queryTobeExecuted = "allUserActivityItemsFromDatetoDate";
+        Date dayStartDate = DateUtils.tryParse("01-" + monthFilter, DateUtils.DAY_MONTH_YEAR);
+        Date dayEndDate = DateUtils.getLastDayOfThisMonth(dayStartDate);
+        
+        List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("calenderDateStart", dayStartDate);
+        dataMap.put("calenderDateEnd", dayEndDate);
+        
+        logDebug("dayStartDate : " + dayStartDate);
+        List<?> userActivityItems = null;
+        
+        boolean isCurrentMonth = DateUtils.isCurrentMonth(dayStartDate);
+        
+        if (isCurrentMonth) {
+        	dataMap.put("todaysDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), 0));
+        }
+        
+        if (userId != null) {
+            dataMap.put("userId", userId);
+            queryTobeExecuted = "userActivityItemsFromDatetoDate";
+            if (isCurrentMonth) {
+            	queryTobeExecuted+="AndUpcoming";
+            }
+           userActivityItems =
+                    getFamstackDataAccessObjectManager().executeAllGroupQuery(HQLStrings.getString(queryTobeExecuted), dataMap);
+        } else {
+        	if (isCurrentMonth) {
+	         	queryTobeExecuted+="AndUpcoming";
+	        }
+           userActivityItems =
+        	            getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString(queryTobeExecuted), dataMap);
+        }
+        
+        
+
+        getAllTaskActivitiesFromUserActivity(taskActivitiesList, userActivityItems);
+        return taskActivitiesList;
+    }
+
     private void getAllTaskActivitiesFromUserActivity(List<TaskActivityDetails> taskActivitiesList,
         List<?> userActivityItems)
     {

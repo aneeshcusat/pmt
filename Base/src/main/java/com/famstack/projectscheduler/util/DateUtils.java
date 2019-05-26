@@ -29,6 +29,8 @@ public final class DateUtils extends BaseFamstackService
 
     public static final String DATE_TIME_FORMAT_CALENDER = "yyyy-MM-dd'T'HH:mm:ss";
 
+	public static final String DAY_MONTH_YEAR = "dd-MMM-yyyy";
+
     /** The logger. */
     private static Logger logger = getStaticLogger(DateUtils.class);
 
@@ -159,12 +161,22 @@ public final class DateUtils extends BaseFamstackService
 
     public static Date getFirstDayOfThisMonth()
     {
-        Calendar currentCal = Calendar.getInstance();
-        currentCal.setTime(new Date());
+    	return getFirstDayOfThisMonth(new Date());
+    }
+    
+	public static Date getFirstDayOfThisMonth(Date date) {
+		Calendar currentCal = Calendar.getInstance();
+        currentCal.setTime(date);
         currentCal.set(Calendar.DAY_OF_MONTH, 1);
         return currentCal.getTime();
-
-    }
+	}
+	
+	public static Date getLastDayOfThisMonth(Date date){
+		Calendar currentCal = Calendar.getInstance();
+        currentCal.setTime(date);
+        currentCal.set(Calendar.DAY_OF_MONTH, currentCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return currentCal.getTime();
+	}
 
     public static int getNumberOfDaysInThisMonth()
     {
@@ -247,4 +259,14 @@ public final class DateUtils extends BaseFamstackService
         }
         return "NA";
     }
+
+	public static boolean isCurrentMonth(Date date) {
+		 Calendar startCal = Calendar.getInstance();
+	        startCal.setTime(date);
+	    Calendar currentDateCal = Calendar.getInstance();
+	    	currentDateCal.setTime(new Date());
+	        
+	   return startCal.get(Calendar.MONTH) == currentDateCal.get(Calendar.MONTH);
+	}
+
 }

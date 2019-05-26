@@ -19,6 +19,8 @@ public enum UserRole
     SUPERADMIN,
 
     /** The cordinator. */
-    CORDINATOR
+    CORDINATOR,
+    
+    SITEADMIN
 
 }

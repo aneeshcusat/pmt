@@ -375,9 +375,9 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectManager.getUserTaskActivityJson(userId, dayfilter);
     }
 
-    public Map getUserTaskActivity(Integer userId, int dayfilter)
+    public Map getUserTaskActivity(Integer userId, String monthFilter)
     {
-        List<TaskActivityDetails> taskActivities = projectManager.getUserTaskActivity(userId, dayfilter);
+        List<TaskActivityDetails> taskActivities = projectManager.getUserTaskActivity(userId, monthFilter);
         Map<String, List<TaskActivityDetails>> taskActivitiesMap = new HashMap<>();
 
         if (taskActivities != null) {

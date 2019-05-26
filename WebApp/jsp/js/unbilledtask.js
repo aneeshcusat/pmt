@@ -214,14 +214,17 @@ function deleteTaskActivity(activityId, taskName){
 
 
 var reloadTaskActivities = function(){
-	var taskFilterDay = $("#taskFilterDayId").val();
-	doAjaxRequest("GET", "/bops/dashboard/userTaskActivity?dayfilter=" + taskFilterDay, {},  function(data) {
+	var taskFilterMonth = $(".taskActivityMonthSelector").val();
+	var assigneeId = "";
+	if ($("#taskActivityAssigneeId").length > 0) {
+		assigneeId = $("#taskActivityAssigneeId").val();
+	}
+	$(".userTaskActivites").html("Loading...");
+	doAjaxRequest("GET", "/bops/dashboard/userTaskActivity", {"monthFilter":taskFilterMonth, "userId": assigneeId.replace("userId","")},  function(data) {
 		$(".userTaskActivites").html(data);
-		var assigneeId = "";
-		if ($("#taskAssigneeId").length > 0) {
-			assigneeId = $("#taskAssigneeId").val();
+		if (assigneeId != 0) {
+			//filterTaskActivities(assigneeId);
 		}
-		filterTaskActivities(assigneeId);
 	   }, function(e) {
 	   });
 };

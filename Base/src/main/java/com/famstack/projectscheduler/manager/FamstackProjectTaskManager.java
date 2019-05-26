@@ -419,9 +419,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return FamstackUtils.getJsonFromObject(famstackUserActivityManager.getAllTaskActivities(userId, dayfilter));
     }
 
-    public List<TaskActivityDetails> getUserTaskActivity(Integer userId, int dayfilter)
+    public List<TaskActivityDetails> getUserTaskActivity(Integer userId, String monthFilter)
     {
-        return famstackUserActivityManager.getAllTaskActivities(userId, dayfilter);
+        return famstackUserActivityManager.getAllTaskActivities(userId, monthFilter);
     }
 
     public String getUserTaskActivityJson(String startDateString, String endDateString, int userId, String userGroupId)
