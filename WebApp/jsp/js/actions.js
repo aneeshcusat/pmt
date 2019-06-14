@@ -104,12 +104,18 @@ function page_content_onresize(){
     var content = $(".page-content");
     var sidebar = $(".page-sidebar");
     
+    var ganttDiv = $("#gantt_here");
+    
     if(content.height() < $(document).height() - content_minus){        
         content.height($(document).height() - content_minus);
     }        
     
     if(sidebar.height() > content.height()){        
         content.height(sidebar.height());
+    }
+    
+    if (ganttDiv.length > 0) {
+    	//ganttDiv.height( content.height());
     }
     
     if($(window).width() > 1024){

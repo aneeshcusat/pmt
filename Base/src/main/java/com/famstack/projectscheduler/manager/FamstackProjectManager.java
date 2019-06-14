@@ -17,14 +17,17 @@ import javax.annotation.Resource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+import org.springframework.util.NumberUtils;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
+import com.famstack.projectscheduler.contants.ProjectPriority;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectTaskType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
+import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.DashBoardProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.DashboardUtilizationDetails;
@@ -72,6 +75,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     @Resource
     FamstackNotificationServiceManager famstackNotificationServiceManager;
+    
+    @Resource
+    FamstackUserActivityManager famstackUserActivityManager;
 
     public int createProjectItem(ProjectDetails projectDetails)
     {
@@ -124,6 +130,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             allTaskDetailsList);
     }
 
+    
     public void quickDuplicateProject(ProjectItem projectDetails, String projectName, Integer projectDuration,
         Timestamp startTimeStamp, Timestamp completionTimeStamp, List<TaskDetails> taskItemList)
     {
@@ -173,7 +180,143 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     }
 
-    private void notifyProjectTaskAssignment(ProjectDetails projectDetails, List<TaskDetails> allTaskDetailsList)
+	public void weeklyTimeLog(String projectDetails, String weekStartDate) {
+		String []projectRowDetailsArray  = projectDetails.split("#PD#");
+		//Billable ->projectIds->tasks->usersIds->daylist
+		Map<String, Map<String, Map<String,Map<String, List<Integer>>>>> projectDetailsMap = new HashMap<>();
+		
+		for(String projectRowDetail : projectRowDetailsArray) {
+			String []projectLineItemDetailsArray = projectRowDetail.split("#PID#");
+			
+			String userId = projectLineItemDetailsArray[0];
+			String projectType = projectLineItemDetailsArray[1];
+			String projectId = projectLineItemDetailsArray[2];
+			
+			
+			String taskId = projectLineItemDetailsArray[3];
+			String nonBillableTask = projectLineItemDetailsArray[4];
+
+			if (projectType.equalsIgnoreCase("NON_BILLABLE")) {
+				projectId = "projectId";
+				taskId = nonBillableTask;
+			}
+			
+			Map<String, Map<String,Map<String, List<Integer>>>> projectTypeMap = projectDetailsMap.get(projectType);
+			if (projectTypeMap == null) {
+				projectTypeMap = new HashMap();
+				projectDetailsMap.put(projectType, projectTypeMap);
+			}
+
+			
+			Map<String,Map<String, List<Integer>>> projectIdsMap = projectTypeMap.get(projectId);
+			if (projectIdsMap == null) {
+				projectIdsMap = new HashMap<>();
+				projectTypeMap.put(projectId, projectIdsMap);
+			}
+
+			Map<String, List<Integer>> tasksMap = projectIdsMap.get(taskId);
+			if (tasksMap == null) {
+				tasksMap = new HashMap<>();
+				projectIdsMap.put(taskId, tasksMap);
+			}
+			
+			 List<Integer> weekDayTaskTimeList = tasksMap.get(userId);
+			 if (weekDayTaskTimeList == null) {
+				 weekDayTaskTimeList = new ArrayList<>();
+				tasksMap.put(userId, weekDayTaskTimeList);
+			}
+			
+			for (int i =1 ; i <=7;i++) {
+				String taskTime = projectLineItemDetailsArray[i + 4];
+				if (StringUtils.isNotBlank(taskTime)) {
+					String[] taskTimeSplit = taskTime.split("[.]");
+					int mins = 0;
+			    	if (taskTimeSplit.length > 1) {
+			    		mins = Integer.parseInt(taskTimeSplit[1]);
+			    		if (mins < 10) {
+			    			mins*=10;
+			    		}
+			    	} 
+					weekDayTaskTimeList.add((Integer.parseInt(taskTimeSplit[0]) * 60)  + mins);
+				} else {
+					weekDayTaskTimeList.add(0);
+				}
+				
+			}
+			
+		}
+		
+		createBillableWeeklyTasks(projectDetailsMap, DateUtils.tryParse(weekStartDate, DateUtils.DAY_MONTH_YEAR));
+		
+	}
+
+    private void createBillableWeeklyTasks(
+			Map<String, Map<String, Map<String, Map<String, List<Integer>>>>> projectDetailsMap, Date weekStartTimeInitial) {
+    	for (String projectType : projectDetailsMap.keySet()) {
+    		Map<String, Map<String, Map<String, List<Integer>>>> projectIds = projectDetailsMap.get(projectType);
+    		
+    		for (String projectId : projectIds.keySet()) {
+    			ProjectItem projectItem = null;
+    			if (projectType.equalsIgnoreCase("BILLABLE")) {
+    				projectItem = getProjectItemById(Integer.parseInt(projectId));
+    			}
+    			Map<String, Map<String, List<Integer>>> taskIds = projectIds.get(projectId);
+    			int taskId = 0;
+    			for (String taskNameOrId : taskIds.keySet()) {
+    				TaskDetails taskDetails = new TaskDetails();
+    				TaskItem taskItem = null;
+    				if (projectType.equalsIgnoreCase("BILLABLE")) {
+	    				if (!org.apache.commons.lang.StringUtils.isNumeric(taskNameOrId) ) {
+	    					taskDetails.setName(taskNameOrId);
+	    					taskDetails.setDescription("Weekly time log task for " + taskNameOrId);
+	    					taskDetails.setStartTime(DateUtils.format(weekStartTimeInitial, DateUtils.DATE_TIME_FORMAT));
+	    					taskDetails.setDuration(0);
+	    					taskDetails.setProjectTaskType(ProjectTaskType.PRODUCTIVE);
+	    					taskDetails.setPriority(ProjectPriority.HIGH);
+	    					famstackProjectTaskManager.createTaskItem(taskDetails, projectItem, true);
+	    					taskId = taskDetails.getTaskId();
+	    				} else {
+	    					taskId = Integer.parseInt(taskNameOrId);
+	    				}
+	   					taskItem = famstackProjectTaskManager.getTaskItemById(taskId);
+    				}
+        			Map<String, List<Integer>> userIds = taskIds.get(taskNameOrId);
+        			for (String userId : userIds.keySet()) {
+        				taskDetails.setAssignee(Integer.parseInt(userId));
+            			List<Integer> weekTaskTimeList = userIds.get(userId);
+            			Date weekStartTime = new Date(weekStartTimeInitial.getTime());
+            			for (int dayTaskTime : weekTaskTimeList) {
+            				if (dayTaskTime != 0) {
+		            			if (projectType.equalsIgnoreCase("BILLABLE")) {
+		            				famstackProjectTaskManager.createCompletedTaskItem(taskDetails, projectItem, taskItem, dayTaskTime, UserTaskType.PROJECT); 
+		            			} else {
+		            				String userTaskType = "OTHER";
+		            				if ("LEAVE".equalsIgnoreCase(taskNameOrId) || "MEETING".equalsIgnoreCase(taskNameOrId)) {
+		            					userTaskType = taskNameOrId;
+		            				}
+		            				String taskName =
+		            						dayTaskTime / 60 + " hours " + dayTaskTime % 60 + " Mins " + taskNameOrId;
+		            				famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(), weekStartTime, 0, taskName,
+		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskNameOrId, ProjectType.NON_BILLABLE, "");
+		            			}
+            				}
+            				weekStartTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, weekStartTime, 1);
+            				taskDetails.setStartTime(DateUtils.format(weekStartTime, DateUtils.DATE_TIME_FORMAT));
+            			}
+            		}	
+        			
+        			if (taskItem != null) {
+        				taskItem.setStatus(TaskStatus.COMPLETED);
+        				famstackDataAccessObjectManager.updateItem(taskItem);
+        			}
+        		}
+    			
+    		}
+    	}
+		
+	}
+
+	private void notifyProjectTaskAssignment(ProjectDetails projectDetails, List<TaskDetails> allTaskDetailsList)
     {
         if (projectDetails != null) {
             for (TaskDetails taskDetails : allTaskDetailsList) {
@@ -734,6 +877,55 @@ public class FamstackProjectManager extends BaseFamstackManager
         jsonProductListObject.put("suggestions", jsonArray);
         return jsonProductListObject.toString();
     }
+    
+    public String searchForProjectNamesCodePoIdJson(String query)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("name", query + "%");
+        dataMap.put("code", query + "%");
+        dataMap.put("PONumber", query + "%");
+        
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonProductListObject = new JSONObject();
+        List<?> projectItems =
+            famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("searchForProjectNamesCodePoId"), dataMap);
+
+        for (Object projectItemObj : projectItems) {
+            ProjectItem projectItem = (ProjectItem) projectItemObj;
+            
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("value", projectItem.getName());
+            jsonObject.put("name", projectItem.getName());
+            jsonObject.put("data", projectItem.getProjectId());
+            jsonObject.put("projectCode", projectItem.getCode());
+            jsonObject.put("projectPOId", projectItem.getPONumber());
+            jsonObject.put("projectCategory", projectItem.getCategory());
+            jsonObject.put("projectDate", projectItem.getCompletionTime());
+            
+            if (projectItem.getTaskItems() != null) {
+            	JSONArray jsonTaskArray = new JSONArray();
+            	for (TaskItem taskItem : projectItem.getTaskItems()) {
+            		if (taskItem.getStatus() != TaskStatus.COMPLETED && taskItem.getStatus() != TaskStatus.INPROGRESS) {
+	            		JSONObject jsonTaskObject = new JSONObject();
+	            		jsonTaskObject.put("name", taskItem.getName());
+	            		jsonTaskObject.put("id", taskItem.getTaskId());
+	            		jsonTaskObject.put("status", taskItem.getStatus());
+	            		jsonTaskObject.put("timeTaken", taskItem.getActualTimeTaken());
+	            		jsonTaskObject.put("startTime", taskItem.getStartTime());
+	            		jsonTaskObject.put("endTime", taskItem.getCompletionTime());
+	            		jsonTaskArray.put(jsonTaskObject);
+            		}
+            	}
+            	
+            	jsonObject.put("tasks", jsonTaskArray);
+            }
+            jsonArray.put(jsonObject);
+        }
+        jsonProductListObject.put("suggestions", jsonArray);
+        return jsonProductListObject.toString();
+    }
+    
+    
 
     public List<ProjectDetails> getAllProjectDetailsList(Date startDate, Date endDate)
     {
@@ -1533,5 +1725,6 @@ public class FamstackProjectManager extends BaseFamstackManager
         dataMap.put("dateTill", dateTill);
         famstackDataAccessObjectManager.executeSQLUpdate(HQLStrings.getString("projectSoftDeleteOlderSQL"), dataMap);
     }
+
 
 }

@@ -110,9 +110,6 @@ border-bottom: 1px solid lightgray;
 	right: 0px;
 }
 
-
-
-
 .alert-minimalist {
 	background-color: lightblue;
 	border-color: rgba(149, 149, 149, 0.3);
@@ -131,3 +128,17 @@ border-bottom: 1px solid lightgray;
 .alert-minimalist-message {
 	font-size: 11px;
 }
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto;width:300px }
+.autocomplete-suggestion {
+	padding: 5px 5px 5px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 20px;
+    border-top: 1px solid #ccc;
+}
+.autocomplete-selected { background: #428bca; color:#fff }
+.autocomplete-suggestions strong { font-weight: normal; color: #13d42d; font-size: 13px; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }

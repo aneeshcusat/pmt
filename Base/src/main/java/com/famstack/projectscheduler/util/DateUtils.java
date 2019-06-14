@@ -30,7 +30,12 @@ public final class DateUtils extends BaseFamstackService
     public static final String DATE_TIME_FORMAT_CALENDER = "yyyy-MM-dd'T'HH:mm:ss";
 
 	public static final String DAY_MONTH_YEAR = "dd-MMM-yyyy";
+	
+	public static final String DATE_MONTH_YEAR = "dd-MMM-yy";
 
+	public static final String DATE_MONTH_YEAR_TIME = "dd-MM-yyyy HH:mm";
+
+	
     /** The logger. */
     private static Logger logger = getStaticLogger(DateUtils.class);
 
@@ -188,8 +193,8 @@ public final class DateUtils extends BaseFamstackService
 
     public static void main(String[] args)
     {
-        System.out.println(getNumberOfDaysBetweenTwoDates(new Date(),
-            getNextPreviousDate(DateTimePeriod.DAY, new Date(), +6)));
+       //System.out.println(getWeekNumber(tryParse("29-Dec-18", DATE_MONTH_YEAR)));
+       System.out.println("23.1".split("[.]")[0]);
     }
 
     public static int getNumberOfDaysInThisMonth(Date date)
@@ -267,6 +272,16 @@ public final class DateUtils extends BaseFamstackService
 	    	currentDateCal.setTime(new Date());
 	        
 	   return startCal.get(Calendar.MONTH) == currentDateCal.get(Calendar.MONTH);
+	}
+
+	public static String getDayString(Date date) {
+		return new SimpleDateFormat("EEEE").format(date); 
+	}
+
+	public static int getWeekNumber(Date startDate) {
+		 Calendar startCal = Calendar.getInstance();
+	     startCal.setTime(startDate);
+	     return startCal.get(Calendar.WEEK_OF_YEAR);
 	}
 
 }

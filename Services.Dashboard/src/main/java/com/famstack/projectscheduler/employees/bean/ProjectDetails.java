@@ -349,6 +349,13 @@ public class ProjectDetails
         Date completionDate = DateUtils.tryParse(getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
         return (int) ((completionDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
     }
+    
+    public int getProjectDurationInDays()
+    {
+        Date completionDate = DateUtils.tryParse(getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
+        Date startDate = DateUtils.tryParse(getStartTime(), DateUtils.DATE_TIME_FORMAT);
+        return (int) ((completionDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    }
 
     public int getNoOfTasks()
     {

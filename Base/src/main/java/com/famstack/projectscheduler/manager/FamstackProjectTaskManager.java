@@ -75,23 +75,29 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     public void createExtraTaskItem(TaskDetails taskDetails, ProjectItem projectItem)
     {
-        Set<TaskItem> taskItems = projectItem.getTaskItems();
-       // UserTaskActivityItem userTaskActivityItemOld = null;
-        int durationNewMinutes = taskDetails.getDuration();
+    	 Set<TaskItem> taskItems = projectItem.getTaskItems();
+         // UserTaskActivityItem userTaskActivityItemOld = null;
+          int durationNewMinutes = taskDetails.getDuration();
 
-        TaskItem taskItemNew = null;
-        if (taskItems != null) {
-            for (TaskItem taskItem : taskItems) {
-                if (taskItem.getExtraTimeTask()) {
-                    taskItemNew = taskItem;
-                    break;
-                }
-            }
-        }
-
+          TaskItem taskItemNew = null;
+          if (taskItems != null) {
+              for (TaskItem taskItem : taskItems) {
+                  if (taskItem.getExtraTimeTask()) {
+                      taskItemNew = taskItem;
+                      break;
+                  }
+              }
+          }
+          
+          taskDetails.setName("Project extra time");
+          createCompletedTaskItem(taskDetails, projectItem,taskItemNew, durationNewMinutes,UserTaskType.EXTRATIME );
+    }
+    
+    public void createCompletedTaskItem(TaskDetails taskDetails, ProjectItem projectItem, TaskItem taskItemNew, int durationNewMinutes, UserTaskType userTaskType)
+    {
         if (taskItemNew == null) {
             taskItemNew = new TaskItem();
-            taskItemNew.setName("Project extra time");
+            taskItemNew.setName(taskDetails.getName());
             taskItemNew.setCanRecure(false);
             taskItemNew.setStatus(TaskStatus.COMPLETED);
             taskItemNew.setDescription(taskDetails.getDescription());
@@ -134,7 +140,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
        // if (userTaskActivityItemOld == null) {
             famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(),
             		startTime, taskItemNew.getTaskId(), taskItemNew.getName(), durationNewMinutes,
-                UserTaskType.EXTRATIME, null, projectItem.getType(), taskDetails.getDescription());
+                userTaskType, null, projectItem.getType(), taskDetails.getDescription());
         /*} else {
             userTaskActivityItemOld.setDurationInMinutes(durationNewMinutes);
             userTaskActivityItemOld.setTaskName(taskDetails.getName());
@@ -545,9 +551,11 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
 
         String sqlQuery = HQLStrings.getString("projectTeamAssigneeCalanderSQL");
-        sqlQuery += " and utai.user_grp_id = " + userGroupId;
+       
         if (userId != null) {
             sqlQuery += " and uai.id = " + userId;
+        } else {
+        	 sqlQuery += " and utai.user_grp_id = " + userGroupId;
         }
         List<Object[]> projectItemList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
         logDebug("projectItemList" + projectItemList);

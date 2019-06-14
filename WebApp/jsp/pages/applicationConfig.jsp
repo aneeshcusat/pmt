@@ -82,6 +82,9 @@ tr.clickable:hover {
 				   	<tr class="clickable">
 				   		<td colspan="2"><a href="#tab5" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Dashboard View</a></td>
 				   	</tr>
+				   		<tr class="clickable">
+				   		<td colspan="2"><a href="#tab6" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Enable Weekly Time Log</a></td>
+				   	</tr>
 			   	 	</tbody>
 			     </table>
 				</div>
@@ -160,6 +163,8 @@ tr.clickable:hover {
 									<select class="form-control select" id="reportingSelectId">
 										<option value="default">Default</option>
 										<option value="format1">Project Reporting - Format 1</opiton>
+										<option value="format2">Project Reporting - Format 2</opiton>
+										<option value="format3">Project Reporting - Format 3</opiton>
 									</select>
 									</td>
 									<td width="70px"><a href="#" onclick="createReportingApplicationConfig()" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
@@ -184,6 +189,26 @@ tr.clickable:hover {
 									</select>
 									</td>
 									<td width="70px"><a href="#" onclick="createDashboardApplicationConfig()" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class='row tab-pane ' id="tab6">
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Weekly Time Log Enabled</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+									<select class="form-control select" id="weeklyTimeLogSelectId">
+										<option value="disabled">Disabled</option>
+										<option value="enabled">Enabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="createWeeklyTimeLog();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
 								</tr>
 							</tbody>
 						</table>
@@ -243,6 +268,15 @@ tr.clickable:hover {
   	 </script>
   </c:forEach>
   </c:if>
+  
+   <c:set var="weeklyTimeLog" value='weeklyTimeLog${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[weeklyTimeLog] && not empty appConfigMap[weeklyTimeLog].appConfValueDetails}">
+  <c:forEach var="weeklyTimeLogConf" items="${appConfigMap[weeklyTimeLog].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#weeklyTimeLogSelectId").val('${weeklyTimeLogConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
  
  <script type="text/javascript">
  
@@ -297,6 +331,16 @@ tr.clickable:hover {
 	    });
  }
  
+ 
+ function createWeeklyTimeLog(){
+	 var input1 = $("#weeklyTimeLogSelectId").val();
+	 var type = "weeklyTimeLog";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
  
  
  function doAjaxDeleteAppConfigVal(id) {

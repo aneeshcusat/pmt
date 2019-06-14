@@ -80,10 +80,10 @@
         							</div>
         							<div class="col-md-2" >
         								<c:set var="reportFormat" value="${param.format}"/>
-        								<c:if test="${not empty param.format  && (param.format eq 'format1' || param.format eq 'default')}">
+        								<c:if test="${not empty param.format  && (param.format eq 'format1' || param.format eq 'default' || param.format eq 'format2' || param.format eq 'format3')}">
         									<button onclick="exportReport('${param.format}')" class="btn btn-danger pull-right" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
         								</c:if>
-        								<c:if test="${empty param.format || (param.format ne 'format1' && param.format ne 'default')}">
+        								<c:if test="${empty param.format || (param.format ne 'format1' && param.format ne 'default' && param.format ne 'format2' && param.format ne 'format3')}">
         									<button onclick="exportReport('default')" class="btn btn-danger  pull-right" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>
         									<c:set var="reportFormat" value="default"/>
         								</c:if>

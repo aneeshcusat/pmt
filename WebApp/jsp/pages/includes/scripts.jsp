@@ -254,8 +254,14 @@ var site_settings = "";
                 cancelClass: 'btn-small',
                 format: 'MM.DD.YYYY',
                 separator: ' to ',
-                startDate: filterDateMap['${dateRangeLabel}'][0],
-                endDate: filterDateMap['${dateRangeLabel}'][1]          
+                <c:if test="${not empty dateRangeLabel}">
+                	startDate: filterDateMap['${dateRangeLabel}'][0],
+               	 	endDate: filterDateMap['${dateRangeLabel}'][1]  
+                </c:if>
+                <c:if test="${empty dateRangeLabel}">
+	            	startDate: moment().startOf('month'),
+	           	 	endDate:  moment().endOf('month').format('MM/DD/YYYY')  
+	            </c:if>
               },function(start, end) {
             	  $("#daterangeText").val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
             	  $("#reportrange span").html($("#daterangeText").val());
@@ -266,7 +272,7 @@ var site_settings = "";
         		$("#reportrange span").html("${dateRange}");
         	</c:if>
         	<c:if test="${empty dateRange}">
-            	$("#daterangeText").val(moment().subtract('days', 0).format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+            	$("#daterangeText").val(moment().startOf('month').format('MM/DD/YYYY') + ' - ' + moment().endOf('month').format('MM/DD/YYYY'));
          		$("#reportrange span").html($("#daterangeText").val());
          	</c:if>
         }

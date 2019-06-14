@@ -689,6 +689,11 @@ public class FamstackDashboardManager extends BaseFamstackService
     {
         return projectManager.getProjectNameJson(query);
     }
+    
+    public String searchForProjectNamesCodePoIdJson(String query)
+    {
+        return projectManager.searchForProjectNamesCodePoIdJson(query);
+    }
 
     public List<ProjectDetails> getAllProjectDetailsList(Date startDate, Date endDate)
     {
@@ -1374,6 +1379,11 @@ public class FamstackDashboardManager extends BaseFamstackService
             taskDetails);
 
     }
+    
+    public void weeklyTimeLog(String projectDetails, String weekStartDate) {
+    	  projectManager.weeklyTimeLog(projectDetails, weekStartDate);
+	}
+
 
     public int adjustTaskActivityTime(int activityId, int taskId, int newDuration, String startTime, String endTime)
     {
@@ -1489,4 +1499,56 @@ public class FamstackDashboardManager extends BaseFamstackService
          return jsonArray.toString();
 	}
 
+	public String mapProjectDataToTimeline(List<ProjectDetails> projectData) {
+		JSONObject dataObject = new JSONObject();
+		JSONArray dataArray = new JSONArray();
+		JSONArray resourceArray = new JSONArray();
+		Set<Integer> ownerSet = new HashSet<>();
+		
+		for (ProjectDetails projectDetail : projectData) {
+			JSONObject projectDataObject = new JSONObject();
+			projectDataObject.put("id", projectDetail.getId());
+			projectDataObject.put("text", projectDetail.getName());
+			projectDataObject.put("start_date", DateUtils.format(DateUtils.tryParse(projectDetail.getStartTime(), DateUtils.DATE_TIME_FORMAT), DateUtils.DATE_MONTH_YEAR_TIME));
+			projectDataObject.put("duration", projectDetail.getProjectDurationInDays());
+			projectDataObject.put("progress", 0);
+			projectDataObject.put("parent", 0);
+			projectDataObject.put("type", "task");
+			dataArray.put(projectDataObject);
+			if (projectDetail.getProjectTaskDeatils() != null) {
+				for (TaskDetails taskDetails : projectDetail.getProjectTaskDeatils()) {
+					JSONObject taskDataObject = new JSONObject();
+					taskDataObject.put("id", taskDetails.getTaskId());
+					taskDataObject.put("text", taskDetails.getName());
+					taskDataObject.put("start_date", DateUtils.format(DateUtils.tryParse(projectDetail.getStartTime(), DateUtils.DATE_TIME_FORMAT), DateUtils.DATE_MONTH_YEAR_TIME));
+					taskDataObject.put("duration", (taskDetails.getDuration() / 24));
+					taskDataObject.put("progress", taskDetails.getPercentageOfTaskCompleted());
+					taskDataObject.put("parent", projectDetail.getId());
+					taskDataObject.put("owner_id", taskDetails.getAssignee());
+					taskDataObject.put("type", "task");
+					ownerSet.add(taskDetails.getAssignee());
+					dataArray.put(taskDataObject);
+				}
+			}
+		}
+		
+		for (Integer user : ownerSet) {
+			if (user != 0) {
+				JSONObject resourceDataObject = new JSONObject();
+				resourceDataObject.put("id", user);
+				EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(user);
+				if (employeeDetails != null) {
+					resourceDataObject.put("text", employeeDetails.getFirstName() + " " +  employeeDetails.getLastName());
+				} else {
+					resourceDataObject.put("text", "Unassigned");
+				}
+				resourceArray.put(resourceDataObject);
+			}
+		}
+		
+		dataObject.put("data", dataArray);
+		dataObject.put("resource", resourceArray);
+		
+		return dataObject.toString();
+	}
 }

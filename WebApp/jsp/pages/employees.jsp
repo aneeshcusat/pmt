@@ -2,8 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="includes/header.jsp" %>
 <c:set var="employeeAccess" value="false"/>
-<c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
-<c:set var="employeeAccess" value="true"/> 
+<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userGroupId == '1012'}">
+	<c:set var="employeeAccess" value="true"/> 
 </c:if>           
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">

@@ -10,7 +10,7 @@
 <html lang="en">
     <head>        
         <!-- META SECTION -->
-        <title><c:if test="${tracopusConfigEnabled == false}">Famstack</c:if><c:if test="${tracopusConfigEnabled == true}">Tracopus</c:if> - Project Scheduler</title>            
+        <title><c:if test="${tracopusConfigEnabled == false}">Famstack&trade;</c:if><c:if test="${tracopusConfigEnabled == true}">Tracopus</c:if> - Project Scheduler</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
            <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,7 +42,7 @@
         <div class="animate form login_form">
           <section class="login_content">
           	   <div>
-                 <c:if test="${tracopusConfigEnabled == false}"><img alt="" src="${fn:escapeXml(image)}/favicon.ico" style="width: 25px;height: 25px;margin-top: 0;margin-right: 5px;padding-top: 0;vertical-align: unset"/><span style="font-size: 35px;color: gray;font-weight: 200;opacity:.7">famstack</span></c:if>
+                 <c:if test="${tracopusConfigEnabled == false}"><img alt="" src="${fn:escapeXml(image)}/favicon.ico" style="width: 25px;height: 25px;margin-top: 0;margin-right: 5px;padding-top: 0;vertical-align: unset"/><span style="font-size: 35px;color: gray;font-weight: 200;opacity:.7">famstack&trade;</span></c:if>
                  <c:if test="${tracopusConfigEnabled == true}"><img style="height: 40px" alt="" src="${fn:escapeXml(image)}/tracopus_logo_trans.png"/></c:if>
                </div>
               <form class="form-horizontal" method="post" id="forgotForm">

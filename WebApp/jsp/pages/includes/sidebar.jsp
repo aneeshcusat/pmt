@@ -44,6 +44,15 @@
                         </div>    
                     </li>
                     <li class="xn-title">Navigation</li>
+                    
+                  <c:set var="weeklyTimeLog" value='weeklyTimeLog${currentUserGroupId}'/>   
+                  <c:set var="weeklyTimeLogStatus" value='disabled'/>  
+				  <c:if test="${not empty appConfigMap[weeklyTimeLog] && not empty appConfigMap[weeklyTimeLog].appConfValueDetails}">
+				  <c:forEach var="weeklyTimeLogConf" items="${appConfigMap[weeklyTimeLog].appConfValueDetails}">
+				  		<c:set var="weeklyTimeLogStatus" value='${weeklyTimeLogConf.value}'/>  
+				  </c:forEach>
+				  </c:if>
+                    
                     <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                      <li class="">
                         <a href="${applicationHome}/index"><span class="fa fa-list-alt"></span> <span class="xn-text">Home Page</span></a>                        
@@ -80,12 +89,15 @@
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
                             <li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
+                            <c:if test="${weeklyTimeLogStatus == 'enabled'}">
+                            <li class=""><a href="${applicationHome}/timeSheet"><span class="fa fa-clock-o"></span> Time Sheet</a></li>
+                            </c:if>
+                            <li class=""><a href="${applicationHome}/projectTimeline"><span class="fa fa-list-alt"></span> Project Timeline</a></li>
                             <li><a href="${applicationHome}/mileStones"><span class="fa fa-trophy"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
                             <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
                             <li><a href="${applicationHome}/applicationConfig"><span class="fa fa-cog"></span>Application config</a></li>
                             <li><a href="${applicationHome}/userSiteActivity"><span class="fa fa-calendar"></span>User Site Activity</a></li>
-                            <li><a href="${applicationHome}/faq"><span class="fa fa-arrow-circle-o-left"></span>FAQ</a></li>
                         </ul>
                     </li>
                     </c:if>
@@ -99,10 +111,12 @@
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Additional Features</span></a>
                         <ul>
  							<li><a href="${applicationHome}/myTaskList"><span class="fa fa-th-list"></span>Task Activities</a></li>
+ 							<c:if test="${weeklyTimeLogStatus == 'enabled'}">
+                            	<li class=""><a href="${applicationHome}/timeSheet"><span class="fa fa-clock-o"></span> Time Sheet</a></li>
+                            </c:if>
                             <li><a href="${applicationHome}/messages"><span class="fa fa-comments"></span> Messages</a></li>
                             <li><a href="${applicationHome}/calender"><span class="fa fa-calendar"></span> My Calendar</a></li>
                             <li><a href="${applicationHome}/userSiteActivity"><span class="fa fa-calendar"></span>User Site Activity</a></li>
-                            <li><a href="${applicationHome}/faq"><span class="fa fa-arrow-circle-o-left"></span>FAQ</a></li>
                         </ul>
                     </li>
                     </c:if>

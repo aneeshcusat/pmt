@@ -251,7 +251,7 @@ public class FamstackProjectController extends BaseFamstackService
             endDate = startDate;
         }
 
-        if ("default".equalsIgnoreCase(format)) {
+        if ("default".equalsIgnoreCase(format) || "format3".equalsIgnoreCase(format)) {
             List<ProjectTaskActivityDetails> projectTaskAssigneeDataList =
                 famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate);
             return new ModelAndView("response/reporting" + format)
@@ -262,7 +262,33 @@ public class FamstackProjectController extends BaseFamstackService
                 "dateRange", dateRange);
         }
     }
+    @RequestMapping(value = "/projectTimeLineJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String projectTimeLine(@RequestParam(value = "daterange", defaultValue = "") String dateRange)
+    {
+        logDebug(dateRange);
+        String[] dateRanges;
+        Date startDate = null;
+        Date endDate = null;
+        if (StringUtils.isNotBlank(dateRange)) {
+            dateRanges = dateRange.split("-");
 
+            if (dateRanges != null && dateRanges.length > 1) {
+                startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+            }
+        } else {
+            startDate =
+                DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+            endDate = startDate;
+        }
+    
+        List<ProjectDetails> projectData = famstackDashboardManager.getAllProjectDetailsList(startDate, endDate);
+        if (projectData != null) {
+        	return famstackDashboardManager.mapProjectDataToTimeline(projectData);
+        }
+		return "{\"data\": []}";
+    }
     @RequestMapping(value = "/export/{templateName}")
     public void downloadReportingFile(@RequestParam(value = "daterange", defaultValue = "") String dateRange,
         @PathVariable(value = "templateName") String templateName, HttpServletRequest request,
@@ -289,7 +315,7 @@ public class FamstackProjectController extends BaseFamstackService
         Map<String, Map<Integer, UserWorkDetails>> employeeUtilizationData = null;
         Map<String, Map<Integer, Integer>> nonBillableTaskActivities = null;
         Map<String, Object> dataMap = new HashMap<>();
-        if ("default".equalsIgnoreCase(templateName)) {
+        if ("default".equalsIgnoreCase(templateName) || "format3".equalsIgnoreCase(templateName)) {
             List<ProjectTaskActivityDetails> projectTaskAssigneeDataList =
                 famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate);
             nonBillableTaskActivities = famstackDashboardManager.getAllNonBillableTaskActivityList(startDate, endDate);
@@ -320,6 +346,13 @@ public class FamstackProjectController extends BaseFamstackService
     public String getProjectNameJson(@RequestParam("query") String query)
     {
         return famstackDashboardManager.getProjectNameJson(query);
+    }
+    
+    @RequestMapping(value = "/getProjectNamesCodePoIdJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String getProjectNamesCodePoIdJson(@RequestParam("query") String query)
+    {
+        return famstackDashboardManager.searchForProjectNamesCodePoIdJson(query);
     }
 
     @RequestMapping(value = "/createProject", method = RequestMethod.POST)
@@ -385,6 +418,18 @@ public class FamstackProjectController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/weeklyTimeLog", method = RequestMethod.POST)
+    @ResponseBody
+    public String weeklyTimeLog(@RequestParam("projectDetails") String projectDetails, @RequestParam("weekStartDate") String weekStartDate)
+    {
+
+        famstackDashboardManager.weeklyTimeLog(projectDetails, weekStartDate);
+        return "{\"status\": true}";
+    }
+
+    
+    
+    
     @RequestMapping(value = "/updateProject", method = RequestMethod.POST)
     @ResponseBody
     public String updateProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,

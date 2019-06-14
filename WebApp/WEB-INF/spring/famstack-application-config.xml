@@ -38,6 +38,8 @@
 	   <map>
 	   	  <entry key="default" value-ref="famstackXLSExportProcessorDefault"/>
 		  <entry key="format1" value-ref="famstackXLSExportProcessor1"/>
+		  <entry key="format2" value-ref="famstackXLSExportProcessorFormat2"/>
+		  <entry key="format3" value-ref="famstackXLSExportProcessorFormat3"/>
 		  <entry key="useractivity" value-ref="famstackXLSEmployeeSiteActivity"/>
 		  <entry key="famstackEmpUtilisation" value-ref="famstackXLSEmployeeUtilisationProcessor" />
 		</map>

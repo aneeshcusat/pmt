@@ -10,6 +10,6 @@
   		<c:redirect url="/dashboard/tasks"></c:redirect>
   </c:if>     
 </c:if>
-  <c:if test = "${fn:contains(requestUri, 'index') || fn:contains(requestUri, 'dashboard1')}">
+  <c:if test = "${fn:contains(requestUri, 'index') || fn:contains(requestUri, 'dashboard1') || fn:contains(requestUri, 'projectTimeline')}">
   	<c:set var="expandedPage" value="false"></c:set>
   </c:if>
