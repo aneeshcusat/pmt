@@ -1,41 +1,42 @@
  <!-- START PRELOADS -->
         <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
+        <c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
 <audio id="audio-alert" src="${audio}/alert.mp3" preload="auto"></audio>
         <audio id="audio-fail" src="${audio}/fail.mp3" preload="auto"></audio>
         <!-- END PRELOADS -->                  
         
     <!-- START SCRIPTS -->
         <!-- START PLUGINS -->
-        <script type="text/javascript" src="${js}/plugins/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script>  
+        <script type="text/javascript" src="${js}/plugins/jquery/jquery.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js?v=${fsVersionNumber}"></script>  
               
         <!-- END PLUGINS -->
 
         <!-- START THIS PAGE PLUGINS-->        
-        <script type='text/javascript' src="${js}/plugins/icheck/icheck.min.js"></script>        
-        <script type="text/javascript" src="${js}/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/scrolltotop/scrolltopcontrol.js"></script>
-        <script type="text/javascript" src="${js}/jquery.cropit.js"></script>  
+        <script type='text/javascript' src="${js}/plugins/icheck/icheck.min.js?v=${fsVersionNumber}"></script>        
+        <script type="text/javascript" src="${js}/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/scrolltotop/scrolltopcontrol.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/jquery.cropit.js?v=${fsVersionNumber}"></script>  
         
-        <script type="text/javascript" src="${js}/plugins/morris/raphael-min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/morris/morris.min.js"></script>       
-        <script type="text/javascript" src="${js}/plugins/rickshaw/d3.v3.js"></script>
-        <script type="text/javascript" src="${js}/plugins/rickshaw/rickshaw.min.js"></script>
-        <script type='text/javascript' src="${js}/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-        <script type='text/javascript' src="${js}/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>                
+        <script type="text/javascript" src="${js}/plugins/morris/raphael-min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/morris/morris.min.js?v=${fsVersionNumber}"></script>       
+        <script type="text/javascript" src="${js}/plugins/rickshaw/d3.v3.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/rickshaw/rickshaw.min.js?v=${fsVersionNumber}"></script>
+        <script type='text/javascript' src="${js}/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js?v=${fsVersionNumber}"></script>
+        <script type='text/javascript' src="${js}/plugins/jvectormap/jquery-jvectormap-world-mill-en.js?v=${fsVersionNumber}"></script>                
                         
-        <script type="text/javascript" src="${js}/plugins/owl/owl.carousel.min.js"></script>                 
+        <script type="text/javascript" src="${js}/plugins/owl/owl.carousel.min.js?v=${fsVersionNumber}"></script>                 
         
-        <script type="text/javascript" src="${js}/plugins/moment.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/daterangepicker/daterangepicker.js"></script>
-        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-timepicker.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/jquery/jquery.form.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/blockui/jquery.blockUI.js"></script>
-        <script type="text/javascript" src="${js}/plugins/jeditable/jquery.jeditable.js"></script>
-        <script type="text/javascript" src="${js}/plugins/datepicker/jquery.datetimepicker.full.min.js"></script>
-        <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js"></script>
-        <script type="text/javascript" src=" ${js}/plugins/desktopnotification/push_notification.min.js"></script>
+        <script type="text/javascript" src="${js}/plugins/moment.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/daterangepicker/daterangepicker.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-timepicker.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/jquery/jquery.form.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/blockui/jquery.blockUI.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/jeditable/jquery.jeditable.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/datepicker/jquery.datetimepicker.full.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src=" ${js}/plugins/desktopnotification/push_notification.min.js?v=${fsVersionNumber}"></script>
         <!-- END THIS PAGE PLUGINS-->        
 
 
@@ -106,17 +107,17 @@ var site_settings = "";
     </script>
 
         <!-- START TEMPLATE -->
-        <script type="text/javascript" src="${js}/settings.js"></script>
-        <script type="text/javascript" src="${js}/plugins.js"></script>        
-        <script type="text/javascript" src="${js}/actions.js"></script>
+        <script type="text/javascript" src="${js}/settings.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins.js?v=${fsVersionNumber}"></script>        
+        <script type="text/javascript" src="${js}/actions.js?v=${fsVersionNumber}"></script>
         <!--
-        <script type="text/javascript" src="${js}/demo_dashboard.js"></script>
+        <script type="text/javascript" src="${js}/demo_dashboard.js?v=${fsVersionNumber}"></script>
          END TEMPLATE -->
          
          <!--  famstack scripts -->
-         <script type="text/javascript" src="${js}/famstack.ajax.js"></script>
-         <script type="text/javascript" src="${js}/famstack.plugin.js"></script>
-         <script type="text/javascript" src="${js}/plugins/notify/bootstrap-notify.js"></script>
+         <script type="text/javascript" src="${js}/famstack.ajax.js?v=${fsVersionNumber}"></script>
+         <script type="text/javascript" src="${js}/famstack.plugin.js?v=${fsVersionNumber}"></script>
+         <script type="text/javascript" src="${js}/plugins/notify/bootstrap-notify.js?v=${fsVersionNumber}"></script>
         
          <!--  famstack scripts ends -->
     <!-- END SCRIPTS --> 

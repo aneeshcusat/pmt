@@ -190,9 +190,9 @@
 <!-- END CONTENT FRAME -->
  <%@include file="includes/footer.jsp" %> 
 <script src="${js}/plugins/gantt/dhtmlxganttp.js?v=6.1.5"></script>
-	<script src="${js}/plugins/gantt/dhtmlxgantt_grouping.js"></script>
-	<script src="${js}/plugins/gantt/dhtmlxgantt_grouping.js"></script>
-	<script src="${js}/plugins/gantt/dhtmlxgantt_auto_scheduling.js"></script>
+	<script src="${js}/plugins/gantt/dhtmlxgantt_grouping.js?v=${fsVersionNumber}"></script>
+	<script src="${js}/plugins/gantt/dhtmlxgantt_grouping.js?v=${fsVersionNumber}"></script>
+	<script src="${js}/plugins/gantt/dhtmlxgantt_auto_scheduling.js?v=${fsVersionNumber}"></script>
 <%-- 		<script src="${js}/plugins/gantt/dhtmlxgantt_quick_info.js?v=6.1.5"></script>
  --%>	<script src="${js}/plugins/gantt/dhtmlxgantt_tooltip.js?v=6.1.5"></script>
 <script>
@@ -231,8 +231,8 @@ var demo_tasks = {
 		};
  */
 </script>
-<script src="${js}/ganttInitializer.js"></script>
-<script src="${js}/ganttScaleInitializer.js"></script>
+<script src="${js}/ganttInitializer.js?v=${fsVersionNumber}"></script>
+<script src="${js}/ganttScaleInitializer.js?v=${fsVersionNumber}"></script>
 <script>
 //gantt.getTask(5).readonly = true;
  

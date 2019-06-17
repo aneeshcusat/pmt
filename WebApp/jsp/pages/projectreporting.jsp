@@ -104,8 +104,8 @@
 </div>               
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>
-  <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js"></script> 
-<script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js"></script>    
+  <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
+<script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>    
 
 <script type="text/javascript">
         

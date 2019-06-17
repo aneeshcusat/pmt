@@ -114,11 +114,11 @@
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>            
  <script type="text/javascript"
-	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
  
-<script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js"></script>
-<script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js"></script>
+<script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js?v=${fsVersionNumber}"></script>
+<script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?v=${fsVersionNumber}"></script>
 <script>
 var refreshCalendar = function() {
 	var userId = $("#taskAssigneeId").val();

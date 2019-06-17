@@ -496,7 +496,7 @@
                 </div>
                <!-- END PAGE CONTENT WRAPPER -->  
 <%@include file="includes/footer.jsp" %>
-<script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+<script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
 <jsp:useBean id="date" class="java.util.Date"/>
 <fmt:formatDate var="timeHour" value="${date}" pattern="HH"/>
 <fmt:formatDate var="timeMinutes"  value="${date}" pattern="mm"/>

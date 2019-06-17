@@ -101,6 +101,6 @@
 	//var fullcaledartuSource = "/bops/dashboard/getEmpUtlAjaxFullcalendar/"+$(".dashboadgroup").val();
 	//var fullcaledarBsSource = "/bops/dashboard/getEmpBWAjaxFullcalendar/"+$(".dashboadgroup").val();
 </script>
-<script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js"></script>
-<script type="text/javascript" src="${js}/famstack.calender.js"></script>
-<script type="text/javascript" src="${js}/famstack.dashboard.js"></script>
+<script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/famstack.calender.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/famstack.dashboard.js?v=${fsVersionNumber}"></script>

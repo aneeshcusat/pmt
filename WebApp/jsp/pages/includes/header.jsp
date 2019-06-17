@@ -10,7 +10,7 @@
 <c:set value="${staticFilesLocation}/audio" var="audio"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
-<c:set var="cssVersionNumber" value="${applicationScope.applicationConfiguraion.cssVersionNumber}"/>
+<c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
 <c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <c:set var="allUsersMap" value="${applicationScope.applicationConfiguraion.allUsersMap}"/>
@@ -37,8 +37,8 @@
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        
-        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/theme-default.css?v=${cssVersionNumber}"/>
-        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/famstack.css?v=${cssVersionNumber}"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/theme-default.css?v=${fsVersionNumber}"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/famstack.css?v=${fsVersionNumber}"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/daterangepicker.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/jquery.datetimerangepicker.min.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/taginput/mab-jquery-taginput.css"/>

@@ -231,9 +231,9 @@
 
 <%@include file="includes/footer.jsp" %>    
 <script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.js'></script>   
-<script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
-<script type="text/javascript" src="${js}/plugins/tagsinput/jquery.tagsinput.min.js"></script>
-<script type="text/javascript" src="${js}/plugins/fileinput/fileinput.min.js"></script> 
+<script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/plugins/tagsinput/jquery.tagsinput.min.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/plugins/fileinput/fileinput.min.js?v=${fsVersionNumber}"></script> 
 
 <script>
 jQuery.validator.addMethod("validEmail", function(value, element) {

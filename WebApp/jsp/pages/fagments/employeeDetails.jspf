@@ -6,7 +6,7 @@
                  	<a href="${applicationHome}/profile/${user.id}">
                  	 <c:if test="${user.deleted}"><span class="hide">deleted</span></c:if>
                     <div class="profile-image">
-                        <img src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
+                        <img src='${assets}/images/users/no-image.jpg' data-src="${applicationHome}/image/${user.id}" alt="${user.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
                     </div>
                     </a>
                     <div class="profile-data">

@@ -247,7 +247,7 @@ tr.clickable:hover {
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %> 
  <script type="text/javascript"
-	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
  
  <c:set var="projectReporting" value='reporting${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[projectReporting] && not empty appConfigMap[projectReporting].appConfValueDetails}">

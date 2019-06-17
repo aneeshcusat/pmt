@@ -1,7 +1,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>    
-<c:set var="cssVersionNumber" value="${applicationScope.applicationConfiguraion.cssVersionNumber}"/>
-<link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/pages/myTaskList.css?v=${cssVersionNumber}"/>
+<c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
+<link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/pages/myTaskList.css?v=${fsVersionNumber}"/>
 <style>
 </style>
  <!-- START BREADCRUMB -->
@@ -156,10 +156,10 @@
 
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>     
- <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js"></script>       
+ <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>       
 <script type="text/javascript"
-	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js"></script>
+	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?v=${fsVersionNumber}"></script>
 <script>
 
 $(document).ready(function(){

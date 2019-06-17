@@ -380,12 +380,12 @@ display: none;
 <!-- END MODALS -->
 <%@include file="includes/footer.jsp"%>
 <script type="text/javascript"
-	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>
+	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
 <script type='text/javascript'
-	src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js"></script>
+	src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>
 <script type="text/javascript"
-	src="${js}/plugins/dropzone/dropzone.min.js"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js"></script>
+	src="${js}/plugins/dropzone/dropzone.min.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?v=${fsVersionNumber}"></script>
 <script>
 
 $(".taskOwnersList").on("click", function(){

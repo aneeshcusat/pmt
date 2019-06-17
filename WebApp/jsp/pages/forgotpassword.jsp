@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="tracopusConfigEnabled" value="${applicationScope.applicationConfiguraion.tracopusConfigEnabled}"/>
 <c:set var="staticFilesLocation" value="${applicationScope.applicationConfiguraion.staticFilesLocation}"/>
+<c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
 <c:set value="${staticFilesLocation}/css" var="css"/>
 <c:set value="${staticFilesLocation}/image" var="image"/>
 <c:set value="${staticFilesLocation}/js" var="js"/>
@@ -73,11 +74,11 @@
     </div>
   </div>
        <!-- START PLUGINS -->
-        <script type="text/javascript" src="${js}/plugins/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js"></script>
-        <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js"></script>
-        <script type="text/javascript" src="${js}/famstack.ajax.js"></script>  
+        <script type="text/javascript" src="${js}/plugins/jquery/jquery.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/jquery/jquery-ui.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src="${js}/famstack.ajax.js?v=${fsVersionNumber}"></script>  
         <script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.min.js'></script> 
         <!-- END PLUGINS -->  
   <script type="text/javascript">

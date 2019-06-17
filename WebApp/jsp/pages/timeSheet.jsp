@@ -84,11 +84,11 @@
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>   
  <script type="text/javascript"
-	src="${js}/plugins/bootstrap/bootstrap-select.js"></script>         
- <script type='text/javascript' src="${js}/plugins/bootstrap/bootstrap-datepicker.js"></script>  
+	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>         
+ <script type='text/javascript' src="${js}/plugins/bootstrap/bootstrap-datepicker.js?v=${fsVersionNumber}"></script>  
  <script type="text/javascript"
-	src="${js}/plugins/autocomplete/jquery.autocomplete.js"></script> 
+	src="${js}/plugins/autocomplete/jquery.autocomplete.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/plugins/select2/select2.full.min.js"></script> 
+	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js"></script> 
+	src="${js}/famstack.timesheet.js?v=${fsVersionNumber}"></script> 

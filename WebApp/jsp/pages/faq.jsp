@@ -115,8 +115,8 @@
 <%@include file="includes/footer.jsp" %>
  <!-- START THIS PAGE PLUGINS-->        
  <script type='text/javascript' src='${js}/plugins/icheck/icheck.min.js'></script>
- <script type="text/javascript" src="${js}/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
+ <script type="text/javascript" src="${js}/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js?v=${fsVersionNumber}"></script>
  
- <script type="text/javascript" src="${js}/plugins/highlight/jquery.highlight-4.js"></script>
+ <script type="text/javascript" src="${js}/plugins/highlight/jquery.highlight-4.js?v=${fsVersionNumber}"></script>
  <!-- END THIS PAGE PLUGINS-->        
-  <script type="text/javascript" src="${js}/faq.js"></script>
+  <script type="text/javascript" src="${js}/faq.js?v=${fsVersionNumber}"></script>

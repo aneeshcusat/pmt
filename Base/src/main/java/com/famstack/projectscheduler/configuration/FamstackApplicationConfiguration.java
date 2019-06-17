@@ -58,7 +58,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     
     private boolean tracopusConfigEnabled;
     
-    private String cssVersionNumber;
+    private String fsVersionNumber;
 
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
     
@@ -523,11 +523,13 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 		this.tracopusConfigEnabled = tracopusConfigEnabled;
 	}
 
-	public String getCssVersionNumber() {
-		return cssVersionNumber;
+	public String getFsVersionNumber() {
+		return fsVersionNumber;
 	}
 
-	public void setCssVersionNumber(String cssVersionNumber) {
-		this.cssVersionNumber = cssVersionNumber;
+	public void setFsVersionNumber(String fsVersionNumber) {
+		this.fsVersionNumber = fsVersionNumber;
 	}
+
+	
 }

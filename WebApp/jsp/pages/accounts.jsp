@@ -195,7 +195,7 @@ tr.clickable:hover {
         
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %> 
-  <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js"></script> 
+  <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js?v=${fsVersionNumber}"></script> 
  
  <script type="text/javascript">
  
