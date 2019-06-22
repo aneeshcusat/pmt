@@ -961,9 +961,12 @@ public class FamstackDashboardManager extends BaseFamstackService
 	
     public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
     {
-        List<ProjectTaskActivityDetails> projectDetailsList =
+    	 List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
+    	if (startDate != null && endDate != null) {
+        projectDetailsList =
             projectManager.getAllProjectTaskAssigneeData(startDate, endDate);
-        return projectDetailsList;
+    	}
+    	return projectDetailsList;
     }
 
     public Map<String, Map<Integer, UserWorkDetails>> getAllEmployeeUtilizationList(Date startDate, Date endDate)

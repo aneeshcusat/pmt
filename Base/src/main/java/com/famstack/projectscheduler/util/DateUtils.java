@@ -9,6 +9,7 @@ import java.util.Date;
 import org.apache.logging.log4j.Logger;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.employees.bean.FamstackDateRange;
 
 /**
  * The Class DateUtils.
@@ -284,4 +285,23 @@ public final class DateUtils extends BaseFamstackService
 	     return startCal.get(Calendar.WEEK_OF_YEAR);
 	}
 
+	public static FamstackDateRange parseDateRangeString(String dateRange){
+		String[] dateRanges;
+        Date startDate = null;
+        Date endDate = null;
+        if (StringUtils.isNotBlank(dateRange)) {
+            dateRanges = dateRange.split("-");
+
+            if (dateRanges != null && dateRanges.length > 1) {
+                startDate = DateUtils.tryParse(dateRanges[0].trim(), DateUtils.DATE_FORMAT_DP);
+                endDate = DateUtils.tryParse(dateRanges[1].trim(), DateUtils.DATE_FORMAT_DP);
+            }
+        } else {
+            startDate =
+                DateUtils.tryParse(DateUtils.format(new Date(), DateUtils.DATE_FORMAT_DP), DateUtils.DATE_FORMAT_DP);
+            endDate = startDate;
+        }
+        return new FamstackDateRange(startDate, endDate);
+	}
+	
 }

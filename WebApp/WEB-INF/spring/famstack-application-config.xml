@@ -17,6 +17,7 @@
    		<property name="staticFilesLocation" value="${famstack.staticFilesLocation}"/>
    		<property name="tracopusConfigEnabled" value="${famstack.tracopusConfigEnabled}"/>
    		<property name="fsVersionNumber" value="${famstack.fsVersionNumber}"/>
+   		<property name="staticReportEnabled" value="${famstack.staticReportEnabled}"/>
    </bean>
    
    <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">

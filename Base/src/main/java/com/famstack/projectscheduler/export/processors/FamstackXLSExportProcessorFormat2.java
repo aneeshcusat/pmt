@@ -175,7 +175,7 @@ public class FamstackXLSExportProcessorFormat2 extends BaseFamstackService imple
     {
 
         if (leaveDataMap != null) {
-            Row leaveRow = sheet.getRow(projectDetailsRowCount + 2);
+            Row leaveRow = getRow(sheet, projectDetailsRowCount + 2);
             List<Integer> employeeIndexList = getEmployeeIndexList(employees);
             for (Integer userId : leaveDataMap.keySet()) {
                 int userCellIndex = employeeIndexList.indexOf(userId);
@@ -191,15 +191,25 @@ public class FamstackXLSExportProcessorFormat2 extends BaseFamstackService imple
         CellStyle xssfCellProjectTaskHrsStyle, CellStyle xssfCellProjectGrandTotalStyle,
         CellStyle xssfCellUtilizationStyle, int availableWorkingDayHours, int holidayHours)
     {
-
-        Row totalUserProjectHoursRow = sheet.getRow(rowCount);
-        Row holidayRow = sheet.getRow(rowCount + 1);
-
-        Row excessWorkingHrsRow = sheet.getRow(rowCount + 3);
-        Row utilizationRow = sheet.getRow(rowCount + 4);
-        Row availableHrsRow = sheet.getRow(rowCount + 5);
-        Row totalHrsRow = sheet.getRow(rowCount + 6);
         int columnNumber = 11;
+        
+        Row totalUserProjectHoursRow = getRow(sheet, rowCount);
+        Row holidayRow = getRow(sheet, rowCount + 1);
+        Row LeaveHrsRow = getRow(sheet, rowCount + 2);
+        Row excessWorkingHrsRow = getRow(sheet, rowCount + 3);
+        Row utilizationRow = getRow(sheet, rowCount + 4);
+        Row availableHrsRow = getRow(sheet, rowCount + 5);
+        Row totalHrsRow = getRow(sheet, rowCount + 6);
+        
+        createSummaryDetailsLabel(workBook, totalUserProjectHoursRow, columnNumber-1, "Total Task Hours", false);
+        createSummaryDetailsLabel(workBook, holidayRow, columnNumber-1, "Public Holiday hours", false);
+        createSummaryDetailsLabel(workBook, LeaveHrsRow, columnNumber-1, "Leave hours", false);
+        createSummaryDetailsLabel(workBook, holidayRow, columnNumber-5, "NON BILLABLE", false);
+        createSummaryDetailsLabel(workBook, LeaveHrsRow, columnNumber-5, "NON BILLABLE", false);
+        createSummaryDetailsLabel(workBook, excessWorkingHrsRow, columnNumber-1, "Public Holiday hours", false);
+        createSummaryDetailsLabel(workBook, utilizationRow, columnNumber-1, "Utilization", true);
+        createSummaryDetailsLabel(workBook, availableHrsRow, columnNumber-1, "Total Hours Available", false);
+        createSummaryDetailsLabel(workBook, totalHrsRow, columnNumber-1, "Total hours", false);
 
         for (EmployeeDetails employeeDetails : employees) {
             Cell totalUserProjectHoursCell = getCell(totalUserProjectHoursRow, columnNumber);
@@ -256,6 +266,24 @@ public class FamstackXLSExportProcessorFormat2 extends BaseFamstackService imple
         projectGrandTotalCell.setCellFormula(strFormula);
     }
 
+
+	private void createSummaryDetailsLabel(XSSFWorkbook workbook,
+			Row row, int columnNumber, String label, boolean isBold) {
+		Cell cell =  getCell(row, columnNumber);
+        cell.setCellStyle(getRightAllighStyle(workbook, isBold));
+        cell.setCellValue(label);
+	}
+
+	private CellStyle getRightAllighStyle(XSSFWorkbook workbook, boolean isBold) {
+        XSSFCellStyle cellStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(isBold);
+        cellStyle.setFont(font);
+        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
+        return cellStyle;
+
+	}
+    
     private void createNonBillableDetailsRow(XSSFWorkbook workBook, Sheet sheet, int rowCount, String taskCategory,
         Map<Integer, Integer> nonBillableMap, List<EmployeeDetails> employees, CellStyle xssfCellTextWrapStyle,
         CellStyle xssfCellProjectTotalStyle, CellStyle xssfCellProjectTaskHrsStyle)
@@ -263,7 +291,7 @@ public class FamstackXLSExportProcessorFormat2 extends BaseFamstackService imple
 
         if (nonBillableMap != null) {
             int nonBillableDetailsColumnCount = 11;
-            sheet.shiftRows(rowCount, sheet.getLastRowNum() + 1, 1, true, true);
+            //sheet.shiftRows(rowCount, sheet.getLastRowNum() + 1, 1, true, true);
             Row nonBillableItemRow = getRow(sheet, rowCount++);
 
             createProjectDetailsColoumn(sheet, 6, "NON_BILLABLE", nonBillableItemRow, xssfCellTextWrapStyle);
@@ -291,7 +319,7 @@ public class FamstackXLSExportProcessorFormat2 extends BaseFamstackService imple
     {
         if (projectDetails != null) {
             int projectDetailsUserColumnCount = 11;
-            sheet.shiftRows(projectDetailsRowCount, sheet.getLastRowNum() + 1, 1, true, true);
+            //sheet.shiftRows(projectDetailsRowCount, sheet.getLastRowNum() + 1, 1, true, true);
             Row projectDetailsRow = getRow(sheet, projectDetailsRowCount);
             Map<Integer, Map<Integer, Integer>> taskUserActualTimeMap = getProjectTaskDuration(projectDetails);
 

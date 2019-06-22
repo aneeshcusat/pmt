@@ -60,6 +60,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     
     private String fsVersionNumber;
 
+    private boolean staticReportEnabled;
+    
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
     
     public static Map<Integer, EmployeeDetails> allUsersMap = new HashMap<>();
@@ -529,6 +531,14 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
 	public void setFsVersionNumber(String fsVersionNumber) {
 		this.fsVersionNumber = fsVersionNumber;
+	}
+
+	public boolean isStaticReportEnabled() {
+		return staticReportEnabled;
+	}
+
+	public void setStaticReportEnabled(boolean staticReportEnabled) {
+		this.staticReportEnabled = staticReportEnabled;
 	}
 
 	

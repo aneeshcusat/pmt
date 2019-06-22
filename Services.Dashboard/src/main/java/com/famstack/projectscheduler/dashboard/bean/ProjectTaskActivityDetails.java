@@ -2,7 +2,9 @@ package com.famstack.projectscheduler.dashboard.bean;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
@@ -47,6 +49,8 @@ public class ProjectTaskActivityDetails
     private Integer taskActivityDuration;
 
     private Integer taskActActivityDuration;
+    
+    private Double taskActivityTimeXls;
 
     private Integer userId;
 
@@ -73,6 +77,14 @@ public class ProjectTaskActivityDetails
     private int taskDuration;
     
     private Integer projectLead;
+    
+    private String accountName;
+    
+    private String teamName;
+    
+    private String subTeamName;
+    
+    private String clientName;
 
     private List<ProjectTaskActivityDetails> childs;
 
@@ -228,14 +240,22 @@ public class ProjectTaskActivityDetails
 
     public String getClientName()
     {
-        ClientDetails clientDetails = FamstackAccountManager.getClientmap().get(projectClientId);
-        return clientDetails != null ? clientDetails.getName() : "";
+	    if (clientName == null) {
+	        ClientDetails clientDetails = FamstackAccountManager.getClientmap().get(projectClientId);
+	        return clientDetails != null ? clientDetails.getName() : "";
+	    } else {
+			return clientName;
+		}
     }
     
     public String getAccountName()
     {
-        AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(projectAccountId);
-        return accountDetails != null ? accountDetails.getName() : "";
+    	if (accountName == null) {
+    		AccountDetails accountDetails = FamstackAccountManager.getAccountmap().get(projectAccountId);
+    		return accountDetails != null ? accountDetails.getName() : "";
+    	} else {
+    		return accountName;
+    	}
     }
     
     public Integer getTeamId()
@@ -253,18 +273,26 @@ public class ProjectTaskActivityDetails
 
     public String getTeamName()
     {
-        ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(projectTeamId);
-        String teamName = "";
-        if (projectSubTeamDetails != null) {
-            teamName = FamstackAccountManager.getTeammap().get(projectSubTeamDetails.getTeamId()).getName();
-        }
-        return teamName;
+	  if (teamName == null) {
+	    ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(projectTeamId);
+	    String teamNameString = "";
+	    if (projectSubTeamDetails != null) {
+	        teamNameString = FamstackAccountManager.getTeammap().get(projectSubTeamDetails.getTeamId()).getName();
+	    }
+	    return teamNameString;
+	  } else {
+		  return teamName;
+	  }
     }
 
     public String getSubTeamName()
     {
-        ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(projectTeamId);
-        return projectSubTeamDetails != null ? projectSubTeamDetails.getName() : "";
+	    if (subTeamName == null) {
+	    	 ProjectSubTeamDetails projectSubTeamDetails = FamstackAccountManager.getSubteammap().get(projectTeamId);
+	         return projectSubTeamDetails != null ? projectSubTeamDetails.getName() : "";
+	    } else {
+			return subTeamName;
+		}
     }
 
     public String getDurationInHours()
@@ -326,6 +354,17 @@ public class ProjectTaskActivityDetails
             childs = new ArrayList<>();
         }
         childs.add(projectTaskActivityDetails);
+    }
+    
+    public Set<Integer> getAllTaskActivityIds(){
+    	 Set<Integer> taskActivityIds = new HashSet<>();
+    	 taskActivityIds.add(getTaskActivityId());
+    	if (childs != null) {
+           for(ProjectTaskActivityDetails projectTaskActivityDetails : childs){
+        	   taskActivityIds.add(projectTaskActivityDetails.getTaskActivityId());   
+           }
+        }
+    	return taskActivityIds;
     }
 
     public List<ProjectTaskActivityDetails> getChilds()
@@ -444,5 +483,47 @@ public class ProjectTaskActivityDetails
 
 	public void setProjectLead(Integer projectLead) {
 		this.projectLead = projectLead;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
+	public void setSubTeamName(String subTeamName) {
+		this.subTeamName = subTeamName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public Double getTaskActivityTimeXls() {
+		return taskActivityTimeXls;
+	}
+
+	public void setTaskActivityTimeXls(Double taskActivityTimeXls) {
+		this.taskActivityTimeXls = taskActivityTimeXls;
+	}
+	
+	public ProjectTaskActivityDetails getClone(){
+		ProjectTaskActivityDetails projectDetails = new ProjectTaskActivityDetails();
+		projectDetails.setTaskActivityStartTime(getTaskActivityStartTime());
+		projectDetails.setProjectCode(getProjectCode());
+		projectDetails.setProjectId(getProjectId());
+		projectDetails.setProjectName(getProjectName());
+		projectDetails.setProjectNumber(getProjectNumber());
+		projectDetails.setProjectStatus(getProjectStatus());
+		projectDetails.setProjectType(getProjectType());
+		projectDetails.setProjectCategory(getProjectCategory());
+		projectDetails.setAccountName(getAccountName());
+		projectDetails.setTeamName(getTeamName());
+		projectDetails.setSubTeamName(getSubTeamName());
+		projectDetails.setClientName(getClientName());
+		projectDetails.setTaskName(getTaskName());
+		return projectDetails;
 	}
 }

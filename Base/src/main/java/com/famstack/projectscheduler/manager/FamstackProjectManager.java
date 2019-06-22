@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-import org.springframework.util.NumberUtils;
 
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.NotificationType;
