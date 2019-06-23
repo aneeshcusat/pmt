@@ -16,13 +16,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
            <meta name="viewport" content="width=device-width, initial-scale=1">
         
-        <link rel="icon" href="${fn:escapeXml(image)}/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="${fn:escapeXml(image)}/favicon.ico?v=${fsVersionNumber}" type="image/x-icon" />
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        
-       <link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/bootstrap/bootstrap.min.css"/>
-        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/waitme/waitMe.min.css"/>
-        <link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/login.css"/>
+       <link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/bootstrap/bootstrap.min.css?v=${fsVersionNumber}"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/waitme/waitMe.min.css?v=${fsVersionNumber}"/>
+        <link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/login.css?v=${fsVersionNumber}"/>
         <!-- EOF CSS INCLUDE -->                
         <style type="text/css">
 		.login_content .btn:hover, .login_content a {
@@ -86,7 +86,7 @@
         <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap.min.js?v=${fsVersionNumber}"></script>
         <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js?v=${fsVersionNumber}"></script>
         <script type="text/javascript" src="${js}/famstack.ajax.js?v=${fsVersionNumber}"></script>  
-        <script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.min.js'></script> 
+        <script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.min.js?v=${fsVersionNumber}'></script> 
         <!-- END PLUGINS -->  
  <script type="text/javascript">
  var jvalidate = $("#loginForm").validate({
