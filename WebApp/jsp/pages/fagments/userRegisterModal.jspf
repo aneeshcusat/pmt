@@ -161,15 +161,15 @@
 					<label class="col-md-3 control-label">Company Group</label>
 					<div class="col-md-9">
 						<form:select path="userGroupId" id="userGroupId" class="form-control select" data-live-search="true" name="userGroupId">
-								<c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+								<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1012'}">
 							  		<option value="">- select -</option>
 							  	</c:if>
 							    <c:if test="${not empty userGroupMap}">  
                                 <c:forEach var="group" items="${userGroupMap}">
-                                 <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1012'}">
                                     	<option value="${group.value.userGroupId}">${group.value.name}</option>
                                  </c:if>
-                                 <c:if test="${(currentUser.userRole != 'SUPERADMIN') && group.value.userGroupId == currentUserGroupId}">
+                                 <c:if test="${(currentUser.userRole != 'SUPERADMIN' && currentUser.userGroupId != '1012') && group.value.userGroupId == currentUserGroupId}">
 										<option selected="selected" value="${group.value.userGroupId}">${group.value.name}</option>
 								  </c:if>
                    			  </c:forEach>

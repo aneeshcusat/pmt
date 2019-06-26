@@ -49,7 +49,7 @@ tr.clickable:hover {
                       	<td>${account.holder}</td>
                       	<td><a parentid="0" onclick="initializeWidget('account', this);initializeData('${account.name}', '${account.holder}','${account.type}', ${account.accountId});" data-toggle="modal" data-target="#createaccountmodal"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
                       	<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteAccount(${account.accountId},'${account.name}', 'ACCOUNT')">
-                      	<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                      	<i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
 							<span class="hide accountInfo" accountId="${account.accountId}">
 							<span>${account.name}</span>
 							<span>${account.type}</span>
@@ -81,7 +81,7 @@ tr.clickable:hover {
                    			<td>${projectTeam.poc}</td>
                    				<td><a parentid="${account.accountId}"  onclick="initializeWidget('team', this);initializeData('${projectTeam.name}', '${projectTeam.poc}','', ${projectTeam.teamId});" data-toggle="modal" data-target="#createaccountmodal"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
                    					<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteTeam(${projectTeam.teamId},'${projectTeam.name}', 'TEAM')">
-                   				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                   				<i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                    		 </tr>
                        </c:forEach>
                      
@@ -113,7 +113,7 @@ tr.clickable:hover {
                       				<td><a parentid="${projectTeam.teamId}" onclick="initializeWidget('subTeam', this);initializeData('${projectSubTeam.name}', '${projectSubTeam.poId}','', ${projectSubTeam.subTeamId});" data-toggle="modal" data-target="#createaccountmodal">
                       				<i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
                       				<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteSubTeam(${projectSubTeam.subTeamId},'${projectSubTeam.name}', 'SUBTEAM')">
-                      				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                      				<i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                       			</tr>
                          </c:forEach>
                         </c:if>
@@ -149,7 +149,7 @@ tr.clickable:hover {
                          				<td>${client.email}</td>
                          				<td><a parentid="${projectSubTeam.subTeamId}" onclick="initializeWidget('client', this);initializeData('${client.name}', '${client.email}','', ${client.clientId});" data-toggle="modal" data-target="#createaccountmodal"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color:blue"></i></a>&nbsp;&nbsp;
                          				<a href="#" data-box="#confirmationbox" class="mb-control profile-control-right" onclick="javascript:deleteClient(${client.clientId},'${client.name}', 'CLIENT')">
-                         				<i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
+                         				<i class="fa fa-times fa-2x" style="color:red" aria-hidden="true"></i></a></td>
                          			</tr>
                          			</c:forEach>
                           </c:if>

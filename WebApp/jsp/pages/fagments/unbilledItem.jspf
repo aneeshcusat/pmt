@@ -32,9 +32,9 @@
 		</div>
 		
 		<div class="task-edit">
-			<c:if test="${taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER'}">
-				<a href="#" onclick="deleteTaskActivity('${taskActivites.taskActivityId}','${taskActivites.taskName}')"  data-box="#confirmationbox" class="deleteTask mb-control1 profile-control-right btn btn-danger btn-rounded btn-sm">
-					<i class="fa fa-trash-o fa-1" style="color:red" aria-hidden="true"></i>
+			<c:if test="${taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER' || projectTaskActivityDeleteEnabled == 'true'}">
+				<a href="#" onclick="deleteTaskActivity('${taskActivites.taskActivityId}','${taskActivites.taskName}')"  data-box="#confirmationbox" class="deleteTask mb-control1">
+					<i class="fa fa-times fa-1x" style="color:red" aria-hidden="true"></i>
 				</a>
 			</c:if>
 		</div>

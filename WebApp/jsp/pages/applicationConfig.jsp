@@ -82,8 +82,11 @@ tr.clickable:hover {
 				   	<tr class="clickable">
 				   		<td colspan="2"><a href="#tab5" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Dashboard View</a></td>
 				   	</tr>
-				   		<tr class="clickable">
+				   	<tr class="clickable">
 				   		<td colspan="2"><a href="#tab6" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Enable Weekly Time Log</a></td>
+				   	</tr>
+				   	<tr class="clickable">
+				   		<td colspan="2"><a href="#tab7" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Enable Project Task Activity Delete</a></td>
 				   	</tr>
 			   	 	</tbody>
 			     </table>
@@ -213,6 +216,26 @@ tr.clickable:hover {
 							</tbody>
 						</table>
 					</div>
+					<div class='row tab-pane ' id="tab7">
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Project Task Activity Delete</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+									<select class="form-control select" id="projectTaskActivitySelectId">
+										<option value="disabled">Disabled</option>
+										<option value="enabled">Enabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="projectTaskActivityDelete();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>                    
@@ -274,6 +297,15 @@ tr.clickable:hover {
   <c:forEach var="weeklyTimeLogConf" items="${appConfigMap[weeklyTimeLog].appConfValueDetails}">
   	 <script type="text/javascript">
   	 	$("#weeklyTimeLogSelectId").val('${weeklyTimeLogConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+
+   <c:set var="projectTaskActivitySelectId" value='projectTaskActivityDelete${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[projectTaskActivitySelectId] && not empty appConfigMap[projectTaskActivitySelectId].appConfValueDetails}">
+  <c:forEach var="projectTaskActivityDeleteConf" items="${appConfigMap[projectTaskActivitySelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#projectTaskActivitySelectId").val('${projectTaskActivityDeleteConf.value}');
   	 </script>
   </c:forEach>
   </c:if>
@@ -342,7 +374,17 @@ tr.clickable:hover {
 	    });
  }
  
- 
+
+ function projectTaskActivityDelete(){
+	 var input1 = $("#projectTaskActivitySelectId").val();
+	 var type = "projectTaskActivityDelete";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+  
  function doAjaxDeleteAppConfigVal(id) {
 	 var dataString = {"id" : id};
 		doAjaxRequest("POST", "${applicationHome}/deleteAppConfValue", dataString, function(data) {

@@ -248,10 +248,7 @@ background-color: red !important;
   padding-left: 15px;
   position: relative;
 }
-.list-group.task-list .task-edit a {
-  display: block;
-  opacity: .3;
-}
+
 .list-group.task-list .task-edit a i {
   display: block;
   position: relative;

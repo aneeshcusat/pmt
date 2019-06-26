@@ -121,36 +121,6 @@
 	</form:form>
 </div>
 </div>
-<ul class="hide"  id="taskTemplate">
-	<li class="list-group-item taskact-item">
-			<div class="task-item">
-				<div class="task-today pull-left">
-					<a href="#" class="ttip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mark Today">
-						<i class="fa fa-star"></i>
-					</a>
-				</div>
-				<h3 class="task-title"></h3>
-			</div>
-
-			<div class="task-meta">
-				<span class="task-date color-danger"></span>
-				<span class="label label-danger"></span>
-			</div>
-
-			<div class="task-assignee">
-				<a href="#" class="ttip" data-toggle="tooltip" data-placement="top" title="">
-					<img alt="image" class="assignee" src="" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'">
-				</a>
-			</div>
-			
-			<div class="task-edit">
-					<a href="#" data-box="#confirmationbox" class="deleteTask hide mb-control1 profile-control-right btn btn-danger btn-rounded btn-sm">
-						<i class="fa fa-trash-o fa-1" style="color:red" aria-hidden="true"></i>
-					</a>
-			</div>
-		</li>
-
-</ul>
 
 <!-- project create modal end -->  
 
