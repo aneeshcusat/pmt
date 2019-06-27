@@ -47,6 +47,9 @@
 							  			</c:if>
 									</select>
 								</c:if>
+								<c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}">
+									<input type="hidden" id="taskActivityAssigneeId" value="${currentUser.id}">
+								</c:if>
 							</div>
 							<div class="col-md-1"> 
 								<div class="form-group">
