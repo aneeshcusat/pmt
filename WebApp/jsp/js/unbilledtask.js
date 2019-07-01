@@ -200,8 +200,9 @@ var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, s
 
 var deleteTaskActivityAjax = function(activityId) {
 	doAjaxRequest("POST", "/bops/dashboard/deleteTaskActivity", {activityId:activityId},  function() {
-		getAssignJsonData();
+		//getAssignJsonData();
 		$(".mb-control-close").click();
+		$(".taskact-item"+activityId).remove();
 	}, function(e) {
 	});
 }

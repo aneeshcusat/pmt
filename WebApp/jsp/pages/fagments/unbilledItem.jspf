@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <c:if test="${(taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER') || itemType == 'ALL'}">
-	<li class="list-group-item taskact-item userId${taskActivites.userId}">
+	<li class="list-group-item taskact-item userId${taskActivites.userId} taskact-item${taskActivites.taskActivityId}">
 		<div class="task-item">
 			<div class="task-today pull-left">
 				<a href="#" class="ttip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mark Today">

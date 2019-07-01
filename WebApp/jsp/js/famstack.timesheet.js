@@ -184,11 +184,7 @@ function fillTaskDetails(projectDetailsUpdateRowClone, tasks, projectCategory){
 	var billableTasksList = '<option value="'+taskName+'">[NEW] '+taskName+'</option>';
 	if (tasks.length > 0) {
 		for (i in tasks) {
-			if (tasks[i].status == 'ASSIGNED' || tasks[i].status == 'NEW') {
-				billableTasksList += '<option value="'+tasks[i].id+'">'+tasks[i].name+'</option>';
-			} else {
-				billableTasksList += '<option disabled=disabled value="'+tasks[i].id+'">'+tasks[i].name+'</option>';
-			}
+			billableTasksList += '<option data-status="'+tasks[i].status+'" value="'+tasks[i].id+'">'+tasks[i].name+'</option>';
 		}
 	}
 	$(projectDetailsUpdateRowClone).find('select.billableTaskSelector').html(billableTasksList);

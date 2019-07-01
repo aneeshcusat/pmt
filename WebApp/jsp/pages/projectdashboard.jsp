@@ -366,11 +366,15 @@ var clearProjectFormForCreate = function(projectId) {
 	$('#estCompleteTime').val(getTodayDate(new Date()) + " 18:00");
 	
 }
+var isProjectUpdate = false;
+var isProjectDuplicate = false;
+
 var loadProjectForUpdate = function(projectId) {
 	$("#createProjectFormId").prop("action","updateProject");
 	$("#myModalLabel").html("Update a Project");
 	$("#projectActionButton span").html("Update");
-
+	isProjectUpdate = true;
+	isProjectDuplicate = false;
 	loadProject(projectId);
 }
 
@@ -378,7 +382,8 @@ var loadProjectForClone = function(projectId) {
 	$("#createProjectFormId").prop("action","createProject");
 	$("#myModalLabel").html("Duplicate a Project");
 	$("#projectActionButton span").html("Duplicate");
-	
+	isProjectUpdate = false;
+	isProjectDuplicate = true;
 	loadProject(projectId);
 	
 	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
@@ -526,7 +531,9 @@ function initializeCreateProjectForm(project){
 		{
 			serviceUrl: '${applicationHome}/getProjectJson',
 			onSelect : function(suggestion) {
-				loadProjectForClone(suggestion.data);
+				if(!isProjectUpdate && !isProjectDuplicate) {	
+					//loadProjectForClone(suggestion.data);
+				}
 			}
 		});
 
@@ -552,6 +559,8 @@ function initializeCreateProjectForm(project){
 			showNotification($("#projectName").val(),$("#summary").val(),"${applicationHome}/project/"+responseJson.projectId);
 			refreshProjectDetails();
 			$('#createprojectmodal').modal('hide');
+			isProjectUpdate = false;
+			isProjectDuplicate = false;
 		}
 	});
 
@@ -1065,6 +1074,9 @@ var loadDuplicateProjects = function(projectId, projectCode, isForce) {
 		dataString = {"projectId" : projectId};
 		doAjaxRequestWithGlobal("GET", "${applicationHome}/projectTaskCloneJson", dataString, function(data) {
 	        $("#projectTaskCloneDIv"+projectId).html(data);
+	        if(!isForce) {
+	        	loadInitialTaskAvailabilityTime(projectId);
+	        }
 	    }, function(e) {
 	        famstacklog("ERROR: ", e);
 	        famstackalert(e);
@@ -1074,7 +1086,6 @@ var loadDuplicateProjects = function(projectId, projectCode, isForce) {
 		if ($("#projectOpenLink" + projectId).hasClass("fa-chevron-right")) {
 			$("#projectOpenLink" + projectId).removeClass("fa-chevron-right");
 			$("#projectOpenLink" + projectId).addClass("fa-chevron-down");
-			loadInitialTaskAvailabilityTime(projectId);
 			$(".projectData"+projectId).show();	
 		} else {
 			$("#projectOpenLink" + projectId).removeClass("fa-chevron-down");
@@ -1303,7 +1314,7 @@ function initializeCron(cronExpression) {
  
 function loadRecurringProjectDetails(projectId, projectCode, responseJson){
 	famstacklog(responseJson);
-	$("#RPABCreatOrUpdate").html("Upate");
+	$("#RPABCreatOrUpdate").html("Update");
 	$(".recurringTimeDiv").removeClass("hide");
 	$(".recurringDelete").removeClass("hide");
 	$(".recurringEndTime").val(responseJson.endDateString);

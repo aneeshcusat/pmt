@@ -904,16 +904,14 @@ public class FamstackProjectManager extends BaseFamstackManager
             if (projectItem.getTaskItems() != null) {
             	JSONArray jsonTaskArray = new JSONArray();
             	for (TaskItem taskItem : projectItem.getTaskItems()) {
-            		if (taskItem.getStatus() != TaskStatus.COMPLETED && taskItem.getStatus() != TaskStatus.INPROGRESS) {
-	            		JSONObject jsonTaskObject = new JSONObject();
-	            		jsonTaskObject.put("name", taskItem.getName());
-	            		jsonTaskObject.put("id", taskItem.getTaskId());
-	            		jsonTaskObject.put("status", taskItem.getStatus());
-	            		jsonTaskObject.put("timeTaken", taskItem.getActualTimeTaken());
-	            		jsonTaskObject.put("startTime", taskItem.getStartTime());
-	            		jsonTaskObject.put("endTime", taskItem.getCompletionTime());
-	            		jsonTaskArray.put(jsonTaskObject);
-            		}
+            		JSONObject jsonTaskObject = new JSONObject();
+            		jsonTaskObject.put("name", taskItem.getName());
+            		jsonTaskObject.put("id", taskItem.getTaskId());
+            		jsonTaskObject.put("status", taskItem.getStatus());
+            		jsonTaskObject.put("timeTaken", taskItem.getActualTimeTaken());
+            		jsonTaskObject.put("startTime", taskItem.getStartTime());
+            		jsonTaskObject.put("endTime", taskItem.getCompletionTime());
+            		jsonTaskArray.put(jsonTaskObject);
             	}
             	
             	jsonObject.put("tasks", jsonTaskArray);
