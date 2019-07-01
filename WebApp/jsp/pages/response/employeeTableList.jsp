@@ -4,7 +4,7 @@
 <c:set var="userGroupMap" value="${applicationScope.applicationConfiguraion.userGroupMap}"/>
 <c:set var="allUsersMap" value="${applicationScope.applicationConfiguraion.allUsersMap}"/>
 
-<c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
+<c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN'}">
 <c:if test="${not empty allUsersMap}">
 <table class="table table-hover p-table employeeDataTable ">
 		<thead>

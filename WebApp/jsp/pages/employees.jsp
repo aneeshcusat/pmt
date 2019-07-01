@@ -72,11 +72,11 @@
 <div class="page-title">                    
     <h2><span class="fa fa-users"></span> Employees <small>
     
-     <c:if test="${currentUser.userGroupId != '1012' && currentUser.userGroupId != '99999'}">
+     <c:if test="${currentUser.userGroupId != '1012' && currentUser.userRole != 'SUPERADMIN'}">
     	${fn:length(userMap)} 
 	</c:if>
 	
-	 <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
+	 <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN'}">
     	${fn:length(employeeMap)} 
 	</c:if>    
     
@@ -108,7 +108,7 @@
                             </div>
                            
                             <div class="col-md-2">
-                            <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
+                            <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN'}">
                             <a href="javascript:showGridEmployeeDetails();" id="employeesDetailsGridLink"  style="margin-right: 10px;" class="blueColor"><span class="fa fa-th-large fa-3x"></span></a>
                             <a href="javascript:showListEmployeeDetails();" id="employeesDetailsListLink"><span class="fa fa-tasks fa-3x"></span></a>
 							<span style="float: left; margin-right: 5px">Deleted<input type="checkbox" class="showDeletedCheckBox" value="show Deleted" style="margin-left: 10px;"/></span>
@@ -144,7 +144,7 @@
     <div class="row" id="employeesDetailsGridDiv">
    		<%@include file="response/employeeList.jsp" %>
    </div>
-   <c:if test="${currentUser.userGroupId == '1012' || currentUser.userGroupId == '99999'}">
+   <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN'}">
     <div class="row hide" id="employeesDetailsListDiv">
    	</div>
    </c:if>       

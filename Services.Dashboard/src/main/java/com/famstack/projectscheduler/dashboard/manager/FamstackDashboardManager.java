@@ -1042,7 +1042,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 
         for (int userId : empMap.keySet()) {
             UserWorkDetails userDetails = userWorkDetailsMap.get(userId);
-            if (userWorkDetailsMap.get(userId) == null && empMap.get(userId).getRole() != UserRole.SUPERADMIN) {
+            if (userWorkDetailsMap.get(userId) == null) {
                 userDetails = new UserWorkDetails();
                 userDetails.setBillableMins(0);
                 userDetails.setCount(0);

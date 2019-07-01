@@ -41,11 +41,9 @@
                                  <form:select path="projectLead" id="projectLead" name="projectLead" class="form-control select" data-live-search="true">
 								<option value="">- select -</option>
 								<c:if test="${not empty userMap}">
-	    						<c:forEach var="user" items="${userMap}">
-	    						 	<c:if test="${user.role != 'SUPERADMIN'}">
+	    							<c:forEach var="user" items="${userMap}">
 	    								<option value="${user.id}">${user.firstName}</option>
-	    							</c:if>
-		    							</c:forEach>
+		    						</c:forEach>
 		    						</c:if>
 								</form:select>
                               </div>

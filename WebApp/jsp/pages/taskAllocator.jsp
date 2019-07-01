@@ -226,7 +226,6 @@ table tr td.markable span {
         
          	 <c:if test="${not empty userMap}">
              <c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
-             	<c:if test="${user.role != 'SUPERADMIN'}">
 		             <tr class="editable" id="${user.id}-row"">
 		            	<td><input name="assignee" type="radio" id="${user.id}-select" value="${user.id}" path="assignee"></input></td>
 		                <td class="nonmarkable" id="${user.id}-name">${user.firstName} ${user.lastName}</td>
@@ -248,7 +247,6 @@ table tr td.markable span {
 		                <td class="nonmarkable" dynamicvalue="8" style="font-weight: bold; font-size: 18px; color: green" id="${user.id}-availabeHours">8</td>
 		                <td class="nonmarkable"><input path="helper" name="helper" id="${user.id}-helper" type="checkbox" value="${user.id}"></input></td>
 		            </tr>
-            	</c:if>
              </c:forEach>
              </c:if>
         </tbody>

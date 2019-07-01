@@ -824,9 +824,7 @@ function initializeCreateProjectForm(project){
 	    local: [
 		<c:if test="${not empty userMap}">
 		 <c:forEach var="user" items="${userMap}" varStatus="userIndex"> 
-	 		<c:if test="${user.role != 'SUPERADMIN'}"> 
 	 		{ tag: '${user.email}' },
-	 		</c:if>
  		</c:forEach>
  		</c:if>
 	    ]
