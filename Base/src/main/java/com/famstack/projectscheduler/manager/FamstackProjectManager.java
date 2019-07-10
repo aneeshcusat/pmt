@@ -225,7 +225,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 				tasksMap.put(userId, weekDayTaskTimeList);
 			}
 			
-			for (int i =1 ; i <=7;i++) {
+			for (int i = 1 ; i <=7;i++) {
 				String taskTime = projectLineItemDetailsArray[i + 4];
 				if (StringUtils.isNotBlank(taskTime)) {
 					String[] taskTimeSplit = taskTime.split("[.]");
@@ -278,12 +278,14 @@ public class FamstackProjectManager extends BaseFamstackManager
 	    					taskId = Integer.parseInt(taskNameOrId);
 	    				}
 	   					taskItem = famstackProjectTaskManager.getTaskItemById(taskId);
+	   					taskDetails.setDescription(taskItem.getDescription());
     				}
         			Map<String, List<Integer>> userIds = taskIds.get(taskNameOrId);
         			for (String userId : userIds.keySet()) {
         				taskDetails.setAssignee(Integer.parseInt(userId));
             			List<Integer> weekTaskTimeList = userIds.get(userId);
             			Date weekStartTime = new Date(weekStartTimeInitial.getTime());
+            			taskDetails.setStartTime(DateUtils.format(weekStartTimeInitial, DateUtils.DATE_TIME_FORMAT));
             			for (int dayTaskTime : weekTaskTimeList) {
             				if (dayTaskTime != 0) {
 		            			if (projectType.equalsIgnoreCase("BILLABLE")) {

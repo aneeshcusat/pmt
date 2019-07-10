@@ -215,7 +215,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         createSummaryDetailsLabel(workBook, LeaveHrsRow, columnNumber-1, "Leave hours", false);
         createSummaryDetailsLabel(workBook, holidayRow, columnNumber-7, "NON BILLABLE", false);
         createSummaryDetailsLabel(workBook, LeaveHrsRow, columnNumber-7, "NON BILLABLE", false);
-        createSummaryDetailsLabel(workBook, excessWorkingHrsRow, columnNumber-1, "Public Holiday hours", false);
+        createSummaryDetailsLabel(workBook, excessWorkingHrsRow, columnNumber-1, "Excess Working Hours", false);
         createSummaryDetailsLabel(workBook, utilizationRow, columnNumber-1, "Utilization", true);
         createSummaryDetailsLabel(workBook, availableHrsRow, columnNumber-1, "Total Hours Available", false);
         createSummaryDetailsLabel(workBook, totalHrsRow, columnNumber-1, "Total hours", false);

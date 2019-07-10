@@ -33,7 +33,7 @@
                     </td>
 			      	<td>
 			      	 	<div style="float: left;width: 90%;">
-			      	 		<input type="text" class="form-control projectNameSelector" placeholder="Type project details.."/>
+			      	 		<input type="text" class="form-control projectNameSelector" placeholder="Type min 4 letters project name/Code/POId.."/>
 			      	 		<input type="hidden" class="projectNameSelectorIdHidden"/>
 			      	 	</div>
 			      	 	<div class="popoverContainer">

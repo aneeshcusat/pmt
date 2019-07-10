@@ -1,7 +1,7 @@
 <%@include file="includes/header.jsp" %>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/select2/select2.min.css"/>
-<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/timesheet.css"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/timesheet.css?v=${fsVersionNumber}"/>
 
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 
@@ -22,7 +22,7 @@
     <!-- START CONTENT FRAME BODY -->
         <div class="row">
         <div class="col-md-12" style="padding-top: 10px;padding-bottom: 10px">
-        	<div class="col-md-3"><span style="font-size: 12px; font-weight: bold">Log hours on</span><input type='text' class="weekSelector"/></div>
+        	<div class="col-md-3"><span style="font-size: 12px; font-weight: bold">Log hours on</span><input readonly="true" type='text' class="weekSelector"/></div>
         	<div class="col-md-8  text-right">
         	
         	<a href="javascript:moveToPreviousWeek();" title="Previous Week"><span class="fa fa-angle-left fa-2x" style="font-weight: bold"></span></a>
