@@ -147,6 +147,10 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectItem.setProjectLead(projectDetails.getProjectLead());
 
             projectItem.setPONumber(projectDetails.getPONumber());
+            
+            projectItem.setSowLineItem(projectDetails.getSowLineItem());
+            projectItem.setNewCategory(projectDetails.getNewCategory());
+            
             projectItem.setComplexity(projectDetails.getComplexity());
 
             projectItem.setStartTime(startTimeStamp);
@@ -265,7 +269,11 @@ public class FamstackProjectManager extends BaseFamstackManager
     				TaskDetails taskDetails = new TaskDetails();
     				TaskItem taskItem = null;
     				if (projectType.equalsIgnoreCase("BILLABLE")) {
-	    				if (!org.apache.commons.lang.StringUtils.isNumeric(taskNameOrId) ) {
+	    				if (org.apache.commons.lang.StringUtils.isNumeric(taskNameOrId) ) {
+	    					taskItem = famstackProjectTaskManager.getTaskItemById(Integer.parseInt(taskNameOrId));
+	    				} 
+	    				
+	    				if (taskItem == null) {
 	    					taskDetails.setName(taskNameOrId);
 	    					taskDetails.setDescription("Weekly time log task for " + taskNameOrId);
 	    					taskDetails.setStartTime(DateUtils.format(weekStartTimeInitial, DateUtils.DATE_TIME_FORMAT));
@@ -274,10 +282,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 	    					taskDetails.setPriority(ProjectPriority.HIGH);
 	    					famstackProjectTaskManager.createTaskItem(taskDetails, projectItem, true);
 	    					taskId = taskDetails.getTaskId();
-	    				} else {
-	    					taskId = Integer.parseInt(taskNameOrId);
-	    				}
-	   					taskItem = famstackProjectTaskManager.getTaskItemById(taskId);
+	    					taskItem = famstackProjectTaskManager.getTaskItemById(taskId);
+	    				} 
+	   					
 	   					taskDetails.setDescription(taskItem.getDescription());
     				}
         			Map<String, List<Integer>> userIds = taskIds.get(taskNameOrId);
@@ -342,6 +349,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         projectItem.setProjectLead(projectDetails.getProjectLead());
 
         projectItem.setPONumber(projectDetails.getPONumber());
+        projectItem.setSowLineItem(projectDetails.getSowLineItem());
+        projectItem.setNewCategory(projectDetails.getNewCategory());
+        
         projectItem.setComplexity(projectDetails.getComplexity());
         Date startDate = DateUtils.tryParse(projectDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
         Date completionDate = DateUtils.tryParse(projectDetails.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
@@ -558,6 +568,9 @@ public class FamstackProjectManager extends BaseFamstackManager
                 projectDetails.setComplexity(projectItem.getComplexity());
                 projectDetails.setPONumber(projectItem.getPONumber());
 
+                projectDetails.setSowLineItem(projectItem.getSowLineItem());
+                projectDetails.setNewCategory(projectItem.getNewCategory());
+                
                 projectDetails.setTags(projectItem.getTags());
                 projectDetails.setType(projectItem.getType());
                 if (projectItem.getReporter() != null) {

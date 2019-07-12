@@ -72,12 +72,6 @@ function saveCurrentProjectWeekData(clearProjects){
 			var responseJson = JSON.parse(data);
 			if (responseJson.status){
 				if(clearProjects) {
-					/* $(".projectNameSelector").val("");
-					$(".projectNameSelectorIdHidden").val("");
-					$('.projectNameSelector').addClass("error");
-					$('.popoverContainer').addClass("hide");
-					$('select.billableTaskSelector').html('');
-					$('.projectDetailsUpdateRow.active select.billableTaskSelector').selectpicker('refresh'); */
 					clearWeeklyTimeLogTable();
 				}
 			}

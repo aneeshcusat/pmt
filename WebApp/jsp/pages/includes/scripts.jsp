@@ -162,9 +162,10 @@ var site_settings = "";
     	if(error.status == 401) {
     		window.location.reload(true);
     	} else {
-	       	var subject = error.status +" : "+ error.statusText;
-	    	var message = "error has occured - user name - ${currentUser.firstName} - ${currentUser.userId} " ;
-	    	doAjaxRequestWithGlobal("GET", "${applicationHome}/sendMail",  {subject:subject,body:message},function(data) {
+	       	var subject = "[" +error.status +"] : ["+ error.statusText+"] : ["+ error.responseText + "]";
+	       	
+	    	var message = "Error has occured - user name[${currentUser.firstName}][${currentUser.userId}]["+window.location.href+"]" ;
+	    	doAjaxRequestWithGlobal("GET", "${applicationHome}/triggerEmail",  {subject:subject,body:message},function(data) {
 				famstacklog("data: ", data);
 	    },function(error) {
 	    	famstacklog("ERROR: ", error);

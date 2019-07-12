@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -219,6 +220,9 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         userTaskActivityItem.setCreatedDate(new Timestamp(new Date().getTime()));
         userTaskActivityItem.setLastModifiedDate(new Timestamp(new Date().getTime()));
         userTaskActivityItem.setUserGroupId(userActivityItem.getUserGroupId());
+        if (userActivityItem.getUserItem() != null) {
+        	userTaskActivityItem.setUserId(userActivityItem.getUserItem().getId());
+        }
         userTaskActivityItem.setUserActivityItem(userActivityItem);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userTaskActivityItem);
         return userTaskActivityItem;
@@ -435,7 +439,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         Date currentDate = new Date();
 
         List<?> userTaskActivityItems = getUserTaskActivityItemByTaskId(taskId);
-        List<Integer> contributersList = new ArrayList<>();
+        Set<Integer> contributersList = new HashSet<>();
 
         if (adjustStartTime == null) {
             adjustStartTime = currentDate;

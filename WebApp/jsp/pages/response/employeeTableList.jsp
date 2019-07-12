@@ -22,6 +22,8 @@
 				<th>Role</th>
 				<th>Group</th>
 				<th>IsTemp</th>
+				<th>IsFunded</th>
+				<th>IsDeleted</th>
 				<th>LoggedIn?</th>
 				<th></th>
 			</tr>
@@ -46,6 +48,8 @@
 				<td>${user.role}</td>
 				<td>${userGroupMap[user.userGroupId].name}</td>
 				<td><c:if test="${user.temporaryEmployee}">Yes<span class="hide">Temporary</span></c:if><c:if test="${!user.temporaryEmployee}">No</c:if></td>
+				<td><c:if test="${user.fundedEmployee}">Yes<span class="hide">Funded</span></c:if><c:if test="${!user.fundedEmployee}">No</c:if></td>
+				<td><c:if test="${user.deleted}">Yes<span class="hide">Deleted</span></c:if><c:if test="${!user.deleted}">No</c:if></td>
 				<td><c:if test="${user.needPasswordReset}">No</c:if><c:if test="${!user.needPasswordReset}">Yes<span class="hide">LoggedIn</span></c:if></td>
 				<td style="width: 50px">
 					<a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit fa-2x"></span></a>

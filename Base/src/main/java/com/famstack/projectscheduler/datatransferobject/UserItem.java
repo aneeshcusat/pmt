@@ -93,6 +93,9 @@ public class UserItem implements FamstackBaseItem
 
     @Column(name = "is_temp")
     private Boolean temporaryEmployee;
+    
+    @Column(name = "is_funded")
+    private Boolean fundedEmployee;
 
     @Column(name = "profile_photo", columnDefinition = "LONGBLOB")
     private byte[] profilePhoto;
@@ -475,5 +478,13 @@ public class UserItem implements FamstackBaseItem
     {
         this.temporaryEmployee = temporaryEmployee;
     }
+
+	public Boolean getFundedEmployee() {
+		return fundedEmployee;
+	}
+
+	public void setFundedEmployee(Boolean fundedEmployee) {
+		this.fundedEmployee = fundedEmployee;
+	}
 
 }

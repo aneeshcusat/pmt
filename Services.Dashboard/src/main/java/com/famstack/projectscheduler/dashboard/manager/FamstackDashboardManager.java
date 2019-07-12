@@ -258,11 +258,13 @@ public class FamstackDashboardManager extends BaseFamstackService
     public ProjectDetails getProjectDetails(int projectId, HttpServletRequest request)
     {
         ProjectDetails projectDetails = projectManager.getProjectDetails(projectId);
-        List<String> filesNames = famstackProjectFileManager.getProjectFiles("" + projectDetails.getId(), request);
-        List<String> completedFilesNames =
-            famstackProjectFileManager.getProjectFiles(projectDetails.getId() + "-completed", request);
-        projectDetails.setFilesNames(filesNames);
-        projectDetails.setCompletedFilesNames(completedFilesNames);
+        if (projectDetails != null) {
+	        List<String> filesNames = famstackProjectFileManager.getProjectFiles("" + projectDetails.getId(), request);
+	        List<String> completedFilesNames =
+	            famstackProjectFileManager.getProjectFiles(projectDetails.getId() + "-completed", request);
+	        projectDetails.setFilesNames(filesNames);
+	        projectDetails.setCompletedFilesNames(completedFilesNames);
+        }
         return projectDetails;
     }
 

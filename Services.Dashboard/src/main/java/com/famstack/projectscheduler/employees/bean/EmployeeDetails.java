@@ -28,6 +28,8 @@ public class EmployeeDetails
     private String empCode;
 
     private Boolean temporaryEmployee;
+    
+    private Boolean fundedEmployee;
 
     private Boolean needPasswordReset;
 
@@ -347,5 +349,13 @@ public class EmployeeDetails
     {
         this.needPasswordReset = needPasswordReset;
     }
+
+	public Boolean getFundedEmployee() {
+		return fundedEmployee;
+	}
+
+	public void setFundedEmployee(Boolean fundedEmployee) {
+		this.fundedEmployee = fundedEmployee;
+	}
 
 }

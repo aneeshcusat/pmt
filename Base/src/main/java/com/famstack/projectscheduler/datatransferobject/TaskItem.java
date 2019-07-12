@@ -51,7 +51,7 @@ public class TaskItem implements FamstackBaseItem
     @Column(name = "helpers")
     private String helpers;
 
-    @Column(name = "contributers")
+    @Column(name = "contributers", columnDefinition="LONGTEXT")
     private String contributers;
 
     @Column(name = "description")

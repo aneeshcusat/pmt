@@ -73,6 +73,9 @@ tr.clickable:hover {
 				   	 <tr class="clickable">
 				   		<td colspan="2"><a href="#tab2" onclick="refreshProjectCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Categories</a></td>
 				   	</tr>
+				   	<tr class="clickable">
+				   		<td colspan="2"><a href="#tab21" onclick="refreshNewProjectCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>New Project Categories</a></td>
+				   	</tr>
 				   	 <tr class="clickable">
 				   		<td colspan="2"><a href="#tab3" onclick="refreshNonBillableCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Non-billable Categories</a></td>
 				   	</tr>
@@ -121,7 +124,7 @@ tr.clickable:hover {
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
-									<th>Project Type</th>
+									<th>Project Categories</th>
 									<th width="70px" style="text-align: center"><a
 										data-toggle="modal" data-target="#createAppModel"  onclick="setAppConfigAction('createProjectCategory();')"
 										parentid="0"><i
@@ -131,6 +134,24 @@ tr.clickable:hover {
 							<thead>
 								<tbody id="projectCategoryDiv">
 									<%@include file="response/appConfigProjectCategories.jsp"%>
+							    </tbody>
+						</table>
+					</div>
+					
+					<div class='row tab-pane' id="tab21">
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th>New Project Categories</th>
+									<th width="70px" style="text-align: center"><a
+										data-toggle="modal" data-target="#createAppModel"  onclick="setAppConfigAction('createNewProjectCategory();')"
+										parentid="0"><i
+											class="fa fa-plus fa-2x" aria-hidden="true"
+											style="color: #95b75d;float:right"></i></a></th>
+								</tr>
+							<thead>
+								<tbody id="newProjectCategoryDiv">
+									<%@include file="response/appConfigNewProjectCategories.jsp"%>
 							    </tbody>
 						</table>
 					</div>
@@ -251,7 +272,7 @@ tr.clickable:hover {
                          aria-label="Close">
                      <span aria-hidden="true">&times;</span>
                  </button>
-                 <h4 class="modal-title" id="myModalLabel">Category Type</h4>
+                 <h4 class="modal-title" id="myModalLabel">Categories</h4>
              </div>
              <div class="modal-body">
                  <%@include file="fagments/createAppConfModal.jspf" %>
@@ -319,6 +340,10 @@ tr.clickable:hover {
  function createProjectCategory(){
 	 createApplicationConfig('projectCategory');
  }
+ 
+ function createNewProjectCategory(){
+	 createApplicationConfig('newProjectCategory');
+ }
 
  function createNonBillableCategory(){
 	 createApplicationConfig('nonBillableCategory');
@@ -336,6 +361,7 @@ tr.clickable:hover {
 	 var dataString = {input1: input1, input2: input1,type: type};
 	 doAjaxRequest("POST", "${applicationHome}/createAppConfValue", dataString ,function(data) {
 		 refreshProjectCategory();
+		 refreshNewProjectCategory();
 		 refreshNonBillableCategory();
 		 $('#createAppModel').modal('hide');
 	    },function(error) {
@@ -392,6 +418,7 @@ tr.clickable:hover {
          var responseJson = JSON.parse(data);
          if (responseJson.status){
         	 refreshProjectCategory();
+        	 refreshNewProjectCategory();
         	 refreshNonBillableCategory();
          }
          $(".message-box").removeClass("open");
@@ -403,6 +430,14 @@ tr.clickable:hover {
  function refreshProjectCategory(){
 	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfigProjectCategories", {}, function(data) {
 	        $("#projectCategoryDiv").html(data);
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	    }, false);
+ }
+ 
+ function refreshNewProjectCategory(){
+	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfigNewProjectCategories", {}, function(data) {
+	        $("#newProjectCategoryDiv").html(data);
 	    }, function(e) {
 	        famstacklog("ERROR: ", e);
 	    }, false);

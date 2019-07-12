@@ -15,13 +15,13 @@
 		        </c:if>
 		       	 	<c:if test="${tracopusConfigEnabled == false}">
                     <li class="xn-logo">
-                        <a href="index"><img alt="" src="${image}/favicon.ico" style="width: 25px;"/> famstack</a>
+                        <a href="${applicationHome}/index"><img alt="" src="${image}/favicon.ico" style="width: 25px;"/> famstack</a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     </c:if>
                     <c:if test="${tracopusConfigEnabled == true}">
                       <li class="xn-logo">
-                        <a href="index" style="text-align: center;"> <img src="${image}/tracopuslogo.png" style="height: 30px"/></a>
+                        <a href="${applicationHome}/index" style="text-align: center;"> <img src="${image}/tracopuslogo.png" style="height: 30px"/></a>
                         <a href="#" class="x-navigation-control"></a>
                     </li>
                     </c:if>

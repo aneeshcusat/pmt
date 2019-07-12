@@ -162,7 +162,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             (List<UserTaskActivityItem>) famstackUserActivityManager.getUserTaskActivityItemByTaskId(taskItemNew
                 .getTaskId());
 
-        List<Integer> contributersList = new ArrayList<>();
+        Set<Integer> contributersList = new HashSet<>();
 
         for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
             UserActivityItem userActivityItem = userTaskActivityItem.getUserActivityItem();
@@ -173,8 +173,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
 
         taskItemNew.setActualTimeTaken(actualDuration);
-        taskItemNew.setContributers(contributersList.toString().replace("[", "").replaceAll("]", "")
-            .replace("null", ""));
+        taskItemNew.setContributers(contributersList.toString().replace("[", "").replaceAll("]", "").replace("null", ""));
 
         famstackDataAccessObjectManager.saveOrUpdateItem(taskItemNew);
     }
@@ -769,11 +768,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
                     adjustStartTime, adjustCompletionTimeDate);
 
             Integer actualTimeTaken = (Integer) taskActivities.get(TASK_ACTUAL_DURATION);
-            List<Integer> contributersList = (List<Integer>) taskActivities.get(TASK_CONTRIBUTERS);
+            Set<Integer> contributersList = (Set<Integer>) taskActivities.get(TASK_CONTRIBUTERS);
 
             taskItem.setActualTimeTaken(actualTimeTaken);
-            taskItem.setContributers(contributersList.toString().replace("[", "").replaceAll("]", "")
-                .replace("null", ""));
+            taskItem.setContributers(contributersList.toString().replace("[", "").replaceAll("]", "").replace("null", ""));
 
             if (taskStatus == TaskStatus.COMPLETED) {
                 calculateBillableAndNonBillableTime(taskId);

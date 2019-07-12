@@ -3,7 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="nonBillableCategories" value="${applicationScope.applicationConfiguraion.nonBillableCategories}"/>
-<c:if test="${not empty nonBillableCategories}">
 		<tr class="clickable">
 			<td>Leave</td>
 			<td></td>
@@ -12,6 +11,7 @@
 			<td>Meeting</td>
 			<td></td>
 		</tr>
+		<c:if test="${not empty nonBillableCategories}">
         <c:forEach var="nonBillableCategoryConf" items="${nonBillableCategories}">
 		<tr class="clickable">
 			<td>${nonBillableCategoryConf.name}</td>

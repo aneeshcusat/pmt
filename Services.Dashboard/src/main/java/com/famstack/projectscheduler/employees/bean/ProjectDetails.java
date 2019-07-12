@@ -87,6 +87,10 @@ public class ProjectDetails
 
     private String PONumber;
 
+    private String newCategory;
+
+    private String sowLineItem;
+
     private List<ProjectDetails> duplicateProjects;
 
     public Integer getId()
@@ -647,4 +651,20 @@ public class ProjectDetails
     {
         return DateUtils.format(createdDate, DateUtils.DATE_FORMAT_CALENDER);
     }
+
+	public String getNewCategory() {
+		return newCategory;
+	}
+
+	public void setNewCategory(String newCategory) {
+		this.newCategory = newCategory;
+	}
+
+	public String getSowLineItem() {
+		return sowLineItem;
+	}
+
+	public void setSowLineItem(String sowLineItem) {
+		this.sowLineItem = sowLineItem;
+	}
 }

@@ -124,6 +124,12 @@ public class ProjectItem implements FamstackBaseItem
 
     @Column(name = "deleted")
     private Boolean deleted;
+    
+    @Column(name = "new_category")
+    private String newCategory;
+
+    @Column(name = "sow_line_item")
+    private String sowLineItem;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "projectItem", cascade = CascadeType.ALL)
     private Set<ProjectCommentItem> projectComments;
@@ -428,5 +434,21 @@ public class ProjectItem implements FamstackBaseItem
     {
         this.durationHrs = durationHrs;
     }
+
+	public String getNewCategory() {
+		return newCategory;
+	}
+
+	public void setNewCategory(String newCategory) {
+		this.newCategory = newCategory;
+	}
+
+	public String getSowLineItem() {
+		return sowLineItem;
+	}
+
+	public void setSowLineItem(String sowLineItem) {
+		this.sowLineItem = sowLineItem;
+	}
 
 }

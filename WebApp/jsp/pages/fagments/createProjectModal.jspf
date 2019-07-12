@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="projectCategories" value="${applicationScope.applicationConfiguraion.projectCategories}"/>
+<c:set var="newProjectCategories" value="${applicationScope.applicationConfiguraion.newProjectCategories}"/>
 <style>
 
 </style>
@@ -18,7 +20,6 @@
                                 <label class="col-md-3 control-label">Project Name</label>
                                 <div class="col-md-9">                                            
                                         <form:input type="text" class="autocomplete form-control" id="projectName" path="name"/>
-                                    <span class="help-block">required project name</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -84,7 +85,6 @@
                                         <option>${loop.count}</option>
                                  	</c:forEach>
                                     </form:select> --%>
-							 	 <span class="help-block">required project duration</span>
 							</div>                                    
                                 <label class="col-md-2 control-label">Complexity</label>
                                 <div class="col-md-3">
@@ -108,7 +108,6 @@
                             			  </c:forEach>
                             			</c:if>
                                     </form:select>
-                                    <span class="help-block">required account</span>
                                     </div>
                                 <label class="col-md-2 control-label">Team</label>
                                 <div class="col-md-3">
@@ -132,7 +131,6 @@
                             			  </c:forEach>
                             			</c:if>
 										</form:select>
-                                    <span class="help-block">required team</span>
                                 </div>
                             </div>
                              <div class="form-group">  
@@ -158,7 +156,6 @@
                                            </c:forEach>
                                          </c:if>
                                     </form:select>
-                                    <span class="help-block">required team</span>
                                 </div>  
                                 <div class="col-md-4">
                                     <span id="POidSpan" style="font-weight: bold;">POID</span>
@@ -170,7 +167,6 @@
                                 <label class="col-md-3 control-label">Project code</label>
                                 <div class="col-md-9">
                                         <form:input type="text" class="autocomplete form-control" id="projectcode" path="code"/>
-                                    <span class="help-block">required project code</span>
                                 </div>
                             </div>
                              <div class="form-group">                                        
@@ -195,11 +191,32 @@
 	                                        <option>UI/UX</option>
                                         </c:if>
                                     </form:select>
-                                    <span class="help-block">required project category</span>
+                                </div>
+                                
+                            </div>
+                            <c:if test="${currentUserGroupId != 1018}">
+                             <div class="form-group">                                        
+                                <label class="col-md-3 control-label">New Project Category</label>
+                                 <div class="col-md-9">  
+                                    <form:select class="form-control select" id="newCategory" path="newCategory"  data-live-search="true">
+                                         <option value="">- select -</option>
+                                        <c:if test="${not empty newProjectCategories }">
+                                        <c:forEach var="projectCategoryConf" items="${newProjectCategories}">
+                                         <option value="${projectCategoryConf.value}">${projectCategoryConf.name}</option>
+                                        </c:forEach>
+                                        </c:if>
+                                    </form:select>
                                 </div>
                                 
                             </div>
                             
+                            <div class="form-group">
+							<label class="col-md-3 control-label">SOW line item</label>
+							<div class="col-md-9">
+								 <form:input type="text" class="form-control" id="sowLineItem" path="sowLineItem"/>
+							</div>
+							</div>
+							</c:if>
                             <div class="form-group">
 							<label class="col-md-3 control-label">Quantity</label>
 							<div class="col-md-9">
@@ -211,18 +228,16 @@
 							<label class="col-md-3 control-label">Est Start Time</label>
 							<div class="col-md-9">
 								 <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"  autocomplete="off"/>
-								 <span class="help-block">required estimated start time</span>
 							</div>
 							</div>
 							<div class="form-group">
 							<label class="col-md-3 control-label">Est Completion Time</label>
                                 <div class="col-md-9">
                                        <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"  autocomplete="off"/> 
-                                    <span class="help-block">required estimated completion time</span>
                                 </div>
 							</div>
-                          
-                             <div class="form-group">
+                           <c:if test="${currentUserGroupId == 1018}">
+                             <div class="form-group ">
                                 <label class="col-md-3 control-label">Watchers</label>
                                 <div class="col-md-9" id="watcher_tag_div">
                                     <form:input type="text" class="form-control tagsinputWatchers" placeholder="add emails" value="" path="watchers"  id="watchers"/>
@@ -237,6 +252,7 @@
                                     <span class="help-block">tag project with keywords</span>
                                 </div>
                             </div>
+                            </c:if>
                         </div>
                         
                     </div>

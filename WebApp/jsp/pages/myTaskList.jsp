@@ -10,7 +10,7 @@
      <li class="active">Task Activities</li>
  </ul>
  <!-- END BREADCRUMB -->  
-<div class="content-frame" ng-app="mytasks" style="min-height: 500px">     
+<div class="content-frame" ng-app="mytasks" style="min-height: 500px; margin-bottom: 50px">     
     <!-- START CONTENT FRAME TOP -->
     <div class="content-frame-top">                        
         <div class="page-title">                    

@@ -1,6 +1,6 @@
 <%@include file="includes/header.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/dashboard.css"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/dashboard.css?v=${fsVersionNumber}"/>
  <div class="col-md-12 dsfilter">
  <div class="col-md-12">
  </div>

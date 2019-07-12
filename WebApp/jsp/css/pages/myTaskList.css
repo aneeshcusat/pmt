@@ -239,7 +239,7 @@ background-color: red !important;
 .list-group.task-list .task-assignee img {
   width: 30px;
   position: relative;
-  z-index: 10;
+  z-index: 1;
 }
 .list-group.task-list .task-edit {
   display: table-cell;

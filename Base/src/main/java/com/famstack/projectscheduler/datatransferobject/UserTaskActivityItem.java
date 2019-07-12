@@ -54,6 +54,9 @@ public class UserTaskActivityItem implements FamstackBaseItem
 
     @Column(name = "task_id")
     private int taskId;
+    
+    @Column(name = "user_id")
+    private Integer userId;
 
     @Column(name = "task_name")
     private String taskName;
@@ -289,5 +292,13 @@ public class UserTaskActivityItem implements FamstackBaseItem
     {
         this.taskActCategory = taskActCategory;
     }
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 
 }

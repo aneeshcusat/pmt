@@ -352,6 +352,17 @@ var jvalidate = $("#createProjectFormId").validate({
 	category: {
 	   	 required: true
 	}
+   <c:if test="${currentUserGroupId != 1018}">
+	,
+	newCategory: {
+	   	 required: true
+	},
+	sowLineItem: {
+	   	 required: true
+	}
+	</c:if>
+
+	
  }
 });
 

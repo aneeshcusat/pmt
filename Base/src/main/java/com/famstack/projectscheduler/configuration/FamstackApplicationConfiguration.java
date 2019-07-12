@@ -461,6 +461,11 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     {
         return getCategories("projectCategory");
     }
+    
+    public List<AppConfValueDetails> getNewProjectCategories()
+    {
+        return getCategories("newProjectCategory");
+    }
 
     public List<AppConfValueDetails> getNonBillableCategories()
     {

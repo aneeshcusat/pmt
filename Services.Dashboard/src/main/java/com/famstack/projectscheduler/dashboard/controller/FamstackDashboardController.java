@@ -320,7 +320,7 @@ public class FamstackDashboardController extends BaseFamstackService
     @ResponseBody
     public String forceConfInitialize()
     {
-        forceConfInitialize();
+    	getFamstackApplicationConfiguration().forceInitialize();
         return "SUCCESS";
     }
 
@@ -399,10 +399,17 @@ public class FamstackDashboardController extends BaseFamstackService
     }
 
     @RequestMapping("/appConfigProjectCategories")
-    public ModelAndView projectdashboardList(Model model)
+    public ModelAndView appConfigProjectCategories(Model model)
     {
         return new ModelAndView("response/appConfigProjectCategories");
     }
+    
+    @RequestMapping("/appConfigNewProjectCategories")
+    public ModelAndView appConfigNewProjectCategories(Model model)
+    {
+        return new ModelAndView("response/appConfigNewProjectCategories");
+    }
+
 
     @RequestMapping("/appConfigNonBillableCategories")
     public ModelAndView appConfigNonBillableCategories(Model model)
