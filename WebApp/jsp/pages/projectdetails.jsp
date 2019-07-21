@@ -1,7 +1,10 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
+
+
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
@@ -156,6 +159,19 @@ width: 60%;
 	padding:5px 5px 5px 0px;
 }
 	</style>
+	
+<c:if test="${projectDetails == null}">
+<div class="content-frame" style=" min-height: 500px;">    
+	<div class="content-frame-top" style="padding:0 0 0 0">  
+		<div class="row">
+                  <div class="col-md-7">                      
+            <h4><span style="padding-top: 10px;" class="fa ">Invalid Project Id</span></h4>
+            </div>
+       </div>
+	</div>     
+</div>
+</c:if>
+<c:if test="${projectDetails != null}">
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
 	<div class="content-frame-top" style="padding:0 0 0 0">  
@@ -223,6 +239,14 @@ width: 60%;
                                   <div class="col-md-6">
                                       <p><span class="bold">Category </span>: ${projectDetails.category}</p>
                                   </div>
+                                   <c:if test="${currentUserGroupId != 1018}">
+                                   <div class="col-md-6">
+                                      <p><span class="bold">New Category </span>: ${projectDetails.newCategory}</p>
+                                  </div>
+                                   <div class="col-md-6">
+                                      <p><span class="bold">SOW Line Item </span>: ${projectDetails.sowLineItem}</p>
+                                  </div>
+	                              </c:if>
                                   <div class="col-md-6">
                                       <p><span class="bold">Account </span>: ${projectDetails.accountName}</p>
                                   </div>
@@ -607,7 +631,10 @@ width: 60%;
               </div>
     
 </div>               
-<!-- END CONTENT FRAME -->       
+<!-- END CONTENT FRAME -->     
+
+
+  
 <!-- task pop up window start-->
     <div id="task-pop-up">
       <h5><span id="popup-taskname"></span></h5>
@@ -705,7 +732,7 @@ width: 60%;
 		</div>
 	</form:form>
 </div>                         
-                        
+</c:if>                        
                          
  <%@include file="includes/footer.jsp" %>  
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js?v=${fsVersionNumber}"></script> 
@@ -1745,4 +1772,5 @@ $("#taskDetailsSearch").keyup(function(e){
 	performProjectSearch();
 });
 </script>
+
 

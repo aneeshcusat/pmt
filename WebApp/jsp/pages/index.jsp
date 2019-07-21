@@ -504,7 +504,6 @@ templatePlugins.init(${timeHour},${timeMinutes});
 
 $(function(){        
     /* reportrange */
-    if ('${projectTypeJson}' != "[]") {
 	    /* Donut dashboard chart */
 	    Morris.Donut({
 	        element: 'dashboard-donut-1',
@@ -514,8 +513,6 @@ $(function(){
 	        resize: true
 	    });
 	    /* END Donut dashboard chart */
-    }
-    if ('${employeeUtilization}' != "[]") {
 	    /* Bar dashboard chart emp */
 	    Morris.Bar({
 	        element: 'dashboard-bar-emp',
@@ -529,9 +526,7 @@ $(function(){
 	        resize: true,
 	        gridLineColor: '#E5E5E5'
 	    });
-	}
     
-    if ('${teamUtilizationJson}' != "[]") {
 	    /* Bar dashboard chart emp */
 	    Morris.Bar({
 	        element: 'dashboard-bar-team',
@@ -545,9 +540,7 @@ $(function(){
 	        resize: true,
 	        gridLineColor: '#E5E5E5'
 	    });
-    }
     
-    if ('${projectCategoryJson}' != "[]") {
 	    /* Bar dashboard chart emp */
 	    Morris.Bar({
 	        element: 'dashboard-bar-work',
@@ -561,7 +554,6 @@ $(function(){
 	        resize: true,
 	        gridLineColor: '#E5E5E5'
 	    });
-    }
     var jvm_wm = new jvm.WorldMap({container: $('#dashboard-map-seles'),
         map: 'world_mill_en', 
         backgroundColor: '#FFFFFF',                                      

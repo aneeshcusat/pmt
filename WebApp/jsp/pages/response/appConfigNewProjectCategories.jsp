@@ -3,6 +3,35 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="newProjectCategories" value="${applicationScope.applicationConfiguraion.newProjectCategories}"/>
+		<tr class="clickable">
+			<td>Reporting and Descriptive Analytics</td>
+			<td></td>
+		</tr>
+		<tr class="clickable">
+			<td>Insightful Analytics</td>
+			<td></td>
+		</tr>
+		<tr class="clickable">
+			<td>Internal</td>
+			<td></td>
+		</tr>
+		<tr class="clickable">
+			<td>Project Management</td>
+			<td></td>
+		</tr>
+		<tr class="clickable">
+			<td>Advanced Analytics</td>
+			<td></td>
+		</tr>
+		<tr class="clickable">
+			<td>System Integration and Implementation</td>
+			<td></td>
+		</tr>
+		<tr class="clickable">
+			<td>Business &amp; Analytics Consulting</td>
+			<td></td>
+		</tr>
+
 <c:if test="${not empty newProjectCategories}">
 
         <c:forEach var="projectCategoryConf" items="${newProjectCategories}">

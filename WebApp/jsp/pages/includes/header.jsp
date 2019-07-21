@@ -68,7 +68,7 @@
             <div class="page-content">
                 
                 <!-- START X-NAVIGATION VERTICAL -->
-                <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+                <ul class="x-navigation x-navigation-horizontal x-navigation-panel" style="box-shadow: 0px 5px 5px rgba(0, 0, 0, .5);">
                     <!-- TOGGLE NAVIGATION -->
                     <li class="xn-icon-button">
                         <a href="#" class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>

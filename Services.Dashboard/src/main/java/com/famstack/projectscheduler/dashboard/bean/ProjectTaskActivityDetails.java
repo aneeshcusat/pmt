@@ -27,14 +27,18 @@ public class ProjectTaskActivityDetails
     private Integer projectId;
 
     private String projectNumber;
-
-    private String projectName;
+    
+    private String sowLineItem;
+    
+     private String projectName;
 
     private ProjectStatus projectStatus;
 
     private ProjectType projectType;
 
     private String projectCategory;
+    
+    private String newProjectCategory;
     
     private Integer projectAccountId;
     
@@ -525,5 +529,21 @@ public class ProjectTaskActivityDetails
 		projectDetails.setClientName(getClientName());
 		projectDetails.setTaskName(getTaskName());
 		return projectDetails;
+	}
+
+	public String getSowLineItem() {
+		return sowLineItem;
+	}
+
+	public void setSowLineItem(String sowLineItem) {
+		this.sowLineItem = sowLineItem;
+	}
+
+	public String getNewProjectCategory() {
+		return newProjectCategory;
+	}
+
+	public void setNewProjectCategory(String newProjectCategory) {
+		this.newProjectCategory = newProjectCategory;
 	}
 }

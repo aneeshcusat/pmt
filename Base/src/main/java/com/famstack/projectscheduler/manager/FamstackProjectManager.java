@@ -235,12 +235,18 @@ public class FamstackProjectManager extends BaseFamstackManager
 					String[] taskTimeSplit = taskTime.split("[.]");
 					int mins = 0;
 			    	if (taskTimeSplit.length > 1) {
-			    		mins = Integer.parseInt(taskTimeSplit[1]);
+			    		if (StringUtils.isNotBlank(taskTimeSplit[1])) {
+			    			mins = Integer.parseInt(taskTimeSplit[1]);
+			    		}
 			    		if (mins < 10) {
 			    			mins*=10;
 			    		}
 			    	} 
-					weekDayTaskTimeList.add((Integer.parseInt(taskTimeSplit[0]) * 60)  + mins);
+			    	int hours = 0;
+			    	if (StringUtils.isNotBlank(taskTimeSplit[0])) {
+			    		hours = Integer.parseInt(taskTimeSplit[0]);
+			    	}
+					weekDayTaskTimeList.add((hours * 60)  + mins);
 				} else {
 					weekDayTaskTimeList.add(0);
 				}
@@ -1186,6 +1192,10 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setTaskId((Integer) data[15]);
             projectTaskActivityDetails.setTaskActivityId((Integer) data[16]);
             projectTaskActivityDetails.setProjectAccountId((Integer) data[20]);
+            
+            projectTaskActivityDetails.setSowLineItem((String) data[22]);
+            
+            projectTaskActivityDetails.setNewProjectCategory((String) data[23]);
 
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
             key += "T" + data[15];

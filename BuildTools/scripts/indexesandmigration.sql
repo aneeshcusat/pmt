@@ -24,6 +24,16 @@ CREATE INDEX user_activity_info_indexes ON user_activity_info (created_date);
 CREATE INDEX user_task_activity_info_indexes ON user_task_activity_info (task_id);
 CREATE INDEX project_info_indexes ON project_info (start_time,completion_time,name);
 
+CREATE INDEX user_task_activity_info_indexes_s ON user_task_activity_info (actual_start_time);
+CREATE INDEX user_task_activity_info_indexes_e ON user_task_activity_info (actual_end_time);
+CREATE INDEX user_activity_info_indexes_s ON user_activity_info (calender_date);
+CREATE INDEX user_activity_info_indexes_u ON user_activity_info (id);
+CREATE INDEX user_info_indexes_u ON user_info (user_id);
+CREATE INDEX task_info_indexes_c ON user_info (completion_time);
+
+  
+
+
 update user_task_activity_info p set p.duration = p.duration * 60;
 
 SET FOREIGN_KEY_CHECKS=0;

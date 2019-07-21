@@ -141,7 +141,7 @@ function cloneProjectUpdateTimeRow(){
 		}
 	});
 	
-	if($(".projectDetailsUpdateRow").length > 15) {
+	if($(".projectDetailsUpdateRow").length > 10) {
 		$(".addNewRowLink").addClass("hide");
 	}
 }

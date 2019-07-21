@@ -58,7 +58,6 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
     public void renderReport(Map<String, Object> dataMap)
 
     {
-
         XSSFWorkbook workBook = (XSSFWorkbook) dataMap.get("workBook");
         Sheet sheet = (Sheet) dataMap.get("sheet");
         String teamName = (String) dataMap.get("teamName");
@@ -68,9 +67,13 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         List<EmployeeDetails> employees = (List<EmployeeDetails>) dataMap.get("employees");
         List<EmployeeDetails> deletedEmployees = getDeletedEmployees(employees, exportDataList);
         employees.addAll(deletedEmployees);
+     
         Map<String, Map<Integer, Integer>> nonBillableTaskActivities =
             (Map<String, Map<Integer, Integer>>) dataMap.get("nonBillableTaskActivities");
 
+        List<EmployeeDetails> deletedNonBillableEmployees = getDeletedEmployees(employees, nonBillableTaskActivities);
+        employees.addAll(deletedNonBillableEmployees);
+     
         logDebug("Rendering reoprt for  FamstackXLSExportProcessor11");
 
         int holidayHours = 0;
@@ -100,7 +103,39 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
 
     }
 
-    private String getSheetNameFromDate(String dateRange)
+    private List<EmployeeDetails> getDeletedEmployees(
+			List<EmployeeDetails> employees,
+			Map<String, Map<Integer, Integer>> nonBillableTaskActivities) {
+    	List<Integer> availableIdList = getEmployeeIndexList(employees);
+    	List<EmployeeDetails> deletedEmployeeList = new ArrayList<>();
+    	Map<Integer, EmployeeDetails> allEmployeesMap = getFamstackApplicationConfiguration().getAllUsersMap();
+    	boolean otherAdded = false;
+    	if (nonBillableTaskActivities != null) {
+    		 for (String taskCategory : nonBillableTaskActivities.keySet()) {
+    			 Map<Integer, Integer> nonBillableMap = nonBillableTaskActivities.get(taskCategory);
+    			 for (Integer userId : nonBillableMap.keySet()) {
+    				 if (!availableIdList.contains(userId)){
+    					 EmployeeDetails employeeDetails = allEmployeesMap.get(userId);
+    					 if (employeeDetails != null) {
+     						if (!deletedEmployeeList.contains(employeeDetails)) {
+     							deletedEmployeeList.add(employeeDetails);	
+     						}
+	     				} else if (!otherAdded) {
+	     					EmployeeDetails otherEmp = new EmployeeDetails();
+	 				        otherEmp.setId(0);
+	 				        otherEmp.setFirstName("Unknown User");
+	 				        deletedEmployeeList.add(otherEmp);
+	 				        otherAdded = true;
+	     				}
+    				 }
+    			 }
+    			 
+    		}
+    	}
+		return deletedEmployeeList;
+	}
+
+	private String getSheetNameFromDate(String dateRange)
     {
         Date startDate = null;
         Date endDate = null;
@@ -188,7 +223,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
                 if(userCellIndex < 0) {
                 	userCellIndex = employeeIndexList.indexOf(0);
                 }
-                createTaskTimeCell(sheet, 13 + userCellIndex, leaveDataMap.get(userId),null, leaveRow,
+                createTaskTimeCell(sheet, 15 + userCellIndex, leaveDataMap.get(userId),null, leaveRow,
                     xssfCellProjectTaskHrsStyle);
             }
         }
@@ -208,13 +243,13 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         Row utilizationRow = getRow(sheet, rowCount + 4);
         Row availableHrsRow = getRow(sheet, rowCount + 5);
         Row totalHrsRow = getRow(sheet, rowCount + 6);
-        int columnNumber = 13;
+        int columnNumber = 15;
         
         createSummaryDetailsLabel(workBook, totalUserProjectHoursRow, columnNumber-1, "Total Task Hours", false);
         createSummaryDetailsLabel(workBook, holidayRow, columnNumber-1, "Public Holiday hours", false);
         createSummaryDetailsLabel(workBook, LeaveHrsRow, columnNumber-1, "Leave hours", false);
-        createSummaryDetailsLabel(workBook, holidayRow, columnNumber-7, "NON BILLABLE", false);
-        createSummaryDetailsLabel(workBook, LeaveHrsRow, columnNumber-7, "NON BILLABLE", false);
+        createSummaryDetailsLabel(workBook, holidayRow, columnNumber-8, "NON BILLABLE", false);
+        createSummaryDetailsLabel(workBook, LeaveHrsRow, columnNumber-8, "NON BILLABLE", false);
         createSummaryDetailsLabel(workBook, excessWorkingHrsRow, columnNumber-1, "Excess Working Hours", false);
         createSummaryDetailsLabel(workBook, utilizationRow, columnNumber-1, "Utilization", true);
         createSummaryDetailsLabel(workBook, availableHrsRow, columnNumber-1, "Total Hours Available", false);
@@ -299,12 +334,12 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
     {
 
         if (nonBillableMap != null) {
-            int nonBillableDetailsColumnCount = 13;
+            int nonBillableDetailsColumnCount = 15;
             //sheet.shiftRows(rowCount, sheet.getLastRowNum() + 1, 1, true, true);
             Row nonBillableItemRow = getRow(sheet, rowCount++);
             xssfCellTextWrapStyle = null;
-            createProjectDetailsColoumn(sheet, 6, "NON BILLABLE", nonBillableItemRow, xssfCellTextWrapStyle);
-            createProjectDetailsColoumn(sheet, 7, taskCategory, nonBillableItemRow, xssfCellTextWrapStyle);
+            createProjectDetailsColoumn(sheet, 7, "NON BILLABLE", nonBillableItemRow, xssfCellTextWrapStyle);
+            createProjectDetailsColoumn(sheet, 8, taskCategory, nonBillableItemRow, xssfCellTextWrapStyle);
 
             List<Integer> employeeIndexList = getEmployeeIndexList(employees);
 
@@ -331,7 +366,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         CellStyle xssfCellProjectTotalStyle, CellStyle xssfCellProjectTaskHrsStyle, CellStyle hiddenStyle)
     {
         if (projectDetails != null) {
-            int projectDetailsUserColumnCount = 13;
+            int projectDetailsUserColumnCount = 15;
             //sheet.shiftRows(projectDetailsRowCount, sheet.getLastRowNum() + 1, 1, true, true);
             Row projectDetailsRow = getRow(sheet, projectDetailsRowCount);
             // Map<Integer, Map<Integer, Integer>> taskUserActualTimeMap = getProjectTaskDuration(projectDetails);
@@ -346,19 +381,23 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             createProjectDetailsColoumn(sheet, 2, "" + (projectDetails.getProjectId() == null ? "" : projectDetails.getProjectId()), projectDetailsRow, textWrapStyle);
 
             createProjectDetailsColoumn(sheet, 3, projectDetails.getProjectNumber(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 4, projectDetails.getProjectName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 5, projectDetails.getProjectStatus().toString(), projectDetailsRow,
+            createProjectDetailsColoumn(sheet, 4, projectDetails.getSowLineItem(), projectDetailsRow, textWrapStyle);
+            
+            createProjectDetailsColoumn(sheet, 5, projectDetails.getProjectName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 6, projectDetails.getProjectStatus().toString(), projectDetailsRow,
                 textWrapStyle);
-            createProjectDetailsColoumn(sheet, 6, projectDetails.getProjectType().toString(), projectDetailsRow,
+            createProjectDetailsColoumn(sheet, 7, projectDetails.getProjectType().toString(), projectDetailsRow,
                 textWrapStyle);
-            createProjectDetailsColoumn(sheet, 7, projectDetails.getProjectCategory(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 8, projectDetails.getAccountName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 9, projectDetails.getTeamName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 10, projectDetails.getSubTeamName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 11, projectDetails.getClientName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 12, projectDetails.getTaskName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 8, projectDetails.getProjectCategory(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 9, projectDetails.getNewProjectCategory(), projectDetailsRow, textWrapStyle);
+            
+            createProjectDetailsColoumn(sheet, 10, projectDetails.getAccountName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 11, projectDetails.getTeamName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 12, projectDetails.getSubTeamName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 13, projectDetails.getClientName(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 14, projectDetails.getTaskName(), projectDetailsRow, textWrapStyle);
 
-            createProjectDetailsColoumn(sheet, 13 + employees.size() + 1, "" + projectDetails.getAllTaskActivityIds(), projectDetailsRow, hiddenStyle);
+            createProjectDetailsColoumn(sheet, 15 + employees.size() + 1, "" + projectDetails.getAllTaskActivityIds(), projectDetailsRow, hiddenStyle);
 
             
             List<Integer> employeeIndexList = getEmployeeIndexList(employees);
@@ -503,15 +542,15 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         if (employees != null) {
             userRow.getCell(1).setCellValue(employees.size());
             for (EmployeeDetails employeeDetails : employees) {
-                Cell userHeaderCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 12);
+                Cell userHeaderCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 14);
                 userHeaderCell.setCellValue(employeeDetails.getFirstName());
                 userHeaderCell.setCellStyle(xssfCellUserHeaderStyle);
                 
-                Cell userIdHeaderCell = getCell(userIdHeaderRow, userDetailsColumnCount + 12);
+                Cell userIdHeaderCell = getCell(userIdHeaderRow, userDetailsColumnCount + 14);
                 userIdHeaderCell.setCellValue(employeeDetails.getId());
                 userIdHeaderCell.setCellStyle(hiddenStyle);
                 
-                sheet.autoSizeColumn(userDetailsColumnCount + 12);
+                sheet.autoSizeColumn(userDetailsColumnCount + 14);
                 userDetailsColumnCount++;
             }
 
@@ -521,8 +560,8 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
              * projectTotalAdjustmentCell.setCellStyle(xssfCellUserHeaderStyle);
              * projectTotalAdjustmentCell.setCellValue("Adjustment");
              */
-            Cell projectTotalCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 12);
-            sheet.autoSizeColumn(userDetailsColumnCount + 12);
+            Cell projectTotalCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 14);
+            sheet.autoSizeColumn(userDetailsColumnCount + 14);
             projectTotalCell.setCellStyle(xssfCellUserHeaderStyle);
             projectTotalCell.setCellValue("Project Total Hrs");
         }

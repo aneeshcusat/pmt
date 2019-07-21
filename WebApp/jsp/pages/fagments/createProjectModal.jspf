@@ -200,6 +200,13 @@
                                  <div class="col-md-9">  
                                     <form:select class="form-control select" id="newCategory" path="newCategory"  data-live-search="true">
                                          <option value="">- select -</option>
+                                         <option value="Reporting and Descriptive Analytics">Reporting and Descriptive Analytics</option>
+										<option value="Insightful Analytics">Insightful Analytics</option>
+										<option value="Internal">Internal</option>
+										<option value="Project Management">Project Management</option>
+										<option value="Advanced Analytics">Advanced Analytics</option>
+										<option value="System Integration and Implementation">System Integration and Implementation</option>
+										<option value="Business & Analytics Consulting">Business &amp; Analytics Consulting</option>
                                         <c:if test="${not empty newProjectCategories }">
                                         <c:forEach var="projectCategoryConf" items="${newProjectCategories}">
                                          <option value="${projectCategoryConf.value}">${projectCategoryConf.name}</option>
