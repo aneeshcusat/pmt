@@ -56,6 +56,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         Long endTime = DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, startTime, durationInMinutes).getTime();
         userTaskActivityItem.setActualEndTime(new Timestamp(endTime));
         userTaskActivityItem.setRecordedEndTime(new Timestamp(endTime));
+        userTaskActivityItem.setModifiedBy(getFamstackApplicationConfiguration().getCurrentUserId());
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userTaskActivityItem);
     }
 
@@ -222,6 +223,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         userTaskActivityItem.setUserGroupId(userActivityItem.getUserGroupId());
         if (userActivityItem.getUserItem() != null) {
         	userTaskActivityItem.setUserId(userActivityItem.getUserItem().getId());
+        }
+        try{
+        	userTaskActivityItem.setModifiedBy(getFamstackApplicationConfiguration().getCurrentUserId());
+        }catch(Exception e) {
+        	
         }
         userTaskActivityItem.setUserActivityItem(userActivityItem);
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userTaskActivityItem);
@@ -467,6 +473,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
                     if (userTaskActivityItem.getRecordedStartTime() == null) {
                         userTaskActivityItem.setRecordedStartTime(new Timestamp(currentDate.getTime()));
                     }
+                    userTaskActivityItem.setModifiedBy(getFamstackApplicationConfiguration().getCurrentUserId());
                     userTaskActivityItem.setRecordedEndTime(new Timestamp(currentDate.getTime()));
 
                     Date completionTime = userTaskActivityItem.getActualEndTime();
@@ -512,6 +519,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         currentUserTaskActivityItem.setRecordedEndTime(taskItem.getTaskPausedTime());
         currentUserTaskActivityItem.setCompletionComment("Paused task Completed");
         currentUserTaskActivityItem.setDurationInMinutes(prevoisTaskActualDuration);
+        currentUserTaskActivityItem.setModifiedBy(getFamstackApplicationConfiguration().getCurrentUserId());
         famstackDataAccessObjectManager.saveOrUpdateItem(currentUserTaskActivityItem);
 
         UserTaskActivityItem userTaskActivityItem =

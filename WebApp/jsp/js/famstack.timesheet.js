@@ -116,7 +116,11 @@ function cloneProjectUpdateTimeRow(){
 	initializeSelectBox($(projectDetailsUpdateRowClone).find(".userIdSelector"), function(){$(projectDetailsUpdateRowClone).find(".userIdSelector").removeClass("error");});
 	initializeSelectBox($(projectDetailsUpdateRowClone).find(".projectTypeSelector"), projectTypeChange);
 
-	initializeSelect2Box($(projectDetailsUpdateRowClone).find(".billableTaskSelector"), function(){$(projectDetailsUpdateRowClone).find(".billableTaskSelector").removeClass("error");});
+	if (taskCreateEnabled) {
+		initializeSelect2Box($(projectDetailsUpdateRowClone).find(".billableTaskSelector"), function(){$(projectDetailsUpdateRowClone).find(".billableTaskSelector").removeClass("error");});
+	} else {
+		initializeSelectBox($(projectDetailsUpdateRowClone).find(".billableTaskSelector"), function(){$(projectDetailsUpdateRowClone).find(".billableTaskSelector").removeClass("error");});
+	}
 	initializeSelectBox($(projectDetailsUpdateRowClone).find(".nonBillableTaskSelector"), function(){$(projectDetailsUpdateRowClone).find(".nonBillableTaskSelector").removeClass("error");});
 	
 	$(projectDetailsUpdateRowClone).find('.projectNameSelector').on('change', function(){

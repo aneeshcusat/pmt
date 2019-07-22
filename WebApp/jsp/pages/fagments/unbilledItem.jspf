@@ -13,7 +13,7 @@
 			${taskActivites.taskId} :  ${taskActivites.taskName}
 			</c:if>
 			<c:if test="${taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER'}">
-				 <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="editUnbillableFormForCreate(${taskActivites.taskActivityId}, ${taskActivites.userId},'${taskActivites.taskActCategory }','${taskActivites.actualStartTime }','${taskActivites.actualEndTime }' )">
+				 <a style="cursor:pointer" data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="editUnbillableFormForCreate(${taskActivites.taskActivityId}, ${taskActivites.userId},'${taskActivites.taskActCategory }','${taskActivites.actualStartTime }','${taskActivites.actualEndTime }' )">
 					 ${taskActivites.taskName}
 				</a>
 			</c:if>

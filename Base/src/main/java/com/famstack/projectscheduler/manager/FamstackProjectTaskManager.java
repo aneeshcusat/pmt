@@ -195,38 +195,42 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         taskItem.setName(taskDetails.getName());
         taskItem.setCanRecure(taskDetails.getCanRecure());
         taskItem.setPriority(taskDetails.getPriority());
-        taskItem.setProjectItem(projectItem);
-        taskItem.setUserGroupId(projectItem.getUserGroupId());
-        taskItem.setActualTimeTaken(taskDetails.getActualTimeTaken());
-        taskItem.setTaskRemainingTime(taskDetails.getTaskRemainingTime());
         taskItem.setProjectTaskType(taskDetails.getProjectTaskType());
-        Date startDate = DateUtils.tryParse(taskDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
-        Date completionDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startDate, taskDetails.getDuration());
-        Timestamp startTimeStamp = null;
-        if (startDate != null) {
-            startTimeStamp = new Timestamp(startDate.getTime());
-        }
-
-        Timestamp completionTimeStamp = null;
-        if (completionDate != null) {
-            completionTimeStamp = new Timestamp(completionDate.getTime());
-        }
-
-        taskItem.setAssignee(taskDetails.getAssignee());
-        taskItem.setHelpers(Arrays.toString(taskDetails.getHelper()));
-
-        if (taskDetails.getAssignee() > 0) {
-            taskItem.setStatus(TaskStatus.ASSIGNED);
+        if(taskItem.getStatus() != TaskStatus.COMPLETED && taskItem.getStatus() !=  TaskStatus.INPROGRESS && taskItem.getStatus() != TaskStatus.CLOSED ) {
+	        taskItem.setProjectItem(projectItem);
+	        taskItem.setUserGroupId(projectItem.getUserGroupId());
+	        taskItem.setActualTimeTaken(taskDetails.getActualTimeTaken());
+	        taskItem.setTaskRemainingTime(taskDetails.getTaskRemainingTime());
+	        Date startDate = DateUtils.tryParse(taskDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
+	        Date completionDate = DateUtils.getNextPreviousDate(DateTimePeriod.HOUR, startDate, taskDetails.getDuration());
+	        Timestamp startTimeStamp = null;
+	        if (startDate != null) {
+	            startTimeStamp = new Timestamp(startDate.getTime());
+	        }
+	
+	        Timestamp completionTimeStamp = null;
+	        if (completionDate != null) {
+	            completionTimeStamp = new Timestamp(completionDate.getTime());
+	        }
+	
+	        taskItem.setAssignee(taskDetails.getAssignee());
+	        taskItem.setHelpers(Arrays.toString(taskDetails.getHelper()));
+	
+	        if (taskDetails.getAssignee() > 0) {
+	            taskItem.setStatus(TaskStatus.ASSIGNED);
+	        } else {
+	            taskItem.setStatus(TaskStatus.NEW);
+	        }
+	        taskItem.setStartTime(startTimeStamp);
+	        taskItem.setCompletionTime(completionTimeStamp);
+	        taskItem.setDuration(taskDetails.getDuration());
+	
+	        famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+	        taskDetails.setTaskId(taskItem.getTaskId());
+	        updateUserActivity(taskDetails, startDate, projectItem.getType(), projectItem.getUserGroupId());
         } else {
-            taskItem.setStatus(TaskStatus.NEW);
+        	famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
         }
-        taskItem.setStartTime(startTimeStamp);
-        taskItem.setCompletionTime(completionTimeStamp);
-        taskItem.setDuration(taskDetails.getDuration());
-
-        famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
-        taskDetails.setTaskId(taskItem.getTaskId());
-        updateUserActivity(taskDetails, startDate, projectItem.getType(), projectItem.getUserGroupId());
     }
 
     public void reAssignTask(TaskDetails taskDetails, int newUserId, int userTaskActivityId, TaskStatus taskStatus)

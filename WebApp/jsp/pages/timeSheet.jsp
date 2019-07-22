@@ -1,9 +1,19 @@
 <%@include file="includes/header.jsp" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/select2/select2.min.css"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/timesheet.css?v=${fsVersionNumber}"/>
 
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
+
+<script type="text/javascript">
+<c:if test="${currentUserGroupId != 1018}">
+	var taskCreateEnabled = true;
+</c:if>
+<c:if test="${currentUserGroupId == 1018}">
+	var taskCreateEnabled = false;
+</c:if>
+</script>
 
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
@@ -91,4 +101,4 @@
 <script type="text/javascript"
 	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js?v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.timesheet.js?version=3&v=${fsVersionNumber}"></script> 

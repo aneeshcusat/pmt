@@ -93,6 +93,9 @@ public class UserTaskActivityItem implements FamstackBaseItem
 
     @Column(name = "completion_comment")
     private String completionComment;
+    
+    @Column(name = "modified_by")
+    private Integer modifiedBy;
 
     @ManyToOne
     @JoinColumn(name = "user_act_id")
@@ -299,6 +302,14 @@ public class UserTaskActivityItem implements FamstackBaseItem
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public Integer getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Integer modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 }

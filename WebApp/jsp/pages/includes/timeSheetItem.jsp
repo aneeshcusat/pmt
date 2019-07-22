@@ -7,7 +7,7 @@
 			      	<td> 
 			      		 <select class="form-control userIdSelector">
 							<c:choose>
-  							<c:when  test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
+  							<c:when  test="${((currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && currentUserGroupId != 1018) || currentUser.userRole == 'SUPERADMIN'}">
 								<option value="">- select -</option>
 								<c:if test="${not empty userMap}">
 	    							<c:forEach var="user" items="${userMap}">
