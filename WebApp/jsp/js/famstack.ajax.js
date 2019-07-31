@@ -12,11 +12,11 @@ var doAjaxRequestWithGlobal = function(requestType, requestUrl, requestJsonData,
         	   successCallBackMethod(data);
         	   $(".page-container").waitMe('hide');
        },
-       error : function(jqXHR, error) {
-           console.log("ERROR: ", error);
-           errorCallBackMethod(error);
+       error : function(jqXHR, exception) {
+           console.log("ERROR: ", exception);
+           errorCallBackMethod(jqXHR);
            $(".page-container").waitMe('hide');
-           triggerClientErrorEmail(jqXHR.url, error);
+           triggerClientErrorEmail(jqXHR, exception);
        },
        done : function(e) {
            console.log("DONE");

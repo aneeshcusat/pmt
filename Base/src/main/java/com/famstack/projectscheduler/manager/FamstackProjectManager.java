@@ -187,7 +187,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 		String []projectRowDetailsArray  = projectDetails.split("#PD#");
 		//Billable ->projectIds->tasks->usersIds->daylist
 		Map<String, Map<String, Map<String,Map<String, List<Integer>>>>> projectDetailsMap = new HashMap<>();
-		
+		Map<String, String> taskCommentsMap = new HashMap<>();
 		for(String projectRowDetail : projectRowDetailsArray) {
 			String []projectLineItemDetailsArray = projectRowDetail.split("#PID#");
 			
@@ -198,11 +198,14 @@ public class FamstackProjectManager extends BaseFamstackManager
 			
 			String taskId = projectLineItemDetailsArray[3];
 			String nonBillableTask = projectLineItemDetailsArray[4];
-
+			String taskComments = projectLineItemDetailsArray[13];
+		
 			if (projectType.equalsIgnoreCase("NON_BILLABLE")) {
 				projectId = "projectId";
 				taskId = nonBillableTask;
 			}
+			
+			taskCommentsMap.put(taskId, taskComments);
 			
 			Map<String, Map<String,Map<String, List<Integer>>>> projectTypeMap = projectDetailsMap.get(projectType);
 			if (projectTypeMap == null) {
@@ -255,12 +258,12 @@ public class FamstackProjectManager extends BaseFamstackManager
 			
 		}
 		
-		createBillableWeeklyTasks(projectDetailsMap, DateUtils.tryParse(weekStartDate, DateUtils.DAY_MONTH_YEAR));
+		createBillableWeeklyTasks(projectDetailsMap, DateUtils.tryParse(weekStartDate, DateUtils.DAY_MONTH_YEAR), taskCommentsMap);
 		
 	}
 
     private void createBillableWeeklyTasks(
-			Map<String, Map<String, Map<String, Map<String, List<Integer>>>>> projectDetailsMap, Date weekStartTimeInitial) {
+			Map<String, Map<String, Map<String, Map<String, List<Integer>>>>> projectDetailsMap, Date weekStartTimeInitial, Map<String, String> taskCommentsMap) {
     	for (String projectType : projectDetailsMap.keySet()) {
     		Map<String, Map<String, Map<String, List<Integer>>>> projectIds = projectDetailsMap.get(projectType);
     		
@@ -292,8 +295,12 @@ public class FamstackProjectManager extends BaseFamstackManager
 	    					taskId = taskDetails.getTaskId();
 	    					taskItem = famstackProjectTaskManager.getTaskItemById(taskId);
 	    				} 
-	   					
-	   					taskDetails.setDescription(taskItem.getDescription());
+	    				String taskComments = taskCommentsMap.get(taskNameOrId);
+	    				if (StringUtils.isNotBlank(taskComments)) {
+	    					taskDetails.setDescription(taskComments);
+	    				} else {
+	    					taskDetails.setDescription(taskItem.getDescription());
+	    				}
     				}
         			Map<String, List<Integer>> userIds = taskIds.get(taskNameOrId);
         			for (String userId : userIds.keySet()) {
@@ -313,7 +320,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 		            				String taskName =
 		            						dayTaskTime / 60 + " hours " + dayTaskTime % 60 + " Mins " + taskNameOrId;
 		            				famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(), weekStartTime, 0, taskName,
-		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskNameOrId, ProjectType.NON_BILLABLE, "");
+		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskNameOrId, ProjectType.NON_BILLABLE, taskCommentsMap.get(taskNameOrId));
 		            			}
             				}
             				weekStartTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, weekStartTime, 1);

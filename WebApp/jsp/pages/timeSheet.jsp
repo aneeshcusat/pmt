@@ -45,21 +45,22 @@
         </div>
             <div class="col-md-12">
             
-            <table class="table table-responsive table-hover weeklyTimeLogTable">
+            <table style="margin-bottom: 0px;" class="table table-responsive table-hover weeklyTimeLogTable">
 			  <thead>
 			        <tr>
 			        	<th width="10%">User</th>
-			        	<th width="5%">Type</th>
+			        	<th width="6%">Type</th>
 			        	<th width="15%">Project</th>
-			        	<th width="15%">Task</th>
-			        	<th width="7%"><span class="day1"></span></th>
-			        	<th width="7%"><span class="day2"></span></th>
-			        	<th width="7%"><span class="day3"></span></th>
-			        	<th width="7%"><span class="day4"></span> </th>
-			        	<th width="7%"><span class="day5"></span></th>
-			        	<th width="7%"><span class="day6"></span></th>
-			        	<th width="7%"><span class="day7"></span></th>
-			        	<th width="5%">Total</th>
+			        	<th width="12%">Task</th>
+			        	<th width="9%">Comments</th>
+			        	<th width="6%"><span class="day1"></span></th>
+			        	<th width="6%"><span class="day2"></span></th>
+			        	<th width="6%"><span class="day3"></span></th>
+			        	<th width="6%"><span class="day4"></span> </th>
+			        	<th width="6%"><span class="day5"></span></th>
+			        	<th width="6%"><span class="day6"></span></th>
+			        	<th width="6%"><span class="day7"></span></th>
+			        	<th width="8%">Total</th>
 			        </tr>
 			    </thead>
 			    <tbody class="projectUpdateTimeBody">
@@ -67,11 +68,11 @@
 			    </tbody>
 				<tfoot>
 					<tr class="projectDetailsFooterRow">
-						<td colspan="11" style="background: #f1f5f9;"><a class="addNewRowLink" style="font-size: 12px;color: #000" href="javascript:cloneProjectUpdateTimeRow();">+Add new row</a></td>
-						<td style="background: #f1f5f9;"><span class="weeklyTotal" style="font-size: 12px;font-weight:bold;color: #000">00:00</span></td>
+						<td colspan="12" style="background: #f1f5f9;"><a class="addNewRowLink" style="font-size: 12px;color: #000" href="javascript:cloneProjectUpdateTimeRow();">+Add new row</a></td>
+						<td style="background: #f1f5f9;"><span class="weeklyTotal" style="font-size: 12px;font-weight:bold;color: #000;padding-left: 5px">00:00</span></td>
 					</tr>
 					<tr>
-						<td colspan="12" style="background: #fff; text-align: center;">
+						<td colspan="13" style="background: #fff; text-align: center;">
 							<button type="button" class="btn btn-secondary" onclick="clearWeeklyTimeLogTable();">Clear</button>
 						<button type="button" id="weeklyTimeLogSaveButton" onclick="saveCurrentProjectWeekData(true);"
 							class="btn btn-info">
@@ -88,6 +89,32 @@
 			</table>
             </div>
         </div>
+         <div class="row loggedTimeDiv hide">
+        <div class="col-md-12">
+        	<div class="col-md-3"><span style="font-size: 12px; font-weight: bold">Logged hours for this week</span></div>
+        </div>
+        <div class="col-md-12" style="padding-top: 10px;padding-bottom: 10px">
+        	<table class="table table-responsive">
+			  <thead>
+			        <tr>
+			        	<th width="10%">User</th>
+			        	<th width="6%">Type</th>
+			        	<th width="15%">Project</th>
+			        	<th width="12%">Task</th>
+			        	<th width="9%">Comments</th>
+			        	<th width="6%"><span class="day1"></span></th>
+			        	<th width="6%"><span class="day2"></span></th>
+			        	<th width="6%"><span class="day3"></span></th>
+			        	<th width="6%"><span class="day4"></span> </th>
+			        	<th width="6%"><span class="day5"></span></th>
+			        	<th width="6%"><span class="day6"></span></th>
+			        	<th width="6%"><span class="day7"></span></th>
+			        	<th width="8%">Total</th>
+			        </tr>
+			    </thead>
+			  </table>
+        </div>
+        </div>
         
     </div>                    
     <!-- END CONTENT FRAME BODY -->
@@ -101,4 +128,4 @@
 <script type="text/javascript"
 	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js?version=3.1&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.timesheet.js?version=3.2&v=${fsVersionNumber}"></script> 

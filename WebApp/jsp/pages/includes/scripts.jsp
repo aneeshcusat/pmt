@@ -115,7 +115,7 @@ var site_settings = "";
          END TEMPLATE -->
          
          <!--  famstack scripts -->
-         <script type="text/javascript" src="${js}/famstack.ajax.js?version=3.1&v=${fsVersionNumber}"></script>
+         <script type="text/javascript" src="${js}/famstack.ajax.js?version=3.2&v=${fsVersionNumber}"></script>
          <script type="text/javascript" src="${js}/famstack.plugin.js?v=${fsVersionNumber}"></script>
          <script type="text/javascript" src="${js}/plugins/notify/bootstrap-notify.js?v=${fsVersionNumber}"></script>
         
@@ -162,9 +162,9 @@ var site_settings = "";
     		window.location.reload(true);
     	}
     }
-    function triggerClientErrorEmail(url,error){
-    	if(error.status != 401) {
-	       	var subject = "[${serverInstanceName}]["+ url + "][" +error.status +"] : ["+ error.statusText+"] :";
+    function triggerClientErrorEmail(error, exception){
+    	if(error.status != 401 && error.status != 0) {
+	       	var subject = "[${serverInstanceName}]["+ error.url + "][" +error.status +"] : ["+ exception +"] :";
 	    	var message = "Error has occured - user name [${currentUser.userId}] Page URL ["+window.location.href+"]" ;
 	    	doAjaxRequestWithGlobal("GET", "${applicationHome}/triggerEmail",  {subject:subject,body:message},function(data) {
 				famstacklog("data: ", data);

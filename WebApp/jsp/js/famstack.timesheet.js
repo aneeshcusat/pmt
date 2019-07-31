@@ -19,6 +19,7 @@ function saveCurrentProjectWeekData(clearProjects){
 		var projectId = $(projectItemRow).find(".projectNameSelectorIdHidden").val();
 		var billableTaskId = $(projectItemRow).find(".billableTaskSelector").val();
 		var nonBillableTaskId  =$(projectItemRow).find(".nonBillableTaskSelector").val();
+		var taskComments  =$(projectItemRow).find(".taskcomments").val();
 		
 		$(projectItemRow).find(".userIdSelector").removeClass("error");
 		$(projectItemRow).find(".projectNameSelector").removeClass("error");
@@ -60,8 +61,8 @@ function saveCurrentProjectWeekData(clearProjects){
 			$(projectItemRow).find(".weekday").addClass("error");
 			hasError = true;
 		}
-		
-		dataString+="#PID#"+$(".weekSelector").val()+"#PD#";
+		dataString+="#PID#"+$(".weekSelector").val();
+		dataString+="#PID#"+taskComments+"#PD#";;
 	});
 
 	if (!hasError){

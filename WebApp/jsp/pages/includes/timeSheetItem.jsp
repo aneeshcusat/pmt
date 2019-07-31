@@ -56,6 +56,10 @@
 						</select>
 			      	</td>
 			      	<td>
+			      		 <textarea class="form-control taskcomments" cols="5" rows="1" ></textarea>
+			      	</td>
+			      	
+			      	<td>
 			      		 <input type="number"  min="0" class="form-control weekday day1"/>
 			      	</td>
 			      	<td>
@@ -77,7 +81,7 @@
 			      		<input type="number"  min="0" class="form-control weekday day7"/>
 			      	</td>
 			      	<td style="background: #f1f5f9;padding-top: 15px;font-size: 10px;font-weight: bold;">
-			      		<span class="weekdayTotal">00:00</span>
+			      		<span class="weekdayTotal" style="padding-left: 5px">00:00</span>
 			      		<a href="#" class="projectDetailsUpdateRowDelLink"><span class="fa fa-times" style="color: red;float:right"></span></a>
 			      	</td>
 			      </tr>
