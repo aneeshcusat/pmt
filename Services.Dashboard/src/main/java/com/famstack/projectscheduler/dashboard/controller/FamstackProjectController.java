@@ -37,6 +37,7 @@ import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.FamstackDateRange;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
@@ -332,11 +333,34 @@ public class FamstackProjectController extends BaseFamstackService
     		nonBillableTaskActivities = famstackDashboardManager.getAllNonBillableTaskActivityList(initialStartDate, initialEndDate);
     		dataMap.put("exportDataList", projectTaskAssigneeDataList);
             dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
-        } else if ("default".equalsIgnoreCase(templateName) || "format3".equalsIgnoreCase(templateName)) {
+        } else if ("default".equalsIgnoreCase(templateName)) {
            projectTaskAssigneeDataList.addAll(famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate));
            nonBillableTaskActivities = famstackDashboardManager.getAllNonBillableTaskActivityList(startDate, endDate);
            dataMap.put("exportDataList", projectTaskAssigneeDataList);
            dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
+        } else if ("format3".equalsIgnoreCase(templateName)) {
+            projectTaskAssigneeDataList.addAll(famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate, true));
+            projectTaskAssigneeDataList.addAll(famstackDashboardManager.getAllNonBillableTaskActivities(startDate, endDate, true));
+            
+            Collections.sort(projectTaskAssigneeDataList, new Comparator<ProjectTaskActivityDetails>()
+        	        {
+        	            @Override
+        	            public int compare(ProjectTaskActivityDetails projectDetails2, ProjectTaskActivityDetails projectDetails1)
+        	            {
+        	                int useId1 =projectDetails1.getUserId();
+        	                int useId2 =projectDetails2.getUserId();
+        	                EmployeeDetails emp1 = getFamstackApplicationConfiguration().getAllUsersMap().get(useId1);
+        	                EmployeeDetails emp2 = getFamstackApplicationConfiguration().getAllUsersMap().get(useId2);
+        	                if (emp1 != null && emp2 != null) {
+        	                	return emp2.getFirstName().compareTo(emp1.getFirstName());
+        	                }
+        	                return 0;
+        	            }
+        	        });
+
+            
+            dataMap.put("exportDataList", projectTaskAssigneeDataList);
+            dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
         } else if ("useractivity".equalsIgnoreCase(templateName)) {
             Map<Integer, Map<String, String>> userSiteActivityMap =
                 famstackDashboardManager.getAllUserSiteActivities(startDate, endDate);
@@ -438,7 +462,14 @@ public class FamstackProjectController extends BaseFamstackService
     @ResponseBody
     public String weeklyTimeLog(@RequestParam("projectDetails") String projectDetails, @RequestParam("weekStartDate") String weekStartDate)
     {
-
+    	try{
+    	logInfo("Weekly time date : " +  weekStartDate);
+    	logInfo("Weekly Time data : " +  projectDetails);
+    	logInfo("Weekly Time group : " +  getFamstackApplicationConfiguration().getCurrentUserGroupId());
+    	logInfo("Weekly Time user id : " +  getFamstackApplicationConfiguration().getCurrentUserId());
+    	} catch(Exception e) {
+    		logError("Weekly Time logging failed : ", e);
+    	}
         famstackDashboardManager.weeklyTimeLog(projectDetails, weekStartDate);
         return "{\"status\": true}";
     }

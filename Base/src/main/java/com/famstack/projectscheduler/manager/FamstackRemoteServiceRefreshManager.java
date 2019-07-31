@@ -109,7 +109,7 @@ public class FamstackRemoteServiceRefreshManager extends BaseFamstackManager
 		    	 logError("Refresh serive failed with status code :" +  responseCode +", hostname :" + httpUrl);
 		     }
 	      } catch (Exception e) {
-	    	  logError("Refresh serive failed, hostname :" + httpUrl,  e);
+	    	  logError("Refresh serive failed, hostname :" + httpUrl);
 	      }
     }
 

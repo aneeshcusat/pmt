@@ -408,6 +408,19 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             
             createTaskTimeCell(sheet, projectDetailsUserColumnCount + userCellIndex,
                 projectDetails.getTaskActivityDuration(), projectDetails.getTaskActivityTimeXls(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
+            
+           /* 
+            if (projectDetails.getSubItems().size() > 0) {
+            	for (ProjectTaskActivityDetails subActivityDetails : projectDetails.getSubItems()) {
+            		 userCellIndex = employeeIndexList.indexOf(subActivityDetails.getUserId());
+                    if(userCellIndex < 0) {
+                    	userCellIndex = employeeIndexList.indexOf(0);
+                    }
+                    createTaskTimeCell(sheet, projectDetailsUserColumnCount + userCellIndex,
+                    		subActivityDetails.getTaskActivityDuration(), subActivityDetails.getTaskActivityTimeXls(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
+            	}
+            }*/
+            
             createProjectSumFunctionCell(projectDetailsRow, projectDetailsUserColumnCount + employees.size(),
                 xssfCellProjectTotalStyle);
 

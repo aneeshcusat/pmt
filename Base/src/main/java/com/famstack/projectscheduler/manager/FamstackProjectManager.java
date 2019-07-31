@@ -278,7 +278,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 	    				if (org.apache.commons.lang.StringUtils.isNumeric(taskNameOrId) ) {
 	    					taskItem = famstackProjectTaskManager.getTaskItemById(Integer.parseInt(taskNameOrId));
 	    				} 
-	    				
+	    				if (taskItem == null) {
+	    					taskItem = getTaskItemFromProject(projectItem, taskNameOrId);
+	    				}
 	    				if (taskItem == null) {
 	    					taskDetails.setName(taskNameOrId);
 	    					taskDetails.setDescription("Weekly time log task for " + taskNameOrId);
@@ -328,6 +330,18 @@ public class FamstackProjectManager extends BaseFamstackManager
     		}
     	}
 		
+	}
+
+	private TaskItem getTaskItemFromProject(ProjectItem projectItem,
+			String taskNameOrId) {
+		if (projectItem != null && projectItem.getTaskItems() != null) {
+			for(TaskItem taskItem : projectItem.getTaskItems()) {
+				if(taskItem.getName().equalsIgnoreCase(taskNameOrId)) {
+					return taskItem;
+				}
+			}
+		}
+		return null;
 	}
 
 	private void notifyProjectTaskAssignment(ProjectDetails projectDetails, List<TaskDetails> allTaskDetailsList)
@@ -1108,14 +1122,14 @@ public class FamstackProjectManager extends BaseFamstackManager
     	return query == null ? "" : query;
 	}
 
-	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean getUnique)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startDate", startDate);
         dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
 
         List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
-
+        List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList= new ArrayList<>();
         String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
         String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
         sqlQuery += " and utai.user_grp_id = " + userGroupId;
@@ -1125,11 +1139,14 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("projectItemList" + projectItemList);
         logDebug("startDate" + startDate);
         logDebug("endDate" + endDate);
-        mapProjectsList(projectDetailsList, projectItemList);
+        mapProjectsList(projectDetailsList,projectDetailsUniqueTasksList, projectItemList);
+        if (getUnique) {
+        	return projectDetailsUniqueTasksList;
+        }
         return projectDetailsList;
     }
 
-    private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<Object[]> projectItemList)
+    private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList, List<Object[]> projectItemList)
     {
 
         /*
@@ -1139,7 +1156,10 @@ public class FamstackProjectManager extends BaseFamstackManager
          */
 
         Map<String, ProjectTaskActivityDetails> projectCacheMap = new HashMap<>();
+        Map<String, ProjectTaskActivityDetails> projectUniqueItemCacheMap = new HashMap<>();
+        
         ProjectTaskActivityDetails projectTaskActivityDetailsTmp;
+        ProjectTaskActivityDetails projectUniqueItemDetails;
 
         for (int i = 0; i < projectItemList.size(); i++) {
             ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
@@ -1201,7 +1221,12 @@ public class FamstackProjectManager extends BaseFamstackManager
             key += "T" + data[15];
             key += "U" + data[14];
 
+            String uniqueItemKey = "T" + data[15];
+            uniqueItemKey += "U" + data[14];
+            
             projectTaskActivityDetailsTmp = projectCacheMap.get(key);
+            projectUniqueItemDetails = projectUniqueItemCacheMap.get(uniqueItemKey);
+            
             if (projectTaskActivityDetailsTmp != null) {
                 projectTaskActivityDetailsTmp.addToChildProjectActivityDetailsMap(projectTaskActivityDetails);
                 projectTaskActivityDetailsTmp.setTaskActivityDuration(projectTaskActivityDetailsTmp
@@ -1209,7 +1234,15 @@ public class FamstackProjectManager extends BaseFamstackManager
             } else {
                 projectCacheMap.put(key, projectTaskActivityDetails);
                 projectDetailsList.add(projectTaskActivityDetails);
+                
+                if (projectUniqueItemDetails != null) {
+                	projectUniqueItemDetails.getSubItems().add(projectTaskActivityDetails);
+                } else {
+                	projectUniqueItemCacheMap.put(uniqueItemKey, projectTaskActivityDetails);
+                	projectDetailsUniqueTasksList.add(projectTaskActivityDetails);
+                }
             }
+           
         }
     }
     

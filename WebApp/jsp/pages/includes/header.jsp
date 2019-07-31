@@ -37,7 +37,7 @@
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        
-        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/theme-default.css?v=${fsVersionNumber}"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/theme-default.css?version=3.1&v=${fsVersionNumber}"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/famstack.css?v=${fsVersionNumber}"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/daterangepicker.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/jquery.datetimerangepicker.min.css"/>

@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.manager.FamstackUserActivityManager;
@@ -173,7 +174,7 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
     private void createWeekSumCell(int startCellIndex, int endCellIndex, int rowIndex,int weekCellIndex, Sheet sheet, CellStyle cellStyle){
     	String startCellLetter = CellReference.convertNumToColString(startCellIndex);
     	String endCellLetter = CellReference.convertNumToColString(endCellIndex);
-    	String strFormula = "SUM(" + startCellLetter + rowIndex + ":" + endCellLetter + rowIndex + ")";
+    	String strFormula = "SUM(" + startCellLetter + (rowIndex+1) + ":" + endCellLetter + (rowIndex+1) + ")";
     	Cell weekSumCell = getCell(sheet, getRow(sheet, rowIndex), weekCellIndex);
     	weekSumCell.setCellType(CellType.FORMULA);
     	weekSumCell.setCellFormula(strFormula);
@@ -196,17 +197,37 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
             createProjectDetailsColoumn(sheet, 3, projectDetails.getAccountName(), projectDetailsRow);
             createProjectDetailsColoumn(sheet, 4, projectDetails.getProjectName(), projectDetailsRow);
             createProjectDetailsColoumn(sheet, 5, projectDetails.getClientName(), projectDetailsRow);
-            createProjectDetailsColoumn(sheet, 6, projectDetails.getProjectCategory(), projectDetailsRow);
+            createProjectDetailsColoumn(sheet, 6, getProjectType(projectDetails.getProjectType()), projectDetailsRow);
             createProjectDetailsColoumn(sheet, 7, projectDetails.getTaskName(), projectDetailsRow);
 
             int dateCellIndex = dateList.indexOf(projectDateString);
             
             createTaskTimeCell(sheet, 8 + dateCellIndex,
                 projectDetails.getTaskActivityDuration(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
+            
+            if (projectDetails.getSubItems().size() > 0) {
+            	for (ProjectTaskActivityDetails subActivityDetails : projectDetails.getSubItems()) {
+            		 projectDateString = DateUtils.format(subActivityDetails.getTaskActivityStartTime(), DateUtils.DATE_MONTH_YEAR);
+            		 dateCellIndex = dateList.indexOf(projectDateString);
+                     createTaskTimeCell(sheet, 8 + dateCellIndex,
+                    		 subActivityDetails.getTaskActivityDuration(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
+            	}
+            }
         }
     }
 
-    private Row getRow(Sheet sheet, int rowIndex)
+    private String getProjectType(ProjectType projectType) {
+		if (projectType != null) {
+			if (projectType == ProjectType.BILLABLE){
+				return "Billable";
+			} else {
+				return "Non Billable";
+			}
+		}
+		return "";
+	}
+
+	private Row getRow(Sheet sheet, int rowIndex)
     {
         Row projectDetailsRow = sheet.getRow(rowIndex);
         if (projectDetailsRow == null) {

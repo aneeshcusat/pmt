@@ -7364,7 +7364,7 @@ div.growlUI h3, div.growlUI h4 {
  }
  
  ::-webkit-scrollbar {
-    width: 2px;
+    width: 7px;
 }
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 

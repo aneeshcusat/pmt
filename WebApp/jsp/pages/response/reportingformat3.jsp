@@ -56,7 +56,7 @@
 					<td>${project.accountName}</td>
 					<td>${project.projectName}</td>
 					<td>${project.clientName}</td>
-					<td>${project.projectCategory}</td>
+					<td>${project.projectType}</td>
 					<td>${project.taskName}</td>
 					<td><span class="label label-${projectState}" style="${statusColor}">${project.projectStatus}</span></td>
 					<c:if test="${empty project.childs}">

@@ -17,6 +17,7 @@ import com.famstack.projectscheduler.contants.LeaveType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
+import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
@@ -680,6 +681,64 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         return nonBillableTaskActivityItems;
     }
 
+    public void getAllNonBillabileTaskActivities(Date startDate, Date endDate, List<ProjectTaskActivityDetails> projectDetailsList,List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("calenderDateStart", startDate);
+        dataMap.put("calenderDateEnd", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+        List<UserTaskActivityItem> userTaskActivityItems =
+            (List<UserTaskActivityItem>) getFamstackDataAccessObjectManager().executeQuery(
+                HQLStrings.getString("allUnBilledUserActivityItemsFromDatetoDate"), dataMap);
+        logDebug("Non billabletask activity items" + userTaskActivityItems);
+        List<ProjectTaskActivityDetails> projectTaskActivityDetailsList = new ArrayList();
+        Map<String, ProjectTaskActivityDetails> projectCacheMap = new HashMap<>();
+        Map<String, ProjectTaskActivityDetails> projectUniqueItemCacheMap = new HashMap<>();
+       
+        ProjectTaskActivityDetails projectTaskActivityDetailsTmp;
+        ProjectTaskActivityDetails projectUniqueItemDetails;
+        for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+        	ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
+        	projectTaskActivityDetails.setTaskActivityStartTime(userTaskActivityItem.getActualStartTime());
+        	projectTaskActivityDetails.setUserId(userTaskActivityItem.getUserActivityItem().getUserItem().getId());
+        	projectTaskActivityDetails.setProjectName(userTaskActivityItem.getTaskActCategory());
+        	projectTaskActivityDetails.setClientName("");
+        	projectTaskActivityDetails.setProjectCategory("Non Billable");
+        	projectTaskActivityDetails.setProjectType(ProjectType.NON_BILLABLE);
+        	projectTaskActivityDetails.setTaskName(userTaskActivityItem.getTaskName());
+        	projectTaskActivityDetails.setTaskActivityDuration(userTaskActivityItem.getDurationInMinutes());
+        	projectTaskActivityDetailsList.add(projectTaskActivityDetails);
+        	
+        	
+        	String key = "D" + userTaskActivityItem.getActualStartTime();
+            key += "T" + userTaskActivityItem.getTaskActCategory();
+            key += "U" + userTaskActivityItem.getUserActivityItem().getUserItem().getId();
+
+            String uniqueItemKey  = "T" + userTaskActivityItem.getTaskActCategory();
+            uniqueItemKey += "U" + userTaskActivityItem.getUserActivityItem().getUserItem().getId();
+            
+            projectTaskActivityDetailsTmp = projectCacheMap.get(key);
+            projectUniqueItemDetails = projectUniqueItemCacheMap.get(uniqueItemKey);
+            
+            if (projectTaskActivityDetailsTmp != null) {
+                projectTaskActivityDetailsTmp.addToChildProjectActivityDetailsMap(projectTaskActivityDetails);
+                projectTaskActivityDetailsTmp.setTaskActivityDuration(projectTaskActivityDetailsTmp
+                    .getTaskActivityDuration() + projectTaskActivityDetails.getTaskActivityDuration());
+            } else {
+                projectCacheMap.put(key, projectTaskActivityDetails);
+                projectDetailsList.add(projectTaskActivityDetails);
+                
+                if (projectUniqueItemDetails != null) {
+                	projectUniqueItemDetails.getSubItems().add(projectTaskActivityDetails);
+                } else {
+                	projectUniqueItemCacheMap.put(uniqueItemKey, projectTaskActivityDetails);
+                	projectDetailsUniqueTasksList.add(projectTaskActivityDetails);
+                }
+            }
+
+        	
+        }
+    }
+    
     public UserTaskActivityItem deleteTaskActivity(int activityId)
     {
         UserTaskActivityItem userTaskActivityItem =

@@ -188,6 +188,7 @@ div#taskDetailsDiv {
 		</div>
 	</div>
 	 <div class="row" id="projectDashBoardData">
+	 	Loading data....
 	 </div>
 </div>
 <!-- END CONTENT FRAME -->
@@ -1029,6 +1030,7 @@ var loadAllProjectDetails = function(daterange) {
     }, function(e) {
         famstacklog("ERROR: ", e);
         famstackalert(e);
+        fillProjectData("Unable to find project details..");
     });
 }
 

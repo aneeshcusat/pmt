@@ -3,16 +3,20 @@ var doAjaxRequestWithGlobal = function(requestType, requestUrl, requestJsonData,
        type : requestType,
        url : requestUrl ,
        data: requestJsonData,
-       timeout : 30000,
+       timeout : 60000,
        global:global,
+       beforeSend: function(jqXHR, settings) {
+           jqXHR.url = settings.url;
+       },
        success : function(data) {
         	   successCallBackMethod(data);
         	   $(".page-container").waitMe('hide');
        },
-       error : function(error) {
+       error : function(jqXHR, error) {
            console.log("ERROR: ", error);
            errorCallBackMethod(error);
            $(".page-container").waitMe('hide');
+           triggerClientErrorEmail(jqXHR.url, error);
        },
        done : function(e) {
            console.log("DONE");

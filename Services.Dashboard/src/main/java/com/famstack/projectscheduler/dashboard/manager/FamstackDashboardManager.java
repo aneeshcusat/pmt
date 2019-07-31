@@ -368,8 +368,10 @@ public class FamstackDashboardManager extends BaseFamstackService
     {
         TaskDetails taskDetails = projectManager.getProjectTaskById(taskId);
         projectManager.deleteProjectTask(taskId, projectId);
+        if (taskDetails != null) {
         taskDetails.setProjectId(projectId);
         triggerTaskNotification(NotificationType.TASK_DELETED, taskDetails);
+        }
     }
 
     public String getUserTaskActivityJson(Integer userId, int dayfilter)
@@ -961,12 +963,16 @@ public class FamstackDashboardManager extends BaseFamstackService
 		 return dashboardOverAllutilizationFilterdList;
 	}
 	
-    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate)
+	{
+		 return getAllProjectTaskAssigneeData(startDate, endDate, false);
+	}
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean uniqueTaskUser)
     {
     	 List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
     	if (startDate != null && endDate != null) {
         projectDetailsList =
-            projectManager.getAllProjectTaskAssigneeData(startDate, endDate);
+            projectManager.getAllProjectTaskAssigneeData(startDate, endDate, uniqueTaskUser);
     	}
     	return projectDetailsList;
     }
@@ -984,6 +990,19 @@ public class FamstackDashboardManager extends BaseFamstackService
     public Map<Integer, Map<String, UserTaskActivityItem>> getAllNonBillabileActivities(Date startDate, Date endDate)
     {
         return famstackUserActivityManager.getAllNonBillabileActivities(startDate, endDate);
+    }
+    
+    public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(Date startDate, Date endDate, boolean uniqueList)
+    {
+    	 List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList = new ArrayList<>();
+         List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
+         famstackUserActivityManager.getAllNonBillabileTaskActivities(startDate, endDate, projectDetailsList, projectDetailsUniqueTasksList);
+         
+         if (uniqueList) {
+        	 return projectDetailsUniqueTasksList;
+         }
+         
+         return projectDetailsList;
     }
 
     public void updateProject(ProjectDetails projectDetails)

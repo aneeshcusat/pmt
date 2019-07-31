@@ -3,14 +3,14 @@
 <c:if test="${(taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER') || itemType == 'ALL'}">
 	<li class="list-group-item taskact-item userId${taskActivites.userId} taskact-item${taskActivites.taskActivityId}">
 		<div class="task-item">
-			<div class="task-today pull-left">
+			<div class="task-today pull-left hide">
 				<a href="#" class="ttip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Mark Today">
 					<i class="fa fa-star"></i>
 				</a>
 			</div>
-			<h3 class="task-title">
+			<h3 class="task-title" data-task-id="${taskActivites.taskId}">
 			<c:if test="${taskActivites.userTaskType != 'LEAVE' && taskActivites.userTaskType != 'MEETING' && taskActivites.userTaskType != 'OTHER'}">
-			${taskActivites.taskId} :  ${taskActivites.taskName}
+			${taskActivites.taskName}
 			</c:if>
 			<c:if test="${taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER'}">
 				 <a style="cursor:pointer" data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="editUnbillableFormForCreate(${taskActivites.taskActivityId}, ${taskActivites.userId},'${taskActivites.taskActCategory }','${taskActivites.actualStartTime }','${taskActivites.actualEndTime }' )">
@@ -18,6 +18,7 @@
 				</a>
 			</c:if>
 			</h3>
+			<span class="hide" style="font-weight: normal;"><a href="project/">Test project</a></span>
 		</div>
 	
 		<div class="task-meta">

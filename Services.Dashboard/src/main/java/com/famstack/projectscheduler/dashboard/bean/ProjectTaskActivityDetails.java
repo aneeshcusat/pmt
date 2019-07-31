@@ -89,6 +89,8 @@ public class ProjectTaskActivityDetails
     private String subTeamName;
     
     private String clientName;
+    
+    private List<ProjectTaskActivityDetails> subItems;
 
     private List<ProjectTaskActivityDetails> childs;
 
@@ -545,5 +547,12 @@ public class ProjectTaskActivityDetails
 
 	public void setNewProjectCategory(String newProjectCategory) {
 		this.newProjectCategory = newProjectCategory;
+	}
+
+	public List<ProjectTaskActivityDetails> getSubItems() {
+		if (subItems == null) {
+			subItems = new ArrayList<>();
+		}
+		return subItems;
 	}
 }

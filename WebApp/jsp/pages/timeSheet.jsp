@@ -101,4 +101,4 @@
 <script type="text/javascript"
 	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js?version=3&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.timesheet.js?version=3.1&v=${fsVersionNumber}"></script> 

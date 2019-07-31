@@ -178,8 +178,10 @@ function fillProjectDetails(projectDetailsUpdateRowClone,project) {
 function fillTaskDetails(projectDetailsUpdateRowClone, tasks, projectCategory){
 	//var taskName = 'Week '+ moment($(".weekSelector").val(), "DD/MMM/YYYY").week() +', Task '+projectCategory;
 	var taskName = 'Weekly Task '+projectCategory;
-	
-	var billableTasksList = '<option value="'+taskName+'">[NEW] '+taskName+'</option>';
+	var billableTasksList ="";
+	if (taskCreateEnabled) {
+	 billableTasksList = '<option value="'+taskName+'">[NEW] '+taskName+'</option>';
+	} 
 	if (tasks.length > 0) {
 		for (i in tasks) {
 			billableTasksList += '<option data-status="'+tasks[i].status+'" value="'+tasks[i].id+'">'+tasks[i].name+'</option>';
