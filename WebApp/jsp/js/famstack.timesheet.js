@@ -97,6 +97,8 @@ function saveCurrentProjectWeekData(clearProjects){
 					getSelectedWeekLoggedData();
 					showSuccessMessage("Task details saved Successfully!!!");
 				}
+			} else {
+				 showErrorMessage("Unable to save data, please refresh the page and try again");
 			}
 		}, function(e) {
 	        famstacklog("ERROR: ", e);

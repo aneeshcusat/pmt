@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.famstack.email.FamstackEmailSender;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
@@ -37,7 +38,6 @@ import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
-import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.FamstackDateRange;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
@@ -61,6 +61,9 @@ public class FamstackProjectController extends BaseFamstackService
     
     @Resource
     FamstackStaticXLSImportManager famstackStaticXLSImportManager;
+    
+    @Resource
+    FamstackEmailSender famstackEmailSender;
 
     @RequestMapping(value = "/projects", method = RequestMethod.GET)
     public ModelAndView listProjects()
@@ -445,15 +448,19 @@ public class FamstackProjectController extends BaseFamstackService
     public String weeklyTimeLog(@RequestParam("projectDetails") String projectDetails, @RequestParam("weekStartDate") String weekStartDate)
     {
     	try{
-    	logInfo("Weekly time date : " +  weekStartDate);
-    	logInfo("Weekly Time data : " +  projectDetails);
-    	logInfo("Weekly Time group : " +  getFamstackApplicationConfiguration().getCurrentUserGroupId());
-    	logInfo("Weekly Time user id : " +  getFamstackApplicationConfiguration().getCurrentUserId());
+	    	logInfo("Weekly time date : " +  weekStartDate);
+	    	logInfo("Weekly Time data : " +  projectDetails);
+	    	logInfo("Weekly Time group : " +  getFamstackApplicationConfiguration().getCurrentUserGroupId());
+	    	logInfo("Weekly Time user id : " +  getFamstackApplicationConfiguration().getCurrentUserId());
+	    	 famstackDashboardManager.weeklyTimeLog(projectDetails, weekStartDate);
+	         return "{\"status\": true}";
     	} catch(Exception e) {
     		logError("Weekly Time logging failed : ", e);
+    		famstackEmailSender.sendTextMessage("ALERT: ERROR - SERVER, weeklyTimeLog failed", "User id "
+        			+ getFamstackApplicationConfiguration().getCurrentUserId() +", projectDetails " + projectDetails +", weekStartDate" + weekStartDate + ", Error " + e.getMessage());
+
     	}
-        famstackDashboardManager.weeklyTimeLog(projectDetails, weekStartDate);
-        return "{\"status\": true}";
+    	 return "{\"status\": false}";
     }
 
     @RequestMapping(value = "/getWeeklyLogggedTime", method = RequestMethod.GET)

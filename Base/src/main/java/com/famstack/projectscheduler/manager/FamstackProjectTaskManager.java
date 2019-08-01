@@ -269,14 +269,14 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager.getItemById(taskId, TaskItem.class);
         TaskActivityDetails taskDetails = null;
         if (taskItem == null) {
-        	famstackEmailSender.sendTextMessage("ERROR - SERVER, playTask failed- Unable to find task item id " + taskId, "User id " + getFamstackApplicationConfiguration().getCurrentUserId() +", taskActivityId " + taskActivityId);
+        	famstackEmailSender.sendTextMessage("ALERT: ERROR - SERVER, playTask failed- Unable to find task item id " + taskId, "User id " + getFamstackApplicationConfiguration().getCurrentUserId() +", taskActivityId " + taskActivityId);
         } else {
         try{
 	        UserTaskActivityItem userTaskActivityItem =
 	            famstackUserActivityManager.completeTaskActivityAndStartNewTaskActivity(taskActivityId, taskItem);
 	        taskDetails = famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
 	        } catch (Exception e) {
-	        	famstackEmailSender.sendTextMessage("ERROR - SERVER, playTask failed- Unable to find task item id " + taskId, "User id " 
+	        	famstackEmailSender.sendTextMessage("ALERT: ERROR - SERVER, playTask failed- Unable to find task item id " + taskId, "User id " 
 	        			+ getFamstackApplicationConfiguration().getCurrentUserId() +", taskActivityId " + taskActivityId +", TaskPausedTime" + taskItem.getTaskPausedTime());
 	        	logError("Unable to pause task", e);
 	        }
