@@ -69,3 +69,23 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 12px;
     padding: 10px;
 }
+.loggedDataTableBody .bold{
+	font-weight: bold;
+}
+.weeklyTotal{
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+}
+
+.taskLogInfo{
+	font-size: 13px;
+    font-weight: bold;
+}
+.redColor{
+	color: red;
+}
+
+.greenColor{
+	color:green;
+}

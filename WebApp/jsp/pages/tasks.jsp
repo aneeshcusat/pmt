@@ -752,26 +752,27 @@ function playTask(taskId){
 	var dataString = {"taskId": taskId, "taskActivityId":taskActivityId};
 	doAjaxRequest("POST", "${applicationHome}/playTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
-
         famstacklog(responseJson);
-        $(".taskPlayPause"+taskId).removeClass("fa-play");
-		$(".taskPlayPause"+taskId).addClass("fa-pause");
-		$(".taskPlayPause"+taskId).attr("data-task-state", "running");
-		$(".blink"+taskId).html("");
-		$("."+taskId+".taskRemainingDiv .actualTaskStartTime").html(getTodayDateTime(new Date()))
-		$(".task-item" + taskId).find(".startDateTimeDiv").html("Started" + " at : " + getTodayDateTime(new Date()));
-		/* $("."+taskId+".taskRemainingDiv .taskHour").html(responseJson.startHour);
-		$("."+taskId+".taskRemainingDiv .taskMinutes").html(responseJson.startMins);
-		$("."+taskId+".taskRemainingDiv .taskSeconds").html(responseJson.startSecs); */
-		
-		
-		$(".task-item" + taskId).find("input.taskActivityId").val(responseJson.taskActivityId);
-		$(".task-item" + taskId).find("input.startTime").val(getTodayDateTime(new Date()));
-		window.setInterval(function(taskId){
-			getCompletedTaskTime(taskId);
-		}, 1000, taskId);
-
-       
+        if(!responseJson.hasOwnProperty('ERROR')){
+        	$(".taskPlayPause"+taskId).removeClass("fa-play");
+     		$(".taskPlayPause"+taskId).addClass("fa-pause");
+     		$(".taskPlayPause"+taskId).attr("data-task-state", "running");
+     		$(".blink"+taskId).html("");
+     		$("."+taskId+".taskRemainingDiv .actualTaskStartTime").html(getTodayDateTime(new Date()))
+     		$(".task-item" + taskId).find(".startDateTimeDiv").html("Started" + " at : " + getTodayDateTime(new Date()));
+     		/* $("."+taskId+".taskRemainingDiv .taskHour").html(responseJson.startHour);
+     		$("."+taskId+".taskRemainingDiv .taskMinutes").html(responseJson.startMins);
+     		$("."+taskId+".taskRemainingDiv .taskSeconds").html(responseJson.startSecs); */
+     		
+     		
+     		$(".task-item" + taskId).find("input.taskActivityId").val(responseJson.taskActivityId);
+     		$(".task-item" + taskId).find("input.startTime").val(getTodayDateTime(new Date()));
+     		window.setInterval(function(taskId){
+     			getCompletedTaskTime(taskId);
+     		}, 1000, taskId);
+        } else {
+        	 $(".blink"+taskId).html("ERROR");
+        }
     }, function(e) {
     });
 }

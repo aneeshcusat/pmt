@@ -4,10 +4,10 @@
 <c:set var="nonBillableCategories" value="${applicationScope.applicationConfiguraion.nonBillableCategories}"/>
 
 			      <tr class="projectDetailsUpdateRow hide">
-			      	<td> 
+			      	<td>
 			      		 <select class="form-control userIdSelector">
 							<c:choose>
-  							<c:when  test="${((currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && currentUserGroupId != 1018) || currentUser.userRole == 'SUPERADMIN'}">
+  							<c:when  test="${param.hasFullPermission eq 'true'}">
 								<option value="">- select -</option>
 								<c:if test="${not empty userMap}">
 	    							<c:forEach var="user" items="${userMap}">

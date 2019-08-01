@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import com.famstack.email.FamstackEmailSender;
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectPriority;
@@ -51,6 +52,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     @Resource
     FamstackUserProfileManager famstackUserProfileManager;
 
+    @Resource
+    FamstackEmailSender famstackEmailSender;
+    
     @Resource
     FamstackUserActivityManager famstackUserActivityManager;
 
@@ -263,10 +267,21 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     public TaskActivityDetails playTask(int taskId, int taskActivityId)
     {
         TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager.getItemById(taskId, TaskItem.class);
-        UserTaskActivityItem userTaskActivityItem =
-            famstackUserActivityManager.completeTaskActivityAndStartNewTaskActivity(taskActivityId, taskItem);
-
-        return famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
+        TaskActivityDetails taskDetails = null;
+        if (taskItem == null) {
+        	famstackEmailSender.sendTextMessage("ERROR - SERVER, playTask failed- Unable to find task item id " + taskId, "User id " + getFamstackApplicationConfiguration().getCurrentUserId() +", taskActivityId " + taskActivityId);
+        } else {
+        try{
+	        UserTaskActivityItem userTaskActivityItem =
+	            famstackUserActivityManager.completeTaskActivityAndStartNewTaskActivity(taskActivityId, taskItem);
+	        taskDetails = famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
+	        } catch (Exception e) {
+	        	famstackEmailSender.sendTextMessage("ERROR - SERVER, playTask failed- Unable to find task item id " + taskId, "User id " 
+	        			+ getFamstackApplicationConfiguration().getCurrentUserId() +", taskActivityId " + taskActivityId +", TaskPausedTime" + taskItem.getTaskPausedTime());
+	        	logError("Unable to pause task", e);
+	        }
+        }
+        return taskDetails;
     }
 
     public void pauseTask(TaskDetails taskDetails)
@@ -780,9 +795,12 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             if (taskStatus == TaskStatus.COMPLETED) {
                 calculateBillableAndNonBillableTime(taskId);
             }
+            getFamstackDataAccessObjectManager().updateItem(taskItem);
+        } else {
+        	logError("Unable to find task item id " +  taskId);
+        	famstackEmailSender.sendTextMessage("ERROR - SERVER, updateTaskStatus failed- Unable to find task item id " + taskId, "User id " + getFamstackApplicationConfiguration().getCurrentUserId() +", taskStatus " + taskStatus);
         }
-
-        getFamstackDataAccessObjectManager().updateItem(taskItem);
+       
         return taskItem;
     }
 

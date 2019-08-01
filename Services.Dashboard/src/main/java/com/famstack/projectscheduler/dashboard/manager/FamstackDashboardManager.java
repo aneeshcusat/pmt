@@ -379,6 +379,7 @@ public class FamstackDashboardManager extends BaseFamstackService
         return projectManager.getUserTaskActivityJson(userId, dayfilter);
     }
 
+    @Deprecated
     public Map getUserTaskActivity(Integer userId, String monthFilter)
     {
         List<TaskActivityDetails> taskActivities = projectManager.getUserTaskActivity(userId, monthFilter);
@@ -554,14 +555,15 @@ public class FamstackDashboardManager extends BaseFamstackService
     public String playTask(int taskId, int taskActivityId)
     {
         TaskActivityDetails taskActivityDetails = projectManager.playTask(taskId, taskActivityId);
-
         JSONObject jsonTaskActivity = new JSONObject();
-
-        jsonTaskActivity.put("taskActivityId", taskActivityDetails.getTaskActivityId());
-        jsonTaskActivity.put("startHour", taskActivityDetails.getTimeTakenToCompleteHour());
-        jsonTaskActivity.put("startMins", taskActivityDetails.getTimeTakenToCompleteMinute());
-        jsonTaskActivity.put("startSecs", taskActivityDetails.getTimeTakenToCompleteSecond());
-
+        if (taskActivityDetails != null) {
+	        jsonTaskActivity.put("taskActivityId", taskActivityDetails.getTaskActivityId());
+	        jsonTaskActivity.put("startHour", taskActivityDetails.getTimeTakenToCompleteHour());
+	        jsonTaskActivity.put("startMins", taskActivityDetails.getTimeTakenToCompleteMinute());
+	        jsonTaskActivity.put("startSecs", taskActivityDetails.getTimeTakenToCompleteSecond());
+        } else {
+        	jsonTaskActivity.put("ERROR","Unable to pause task");
+        }
         return jsonTaskActivity.toString();
 
     }
@@ -967,7 +969,13 @@ public class FamstackDashboardManager extends BaseFamstackService
 	{
 		 return getAllProjectTaskAssigneeData(startDate, endDate, false);
 	}
-    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean uniqueTaskUser)
+	
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean uniqueTaskUser)
+    {
+		return getAllProjectTaskAssigneeData(startDate, endDate, uniqueTaskUser, null);
+    }
+	
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean uniqueTaskUser, Integer userId)
     {
     	 List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
     	if (startDate != null && endDate != null) {
@@ -992,11 +1000,11 @@ public class FamstackDashboardManager extends BaseFamstackService
         return famstackUserActivityManager.getAllNonBillabileActivities(startDate, endDate);
     }
     
-    public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(Date startDate, Date endDate, boolean uniqueList)
+    public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(Date startDate, Date endDate, boolean uniqueList, Integer currentUserId)
     {
     	 List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList = new ArrayList<>();
          List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
-         famstackUserActivityManager.getAllNonBillabileTaskActivities(startDate, endDate, projectDetailsList, projectDetailsUniqueTasksList);
+         famstackUserActivityManager.getAllNonBillabileTaskActivities(startDate, endDate, projectDetailsList, projectDetailsUniqueTasksList, currentUserId);
          
          if (uniqueList) {
         	 return projectDetailsUniqueTasksList;
@@ -1453,7 +1461,7 @@ public class FamstackDashboardManager extends BaseFamstackService
 
     public void sendMail(String subject, String messageBody)
     {
-        famstackEmailSender.sendTextMessage("famstack.support@course5i.com", "famstack.bops@gmail.com", "ALERT: ERROR - "
+        famstackEmailSender.sendTextMessage("ALERT: ERROR - "
             + subject, messageBody);
     }
 
@@ -1574,5 +1582,89 @@ public class FamstackDashboardManager extends BaseFamstackService
 		dataObject.put("resource", resourceArray);
 		
 		return dataObject.toString();
+	}
+
+	public String getWeeklyLogggedTime(String weekStartDate, Integer currentUserId) {
+		 Date startDate = DateUtils.tryParse(weekStartDate, DateUtils.DAY_MONTH_YEAR);
+		 Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, startDate, 6);
+		 if (currentUserId == 0) {
+			 currentUserId = null;
+		 }
+		 
+		 List<ProjectTaskActivityDetails>  projectTaskAssigneeDataList = getBillableAndNonBillaleSortedList(startDate, endDate, currentUserId);
+         return getJsonPrjTskWeeklyTaskList(projectTaskAssigneeDataList);
+	}
+	
+	public List<ProjectTaskActivityDetails> getBillableAndNonBillaleSortedList(Date startDate, Date endDate, Integer currentUserId) {
+		 List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+		 projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, true, currentUserId));
+        projectTaskAssigneeDataList.addAll(getAllNonBillableTaskActivities(startDate, endDate, true, currentUserId));
+        Collections.sort(projectTaskAssigneeDataList, new Comparator<ProjectTaskActivityDetails>()
+	        {
+	            @Override
+	            public int compare(ProjectTaskActivityDetails projectDetails2, ProjectTaskActivityDetails projectDetails1)
+	            {
+	                int useId1 =projectDetails1.getUserId();
+	                int useId2 =projectDetails2.getUserId();
+	                EmployeeDetails emp1 = getFamstackApplicationConfiguration().getAllUsersMap().get(useId1);
+	                EmployeeDetails emp2 = getFamstackApplicationConfiguration().getAllUsersMap().get(useId2);
+	                if (emp1 != null && emp2 != null) {
+	                	return emp2.getFirstName().compareTo(emp1.getFirstName());
+	                }
+	                return 0;
+	            }
+	        });
+        return projectTaskAssigneeDataList;
+        
+	}
+
+	private String getJsonPrjTskWeeklyTaskList(
+			List<ProjectTaskActivityDetails> projectTaskAssigneeDataList) {
+		JSONArray jsonArray = new JSONArray();
+		for(ProjectTaskActivityDetails projectTaskActivityDetails : projectTaskAssigneeDataList) {
+			int weekTotal = 0;
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("userId",projectTaskActivityDetails.getUserId());
+			jsonObject.put("projectId", projectTaskActivityDetails.getProjectId());;
+			jsonObject.put("taskId", projectTaskActivityDetails.getTaskId());
+			jsonObject.put("taskActId", projectTaskActivityDetails.getTaskActivityId());;
+			
+			if(getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetails.getUserId()) != null){
+				jsonObject.put("userName", getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetails.getUserId()).getFirstName());
+			} else {
+				jsonObject.put("userName",projectTaskActivityDetails.getUserId());
+			}
+						jsonObject.put("type", projectTaskActivityDetails.getProjectType());
+			jsonObject.put("project", projectTaskActivityDetails.getProjectName());
+			jsonObject.put("task", projectTaskActivityDetails.getTaskName());
+			jsonObject.put("comments", projectTaskActivityDetails.getTaskCompletionComments());
+			JSONObject timeData = new JSONObject();
+			String dateString = DateUtils.format(projectTaskActivityDetails.getTaskActivityStartTime(), DateUtils.DAY_MONTH_YEAR);
+			timeData.put(dateString, projectTaskActivityDetails.getDurationInHours());
+			weekTotal+=projectTaskActivityDetails.getTaskActivityDuration();
+			for(ProjectTaskActivityDetails subItem : projectTaskActivityDetails.getSubItems()) {
+				dateString = DateUtils.format(subItem.getTaskActivityStartTime(), DateUtils.DAY_MONTH_YEAR);
+				timeData.put(dateString, subItem.getDurationInHours());
+				weekTotal+=projectTaskActivityDetails.getTaskActivityDuration();
+			}
+			int hours = weekTotal / 60;
+	        int minutes = weekTotal % 60;
+			timeData.put("weekdayTotal", String.format("%d:%02d", hours, minutes));
+			jsonObject.put("time",timeData);
+			jsonArray.put(jsonObject);
+		}
+		return jsonArray.toString();
+	}
+	
+
+	public String getMonthlyLogggedTime(String monthFilter, Integer userId) {
+		 List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+		 Date startDate = DateUtils.tryParse("01-" + monthFilter, DateUtils.DAY_MONTH_YEAR);
+	     Date endDate = DateUtils.getLastDayOfThisMonth(startDate);
+		 
+		 projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, userId));
+         projectTaskAssigneeDataList.addAll(getAllNonBillableTaskActivities(startDate, endDate, false, userId));
+         
+		 return "";
 	}
 }

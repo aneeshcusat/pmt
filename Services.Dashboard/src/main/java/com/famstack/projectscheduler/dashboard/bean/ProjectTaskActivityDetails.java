@@ -90,6 +90,8 @@ public class ProjectTaskActivityDetails
     
     private String clientName;
     
+    private String taskCompletionComments;
+    
     private List<ProjectTaskActivityDetails> subItems;
 
     private List<ProjectTaskActivityDetails> childs;
@@ -554,5 +556,13 @@ public class ProjectTaskActivityDetails
 			subItems = new ArrayList<>();
 		}
 		return subItems;
+	}
+
+	public String getTaskCompletionComments() {
+		return taskCompletionComments;
+	}
+
+	public void setTaskCompletionComments(String taskCompletionComments) {
+		this.taskCompletionComments = taskCompletionComments;
 	}
 }

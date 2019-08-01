@@ -198,7 +198,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 			
 			String taskId = projectLineItemDetailsArray[3];
 			String nonBillableTask = projectLineItemDetailsArray[4];
-			String taskComments = projectLineItemDetailsArray[13];
+			String taskComments = projectLineItemDetailsArray[12];
 		
 			if (projectType.equalsIgnoreCase("NON_BILLABLE")) {
 				projectId = "projectId";
@@ -286,7 +286,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 	    				}
 	    				if (taskItem == null) {
 	    					taskDetails.setName(taskNameOrId);
-	    					taskDetails.setDescription("Weekly time log task for " + taskNameOrId);
+	    					//taskDetails.setDescription("Weekly time log task for " + taskNameOrId);
 	    					taskDetails.setStartTime(DateUtils.format(weekStartTimeInitial, DateUtils.DATE_TIME_FORMAT));
 	    					taskDetails.setDuration(0);
 	    					taskDetails.setProjectTaskType(ProjectTaskType.PRODUCTIVE);
@@ -883,7 +883,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         TaskItem taskItem =
             famstackProjectTaskManager.updateTaskStatus(taskId, taskStatus, comments, adjustStartTime,
                 adjustCompletionTimeDate);
-        updateProjectStatusBasedOnTaskStatus(taskItem.getProjectItem().getProjectId());
+        if (taskItem != null) {
+        	updateProjectStatusBasedOnTaskStatus(taskItem.getProjectItem().getProjectId());
+        }
 
     }
 
@@ -1131,6 +1133,10 @@ public class FamstackProjectManager extends BaseFamstackManager
 
 	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean getUnique)
     {
+		return getAllProjectTaskAssigneeData(startDate, endDate, getUnique, null);
+    }
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean getUnique, Integer userId)
+    {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startDate", startDate);
         dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
@@ -1140,6 +1146,11 @@ public class FamstackProjectManager extends BaseFamstackManager
         String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
         String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
         sqlQuery += " and utai.user_grp_id = " + userGroupId;
+        
+        if(userId != null) {
+        	sqlQuery += " and uai.user_id = " + userId;
+        }
+        
         sqlQuery += " " + HQLStrings.getString("projectTeamAssigneeReportSQL-OrderBy");
 
         List<Object[]> projectItemList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
@@ -1223,6 +1234,8 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setSowLineItem((String) data[22]);
             
             projectTaskActivityDetails.setNewProjectCategory((String) data[23]);
+
+            projectTaskActivityDetails.setTaskCompletionComments((String) data[24]);
 
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
             key += "T" + data[15];

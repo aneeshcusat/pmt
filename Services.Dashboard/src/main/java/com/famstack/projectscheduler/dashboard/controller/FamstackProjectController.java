@@ -339,25 +339,7 @@ public class FamstackProjectController extends BaseFamstackService
            dataMap.put("exportDataList", projectTaskAssigneeDataList);
            dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
         } else if ("format3".equalsIgnoreCase(templateName)) {
-            projectTaskAssigneeDataList.addAll(famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate, true));
-            projectTaskAssigneeDataList.addAll(famstackDashboardManager.getAllNonBillableTaskActivities(startDate, endDate, true));
-            
-            Collections.sort(projectTaskAssigneeDataList, new Comparator<ProjectTaskActivityDetails>()
-        	        {
-        	            @Override
-        	            public int compare(ProjectTaskActivityDetails projectDetails2, ProjectTaskActivityDetails projectDetails1)
-        	            {
-        	                int useId1 =projectDetails1.getUserId();
-        	                int useId2 =projectDetails2.getUserId();
-        	                EmployeeDetails emp1 = getFamstackApplicationConfiguration().getAllUsersMap().get(useId1);
-        	                EmployeeDetails emp2 = getFamstackApplicationConfiguration().getAllUsersMap().get(useId2);
-        	                if (emp1 != null && emp2 != null) {
-        	                	return emp2.getFirstName().compareTo(emp1.getFirstName());
-        	                }
-        	                return 0;
-        	            }
-        	        });
-
+            projectTaskAssigneeDataList = famstackDashboardManager.getBillableAndNonBillaleSortedList(startDate, endDate, null);
             
             dataMap.put("exportDataList", projectTaskAssigneeDataList);
             dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
@@ -474,7 +456,19 @@ public class FamstackProjectController extends BaseFamstackService
         return "{\"status\": true}";
     }
 
+    @RequestMapping(value = "/getWeeklyLogggedTime", method = RequestMethod.GET)
+    @ResponseBody
+    public String getWeeklyLogggedTime(@RequestParam("weekStartDate") String weekStartDate, @RequestParam("userId") Integer currentUserId)
+    {
+        return famstackDashboardManager.getWeeklyLogggedTime(weekStartDate, currentUserId);
+    }
     
+    @RequestMapping(value = "/getMonthlyLogggedTime", method = RequestMethod.POST)
+    @ResponseBody
+    public String getMonthlyLogggedTime(@RequestParam("monthFilter") String monthFilter)
+    {
+        return famstackDashboardManager.getMonthlyLogggedTime(monthFilter, 0);
+    }
     
     
     @RequestMapping(value = "/updateProject", method = RequestMethod.POST)

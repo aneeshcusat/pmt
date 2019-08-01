@@ -13,6 +13,7 @@ function clearWeeklyTimeLogTable(){
 function saveCurrentProjectWeekData(clearProjects){
 	var dataString = "";
 	var hasError = false;
+	var errorMsg = "";
 	$(".projectDetailsUpdateRow.active").each(function(projectItemRowIndex, projectItemRow){
 		var userId = $(projectItemRow).find(".userIdSelector").val();
 		var projectType = $(projectItemRow).find(".projectTypeSelector").val();
@@ -27,23 +28,37 @@ function saveCurrentProjectWeekData(clearProjects){
 		$(projectItemRow).find(".nonBillableTaskSelector").removeClass("error");
 		$(projectItemRow).find(".weekday").removeClass("error");
 		
+		
+		
 		if (userId == "") {
 			hasError = true;
 			$(projectItemRow).find(".userIdSelector").addClass("error");
+			errorMsg ="Invalid user selection";
 		}
+		
+		var currentSelectedWeekDate = $(".weekSelector").val();
+		
+		if (currentSelectedWeekDate.includes('NaN') || currentSelectedWeekDate.includes('undefined')) {
+			hasError = true;
+			errorMsg ="Invalid date selection";
+		}
+		
 		if (projectType == "BILLABLE") {
 			if (projectId == "") {
 				hasError = true;
 				$(projectItemRow).find(".projectNameSelector").addClass("error");
+				errorMsg ="Invalid project selection";
 			}
 			if (billableTaskId == "") {
 				hasError = true;
 				$(projectItemRow).find(".billableTaskSelector").addClass("error");
+				errorMsg ="Invalid task selection";
 			}
 		} else {
 			if (nonBillableTaskId == "") {
 				hasError = true;
 				$(projectItemRow).find(".nonBillableTaskSelector").addClass("error");
+				errorMsg ="Invalid task selection";
 			}
 		}
 		
@@ -60,11 +75,16 @@ function saveCurrentProjectWeekData(clearProjects){
 		if(!hasDayValue){
 			$(projectItemRow).find(".weekday").addClass("error");
 			hasError = true;
+			errorMsg ="Invalid task time";
 		}
-		dataString+="#PID#"+$(".weekSelector").val();
-		dataString+="#PID#"+taskComments+"#PD#";;
+		
+		dataString+="#PID#"+taskComments;
+		dataString+="#PID#"+$(".weekSelector").val()+"#PD#";
 	});
-
+	if (hasError){
+		showErrorMessage(errorMsg);
+	}
+	
 	if (!hasError){
 		console.log(dataString);
 		
@@ -74,14 +94,35 @@ function saveCurrentProjectWeekData(clearProjects){
 			if (responseJson.status){
 				if(clearProjects) {
 					clearWeeklyTimeLogTable();
+					getSelectedWeekLoggedData();
+					showSuccessMessage("Task details saved Successfully!!!");
 				}
 			}
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
 	        famstackalert(e);
+	        getSelectedWeekLoggedData();
+	        showErrorMessage("Unable to save data, please refresh the page and try again");
 	    });
 	}
 
+}
+function showErrorMessage(errorMsg) {
+	$(".taskLogInfo").removeClass("hide");
+	$(".taskLogInfo .taskLogInfoMsg").html("Error has occured!!!  " + errorMsg);
+	$(".taskLogInfo").removeClass("greenColor");
+	$(".taskLogInfo").addClass("redColor");
+	$(".taskLogInfo .errorMsg").removeClass("hide");
+	$(".taskLogInfo .successMsg").addClass("hide");
+}
+
+function showSuccessMessage(successMsg) {
+	$(".taskLogInfo").removeClass("hide");
+	$(".taskLogInfo .taskLogInfoMsg").html(successMsg);
+	$(".taskLogInfo").addClass("greenColor");
+	$(".taskLogInfo").removeClass("redColor");
+	$(".taskLogInfo .errorMsg").addClass("hide");
+	$(".taskLogInfo .successMsg").removeClass("hide");
 }
 
 function saveCurrentProjectWeekDataAndMove(){
@@ -107,6 +148,77 @@ function moveToCurrentWeek(){
 	var date = new Date(getLastMonday(new Date()));
 	$('.weekSelector').val(formatDate(date));
 	fillWeeklyDates(date);
+}
+
+
+$(".loggedUserIdSelector").on("change", function(){
+	var userId = $(this).val();
+	$(".loggedData.trActive").addClass("hide");
+	$(".loggedData.trActive").removeClass("visibleTask");
+	if (userId == "") {
+		$(".loggedData.trActive").removeClass("hide");
+		$(".loggedData.trActive").addClass("visibleTask");
+	} else {
+		$(".loggedData.trActive.userId"+userId).removeClass("hide");
+		$(".loggedData.trActive.userId"+userId).addClass("visibleTask");
+	}
+	
+	weeklyLoggedTotalCalculate();
+});
+
+
+function getSelectedWeekLoggedData(){
+	$(".taskLogInfo").addClass("hide");
+	doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getWeeklyLogggedTime",{"weekStartDate":$(".weekSelector").val(),"userId":$(".currentUserId").val()} , function(data) {
+		famstacklog(data);
+		var responseJson = JSON.parse(data);
+		fillLoggedData(responseJson);
+	}, function(e) {
+        famstacklog("ERROR: ", e);
+        famstackalert(e);
+    }, false);
+}
+
+function fillLoggedData(data){
+	$('.loggedData.trActive').remove();
+	 if ( data.length == 0 ) {
+	     if(!$(".loggedTimeDiv").hasClass("hide")){
+	    	 $(".loggedTimeDiv").addClass("hide");
+	     }
+	  } else {
+		  $(".loggedTimeDiv").removeClass("hide");
+		$.each(data, function(key,value) {
+			var loggedDataClone = $(".loggedData:first").clone();
+			$(loggedDataClone).removeClass("hide").appendTo(".loggedDataTableBody");
+			$(loggedDataClone).addClass("trActive");
+			
+			 var date =  new Date($(".weekSelector").val());
+			 date.setDate(date.getDate() - 1);
+			 for (var i = 0 ; i < 7 ;i++) {
+				 date.setDate(date.getDate() + 1);
+				 $(loggedDataClone).find('.loggedDay' + (i+1)).addClass(formatDate(date));
+			 }
+			
+			$(loggedDataClone).find(".userName").html(value.userName);
+			$(loggedDataClone).find(".type").html(value.type);
+			$(loggedDataClone).find(".project").html(value.project);
+			$(loggedDataClone).find(".task").html(value.task);
+			$(loggedDataClone).find(".taskComments").html(value.comments);
+			
+			$(loggedDataClone).addClass("userId" + value.userId );
+			$(loggedDataClone).find(".project").addClass("projectId" + value.projectId );
+			$(loggedDataClone).find(".task").addClass("taskId" + value.taskId );
+			
+			$.each(value.time, function(dateString,timeInHours) {
+				$(loggedDataClone).find("."+dateString).html(timeInHours);
+			});
+			
+		}); 
+		if ($(".loggedUserIdSelector").length > 0){
+			$(".loggedUserIdSelector").trigger("change");
+		}
+		weeklyLoggedTotalCalculate();
+	}
 }
 
 function cloneProjectUpdateTimeRow(){
@@ -273,12 +385,17 @@ function projectTypeChange(){
 		$(popoverContainer).addClass("hide");
 	}
 }
-
+function weeklyLoggedTotalCalculate(){
+	weeklyTotalTimeCalculate("loggedData.visibleTask","projectLoggedDetailsFooterRow");
+}
 
 function weeklyTotalCalculate(){
+	weeklyTotalTimeCalculate('projectDetailsUpdateRow', 'projectDetailsFooterRow');
+}
+function weeklyTotalTimeCalculate(source, destination){
     
     var weeklyTotal = 0;
-    $(".projectDetailsUpdateRow .weekdayTotal").each(function() {
+    $("."+source+" .weekdayTotal").each(function() {
     	var time = $(this).html();
     	var timeArray = time.split(':');
     	if (timeArray.length > 1) {
@@ -291,7 +408,7 @@ function weeklyTotalCalculate(){
     	
     });
     
-    $(".projectDetailsFooterRow .weeklyTotal").html((parseInt(weeklyTotal/60)) + ":" + parseInt(weeklyTotal%60));
+    $("."+destination+" .weeklyTotal").html((parseInt(weeklyTotal/60)) + ":" + parseInt(weeklyTotal%60));
 
 }
 
@@ -299,7 +416,7 @@ function getLastMonday(date) {
 	  var t = new Date(date);
 	  t.setDate(t.getDate() - t.getDay() + 1);
 	  return t;
-	}
+}
 $('.weekSelector').val(formatDate(getLastMonday(new Date())));
 $('.weekSelector').datepicker({ 
 	defaultViewDate:getLastMonday(new Date()),
@@ -323,9 +440,13 @@ function formatDate(date) {
 	            	    "Nov", "Dec"
 	            	  ];
 	  var day = date.getDate();
+	  var dayString = ""+day;
+	  if (day < 10) {
+		  dayString = "0"+day;
+	  }
 	  var monthIndex = date.getMonth();
 	  var year = date.getFullYear();
-	  return day + '-' + monthNames[monthIndex] + '-' + year;
+	  return dayString + '-' + monthNames[monthIndex] + '-' + year;
 	}
 	
 function formatDayDate(currentDate) {
@@ -351,4 +472,6 @@ function fillWeeklyDates(currentDate){
 		$(".day"+i).html(formatDayDate(currentDate));
 		currentDate.setDate(currentDate.getDate() + 1);
 	}
+	
+	getSelectedWeekLoggedData();
 }

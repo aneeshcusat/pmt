@@ -314,8 +314,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
     {
         String queryTobeExecuted = "allUserActivityItemsFromDatetoDate";
         Date dayStartDate = DateUtils.tryParse("01-" + monthFilter, DateUtils.DAY_MONTH_YEAR);
-        Date dayEndDate = DateUtils.getLastDayOfThisMonth(dayStartDate);
-        
+        Date dayEndDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,DateUtils.getLastDayOfThisMonth(dayStartDate),0);;
         List<TaskActivityDetails> taskActivitiesList = new ArrayList<>();
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("calenderDateStart", dayStartDate);
@@ -680,8 +679,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         return nonBillableTaskActivityItems;
     }
-
     public void getAllNonBillabileTaskActivities(Date startDate, Date endDate, List<ProjectTaskActivityDetails> projectDetailsList,List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList)
+    {
+    	getAllNonBillabileTaskActivities(startDate, endDate, projectDetailsList, projectDetailsUniqueTasksList, null);	
+    }
+    public void getAllNonBillabileTaskActivities(Date startDate, Date endDate, List<ProjectTaskActivityDetails> projectDetailsList,List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList, Integer userId)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("calenderDateStart", startDate);
@@ -697,6 +699,10 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         ProjectTaskActivityDetails projectTaskActivityDetailsTmp;
         ProjectTaskActivityDetails projectUniqueItemDetails;
         for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
+        	
+        	if (userId != null && userTaskActivityItem.getUserActivityItem().getUserItem().getId() != userId) {
+        		continue;
+        	}
         	ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
         	projectTaskActivityDetails.setTaskActivityStartTime(userTaskActivityItem.getActualStartTime());
         	projectTaskActivityDetails.setUserId(userTaskActivityItem.getUserActivityItem().getUserItem().getId());
@@ -706,6 +712,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         	projectTaskActivityDetails.setProjectType(ProjectType.NON_BILLABLE);
         	projectTaskActivityDetails.setTaskName(userTaskActivityItem.getTaskName());
         	projectTaskActivityDetails.setTaskActivityDuration(userTaskActivityItem.getDurationInMinutes());
+        	projectTaskActivityDetails.setTaskCompletionComments(userTaskActivityItem.getCompletionComment());
         	projectTaskActivityDetailsList.add(projectTaskActivityDetails);
         	
         	

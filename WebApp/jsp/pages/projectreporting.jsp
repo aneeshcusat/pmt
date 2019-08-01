@@ -68,7 +68,7 @@
 										</div>
                                  	</div>
                                  	<div class="col-md-2" >
-					                 <span style="margin-top: 9px;margin-right:  10px;float:right"></>Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;</span>
+					                 <span style="margin-top: 9px;margin-right:  10px;float:right">Select a date Range :  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;</span>
 					                 <input type="text" name="daterange" id="daterangeText" style="display: none" value="${dateRange}" /> 
 					                </div>
 					             	

@@ -102,7 +102,7 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
 
     private void createHeader(Sheet sheet, List<String> dateList, List<String> dayList)
     {
-        int colIndex = 8;
+        int colIndex = 9;
         Row rowDate = getRow(sheet, 1);
         Row rowDay = getRow(sheet, 2);
         int dayIndexCount = 0;
@@ -141,7 +141,7 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
             if (exportDataList.size() > 0) {
                 for (ProjectTaskActivityDetails projectDetails : exportDataList) {
                     createProjectDetailsRow(workBook, sheet, projectDetailsRowCount, projectDetails, allEmployeesMap, dateList, xssfCellProjectTaskHrsStyle);
-                    createWeekSumCells(sheet,dateList.indexOf("SKIP"),dateList.lastIndexOf("SKIP"), 8, projectDetailsRowCount, xssfCellProjectTaskHrsStyle);
+                    createWeekSumCells(sheet,dateList.indexOf("SKIP"),dateList.lastIndexOf("SKIP"), 9, projectDetailsRowCount, xssfCellProjectTaskHrsStyle);
                     projectDetailsRowCount++;
                 }
             }
@@ -199,17 +199,18 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
             createProjectDetailsColoumn(sheet, 5, projectDetails.getClientName(), projectDetailsRow);
             createProjectDetailsColoumn(sheet, 6, getProjectType(projectDetails.getProjectType()), projectDetailsRow);
             createProjectDetailsColoumn(sheet, 7, projectDetails.getTaskName(), projectDetailsRow);
+            createProjectDetailsColoumn(sheet, 8, projectDetails.getTaskCompletionComments(), projectDetailsRow);
 
             int dateCellIndex = dateList.indexOf(projectDateString);
             
-            createTaskTimeCell(sheet, 8 + dateCellIndex,
+            createTaskTimeCell(sheet, 9 + dateCellIndex,
                 projectDetails.getTaskActivityDuration(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
             
             if (projectDetails.getSubItems().size() > 0) {
             	for (ProjectTaskActivityDetails subActivityDetails : projectDetails.getSubItems()) {
             		 projectDateString = DateUtils.format(subActivityDetails.getTaskActivityStartTime(), DateUtils.DATE_MONTH_YEAR);
             		 dateCellIndex = dateList.indexOf(projectDateString);
-                     createTaskTimeCell(sheet, 8 + dateCellIndex,
+                     createTaskTimeCell(sheet, 9 + dateCellIndex,
                     		 subActivityDetails.getTaskActivityDuration(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
             	}
             }
