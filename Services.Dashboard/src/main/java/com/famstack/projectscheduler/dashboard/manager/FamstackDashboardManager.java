@@ -980,7 +980,7 @@ public class FamstackDashboardManager extends BaseFamstackService
     	 List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
     	if (startDate != null && endDate != null) {
         projectDetailsList =
-            projectManager.getAllProjectTaskAssigneeData(startDate, endDate, uniqueTaskUser);
+            projectManager.getAllProjectTaskAssigneeData(startDate, endDate, uniqueTaskUser,userId);
     	}
     	return projectDetailsList;
     }

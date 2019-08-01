@@ -1148,7 +1148,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         sqlQuery += " and utai.user_grp_id = " + userGroupId;
         
         if(userId != null) {
-        	sqlQuery += " and uai.user_id = " + userId;
+        	sqlQuery += " and uai.id = " + userId;
         }
         
         sqlQuery += " " + HQLStrings.getString("projectTeamAssigneeReportSQL-OrderBy");
