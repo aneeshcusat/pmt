@@ -56,7 +56,7 @@
 						</select>
 			      	</td>
 			      	<td>
-			      		 <textarea class="form-control taskcomments" cols="5" rows="1" ></textarea>
+			      		 <textarea class="form-control taskcomments" cols="5" rows="1" maxlength="250"  placeholder="Max 250 chars"></textarea>
 			      	</td>
 			      	
 			      	<td>

@@ -61,6 +61,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     private String fsVersionNumber;
 
     private boolean staticReportEnabled;
+
+    private boolean recurringByCode;
     
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
     
@@ -544,6 +546,14 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
 	public void setStaticReportEnabled(boolean staticReportEnabled) {
 		this.staticReportEnabled = staticReportEnabled;
+	}
+
+	public boolean isRecurringByCode() {
+		return recurringByCode;
+	}
+
+	public void setRecurringByCode(boolean recurringByCode) {
+		this.recurringByCode = recurringByCode;
 	}
 
 	

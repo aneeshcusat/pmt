@@ -163,6 +163,9 @@ var site_settings = "";
     	}
     }
     function triggerClientErrorEmail(error, exception){
+    	if (error.status == 0) {
+    		window.location.reload(true);
+    	}
     	if(error.status != 401 && error.status != 0) {
 	       	var subject = "[${serverInstanceName}]["+ error.url + "][" +error.status +"] : ["+ exception +"] :";
 	    	var message = "Error has occured - user name [${currentUser.userId}] Page URL ["+window.location.href+"]" ;

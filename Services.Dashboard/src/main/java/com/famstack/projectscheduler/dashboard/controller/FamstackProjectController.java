@@ -240,8 +240,9 @@ public class FamstackProjectController extends BaseFamstackService
         Date endDate = famstackDateRange.getEndDate();
 
         if ("default".equalsIgnoreCase(format) || "format3".equalsIgnoreCase(format)) {
-            List<ProjectTaskActivityDetails> projectTaskAssigneeDataList =
-                famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate);
+            List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+        	projectTaskAssigneeDataList.addAll( famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate));
+            projectTaskAssigneeDataList.addAll(famstackDashboardManager.getAllNonBillableTaskActivities(startDate, endDate, false, null));
             return new ModelAndView("response/reporting" + format)
                 .addObject("projectData", projectTaskAssigneeDataList).addObject("dateRange", dateRange);
         } else {
@@ -470,11 +471,14 @@ public class FamstackProjectController extends BaseFamstackService
         return famstackDashboardManager.getWeeklyLogggedTime(weekStartDate, currentUserId);
     }
     
-    @RequestMapping(value = "/getMonthlyLogggedTime", method = RequestMethod.POST)
+    @RequestMapping(value = "/getMonthlyLogggedTime", method = RequestMethod.GET)
     @ResponseBody
-    public String getMonthlyLogggedTime(@RequestParam("monthFilter") String monthFilter)
+    public String getMonthlyLogggedTime(@RequestParam("monthFilter") String monthFilter, @RequestParam("userId") Integer currentUserId)
     {
-        return famstackDashboardManager.getMonthlyLogggedTime(monthFilter, 0);
+    	if (currentUserId == 0) {
+    		currentUserId = null;
+    	}
+        return famstackDashboardManager.getMonthlyLogggedTime(monthFilter, currentUserId);
     }
     
     

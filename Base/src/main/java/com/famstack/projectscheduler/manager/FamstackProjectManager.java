@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import com.famstack.email.FamstackEmailSender;
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
@@ -74,6 +75,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     @Resource
     FamstackNotificationServiceManager famstackNotificationServiceManager;
+    
+    @Resource
+    FamstackEmailSender famstackEmailSender;
     
     @Resource
     FamstackUserActivityManager famstackUserActivityManager;
@@ -1131,11 +1135,7 @@ public class FamstackProjectManager extends BaseFamstackManager
     	return query == null ? "" : query;
 	}
 
-	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean getUnique)
-    {
-		return getAllProjectTaskAssigneeData(startDate, endDate, getUnique, null);
-    }
-	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean getUnique, Integer userId)
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean getUnique,boolean addSameTaskActTime, Integer userId)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startDate", startDate);
@@ -1143,10 +1143,12 @@ public class FamstackProjectManager extends BaseFamstackManager
 
         List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
         List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList= new ArrayList<>();
+        List<ProjectTaskActivityDetails>  allTaskActProjectDetailsList= new ArrayList<>();
         String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
         String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
-        sqlQuery += " and utai.user_grp_id = " + userGroupId;
-        
+        if(userId == null) {
+        	sqlQuery += " and utai.user_grp_id = " + userGroupId;
+        }
         if(userId != null) {
         	sqlQuery += " and uai.id = " + userId;
         }
@@ -1157,14 +1159,19 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("projectItemList" + projectItemList);
         logDebug("startDate" + startDate);
         logDebug("endDate" + endDate);
-        mapProjectsList(projectDetailsList,projectDetailsUniqueTasksList, projectItemList);
+        mapProjectsList(projectDetailsList,projectDetailsUniqueTasksList, allTaskActProjectDetailsList, projectItemList);
+        
+        if (!addSameTaskActTime) {
+        	return allTaskActProjectDetailsList;
+        }
+        
         if (getUnique) {
         	return projectDetailsUniqueTasksList;
         }
         return projectDetailsList;
     }
 
-    private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList, List<Object[]> projectItemList)
+    private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList, List<ProjectTaskActivityDetails> allTaskActProjectDetailsList, List<Object[]> projectItemList)
     {
 
         /*
@@ -1246,7 +1253,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             
             projectTaskActivityDetailsTmp = projectCacheMap.get(key);
             projectUniqueItemDetails = projectUniqueItemCacheMap.get(uniqueItemKey);
-            
+            allTaskActProjectDetailsList.add(projectTaskActivityDetails);
             if (projectTaskActivityDetailsTmp != null) {
                 projectTaskActivityDetailsTmp.addToChildProjectActivityDetailsMap(projectTaskActivityDetails);
                 projectTaskActivityDetailsTmp.setTaskActivityDuration(projectTaskActivityDetailsTmp
@@ -1667,8 +1674,15 @@ public class FamstackProjectManager extends BaseFamstackManager
                     logInfo("Deleting recurring project after expiry : " + projectCode);
                     continue;
                 }
-                ProjectItem projectItem = getLatestProjectByCode(projectCode);
-                logDebug("recurring Project code :" + projectCode);
+                int projectId = recurringProjectItem.getProjectId();
+                ProjectItem projectItem = null;
+                if (getFamstackApplicationConfiguration().isRecurringByCode()) {
+                	projectItem = getLatestProjectByCode(projectCode);
+               	 	logInfo("Recurring project by code : " + projectId + ", Recurring id " + recurringProjectItem.getId());
+                } else {
+                	projectItem = getProjectItemById(projectId);
+                	logInfo("Recurring project by id : " + projectId + ", Recurring id " + recurringProjectItem.getId());
+                }
                 if (projectItem != null) {
                     Timestamp projectStartTime = getNewTimeForDuplicate(projectItem.getStartTime());
 
@@ -1688,6 +1702,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 
                     quickDuplicateProject(projectItem, projectItem.getName(), projectItem.getDurationHrs(),
                         projectStartTime, projectEndTime, taskItemList);
+                } else {
+                	logError("Recurring project not found : " + projectId + ", Recurring id " + recurringProjectItem.getId());
+                	famstackEmailSender.sendTextMessage("ALERT ERROR - SERVER Recurring project not found, Project Id " + projectId + ", Recurring id " + recurringProjectItem.getId(), "Reccuring failed"); 
                 }
 
                 recurringProjectItem.setLastRun(recurringProjectItem.getNextRun());
@@ -1726,6 +1743,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             if (taskItem.getCanRecure()) {
                 TaskDetails taskDetails = new TaskDetails();
                 taskDetails.setAssignee(taskItem.getAssignee());
+                //TODO : checkif the user in same group
                 taskDetails.setName(taskItem.getName());
                 taskDetails.setCanRecure(taskItem.getCanRecure());
                 taskDetails.setDescription(taskItem.getDescription());

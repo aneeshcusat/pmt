@@ -679,18 +679,22 @@ public class FamstackUserActivityManager extends BaseFamstackManager
 
         return nonBillableTaskActivityItems;
     }
-    public void getAllNonBillabileTaskActivities(Date startDate, Date endDate, List<ProjectTaskActivityDetails> projectDetailsList,List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList)
-    {
-    	getAllNonBillabileTaskActivities(startDate, endDate, projectDetailsList, projectDetailsUniqueTasksList, null);	
-    }
-    public void getAllNonBillabileTaskActivities(Date startDate, Date endDate, List<ProjectTaskActivityDetails> projectDetailsList,List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList, Integer userId)
+    public void getAllNonBillabileTaskActivities(Date startDate, Date endDate, List<ProjectTaskActivityDetails> projectDetailsList,List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList, List<ProjectTaskActivityDetails> allTaskActivityProjectDetailsList, Integer currentUserId)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("calenderDateStart", startDate);
         dataMap.put("calenderDateEnd", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+        
+        String hqlQuery = HQLStrings.getString("allUnBilledUserActivityItemsFromDatetoDate");
+       
+        if (currentUserId == null) {
+        	hqlQuery += "and userGroupId=" + getFamstackApplicationConfiguration().getCurrentUserGroupId();
+        }
+        
         List<UserTaskActivityItem> userTaskActivityItems =
-            (List<UserTaskActivityItem>) getFamstackDataAccessObjectManager().executeQuery(
-                HQLStrings.getString("allUnBilledUserActivityItemsFromDatetoDate"), dataMap);
+            (List<UserTaskActivityItem>) getFamstackDataAccessObjectManager().executeAllGroupQuery(
+                hqlQuery, dataMap);
+        
         logDebug("Non billabletask activity items" + userTaskActivityItems);
         List<ProjectTaskActivityDetails> projectTaskActivityDetailsList = new ArrayList();
         Map<String, ProjectTaskActivityDetails> projectCacheMap = new HashMap<>();
@@ -700,15 +704,15 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         ProjectTaskActivityDetails projectUniqueItemDetails;
         for (UserTaskActivityItem userTaskActivityItem : userTaskActivityItems) {
         	
-        	if (userId != null && userTaskActivityItem.getUserActivityItem().getUserItem().getId() != userId) {
+        	if (currentUserId != null && userTaskActivityItem.getUserActivityItem().getUserItem().getId() != currentUserId) {
         		continue;
         	}
         	ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
         	projectTaskActivityDetails.setTaskActivityStartTime(userTaskActivityItem.getActualStartTime());
         	projectTaskActivityDetails.setUserId(userTaskActivityItem.getUserActivityItem().getUserItem().getId());
-        	projectTaskActivityDetails.setProjectName(userTaskActivityItem.getTaskActCategory());
+        	projectTaskActivityDetails.setProjectName("");
         	projectTaskActivityDetails.setClientName("");
-        	projectTaskActivityDetails.setProjectCategory("Non Billable");
+        	projectTaskActivityDetails.setProjectCategory(userTaskActivityItem.getTaskActCategory());
         	projectTaskActivityDetails.setProjectType(ProjectType.NON_BILLABLE);
         	projectTaskActivityDetails.setTaskName(userTaskActivityItem.getTaskName());
         	projectTaskActivityDetails.setTaskActivityDuration(userTaskActivityItem.getDurationInMinutes());
@@ -725,7 +729,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager
             
             projectTaskActivityDetailsTmp = projectCacheMap.get(key);
             projectUniqueItemDetails = projectUniqueItemCacheMap.get(uniqueItemKey);
-            
+            allTaskActivityProjectDetailsList.add(projectTaskActivityDetails);
             if (projectTaskActivityDetailsTmp != null) {
                 projectTaskActivityDetailsTmp.addToChildProjectActivityDetailsMap(projectTaskActivityDetails);
                 projectTaskActivityDetailsTmp.setTaskActivityDuration(projectTaskActivityDetailsTmp

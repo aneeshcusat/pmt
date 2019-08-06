@@ -974,13 +974,17 @@ public class FamstackDashboardManager extends BaseFamstackService
     {
 		return getAllProjectTaskAssigneeData(startDate, endDate, uniqueTaskUser, null);
     }
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean uniqueTaskUser, Integer userId)
+    {
+		return getAllProjectTaskAssigneeData(startDate, endDate, uniqueTaskUser,true, userId);
+    }
 	
-    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean uniqueTaskUser, Integer userId)
+    public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean uniqueTaskUser,boolean addSameTaskActTime, Integer userId)
     {
     	 List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
     	if (startDate != null && endDate != null) {
         projectDetailsList =
-            projectManager.getAllProjectTaskAssigneeData(startDate, endDate, uniqueTaskUser,userId);
+            projectManager.getAllProjectTaskAssigneeData(startDate, endDate, uniqueTaskUser,addSameTaskActTime,userId);
     	}
     	return projectDetailsList;
     }
@@ -1002,9 +1006,19 @@ public class FamstackDashboardManager extends BaseFamstackService
     
     public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(Date startDate, Date endDate, boolean uniqueList, Integer currentUserId)
     {
+    	return getAllNonBillableTaskActivities(startDate, endDate, uniqueList, true, currentUserId);
+    }
+    
+    public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(Date startDate, Date endDate, boolean uniqueList,boolean addSameTaskActTime, Integer currentUserId)
+    {
     	 List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList = new ArrayList<>();
          List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
-         famstackUserActivityManager.getAllNonBillabileTaskActivities(startDate, endDate, projectDetailsList, projectDetailsUniqueTasksList, currentUserId);
+         List<ProjectTaskActivityDetails> allTaskActProjectDetailsList = new ArrayList<>();
+         famstackUserActivityManager.getAllNonBillabileTaskActivities(startDate, endDate, projectDetailsList, projectDetailsUniqueTasksList,allTaskActProjectDetailsList, currentUserId);
+         
+         if (!addSameTaskActTime) {
+         	return allTaskActProjectDetailsList;
+         }
          
          if (uniqueList) {
         	 return projectDetailsUniqueTasksList;
@@ -1596,8 +1610,8 @@ public class FamstackDashboardManager extends BaseFamstackService
 	}
 	
 	public List<ProjectTaskActivityDetails> getBillableAndNonBillaleSortedList(Date startDate, Date endDate, Integer currentUserId) {
-		 List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
-		 projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, true, currentUserId));
+		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+		projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, true, currentUserId));
         projectTaskAssigneeDataList.addAll(getAllNonBillableTaskActivities(startDate, endDate, true, currentUserId));
         Collections.sort(projectTaskAssigneeDataList, new Comparator<ProjectTaskActivityDetails>()
 	        {
@@ -1634,7 +1648,8 @@ public class FamstackDashboardManager extends BaseFamstackService
 			} else {
 				jsonObject.put("userName",projectTaskActivityDetails.getUserId());
 			}
-						jsonObject.put("type", projectTaskActivityDetails.getProjectType());
+			
+			jsonObject.put("type", projectTaskActivityDetails.getProjectType());
 			jsonObject.put("project", projectTaskActivityDetails.getProjectName());
 			jsonObject.put("task", projectTaskActivityDetails.getTaskName());
 			jsonObject.put("comments", projectTaskActivityDetails.getTaskCompletionComments());
@@ -1645,8 +1660,10 @@ public class FamstackDashboardManager extends BaseFamstackService
 			for(ProjectTaskActivityDetails subItem : projectTaskActivityDetails.getSubItems()) {
 				dateString = DateUtils.format(subItem.getTaskActivityStartTime(), DateUtils.DAY_MONTH_YEAR);
 				timeData.put(dateString, subItem.getDurationInHours());
-				weekTotal+=projectTaskActivityDetails.getTaskActivityDuration();
+				weekTotal+=subItem.getTaskActivityDuration();
 			}
+			System.out.println("weekTotal" + weekTotal);
+			
 			int hours = weekTotal / 60;
 	        int minutes = weekTotal % 60;
 			timeData.put("weekdayTotal", String.format("%d:%02d", hours, minutes));
@@ -1662,9 +1679,54 @@ public class FamstackDashboardManager extends BaseFamstackService
 		 Date startDate = DateUtils.tryParse("01-" + monthFilter, DateUtils.DAY_MONTH_YEAR);
 	     Date endDate = DateUtils.getLastDayOfThisMonth(startDate);
 		 
-		 projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, userId));
-         projectTaskAssigneeDataList.addAll(getAllNonBillableTaskActivities(startDate, endDate, false, userId));
+		 projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, false, userId));
+         projectTaskAssigneeDataList.addAll(getAllNonBillableTaskActivities(startDate, endDate, false,false, userId));
          
-		 return "";
+         Collections.sort(projectTaskAssigneeDataList, new Comparator<ProjectTaskActivityDetails>()
+        	        {
+        	            @Override
+        	            public int compare(ProjectTaskActivityDetails projectDetails2, ProjectTaskActivityDetails projectDetails1)
+        	            {
+        	                Date date1 = projectDetails1.getTaskActivityStartTime();
+        	                Date date2 = projectDetails2.getTaskActivityStartTime();
+
+        	                if (date1.before(date2)) {
+        	                    return -1;
+        	                } else if (date1.after(date2)) {
+        	                    return 1;
+        	                }
+        	                return 0;
+        	            }
+        	        });
+		 return mapProjectTaskAssigneeDataToJson(projectTaskAssigneeDataList);
+	}
+
+	private String mapProjectTaskAssigneeDataToJson(
+			List<ProjectTaskActivityDetails> projectTaskAssigneeDataList) {
+		JSONArray jsonArray = new JSONArray();
+		for(ProjectTaskActivityDetails projectTaskActivityDetails : projectTaskAssigneeDataList) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("userId",projectTaskActivityDetails.getUserId());
+			jsonObject.put("projectId", projectTaskActivityDetails.getProjectId());;
+			jsonObject.put("taskId", projectTaskActivityDetails.getTaskId());
+			jsonObject.put("taskActivityId", projectTaskActivityDetails.getTaskActivityId());;
+			if(getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetails.getUserId()) != null){
+				jsonObject.put("userName", getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetails.getUserId()).getFirstName());
+			} else {
+				jsonObject.put("userName","Unknown");
+			}
+			jsonObject.put("projectType", projectTaskActivityDetails.getProjectType());
+			jsonObject.put("projectName", projectTaskActivityDetails.getProjectName());
+			jsonObject.put("taskName", projectTaskActivityDetails.getTaskName());
+			jsonObject.put("projectCategory", projectTaskActivityDetails.getProjectCategory());
+			jsonObject.put("taskActProjType", projectTaskActivityDetails.getTaskActType());
+			jsonObject.put("taskActCategory", projectTaskActivityDetails.getTaskActCategory());
+			jsonObject.put("completionComments", projectTaskActivityDetails.getTaskCompletionComments());
+			jsonObject.put("durationInHours", projectTaskActivityDetails.getDurationInHours());
+			jsonObject.put("dateString", DateUtils.format(projectTaskActivityDetails.getTaskActivityStartTime(), DateUtils.DAY_MONTH_YEAR));
+			
+			jsonArray.put(jsonObject);
+		}
+		return jsonArray.toString();
 	}
 }

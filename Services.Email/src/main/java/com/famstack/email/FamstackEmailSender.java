@@ -39,9 +39,8 @@ public class FamstackEmailSender extends BaseFamstackService
     {
     	String from = "famstack.support@course5i.com";
     	String to = "famstack.bops@gmail.com";
-
-    	MimeMessage message = javaMailSender.createMimeMessage();
-        try {
+    	 try {
+    		MimeMessage message = javaMailSender.createMimeMessage();
             message.setFrom(new InternetAddress(from));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);

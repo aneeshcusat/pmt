@@ -1,5 +1,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@include file="includes/header.jsp" %>           
+<%@include file="includes/header.jsp" %>    
+<c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
+<link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/pages/myTaskList.css?v=${fsVersionNumber}"/>
 <style>
 /* Panel - Activity Stream
 ---------------------------*/
@@ -14,13 +16,14 @@
 .panel-comment ul.list-stream .list-stream-item,
 .activity-stream ul.list-comment .list-stream-item,
 .panel-comment ul.list-comment .list-stream-item {
-  border-left: 1px solid #e1e3e4;
-  padding-top: 18px;
-  padding-bottom: 18px;
-  padding-right: 15px;
-  margin-left: 15px;
-  margin-right: -15px;
-  border-top: 1px solid #e1e3e4;
+    /* border-left: 1px solid #e1e3e4; */
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    margin-left: 5px;
+    margin-right: 0px;
+    border-top: 1px solid #e1e3e4;
+}
 }
 .activity-stream ul.list-stream .list-stream-item:first-child,
 .panel-comment ul.list-stream .list-stream-item:first-child,
@@ -148,78 +151,101 @@
   text-transform: uppercase;
   font-size: 11px;
 }
-
-.color-primary {
-  color: #2980b9 !important;
-}
-.color-success {
-  color: #27ae60 !important;
-}
-.color-info {
-  color: #3498db !important;
-}
-.color-warning {
-  color: #f39c12 !important;
-}
-.color-danger {
-  color: #c0392b !important;
-}
-.bg-primary {
-  background: #2980b9 !important;
-}
-.bg-success {
-  background: #27ae60 !important;
-}
-.bg-info {
-  background: #3498db !important;
-}
-.bg-warning {
-  background: #f39c12 !important;
-}
-.bg-danger {
-  background: #c0392b !important;
-}
 </style>
 
- <!-- START BREADCRUMB -->
- <ul class="breadcrumb">
-     <li><a href="${applicationHome}/index">Home</a></li>  
-     <li class="active">My Activities</li>
- </ul>
- <!-- END BREADCRUMB -->  
-
-<!-- PAGE TITLE -->
-<div class="page-title">                    
-    <h2><span class="fa fa-users"></span> My Task Activities</h2>
-</div>
 <!-- END PAGE TITLE -->                
+<div class="content-frame" style="min-height: 500px; margin-bottom: 50px">     
+    <!-- START CONTENT FRAME TOP -->
+    <div class="content-frame-top">                        
+        <div class="page-title">                    
+            <h2><span class="fa fa-tasks"></span> Task Activities</h2>
+        </div>                                                
+    </div> 
+<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="col-md-5">
+								<div class="input-group">
+									<div class="input-group-addon">
+										<span class="fa fa-search"></span>
+									</div>
+									<input type="text" class="form-control" id="taskActivitySearchId" placeholder="Search for a task activity">
+								</div>
+							</div>
+							 <div class="col-md-2">
+							  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
+								<select id="taskActivityAssigneeId" name="taskAssigneeId" class="form-control select" data-live-search="true">
+									<option value="0">All</option>
+										 <c:if test="${not empty userMap}">
+											<c:forEach var="user" items="${userMap}">
+												 <c:if test="${currentUser.id eq user.id}">
+												 	<option selected="selected" value="userId${user.id}">${user.firstName}</option>
+												 </c:if>
+												  <c:if test="${currentUser.id ne user.id}">
+												  <option value="userId${user.id}">${user.firstName}</option>
+												  </c:if>
+							  				</c:forEach>
+							  			</c:if>
+									</select>
+								</c:if>
+								<c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}">
+									<input type="hidden" id="taskActivityAssigneeId" value="${currentUser.id}">
+								</c:if>
+							</div>
+							<div class="col-md-1"> 
+								<div class="form-group">
+                     	 		<input type='text' class="form-control taskActivityMonthSelector" id='' autocomplete="off"/>
+                            </div>
+							</div>
+							<div class="col-md-1"> 
+                            </div>
+							<div class="col-md-3">
+								  
+								  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
+									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
+									Record Non-billable Time.
+									</a>
+								
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
 
+		</div>
 <!-- PAGE CONTENT WRAPPER -->
 <div class="page-content-wrap">
-    
     <div class="row">
         <div class="col-md-12">
 				<div class="panel panel-default panel-stream">
 					<div class="panel-body">
 						<div class="activity-stream">
+								
+						
 							<ul class="list-unstyled list-stream">
+							
 								<li class="list-stream-item">
 									<div class="list-stream-icon pull-left bg-primary">
 										<i class="fa fa-tint"></i>
 									</div>
 									<div class="media">
-										<a class="media-avatar mini media-left" href="#">
-											<img class="media-object" src="img/uif-1.jpg" alt="...">
-										</a>
 										<div class="media-body">
 											<h4 class="media-heading">
-												<a href="#">John Appleseed</a>
-												<span class="meta-time">2 hours ago</span>
+												<a href="#">Task Activity name</a>
 											</h4>
 											<p>
-												Created a new project: <a href="#">This is Awesome Project</a>
+												Project: <a href="#">This is Awesome Project</a>
+												Project Type: <a href="#">This is Awesome Project</a>
+											</p>
+											<p>
+												Task: <a href="#">This is Awesome Project</a>
 											</p>
 										</div>
+										<a class="media-avatar mini media-left" href="#">
+											<img class="media-object assignee" src="/bops/dashboard/image/192" onerror="this.src='/bops/jsp/assets/images/users/no-image.jpg'"/>
+										</a>
 									</div>
 								</li>
 								<li class="list-stream-item">
@@ -241,124 +267,6 @@
 										</div>
 									</div>
 								</li>
-								<li class="list-stream-item">
-									<div class="list-stream-icon pull-left bg-success">
-										<i class="fa fa-check-square-o"></i>
-									</div>
-									<div class="media">
-										<a class="media-avatar mini media-left" href="#">
-											<img class="media-object" src="img/uif-3.jpg" alt="...">
-										</a>
-										<div class="media-body">
-											<h4 class="media-heading">
-												<a href="#">Chris Mullin</a>
-												<span class="meta-time">Yesterday</span>
-											</h4>
-											<p>
-												Completed a task in: <a href="#">Milestone #20</a>
-											</p>
-										</div>
-									</div>
-								</li>
-								<li class="list-stream-item">
-									<div class="list-stream-icon pull-left bg-primary">
-										<i class="fa fa-tint"></i>
-									</div>
-									<div class="media">
-										<a class="media-avatar mini media-left" href="#">
-											<img class="media-object" src="img/uif-1.jpg" alt="...">
-										</a>
-										<div class="media-body">
-											<h4 class="media-heading">
-												<a href="#">John Appleseed</a>
-												<span class="meta-time">2 hours ago</span>
-											</h4>
-											<p>
-												Created a new Project: <a href="#">This is Awesome Project</a>
-											</p>
-										</div>
-									</div>
-								</li>
-								<li class="list-stream-item minified">
-									<div class="list-stream-icon pull-left bg-info">
-										<i class="fa fa-comments"></i>
-									</div>
-									<div class="media">
-										<div class="media-body">
-											<p>
-												2 Comments made on Task: <a href="#">This is Awesome Project</a>
-											</p>
-											<span class="meta-time">2 hours ago</span>
-										</div>
-										<div class="grouped-avatar clearfix">
-											<a class="media-avatar mini pull-left" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="John Appleseed">
-												<img class="media-object" src="img/uif-1.jpg" alt="...">
-											</a>
-											<a class="media-avatar mini pull-left" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Kung Fu Panda">
-												<img class="media-object" src="img/uif-7.jpg" alt="...">
-											</a>
-										</div>
-									</div>
-								</li>
-								<li class="list-stream-item">
-									<div class="list-stream-icon pull-left bg-success">
-										<i class="fa fa-check-square-o"></i>
-									</div>
-									<div class="media">
-										<a class="media-avatar mini media-left" href="#">
-											<img class="media-object" src="img/uif-3.jpg" alt="...">
-										</a>
-										<div class="media-body">
-											<h4 class="media-heading">
-												<a href="#">Chris Mullin</a>
-												<span class="meta-time">Yesterday</span>
-											</h4>
-											<p>
-												Completed a Task in: <a href="#">Milestone #20</a>
-											</p>
-										</div>
-									</div>
-								</li>
-								<li class="list-stream-item minified">
-									<div class="list-stream-icon pull-left bg-info">
-										<i class="fa fa-comment"></i>
-									</div>
-									<div class="media">
-										<div class="media-body">
-											<p class="pull-left">
-												2 Comments made on Task: <a href="#">This is Awesome Project</a>
-											</p>
-											<span class="meta-time">2 hours ago</span>
-										</div>
-										<div class="grouped-avatar clearfix">
-											<a class="media-avatar mini pull-left" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="John Appleseed">
-												<img class="media-object" src="img/uif-1.jpg" alt="...">
-											</a>
-											<a class="media-avatar mini pull-left" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Kung Fu Panda">
-												<img class="media-object" src="img/uif-7.jpg" alt="...">
-											</a>
-										</div>
-									</div>
-								</li>
-								<li class="list-stream-item">
-									<div class="list-stream-icon pull-left bg-success">
-										<i class="fa fa-check-square-o"></i>
-									</div>
-									<div class="media">
-										<a class="media-avatar mini media-left" href="#">
-											<img class="media-object" src="img/uif-3.jpg" alt="...">
-										</a>
-										<div class="media-body">
-											<h4 class="media-heading">
-												<a href="#">Chris Mullin</a>
-												<span class="meta-time">Yesterday</span>
-											</h4>
-											<p>
-												Completed a Task in: <a href="#">Milestone #20</a>
-											</p>
-										</div>
-									</div>
-								</li>
 								<li class="list-stream-item minified load">
 									<div class="list-stream-icon pull-left">
 										<i class="fa fa-repeat"></i>
@@ -376,3 +284,123 @@
         </div>
     </div>
 </div>
+</div>
+<%@include file="includes/footer.jsp" %>     
+ <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>       
+<script type="text/javascript"
+	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?v=${fsVersionNumber}"></script>
+<script>
+
+$(document).ready(function(){
+	reloadTaskActivities();
+});
+
+var activeUserId = "";
+
+$(".taskOwnersList").on("click", function(){
+	var hasClass = $("#" + this.id).hasClass("active");
+	$(".taskOwnersList").removeClass("active");
+	if (!hasClass) {
+		$("#" + this.id).addClass("active");
+		$(".taskact-item").hide();
+		$(".taskact-item." + this.id).show();
+		activeUserId=this.id;
+	} else {
+		$(".taskact-item").show();
+		activeUserId="";
+	}
+	performSearch();
+});
+
+
+$("#taskAssigneeId").on("change", function(){
+	var assigneeSelectionId = $(this).val();
+	filterTaskActivities(assigneeSelectionId);
+});
+
+function filterTaskActivities(assigneeSelectionId){
+	if (assigneeSelectionId != "") {
+		$(".taskact-item").hide();
+		$(".taskact-item." + assigneeSelectionId).show();
+		activeUserId=assigneeSelectionId;
+	} else {
+		$(".taskact-item").show();
+		activeUserId="";
+	}
+	performSearch();
+}
+
+
+function performSearch(){
+	var serarchText = $('#taskActivitySearchId').val();
+	famstacklog(serarchText);
+	var searchId = ".taskact-item";
+
+	if (activeUserId != "") {
+		searchId+="."+activeUserId;
+	}
+	
+	if (serarchText != "") {
+		$('.taskact-item').hide();
+	    $(searchId).each(function(){
+	       if($(this).text().toUpperCase().indexOf(serarchText.toUpperCase()) != -1){
+	           $(this).show();
+	       }
+	    });
+	} else {
+		$(searchId).show();
+	}
+}
+
+$('#taskActivitySearchId').keydown(function(){
+	performSearch();
+});
+
+$('#taskActivitySearchId').keyup(function(){
+	performSearch();
+});
+
+$(document).ready(function(){
+	/* MESSAGE BOX */
+	$(document).on("click",".deleteTask",function(){
+	    var box = $($(this).data("box"));
+	    if(box.length > 0){
+	        box.toggleClass("open");
+	        
+	        var sound = box.data("sound");
+	        
+	        if(sound === 'alert')
+	            playAudio('alert');
+	        
+	        if(sound === 'fail')
+	            playAudio('fail');
+	        
+	    }        
+	    return false;
+	});
+	$(document).on("click",".mb-control-close",function(){
+	   $(this).parents(".message-box").removeClass("open");
+	   return false;
+	});    
+	/* END MESSAGE BOX */
+});
+
+$("#taskActivityAssigneeId").on("change", function(){
+	reloadTaskActivities();
+});
+
+$(".taskActivityMonthSelector").on("change", function(){
+	reloadTaskActivities();
+});
+function refreshCalendar(){
+	reloadTaskActivities();
+}
+$('.taskActivityMonthSelector').datetimepicker({ 
+	sideBySide: true, format: 'MMM-YYYY',
+	useCurrent: true,
+	defaultDate:new Date()
+	}).on('dp.change', function(e) {
+		reloadTaskActivities();
+	});
+</script>

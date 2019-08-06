@@ -276,8 +276,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 	            famstackUserActivityManager.completeTaskActivityAndStartNewTaskActivity(taskActivityId, taskItem);
 	        taskDetails = famstackUserActivityManager.mapUserTaskActivityItem(userTaskActivityItem);
 	        } catch (Exception e) {
-	        	famstackEmailSender.sendTextMessage("ALERT: ERROR - SERVER, playTask failed- Unable to find task item id " + taskId, "User id " 
-	        			+ getFamstackApplicationConfiguration().getCurrentUserId() +", taskActivityId " + taskActivityId +", TaskPausedTime" + taskItem.getTaskPausedTime());
+	        	famstackEmailSender.sendTextMessage("ALERT: ERROR - SERVER, playTask failed- item id " + taskId, "User id " 
+	        			+ getFamstackApplicationConfiguration().getCurrentUserId() +", taskActivityId " + taskActivityId +", TaskPausedTime" + taskItem.getTaskPausedTime() +", Error message "+ e.getMessage());
 	        	logError("Unable to pause task", e);
 	        }
         }

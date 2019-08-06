@@ -11,6 +11,9 @@
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/checkbox/styledCheckbox.css"/>
 
+<script type="text/javascript">
+var assigneeMandatoryForQuickCloning = ${currentUserGroupId != 1018};
+</script>
 <style>
 @media screen and (min-width: 700px) {
 	#createprojectmodal .modal-dialog {
@@ -455,6 +458,11 @@ function clearCreateProjectForm(){
 	$("#PONumber").val("");
 	$("#POidSpan").html("");
 	
+	$("#newCategory").prop("selectedIndex",0);
+	$('#newCategory').selectpicker('refresh');
+	$("#sowLineItem").val("");
+	
+	
 	$("#watchers").val("");
 	
 	$("#tags").val("");
@@ -511,6 +519,12 @@ function initializeCreateProjectForm(project){
 
 	$("#category").val(project.category);
 	$('#category').selectpicker('refresh');
+	
+	
+	$("#newCategory").val(project.newCategory);
+	$('#newCategory').selectpicker('refresh');
+	$("#sowLineItem").val(project.sowLineItem);
+	
 	$('.clientOption').each(function () { $(this).show(); });
 	$('#clientId').val(project.clientId);
 	$('#clientId').selectpicker('refresh');
@@ -518,7 +532,7 @@ function initializeCreateProjectForm(project){
 	
 	$("#watchers").val(project.watchers);
 	
-	if (project.watchers != "") {
+	if (project.watchers != null && project.watchers != "") {
 		var watchersArray = project.watchers.split(",");
 		famstacklog(watchersArray);
 		for (var index=0; index < watchersArray.length; index++) {
@@ -527,7 +541,7 @@ function initializeCreateProjectForm(project){
 		$(".twitter-typeahead input.mab-jquery-taginput-input").attr("placeholder","");
 	}
 	
-	if (project.tags != "") {
+	if (project.tags != null && project.tags != "") {
 		var tagsArray = project.tags.split(",");
 		for (var index=0; index < tagsArray.length; index++) {
 			$(".tagsinput").addTag(tagsArray[index]);
@@ -1230,9 +1244,12 @@ var createDuplicateProjectWithTaskAction = function(projectId, projectCode) {
 			$(this).find(".tskDuration").addClass("error");
 			isError = true;
 		}
-		if (availabilityTime == "") {
+		if (availabilityTime == "" && assigneeMandatoryForQuickCloning) {
 			$(this).find(".taskCloneAssignee").addClass("error");
 			isError = true;
+		} else {
+			taskCloneAssignee = 0;
+			availabilityTime= getTodayDate(new Date()) + " 08:00";
 		}
 		taskDurationIntValue+=parseInt(tskDuration);
 		
@@ -1297,6 +1314,8 @@ function refreshProjectDetails(){
 			} else {
 				$(".recurringTimeDiv").addClass("hide");
 				$(".recurringDelete").addClass("hide");
+				$(".recurringProjectDiv").addClass("hide");
+				$(".recurringProjectName").html("");
 				$(".recurringEndTime").val("");
 				$("#RPABCreatOrUpdate").html("Create");
 				initializeCron("0 5 0 * * ?");
@@ -1330,6 +1349,9 @@ function loadRecurringProjectDetails(projectId, projectCode, responseJson){
 	$(".recurringDelete").removeClass("hide");
 	$(".recurringEndTime").val(responseJson.endDateString);
 	$("#recurringCronExpressionValue").val(responseJson.cronExpression);
+	$(".recurringProjectDiv").removeClass("hide");
+	$(".recurringProjectName").html("<a href='project\\"+responseJson.projectId+"' target='_new'>View recurring project</a>");
+	
 	initializeCron(responseJson.cronExpression);
 	$("#recurringNET").html(responseJson.nextRun);
 	if (responseJson.lastRun != null){

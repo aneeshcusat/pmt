@@ -132,7 +132,15 @@ function saveCurrentProjectWeekDataAndMove(){
 	moveToNextWeek();
 }
 
+function checkValidDate() {
+	var currentSelectedWeekDate = $(".weekSelector").val();
+	if (currentSelectedWeekDate == "" || currentSelectedWeekDate.includes('NaN') || currentSelectedWeekDate.includes('undefined')) {
+		$('.weekSelector').val(formatDate(getLastMonday(new Date())));
+	}
+}
+
 function moveToPreviousWeek(){
+	checkValidDate();
 	 var date =  new Date($(".weekSelector").val());
 	 date.setDate(date.getDate() - 7);
 	 $('.weekSelector').val(formatDate(date));
@@ -140,6 +148,7 @@ function moveToPreviousWeek(){
 }
 
 function moveToNextWeek(){
+	checkValidDate();
 	 var date =  new Date($(".weekSelector").val());
 	 date.setDate(date.getDate() + 7);
 	 $('.weekSelector').val(formatDate(date));
@@ -147,6 +156,7 @@ function moveToNextWeek(){
 }
 
 function moveToCurrentWeek(){
+	checkValidDate();
 	var date = new Date(getLastMonday(new Date()));
 	$('.weekSelector').val(formatDate(date));
 	fillWeeklyDates(date);
@@ -419,6 +429,8 @@ function getLastMonday(date) {
 	  t.setDate(t.getDate() - t.getDay() + 1);
 	  return t;
 }
+
+$(document).ready(function(){
 $('.weekSelector').val(formatDate(getLastMonday(new Date())));
 $('.weekSelector').datepicker({ 
 	defaultViewDate:getLastMonday(new Date()),
@@ -430,9 +442,11 @@ $('.weekSelector').datepicker({
 	daysOfWeekDisabled: [0,2,3,4,5,6],
 	autoclose:true
 }).on('changeDate', function(e) {
+	checkValidDate();
 	var date = new Date($(".weekSelector").val());
 	fillWeeklyDates(date);
 });;
+});
 
 function formatDate(date) {
 	var monthNames = [
@@ -470,10 +484,10 @@ function formatDayDate(currentDate) {
 
 
 function fillWeeklyDates(currentDate){
-	for (i =1; i < 8; i++) {
+	for (var i =1; i < 8; i++) {
 		$(".day"+i).html(formatDayDate(currentDate));
 		currentDate.setDate(currentDate.getDate() + 1);
 	}
-	
+	$('.loggedData.trActive').remove();
 	getSelectedWeekLoggedData();
 }

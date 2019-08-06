@@ -88,10 +88,10 @@ public class UserTaskActivityItem implements FamstackBaseItem
     @Column(name = "recorded_end_time")
     private Timestamp recordedEndTime;
 
-    @Column(name = "inprogress_comment")
+    @Column(name = "inprogress_comment", columnDefinition="LONGTEXT")
     private String inprogressComment;
 
-    @Column(name = "completion_comment")
+    @Column(name = "completion_comment", columnDefinition="LONGTEXT")
     private String completionComment;
     
     @Column(name = "modified_by")
