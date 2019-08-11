@@ -1,5 +1,26 @@
 <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
 <%@include file="includes/header.jsp"%>
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
+<c:set var="projectRecurringByCodeEnabled" value='false'/>  
+  <c:set var="projectRecurringByCodeSelectId" value='projectRecurringByCode${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[projectRecurringByCodeSelectId] && not empty appConfigMap[projectRecurringByCodeSelectId].appConfValueDetails}">
+  <c:forEach var="projectRecurringByCodeConf" items="${appConfigMap[projectRecurringByCodeSelectId].appConfValueDetails}">
+  <c:if test="${projectRecurringByCodeConf.value eq 'enabled'}">
+	<c:set var="projectRecurringByCodeEnabled" value='true'/>   
+  </c:if>
+  </c:forEach>
+  </c:if>
+  
+  <c:set var="assignManForQckClone" value='true'/>  
+  <c:set var="assignManForQckCloneSelectId" value='assignManForQckClone${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[assignManForQckCloneSelectId] && not empty appConfigMap[assignManForQckCloneSelectId].appConfValueDetails}">
+  <c:forEach var="assignManForQckCloneConf" items="${appConfigMap[assignManForQckCloneSelectId].appConfValueDetails}">
+  <c:if test="${assignManForQckCloneConf.value eq 'disabled'}">
+	<c:set var="assignManForQckClone" value='false'/>   
+  </c:if>
+  </c:forEach>
+  </c:if>
+
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>                    
@@ -12,7 +33,8 @@
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/checkbox/styledCheckbox.css"/>
 
 <script type="text/javascript">
-var assigneeMandatoryForQuickCloning = ${currentUserGroupId != 1018};
+var assigneeMandatoryForQuickCloning = ${assignManForQckClone};
+var recurringByCode = ${projectRecurringByCodeEnabled};;
 </script>
 <style>
 @media screen and (min-width: 700px) {
@@ -1350,8 +1372,11 @@ function loadRecurringProjectDetails(projectId, projectCode, responseJson){
 	$(".recurringEndTime").val(responseJson.endDateString);
 	$("#recurringCronExpressionValue").val(responseJson.cronExpression);
 	$(".recurringProjectDiv").removeClass("hide");
-	$(".recurringProjectName").html("<a href='project\\"+responseJson.projectId+"' target='_new'>View recurring project</a>");
-	
+	if (recurringByCode) {
+		$(".recurringProjectName").html("<a href='project\\"+projectId+"' target='_new'>View recurring project</a>");
+	} else {
+		$(".recurringProjectName").html("<a href='project\\"+responseJson.projectId+"' target='_new'>View recurring project</a>");
+	}
 	initializeCron(responseJson.cronExpression);
 	$("#recurringNET").html(responseJson.nextRun);
 	if (responseJson.lastRun != null){

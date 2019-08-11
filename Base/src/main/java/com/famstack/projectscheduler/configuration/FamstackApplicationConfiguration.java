@@ -62,8 +62,6 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 
     private boolean staticReportEnabled;
 
-    private boolean recurringByCode;
-    
     public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
     
     public static Map<Integer, EmployeeDetails> allUsersMap = new HashMap<>();
@@ -141,6 +139,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         userMap.putAll(userMapTemp);
         userIdMap.putAll(userIdMapTemp);
         allUsersMap.putAll(allUserMapTemp);
+        
         famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "user", true);
     }
     
@@ -315,11 +314,18 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     {
         return allUsersMap;
     }
+    
+    public List<EmployeeDetails> getAllSortedUsers()
+    {
+    	List<EmployeeDetails> employeeDetails = new ArrayList<>(allUsersMap.values());
+        Collections.sort(employeeDetails);
+        return employeeDetails;
+    }
 
     
     public Map<Integer, EmployeeDetails> getCurrentGroupUserMap()
     {
-        Map<Integer, EmployeeDetails> currentUserGroup = new HashMap();
+        Map<Integer, EmployeeDetails> currentUserGroup = new HashMap<>();
         if (userMap != null) {
             for (Integer userId : userMap.keySet()) {
                 if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
@@ -516,6 +522,30 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
     	return instanceName;
     }
 
+    public String getAppConfig(String type, String userGroupId)
+    {
+        List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
+        String appConfigType = type + userGroupId;
+        if (appConfigMap != null) {
+            AppConfDetails appConfigDetails = appConfigMap.get(appConfigType);
+
+            if (appConfigDetails != null && appConfigDetails.getAppConfValueDetails() != null) {
+                appConfValueDetails.addAll(appConfigDetails.getAppConfValueDetails());
+               return appConfValueDetails.get(0).getValue();
+            }
+        }
+        return null;
+    }
+
+	public boolean isRecurringByCode(String userGroupId) {
+		String value = getAppConfig("projectRecurringByCode", userGroupId);
+		if( value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}
+	
+    
 	public String getStaticFilesLocation() {
 		return staticFilesLocation;
 	}
@@ -548,13 +578,4 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 		this.staticReportEnabled = staticReportEnabled;
 	}
 
-	public boolean isRecurringByCode() {
-		return recurringByCode;
-	}
-
-	public void setRecurringByCode(boolean recurringByCode) {
-		this.recurringByCode = recurringByCode;
-	}
-
-	
 }

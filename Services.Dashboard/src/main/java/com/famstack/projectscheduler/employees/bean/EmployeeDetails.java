@@ -6,8 +6,7 @@ import java.util.Date;
 import com.famstack.projectscheduler.contants.LeaveType;
 import com.famstack.projectscheduler.security.user.UserRole;
 
-public class EmployeeDetails
-{
+public class EmployeeDetails implements Comparable<EmployeeDetails> {
 
     private static final int AWAY = 1;
 
@@ -356,6 +355,14 @@ public class EmployeeDetails
 
 	public void setFundedEmployee(Boolean fundedEmployee) {
 		this.fundedEmployee = fundedEmployee;
+	}
+
+	@Override
+	public int compareTo(EmployeeDetails employeeDetails) {
+		if (firstName != null) {
+			return firstName.compareTo(employeeDetails.firstName);
+		} 
+		return 0;
 	}
 
 }

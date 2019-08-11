@@ -1,4 +1,6 @@
 INSERT INTO `bops`.`user_group_item` (`id`, `company_id`, `company_name`, `name`, `user_grp_id`) VALUES (1018, 'bops', 'Course5i', 'Life Science', 1018); 
+INSERT INTO `bops`.`user_group_item` (`id`, `company_id`, `company_name`, `name`, `user_grp_id`) VALUES (1019, 'bops', 'Course5i', 'Team David McBride', 1019); 
+
 
 update user_info set reporterting_manager=null where user_grp_id='1015';
 delete from user_task_activity_info where user_grp_id='1015';

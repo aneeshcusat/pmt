@@ -86,10 +86,10 @@ tr.clickable:hover {
 				   		<td colspan="2"><a href="#tab5" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Dashboard View</a></td>
 				   	</tr>
 				   	<tr class="clickable">
-				   		<td colspan="2"><a href="#tab6" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Enable Weekly Time Log</a></td>
+				   		<td colspan="2"><a href="#tab6" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Weekly Time Log</a></td>
 				   	</tr>
 				   	<tr class="clickable">
-				   		<td colspan="2"><a href="#tab7" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Enable Project Task Activity Delete</a></td>
+				   		<td colspan="2"><a href="#tab7" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Config</a></td>
 				   	</tr>
 			   	 	</tbody>
 			     </table>
@@ -221,7 +221,7 @@ tr.clickable:hover {
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
-									<th colspan="2">Weekly Time Log Enabled</th>
+									<th colspan="2">Weekly Time Log</th>
 								</tr>
 							<thead>
 							<tbody>
@@ -233,6 +233,24 @@ tr.clickable:hover {
 									</select>
 									</td>
 									<td width="70px"><a href="#" onclick="createWeeklyTimeLog();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">New Task create</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+									<select class="form-control select" id="weeklyTimeLogNewTaskSelectId">
+										<option value="enabled">Enabled</option>
+										<option value="disabled">Disabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="createWeeklyTimeLogNewTask();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
 								</tr>
 							</tbody>
 						</table>
@@ -256,6 +274,44 @@ tr.clickable:hover {
 								</tr>
 							</tbody>
 						</table>
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Recurring Project From</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+									<select class="form-control select" id="projectRecurringByCodeSelectId">
+										<option value="disabled">Original Project</option>
+										<option value="enabled">Latest Project</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="projectRecurringByCode();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						
+					     <table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Assignee for Project Quick cloning</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+									<select class="form-control select" id="assignManForQckCloneSelectId">
+										<option value="enabled">Mandatory</option>
+										<option value="disabled">Optional</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="assignManForQckClone();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						
 					</div>
 				</div>
 			</div>
@@ -318,6 +374,33 @@ tr.clickable:hover {
   <c:forEach var="weeklyTimeLogConf" items="${appConfigMap[weeklyTimeLog].appConfValueDetails}">
   	 <script type="text/javascript">
   	 	$("#weeklyTimeLogSelectId").val('${weeklyTimeLogConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
+     <c:set var="weeklyTimeLogNewTask" value='weeklyTimeLogNewTask${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[weeklyTimeLogNewTask] && not empty appConfigMap[weeklyTimeLogNewTask].appConfValueDetails}">
+  <c:forEach var="weeklyTimeLogNewTaskConf" items="${appConfigMap[weeklyTimeLogNewTask].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#weeklyTimeLogNewTaskSelectId").val('${weeklyTimeLogNewTaskConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
+     <c:set var="projectRecurringByCode" value='projectRecurringByCode${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[projectRecurringByCode] && not empty appConfigMap[projectRecurringByCode].appConfValueDetails}">
+  <c:forEach var="projectRecurringByCodeConf" items="${appConfigMap[projectRecurringByCode].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#projectRecurringByCodeSelectId").val('${projectRecurringByCodeConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
+       <c:set var="assignManForQckClone" value='assignManForQckClone${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[assignManForQckClone] && not empty appConfigMap[assignManForQckClone].appConfValueDetails}">
+  <c:forEach var="assignManForQckCloneConf" items="${appConfigMap[assignManForQckClone].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#assignManForQckCloneSelectId").val('${assignManForQckCloneConf.value}');
   	 </script>
   </c:forEach>
   </c:if>
@@ -399,7 +482,37 @@ tr.clickable:hover {
 	    	famstacklog("ERROR: ", error);
 	    });
  }
+
+ function createWeeklyTimeLogNewTask(){
+	 var input1 = $("#weeklyTimeLogNewTaskSelectId").val();
+	 var type = "weeklyTimeLogNewTask";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
  
+ function projectRecurringByCode(){
+	 var input1 = $("#projectRecurringByCodeSelectId").val();
+	 var type = "projectRecurringByCode";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ } 
+ 
+
+ function assignManForQckClone(){
+	 var input1 = $("#assignManForQckCloneSelectId").val();
+	 var type = "assignManForQckClone";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ } 
 
  function projectTaskActivityDelete(){
 	 var input1 = $("#projectTaskActivitySelectId").val();

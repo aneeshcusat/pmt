@@ -1605,6 +1605,9 @@ public class FamstackProjectManager extends BaseFamstackManager
         RecurringProjectItem recurringProjectItem = getRecurringProjectItem(projectCode, projectId);
         if (recurringProjectItem == null) {
             recurringProjectItem = new RecurringProjectItem();
+            recurringProjectItem.setName(projectCode);
+            recurringProjectItem.setProjectId(projectId);
+            recurringProjectItem.setProjectCode(projectCode);
         }
 
         Date nextRun = FamstackUtils.getNextRunFromCron(cronExpression, new Date());
@@ -1631,10 +1634,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         }
         recurringProjectItem.setCronExpression(newCronExpression);
         recurringProjectItem.setNextRun(nextRun == null ? null : new Timestamp(nextRun.getTime()));
-        recurringProjectItem.setName(projectCode);
-        recurringProjectItem.setProjectId(projectId);
-        recurringProjectItem.setProjectCode(projectCode);
-
+       
         famstackDataAccessObjectManager.saveOrUpdateItem(recurringProjectItem);
         return recurringProjectItem;
     }
@@ -1676,7 +1676,7 @@ public class FamstackProjectManager extends BaseFamstackManager
                 }
                 int projectId = recurringProjectItem.getProjectId();
                 ProjectItem projectItem = null;
-                if (getFamstackApplicationConfiguration().isRecurringByCode()) {
+                if (getFamstackApplicationConfiguration().isRecurringByCode(recurringProjectItem.getUserGroupId())) {
                 	projectItem = getLatestProjectByCode(projectCode);
                	 	logInfo("Recurring project by code : " + projectId + ", Recurring id " + recurringProjectItem.getId());
                 } else {

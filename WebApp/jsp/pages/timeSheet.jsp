@@ -7,8 +7,21 @@
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="hasFullPermissionVar" value="${(((currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && currentUserGroupId != 1018) || currentUser.userRole == 'SUPERADMIN')}"/>
 <c:set var="currentUserId" value="${applicationScope.applicationConfiguraion.currentUserId}"/>
+<c:set var="appConfigMap" value="${applicationScope.applicationConfiguraion.appConfigMap}"/>
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
+<c:set var="weeklyTimeLogNewTaskSelectId" value='weeklyTimeLogNewTask${currentUserGroupId}'/>
+
+<c:set var="weeklyLogTaskEnabled" value='true'/>   
+  <c:if test="${not empty appConfigMap[weeklyTimeLogNewTaskSelectId] && not empty appConfigMap[weeklyTimeLogNewTaskSelectId].appConfValueDetails}">
+  <c:forEach var="weeklyTimeLogNewTaskConf" items="${appConfigMap[weeklyTimeLogNewTaskSelectId].appConfValueDetails}">
+  <c:if test="${weeklyTimeLogNewTaskConf.value eq 'disabled'}">
+	<c:set var="weeklyLogTaskEnabled" value='false'/>   
+  </c:if>
+  </c:forEach>
+  </c:if>
+
 <script type="text/javascript">
-var taskCreateEnabled = ${currentUserGroupId != 1018};
+var taskCreateEnabled = ${weeklyLogTaskEnabled};
 </script>
 
  <ul class="breadcrumb">

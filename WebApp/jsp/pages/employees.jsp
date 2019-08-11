@@ -1,6 +1,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="includes/header.jsp" %>
+<c:set var="allSortedUsers" value="${applicationScope.applicationConfiguraion.allSortedUsers}"/>
 <c:set var="employeeAccess" value="false"/>
 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userGroupId == '1012'}">
 	<c:set var="employeeAccess" value="true"/> 
@@ -185,6 +186,8 @@
 <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
 <script type="text/javascript" src="${js}/plugins/datatables/buttons.html5.min.js?v=${fsVersionNumber}"></script>   
+<script type='text/javascript' src='${js}/plugins/lazyload/jquery.lazy.min.js'></script>   
+
 <script>
   
 jQuery.validator.addMethod("validEmail", function(value, element) {
@@ -516,11 +519,16 @@ $(".showDeletedCheckBox").on("change",function(e){
 	performSearch(e);
 });
 
-$("img[data-src]").each(function(index) {
+/* $("img[data-src]").each(function(index) {
     $(this).load(function() {
         // code to run after loading
     });
     $(this).attr("src", $(this).attr("data-src"));
 });
 
-</script>        
+
+ */
+ $(document).ready(function(){
+	 $('.profile-image img').Lazy();
+ });
+ </script>        
