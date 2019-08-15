@@ -108,7 +108,7 @@ var site_settings = "";
 
         <!-- START TEMPLATE -->
         <script type="text/javascript" src="${js}/settings.js?v=${fsVersionNumber}"></script>
-        <script type="text/javascript" src="${js}/plugins.js?v=${fsVersionNumber}"></script>        
+        <script type="text/javascript" src="${js}/plugins.js?version=2.1&v=${fsVersionNumber}"></script>        
         <script type="text/javascript" src="${js}/actions.js?v=${fsVersionNumber}"></script>
         <!--
         <script type="text/javascript" src="${js}/demo_dashboard.js?v=${fsVersionNumber}"></script>

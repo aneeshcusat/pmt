@@ -33,6 +33,10 @@
 			<td></td>
 		</tr>
 		<tr class="clickable">
+			<td>CSR</td>
+			<td></td>
+		</tr>
+		<tr class="clickable">
 			<td>Famstack Management</td>
 			<td></td>
 		</tr>

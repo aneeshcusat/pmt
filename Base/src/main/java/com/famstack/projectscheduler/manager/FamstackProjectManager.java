@@ -39,6 +39,7 @@ import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.RecurringProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.employees.bean.RecurringProjectDetails;
@@ -1742,8 +1743,17 @@ public class FamstackProjectManager extends BaseFamstackManager
             Date taskStartTime = getNewTimeForDuplicate(taskItem.getStartTime());
             if (taskItem.getCanRecure()) {
                 TaskDetails taskDetails = new TaskDetails();
-                taskDetails.setAssignee(taskItem.getAssignee());
-                //TODO : checkif the user in same group
+                try{
+	                Map<Integer, EmployeeDetails> allEmployeeDetails = getFamstackApplicationConfiguration().getAllUsersMap();
+	                if (allEmployeeDetails != null 
+	                		&& allEmployeeDetails.get(taskItem.getAssignee()) != null 
+	                		&& allEmployeeDetails.get(taskItem.getAssignee()).getUserGroupId() == projectItem.getUserGroupId()) {
+	                	taskDetails.setAssignee(taskItem.getAssignee());
+	                }
+                } catch(Exception e) {
+                	logError("Recurring project task assignee get error", e);
+                	famstackEmailSender.sendTextMessage("ALERT ERROR - SERVER Recurring project task assignee get error, Project Id " + projectItem.getProjectId() + ", task id " + taskItem.getTaskId(), "Reccuring task assignee failed"); 
+                }
                 taskDetails.setName(taskItem.getName());
                 taskDetails.setCanRecure(taskItem.getCanRecure());
                 taskDetails.setDescription(taskItem.getDescription());

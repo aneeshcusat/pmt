@@ -57,15 +57,17 @@ $('#fullcaledarusersiteactivity').fullCalendar({
         	        			 $(this).css('background', "#FFF");
         	        		}
         	        	} else {
-        	        		if ($(this).attr("data-active") != "leave") {
+        	        		if ($(this).attr("data-active") != "Leave" && $(this).attr("data-active") != "Holiday" && $(this).attr("data-active") != "Leave Or Holiday") {
 	     	        			$(this).css('background', "green");
 	     	        			if ($("#userSiteActivityAssigneeId").prop("selectedIndex") > 0) {
 	     	        				$(this).append('<a class="marksiteactivity" style="color:red" href="javascript:updateUserActivityAjax(\''+$("#userSiteActivityAssigneeId").val()+'\',\''+$(this).attr("data-date")+'\', false);"><span class="fa fa-times  fa-2x"></span></a>');
 	     	        			} else if ($("#userSiteActivityAssigneeId").val() == "-1") {
 	        	        			 $(this).css('background', "#FFF");
 	        	        		}
-        	        		} else {
+        	        		} else if ($(this).attr("data-active") == "Leave" || $(this).attr("data-active") == "Meeting") {
         	        			$(this).css('background', "yellow");
+        	        		} else if ($(this).attr("data-active") == "Holiday" || $(this).attr("data-active") == "Leave Or Holiday") {
+        	        			$(this).css('background', "#c94a4a");
         	        		}
   
         	        	}

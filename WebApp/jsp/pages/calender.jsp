@@ -118,7 +118,7 @@
  
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js?v=${fsVersionNumber}"></script>
 <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.1&v=${fsVersionNumber}"></script>
 <script>
 var refreshCalendar = function() {
 	var userId = $("#taskAssigneeId").val();

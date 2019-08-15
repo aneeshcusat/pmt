@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.famstack.email.FamstackEmailSender;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
+import com.famstack.projectscheduler.contants.FamstackConstants;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
@@ -1535,11 +1536,19 @@ public class FamstackDashboardManager extends BaseFamstackService
          
          if (nonBillativities != null) {
         	 for(String dateString : nonBillativities.keySet()) {
-           	  jsonObject = new JSONObject();
-           	  jsonObject.put("start", dateString.replace("/","-"));
-           	  jsonObject.put("dateString", dateString.replace("/","-"));
-           	  jsonObject.put("type", "leave");
-           	  jsonArray.put(jsonObject);
+        		 
+        	  String taskActCategory = nonBillativities.get(dateString).getTaskActCategory();
+        	  if (FamstackConstants.LEAVE.equalsIgnoreCase(taskActCategory) ||
+        			  FamstackConstants.HOLIDAY.equalsIgnoreCase(taskActCategory) || 
+        			  FamstackConstants.LEAVE_OR_HOLIDAY.equalsIgnoreCase(taskActCategory) || 
+        			  FamstackConstants.MEETING.equalsIgnoreCase(taskActCategory)) {
+	           	  jsonObject = new JSONObject();
+	           	  jsonObject.put("start", dateString.replace("/","-"));
+	           	  jsonObject.put("dateString", dateString.replace("/","-"));
+	           	
+	              jsonObject.put("type", taskActCategory);
+	           	  jsonArray.put(jsonObject);
+        	  }
            	 }
          }
          return jsonArray.toString();
@@ -1662,7 +1671,6 @@ public class FamstackDashboardManager extends BaseFamstackService
 				timeData.put(dateString, subItem.getDurationInHours());
 				weekTotal+=subItem.getTaskActivityDuration();
 			}
-			System.out.println("weekTotal" + weekTotal);
 			
 			int hours = weekTotal / 60;
 	        int minutes = weekTotal % 60;

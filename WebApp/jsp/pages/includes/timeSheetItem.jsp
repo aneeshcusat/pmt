@@ -1,8 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
-<c:set var="nonBillableCategories" value="${applicationScope.applicationConfiguraion.nonBillableCategories}"/>
-
 			      <tr class="projectDetailsUpdateRow hide">
 			      	<td>
 			      		 <select class="form-control userIdSelector">
@@ -45,14 +43,7 @@
                         </select>
                         
                         <select class="form-control nonBillableTaskSelector hide">
-							<option value="">- select -</option>
-  							<option value="LEAVE">Leave</option>
-  							<option value="MEETING">Meeting</option>
-  							<c:if test="${not empty nonBillableCategories }">
-	                            <c:forEach var="nonBillableCategoryConf" items="${nonBillableCategories}">
-    	    	                    <option value="${nonBillableCategoryConf.value}">${nonBillableCategoryConf.name}</option>
-        	                    </c:forEach>
-                            </c:if>
+							 <%@include file="unbilledtaskcategories.jsp"%>   
 						</select>
 			      	</td>
 			      	<td>

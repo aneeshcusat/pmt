@@ -385,7 +385,7 @@ display: none;
 	src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.1&v=${fsVersionNumber}"></script>
 <script>
 
 $(".taskOwnersList").on("click", function(){

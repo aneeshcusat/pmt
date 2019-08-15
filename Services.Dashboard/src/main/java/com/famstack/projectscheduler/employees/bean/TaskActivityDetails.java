@@ -279,11 +279,6 @@ public class TaskActivityDetails
         this.durationInMinutes = durationInMinutes;
     }
 
-    public static void main(String[] args)
-    {
-        System.out.println(new Date(Long.parseLong("1516156200000")));
-    }
-
     public String getTaskActCategory()
     {
         return taskActCategory;

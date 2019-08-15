@@ -93,4 +93,4 @@ position:absolute;bottom:0;left:0;right:0;font-size:12px;color:#000;text-align:c
  
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js?v=${fsVersionNumber}"></script>
 <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/usersiteactivity.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/usersiteactivity.js?version=2.1&v=${fsVersionNumber}"></script>

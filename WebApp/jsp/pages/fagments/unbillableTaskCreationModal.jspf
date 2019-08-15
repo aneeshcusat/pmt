@@ -34,34 +34,14 @@
 				<label class="col-md-3 control-label">Type</label>
                      <div class="col-md-9">
                          <select path="taskType" id="taskType" name="taskType" class="form-control" data-live-search="true">
-							<option value="">- select -</option>
-							<c:if test="${!staticUnbilledEnabled }">
-  							<option value="LEAVE">Leave</option>
-  							<option value="MEETING">Meeting</option>
-  							<c:if test="${not empty nonBillableCategories }">
-	                            <c:forEach var="nonBillableCategoryConf" items="${nonBillableCategories}">
-    	    	                    <option value="${nonBillableCategoryConf.value}">${nonBillableCategoryConf.name}</option>
-        	                    </c:forEach>
-                            </c:if>
-                            </c:if>
-                            <c:if test="${staticUnbilledEnabled }">
-                            	<option value="Admin Work">Admin Work</option>
-                            	<option value="Attending Trainings & Knowledge Development">Attending Trainings &amp; Knowledge Development</option>
-                            	<option value="Famstack Management">Famstack Management</option>
-                            	<option value="Holiday">Holiday</option>
-                            	<option value="Imparting Trainings">Imparting Trainings</option>
-                            	<option value="Internal Team Meetings">Internal Team Meetings</option>
-                            	<option value="LEAVE">Leave</option>
-                            	<option value="Marketing Collaterals & POC">Marketing Collaterals &amp; POC</option>
-								<option value="Presales Proposals">Presales Proposals</option>
-                            </c:if>
+							 <%@include file="../includes/unbilledtaskcategories.jsp"%>   
 						</select>
                      </div>
 				</div>
 			<div class="form-group">
 				<label class="col-md-3 control-label">Comments : </label>
                      <div class="col-md-9">
-                            <textarea class="form-control" id="taskStartComments"  style="height: 100px"></textarea> 
+                            <textarea class="form-control" id="taskUBStartComments"  style="height: 100px"></textarea> 
                          <span class="help-block">required description</span>
                      </div>
 				</div>

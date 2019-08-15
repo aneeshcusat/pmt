@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.famstack.email.FamstackEmailSender;
+import com.famstack.projectscheduler.contants.FamstackConstants;
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectPriority;
@@ -278,7 +279,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 	        } catch (Exception e) {
 	        	famstackEmailSender.sendTextMessage("ALERT: ERROR - SERVER, playTask failed- item id " + taskId, "User id " 
 	        			+ getFamstackApplicationConfiguration().getCurrentUserId() +", taskActivityId " + taskActivityId +", TaskPausedTime" + taskItem.getTaskPausedTime() +", Error message "+ e.getMessage());
-	        	logError("Unable to pause task", e);
+	        	logError("Unable to play task", e);
 	        }
         }
         return taskDetails;
@@ -523,9 +524,17 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             } else if (projectTaskActivityDetails.getTaskStatus() == TaskStatus.ASSIGNED) {
                 color = "blue";
             } else if (projectTaskActivityDetails.getTaskStatus() == TaskStatus.INPROGRESS) {
-                color = "yellow";
+                color = "lightblue";
                 textColor = "black";
             }
+            if (FamstackConstants.HOLIDAY.equalsIgnoreCase(projectTaskActivityDetails.getTaskActCategory())
+                    || FamstackConstants.LEAVE_OR_HOLIDAY.equalsIgnoreCase(projectTaskActivityDetails.getTaskActCategory())) {
+                    color = "#c94a4a";
+             }
+            if (FamstackConstants.LEAVE.equalsIgnoreCase(projectTaskActivityDetails.getTaskActCategory())) {
+            	color = "yellow";
+                textColor = "black";
+             }
             jsonObject.put("textColor", textColor);
             jsonObject.put("color", color);
 

@@ -471,7 +471,7 @@ $(function() {
                         center: 'title',
                         right: 'agendaDay,agendaWeek,month'
                     },
-                    height: 500,
+                    height: 700,
                     defaultView: 'agendaDay',
                     weekends: true,
                     editable: false,

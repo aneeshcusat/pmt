@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
-import com.famstack.projectscheduler.contants.UserTaskType;
+import com.famstack.projectscheduler.contants.FamstackConstants;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
@@ -95,8 +95,9 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
                                     nonBillableTaskItem.get(userNonBillableDate);
 
                                 if (userTaskActivityItem != null
-                                    && (userTaskActivityItem.getType() == UserTaskType.LEAVE)) {
-
+                                    && (FamstackConstants.LEAVE.equalsIgnoreCase(userTaskActivityItem.getTaskActCategory()) || 
+                                    		FamstackConstants.HOLIDAY.equalsIgnoreCase(userTaskActivityItem.getTaskActCategory()) ||
+                                    		FamstackConstants.LEAVE_OR_HOLIDAY.equalsIgnoreCase(userTaskActivityItem.getTaskActCategory()))) {
                                     cell.setCellValue(userTaskActivityItem.getTaskActCategory());
                                     String startTimeString =
                                         DateUtils.format(new Date(userTaskActivityItem.getActualStartTime().getTime()),

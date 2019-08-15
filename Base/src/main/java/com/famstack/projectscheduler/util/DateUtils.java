@@ -192,12 +192,6 @@ public final class DateUtils extends BaseFamstackService
 
     }
 
-    public static void main(String[] args)
-    {
-       //System.out.println(getWeekNumber(tryParse("29-Dec-18", DATE_MONTH_YEAR)));
-       System.out.println("23.1".split("[.]")[0]);
-    }
-
     public static int getNumberOfDaysInThisMonth(Date date)
     {
         Calendar currentCal = Calendar.getInstance();

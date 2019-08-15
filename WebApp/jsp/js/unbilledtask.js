@@ -95,7 +95,7 @@ var createUnbillableTask = function(){
 	
 	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
 	
-	var dataString = {skipWeekEnd:isSkipWeekEnds,userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
+	var dataString = {skipWeekEnd:isSkipWeekEnds,userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskUBStartComments").val()};
 	doAjaxRequest("POST", "/bops/dashboard/createNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){
