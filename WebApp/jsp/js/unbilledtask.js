@@ -142,7 +142,7 @@ var editUnbillableTask = function(taskActId){
 	
 	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
 	
-	var dataString = {taskActId:taskActId,skipWeekEnd:isSkipWeekEnds,userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskStartComments").val()};
+	var dataString = {taskActId:taskActId,skipWeekEnd:isSkipWeekEnds,userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskUBStartComments").val()};
 	doAjaxRequest("POST", "/bops/dashboard/updateNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){
@@ -167,7 +167,7 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#startDateRange").val(getTodayDate(new Date()) + " 9:00");
 	$("#completionDateRange").val(getTodayDate(new Date()) + " 17:00");
 	$("#skipWeekEnds").prop("checked", true);
-	$("#taskStartComments").val("");
+	$("#taskUBStartComments").val("");
 	unBilledButtonAction = "Create";
 	$(".nonBillableTaskCreateText").html("Create");
 	$("#unbilledModelTitle").html("Create Non-billable time");
@@ -191,7 +191,7 @@ var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, s
 	$("#startDateRange").val(getTodayDateTime(new Date(startTime)));
 	$("#completionDateRange").val(getTodayDateTime(new Date(endTime)));
 	$("#skipWeekEnds").prop("checked", false);
-	$("#taskStartComments").val("");
+	$("#taskUBStartComments").val("");
 	$(".nonBillableTaskCreateText").html("Update");
 	unBilledButtonAction = "Update";
 	$("#taskCreate").show();
