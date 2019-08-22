@@ -319,13 +319,20 @@ public class FamstackProjectManager extends BaseFamstackManager
 		            				famstackProjectTaskManager.createCompletedTaskItem(taskDetails, projectItem, taskItem, dayTaskTime, UserTaskType.PROJECT); 
 		            			} else {
 		            				String userTaskType = "OTHER";
-		            				if ("LEAVE".equalsIgnoreCase(taskNameOrId) || "MEETING".equalsIgnoreCase(taskNameOrId)) {
+		            				String taskActCategory = taskNameOrId;
+		            				if ("LEAVE".equalsIgnoreCase(taskNameOrId)){
+		            					taskActCategory = "Leave";
+		            				}
+		            			   if ("MEETING".equalsIgnoreCase(taskNameOrId)) {
+		            				   taskActCategory = "Meeting";
+		            				}
+		            			   if ("LEAVE".equalsIgnoreCase(taskNameOrId) || "MEETING".equalsIgnoreCase(taskNameOrId)) {
 		            					userTaskType = taskNameOrId;
 		            				}
 		            				String taskName =
-		            						dayTaskTime / 60 + " hours " + dayTaskTime % 60 + " Mins " + taskNameOrId;
+		            						dayTaskTime / 60 + " hours " + dayTaskTime % 60 + " Mins " + taskActCategory;
 		            				famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(), weekStartTime, 0, taskName,
-		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskNameOrId, ProjectType.NON_BILLABLE, taskCommentsMap.get(taskNameOrId));
+		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskActCategory, ProjectType.NON_BILLABLE, taskCommentsMap.get(taskNameOrId));
 		            			}
             				}
             				weekStartTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, weekStartTime, 1);
@@ -1747,7 +1754,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 	                Map<Integer, EmployeeDetails> allEmployeeDetails = getFamstackApplicationConfiguration().getAllUsersMap();
 	                if (allEmployeeDetails != null 
 	                		&& allEmployeeDetails.get(taskItem.getAssignee()) != null 
-	                		&& allEmployeeDetails.get(taskItem.getAssignee()).getUserGroupId() == projectItem.getUserGroupId()) {
+	                		&& projectItem.getUserGroupId().equalsIgnoreCase(allEmployeeDetails.get(taskItem.getAssignee()).getUserGroupId())) {
 	                	taskDetails.setAssignee(taskItem.getAssignee());
 	                }
                 } catch(Exception e) {

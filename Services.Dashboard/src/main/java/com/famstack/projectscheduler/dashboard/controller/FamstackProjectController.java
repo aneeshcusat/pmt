@@ -314,12 +314,12 @@ public class FamstackProjectController extends BaseFamstackService
     		if (dateRangeList.size() > 0) {
     			startDate =  dateRangeList.get(0).getStartDate();
     			endDate =  dateRangeList.get(0).getEndDate();
-    			projectTaskAssigneeDataList1 = famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate);
+    			projectTaskAssigneeDataList1 =  famstackDashboardManager.getBillableAndNonBillaleSortedListByStartDate(startDate, endDate,false, null);
     		} 
     		if (dateRangeList.size() > 1) {
     			startDate =  dateRangeList.get(1).getStartDate();
     			endDate =  dateRangeList.get(1).getEndDate();
-    			projectTaskAssigneeDataList2 = famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate);
+    			projectTaskAssigneeDataList2 =  famstackDashboardManager.getBillableAndNonBillaleSortedListByStartDate(startDate, endDate,false, null);
     		}
     		
     		if ("F".equalsIgnoreCase(insertLocation)) {
@@ -338,12 +338,12 @@ public class FamstackProjectController extends BaseFamstackService
     		dataMap.put("exportDataList", projectTaskAssigneeDataList);
             dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
         } else if ("default".equalsIgnoreCase(templateName)) {
-           projectTaskAssigneeDataList.addAll(famstackDashboardManager.getAllProjectTaskAssigneeData(startDate, endDate));
+           projectTaskAssigneeDataList.addAll(famstackDashboardManager.getBillableAndNonBillaleSortedListByStartDate(startDate, endDate,false, null));
            nonBillableTaskActivities = famstackDashboardManager.getAllNonBillableTaskActivityList(startDate, endDate);
            dataMap.put("exportDataList", projectTaskAssigneeDataList);
            dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);
         } else if ("format3".equalsIgnoreCase(templateName)) {
-            projectTaskAssigneeDataList = famstackDashboardManager.getBillableAndNonBillaleSortedList(startDate, endDate, null);
+            projectTaskAssigneeDataList = famstackDashboardManager.getBillableAndNonBillaleSortedListByAssignee(startDate, endDate,true, null);
             
             dataMap.put("exportDataList", projectTaskAssigneeDataList);
             dataMap.put("nonBillableTaskActivities", nonBillableTaskActivities);

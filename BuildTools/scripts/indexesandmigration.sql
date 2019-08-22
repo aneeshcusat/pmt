@@ -56,7 +56,8 @@ update user_task_activity_info utai set task_act_category="Business Development"
 update user_task_activity_info utai set task_act_category="Training", type="OTHER" where type="TRAINING";
 update user_task_activity_info utai set task_act_category="Admin", type="OTHER" where type="ADMIN";
 
-update user_task_activity_info utai set task_act_category="Leave" where type="LEAVE";
-update user_task_activity_info utai set task_act_category="Meeting" where type="MEETING";
+SET SQL_SAFE_UPDATES = 0;
+update user_task_activity_info utai set task_act_category="Leave" where  BINARY task_act_category="LEAVE";
+update user_task_activity_info set task_act_category='Meeting' where BINARY task_act_category='MEETING';
 
 

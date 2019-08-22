@@ -166,7 +166,7 @@ div#taskDetailsDiv {
 				<div class="panel-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<div class="col-md-5">
+							<div class="col-md-4">
 								<div class="input-group">
 									<div class="input-group-addon">
 										<span class="fa fa-search"></span>
@@ -196,8 +196,17 @@ div#taskDetailsDiv {
         								<input style="margin-left:10px" class="btn btn-default dateFilterDiv" type="button" value="Filter" onclick="loadAllProjectDetails($('#daterangeText').val());"></input>
         								<input type="hidden" id="daterangeText" value="hello" /> 
         					</div>
-        					
-							<div class="col-md-3">
+        					<div class="col-md-2" >
+        						<c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+       							   <select class="form-control" data-live-search="true" id="userGroupSelection">
+						               <option value="">- select -</option>
+						               <c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
+						                <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
+						               </c:forEach>
+						           </select>
+       							</c:if>
+        					</div>
+							<div class="col-md-2">
 								  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 								<a data-toggle="modal" data-target="#createprojectmodal" onclick="clearProjectFormForCreate()"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>

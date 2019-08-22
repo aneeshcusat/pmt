@@ -708,11 +708,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager
         		continue;
         	}
         	ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
+        	projectTaskActivityDetails.setTaskActivityId(userTaskActivityItem.getId());
         	projectTaskActivityDetails.setTaskActivityStartTime(userTaskActivityItem.getActualStartTime());
         	projectTaskActivityDetails.setUserId(userTaskActivityItem.getUserActivityItem().getUserItem().getId());
         	projectTaskActivityDetails.setProjectName("");
         	projectTaskActivityDetails.setClientName("");
         	projectTaskActivityDetails.setProjectCategory(userTaskActivityItem.getTaskActCategory());
+        	projectTaskActivityDetails.setTaskActCategory(userTaskActivityItem.getTaskActCategory());
         	projectTaskActivityDetails.setProjectType(ProjectType.NON_BILLABLE);
         	projectTaskActivityDetails.setTaskName(userTaskActivityItem.getTaskName());
         	projectTaskActivityDetails.setTaskActivityDuration(userTaskActivityItem.getDurationInMinutes());

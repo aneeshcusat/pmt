@@ -10,10 +10,10 @@
 <c:if test="${!staticUnbilledEnabled }">
 	<c:if test="${currentUserGroupId =='1018'}">
 		<option value="Leave Or Holiday">Leave Or Holiday</option>
-<	</c:if>
+	</c:if>
 	<c:if test="${currentUserGroupId !='1018'}">
 		<option value="LEAVE">Leave</option>
-<	</c:if>
+	</c:if>
 	<option value="MEETING">Meeting</option>
 	<c:if test="${not empty nonBillableCategories }">
 		<c:forEach var="nonBillableCategoryConf" items="${nonBillableCategories}">

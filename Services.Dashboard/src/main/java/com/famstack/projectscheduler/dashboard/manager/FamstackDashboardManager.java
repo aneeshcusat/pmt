@@ -67,7 +67,6 @@ import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.notification.bean.NotificationItem;
 import com.famstack.projectscheduler.notification.services.FamstackDesktopNotificationService;
-import com.famstack.projectscheduler.security.user.UserRole;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.LimitedQueue;
@@ -1614,14 +1613,38 @@ public class FamstackDashboardManager extends BaseFamstackService
 			 currentUserId = null;
 		 }
 		 
-		 List<ProjectTaskActivityDetails>  projectTaskAssigneeDataList = getBillableAndNonBillaleSortedList(startDate, endDate, currentUserId);
+		 List<ProjectTaskActivityDetails>  projectTaskAssigneeDataList = getBillableAndNonBillaleSortedListByAssignee(startDate, endDate, true, currentUserId);
          return getJsonPrjTskWeeklyTaskList(projectTaskAssigneeDataList);
 	}
 	
-	public List<ProjectTaskActivityDetails> getBillableAndNonBillaleSortedList(Date startDate, Date endDate, Integer currentUserId) {
+	public List<ProjectTaskActivityDetails> getBillableAndNonBillaleSortedListByStartDate(Date startDate, Date endDate, boolean isUnique, Integer currentUserId) {
 		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
-		projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, true, currentUserId));
-        projectTaskAssigneeDataList.addAll(getAllNonBillableTaskActivities(startDate, endDate, true, currentUserId));
+		projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, isUnique, currentUserId));
+        projectTaskAssigneeDataList.addAll(getAllNonBillableTaskActivities(startDate, endDate, isUnique, currentUserId));
+        Collections.sort(projectTaskAssigneeDataList, new Comparator<ProjectTaskActivityDetails>()
+	        {
+	            @Override
+	            public int compare(ProjectTaskActivityDetails projectDetails2, ProjectTaskActivityDetails projectDetails1)
+	            {
+	            	 Date date1 = projectDetails1.getTaskActivityStartTime();
+	                 Date date2 = projectDetails2.getTaskActivityStartTime();
+
+	                 if (date1.before(date2)) {
+	                     return 1;
+	                 } else if (date1.after(date2)) {
+	                     return -1;
+	                 }
+	                 return 0;
+	            }
+	        });
+        return projectTaskAssigneeDataList;
+        
+	}
+	
+	public List<ProjectTaskActivityDetails> getBillableAndNonBillaleSortedListByAssignee(Date startDate, Date endDate, boolean isUnique, Integer currentUserId) {
+		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+		projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(startDate, endDate, isUnique, currentUserId));
+        projectTaskAssigneeDataList.addAll(getAllNonBillableTaskActivities(startDate, endDate, isUnique, currentUserId));
         Collections.sort(projectTaskAssigneeDataList, new Comparator<ProjectTaskActivityDetails>()
 	        {
 	            @Override

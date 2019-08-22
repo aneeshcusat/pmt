@@ -55,7 +55,7 @@
 		<!-- START DEFAULT TABLE EXPORT -->
                             <div class="panel panel-default">
                                 <div class="panel-body">
-                                	<div class="col-md-5" >
+                                	<div class="col-md-4" >
 										<div class="input-group">
 											<div class="input-group-addon">
 												<span class="fa fa-search"></span>
@@ -78,7 +78,18 @@
         							</span>
         								<input style="margin-left:10px" class="btn btn-default" type="button" onclick="getProjectReportingData('${param.format}');" value="Search"></input>
         							</div>
-        							<div class="col-md-2" >
+        							<div  class="col-md-2">
+        							 <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+        							   <select class="form-control" data-live-search="true" id="userGroupSelection">
+							               <option value="">- select -</option>
+							               <c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
+							                <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
+							               </c:forEach>
+							           </select>
+        							</c:if>
+        							</div>
+        							
+        							<div class="col-md-1" >
         								<c:set var="reportFormat" value="${param.format}"/>
         								<c:if test="${not empty param.format  && (param.format eq 'format1' || param.format eq 'default' || param.format eq 'format2' || param.format eq 'format3')}">
         									<button onclick="exportReport('${param.format}')" class="btn btn-danger pull-right" aria-expanded="true"><i class="fa fa-bars"></i> Export Data</button>

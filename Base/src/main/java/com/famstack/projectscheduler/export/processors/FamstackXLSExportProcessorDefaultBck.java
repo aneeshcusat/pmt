@@ -30,7 +30,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
-import com.famstack.projectscheduler.contants.FamstackConstants;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
@@ -47,7 +46,7 @@ import com.famstack.projectscheduler.util.StringUtils;
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FamstackXLSExportProcessorDefault extends BaseFamstackService implements FamstackBaseXLSExportProcessor
+public class FamstackXLSExportProcessorDefaultBck extends BaseFamstackService implements FamstackBaseXLSExportProcessor
 {
 
     @Resource
@@ -180,12 +179,6 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         if (exportDataList != null) {
             if (exportDataList.size() > 0) {
                 for (ProjectTaskActivityDetails projectDetails : exportDataList) {
-                	if(FamstackConstants.LEAVE.equalsIgnoreCase(projectDetails.getTaskActCategory() )
-                			|| FamstackConstants.HOLIDAY.equalsIgnoreCase(projectDetails.getTaskActCategory())
-                					|| FamstackConstants.LEAVE_OR_HOLIDAY.equalsIgnoreCase(projectDetails.getTaskActCategory())){
-                				continue;
-                			}
-                	
                     createProjectDetailsRow(workBook, sheet, projectDetailsRowCount, projectDetails, employees,
                         xssfCellTextWrapStyle, xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle, hiddenStyle);
                     projectDetailsRowCount++;
@@ -196,36 +189,19 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         if (nonBillableTaskActivities != null) {
             // Row blankRow = sheet.getRow((++projectDetailsRowCount) + 1);
             // createProjectSumFunctionCell(blankRow, 11 + employees.size(), xssfCellProjectTotalStyle);
-            Map<Integer, Integer> leaveDataMap = nonBillableTaskActivities.get(FamstackConstants.LEAVE);
-            nonBillableTaskActivities.remove(FamstackConstants.LEAVE);
-            
-            Map<Integer, Integer> holidayDataMap = nonBillableTaskActivities.get(FamstackConstants.HOLIDAY);
-            Map<Integer, Integer> leaveHolidayDataMap = nonBillableTaskActivities.get(FamstackConstants.LEAVE_OR_HOLIDAY);
-            if (leaveHolidayDataMap != null) {
-            	holidayDataMap.putAll(leaveHolidayDataMap);
-            }
-            nonBillableTaskActivities.remove(FamstackConstants.HOLIDAY);
-            nonBillableTaskActivities.remove(FamstackConstants.LEAVE_OR_HOLIDAY);
+            Map<Integer, Integer> leaveDataMap = nonBillableTaskActivities.get("Leave");
+            nonBillableTaskActivities.remove("Leave");
 
-           
-           /* for (String taskCategory : nonBillableTaskActivities.keySet()) {
-            	if(FamstackConstants.LEAVE.equalsIgnoreCase(taskCategory)
-            			|| FamstackConstants.HOLIDAY.equalsIgnoreCase(taskCategory)
-            					|| FamstackConstants.LEAVE_OR_HOLIDAY.equalsIgnoreCase(taskCategory)){
-	                createNonBillableDetailsRow(workBook, sheet, projectDetailsRowCount, taskCategory,
-	                    nonBillableTaskActivities.get(taskCategory), employees, xssfCellTextWrapStyle,
-	                    xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle);
-	
-	                projectDetailsRowCount++;
-            	}
-            }*/
-            
-            fillNonBillableData(workBook, sheet, projectDetailsRowCount, holidayDataMap, employees, xssfCellTextWrapStyle,
-                    xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle);
             projectDetailsRowCount++;
-            fillNonBillableData(workBook, sheet, projectDetailsRowCount, leaveDataMap, employees, xssfCellTextWrapStyle,
+            for (String taskCategory : nonBillableTaskActivities.keySet()) {
+                createNonBillableDetailsRow(workBook, sheet, projectDetailsRowCount, taskCategory,
+                    nonBillableTaskActivities.get(taskCategory), employees, xssfCellTextWrapStyle,
+                    xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle);
+
+                projectDetailsRowCount++;
+            }
+            fillLeaveDetails(workBook, sheet, projectDetailsRowCount, leaveDataMap, employees, xssfCellTextWrapStyle,
                 xssfCellProjectTotalStyle, xssfCellProjectTaskHrsStyle);
-           
         }
 
         createTotalSummaryDetailsRows(workBook, sheet, projectDetailsRowCount, employees, xssfCellTextWrapStyle,
@@ -234,20 +210,20 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
 
     }
 
-    private void fillNonBillableData(XSSFWorkbook workBook, Sheet sheet, int projectDetailsRowCount,
-        Map<Integer, Integer> nonbillableDataMap, List<EmployeeDetails> employees, CellStyle xssfCellTextWrapStyle,
+    private void fillLeaveDetails(XSSFWorkbook workBook, Sheet sheet, int projectDetailsRowCount,
+        Map<Integer, Integer> leaveDataMap, List<EmployeeDetails> employees, CellStyle xssfCellTextWrapStyle,
         CellStyle xssfCellProjectTotalStyle, CellStyle xssfCellProjectTaskHrsStyle)
     {
 
-        if (nonbillableDataMap != null) {
+        if (leaveDataMap != null) {
             Row leaveRow = getRow(sheet,projectDetailsRowCount + 2);
             List<Integer> employeeIndexList = getEmployeeIndexList(employees);
-            for (Integer userId : nonbillableDataMap.keySet()) {
+            for (Integer userId : leaveDataMap.keySet()) {
                 int userCellIndex = employeeIndexList.indexOf(userId);
                 if(userCellIndex < 0) {
                 	userCellIndex = employeeIndexList.indexOf(0);
                 }
-                createTaskTimeCell(sheet, 15 + userCellIndex, nonbillableDataMap.get(userId),null, leaveRow,
+                createTaskTimeCell(sheet, 15 + userCellIndex, leaveDataMap.get(userId),null, leaveRow,
                     xssfCellProjectTaskHrsStyle);
             }
         }
@@ -288,9 +264,9 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             totalUserProjectHoursCell.setCellType(CellType.FORMULA);
             totalUserProjectHoursCell.setCellFormula(strFormula);
 
-          /*  Cell holidayCell = getCell(holidayRow, columnNumber);
+            Cell holidayCell = getCell(holidayRow, columnNumber);
             holidayCell.setCellStyle(xssfCellProjectTaskHrsStyle);
-            holidayCell.setCellValue(convertToActualTimeString(holidayHours * 60));*/
+            holidayCell.setCellValue(convertToActualTimeString(holidayHours * 60));
 
             Cell availableHrsCell = getCell(availableHrsRow, columnNumber);
             availableHrsCell.setCellStyle(xssfCellProjectTaskHrsStyle);
@@ -408,9 +384,9 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             createProjectDetailsColoumn(sheet, 4, projectDetails.getSowLineItem(), projectDetailsRow, textWrapStyle);
             
             createProjectDetailsColoumn(sheet, 5, projectDetails.getProjectName(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 6, projectDetails.getProjectStatus() != null ? projectDetails.getProjectStatus().toString() : "", projectDetailsRow,
+            createProjectDetailsColoumn(sheet, 6, projectDetails.getProjectStatus().toString(), projectDetailsRow,
                 textWrapStyle);
-            createProjectDetailsColoumn(sheet, 7, projectDetails.getProjectType() != null ? projectDetails.getProjectType().toString():"", projectDetailsRow,
+            createProjectDetailsColoumn(sheet, 7, projectDetails.getProjectType().toString(), projectDetailsRow,
                 textWrapStyle);
             createProjectDetailsColoumn(sheet, 8, projectDetails.getProjectCategory(), projectDetailsRow, textWrapStyle);
             createProjectDetailsColoumn(sheet, 9, projectDetails.getNewProjectCategory(), projectDetailsRow, textWrapStyle);
