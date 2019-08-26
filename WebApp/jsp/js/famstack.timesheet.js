@@ -462,7 +462,12 @@ function formatDate(date) {
 	  }
 	  var monthIndex = date.getMonth();
 	  var year = date.getFullYear();
-	  return dayString + '-' + monthNames[monthIndex] + '-' + year;
+	  var dateformatedString =  dayString + '-' + monthNames[monthIndex] + '-' + year;
+	  
+	  if (dateformatedString.indexOf("--") > 0) {
+		  dateformatedString = dateformatedString.replace(/\-+/g, '-');
+	  }
+	  return dateformatedString;
 	}
 	
 function formatDayDate(currentDate) {
@@ -479,7 +484,8 @@ function formatDayDate(currentDate) {
 	  var day = currentDate.getDay();
 	  var date = currentDate.getDate();
 	  var monthIndex = currentDate.getMonth();
-	  return weekNames[day] + ', ' + monthNames[monthIndex] + " " + date;
+	 return weekNames[day] + ', ' + monthNames[monthIndex] + " " + date;
+	 
 	}
 
 

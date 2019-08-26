@@ -61,3 +61,25 @@ update user_task_activity_info utai set task_act_category="Leave" where  BINARY 
 update user_task_activity_info set task_act_category='Meeting' where BINARY task_act_category='MEETING';
 
 
+
+--update time
+------------
+UPDATE `bops`.`user_activity_info` SET `calender_date` = '2018-12-27 12:00:00' WHERE (`user_act_id` = '581189');
+
+UPDATE user_task_activity_info
+SET 
+actual_start_time = DATE_FORMAT(actual_start_time ,'2019-%m-%d %H:%i'), 
+actual_end_time = DATE_FORMAT(actual_end_time ,'2019-%m-%d %H:%i'),
+start_time = DATE_FORMAT(start_time ,'2019-%m-%d %H:%i'),
+recorded_start_time = DATE_FORMAT(recorded_start_time ,'2019-%m-%d %H:%i'),
+recorded_end_time = DATE_FORMAT(recorded_end_time ,'2019-%m-%d %H:%i')
+where user_tsk_act_id in (1045003,1045004,1044150,1045005,1044138,1044151,1044139,1045002,1044140,1044141,1044142,1044143,1044144);
+
+
+UPDATE user_activity_info
+SET 
+calender_date = DATE_FORMAT(calender_date ,'2019-%m-%d %H:%i')
+where user_act_id in ('1044954','1044956','1044955','1042596','1042597','1042598','1042599','1042600','1042601','1044952');
+
+
+
