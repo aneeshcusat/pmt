@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +15,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.famstack.projectscheduler.contants.RecurringType;
 
 @Entity
 @Table(name = "recurring_prj_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})})
@@ -41,8 +45,15 @@ public class RecurringProjectItem implements FamstackBaseItem
     private String cronExpression;
 
     @Column(name = "project_id")
-    private int projectId;
-
+    private Integer projectId;
+    
+    @Column(name = "task_id")
+    private Integer taskId;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private RecurringType type;
+    
     @Column(name = "project_code")
     private String projectCode;
 
@@ -60,6 +71,10 @@ public class RecurringProjectItem implements FamstackBaseItem
 
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
+    
+    @Column(name = "recurre_original")
+    private Boolean recurreOriginal;
+
 
     public int getId()
     {
@@ -166,12 +181,12 @@ public class RecurringProjectItem implements FamstackBaseItem
         this.lastRun = lastRun;
     }
 
-    public int getProjectId()
+    public Integer getProjectId()
     {
         return projectId;
     }
 
-    public void setProjectId(int projectId)
+    public void setProjectId(Integer projectId)
     {
         this.projectId = projectId;
     }
@@ -185,5 +200,29 @@ public class RecurringProjectItem implements FamstackBaseItem
     {
         this.endDate = endDate;
     }
+
+	public Integer getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
+	}
+
+	public RecurringType getType() {
+		return type == null ? RecurringType.PROJECT : type;
+	}
+
+	public void setType(RecurringType type) {
+		this.type = type;
+	}
+
+	public Boolean getRecurreOriginal() {
+		return recurreOriginal;
+	}
+
+	public void setRecurreOriginal(Boolean recurreOriginal) {
+		this.recurreOriginal = recurreOriginal;
+	}
 
 }

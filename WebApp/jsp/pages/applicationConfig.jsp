@@ -277,7 +277,7 @@ tr.clickable:hover {
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
-									<th colspan="2">Recurring Project From</th>
+									<th colspan="2">Recurring Project From, Default</th>
 								</tr>
 							<thead>
 							<tbody>
@@ -308,6 +308,25 @@ tr.clickable:hover {
 									</select>
 									</td>
 									<td width="70px"><a href="#" onclick="assignManForQckClone();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Project Task Create Restriction for Managers and below roles</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+									<select class="form-control select" id="sameDayOnlyTaskEnabledSelectId">
+										<option value="disabled">No restriction</opiton>
+										<option value="enabled">Same day only</option>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="sameDayOnlyTask();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
 								</tr>
 							</tbody>
 						</table>
@@ -410,6 +429,15 @@ tr.clickable:hover {
   <c:forEach var="projectTaskActivityDeleteConf" items="${appConfigMap[projectTaskActivitySelectId].appConfValueDetails}">
   	 <script type="text/javascript">
   	 	$("#projectTaskActivitySelectId").val('${projectTaskActivityDeleteConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
+   <c:set var="sameDayOnlyTaskEnabledSelectId" value='sameDayOnlyTask${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[sameDayOnlyTaskEnabledSelectId] && not empty appConfigMap[sameDayOnlyTaskEnabledSelectId].appConfValueDetails}">
+  <c:forEach var="sameDayOnlyTaskConf" items="${appConfigMap[sameDayOnlyTaskEnabledSelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#sameDayOnlyTaskEnabledSelectId").val('${sameDayOnlyTaskConf.value}');
   	 </script>
   </c:forEach>
   </c:if>
@@ -524,6 +552,17 @@ tr.clickable:hover {
 	    });
  }
   
+ function sameDayOnlyTask(){
+	 var input1 = $("#sameDayOnlyTaskEnabledSelectId").val();
+	 var type = "sameDayOnlyTask";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
+ 
  function doAjaxDeleteAppConfigVal(id) {
 	 var dataString = {"id" : id};
 		doAjaxRequest("POST", "${applicationHome}/deleteAppConfValue", dataString, function(data) {

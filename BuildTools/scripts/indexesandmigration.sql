@@ -82,4 +82,7 @@ calender_date = DATE_FORMAT(calender_date ,'2019-%m-%d %H:%i')
 where user_act_id in ('1044954','1044956','1044955','1042596','1042597','1042598','1042599','1042600','1042601','1044952');
 
 
+select * from task_info where task_id in (
+select task_id from user_task_activity_info where actual_start_time is null and user_grp_id=1018);
 
+update recurring_prj_info set type='PROJECT';

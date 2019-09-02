@@ -64,7 +64,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         createTaskItem(taskDetails, projectItem, false);
     }
 
-    public void createTaskItem(TaskDetails taskDetails, ProjectItem projectItem, Boolean isScheduler)
+    public TaskItem createTaskItem(TaskDetails taskDetails, ProjectItem projectItem, Boolean isScheduler)
     {
         TaskItem taskItem = new TaskItem();
 
@@ -72,9 +72,10 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         if (!isScheduler) {
             taskItem.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
         }
-        saveTask(taskDetails, projectItem, taskItem);
+        taskItem = saveTask(taskDetails, projectItem, taskItem);
         famstackProjectActivityManager.createProjectActivityItemItem(projectItem, ProjectActivityType.TASK_ADDED,
             taskItem.getName());
+        return taskItem;
 
     }
 
@@ -194,7 +195,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
     }
 
-    private void saveTask(TaskDetails taskDetails, ProjectItem projectItem, TaskItem taskItem)
+    private TaskItem saveTask(TaskDetails taskDetails, ProjectItem projectItem, TaskItem taskItem)
     {
         taskItem.setDescription(taskDetails.getDescription());
         taskItem.setName(taskDetails.getName());
@@ -230,12 +231,13 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 	        taskItem.setCompletionTime(completionTimeStamp);
 	        taskItem.setDuration(taskDetails.getDuration());
 	
-	        famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+	        taskItem = (TaskItem) famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
 	        taskDetails.setTaskId(taskItem.getTaskId());
 	        updateUserActivity(taskDetails, startDate, projectItem.getType(), projectItem.getUserGroupId());
         } else {
-        	famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
+        	taskItem = (TaskItem) famstackDataAccessObjectManager.saveOrUpdateItem(taskItem);
         }
+        return taskItem;
     }
 
     public void reAssignTask(TaskDetails taskDetails, int newUserId, int userTaskActivityId, TaskStatus taskStatus)

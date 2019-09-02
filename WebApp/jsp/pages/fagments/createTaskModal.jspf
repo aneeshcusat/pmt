@@ -131,7 +131,7 @@
 								</form:select>
            					</c:if>
                      </div>
-                     <label class="col-md-2 control-label">Recurring?</label>
+                     <label class="col-md-2 control-label">Recurring with Project?</label>
                      <div class="col-md-4">
                          <form:select class="form-control select canRecure" path="canRecure" id="canRecure">
                             <option value="false" selected="selected">NO</option>

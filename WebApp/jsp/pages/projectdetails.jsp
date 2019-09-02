@@ -3,8 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
-
-
+<c:set var="sameDayOnlyTaskEnabled" value="${applicationScope.applicationConfiguraion.sameDayOnlyTaskEnabled}"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/projectdetails.css?v=${fsVersionNumber}"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/cron/jquery-cron.css"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
@@ -12,153 +14,6 @@
      <li class="active">${projectDetails.name}</li>
  </ul>
  <!-- END BREADCRUMB -->  
- <style>
- input.error{
-     border-color: #E04B4A
- }
-.markable{
-	height: 100%;
-	padding:0 0 0 0 !important;
-}
-#employeeListForTaskTable{
-height: 100%;
-}
-.durationRangeSelector{
-	width: 35px; 
-	margin: 0 0; 
-	font-weight: bold; 
-	text-align: center; 
-	padding: 0 0; 
-	padding-left: 7px;
-}
-
-table tr td.markable span {
-  	float: left;
-    height: 100%;
-    display: table-cell;
-    z-index: 1000;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 15px;
-    font-weight: bold;
-    color: wheat;
-    vertical-align: middle;
- }
-
-#createtaskmodal .modal-dialog {
-	width: 70%;
-}
-
-#taskAddExtraTimeModal  .modal-dialog {
-		width: 30%;
-}
-
-#employeeListForTaskTable th{
-font-weight: normal;
-font-size: 8pt;
-}
-
-div#task-pop-up {
-  display: none;
-  position: absolute;
-  width: 280px;
-  padding: 10px;
-  background: #eeeeee;
-  color: #000000;
-  border: 1px solid #1a1a1a;
-  font-size: 90%;
-}
-
-.dataTables_length {
-width: 40%;
-}
-
-.dataTables_filter{
-width: 60%;
-}
-.task_progress .progress {
-		height: 10px;
-}
-
-.panel {
-    border: 1px solid #e1e3e4;
-    position: relative;
-    border-radius: 4px;
-    box-shadow: 0 0 0 transparent !important;
-}
-
-.no-padding {
-    padding: 0 !important;
-}
-
-.panel-stats .panel-data.panel-progress, .panel-stats-icon .panel-data.panel-progress {
-    padding: 20px 30px;
-}
-
-.panel-stats .panel-data, .panel-stats-icon .panel-data {
-    text-align: center;
-    border-left: 1px solid #dfe7ea;
-    border-top: 1px solid #dfe7ea;
-    margin-left: -1px;
-    margin-top: -1px;
-    padding: 0px;
-    font-size: 20px;
-    color: #444c52;
-}
-
-.panel-stats .panel-data.panel-progress .progress, .panel-stats-icon .panel-data.panel-progress .progress {
-    margin-bottom: 10px;
-}
-
-.progress {
-    box-shadow: 0 0 0 transparent !important;
-    background: #f6f7f7;
-}
-
-.panel-stats .panel-data span, .panel-stats-icon .panel-data span {
-    display: block;
-    font-size: 14px;
-    font-family: 'Karla', sans-serif;
-    color: #7f8c8d;
-}
-
-.panel-stats [class*="col-"], .panel-stats-icon [class*="col-"] {
-    padding: 0 !important;
-}
-
-.panel .panel-footer {
-    background: #fcfcfc;
-    font-size: 13px;
-    color: #3e5465;
-    padding: 11px 15px 12px;
-    border-top: 1px solid #e1e3e4;
-}
-
-.durationTxt, .dateTimeTaskEditPicker{
-	font-weight: bold;
-	width:30px;
-	margin-right: 5px;
-	height: 30px;
-    line-height: 18px;
-    box-shadow: none;
-    -webkit-appearance: none;
-    border: 1px solid #D5D5D5;
-    background: #F9F9F9;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	border-radius: 4px;
-	color: #555;
-	font-size: 10px;
-	padding: 0px 2px 2px 5px;
-}
-.dateTimeTaskEditPicker {
-	width: 100px;
-	margin-bottom: 5px;
-}
-
-.taskDetailsTable.table tbody tr td {
-	padding:5px 5px 5px 0px;
-}
-	</style>
 	
 <c:if test="${projectDetails == null}">
 <div class="content-frame" style=" min-height: 500px;">    
@@ -546,6 +401,11 @@ width: 60%;
                                                  href="#"><i class="fa fa-pencil fa-lg" style="" aria-hidden="true"></i></a>
                                                	</c:if>
                                                </td>
+                                                <td width="1%">
+                                                	<a href="#" style="color:blue" title="Recurring Task" data-toggle="modal" data-target="#recurringtaskmodal" onclick="recurringTaskModel('${taskDetails.taskId}','${projectDetails.id}')">
+														<span class="fa fa-recycle fa-lg recurringSpinTask${taskDetails.taskId}"></span>
+													</a>
+                                                </td>
                                             	</c:if>
                                             	<%@include file="response/taskActivityDetailsResponse.jsp"%>
                                             </tr>
@@ -731,7 +591,36 @@ width: 60%;
 			</div>
 		</div>
 	</form:form>
-</div>                         
+</div>   
+
+<!-- recurring project create modal start -->
+<div class="modal fade" id="recurringtaskmodal" tabindex="-1"
+	role="dialog" aria-labelledby="recurringtaskmodal" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Recurring Task Settings</h4>
+				</div>
+				<div class="modal-body">
+					<%@include file="fagments/recurringTaskModal.jspf"%>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancel</button>
+					<button type="button" id="recurringTaskActionButton" onclick=""
+						class="btn btn-primary">
+						<span id="RTCreatOrUpdate">Create</span>
+					</button>
+				</div>
+			</div>
+		</div>
+</div>
+<!-- recurring project create modal end -->
+                      
 </c:if>                        
                          
  <%@include file="includes/footer.jsp" %>  
@@ -741,8 +630,22 @@ width: 60%;
 	<script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
 	<script type='text/javascript' src='${js}/plugins/jquery-validation/jquery.validate.js'></script>   
+<script type="text/javascript" src="${js}/plugins/gentleSelect/jquery-gentleSelect-min.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/plugins/cron/jquery-cron.js?v=${fsVersionNumber}"></script>
        <script>
-   	
+
+       <c:if test="${!sameDayOnlyTaskEnabled}">
+      	 	var startProjectTime = '${projectDetails.startTime}';
+       		var completionProjectTime = '${projectDetails.completionTime}';
+       		var sameDayOnlyTaskEnabled = false;
+       </c:if>
+       
+       <c:if test="${sameDayOnlyTaskEnabled}">
+ 	 	var startProjectTime = new Date();
+  		var completionProjectTime = new Date();
+  		var sameDayOnlyTaskEnabled = true;
+  		</c:if>
+       
        var jvalidate = $("#createTaskFormId").validate({
     		 ignore: ".ignorevalidation",
     	   rules: {                                            
@@ -800,7 +703,7 @@ var clearTaskDetails = function(){
     var taskDate = new Date();
 	var projectEndDate = new Date('${projectDetails.completionTime}');
     console.log(" date " + projectEndDate);
-	if (taskDate < projectEndDate){
+	if (taskDate < projectEndDate || sameDayOnlyTaskEnabled){
 		$("#estStartTime").val(getTodayDate(new Date()) + " 08:00");
 	} else {
 		$("#estStartTime").val(getTodayDate(new Date("${projectDetails.completionTime}")) + " 08:00");
@@ -1065,8 +968,7 @@ $('#createTaskFormId').ajaxForm(function(response) {
 		window.location.reload(true);
 	}
 });
-var startProjectTime = '${projectDetails.startTime}';
-var completionProjectTime = '${projectDetails.completionTime}';
+
 
 $('input:radio[name=assigneeId]').on("click", function(){
 	resetAssignTable();
@@ -1196,8 +1098,11 @@ $("#estStartTime").on("change",function(){
 	
 	var startTaskTime = $("#estStartTime").val();
 	var startTaskDate = new Date(startTaskTime);
+	if (sameDayOnlyTaskEnabled && isNotSameDate(startTaskDate, new Date())) {
+		$("#estStartTime").val(getTodayDate(new Date()) + " 08:00");		
+	}
 	
-	if(startTaskDate < startProjectDate) {
+	if(startTaskDate < startProjectDate && !sameDayOnlyTaskEnabled) {
 		$("#estStartTime").css("border", "1px solid red");
 		return;
 	} else {
@@ -1212,9 +1117,14 @@ $("#estStartTime").on("change",function(){
 	}
 	
 	$("#currentAssignmentDate").html("Date : " + getTodayDate(new Date($("#estStartTime").val())));
-
-
 });
+
+function isNotSameDate(date1, date2){
+	if (date1.getDate() != date2.getDate() || date1.getMonth() != date2.getMonth() ||  date1.getFullYear() != date2.getFullYear()) {
+		return true;
+	}
+	return false;
+}
 
 $("#duration").on("change",function(){
 	resetAssignTable();
@@ -1771,6 +1681,152 @@ $("#taskDetailsSearch").keydown(function(e){
 $("#taskDetailsSearch").keyup(function(e){
 	performProjectSearch();
 });
+
+
+
+/******************Recurring PrjTsk model************/
+ function recurringTaskModel(taskId, projectId) {
+	var dataString = {"taskId": taskId};
+	doAjaxRequest("GET", "${applicationHome}/getRecurringTaskDetails", dataString, function(data) {
+			famstacklog(data);
+			if (data != ""){
+				var responseJson = JSON.parse(data);
+				loadRecurringTaskDetails(taskId, responseJson);
+			} else {
+				$(".recurringTimeDiv").addClass("hide");
+				$(".recurringDelete").addClass("hide");
+				$(".recurringPrjTskDiv").addClass("hide");
+				$(".recurringPrjTskName").html("");
+				$(".recurringEndTime").val("");
+				$("#RTCreatOrUpdate").html("Create");
+				initializeCron("0 5 0 * * ?");
+			}
+			$("#recurringTaskActionButton").attr("onclick", "createRecurringTask('"+projectId+"',"+taskId+")");
+		}, function(e) {
+	        famstacklog("ERROR: ", e);
+	        famstackalert(e);
+	    });
+}
+ 
+function initializeCron(cronExpression) {
+	$('#recurringCronExpressionDiv').html('<div id="recurringCronExpression"></div>');
+	$('#recurringCronExpression').cron({
+ 	 initial: cronExpression,
+      onChange: function() {
+          $('#recurringCronExpressionValue').val($(this).cron("value"));
+      },
+      customValues: {
+         // "5 Minutes" : "*/5 * * * *",
+         // "2 Hours on Weekends" : "0 */2 * * 5,6"
+      },
+      useGentleSelect: true
+ });
+}
+ 
+function loadRecurringTaskDetails(taskId, responseJson){
+	famstacklog(responseJson);
+	$("#RTCreatOrUpdate").html("Update");
+	$(".recurringTimeDiv").removeClass("hide");
+	$(".recurringDelete").removeClass("hide");
+	$(".recurringEndTime").val(responseJson.endDateString);
+	$("#recurringCronExpressionValue").val(responseJson.cronExpression);
+	$(".recurringTaskDiv").removeClass("hide");
+
+	if ( responseJson.recurreOriginal) {
+		$(".recurreOriginal").prop("checked", "checked");
+	} else {
+		$(".recurreOriginal").removeAttr("checked");
+	}
+	
+	initializeCron(responseJson.cronExpression);
+	$("#recurringNET").html(responseJson.nextRun);
+	if (responseJson.lastRun != null){
+		$("#recurringLET").html(responseJson.lastRun);
+	} else {
+		$("#recurringLET").html("Not yet run");
+	}
+	$(".recurringDelete").attr("onclick", "deleteRecurringTask("+responseJson.id+","+responseJson.taskId+")");
+}
+
+function createRecurringTask(projectId, taskId) {
+	var cronExp = $("#recurringCronExpressionValue").val();
+	var recurringEndDate = $("#recurringEndDate").val();
+	var recurreOriginal = $(".recurreOriginal").prop("checked");
+	
+	$("#recurringEndDate").css("border", " 0px solid red");
+	
+	if (new Date(recurringEndDate) < new Date()) {
+		$("#recurringEndDate").css("border", " 1px solid red");
+		return;
+	}
+	
+	var dataString = {"projectId": projectId, "taskId": taskId, "cronExp":cronExp, "recurringEndDate":recurringEndDate, "recurreOriginal" : recurreOriginal};
+	doAjaxRequest("POST", "${applicationHome}/createRecurringTask", dataString, function(data) {
+			famstacklog(data);
+			if (data != ""){
+				var responseJson = JSON.parse(data);
+				loadRecurringTaskDetails(taskId, responseJson);
+				$(".recurringSpinTask"+taskId).addClass("fa-spin");
+				$(".recurringSpinTask"+taskId).html('');
+			}
+		}, function(e) {
+	        famstacklog("ERROR: ", e);
+	        famstackalert(e);
+	    });
+}
+
+function deleteRecurringTask(recurringId, taskId) {
+	$(".msgConfirmText").html("Deleting recurring project task schedule");
+	$(".msgConfirmText1").html(recurringId);
+	$("#confirmYesId").prop("href","javascript:deleteRecuringTaskDetails('"+recurringId+"','"+taskId+"')");
+}
+
+function deleteRecuringTaskDetails(recurringId, taskId) {
+	var dataString = {"recurringId": recurringId};
+	doAjaxRequest("POST", "${applicationHome}/deleteRecuringTaskDetails", dataString, function(data) {
+			famstacklog(data);
+			$(".recurringSpinTask"+taskId).removeClass("fa-spin");
+			$(".recurringSpinTask"+taskId).html('');
+			initializeCron("0 5 0 * * ?");
+			$(".message-box").removeClass("open");
+			$("#RTCreatOrUpdate").html("Create");
+			$(".recurringTimeDiv").addClass("hide");
+			$(".recurringDelete").addClass("hide");
+			$(".recurringEndTime").val("");
+			$(".recurreOriginal").prop("checked", "checked");
+		}, function(e) {
+	        famstacklog("ERROR: ", e);
+	        famstackalert(e);
+	    });
+}
+
+function refreshRecurringSpin(projectId){
+	doAjaxRequest("GET", "${applicationHome}/getAllRecuringTaskByProjectId", {projectId:projectId}, function(data) {
+			famstacklog(data);
+			if (data != ""){
+				var responseJson = JSON.parse(data);
+				$.each(responseJson, function(idx, elem){
+					$(".recurringSpinTask"+elem).addClass("fa-spin");
+					$(".recurringSpinTask"+elem).html('<span class="hide">Recurring</span>');
+				});
+			} 
+		}, function(e) {
+	        famstacklog("ERROR: ", e);
+	        famstackalert(e);
+	    });
+}
+
+$('.recurringEndTime').datetimepicker({
+	timepicker:false,
+	formatDate:'Y/m/d',
+	format:'Y/m/d',
+	minDate:new Date()
+});
+
+$( document ).ready(function(){
+refreshRecurringSpin(${projectDetails.id});
+});
+/*********recurring ends*********/
 </script>
 
 

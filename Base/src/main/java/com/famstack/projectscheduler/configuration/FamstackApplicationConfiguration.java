@@ -28,6 +28,7 @@ import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.manager.FamstackApplicationConfManager;
 import com.famstack.projectscheduler.manager.FamstackRemoteServiceRefreshManager;
 import com.famstack.projectscheduler.manager.FamstackUserProfileManager;
+import com.famstack.projectscheduler.security.user.UserRole;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
 
@@ -537,15 +538,6 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
         return null;
     }
 
-	public boolean isRecurringByCode(String userGroupId) {
-		String value = getAppConfig("projectRecurringByCode", userGroupId);
-		if( value != null && "enabled".equalsIgnoreCase(value)) {
-			return true;
-		}
-		return false;
-	}
-	
-    
 	public String getStaticFilesLocation() {
 		return staticFilesLocation;
 	}
@@ -577,5 +569,38 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 	public void setStaticReportEnabled(boolean staticReportEnabled) {
 		this.staticReportEnabled = staticReportEnabled;
 	}
+	
+
+	public boolean isRecurringByCode(String userGroupId) {
+		String value = getAppConfig("projectRecurringByCode", userGroupId);
+		if( value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isSameDayOnlyTaskEnabled() {
+		String value = getAppConfig("sameDayOnlyTask", getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		
+		boolean isManagerAndAbove = getFamstackApplicationConfiguration().getCurrentUser().getUserRole() == UserRole.ADMIN 
+				|| getFamstackApplicationConfiguration().getCurrentUser().getUserRole() == UserRole.SUPERADMIN; 
+		if( value != null && "enabled".equalsIgnoreCase(value) && isManagerAndAbove) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isRecurringOriginal() {
+		return !isRecurringByCode(getFamstackApplicationConfiguration().getCurrentUserGroupId());
+	}
+    
+	public boolean isAssignManForQckClone() {
+		String value = getAppConfig("assignManForQckClone", getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if( value != null && "disabled".equalsIgnoreCase(value)) {
+			return false;
+		}
+		return true;
+	}
+	
 
 }

@@ -240,5 +240,38 @@ public class FamstackTaskController extends BaseFamstackService
             famstackDashboardManager.adjustTaskActivityTime(activityId, taskId, newDuration, startTime, endTime);
         return "{\"status\": true, \"taskActualDuration\":" + taskActualDuration + "}";
     }
+    
+    @RequestMapping(value = "/getRecurringTaskDetails", method = RequestMethod.GET)
+    @ResponseBody
+    public String getRecurringTaskDetails(@RequestParam("taskId") int taskId)
+    {
+        return famstackDashboardManager.getRecurringTaskDetails(taskId);
+    }
+
+    @RequestMapping(value = "/createRecurringTask", method = RequestMethod.POST)
+    @ResponseBody
+    public String createRecurringTask(
+        @RequestParam("projectId") int projectId,@RequestParam("taskId") int taskId, @RequestParam("cronExp") String cronExp,
+        @RequestParam("recurringEndDate") String recurringEndDate,  @RequestParam("recurreOriginal")  boolean recurreOriginal)
+    {
+        return famstackDashboardManager.createRecurringTask(projectId, taskId, cronExp, recurringEndDate, recurreOriginal);
+    }
+
+    @RequestMapping(value = "/deleteRecuringTaskDetails", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteRecuringTaskDetails(@RequestParam("recurringId") int recurringId)
+    {
+        famstackDashboardManager.deleteRecuringTaskDetails(recurringId);
+        return "{\"status\": true}";
+    }
+
+    @RequestMapping(value = "/getAllRecuringTaskByProjectId", method = RequestMethod.GET)
+    @ResponseBody
+    public String getAllRecuringTaskByProjectId(
+            @RequestParam("projectId") int projectId)
+    {
+        return famstackDashboardManager.getAllRecuringTaskByProjectId(projectId);
+    }
+    
 
 }

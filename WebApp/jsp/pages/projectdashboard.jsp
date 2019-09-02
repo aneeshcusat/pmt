@@ -1,25 +1,6 @@
 <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
 <%@include file="includes/header.jsp"%>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
-<c:set var="projectRecurringByCodeEnabled" value='false'/>  
-  <c:set var="projectRecurringByCodeSelectId" value='projectRecurringByCode${currentUserGroupId}'/>   
-  <c:if test="${not empty appConfigMap[projectRecurringByCodeSelectId] && not empty appConfigMap[projectRecurringByCodeSelectId].appConfValueDetails}">
-  <c:forEach var="projectRecurringByCodeConf" items="${appConfigMap[projectRecurringByCodeSelectId].appConfValueDetails}">
-  <c:if test="${projectRecurringByCodeConf.value eq 'enabled'}">
-	<c:set var="projectRecurringByCodeEnabled" value='true'/>   
-  </c:if>
-  </c:forEach>
-  </c:if>
-  
-  <c:set var="assignManForQckClone" value='true'/>  
-  <c:set var="assignManForQckCloneSelectId" value='assignManForQckClone${currentUserGroupId}'/>   
-  <c:if test="${not empty appConfigMap[assignManForQckCloneSelectId] && not empty appConfigMap[assignManForQckCloneSelectId].appConfValueDetails}">
-  <c:forEach var="assignManForQckCloneConf" items="${appConfigMap[assignManForQckCloneSelectId].appConfValueDetails}">
-  <c:if test="${assignManForQckCloneConf.value eq 'disabled'}">
-	<c:set var="assignManForQckClone" value='false'/>   
-  </c:if>
-  </c:forEach>
-  </c:if>
 
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
@@ -33,8 +14,8 @@
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/checkbox/styledCheckbox.css"/>
 
 <script type="text/javascript">
-var assigneeMandatoryForQuickCloning = ${assignManForQckClone};
-var recurringByCode = ${projectRecurringByCodeEnabled};;
+var assigneeMandatoryForQuickCloning = ${applicationScope.applicationConfiguraion.assignManForQckClone};
+var recurringOriginal = ${applicationScope.applicationConfiguraion.recurringOriginal};
 </script>
 <style>
 @media screen and (min-width: 700px) {
@@ -1350,6 +1331,11 @@ function refreshProjectDetails(){
 				$(".recurringEndTime").val("");
 				$("#RPABCreatOrUpdate").html("Create");
 				initializeCron("0 5 0 * * ?");
+				if ( recurringOriginal) {
+					$(".recurreOriginal").prop("checked", "checked");
+				} else {
+					$(".recurreOriginal").removeAttr("checked");
+				}
 			}
 			$("#recurringProjectActionButton").attr("onclick", "createRecurringProject('"+projectCode+"',"+projectId+")");
 		}, function(e) {
@@ -1381,10 +1367,12 @@ function loadRecurringProjectDetails(projectId, projectCode, responseJson){
 	$(".recurringEndTime").val(responseJson.endDateString);
 	$("#recurringCronExpressionValue").val(responseJson.cronExpression);
 	$(".recurringProjectDiv").removeClass("hide");
-	if (recurringByCode) {
-		$(".recurringProjectName").html("<a href='project\\"+projectId+"' target='_new'>View recurring project</a>");
-	} else {
+	if ((responseJson.recurreOriginal != null && responseJson.recurreOriginal) || (responseJson.recurreOriginal == null && recurringOriginal)) {
 		$(".recurringProjectName").html("<a href='project\\"+responseJson.projectId+"' target='_new'>View recurring project</a>");
+		$(".recurreOriginal").prop("checked", "checked");
+	} else {
+		$(".recurringProjectName").html("<a href='project\\"+projectId+"' target='_new'>View recurring project</a>");
+		$(".recurreOriginal").removeAttr("checked");
 	}
 	initializeCron(responseJson.cronExpression);
 	$("#recurringNET").html(responseJson.nextRun);
@@ -1399,6 +1387,8 @@ function loadRecurringProjectDetails(projectId, projectCode, responseJson){
 function createRecurringProject(projectCode, projectId) {
 	var cronExp = $("#recurringCronExpressionValue").val();
 	var recurringEndDate = $("#recurringEndDate").val();
+	var recurreOriginal = $(".recurreOriginal").prop("checked");
+	
 	$("#recurringEndDate").css("border", " 0px solid red");
 	
 	if (new Date(recurringEndDate) < new Date()) {
@@ -1406,7 +1396,7 @@ function createRecurringProject(projectCode, projectId) {
 		return;
 	}
 	
-	var dataString = {"projectCode": projectCode, "projectId": projectId, "cronExp":cronExp, "recurringEndDate":recurringEndDate};
+	var dataString = {"projectCode": projectCode, "projectId": projectId, "cronExp":cronExp, "recurringEndDate":recurringEndDate, "recurreOriginal" : recurreOriginal};
 	doAjaxRequest("POST", "${applicationHome}/createRecurringProject", dataString, function(data) {
 			famstacklog(data);
 			if (data != ""){
@@ -1439,6 +1429,12 @@ function deleteRecuringProjectDetails(recurringId, projectCode) {
 			$(".recurringTimeDiv").addClass("hide");
 			$(".recurringDelete").addClass("hide");
 			$(".recurringEndTime").val("");
+			
+			if ( recurringOriginal) {
+				$(".recurreOriginal").prop("checked", "checked");
+			} else {
+				$(".recurreOriginal").removeAttr("checked");
+			}
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
 	        famstackalert(e);
@@ -1465,7 +1461,7 @@ $( document ).ready(function(){
 refreshProjectDetails();
 refreshRecurringSpin();
 });
-
+/*********recurring ends*********/
 
 var showTaskActActualTimeEdit = function(taskActId) {
 	$("."+taskActId+"taskTimeEditLink").hide();

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
-<c:set var="staticUnbilledEnabled" value="${currentUserGroupId=='1005' || currentUserGroupId=='1002' || currentUserGroupId=='1006' || currentUserGroupId=='1010' || currentUserGroupId=='1001' || currentUserGroupId=='1003' || currentUserGroupId=='1009' || currentUserGroupId=='1007' || currentUserGroupId=='1016' || currentUserGroupId=='1004'}"/>
+<c:set var="staticUnbilledEnabled" value="${currentUserGroupId=='1019' ||currentUserGroupId=='1017' || currentUserGroupId=='1005' || currentUserGroupId=='1002' || currentUserGroupId=='1006' || currentUserGroupId=='1010' || currentUserGroupId=='1001' || currentUserGroupId=='1003' || currentUserGroupId=='1009' || currentUserGroupId=='1007' || currentUserGroupId=='1016' || currentUserGroupId=='1004'}"/>
 <c:set var="nonBillableCategories" value="${applicationScope.applicationConfiguraion.nonBillableCategories}"/>
 	<c:if test="${!staticUnbilledEnabled }">
 		<tr class="clickable">

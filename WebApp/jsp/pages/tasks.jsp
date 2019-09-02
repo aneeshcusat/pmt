@@ -1,5 +1,7 @@
 <%@include file="includes/header.jsp"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="sameDayOnlyTaskEnabled" value="${applicationScope.applicationConfiguraion.sameDayOnlyTaskEnabled}"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/tasks.css?version=3.3&v=${fsVersionNumber}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="userDetailsMap"
 	value="${applicationScope.applicationConfiguraion.userMap}" />
@@ -8,127 +10,11 @@
 	<li class="active">Tasks</li>
 </ul>
 <style>
-.blueColor{
-	color:blue !important;
-}
-.colorRed {
-background-color: red !important;
-}
 
-.fa-clock-o,.fa-pause,.fa-play {
-	margin-right: 6px;
-}
-.fa-pause{
-	color: red;
-}
-.fa-play{
-	color: green;
-}
-.changeBackground {
-	border: 1px dotted #FF0000;
-}
-@media screen and (min-width: 700px) {
-	#taskCompletionModal .modal-dialog {
-		width: 75%;
-	}
-	
-	#taskStartModal  .modal-dialog {
-		width: 75%;
-	}
-	
-	#taskDetailsModal  .modal-dialog {
-		width: 30%;
-	}
-	#unbillableTaskCreationModal .modal-dialog {
-		width: 50%;
-	}
-	.tasks{
-		min-height: 570px;
-	}
-}
-.taskName {
-	color: #2BD5D0;
-}
-
-.taskLabel {
-	float: right;
-	border: 1px solid blue;
-	width: 30px;
-	height: 28px;
-	text-align: center;
-	font-weight: bold;
-	font-size: 20px;
-	color: wheat;
-}
-
-.actualTaskStartTime{
-display: none;
-}
-
-.list-group-horizontal .list-group-item {
-	display: inline-block;
-}
-
-.list-group-item {
-	position: relative;
-	padding: 5px 12px;
-	margin-bottom: -1px;
-	background-color: #f5f5f5;
-	border: 0px solid #ddd;
-	font-size: 13px;
-	font-weight: bold;
-}
-
-.list-group-item.active,.list-group-item.active:hover,.list-group-item.active:focus
-	{
-	background: lightblue;
-	border-color: #1b1e24;
-}
-
-.list-group-horizontal .list-group-item {
-	margin-bottom: 0;
-	margin-left: -4px;
-	margin-right: 0;
-}
-
-.list-group-horizontal .list-group-item:first-child {
-	border-top-right-radius: 0;
-}
-
-.list-group-horizontal .list-group-item:last-child {
-	border-bottom-left-radius: 0;
-}
-
-.blink_text {
-
-    animation:1s blinker linear infinite;
-    -webkit-animation:1s blinker linear infinite;
-    -moz-animation:1s blinker linear infinite;
-	font-weight:bold;
-     color: red;
-    }
-
-    @-moz-keyframes blinker {  
-     0% { opacity: 1.0; }
-     50% { opacity: 0.0; }
-     100% { opacity: 1.0; }
-     }
-
-    @-webkit-keyframes blinker {  
-     0% { opacity: 1.0; }
-     50% { opacity: 0.0; }
-     100% { opacity: 1.0; }
-     }
-
-    @keyframes blinker {  
-     0% { opacity: 1.0; }
-     50% { opacity: 0.0; }
-     100% { opacity: 1.0; }
-     }
 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
 .task-item {
 	display: none;
-}
+  }
 </c:if>
 </style>
 <script>
@@ -387,6 +273,17 @@ display: none;
 	src="${js}/plugins/dropzone/dropzone.min.js?v=${fsVersionNumber}"></script>
 <script type="text/javascript" src="${js}/unbilledtask.js?version=2.1&v=${fsVersionNumber}"></script>
 <script>
+
+<c:if test="${sameDayOnlyTaskEnabled}">
+	var minDate = new Date();
+	var maxDate = new Date();
+</c:if>
+<c:if test="${!sameDayOnlyTaskEnabled}">
+	var currentTaskDate = new Date();
+	var minDate = new Date(currentTaskDate.setMonth(currentTaskDate.getMonth()-3));
+	var maxDate = new Date(currentTaskDate.setMonth(currentTaskDate.getMonth()+3));
+</c:if>
+
 
 $(".taskOwnersList").on("click", function(){
 	var hasClass = $("#" + this.id).hasClass("active");
@@ -786,9 +683,9 @@ function taskPlayOrPause(taskId){
 	}
 }
 
-$('#adjustCompletionTime').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'});
-$('#adjustStartTime').datetimepicker({ sideBySide: true,maxDate:new Date(), format: 'YYYY/MM/DD HH:mm'});
-$('#adjustStartTime1').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm'}).on('dp.change', function(e) {
+$('#adjustCompletionTime').datetimepicker({ sideBySide: true,minDate:minDate,maxDate:maxDate, format: 'YYYY/MM/DD HH:mm'});
+$('#adjustStartTime').datetimepicker({ sideBySide: true,minDate:minDate,maxDate:new Date(), format: 'YYYY/MM/DD HH:mm'});
+$('#adjustStartTime1').datetimepicker({ sideBySide: true,minDate:minDate,maxDate:maxDate, format: 'YYYY/MM/DD HH:mm'}).on('dp.change', function(e) {
    adjustStartTimeChanged();
 });;
 

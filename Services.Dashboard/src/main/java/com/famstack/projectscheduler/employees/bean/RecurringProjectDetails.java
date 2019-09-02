@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.employees.bean;
 
 import java.sql.Timestamp;
 
+import com.famstack.projectscheduler.contants.RecurringType;
 import com.famstack.projectscheduler.util.DateUtils;
 
 public class RecurringProjectDetails
@@ -17,7 +18,13 @@ public class RecurringProjectDetails
     private String cronExpression;
 
     private int projectId;
+    
+    private Integer taskId;
+    
+    private RecurringType type;
 
+    private Boolean recurreOriginal;
+    
     private String projectCode;
 
     private String endDateString;
@@ -149,5 +156,30 @@ public class RecurringProjectDetails
     {
         this.endDateString = endDateString;
     }
+
+	public Integer getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
+	}
+
+	public RecurringType getType() {
+		return type;
+	}
+
+	public void setType(RecurringType type) {
+		this.type = type;
+	}
+
+
+	public Boolean getRecurreOriginal() {
+		return recurreOriginal;
+	}
+
+	public void setRecurreOriginal(Boolean recurreOriginal) {
+		this.recurreOriginal = recurreOriginal;
+	}
 
 }

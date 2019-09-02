@@ -1325,9 +1325,8 @@ public class FamstackDashboardManager extends BaseFamstackService
                  * if (durationInMinutes > 480) { durationInMinutes = 480; }
                  */
 
-                String taskName =
-                    durationInMinutes / 60 + " hours " + durationInMinutes % 60 + " Mins " + taskActCategory + " "
-                        + comments;
+                String taskName = taskActCategory;
+                
                 famstackUserActivityManager.createCompletedUserActivityItem(userId, startTime, 0, taskName,
                     durationInMinutes, UserTaskType.valueOf(type), taskActCategory, ProjectType.NON_BILLABLE, comments);
             }
@@ -1450,10 +1449,10 @@ public class FamstackDashboardManager extends BaseFamstackService
         return recurringProjectDetails != null ? FamstackUtils.getJsonFromObject(recurringProjectDetails) : "";
     }
 
-    public String createRecurringProject(String projectCode, int projectId, String cronExp, String recurringEndDate)
+    public String createRecurringProject(String projectCode, int projectId, String cronExp, String recurringEndDate, boolean recurreOriginal)
     {
         RecurringProjectDetails recurringProjectDetails =
-            projectManager.createRecurringProject(projectCode, projectId, cronExp, recurringEndDate);
+            projectManager.createRecurringProject(projectCode, projectId, cronExp, recurringEndDate, recurreOriginal);
         return recurringProjectDetails != null ? FamstackUtils.getJsonFromObject(recurringProjectDetails) : "";
     }
 
@@ -1760,4 +1759,30 @@ public class FamstackDashboardManager extends BaseFamstackService
 		}
 		return jsonArray.toString();
 	}
+
+
+    public String getRecurringTaskDetails(int taskId)
+    {
+        RecurringProjectDetails recurringTaskDetails =
+            projectManager.getRecurringTaskDetails(taskId);
+        return recurringTaskDetails != null ? FamstackUtils.getJsonFromObject(recurringTaskDetails) : "";
+    }
+
+    public String createRecurringTask(int projectId, int taskId, String cronExp, String recurringEndDate, boolean recurreOriginal)
+    {
+        RecurringProjectDetails recurringTaskDetails =
+            projectManager.createRecurringTask(projectId, taskId, cronExp, recurringEndDate, recurreOriginal);
+        return recurringTaskDetails != null ? FamstackUtils.getJsonFromObject(recurringTaskDetails) : "";
+    }
+
+    public void deleteRecuringTaskDetails(int recurringProjectId)
+    {
+        projectManager.deleteRecuringProjectDetails(recurringProjectId);
+    }
+
+    public String getAllRecuringTaskByProjectId(int projectId)
+    {
+        return FamstackUtils.getJsonFromObject(projectManager.getAllRecuringTaskByProjectId(projectId));
+    }
+
 }
