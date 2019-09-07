@@ -131,6 +131,14 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
                 notificationEmailItem = getProjectTaskStatusNotificationItem(object);
                 notificationEmailItem.setTemplates(Templates.TASK_START_REMINDER);
                 break;
+            case USER_ACTIVITY_REPORT:
+                notificationEmailItem = getUserActivityReportData(object);
+                notificationEmailItem.setTemplates(Templates.USER_ACTIVITY_REPORT);
+                break;
+            case USER_UTILIZATION_REPORT:
+                notificationEmailItem = getUserUtilizationReportData(object);
+                notificationEmailItem.setTemplates(Templates.USER_UTILIZATION_REPORT);
+                break;
             default:
                 break;
         }
@@ -157,11 +165,41 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         }
     }
 
-    private boolean allowNotification(NotificationType notificationType)
+    private EmailNotificationItem getUserUtilizationReportData(Object object) {
+    	EmailNotificationItem notificationEmailItem = getReportingData(object);
+        Map<String, Object> userUtilizationReportData = (Map<String, Object>) object;
+		notificationEmailItem.getData().put("utilizationData",
+				userUtilizationReportData.get("UTILIZATION_DATA"));
+        return notificationEmailItem;
+	}
+
+    private EmailNotificationItem getReportingData(Object object) {
+    	EmailNotificationItem notificationEmailItem = new EmailNotificationItem();
+        Map<String, Object> userUtilizationReportData = (Map<String, Object>) object;
+        notificationEmailItem.setToList((Set<String>) userUtilizationReportData.get("TO_LIST"));
+        notificationEmailItem.setCcList((Set<String>) userUtilizationReportData.get("CC_LIST"));
+        
+        notificationEmailItem.getData().put("teamName", userUtilizationReportData.get("TEAM_NAME"));
+        notificationEmailItem.getData().put("reportDate", userUtilizationReportData.get("REPORT_DATE"));
+		notificationEmailItem.getData().put("dateList",
+				userUtilizationReportData.get("DATE_LIST"));
+        return notificationEmailItem;
+    }
+	private EmailNotificationItem getUserActivityReportData(Object object) {
+		EmailNotificationItem notificationEmailItem = getReportingData(object);
+        Map<String, Object> userUtilizationReportData = (Map<String, Object>) object;
+		notificationEmailItem.getData().put("userActivityData",
+				userUtilizationReportData.get("ACTIVITY_DATA"));
+        return notificationEmailItem;
+	}
+
+	private boolean allowNotification(NotificationType notificationType)
     {
         return (notificationType == NotificationType.RESET_PASSWORD
             || notificationType == NotificationType.FORGOT_PASSWORD
-            || notificationType == NotificationType.USER_REGISTRAION || notificationType == NotificationType.USER_UPDATE)
+				|| notificationType == NotificationType.USER_REGISTRAION
+				|| notificationType == NotificationType.USER_UPDATE
+				|| notificationType == NotificationType.USER_ACTIVITY_REPORT || notificationType == NotificationType.USER_UTILIZATION_REPORT)
             ? true : false;
     }
 

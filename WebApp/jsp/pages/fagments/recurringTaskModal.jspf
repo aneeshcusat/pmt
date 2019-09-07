@@ -26,7 +26,7 @@
 					</div>
 					
 					
-					<div class="col-md-6 hide">
+					<div class="col-md-6">
 					<label class="control-label">Duplicate Original</label>
 						 <input type="checkbox" checked="checked" class="gentleinputstyle recurreOriginal"/>
 					</div>

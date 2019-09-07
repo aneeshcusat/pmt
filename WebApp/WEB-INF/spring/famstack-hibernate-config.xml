@@ -88,6 +88,7 @@
 				<value>com.famstack.projectscheduler.datatransferobject.AppConfValueItem</value>
 				
 				<value>com.famstack.projectscheduler.datatransferobject.RemoteItemRefreshItem</value>
+				<value>com.famstack.projectscheduler.datatransferobject.AutoReportingItem</value>
 				
 			</list>
 		</property>

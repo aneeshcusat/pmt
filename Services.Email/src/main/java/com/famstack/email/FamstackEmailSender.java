@@ -5,7 +5,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import com.famstack.email.util.FamstackTemplateEmailInfo;
 import com.famstack.email.velocity.FamstackEmailTemplateRendererService;
@@ -27,12 +26,12 @@ public class FamstackEmailSender extends BaseFamstackService
      * 
      * @param emailInfo the email info
      */
-    public void sendEmail(FamstackTemplateEmailInfo emailInfo, String... emailsToList)
+    public void sendEmail(FamstackTemplateEmailInfo emailInfo,  String[] emailsCCList, String[] emailsBCCList, String... emailsToList)
     {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         emailInfo.setMimeMessage(mimeMessage);
         logDebug("emailsToList" + emailsToList);
-        javaMailSender.send(famstackEmailTemplateRendererService.createMessage(emailInfo, emailsToList));
+        javaMailSender.send(famstackEmailTemplateRendererService.createMessage(emailInfo, emailsCCList, emailsBCCList, emailsToList));
     }
 
     public void sendTextMessage(String subject, String messageBody)

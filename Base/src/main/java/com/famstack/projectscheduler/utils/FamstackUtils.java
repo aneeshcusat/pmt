@@ -3,7 +3,11 @@ package com.famstack.projectscheduler.utils;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -11,6 +15,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.quartz.CronExpression;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
+import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.util.StringUtils;
 
 public class FamstackUtils extends BaseFamstackService
@@ -67,4 +73,27 @@ public class FamstackUtils extends BaseFamstackService
         }
         return exp != null ? exp.getNextValidTimeAfter(date == null ? new Date() : date) : null;
     }
+
+	public static void sortProjectTaskAssigneeDataList(
+			List<ProjectTaskActivityDetails> projectTaskAssigneeDataList,
+			final Map<Integer, EmployeeDetails> allUsersMap) {
+
+		Collections.sort(projectTaskAssigneeDataList,
+				new Comparator<ProjectTaskActivityDetails>() {
+					@Override
+					public int compare(
+							ProjectTaskActivityDetails projectDetails2,
+							ProjectTaskActivityDetails projectDetails1) {
+						int useId1 = projectDetails1.getUserId();
+						int useId2 = projectDetails2.getUserId();
+						EmployeeDetails emp1 = allUsersMap.get(useId1);
+						EmployeeDetails emp2 = allUsersMap.get(useId2);
+						if (emp1 != null && emp2 != null) {
+							return emp2.getFirstName().compareTo(
+									emp1.getFirstName());
+						}
+						return 0;
+					}
+				});
+	}
 }

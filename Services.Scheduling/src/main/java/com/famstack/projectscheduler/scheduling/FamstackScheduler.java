@@ -59,10 +59,11 @@ public class FamstackScheduler extends BaseFamstackService
 	        deleteOlderProjects();
 	        autoPauseTaskExceedsTimeLimitHrs(10);
 	        refreshRemoteCachedItems();
+			sendUserAutoReportEmail();
     	}
     }
 
-    @Async
+	@Async
     private void refreshRemoteCachedItems() {
     	logDebug("Running refreshRemoteCachedItems scheduler");
         try {
@@ -247,6 +248,17 @@ public class FamstackScheduler extends BaseFamstackService
 
     }
 
+
+    @Async
+	private void sendUserAutoReportEmail() {
+		logDebug("Running sendUserAutoReportEmail scheduler");
+        try {
+			famstackProjectManager.sendAutoReportEmail(new Date(), new Date());
+        } catch (Exception e) {
+			logError("Unable to run sendUserAutoReportEmail", e);
+        }
+	}
+    
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -255,4 +267,5 @@ public class FamstackScheduler extends BaseFamstackService
 		this.enabled = enabled;
 	}
 
+	
 }

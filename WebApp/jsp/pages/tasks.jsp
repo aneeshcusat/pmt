@@ -655,8 +655,8 @@ function playTask(taskId){
      		$(".taskPlayPause"+taskId).addClass("fa-pause");
      		$(".taskPlayPause"+taskId).attr("data-task-state", "running");
      		$(".blink"+taskId).html("");
-     		$("."+taskId+".taskRemainingDiv .actualTaskStartTime").html(getTodayDateTime(new Date()))
-     		$(".task-item" + taskId).find(".startDateTimeDiv").html("Started" + " at : " + getTodayDateTime(new Date()));
+     		$("."+taskId+".taskRemainingDiv .actualTaskStartTime").html(getTodayDateTime(new Date(responseJson.actualStartTime)));
+     		$(".task-item" + taskId).find(".startDateTimeDiv").html("Started" + " at : " + getTodayDateTime(new Date(responseJson.actualStartTime)));
      		/* $("."+taskId+".taskRemainingDiv .taskHour").html(responseJson.startHour);
      		$("."+taskId+".taskRemainingDiv .taskMinutes").html(responseJson.startMins);
      		$("."+taskId+".taskRemainingDiv .taskSeconds").html(responseJson.startSecs); */

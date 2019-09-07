@@ -1,0 +1,34 @@
+#set( $subject = "${subject}")
+<p><strong>Hi ${teamName},</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; </strong>Please find below the task utilization for ${reportDate}. Outliers are marked in red.</p>
+<table>
+<tbody>
+<tr style="background-color: #69d5ed;">
+<td><strong>Sl No</strong></td>
+<td><strong>Employee Name</strong></td>
+<td><strong>Billable hours</strong></td>
+<td><strong>Non billable hours</strong></td>
+<td><strong>Leave or Holiday</strong></td>
+<td><strong>Utilization</strong></td>
+<td><strong>Total Hours</strong></td>
+</tr>
+#set($index = 0)
+ #foreach ($utilization in $utilizationData)
+  #set($index = $index+1)
+    <tr>
+		<td style="text-align: center;">$index</td>
+		<td style="text-align: center;">$utilization.employeeName</td>
+		<td style="text-align: center;">$utilization.billableHours</td>
+		<td style="text-align: center;">$utilization.nonBillableHours</td>
+		<td style="text-align: center;">$utilization.leaveOrHoliday</td>
+		#if($utilization.underOrOverUtilized)
+			<td style="background-color: #f00;text-align: center;">$utilization.utilization</td>
+		#else
+			<td style="text-align: center;">$utilization.utilization</td>
+		#end
+		<td style="text-align: center;">$utilization.totalHours</td>
+	</tr>
+  #end
+
+</tbody>
+</table>

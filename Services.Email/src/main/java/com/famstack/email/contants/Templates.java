@@ -77,7 +77,11 @@ public enum Templates
 
     TASK_RE_ASSIGNED("projectTaskStatus", "projectTaskAssigned"),
 
-    TASK_AUTO_PAUSED("projectTaskStatus", "projectTaskPaused");
+    TASK_AUTO_PAUSED("projectTaskStatus", "projectTaskPaused"),
+    
+    USER_ACTIVITY_REPORT("userActivityReport", "userActivityReport"),
+    
+    USER_UTILIZATION_REPORT("userUtilizationReport", "userUtilizationReport");
 
     /** The subjectkey. */
     private String subjectkey;

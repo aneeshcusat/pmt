@@ -50,26 +50,33 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
             }
 
             String mailSubject = getNotificationSubject(emailNotificationItem.getTemplates());
-
-            famstackTemplateEmailInfo.setMailSubject(mailSubject);
-            famstackTemplateEmailInfo.setVelocityTemplateName(templateName);
-            famstackTemplateEmailInfo.setTemplateParameters(dataMap);
+            FamstackTemplateEmailInfo famstackTemplateEmailInfoNew = new FamstackTemplateEmailInfo();
+            
+            famstackTemplateEmailInfoNew.setMailTo(famstackTemplateEmailInfo.getMailTo());
+            famstackTemplateEmailInfoNew.setMailBcc(famstackTemplateEmailInfo.getMailBcc());
+            famstackTemplateEmailInfoNew.setMailCc(famstackTemplateEmailInfo.getMailCc());
+            famstackTemplateEmailInfoNew.setMailFrom(famstackTemplateEmailInfo.getMailFrom());
+            
+            famstackTemplateEmailInfoNew.setMailSubject(mailSubject);
+            famstackTemplateEmailInfoNew.setVelocityTemplateName(templateName);
+            famstackTemplateEmailInfoNew.setTemplateParameters(dataMap);
 
             Set<String> filteredToList =
-                getFilteredEmailToList(emailNotificationItem, emailNotificationItem.getTemplates());
+                getFilteredEmailAddressList( emailNotificationItem.getToList(), emailNotificationItem.getTemplates());
+            
+            Set<String> filteredCcList =
+                    getFilteredEmailAddressList( emailNotificationItem.getCcList(), emailNotificationItem.getTemplates());
 
-            famstackEmailSender.sendEmail(famstackTemplateEmailInfo, filteredToList.toArray(new String[0]));
+            famstackEmailSender.sendEmail(famstackTemplateEmailInfoNew,filteredCcList.toArray(new String[0]), null, filteredToList.toArray(new String[0]));
         } else {
             logDebug("Unable to send emails" + emailNotificationItem.getToList());
         }
     }
 
-    private Set<String> getFilteredEmailToList(EmailNotificationItem emailNotificationItem, Templates templates)
+    private Set<String> getFilteredEmailAddressList(Set<String> toList, Templates templates)
     {
-        Set<String> toList = emailNotificationItem.getToList();
-
         if (templates == Templates.RESET_PASSWORD || templates == Templates.FORGOT_PASSWORD
-            || templates == Templates.USER_REGISTRAION || templates == Templates.USER_UPDATE) {
+            || templates == Templates.USER_REGISTRAION || templates == Templates.USER_UPDATE || templates == Templates.USER_ACTIVITY_REPORT || templates == Templates.USER_UTILIZATION_REPORT) {
             return toList;
         }
 

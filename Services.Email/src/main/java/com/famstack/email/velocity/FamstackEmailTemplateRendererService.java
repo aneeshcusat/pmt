@@ -14,7 +14,6 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import com.famstack.email.util.EmailMessage;
 import com.famstack.email.util.FamstackTemplateEmailInfo;
 import com.famstack.projectscheduler.BaseFamstackService;
-import com.famstack.projectscheduler.util.StringUtils;
 
 /**
  * The Class famstackEmailTemplateRendererService.
@@ -49,18 +48,32 @@ public class FamstackEmailTemplateRendererService extends BaseFamstackService {
 	 *            the emails to
 	 * @return the mime message preparator
 	 */
-	public MimeMessagePreparator createMessage(FamstackTemplateEmailInfo emailInfo, String... emailsToList) {
+	public MimeMessagePreparator createMessage(FamstackTemplateEmailInfo emailInfo, String[] emailsCCList, String[] emailsBCCList, String... emailsToList) {
 
 		String[] emailsTo = emailsToList;
+		String[] emailsCCs = emailsCCList;
+		String[] emailsBCCs = emailsBCCList;
+		
 		try {
 
 			EmailMessage emailMessage = renderEmailMessage(emailInfo);
+			
 			if (emailsTo == null || emailsTo.length == 0) {
 				emailsTo = new String[1];
 				emailsTo[0] = emailInfo.getMailTo();
 			}
-			return mapPropertiesToMessage(emailInfo.getMailFrom(), emailMessage, emailInfo.getMailCc(),
-					emailInfo.getMailBcc(), emailsTo);
+			
+			if (emailsCCs == null || emailsCCs.length == 0) {
+				emailsCCs = new String[1];
+				emailsCCs[0] = emailInfo.getMailCc();
+			}
+			if (emailsBCCs == null || emailsBCCs.length == 0) {
+				emailsBCCs = new String[1];
+				emailsBCCs[0] = emailInfo.getMailBcc();
+			}
+			return mapPropertiesToMessage(emailInfo.getMailFrom(), emailMessage, emailsCCs,
+					emailsBCCs, emailsTo);
+			
 		} catch (Exception e) {
 			logError("unable to render the template " + e.getMessage(), e);
 		}
@@ -116,7 +129,7 @@ public class FamstackEmailTemplateRendererService extends BaseFamstackService {
 	 *             the messaging exception
 	 */
 	protected MimeMessagePreparator mapPropertiesToMessage(final String messageFrom, final EmailMessage emailMessage,
-			final String emailsCC, final String emailsBCC, final String... emailsTo) throws MessagingException {
+			final String[] emailsCCs, final String[] emailsBCCs, final String... emailsTo) throws MessagingException {
 
 		return new MimeMessagePreparator() {
 			@Override
@@ -128,11 +141,12 @@ public class FamstackEmailTemplateRendererService extends BaseFamstackService {
 				}
 				messageHelper.setText(emailMessage.getBody(), emailMessage.getHtmlBody());
 				messageHelper.setSubject(emailMessage.getSubject());
-				if (StringUtils.isNotBlank(emailsCC)) {
-					messageHelper.setCc(emailsCC);
+				
+				for (String emailCC : emailsCCs) {
+					messageHelper.addCc(emailCC);
 				}
-				if (StringUtils.isNotBlank(emailsBCC)) {
-					messageHelper.setBcc(emailsBCC);
+				for (String emailBCC : emailsBCCs) {
+					messageHelper.addBcc(emailBCC);
 				}
 			}
 		};

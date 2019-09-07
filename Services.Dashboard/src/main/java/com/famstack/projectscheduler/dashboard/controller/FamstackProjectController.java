@@ -651,5 +651,21 @@ public class FamstackProjectController extends BaseFamstackService
     {
         return famstackDashboardManager.getAllRecuringProjectCodes();
     }
+    
+
+	@RequestMapping(value = "/sendAutoReportEmail", method = RequestMethod.GET)
+    @ResponseBody
+	public String sendAutoReportEmail(
+			@RequestParam(value = "daterange", defaultValue = "") String dateRange)
+    {
+    	 FamstackDateRange famstackDateRange = DateUtils.parseDateRangeString(dateRange);
+         Date startDate = famstackDateRange.getStartDate();
+         Date endDate = famstackDateRange.getEndDate();
+        famstackDashboardManager.sendAutoReportEmail(startDate, endDate);
+    	        
+    	return "{\"status\": true}";
+    }
+    
+   
 
 }

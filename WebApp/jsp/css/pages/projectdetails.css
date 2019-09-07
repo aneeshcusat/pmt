@@ -143,3 +143,17 @@ width: 60%;
 .taskDetailsTable.table tbody tr td {
 	padding:5px 5px 5px 0px;
 }
+
+.gentleinputstyle {
+    padding: 1px 5px 1px;
+    background-color: #eee;
+    border: 2px solid #ddd;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+    color: #555;
+    white-space: nowrap;
+}

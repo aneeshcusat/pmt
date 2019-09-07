@@ -32,511 +32,530 @@ import com.famstack.projectscheduler.security.user.UserRole;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
 
-public class FamstackApplicationConfiguration extends BaseFamstackService
-{
+public class FamstackApplicationConfiguration extends BaseFamstackService {
 
-    @Resource
-    FamstackUserProfileManager famstackUserProfileManager;
+	@Resource
+	FamstackUserProfileManager famstackUserProfileManager;
 
-    @Resource
-    FamstackApplicationConfManager famstackApplicationConfManager;
+	@Resource
+	FamstackApplicationConfManager famstackApplicationConfManager;
 
-    @Resource
-    FamstackDataAccessObjectManager famstackDataAccessObjectManager;
-    
-    @Resource
-    FamstackRemoteServiceRefreshManager famstackRemoteServiceRefreshManager;
+	@Resource
+	FamstackDataAccessObjectManager famstackDataAccessObjectManager;
 
-    private String hostName;
+	@Resource
+	FamstackRemoteServiceRefreshManager famstackRemoteServiceRefreshManager;
 
-    private int portNumber;
+	private String hostName;
 
-    private String protocol;
-    
-    private String staticFilesLocation;
-    
-    private String instanceName;
-    
-    private boolean tracopusConfigEnabled;
-    
-    private String fsVersionNumber;
+	private int portNumber;
 
-    private boolean staticReportEnabled;
+	private String protocol;
 
-    public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
-    
-    public static Map<Integer, EmployeeDetails> allUsersMap = new HashMap<>();
+	private String staticFilesLocation;
 
-    private static Map<String, UserGroupDetails> userGroupMap = new HashMap<>();
+	private String instanceName;
 
-    private static Map<String, AppConfDetails> appConfigMap = new HashMap<>();
+	private boolean tracopusConfigEnabled;
 
-    private static Map<String, Integer> userIdMap = new HashMap<>();
+	private String fsVersionNumber;
 
-    private final Map<String, String> configSettings = new HashMap<>();
+	private boolean staticReportEnabled;
 
-    public void forceInitialize()
-    {
-        appConfigMap.clear();
-        userGroupMap.clear();
-        configSettings.clear();
+	public static Map<Integer, EmployeeDetails> userMap = new HashMap<>();
 
-        forceInitializeUserMap(famstackUserProfileManager.getAllEmployeeDataList());
-        initializeUserGroupMap(famstackApplicationConfManager.getUserGroupList());
-        forceInitializeAppConfigMap(famstackApplicationConfManager.getAppConfigList());
-        initializeConfigurations();
-    }
-    
-    public void forceInitializeAppConfigMap(List<AppConfDetails> appConfigList)
-    {
-    	reInitializeAppConfigMap(appConfigList);
-    	famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "application", false);
-    }
+	public static Map<Integer, EmployeeDetails> allUsersMap = new HashMap<>();
 
-    public void reInitializeAppConfigMap(List<AppConfDetails> appConfigList)
-    {
-        logInfo("Re Initializing app config value" + appConfigList);
-        for (AppConfDetails appConfDetails : appConfigList) {
-            appConfigMap.put(appConfDetails.getType(), appConfDetails);
-        }
-        famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "application", true);
-    }
+	private static Map<String, UserGroupDetails> userGroupMap = new HashMap<>();
 
-    public void initializeUserGroupMap(List<UserGroupDetails> userGroupList)
-    {
-        if (userGroupMap.isEmpty()) {
-            forceInitializeUserGroup(userGroupList);
-        }
-    }
+	private static Map<String, AppConfDetails> appConfigMap = new HashMap<>();
 
-    public void forceInitializeUserGroup(List<UserGroupDetails> userGroupList)
-    {
-        for (UserGroupDetails userGroupDetail : userGroupList) {
-            userGroupMap.put(userGroupDetail.getUserGroupId(), userGroupDetail);
-        }
-    }
+	private static Map<String, Integer> userIdMap = new HashMap<>();
 
-    public synchronized void forceInitializeUserMap(List<EmployeeDetails> employeeDetailsList)
-    {
-    	initializeUserMap(employeeDetailsList);
-    	famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "user", false);
-    }
-    public synchronized void initializeUserMap(List<EmployeeDetails> employeeDetailsList)
-    {
-        Map<Integer, EmployeeDetails> userMapTemp = new HashMap<>();
-        Map<Integer, EmployeeDetails> allUserMapTemp = new HashMap<>();
-        Map<String, Integer> userIdMapTemp = new HashMap<>();
+	private final Map<String, String> configSettings = new HashMap<>();
 
-        for (EmployeeDetails employeeDetails : employeeDetailsList) {
-        	allUserMapTemp.put(employeeDetails.getId(), employeeDetails);
-        	if (!employeeDetails.isDeleted()) {
-        		userMapTemp.put(employeeDetails.getId(), employeeDetails);
-        	}
-            userIdMapTemp.put(employeeDetails.getEmail(), employeeDetails.getId());
-        }
-        allUsersMap.clear();
-        userMap.clear();
-        userIdMap.clear();
-        userMap.putAll(userMapTemp);
-        userIdMap.putAll(userIdMapTemp);
-        allUsersMap.putAll(allUserMapTemp);
-        
-        famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(getFamstackApplicationConfiguration().getInstanceName(), "user", true);
-    }
-    
-    /**
-     * Initialize configurations.
-     */
-    public void initializeConfigurations()
-    {
-        List<ConfigurationSettingsItem> configurationSettingsItemsList =
-            (List<ConfigurationSettingsItem>) famstackDataAccessObjectManager
-                .getAllGroupItems("ConfigurationSettingsItem");
-        if (configurationSettingsItemsList != null) {
-            for (ConfigurationSettingsItem configurationSettingsItem : configurationSettingsItemsList) {
-                updatConfiguraionIteme(configurationSettingsItem);
-            }
-        }
-    }
+	public void forceInitialize() {
+		appConfigMap.clear();
+		userGroupMap.clear();
+		configSettings.clear();
 
-    public void updatConfiguraionIteme(ConfigurationSettingsItem configurationSettingsItem)
-    {
-        logDebug("intizlized  configurationSettingsItem : " + configurationSettingsItem.getPropertyName() + " ,value :"
-            + configurationSettingsItem.getPropertyValue());
-        configSettings.put(configurationSettingsItem.getPropertyName(), configurationSettingsItem.getPropertyValue());
-    }
+		forceInitializeUserMap(famstackUserProfileManager
+				.getAllEmployeeDataList());
+		initializeUserGroupMap(famstackApplicationConfManager
+				.getUserGroupList());
+		forceInitializeAppConfigMap(famstackApplicationConfManager
+				.getAppConfigList());
+		initializeConfigurations();
+	}
 
-    public List<EmployeeDetails> getAllUserList()
-    {
-        List<EmployeeDetails> userList = new ArrayList<>();
-        if (userMap != null) {
-            for (Integer userId : userMap.keySet()) {
-                userList.add(userMap.get(userId));
-            }
-        }
-        sortUserList(userList);
-        return userList;
-    }
+	public void forceInitializeAppConfigMap(List<AppConfDetails> appConfigList) {
+		reInitializeAppConfigMap(appConfigList);
+		famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(
+				getFamstackApplicationConfiguration().getInstanceName(),
+				"application", false);
+	}
 
-    public List<EmployeeDetails> getUserList()
-    {
-        List<EmployeeDetails> userList = new ArrayList<>();
-        if (userMap != null) {
-            for (Integer userId : userMap.keySet()) {
+	public void reInitializeAppConfigMap(List<AppConfDetails> appConfigList) {
+		logInfo("Re Initializing app config value" + appConfigList);
+		for (AppConfDetails appConfDetails : appConfigList) {
+			appConfigMap.put(appConfDetails.getType(), appConfDetails);
+		}
+		famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(
+				getFamstackApplicationConfiguration().getInstanceName(),
+				"application", true);
+	}
 
-                if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
-                    userMap.get(userId).getUserGroupId())) {
-                    userList.add(userMap.get(userId));
-                }
-            }
-        }
-        sortUserList(userList);
-        return userList;
-    }
-    
-    public List<EmployeeDetails> getUserList(String groupId)
-    {
-        List<EmployeeDetails> userList = new ArrayList<>();
-        if (userMap != null) {
-            for (Integer userId : userMap.keySet()) {
+	public void initializeUserGroupMap(List<UserGroupDetails> userGroupList) {
+		if (userGroupMap.isEmpty()) {
+			forceInitializeUserGroup(userGroupList);
+		}
+	}
 
-                if (groupId.equalsIgnoreCase(
-                    userMap.get(userId).getUserGroupId())) {
-                    userList.add(userMap.get(userId));
-                }
-            }
-        }
-        sortUserList(userList);
-        return userList;
-    }
+	public void forceInitializeUserGroup(List<UserGroupDetails> userGroupList) {
+		for (UserGroupDetails userGroupDetail : userGroupList) {
+			userGroupMap.put(userGroupDetail.getUserGroupId(), userGroupDetail);
+		}
+	}
 
-    private void sortUserList(List<EmployeeDetails> userList)
-    {
-        Collections.sort(userList, new Comparator<EmployeeDetails>()
-        {
-            @Override
-            public int compare(EmployeeDetails employeeDetails1, EmployeeDetails employeeDetails2)
-            {
-                return employeeDetails1.getFirstName().toUpperCase()
-                    .compareTo(employeeDetails2.getFirstName().toUpperCase());
-            }
-        });
-    }
+	public synchronized void forceInitializeUserMap(
+			List<EmployeeDetails> employeeDetailsList) {
+		initializeUserMap(employeeDetailsList);
+		famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(
+				getFamstackApplicationConfiguration().getInstanceName(),
+				"user", false);
+	}
 
-    public Map<Integer, EmployeeDetails> getFilterdUserMap(String groupId)
-    {
-    	if (!StringUtils.isNotBlank(groupId)){
-    		groupId = getFamstackUserSessionConfiguration().getUserGroupId();
-    	}
-    	
-        Map<Integer, EmployeeDetails> userFiltedMap = new HashMap<>();
-        if (userMap != null) {
-            for (Integer userId : userMap.keySet()) {
-                if (groupId.equalsIgnoreCase(
-                    userMap.get(userId).getUserGroupId())) {
-                    userFiltedMap.put(userId, userMap.get(userId));
-                }
-            }
-        }
-        return userFiltedMap;
-    }
+	public synchronized void initializeUserMap(
+			List<EmployeeDetails> employeeDetailsList) {
+		Map<Integer, EmployeeDetails> userMapTemp = new HashMap<>();
+		Map<Integer, EmployeeDetails> allUserMapTemp = new HashMap<>();
+		Map<String, Integer> userIdMapTemp = new HashMap<>();
 
-    public Map<String, AppConfDetails> getFilterdApplicationConfigMap()
-    {
-        Map<String, AppConfDetails> appConfigFilterdMap = new HashMap<>();
-        if (appConfigMap != null) {
-            for (String appConfigType : appConfigMap.keySet()) {
-                if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
-                    appConfigMap.get(appConfigType).getUserGroupId())) {
-                    appConfigFilterdMap.put(appConfigType, appConfigMap.get(appConfigType));
-                }
-            }
-        }
-        return appConfigFilterdMap;
-    }
+		for (EmployeeDetails employeeDetails : employeeDetailsList) {
+			allUserMapTemp.put(employeeDetails.getId(), employeeDetails);
+			if (!employeeDetails.isDeleted()) {
+				userMapTemp.put(employeeDetails.getId(), employeeDetails);
+			}
+			userIdMapTemp.put(employeeDetails.getEmail(),
+					employeeDetails.getId());
+		}
+		allUsersMap.clear();
+		userMap.clear();
+		userIdMap.clear();
+		userMap.putAll(userMapTemp);
+		userIdMap.putAll(userIdMapTemp);
+		allUsersMap.putAll(allUserMapTemp);
 
-    public String getHostName()
-    {
-        return hostName;
-    }
+		famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(
+				getFamstackApplicationConfiguration().getInstanceName(),
+				"user", true);
+	}
 
-    public void setHostName(String hostName)
-    {
-        this.hostName = hostName;
-    }
+	/**
+	 * Initialize configurations.
+	 */
+	public void initializeConfigurations() {
+		List<ConfigurationSettingsItem> configurationSettingsItemsList = (List<ConfigurationSettingsItem>) famstackDataAccessObjectManager
+				.getAllGroupItems("ConfigurationSettingsItem");
+		if (configurationSettingsItemsList != null) {
+			for (ConfigurationSettingsItem configurationSettingsItem : configurationSettingsItemsList) {
+				updatConfiguraionIteme(configurationSettingsItem);
+			}
+		}
+	}
 
-    public int getPortNumber()
-    {
-        return portNumber;
-    }
+	public void updatConfiguraionIteme(
+			ConfigurationSettingsItem configurationSettingsItem) {
+		logDebug("intizlized  configurationSettingsItem : "
+				+ configurationSettingsItem.getPropertyName() + " ,value :"
+				+ configurationSettingsItem.getPropertyValue());
+		configSettings.put(configurationSettingsItem.getPropertyName(),
+				configurationSettingsItem.getPropertyValue());
+	}
 
-    public void setPortNumber(int portNumber)
-    {
-        this.portNumber = portNumber;
-    }
+	public List<EmployeeDetails> getAllUserList() {
+		List<EmployeeDetails> userList = new ArrayList<>();
+		if (userMap != null) {
+			for (Integer userId : userMap.keySet()) {
+				userList.add(userMap.get(userId));
+			}
+		}
+		sortUserList(userList);
+		return userList;
+	}
 
-    public String getProtocol()
-    {
-        return protocol;
-    }
+	public List<EmployeeDetails> getUserList() {
+		List<EmployeeDetails> userList = new ArrayList<>();
+		if (userMap != null) {
+			for (Integer userId : userMap.keySet()) {
 
-    public void setProtocol(String protocol)
-    {
-        this.protocol = protocol;
-    }
+				if (getFamstackUserSessionConfiguration().getUserGroupId()
+						.equalsIgnoreCase(userMap.get(userId).getUserGroupId())) {
+					userList.add(userMap.get(userId));
+				}
+			}
+		}
+		sortUserList(userList);
+		return userList;
+	}
 
-    public FamstackUserProfileManager getFamstackUserProfileManager()
-    {
-        return famstackUserProfileManager;
-    }
+	public List<EmployeeDetails> getUserList(String groupId) {
+		List<EmployeeDetails> userList = new ArrayList<>();
+		if (userMap != null) {
+			for (Integer userId : userMap.keySet()) {
 
-    public UserItem getCurrentUser()
-    {
-        return getFamstackUserSessionConfiguration().getCurrentUser();
-    }
+				if (groupId.equalsIgnoreCase(userMap.get(userId)
+						.getUserGroupId())) {
+					userList.add(userMap.get(userId));
+				}
+			}
+		}
+		sortUserList(userList);
+		return userList;
+	}
 
-    public Boolean getUserAccessedSystemToday()
-    {
-        Date userLastActivityDate = getFamstackUserSessionConfiguration().getUserLastActivityDate();
-        return userLastActivityDate == null || !DateUtils.isTodayDate(userLastActivityDate);
-    }
+	public List<EmployeeDetails> sortedUserList(String userGroupId) {
+		List<EmployeeDetails> userDetails = getUserList(userGroupId);
+		sortUserList(userDetails);
+		return userDetails;
+	}
+	private void sortUserList(List<EmployeeDetails> userList) {
+		Collections.sort(userList, new Comparator<EmployeeDetails>() {
+			@Override
+			public int compare(EmployeeDetails employeeDetails1,
+					EmployeeDetails employeeDetails2) {
+				return employeeDetails1
+						.getFirstName()
+						.toUpperCase()
+						.compareTo(
+								employeeDetails2.getFirstName().toUpperCase());
+			}
+		});
+	}
 
-    public String getCurrentUserGroupId()
-    {
-        return getFamstackUserSessionConfiguration().getUserGroupId();
-    }
+	public Map<Integer, EmployeeDetails> getFilterdUserMap(String groupId) {
+		if (!StringUtils.isNotBlank(groupId)) {
+			groupId = getFamstackUserSessionConfiguration().getUserGroupId();
+		}
 
-    public Map<Integer, EmployeeDetails> getUserMap()
-    {
-        return userMap;
-    }
+		Map<Integer, EmployeeDetails> userFiltedMap = new HashMap<>();
+		if (userMap != null) {
+			for (Integer userId : userMap.keySet()) {
+				if (groupId.equalsIgnoreCase(userMap.get(userId)
+						.getUserGroupId())) {
+					userFiltedMap.put(userId, userMap.get(userId));
+				}
+			}
+		}
+		return userFiltedMap;
+	}
 
-    public Map<Integer, EmployeeDetails> getAllUsersMap()
-    {
-        return allUsersMap;
-    }
-    
-    public List<EmployeeDetails> getAllSortedUsers()
-    {
-    	List<EmployeeDetails> employeeDetails = new ArrayList<>(allUsersMap.values());
-        Collections.sort(employeeDetails);
-        return employeeDetails;
-    }
+	public Map<String, AppConfDetails> getFilterdApplicationConfigMap() {
+		Map<String, AppConfDetails> appConfigFilterdMap = new HashMap<>();
+		if (appConfigMap != null) {
+			for (String appConfigType : appConfigMap.keySet()) {
+				if (getFamstackUserSessionConfiguration().getUserGroupId()
+						.equalsIgnoreCase(
+								appConfigMap.get(appConfigType)
+										.getUserGroupId())) {
+					appConfigFilterdMap.put(appConfigType,
+							appConfigMap.get(appConfigType));
+				}
+			}
+		}
+		return appConfigFilterdMap;
+	}
 
-    
-    public Map<Integer, EmployeeDetails> getCurrentGroupUserMap()
-    {
-        Map<Integer, EmployeeDetails> currentUserGroup = new HashMap<>();
-        if (userMap != null) {
-            for (Integer userId : userMap.keySet()) {
-                if (getFamstackUserSessionConfiguration().getUserGroupId().equalsIgnoreCase(
-                    userMap.get(userId).getUserGroupId())) {
-                    currentUserGroup.put(userId, userMap.get(userId));
-                }
-            }
-        }
-        return currentUserGroup;
-    }
+	public String getHostName() {
+		return hostName;
+	}
 
-    public Map<String, UserGroupDetails> getUserGroupMap()
-    {
-        return userGroupMap;
-    }
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
 
-    public void updateLastPing()
-    {
-        int userId = getCurrentUserId();
-        logDebug("updating user ping check" + userId);
-        if (!userMap.isEmpty() && userMap.get(userId) != null) {
-            userMap.get(userId).setLastPing(new Timestamp(new Date().getTime()));
-        }
-    }
+	public int getPortNumber() {
+		return portNumber;
+	}
 
-    public String getUrl()
-    {
-        return protocol + "://" + hostName + ":" + portNumber + "/" + "bops/dashboard";
-    }
+	public void setPortNumber(int portNumber) {
+		this.portNumber = portNumber;
+	}
 
-    public int getCurrentUserId()
-    {
-        int userId = 0;
-        if (getCurrentUser() != null) {
-            userId = getCurrentUser().getId();
-        }
-        return userId;
-    }
+	public String getProtocol() {
+		return protocol;
+	}
 
-    public static Map<String, Integer> getUserIdMap()
-    {
-        return userIdMap;
-    }
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
 
-    /**
-     * Checks if is log debug.
-     * 
-     * @return true, if is log debug
-     */
-    public boolean isLogDebug()
-    {
-        if (configSettings.get("logDebug") == null) {
-            return true;
-        }
-        return "TRUE".equalsIgnoreCase(configSettings.get("logDebug")) ? true : false;
-    }
+	public FamstackUserProfileManager getFamstackUserProfileManager() {
+		return famstackUserProfileManager;
+	}
 
-    /**
-     * Checks if is log debug.
-     * 
-     * @return true, if is log debug
-     */
-    public boolean isAutoRefresh()
-    {
-        if (configSettings.get("autoRefresh") == null) {
-            return true;
-        }
-        return "TRUE".equalsIgnoreCase(configSettings.get("autoRefresh")) ? true : false;
-    }
+	public UserItem getCurrentUser() {
+		return getFamstackUserSessionConfiguration().getCurrentUser();
+	}
 
-    /**
-     * Checks if is log debug.
-     * 
-     * @return true, if is log debug
-     */
-    public boolean isEmailDisabled(String userId)
-    {
-        String isEmailDisabledId = userId + "_disableEmail";
+	public Boolean getUserAccessedSystemToday() {
+		Date userLastActivityDate = getFamstackUserSessionConfiguration()
+				.getUserLastActivityDate();
+		return userLastActivityDate == null
+				|| !DateUtils.isTodayDate(userLastActivityDate);
+	}
 
-        if (configSettings.get(isEmailDisabledId) == null) {
-            return false;
-        }
-        return "TRUE".equalsIgnoreCase(configSettings.get(isEmailDisabledId)) ? true : false;
-    }
+	public String getCurrentUserGroupId() {
+		return getFamstackUserSessionConfiguration().getUserGroupId();
+	}
 
-    public boolean isEmailUserDisabled()
-    {
-        return isEmailDisabled(getCurrentUser().getUserId());
-    }
+	public Map<Integer, EmployeeDetails> getUserMap() {
+		return userMap;
+	}
 
-    public boolean isEmailAllEnabled()
-    {
-        String isEmailEnabledId = "enableEmail";
+	public Map<Integer, EmployeeDetails> getAllUsersMap() {
+		return allUsersMap;
+	}
 
-        if (configSettings.get(isEmailEnabledId) == null) {
-            return true;
-        }
-        return "TRUE".equalsIgnoreCase(configSettings.get(isEmailEnabledId)) ? true : false;
-    }
+	public List<EmployeeDetails> getAllSortedUsers() {
+		List<EmployeeDetails> employeeDetails = new ArrayList<>(
+				allUsersMap.values());
+		Collections.sort(employeeDetails);
+		return employeeDetails;
+	}
 
-    public String getConfiguraionItem(String scheduleCron)
-    {
-        if (configSettings.get("scheduleCron") == null) {
-            return "";
-        }
+	public Map<Integer, EmployeeDetails> getCurrentGroupUserMap() {
+		Map<Integer, EmployeeDetails> currentUserGroup = new HashMap<>();
+		if (userMap != null) {
+			for (Integer userId : userMap.keySet()) {
+				if (getFamstackUserSessionConfiguration().getUserGroupId()
+						.equalsIgnoreCase(userMap.get(userId).getUserGroupId())) {
+					currentUserGroup.put(userId, userMap.get(userId));
+				}
+			}
+		}
+		return currentUserGroup;
+	}
 
-        return configSettings.get("scheduleCron");
-    }
+	public Map<String, UserGroupDetails> getUserGroupMap() {
+		return userGroupMap;
+	}
 
-    public boolean isDesktopNotificationEnabled()
-    {
-        if (configSettings.get("desktopNotification") == null) {
-            return true;
-        }
-        return "TRUE".equalsIgnoreCase(configSettings.get("desktopNotification")) ? true : false;
-    }
+	public void updateLastPing() {
+		int userId = getCurrentUserId();
+		logDebug("updating user ping check" + userId);
+		if (!userMap.isEmpty() && userMap.get(userId) != null) {
+			userMap.get(userId)
+					.setLastPing(new Timestamp(new Date().getTime()));
+		}
+	}
 
-    public boolean isExpandedPage()
-    {
-        String toggelId = getCurrentUserId() + "_dashboardToggle";
-        if (configSettings.get(toggelId) == null) {
-            return false;
-        }
-        return "TRUE".equalsIgnoreCase(configSettings.get(toggelId)) ? true : false;
-    }
+	public String getUrl() {
+		return protocol + "://" + hostName + ":" + portNumber + "/"
+				+ "bops/dashboard";
+	}
 
-    public String getDefaultDate()
-    {
-        String defaultDateId = getCurrentUserId() + "_filterDate";
-        String defaultDateLabel = configSettings.get(defaultDateId);
-        logDebug("deraultFilterDate : " + defaultDateLabel);
-        return defaultDateLabel == null ? "This Week" : defaultDateLabel;
-    }
+	public int getCurrentUserId() {
+		int userId = 0;
+		if (getCurrentUser() != null) {
+			userId = getCurrentUser().getId();
+		}
+		return userId;
+	}
 
-    public Map<String, AppConfDetails> getAppConfigMap()
-    {
-        return appConfigMap;
-    }
+	public static Map<String, Integer> getUserIdMap() {
+		return userIdMap;
+	}
 
-    public List<AppConfValueDetails> getProjectCategories()
-    {
-        return getCategories("projectCategory");
-    }
-    
-    public List<AppConfValueDetails> getNewProjectCategories()
-    {
-        return getCategories("newProjectCategory");
-    }
+	/**
+	 * Checks if is log debug.
+	 * 
+	 * @return true, if is log debug
+	 */
+	public boolean isLogDebug() {
+		if (configSettings.get("logDebug") == null) {
+			return true;
+		}
+		return "TRUE".equalsIgnoreCase(configSettings.get("logDebug")) ? true
+				: false;
+	}
 
-    public List<AppConfValueDetails> getNonBillableCategories()
-    {
-        return getCategories("nonBillableCategory");
-    }
+	/**
+	 * Checks if is log debug.
+	 * 
+	 * @return true, if is log debug
+	 */
+	public boolean isAutoRefresh() {
+		if (configSettings.get("autoRefresh") == null) {
+			return true;
+		}
+		return "TRUE".equalsIgnoreCase(configSettings.get("autoRefresh")) ? true
+				: false;
+	}
 
-    public List<AppConfValueDetails> getCategories(String type)
-    {
-        List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
-        String projectCategoryId = type + getCurrentUserGroupId();
-        if (appConfigMap != null) {
-            AppConfDetails appConfigDetails = appConfigMap.get(projectCategoryId);
+	/**
+	 * Checks if is log debug.
+	 * 
+	 * @return true, if is log debug
+	 */
+	public boolean isEmailDisabled(String userId) {
+		String isEmailDisabledId = userId + "_disableEmail";
 
-            if (appConfigDetails != null && appConfigDetails.getAppConfValueDetails() != null) {
-                appConfValueDetails.addAll(appConfigDetails.getAppConfValueDetails());
+		if (configSettings.get(isEmailDisabledId) == null) {
+			return false;
+		}
+		return "TRUE".equalsIgnoreCase(configSettings.get(isEmailDisabledId)) ? true
+				: false;
+	}
 
-                Collections.sort(appConfValueDetails, new Comparator<AppConfValueDetails>()
-                {
-                    @Override
-                    public int compare(AppConfValueDetails appConfValueDetails1,
-                        AppConfValueDetails appConfValueDetails2)
-                    {
-                        return appConfValueDetails1.getName().toUpperCase()
-                            .compareTo(appConfValueDetails2.getName().toUpperCase());
-                    }
-                });
-            }
-        }
-        return appConfValueDetails;
-    }
-    
-    public String getInstanceName(){
-    	
-    	if (instanceName == null) {
+	public boolean isEmailUserDisabled() {
+		return isEmailDisabled(getCurrentUser().getUserId());
+	}
+
+	public boolean isEmailAllEnabled() {
+		String isEmailEnabledId = "enableEmail";
+
+		if (configSettings.get(isEmailEnabledId) == null) {
+			return true;
+		}
+		return "TRUE".equalsIgnoreCase(configSettings.get(isEmailEnabledId)) ? true
+				: false;
+	}
+
+	public String getConfiguraionItem(String scheduleCron) {
+		if (configSettings.get("scheduleCron") == null) {
+			return "";
+		}
+
+		return configSettings.get("scheduleCron");
+	}
+
+	public boolean isDesktopNotificationEnabled() {
+		if (configSettings.get("desktopNotification") == null) {
+			return true;
+		}
+		return "TRUE".equalsIgnoreCase(configSettings
+				.get("desktopNotification")) ? true : false;
+	}
+
+	public boolean isExpandedPage() {
+		String toggelId = getCurrentUserId() + "_dashboardToggle";
+		if (configSettings.get(toggelId) == null) {
+			return false;
+		}
+		return "TRUE".equalsIgnoreCase(configSettings.get(toggelId)) ? true
+				: false;
+	}
+
+	public String getDefaultDate() {
+		String defaultDateId = getCurrentUserId() + "_filterDate";
+		String defaultDateLabel = configSettings.get(defaultDateId);
+		logDebug("deraultFilterDate : " + defaultDateLabel);
+		return defaultDateLabel == null ? "This Week" : defaultDateLabel;
+	}
+
+	public Map<String, AppConfDetails> getAppConfigMap() {
+		return appConfigMap;
+	}
+
+	public List<AppConfValueDetails> getProjectCategories() {
+		return getCategories("projectCategory");
+	}
+
+	public List<AppConfValueDetails> getNewProjectCategories() {
+		return getCategories("newProjectCategory");
+	}
+
+	public List<AppConfValueDetails> getNonBillableCategories() {
+		return getCategories("nonBillableCategory");
+	}
+
+	public List<AppConfValueDetails> getCategories(String type) {
+		List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
+		String projectCategoryId = type + getCurrentUserGroupId();
+		if (appConfigMap != null) {
+			AppConfDetails appConfigDetails = appConfigMap
+					.get(projectCategoryId);
+
+			if (appConfigDetails != null
+					&& appConfigDetails.getAppConfValueDetails() != null) {
+				appConfValueDetails.addAll(appConfigDetails
+						.getAppConfValueDetails());
+
+				Collections.sort(appConfValueDetails,
+						new Comparator<AppConfValueDetails>() {
+							@Override
+							public int compare(
+									AppConfValueDetails appConfValueDetails1,
+									AppConfValueDetails appConfValueDetails2) {
+								return appConfValueDetails1
+										.getName()
+										.toUpperCase()
+										.compareTo(
+												appConfValueDetails2.getName()
+														.toUpperCase());
+							}
+						});
+			}
+		}
+		return appConfValueDetails;
+	}
+
+	public String getInstanceName() {
+
+		if (instanceName == null) {
 			try {
-		        MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
-		        Set<ObjectName> objectNames = beanServer.queryNames(new ObjectName("*:type=Connector,*"),
-		                Query.match(Query.attr("protocol"), Query.value("HTTP/1.1")));
-		        String host = InetAddress.getLocalHost().getHostAddress();
-		        String port = objectNames.iterator().next().getKeyProperty("port");
-		        instanceName = host + ":" + port;
+				MBeanServer beanServer = ManagementFactory
+						.getPlatformMBeanServer();
+				Set<ObjectName> objectNames = beanServer.queryNames(
+						new ObjectName("*:type=Connector,*"),
+						Query.match(Query.attr("protocol"),
+								Query.value("HTTP/1.1")));
+				String host = InetAddress.getLocalHost().getHostAddress();
+				String port = objectNames.iterator().next()
+						.getKeyProperty("port");
+				instanceName = host + ":" + port;
 			} catch (Exception e) {
 				return "unknown";
 			}
-    	}
-    	return instanceName;
-    }
+		}
+		return instanceName;
+	}
 
-    public String getAppConfig(String type, String userGroupId)
-    {
-        List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
-        String appConfigType = type + userGroupId;
-        if (appConfigMap != null) {
-            AppConfDetails appConfigDetails = appConfigMap.get(appConfigType);
+	public String getSingleValueAppConfig(String type, String userGroupId) {
+		List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
+		String appConfigType = type + userGroupId;
+		if (appConfigMap != null) {
+			AppConfDetails appConfigDetails = appConfigMap.get(appConfigType);
 
-            if (appConfigDetails != null && appConfigDetails.getAppConfValueDetails() != null) {
-                appConfValueDetails.addAll(appConfigDetails.getAppConfValueDetails());
-               return appConfValueDetails.get(0).getValue();
-            }
-        }
-        return null;
-    }
+			if (appConfigDetails != null
+					&& appConfigDetails.getAppConfValueDetails() != null) {
+				appConfValueDetails.addAll(appConfigDetails
+						.getAppConfValueDetails());
+				return appConfValueDetails.get(0).getValue();
+			}
+		}
+		return null;
+	}
+
+	public List<AppConfValueDetails> getAppConfigValues(String type,
+			String userGroupId) {
+		List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
+		String appConfigType = type;
+		if (userGroupId != null) {
+			appConfigType = type + userGroupId;
+		}
+		if (appConfigMap != null) {
+			AppConfDetails appConfigDetails = appConfigMap.get(appConfigType);
+
+			if (appConfigDetails != null
+					&& appConfigDetails.getAppConfValueDetails() != null) {
+				appConfValueDetails.addAll(appConfigDetails
+						.getAppConfValueDetails());
+			}
+		}
+		return appConfValueDetails;
+	}
 
 	public String getStaticFilesLocation() {
 		return staticFilesLocation;
@@ -569,38 +588,75 @@ public class FamstackApplicationConfiguration extends BaseFamstackService
 	public void setStaticReportEnabled(boolean staticReportEnabled) {
 		this.staticReportEnabled = staticReportEnabled;
 	}
-	
 
 	public boolean isRecurringByCode(String userGroupId) {
-		String value = getAppConfig("projectRecurringByCode", userGroupId);
-		if( value != null && "enabled".equalsIgnoreCase(value)) {
+		String value = getSingleValueAppConfig("projectRecurringByCode",
+				userGroupId);
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean isSameDayOnlyTaskEnabled() {
-		String value = getAppConfig("sameDayOnlyTask", getFamstackApplicationConfiguration().getCurrentUserGroupId());
-		
-		boolean isManagerAndAbove = getFamstackApplicationConfiguration().getCurrentUser().getUserRole() == UserRole.ADMIN 
-				|| getFamstackApplicationConfiguration().getCurrentUser().getUserRole() == UserRole.SUPERADMIN; 
-		if( value != null && "enabled".equalsIgnoreCase(value) && isManagerAndAbove) {
+		String value = getSingleValueAppConfig("sameDayOnlyTask",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+
+		boolean isManagerAndAbove = getFamstackApplicationConfiguration()
+				.getCurrentUser().getUserRole() == UserRole.ADMIN
+				|| getFamstackApplicationConfiguration().getCurrentUser()
+						.getUserRole() == UserRole.SUPERADMIN;
+		if (value != null && "enabled".equalsIgnoreCase(value)
+				&& isManagerAndAbove) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isRecurringOriginal() {
+		return !isRecurringByCode(getFamstackApplicationConfiguration()
+				.getCurrentUserGroupId());
+	}
+
+	public boolean isWeekTLDisableMonthEnabled() {
+		String value = getSingleValueAppConfig("weekTLDisableMonth",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean isRecurringOriginal() {
-		return !isRecurringByCode(getFamstackApplicationConfiguration().getCurrentUserGroupId());
+	public boolean isWeeklyTimeLogNewTaskEnabled() {
+		String value = getSingleValueAppConfig("weeklyTimeLogNewTask",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "disabled".equalsIgnoreCase(value)) {
+			return false;
+		}
+		return true;
 	}
-    
+
+	
 	public boolean isAssignManForQckClone() {
-		String value = getAppConfig("assignManForQckClone", getFamstackApplicationConfiguration().getCurrentUserGroupId());
-		if( value != null && "disabled".equalsIgnoreCase(value)) {
+		String value = getSingleValueAppConfig("assignManForQckClone",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "disabled".equalsIgnoreCase(value)) {
 			return false;
 		}
 		return true;
 	}
 	
+	public List<String> getGlobalAppConfigList(String type, String userGroupId) {
+		List<AppConfValueDetails> appConfigValues = getAppConfigValues(type,
+				userGroupId);
+		List<String> userActivityEnabledGroupIds = new ArrayList<>();
+		if (appConfigValues != null) {
+			for (AppConfValueDetails appConfValueDetails : appConfigValues) {
+				userActivityEnabledGroupIds.add(appConfValueDetails.getValue());
+			}
+		}
+
+		return userActivityEnabledGroupIds;
+	}
 
 }

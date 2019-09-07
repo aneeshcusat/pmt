@@ -1,0 +1,33 @@
+#set( $subject = "${subject}")
+
+<p><strong>Hi ${teamName},</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; </strong>Please find below the activity report for  ${reportDate}</p>
+<table>
+<tbody>
+<tr style="background-color: #69d5ed;">
+<td><strong>Sl No</strong></td>
+<td><strong>Employee Name</strong></td>
+ #foreach ($dateString in $dateList)
+	<td><strong>Status ($dateString)</strong></td>
+#end
+</tr>
+#set($index = 0)
+ #foreach ($userActivity in $userActivityData)
+ #set($index = $index+1)
+    <tr>
+		<td style="text-align: center;">$index</td>
+		<td style="text-align: center;">$userActivity.employeeName</td>
+		 #foreach ($status in $userActivity.statusList)
+		 	#if($status.status == 'Inactive')
+				<td style="background-color: #f00;text-align: center;">$status.status</td>
+			#elseif ($status.status == 'Leave')
+				<td style="background-color: #ff0;text-align: center;">$status.status</td>
+			#else 
+				<td style="text-align: center;">$status.status</td>
+			#end
+		#end
+	</tr>
+  #end
+
+</tbody>
+</table>

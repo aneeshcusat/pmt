@@ -3,11 +3,13 @@ package com.famstack.projectscheduler.manager;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.famstack.email.FamstackEmailSender;
+import com.famstack.projectscheduler.contants.FamstackConstants;
 import com.famstack.projectscheduler.contants.HQLStrings;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.contants.ProjectActivityType;
@@ -27,6 +30,7 @@ import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectTaskType;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.RecurringType;
+import com.famstack.projectscheduler.contants.ReportType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
@@ -36,9 +40,11 @@ import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
+import com.famstack.projectscheduler.datatransferobject.AutoReportingItem;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.RecurringProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
+import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
@@ -46,6 +52,9 @@ import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.employees.bean.RecurringProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
+import com.famstack.projectscheduler.employees.bean.UserSiteActivityDetails;
+import com.famstack.projectscheduler.employees.bean.UserUtilizationDetails;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -1143,7 +1152,16 @@ public class FamstackProjectManager extends BaseFamstackManager
     	return query == null ? "" : query;
 	}
 
-	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate, boolean getUnique,boolean addSameTaskActTime, Integer userId)
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(
+			Date startDate, Date endDate, boolean getUnique,
+			boolean addSameTaskActTime, Integer userId) {
+		return getAllProjectTaskAssigneeData(startDate, endDate, getUnique,
+				addSameTaskActTime, userId, null);
+	}
+
+	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(
+			Date startDate, Date endDate, boolean getUnique,
+			boolean addSameTaskActTime, Integer userId, String userGroupId)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("startDate", startDate);
@@ -1153,7 +1171,10 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList= new ArrayList<>();
         List<ProjectTaskActivityDetails>  allTaskActProjectDetailsList= new ArrayList<>();
         String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
-        String userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+		if (userGroupId == null) {
+			userGroupId = getFamstackUserSessionConfiguration()
+					.getUserGroupId();
+		}
         if(userId == null) {
         	sqlQuery += " and utai.user_grp_id = " + userGroupId;
         }
@@ -1935,5 +1956,282 @@ public class FamstackProjectManager extends BaseFamstackManager
 		return getAllRecuringTaskIdsByProjectId(projectId);
 	}
 
+	@SuppressWarnings("unchecked")
+	public void sendAutoReportEmail(Date startDate, Date endDate) {
 
+		
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startTime", new Date());
+
+		List<AutoReportingItem> autoReportingItems = (List<AutoReportingItem>) famstackDataAccessObjectManager
+				.executeAllGroupQuery(HQLStrings.getString("autoReportWithIn"),
+						dataMap);
+
+		logDebug("autoReportingItems " + autoReportingItems);
+
+		if (autoReportingItems != null) {
+			startDate = DateUtils.getNextPreviousDate(
+					DateTimePeriod.DAY_START, startDate, 0);
+			
+			Date tmpStartDate = new Date(startDate.getTime());
+			endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,
+					endDate, 0);
+
+			List<String> dateList = new ArrayList<>();
+			while (tmpStartDate.before(endDate)) {
+				dateList.add(DateUtils.format(tmpStartDate,
+						DateUtils.DATE_FORMAT));
+				tmpStartDate = DateUtils.getNextPreviousDate(
+						DateTimePeriod.DAY, tmpStartDate, 1);
+			}
+
+			Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap = null;
+			Map<Integer, Map<String, String>> userSiteActivityMap = null;
+
+			for (AutoReportingItem autoReportingItem : autoReportingItems) {
+
+				if (autoReportingItem.getEndDate() != null
+						&& new Date().after(new Date(autoReportingItem
+								.getEndDate().getTime()))) {
+					logInfo("Deleting auto Reporting Item item after expiry, type : "
+							+ autoReportingItem.getType()
+							+ ", Group id "
+							+ autoReportingItem.getUserGroupId());
+					famstackDataAccessObjectManager
+							.deleteItem(autoReportingItem);
+
+					continue;
+				}
+				logDebug(autoReportingItem.getName());
+				try {
+					Map<String, Object> notificationDataMap = new HashMap<>();
+					List<String> toList = Arrays.asList(autoReportingItem
+							.getToList().split(","));
+					List<String> ccList = Arrays.asList(autoReportingItem
+							.getCcList().split(","));
+
+					UserGroupDetails userGroupDetails = getFamstackApplicationConfiguration()
+							.getUserGroupMap().get(
+									autoReportingItem.getUserGroupId());
+
+					List<EmployeeDetails> employeesList = getFamstackApplicationConfiguration()
+							.sortedUserList(autoReportingItem.getUserGroupId());
+
+					logDebug("toList " + toList);
+					logDebug("ccList " + ccList);
+					logDebug("userGroupDetails " + userGroupDetails);
+
+					notificationDataMap.put("TEAM_NAME",
+							userGroupDetails.getName());
+					notificationDataMap.put("REPORT_DATE", DateUtils.format(
+							startDate, DateUtils.DATE_FORMAT_CALENDER));
+					notificationDataMap.put("TO_LIST", new HashSet<>(toList));
+					notificationDataMap.put("CC_LIST", new HashSet<>(ccList));
+					notificationDataMap.put("DATE_LIST", dateList);
+
+					if (autoReportingItem.getType() == ReportType.USER_SITE_ACTIVITY) {
+						/******** user site activity start *******/
+						if (nonBillativityMap == null) {
+							nonBillativityMap = famstackUserActivityManager
+									.getAllNonBillabileActivities(
+									startDate, endDate);
+						}
+						if (userSiteActivityMap == null) {
+							userSiteActivityMap = famstackUserActivityManager
+									.getAllUserSiteActivities(
+									startDate, endDate, null);
+						}
+
+						List<UserSiteActivityDetails> activityData = famstackUserActivityManager
+								.getUserSiteActivityForReport(
+								userSiteActivityMap, nonBillativityMap,
+								employeesList, dateList);
+						if (activityData != null && !activityData.isEmpty()) {
+						notificationDataMap.put("ACTIVITY_DATA", activityData);
+
+						famstackNotificationServiceManager.notifyAll(
+								NotificationType.USER_ACTIVITY_REPORT,
+								notificationDataMap, null);
+						}
+						/******** user site activity end *******/
+					} else if (autoReportingItem.getType() == ReportType.USER_UTILIZATION) {
+
+						List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(
+				startDate, endDate, employeesList,
+				autoReportingItem.getUserGroupId());
+						
+						logDebug(FamstackUtils.getJsonFromObject(utilizationDetails));
+						if (utilizationDetails != null) {
+							
+						notificationDataMap.put("UTILIZATION_DATA",
+								utilizationDetails);
+						famstackNotificationServiceManager.notifyAll(
+								NotificationType.USER_UTILIZATION_REPORT,
+								notificationDataMap, null);
+						}
+					}
+
+					autoReportingItem
+							.setLastRun(autoReportingItem.getNextRun());
+					String cronExpression = autoReportingItem
+							.getCronExpression();
+					Date nextRun = null;
+					if (cronExpression.contains("|")) {
+						String cronExpression1 = cronExpression.split("[|]")[0];
+						String cronExpression2 = cronExpression.split("[|]")[1];
+
+						nextRun = FamstackUtils
+								.getNextRunFromCron(cronExpression1,
+										autoReportingItem.getNextRun());
+						Date nextRun2 = FamstackUtils
+								.getNextRunFromCron(cronExpression2,
+										autoReportingItem.getNextRun());
+
+						if (nextRun.after(nextRun2)) {
+							nextRun = nextRun2;
+						}
+
+					} else {
+						nextRun = FamstackUtils.getNextRunFromCron(
+								cronExpression, autoReportingItem.getNextRun());
+					}
+
+					autoReportingItem.setNextRun(nextRun == null ? null
+							: new Timestamp(nextRun.getTime()));
+
+					famstackDataAccessObjectManager
+							.saveOrUpdateItem(autoReportingItem);
+
+				} catch (Exception e) {
+					logError("sendUserActivityEmail failed!", e);
+				}
+			}
+
+		}
+
+	}
+
+	public List<UserUtilizationDetails> getAutoReportUtilizationDataForEmail(
+			Date startDate, Date endDate, List<EmployeeDetails> employeesList,
+			String userGroupId) {
+		
+		int numberOfWorkingDays = DateUtils.getWorkingDaysBetweenTwoDates(startDate, endDate);
+		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+		logDebug("startDate" + startDate);
+		logDebug("endDate" + endDate);
+	if (startDate != null && endDate != null) {
+			projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(
+					startDate, endDate, true, true, null, userGroupId));
+	    projectTaskAssigneeDataList.addAll(famstackUserActivityManager
+		    .getAllNonBillableTaskActivities(startDate, endDate, true,
+							true, null, userGroupId));
+			FamstackUtils.sortProjectTaskAssigneeDataList(
+					projectTaskAssigneeDataList,
+					getFamstackApplicationConfiguration().getAllUsersMap());
+			
+			logDebug("projectTaskAssigneeDataList" + projectTaskAssigneeDataList);
+			Map<Integer, Map<String, Integer>> userTotalHoursMap = new HashMap<>();
+			List<UserUtilizationDetails> userUtilizationDetailsList = new ArrayList<>();
+			if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
+				for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
+					logDebug("projectDetails.getTaskActivityDuration" + projectDetails.getTaskActivityDuration());
+					logDebug("projectDetails.type" + projectDetails.getTaskActProjType());
+					logDebug("projectDetails.tcat" + projectDetails.getTaskActCategory());
+					
+					logDebug("projectDetails.sub" + projectDetails.getSubItems());
+					
+					logDebug("projectDetails.child" + projectDetails.getChilds());
+					int userId = projectDetails.getUserId();
+					Map<String, Integer> dateStringHoursMap = userTotalHoursMap
+							.get(userId);
+					if (dateStringHoursMap == null) {
+						dateStringHoursMap = new HashMap<>();
+						userTotalHoursMap.put(userId, dateStringHoursMap);
+					}
+					getUserUtilization(dateStringHoursMap,
+							projectDetails);
+					if (projectDetails.getSubItems().size() > 0) {
+						for (ProjectTaskActivityDetails subActivityDetails : projectDetails
+								.getSubItems()) {
+							logDebug("subActivityDetails.getTaskActProjType()" + subActivityDetails.getTaskActProjType());
+							logDebug("subActivityDetails.getTaskActivityDuration()" + subActivityDetails.getTaskActivityDuration());
+							getUserUtilization(dateStringHoursMap,
+									subActivityDetails);
+						}
+					}
+				}
+			}
+			List<UserUtilizationDetails> underOrOverUtilizedList = new ArrayList<>();
+			for (EmployeeDetails employeeDetails : employeesList) {
+				UserUtilizationDetails userUtilizationDetails = new UserUtilizationDetails();
+				userUtilizationDetails.setEmployeeName(employeeDetails
+						.getFirstName());
+				userUtilizationDetails.setNoOfWorkingDays(numberOfWorkingDays);
+				Map<String, Integer> utilizationTypeMap = userTotalHoursMap
+						.get(employeeDetails.getId());
+
+				if (utilizationTypeMap != null) {
+					for (String type : utilizationTypeMap.keySet()) {
+						if ("billable".equalsIgnoreCase(type)) {
+							userUtilizationDetails
+									.setBillableHours(utilizationTypeMap
+											.get(type));
+						} else if ("leaveOrHoliday".equalsIgnoreCase(type)) {
+							userUtilizationDetails
+									.setLeaveOrHoliday(utilizationTypeMap
+											.get(type));
+						} else if ("nonBillabile".equalsIgnoreCase(type)) {
+							userUtilizationDetails
+									.setNonBillableHours(utilizationTypeMap
+											.get(type));
+						}
+					}
+				}
+
+				if (userUtilizationDetails.isUnderOrOverUtilized()) {
+					underOrOverUtilizedList.add(userUtilizationDetails);
+				} else {
+					userUtilizationDetailsList.add(userUtilizationDetails);
+				}
+			}
+			underOrOverUtilizedList.addAll(userUtilizationDetailsList);
+			return underOrOverUtilizedList;
+		}
+		return null;
+	}
+
+	private void getUserUtilization(Map<String, Integer> dateStringHoursMap,
+			ProjectTaskActivityDetails subActivityDetails) {
+		String userUtilizationType;
+		if (subActivityDetails.getTaskActProjType() == ProjectType.BILLABLE) {
+			userUtilizationType = "billable";
+		} else {
+			String taskActCategory = subActivityDetails
+					.getTaskActCategory();
+			if (FamstackConstants.HOLIDAY
+					.equalsIgnoreCase(taskActCategory)
+					|| FamstackConstants.LEAVE
+							.equalsIgnoreCase(taskActCategory)
+					|| FamstackConstants.LEAVE_OR_HOLIDAY
+							.equalsIgnoreCase(taskActCategory)) {
+				userUtilizationType = "leaveOrHoliday";
+			} else {
+				userUtilizationType = "nonBillabile";
+			}
+		}
+
+		if (!dateStringHoursMap
+				.containsKey(userUtilizationType)) {
+			dateStringHoursMap.put(userUtilizationType,
+					subActivityDetails
+							.getTaskActivityDuration());
+		} else {
+			dateStringHoursMap
+					.put(userUtilizationType,
+							dateStringHoursMap
+									.get(userUtilizationType)
+									+ subActivityDetails
+											.getTaskActivityDuration());
+		}
+	}
 }

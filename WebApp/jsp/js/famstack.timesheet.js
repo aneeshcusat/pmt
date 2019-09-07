@@ -181,6 +181,7 @@ $(".loggedUserIdSelector").on("change", function(){
 
 function getSelectedWeekLoggedData(){
 	$(".taskLogInfo").addClass("hide");
+	checkValidDate();
 	doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getWeeklyLogggedTime",{"weekStartDate":$(".weekSelector").val(),"userId":$(".currentUserId").val()} , function(data) {
 		famstacklog(data);
 		var responseJson = JSON.parse(data);
@@ -430,6 +431,16 @@ function getLastMonday(date) {
 	  return t;
 }
 
+function getLastDayOfMonth(date) {
+	  var t = new Date(date);
+	  if(weekTLDisableMonthEnabled) {
+		  t.setDate(t.getDate() - t.getDate());
+	  } else {
+		  t.setDate(t.getDate() - 90); 
+	  }
+	  return t;
+}
+
 $(document).ready(function(){
 $('.weekSelector').val(formatDate(getLastMonday(new Date())));
 $('.weekSelector').datepicker({ 
@@ -440,6 +451,7 @@ $('.weekSelector').datepicker({
 	calendarWeeks:true,
 	weekStart:1,
 	daysOfWeekDisabled: [0,2,3,4,5,6],
+	startDate:getLastDayOfMonth(new Date()),
 	autoclose:true
 }).on('changeDate', function(e) {
 	checkValidDate();

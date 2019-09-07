@@ -91,6 +91,10 @@ tr.clickable:hover {
 				   	<tr class="clickable">
 				   		<td colspan="2"><a href="#tab7" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Config</a></td>
 				   	</tr>
+				   	
+				   	 <tr class="clickable hide">
+				   		<td colspan="2"><a href="#tab8" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Automated Reporting config</a></td>
+				   	</tr>
 			   	 	</tbody>
 			     </table>
 				</div>
@@ -254,6 +258,24 @@ tr.clickable:hover {
 								</tr>
 							</tbody>
 						</table>
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Disable month after last working day</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+									<select class="form-control select" id="weekTLDisableMonthSelectId">
+										<option value="disabled">Disabled</option>
+										<option value="enabled">Enabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="createweekTLDisableMonth();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<div class='row tab-pane ' id="tab7">
 						<table class="table table table-bordered data-table">
@@ -331,6 +353,23 @@ tr.clickable:hover {
 							</tbody>
 						</table>
 						
+					</div>
+					
+					<div class='row tab-pane ' id="tab8">
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Automatic Reporting config</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr class="clickable">
+									<td>
+										<%@include file="response/autoReportingConfig.jsp"%>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -441,6 +480,16 @@ tr.clickable:hover {
   	 </script>
   </c:forEach>
   </c:if>
+    <c:set var="weekTLDisableMonthSelectId" value='weekTLDisableMonth${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[weekTLDisableMonthSelectId] && not empty appConfigMap[weekTLDisableMonthSelectId].appConfValueDetails}">
+  <c:forEach var="weekTLDisableMonthConf" items="${appConfigMap[weekTLDisableMonthSelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#weekTLDisableMonthSelectId").val('${weekTLDisableMonthConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+ 
+ 
  
  <script type="text/javascript">
  
@@ -521,6 +570,16 @@ tr.clickable:hover {
 	    });
  }
  
+ function createweekTLDisableMonth(){
+	 var input1 = $("#weekTLDisableMonthSelectId").val();
+	 var type = "weekTLDisableMonth";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+
  function projectRecurringByCode(){
 	 var input1 = $("#projectRecurringByCodeSelectId").val();
 	 var type = "projectRecurringByCode";

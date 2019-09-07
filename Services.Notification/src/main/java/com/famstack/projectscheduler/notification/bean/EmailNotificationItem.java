@@ -12,6 +12,8 @@ public class EmailNotificationItem extends NotificationItem
 {
 
     private Set<String> toList;
+    
+    private Set<String> ccList;
 
     private Map<String, Object> data;
 
@@ -64,5 +66,16 @@ public class EmailNotificationItem extends NotificationItem
     {
         this.templates = templates;
     }
+
+	public Set<String> getCcList() {
+	  if (ccList == null) {
+		  ccList = new HashSet<>();
+      }
+      return ccList;
+	}
+
+	public void setCcList(Set<String> ccList) {
+		this.ccList = ccList;
+	}
 
 }

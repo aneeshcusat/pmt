@@ -2,26 +2,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/select2/select2.min.css"/>
-<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/timesheet.css?version=3.3&v=${fsVersionNumber}"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/timesheet.css?version=3.4&v=${fsVersionNumber}"/>
 
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="hasFullPermissionVar" value="${(((currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && currentUserGroupId != 1018) || currentUser.userRole == 'SUPERADMIN')}"/>
 <c:set var="currentUserId" value="${applicationScope.applicationConfiguraion.currentUserId}"/>
 <c:set var="appConfigMap" value="${applicationScope.applicationConfiguraion.appConfigMap}"/>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
-<c:set var="weeklyTimeLogNewTaskSelectId" value='weeklyTimeLogNewTask${currentUserGroupId}'/>
-
-<c:set var="weeklyLogTaskEnabled" value='true'/>   
-  <c:if test="${not empty appConfigMap[weeklyTimeLogNewTaskSelectId] && not empty appConfigMap[weeklyTimeLogNewTaskSelectId].appConfValueDetails}">
-  <c:forEach var="weeklyTimeLogNewTaskConf" items="${appConfigMap[weeklyTimeLogNewTaskSelectId].appConfValueDetails}">
-  <c:if test="${weeklyTimeLogNewTaskConf.value eq 'disabled'}">
-	<c:set var="weeklyLogTaskEnabled" value='false'/>   
-  </c:if>
-  </c:forEach>
-  </c:if>
+<c:set var="weeklyLogTaskEnabled" value='${applicationScope.applicationConfiguraion.weeklyTimeLogNewTaskEnabled}'/>
+<c:set var="weekTLDisableMonthEnabled" value='${applicationScope.applicationConfiguraion.weekTLDisableMonthEnabled}'/>
 
 <script type="text/javascript">
 var taskCreateEnabled = ${weeklyLogTaskEnabled};
+var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
 </script>
 
  <ul class="breadcrumb">
