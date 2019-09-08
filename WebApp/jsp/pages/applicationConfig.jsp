@@ -58,6 +58,14 @@ tr.clickable:hover {
         <div class="row">
          
             <div class="col-md-3 margin10">
+            <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+    		<select class="form-control" data-live-search="true" id="userGroupSelection">
+			    <option value="">- select -</option>
+			    <c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
+			      <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
+			    </c:forEach>
+			</select>
+    		</c:if>
 			    <div class="well" style=" padding: 8px 0;">
 			     <table class="table table data-table table-borderless">
 			       <thead>
