@@ -78,29 +78,29 @@ tr.clickable:hover {
 			   	 	<tr class="clickable hide">
 			   	 		<td colspan="2"><a href="#tab1" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink active"> <i class="icon-envelope"></i>Company Division</a></td>
 				   	</tr>
-				   	 <tr class="clickable">
+				   	 <tr>
 				   		<td colspan="2"><a href="#tab2" onclick="refreshProjectCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Categories</a></td>
 				   	</tr>
-				   	<tr class="clickable">
+				   	<tr>
 				   		<td colspan="2"><a href="#tab21" onclick="refreshNewProjectCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>New Project Categories</a></td>
 				   	</tr>
-				   	 <tr class="clickable">
+				   	 <tr>
 				   		<td colspan="2"><a href="#tab3" onclick="refreshNonBillableCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Non-billable Categories</a></td>
 				   	</tr>
-				   	<tr class="clickable">
+				   	<tr>
 				   		<td colspan="2"><a href="#tab4" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Reports</a></td>
 				   	</tr>
-				   	<tr class="clickable">
+				   	<tr>
 				   		<td colspan="2"><a href="#tab5" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Dashboard View</a></td>
 				   	</tr>
-				   	<tr class="clickable">
+				   	<tr>
 				   		<td colspan="2"><a href="#tab6" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Weekly Time Log</a></td>
 				   	</tr>
-				   	<tr class="clickable">
+				   	<tr>
 				   		<td colspan="2"><a href="#tab7" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Config</a></td>
 				   	</tr>
 				   	
-				   	 <tr class="clickable hide">
+				   	 <tr class="hide">
 				   		<td colspan="2"><a href="#tab8" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Automated Reporting config</a></td>
 				   	</tr>
 			   	 	</tbody>
@@ -108,7 +108,7 @@ tr.clickable:hover {
 				</div>
 			</div>
 
-			<div class="col-md-7" id="applicationConfigDiv"
+			<div class="col-md-9" id="applicationConfigDiv"
 				style="box-shadow: 5px 5px 20px #888888; margin-top: 10px">
 				<div class="tab-content">
 					<div class='row tab-pane ' id="tab1">
@@ -124,7 +124,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>Name</td>
 									<td>Value</td>
 									<td><a href="#" data-box="#confirmationbox" class="mb-control" style="float:right"><i class="fa fa-trash-o fa-2x" style="color:red" aria-hidden="true"></i></a></td>
@@ -194,7 +194,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="reportingSelectId">
 										<option value="default">Default</option>
@@ -216,7 +216,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="dashboardSelectId">
 										<option value="dashboard">Default</option>
@@ -237,7 +237,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="weeklyTimeLogSelectId">
 										<option value="disabled">Disabled</option>
@@ -255,7 +255,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="weeklyTimeLogNewTaskSelectId">
 										<option value="enabled">Enabled</option>
@@ -273,7 +273,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="weekTLDisableMonthSelectId">
 										<option value="disabled">Disabled</option>
@@ -293,7 +293,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="projectTaskActivitySelectId">
 										<option value="disabled">Disabled</option>
@@ -311,7 +311,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="projectRecurringByCodeSelectId">
 										<option value="disabled">Original Project</option>
@@ -330,7 +330,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="assignManForQckCloneSelectId">
 										<option value="enabled">Mandatory</option>
@@ -349,7 +349,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 									<select class="form-control select" id="sameDayOnlyTaskEnabledSelectId">
 										<option value="disabled">No restriction</opiton>
@@ -371,7 +371,7 @@ tr.clickable:hover {
 								</tr>
 							<thead>
 							<tbody>
-								<tr class="clickable">
+								<tr>
 									<td>
 										<%@include file="response/autoReportingConfig.jsp"%>
 									</td>
