@@ -143,8 +143,10 @@ function moveToPreviousWeek(){
 	checkValidDate();
 	 var date =  new Date($(".weekSelector").val());
 	 date.setDate(date.getDate() - 7);
-	 $('.weekSelector').val(formatDate(date));
-  	fillWeeklyDates(date);
+	 if (canMoveToPrevious(date)) {
+		 $('.weekSelector').val(formatDate(date));
+		 fillWeeklyDates(date);
+	}
 }
 
 function moveToNextWeek(){
@@ -429,6 +431,18 @@ function getLastMonday(date) {
 	  var t = new Date(date);
 	  t.setDate(t.getDate() - t.getDay() + 1);
 	  return t;
+}
+
+function canMoveToPrevious(proposedDate){
+	
+	if(weekTLDisableMonthEnabled) {
+		var lastMonthDate = getLastDayOfMonth(new Date());
+		if(lastMonthDate.getTime() >= proposedDate.getTime()) {
+			return false;
+		}
+	}
+	
+	return true;
 }
 
 function getLastDayOfMonth(date) {
