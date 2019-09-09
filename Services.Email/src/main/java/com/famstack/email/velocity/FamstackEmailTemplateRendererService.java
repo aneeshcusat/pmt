@@ -63,11 +63,12 @@ public class FamstackEmailTemplateRendererService extends BaseFamstackService {
 				emailsTo[0] = emailInfo.getMailTo();
 			}
 			
-			if (emailsCCs == null || emailsCCs.length == 0) {
+			if ((emailsCCs == null || emailsCCs.length == 0 ) && emailInfo.getMailCc() != null && emailInfo.getMailCc().length() > 0) {
 				emailsCCs = new String[1];
 				emailsCCs[0] = emailInfo.getMailCc();
 			}
-			if (emailsBCCs == null || emailsBCCs.length == 0) {
+			
+			if ((emailsBCCs == null || emailsBCCs.length == 0 ) && emailInfo.getMailBcc() != null && emailInfo.getMailBcc().length() > 0) {
 				emailsBCCs = new String[1];
 				emailsBCCs[0] = emailInfo.getMailBcc();
 			}
@@ -142,11 +143,15 @@ public class FamstackEmailTemplateRendererService extends BaseFamstackService {
 				messageHelper.setText(emailMessage.getBody(), emailMessage.getHtmlBody());
 				messageHelper.setSubject(emailMessage.getSubject());
 				
-				for (String emailCC : emailsCCs) {
-					messageHelper.addCc(emailCC);
+				if(emailsCCs != null) {
+					for (String emailCC : emailsCCs) {
+						messageHelper.addCc(emailCC);
+					}
 				}
-				for (String emailBCC : emailsBCCs) {
-					messageHelper.addBcc(emailBCC);
+				if(emailsBCCs != null) {
+					for (String emailBCC : emailsBCCs) {
+						messageHelper.addBcc(emailBCC);
+					}
 				}
 			}
 		};

@@ -18,7 +18,7 @@ public class UserUtilizationDetails {
 		this.employeeName = employeeName;
 	}
 
-	public double getUtilization() {
+	public double getUtilizationDouble() {
 		if (noOfWorkingDays > 0) {
 			double totalWorkingDayDurationInMins = (noOfWorkingDays * 8 * 60) - (leaveOrHoliday);
 			double totalUtilizedInMins = billableHours + nonBillableHours;
@@ -27,6 +27,10 @@ public class UserUtilizationDetails {
 			}
 		}
 		return 0;
+	}
+	
+	public String getUtilization() {
+		return String.format("%.2f", getUtilizationDouble());
 	}
 	
 	 private String getTimeInHrs(int timeInMinutes)
@@ -73,7 +77,7 @@ public class UserUtilizationDetails {
 	}
 
 	public boolean isUnderOrOverUtilized() {
-		double utilization = getUtilization();
+		double utilization = getUtilizationDouble();
 		if (utilization > 120 || utilization < 80) {
 			return true;
 		}

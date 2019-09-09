@@ -96,7 +96,9 @@
                             <li><a href="${applicationHome}/mileStones"><span class="fa fa-trophy"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
                             <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
+                            <c:if test="${currentUser.userRole != 'TEAMLEAD'}">
                             <li><a href="${applicationHome}/applicationConfig"><span class="fa fa-cog"></span>Application config</a></li>
+                            </c:if>
                             <li><a href="${applicationHome}/userSiteActivity"><span class="fa fa-calendar"></span>User Site Activity</a></li>
                         </ul>
                     </li>
