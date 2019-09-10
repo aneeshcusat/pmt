@@ -10,6 +10,16 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>        
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-147513705-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-147513705-2');
+</script>
+    
         <!-- META SECTION -->
         <title><c:if test="${tracopusConfigEnabled == false}">Famstack&trade;</c:if><c:if test="${tracopusConfigEnabled == true}">Tracopus</c:if> - Project Scheduler</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

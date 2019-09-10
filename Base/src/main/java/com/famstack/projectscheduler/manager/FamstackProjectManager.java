@@ -1776,7 +1776,7 @@ public class FamstackProjectManager extends BaseFamstackManager
                     		taskItem);
                     TaskItem taskItemCreated = famstackProjectTaskManager.createTaskItem(taskDetails, taskItem.getProjectItem(), true);
                     
-                    if (!recurringProjectItem.getRecurreOriginal()) {
+                    if (recurringProjectItem.getRecurreOriginal() != null && !recurringProjectItem.getRecurreOriginal()) {
                     	recurringProjectItem.setTaskId(taskItemCreated.getTaskId());
                     }
 	            }
