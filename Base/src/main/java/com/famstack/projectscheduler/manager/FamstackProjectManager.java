@@ -1722,7 +1722,8 @@ public class FamstackProjectManager extends BaseFamstackManager
             		String projectCode = recurringProjectItem.getProjectCode();
 	                ProjectItem projectItem = null;
 	                boolean recurreOriginal = !getFamstackApplicationConfiguration().isRecurringByCode(recurringProjectItem.getUserGroupId());
-	                if ((recurringProjectItem.getRecurreOriginal() == null && recurreOriginal) 
+	                
+	                if ((recurringProjectItem.getRecurreOriginal() == null && !recurreOriginal) 
 	                		|| (recurringProjectItem.getRecurreOriginal() != null && !recurringProjectItem.getRecurreOriginal())) {
 	                	projectItem = getLatestProjectByCode(projectCode);
 	               	 	logInfo("Recurring project by code : " + projectId + ", Recurring id " + recurringProjectItem.getId());
@@ -1761,7 +1762,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 	                }
 	                
 	                if (recurringProjectItem.getRecurreOriginal() == null) {
-	                	recurringProjectItem.setRecurreOriginal(!recurreOriginal);
+	                	recurringProjectItem.setRecurreOriginal(recurreOriginal);
 	                }
 	            } else if(recurringProjectItem.getType() == RecurringType.TASK){
 	            	TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager.getItemById(recurringProjectItem.getTaskId(), TaskItem.class);
@@ -1957,8 +1958,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 	}
 
 	@SuppressWarnings("unchecked")
-	public void sendAutoReportEmail(Date startDate, Date endDate) {
-
+	public void sendAutoReportEmail() {
 		
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("startTime", new Date());
@@ -1970,23 +1970,6 @@ public class FamstackProjectManager extends BaseFamstackManager
 		logDebug("autoReportingItems " + autoReportingItems);
 
 		if (autoReportingItems != null) {
-			startDate = DateUtils.getNextPreviousDate(
-					DateTimePeriod.DAY_START, startDate, 0);
-			
-			Date tmpStartDate = new Date(startDate.getTime());
-			endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,
-					endDate, 0);
-
-			List<String> dateList = new ArrayList<>();
-			while (tmpStartDate.before(endDate)) {
-				dateList.add(DateUtils.format(tmpStartDate,
-						DateUtils.DATE_FORMAT));
-				tmpStartDate = DateUtils.getNextPreviousDate(
-						DateTimePeriod.DAY, tmpStartDate, 1);
-			}
-
-			Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap = null;
-			Map<Integer, Map<String, String>> userSiteActivityMap = null;
 
 			for (AutoReportingItem autoReportingItem : autoReportingItems) {
 
@@ -2004,73 +1987,22 @@ public class FamstackProjectManager extends BaseFamstackManager
 				}
 				logDebug(autoReportingItem.getName());
 				try {
-					Map<String, Object> notificationDataMap = new HashMap<>();
-					List<String> toList = Arrays.asList(autoReportingItem
-							.getToList().split(","));
-					List<String> ccList = Arrays.asList(autoReportingItem
-							.getCcList().split(","));
-
-					UserGroupDetails userGroupDetails = getFamstackApplicationConfiguration()
-							.getUserGroupMap().get(
-									autoReportingItem.getUserGroupId());
-
-					List<EmployeeDetails> employeesList = getFamstackApplicationConfiguration()
-							.sortedUserList(autoReportingItem.getUserGroupId());
-
-					logDebug("toList " + toList);
-					logDebug("ccList " + ccList);
-					logDebug("userGroupDetails " + userGroupDetails);
-
-					notificationDataMap.put("TEAM_NAME",
-							userGroupDetails.getName());
-					notificationDataMap.put("REPORT_DATE", DateUtils.format(
-							startDate, DateUtils.DATE_FORMAT_CALENDER));
-					notificationDataMap.put("TO_LIST", new HashSet<>(toList));
-					notificationDataMap.put("CC_LIST", new HashSet<>(ccList));
-					notificationDataMap.put("DATE_LIST", dateList);
-
-					if (autoReportingItem.getType() == ReportType.USER_SITE_ACTIVITY) {
-						/******** user site activity start *******/
-						if (nonBillativityMap == null) {
-							nonBillativityMap = famstackUserActivityManager
-									.getAllNonBillabileActivities(
-									startDate, endDate);
-						}
-						if (userSiteActivityMap == null) {
-							userSiteActivityMap = famstackUserActivityManager
-									.getAllUserSiteActivities(
-									startDate, endDate, null);
-						}
-
-						List<UserSiteActivityDetails> activityData = famstackUserActivityManager
-								.getUserSiteActivityForReport(
-								userSiteActivityMap, nonBillativityMap,
-								employeesList, dateList);
-						if (activityData != null && !activityData.isEmpty()) {
-						notificationDataMap.put("ACTIVITY_DATA", activityData);
-
-						famstackNotificationServiceManager.notifyAll(
-								NotificationType.USER_ACTIVITY_REPORT,
-								notificationDataMap, null);
-						}
-						/******** user site activity end *******/
-					} else if (autoReportingItem.getType() == ReportType.USER_UTILIZATION) {
-
-						List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(
-				startDate, endDate, employeesList,
-				autoReportingItem.getUserGroupId());
+					if (autoReportingItem.getEnabled()) {
+						List<String> toList = Arrays.asList(autoReportingItem
+								.getToList().split(","));
+						List<String> ccList = Arrays.asList(autoReportingItem
+								.getCcList().split(","));
+	
 						
-						logDebug(FamstackUtils.getJsonFromObject(utilizationDetails));
-						if (utilizationDetails != null) {
-							
-						notificationDataMap.put("UTILIZATION_DATA",
-								utilizationDetails);
-						famstackNotificationServiceManager.notifyAll(
-								NotificationType.USER_UTILIZATION_REPORT,
-								notificationDataMap, null);
-						}
+						logDebug("toList " + toList);
+						logDebug("ccList " + ccList);
+						String userGroupId = autoReportingItem.getUserGroupId();
+						ReportType reportType = autoReportingItem.getType();
+						int lastHowManyDays = autoReportingItem.getLastHowManyDays();
+						
+						sendAutoReportEmail(toList, ccList, userGroupId,
+								reportType, lastHowManyDays, autoReportingItem.getSubject());
 					}
-
 					autoReportingItem
 							.setLastRun(autoReportingItem.getNextRun());
 					String cronExpression = autoReportingItem
@@ -2109,6 +2041,94 @@ public class FamstackProjectManager extends BaseFamstackManager
 
 		}
 
+	}
+
+	public void sendAutoReportEmail(List<String> toList, List<String> ccList,
+			String userGroupId, ReportType reportType, int lastHowManyDays, String subject) {
+		Date startDate = DateUtils.getNextPreviousDate(
+				DateTimePeriod.DAY_START, new Date(), 0);
+		
+		Date tmpStartDate = new Date(startDate.getTime());
+		Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,
+				startDate, lastHowManyDays);
+
+		List<String> dateList = new ArrayList<>();
+		while (tmpStartDate.before(endDate)) {
+			dateList.add(DateUtils.format(tmpStartDate,
+					DateUtils.DATE_FORMAT));
+			tmpStartDate = DateUtils.getNextPreviousDate(
+					DateTimePeriod.DAY, tmpStartDate, 1);
+		}
+
+		
+		UserGroupDetails userGroupDetails = getFamstackApplicationConfiguration()
+				.getUserGroupMap().get(
+						userGroupId);
+
+		List<EmployeeDetails> employeesList = getFamstackApplicationConfiguration()
+				.sortedUserList(userGroupId);
+
+		String dateRange = dateList.get(0);
+		if (dateList.size() > 1) {
+			dateRange += "-" + dateList.get(dateList.size() - 1);
+		} else {
+			
+		}
+		
+		Map<String, Object> notificationDataMap = new HashMap<>();
+		notificationDataMap.put("TEAM_NAME",
+				userGroupDetails.getName());
+		notificationDataMap.put("REPORT_DATE", dateRange);
+		notificationDataMap.put("TO_LIST", new HashSet<>(toList));
+		notificationDataMap.put("CC_LIST", new HashSet<>(ccList));
+		notificationDataMap.put("DATE_LIST", dateList);
+		
+		if(StringUtils.isNotBlank(subject)) {
+			subject = subject.replace("{teamName}", userGroupDetails.getName());
+			subject = subject.replace("{date}", dateRange);
+		}
+		
+		notificationDataMap.put("subject", subject);
+
+		if (reportType == ReportType.USER_SITE_ACTIVITY) {
+			/******** user site activity start *******/
+
+			Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap = famstackUserActivityManager
+						.getAllNonBillabileActivities(
+						startDate, endDate);
+			
+			Map<Integer, Map<String, String>> userSiteActivityMap = famstackUserActivityManager
+						.getAllUserSiteActivities(
+						startDate, endDate, null);
+
+			List<UserSiteActivityDetails> activityData = famstackUserActivityManager
+					.getUserSiteActivityForReport(
+					userSiteActivityMap, nonBillativityMap,
+					employeesList, dateList);
+			if (activityData != null && !activityData.isEmpty()) {
+			notificationDataMap.put("ACTIVITY_DATA", activityData);
+
+			famstackNotificationServiceManager.notifyAll(
+					NotificationType.USER_ACTIVITY_REPORT,
+					notificationDataMap, null);
+			}
+			/******** user site activity end *******/
+		} else if (reportType == ReportType.USER_UTILIZATION) {
+
+			List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(
+startDate, endDate, employeesList,
+userGroupId);
+			
+			logDebug(FamstackUtils.getJsonFromObject(utilizationDetails));
+			if (utilizationDetails != null) {
+				
+			notificationDataMap.put("UTILIZATION_DATA",
+					utilizationDetails);
+			famstackNotificationServiceManager.notifyAll(
+					NotificationType.USER_UTILIZATION_REPORT,
+					notificationDataMap, null);
+			}
+		}
 	}
 
 	public List<UserUtilizationDetails> getAutoReportUtilizationDataForEmail(

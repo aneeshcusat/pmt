@@ -56,6 +56,12 @@ public class AutoReportingItem implements FamstackBaseItem
 
 	@Column(name = "subject")
 	private String subject;
+	
+	@Column(name = "enabled")
+	private Boolean enabled;
+	
+	@Column(name = "last_hm_days")
+	private Integer lastHowManyDays;
 
 	@Column(name = "end_date")
     private Timestamp endDate;
@@ -182,6 +188,22 @@ public class AutoReportingItem implements FamstackBaseItem
 
 	public void setLastModifiedDate(Timestamp lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public Boolean getEnabled() {
+		return enabled == null ? true : enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public Integer getLastHowManyDays() {
+		return lastHowManyDays == null ? 0 : lastHowManyDays;
+	}
+
+	public void setLastHowManyDays(Integer lastHowManyDays) {
+		this.lastHowManyDays = lastHowManyDays;
 	}
 
 }

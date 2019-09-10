@@ -49,7 +49,11 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
                 templateName = Templates.DEFAULT.getTemplate();
             }
 
-            String mailSubject = getNotificationSubject(emailNotificationItem.getTemplates());
+            String mailSubject = emailNotificationItem.getSubject();
+            if (!StringUtils.isNotBlank(mailSubject)) {
+            	mailSubject = getNotificationSubject(emailNotificationItem.getTemplates());
+            }
+            
             FamstackTemplateEmailInfo famstackTemplateEmailInfoNew = new FamstackTemplateEmailInfo();
             
             famstackTemplateEmailInfoNew.setMailTo(famstackTemplateEmailInfo.getMailTo());

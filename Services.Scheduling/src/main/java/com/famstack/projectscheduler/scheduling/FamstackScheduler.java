@@ -253,7 +253,7 @@ public class FamstackScheduler extends BaseFamstackService
 	private void sendUserAutoReportEmail() {
 		logDebug("Running sendUserAutoReportEmail scheduler");
         try {
-			famstackProjectManager.sendAutoReportEmail(new Date(), new Date());
+			famstackProjectManager.sendAutoReportEmail();
         } catch (Exception e) {
 			logError("Unable to run sendUserAutoReportEmail", e);
         }

@@ -178,7 +178,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         Map<String, Object> userUtilizationReportData = (Map<String, Object>) object;
         notificationEmailItem.setToList((Set<String>) userUtilizationReportData.get("TO_LIST"));
         notificationEmailItem.setCcList((Set<String>) userUtilizationReportData.get("CC_LIST"));
-        
+        notificationEmailItem.setSubject((String) userUtilizationReportData.get("subject"));
         notificationEmailItem.getData().put("teamName", userUtilizationReportData.get("TEAM_NAME"));
         notificationEmailItem.getData().put("reportDate", userUtilizationReportData.get("REPORT_DATE"));
 		notificationEmailItem.getData().put("dateList",

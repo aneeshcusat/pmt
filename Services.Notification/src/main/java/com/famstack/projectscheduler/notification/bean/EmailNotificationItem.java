@@ -18,6 +18,8 @@ public class EmailNotificationItem extends NotificationItem
     private Map<String, Object> data;
 
     private Templates templates;
+    
+    private String subject;
 
     private final boolean emailEnabled = true;
 
@@ -76,6 +78,14 @@ public class EmailNotificationItem extends NotificationItem
 
 	public void setCcList(Set<String> ccList) {
 		this.ccList = ccList;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 }
