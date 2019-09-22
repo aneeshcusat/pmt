@@ -274,14 +274,21 @@
 <script type="text/javascript" src="${js}/unbilledtask.js?version=2.1&v=${fsVersionNumber}"></script>
 <script>
 
-<c:if test="${sameDayOnlyTaskEnabled}">
-	var minDate = new Date();
-	var maxDate = new Date();
+<c:if test="${sameDayOnlyTaskEnabled}">	
+	var currentTaskDate = new Date();
+	currentTaskDate.setHours(00);
+	currentTaskDate.setMinutes(00);
+	var minDate = new Date(currentTaskDate);
+	currentTaskDate.setHours(23);
+	currentTaskDate.setMinutes(59);
+	var maxDate = new Date(currentTaskDate);
 </c:if>
 <c:if test="${!sameDayOnlyTaskEnabled}">
 	var currentTaskDate = new Date();
-	var minDate = new Date(currentTaskDate.setMonth(currentTaskDate.getMonth()-3));
-	var maxDate = new Date(currentTaskDate.setMonth(currentTaskDate.getMonth()+3));
+	currentTaskDate.setMonth(currentTaskDate.getMonth()-3);
+	var minDate = new Date(currentTaskDate);
+	currentTaskDate.setMonth(currentTaskDate.getMonth()+6)
+	var maxDate = new Date(currentTaskDate);
 </c:if>
 
 
