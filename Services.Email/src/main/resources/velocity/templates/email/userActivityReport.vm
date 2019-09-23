@@ -7,6 +7,7 @@
 <tr style="background-color: #69d5ed;">
 <td><strong>Sl No</strong></td>
 <td><strong>Employee Name</strong></td>
+<td><strong>Reporting Manager</strong></td>
  #foreach ($dateString in $dateList)
 	<td><strong>Status ($dateString)</strong></td>
 #end
@@ -17,6 +18,7 @@
     <tr>
 		<td style="text-align: center;">$index</td>
 		<td style="text-align: center;">$userActivity.employeeName</td>
+		<td style="text-align: center;">$userActivity.reportingManager</td>
 		 #foreach ($status in $userActivity.statusList)
 		 	#if($status.status == 'Inactive')
 				<td style="background-color: #f00;text-align: center;">$status.status</td>

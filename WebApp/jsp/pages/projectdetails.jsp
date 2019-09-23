@@ -1823,9 +1823,11 @@ $('.recurringEndTime').datetimepicker({
 	minDate:new Date()
 });
 
+<c:if test="${projectDetails != null}">
 $( document ).ready(function(){
 refreshRecurringSpin(${projectDetails.id});
 });
+</c:if>
 /*********recurring ends*********/
 </script>
 

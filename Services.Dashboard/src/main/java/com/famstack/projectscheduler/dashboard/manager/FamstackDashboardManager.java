@@ -1999,8 +1999,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				.getAllRecuringTaskByProjectId(projectId));
 	}
 
-	public void sendAutoReportEmail(String userGroupId, ReportType reportType, int lastHowManyDays) {
-		projectManager.sendAutoReportEmail(null, null, userGroupId, reportType, lastHowManyDays, reportType + " Report" );
+	public void sendAutoReportEmail(String userGroupId, ReportType reportType, int lastHowManyDays, int startDays) {
+		projectManager.sendAutoReportEmail(null, null, userGroupId, reportType, lastHowManyDays,startDays, reportType + " Report" );
 	}
 
 }

@@ -6,6 +6,8 @@ import java.util.List;
 public class UserSiteActivityDetails {
 
 	String employeeName;
+	String reportingManager;
+	
 	List<UserSiteActivityStatus> statusList;
 
 	public String getEmployeeName() {
@@ -21,5 +23,13 @@ public class UserSiteActivityDetails {
 			statusList = new ArrayList<>();
 		}
 		return statusList;
+	}
+
+	public String getReportingManager() {
+		return reportingManager;
+	}
+
+	public void setReportingManager(String reportingManager) {
+		this.reportingManager = reportingManager;
 	}
 }

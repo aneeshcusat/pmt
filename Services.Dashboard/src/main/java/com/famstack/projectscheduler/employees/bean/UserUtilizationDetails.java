@@ -5,6 +5,7 @@ package com.famstack.projectscheduler.employees.bean;
 public class UserUtilizationDetails {
 
 	String employeeName;
+	String reportingManager;
 	int billableHours;
 	int nonBillableHours;
 	int leaveOrHoliday;
@@ -82,5 +83,13 @@ public class UserUtilizationDetails {
 			return true;
 		}
 		return false;
+	}
+
+	public String getReportingManager() {
+		return reportingManager;
+	}
+
+	public void setReportingManager(String reportingManager) {
+		this.reportingManager = reportingManager;
 	}
 }

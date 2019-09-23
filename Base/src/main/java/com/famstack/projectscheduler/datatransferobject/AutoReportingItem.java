@@ -54,11 +54,14 @@ public class AutoReportingItem implements FamstackBaseItem
 	@Column(name = "to_lit", columnDefinition = "LONGTEXT")
 	private String toList;
 
-	@Column(name = "subject")
+	@Column(name = "subject", columnDefinition = "LONGTEXT")
 	private String subject;
 	
 	@Column(name = "enabled")
 	private Boolean enabled;
+	
+	@Column(name = "start_days")
+	private Integer startDays;
 	
 	@Column(name = "last_hm_days")
 	private Integer lastHowManyDays;
@@ -204,6 +207,14 @@ public class AutoReportingItem implements FamstackBaseItem
 
 	public void setLastHowManyDays(Integer lastHowManyDays) {
 		this.lastHowManyDays = lastHowManyDays;
+	}
+
+	public Integer getStartDays() {
+		return startDays == null ? 0 : startDays;
+	}
+
+	public void setStartDays(Integer startDays) {
+		this.startDays = startDays;
 	}
 
 }

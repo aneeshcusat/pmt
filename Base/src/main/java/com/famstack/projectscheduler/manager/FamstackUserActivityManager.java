@@ -1085,7 +1085,16 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 			for (EmployeeDetails employeeDetails : employeesList) {
 				UserSiteActivityDetails userSiteActivityDetails = new UserSiteActivityDetails();
 				userSiteActivityDetails.setEmployeeName(employeeDetails.getFirstName());
+				int reportingMangerId = employeeDetails.getReportingManger();
 				
+				try{
+				EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
+				if (reportingEmployeeDetail != null) {
+					userSiteActivityDetails.setReportingManager(reportingEmployeeDetail.getFirstName());
+				}
+				}catch(Exception e){
+					
+				}
 				Map<String, String> activeStatusMap = userSiteActivityMap.get(employeeDetails.getId());
 				Map<String, UserTaskActivityItem> inActiveStatusMap = nonBillativityMap.get(employeeDetails.getId());
 				boolean isInActive = false;

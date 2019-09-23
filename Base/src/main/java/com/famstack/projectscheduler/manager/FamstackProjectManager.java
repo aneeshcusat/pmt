@@ -1933,11 +1933,13 @@ public class FamstackProjectManager extends BaseFamstackManager
         List<Object[]> result =
             getFamstackDataAccessObjectManager()
                 .executeSQLQuery(HQLStrings.getString("recurringTaskIdsByProjectIdSQL"), dataMap);
-        List<Object> projectCodes = new ArrayList<>();
-        for (int i = 0; i < result.size(); i++) {
-            projectCodes.add(result.get(i));
+        List<Object> taskIds = new ArrayList<>();
+        if (result != null) {
+	        for (int i = 0; i < result.size(); i++) {
+	            taskIds.add(result.get(i));
+	        }
         }
-        return projectCodes;
+        return taskIds;
     }
 	
 	public RecurringProjectDetails getRecurringTaskDetails(int taskId) {
@@ -1999,9 +2001,10 @@ public class FamstackProjectManager extends BaseFamstackManager
 						String userGroupId = autoReportingItem.getUserGroupId();
 						ReportType reportType = autoReportingItem.getType();
 						int lastHowManyDays = autoReportingItem.getLastHowManyDays();
+						int startDays = autoReportingItem.getLastHowManyDays();
 						
 						sendAutoReportEmail(toList, ccList, userGroupId,
-								reportType, lastHowManyDays, autoReportingItem.getSubject());
+								reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject());
 					}
 					autoReportingItem
 							.setLastRun(autoReportingItem.getNextRun());
@@ -2044,9 +2047,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 	}
 
 	public void sendAutoReportEmail(List<String> toList, List<String> ccList,
-			String userGroupId, ReportType reportType, int lastHowManyDays, String subject) {
+			String userGroupId, ReportType reportType, int lastHowManyDays, int startDays, String subject) {
 		Date startDate = DateUtils.getNextPreviousDate(
-				DateTimePeriod.DAY_START, new Date(), 0);
+				DateTimePeriod.DAY_START, new Date(), startDays);
 		
 		Date tmpStartDate = new Date(startDate.getTime());
 		Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,
@@ -2184,6 +2187,16 @@ userGroupId);
 			List<UserUtilizationDetails> underOrOverUtilizedList = new ArrayList<>();
 			for (EmployeeDetails employeeDetails : employeesList) {
 				UserUtilizationDetails userUtilizationDetails = new UserUtilizationDetails();
+				
+				int reportingMangerId = employeeDetails.getReportingManger();
+				try{
+					EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
+					if (reportingEmployeeDetail != null) {
+						userUtilizationDetails.setReportingManager(reportingEmployeeDetail.getFirstName());
+					}
+				}catch(Exception e){
+				}
+				
 				userUtilizationDetails.setEmployeeName(employeeDetails
 						.getFirstName());
 				userUtilizationDetails.setNoOfWorkingDays(numberOfWorkingDays);
