@@ -475,7 +475,6 @@ public class FamstackDashboardController extends BaseFamstackService
     public ModelAndView refreshAutoReportingConfig(Model model)
     {
     	List<AutoReportingItem> autoReportingList = famstackDashboardManager.refreshAutoReportingConfig();
-    	System.out.println("autoReportingList" + autoReportingList);
     	return new ModelAndView("response/appConfigAutoReporting").addObject("autoReportingList", autoReportingList);
     }
     
