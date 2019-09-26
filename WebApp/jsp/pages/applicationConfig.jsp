@@ -1,5 +1,6 @@
 <%@include file="includes/header.jsp" %>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
+
 <style>
 .backgroundColor{
 background-color: lightblue;
@@ -37,6 +38,25 @@ tr.clickable:hover {
 .table-borderless th {
     border: 0;
 }
+
+
+.autoreporting ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.autoreporting li a {
+  text-align: center;
+  padding: 2px;
+  text-decoration: none;
+}
+
+.error {
+	border: 1px solid red;
+}
+
 </style>
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Application Config</a></li>  
@@ -57,7 +77,7 @@ tr.clickable:hover {
         
         <div class="row">
          
-            <div class="col-md-3 margin10">
+            <div class="col-md-2 margin10">
             <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
     		<select class="form-control" data-live-search="true" id="userGroupSelection">
 			    <option value="">- select -</option>
@@ -100,15 +120,15 @@ tr.clickable:hover {
 				   		<td colspan="2"><a href="#tab7" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Config</a></td>
 				   	</tr>
 				   	
-				   	 <tr class="hide">
-				   		<td colspan="2"><a href="#tab8" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Automated Reporting config</a></td>
+				   	 <tr class="">
+				   		<td colspan="2"><a href="#tab8" onclick="refreshAutoReportingConfig();" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Automated Reporting config</a></td>
 				   	</tr>
 			   	 	</tbody>
 			     </table>
 				</div>
 			</div>
 
-			<div class="col-md-9" id="applicationConfigDiv"
+			<div class="col-md-10" id="applicationConfigDiv"
 				style="box-shadow: 5px 5px 20px #888888; margin-top: 10px">
 				<div class="tab-content">
 					<div class='row tab-pane ' id="tab1">
@@ -363,7 +383,7 @@ tr.clickable:hover {
 						
 					</div>
 					
-					<div class='row tab-pane ' id="tab8">
+					<div class='row tab-pane' id="tab8">
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
@@ -374,6 +394,11 @@ tr.clickable:hover {
 								<tr>
 									<td>
 										<%@include file="response/autoReportingConfig.jsp"%>
+									</td>
+								</tr>
+								<tr>
+									<td class="autoReportingSavedDataDiv">
+										<%-- <%@include file="response/autoReportingConfigSaved.jsp"%> --%>
 									</td>
 								</tr>
 							</tbody>
@@ -696,4 +721,157 @@ tr.clickable:hover {
 		});    
 		/* END MESSAGE BOX */
 	});
+
+ function refreshAutoReportingConfig(){
+	 doAjaxRequestWithGlobal("GET", "${applicationHome}/refreshAutoReportingConfig", {}, function(data) {
+	        $(".autoReportingSavedDataDiv").html(data);
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	    }, false);
+ }
+
+ function deleteAutoReportingConf(configId){
+	 doAjaxRequestWithGlobal("POST", "${applicationHome}/deleteAutoReportingConfig", {id:configId}, function(data) {
+	        $(".autoReportConf"+configId).remove();
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	    }, false);
+ }
+
+ $(document).on("change",".autoReportEnabled",function(){
+	 var configId = $(this).attr("data-configid");
+	 var enabled = $(this).is(":checked");
+	 
+	 enableOrDisableAutoReportConfig(configId, enabled);
+ });
+ 
+ 
+ function enableOrDisableAutoReportConfig(configId, enabled){
+	 doAjaxRequestWithGlobal("POST", "${applicationHome}/enableOrDisableAutoReportingConfig", {id:configId,enable:enabled}, function(data) {
+     }, function(e) {
+        famstacklog("ERROR: ", e);
+    }, false);
+ }
+ 
+ function addEmailAutoReportingConfig(configId, type){
+	var email =  $(".email"+type+configId).val();
+	doAjaxRequestWithGlobal("POST", "${applicationHome}/addEmailAutoReportingConfig", {id:configId,email:email, type:type}, function(data) {
+		var emaildatalist = "";
+		if (data != null && data != "") {
+			var emailArray = data.split(",");
+			
+			$.each( emailArray, function( index, value ) {
+				emaildatalist += '<li>'+value+'<a href="javascript:removeEmailAutoReportingConfig(\''+value+'\','+configId+',\''+type+'\')"><i class="fa fa-times" style="color: red" aria-hidden="true"></i></a></li>';
+			});
+		}
+		$(".email"+type+"list"+configId).html(emaildatalist);
+     }, function(e) {
+        famstacklog("ERROR: ", e);
+    }, false);
+ }
+ 
+ function removeEmailAutoReportingConfig(email, configId, type){
+	doAjaxRequestWithGlobal("POST", "${applicationHome}/removeEmailAutoReportingConfig", {id:configId,email:email, type:type}, function(data) {
+		var emaildatalist = "";
+		if (data != null && data != "") {
+			var emailArray = data.split(",");
+			$.each( emailArray, function( index, value ) {
+				emaildatalist += '<li>'+value+'<a href="javascript:removeEmailAutoReportingConfig(\''+value+'\','+configId+',\''+type+'\')"><i class="fa fa-times" style="color: red" aria-hidden="true"></i></a></li>';
+			});
+		}
+		$(".email"+type+"list"+configId).html(emaildatalist);
+     }, function(e) {
+        famstacklog("ERROR: ", e);
+    }, false);
+ }
+
+ function createAutoReportingConfig(){
+	
+	 var reportName = $(".autoReportName").val();
+	 var reportType = $(".autoReportType").val();
+	 var startDate = $(".autoReportStartDay").val();
+	 var howmanyPreDay = $(".autoReportHowmany").val();
+	 var cronDays = $(".autoReportDaySelection").val();
+	 var cronTimes = $(".autoReportTimeSelection").val();
+	 var configId = $(".autoReportingConfigId").val();
+	 var autoReportSubject = $(".autoReportSubject").val();
+	 var endDate =$(".autoReportingEndDate").val();; 
+     var cron ="0 0 "+cronTimes+" ? * "+cronDays+" *";
+     var error = false;
+     $(".autoReportName").removeClass("error");
+     $(".removeReportTimeSelection").addClass("error");
+     if (reportName == "") {
+    	 $(".autoReportName").addClass("error");
+    	 error = true;
+     }
+ 	 if (cronTimes == "") {
+ 		 $(".autoReportTimeSelection").addClass("error");
+ 		error = true;
+     }
+ 	 if (!error) {
+	 var dataString = {name: reportName, type: reportType,startDate: startDate,startDate: startDate,previousDate: howmanyPreDay,subject: autoReportSubject,cron: cron,endDate:endDate,configId:configId};
+	 doAjaxRequest("POST", "${applicationHome}/createAutoReportingConfig", dataString ,function(data) {
+		 refreshAutoReportingConfig();
+		 cleareditautoreporting();
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ 	}
+ }
+ 
+ $(".autoReportStartDay").on("change",function(){
+	 var selectedIndex = $(this).prop("selectedIndex");
+	 $(".autoReportHowmany").prop("selectedIndex",selectedIndex);
+	 var index = 0;
+	 $('.autoReportHowmany option').each(function() {
+		 if (index< selectedIndex) {
+			 $(this).prop('disabled', true);
+		 } else {
+			 $(this).prop('disabled', false);
+		 }
+		 index ++;
+		});
+ });
+ 
+ $('.autoReportingEndDate').datetimepicker({
+		timepicker:false,
+		formatDate:'Y/m/d',
+		format:'Y/m/d',
+		minDate:new Date()
+	});
+ 
+ function editautoreporting(configId){
+	 $(".autoReportName").val($(".reportingName"+configId).val());
+	 $(".autoReportType").val( $(".reportingType"+configId).val());
+	 $(".autoReportStartDay").val( $(".reportingStartDay"+configId).val());
+	 $(".autoReportHowmany").val( $(".reportingPreDay"+configId).val());
+	 $(".autoReportDaySelection").val( $(".reportingScheduleDay"+configId).val());
+	 $(".autoReportTimeSelection").val( $(".reportingScheduleTime"+configId).val());
+	 $(".autoReportingConfigId").val(configId);
+	 $(".autoReportSubject").val( $(".reportingSubject"+configId).val());
+	 $(".autoReportingEndDate").val( $(".reportingEndDate"+configId).val());
+	 
+	 $(".clearAutoReporting").removeClass("hide");
+	 $(".saveAutoReporting").html("Update");
+ }
+ 
+ function cleareditautoreporting(){
+	 $(".autoReportName").val("");
+	 $(".autoReportType").prop("selectedIndex", 0);
+	 $(".autoReportStartDay").prop("selectedIndex", 0);
+	 $(".autoReportHowmany").prop("selectedIndex", 0);
+	 $(".autoReportDaySelection").prop("selectedIndex", 0);
+	 $(".autoReportTimeSelection").val("");
+	 $(".autoReportingConfigId").val("");
+	 $(".autoReportSubject").val("");
+	 $(".autoReportingEndDate").val("");
+	 $(".clearAutoReporting").addClass("hide");
+	 $(".saveAutoReporting").html("Save");
+ }
+ 
+ $(".autoReportTimeSelection").on("keypress keyup", function(){
+	 var value = $(this).val();
+	 value = value.replace(/[^0-9,]/g, '');
+	 $(this).val(value);
+ })
  </script>

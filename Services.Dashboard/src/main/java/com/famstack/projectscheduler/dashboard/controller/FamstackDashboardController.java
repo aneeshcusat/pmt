@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.enterprise.inject.Default;
 import javax.ws.rs.PathParam;
 
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.DashBoardProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.DashboardUtilizationDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
+import com.famstack.projectscheduler.datatransferobject.AutoReportingItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeBWDetails;
@@ -451,8 +453,60 @@ public class FamstackDashboardController extends BaseFamstackService
         return "{}";
     }
     
-    
+    @RequestMapping(value = "/createAutoReportingConfig", method = RequestMethod.POST)
+    @ResponseBody
+    public String createAutoReportingConfig(@RequestParam("name") String name, 
+    		@RequestParam("type") String type,
+    		@RequestParam(name="configId", defaultValue="0") Integer configId,
+    		@RequestParam("endDate") String endDateString,
+    		@RequestParam(name="subject", defaultValue="") String subject,
+    		@RequestParam("cron") String cron, 
+    		@RequestParam(name="startDate", defaultValue="0") Integer startDate, 
+    		@RequestParam(name="previousDate", defaultValue="0") Integer previousDate)
+    {
+    	Date endDate = null;
+    	if (StringUtils.isNotBlank(endDateString)) {
+    		endDate = DateUtils.tryParse(endDateString, DateUtils.DATE_FORMAT);
+    	}
+    	return famstackDashboardManager.createAutoReportingConfig(name, type, subject, cron, startDate, previousDate, endDate, configId);
+    }
    
+    @RequestMapping("/refreshAutoReportingConfig")
+    public ModelAndView refreshAutoReportingConfig(Model model)
+    {
+    	List<AutoReportingItem> autoReportingList = famstackDashboardManager.refreshAutoReportingConfig();
+    	System.out.println("autoReportingList" + autoReportingList);
+    	return new ModelAndView("response/appConfigAutoReporting").addObject("autoReportingList", autoReportingList);
+    }
     
     
+    @RequestMapping(value = "/deleteAutoReportingConfig", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteAutoReportingConfig(@RequestParam("id") Integer id) 
+    {
+    	famstackDashboardManager.deleteAutoReportingConfig(id);
+    	return "{\"status\": true}";
+    }
+    
+    
+    @RequestMapping(value = "/addEmailAutoReportingConfig", method = RequestMethod.POST)
+    @ResponseBody
+    public String addEmailAutoReportingConfig(@RequestParam("email") String email, @RequestParam("id") Integer id,
+    		@RequestParam("type") String type) {
+    	return famstackDashboardManager.addEmailAutoReportingConfig(email, type, id);
+    }
+    
+    @RequestMapping(value = "/removeEmailAutoReportingConfig", method = RequestMethod.POST)
+    @ResponseBody
+    public String removeEmailAutoReportingConfig(@RequestParam("email") String email, @RequestParam("id") Integer id,
+    		@RequestParam("type") String type) {
+    	return famstackDashboardManager.removeEmailAutoReportingConfig(email, type, id);
+    }
+    @RequestMapping(value = "/enableOrDisableAutoReportingConfig", method = RequestMethod.POST)
+    @ResponseBody
+    public String enableOrDisableAutoReportingConfig(@RequestParam("id") Integer id,
+    		@RequestParam("enable") Boolean enable) {
+    	famstackDashboardManager.enableOrDisableAutoReportingConfig(id, enable);
+    	return "{\"status\": true}";
+    }
 }

@@ -96,4 +96,11 @@ public class FamstackUtils extends BaseFamstackService
 					}
 				});
 	}
+	
+	public static void main(String[] args) {
+		System.out.println(getNextRunFromCron("0 0 15,17,19 * * ?",new Date()));
+		//0 0 15,17,19 * * ?
+		//0 0 {hours} ? * {weekdays} *
+		//MON,TUE,WED,THU,FRI,SAT,SUN
+	}
 }

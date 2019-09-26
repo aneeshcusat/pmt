@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.dashboard.manager;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -41,6 +42,7 @@ import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
+import com.famstack.projectscheduler.datatransferobject.AutoReportingItem;
 import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
@@ -2003,4 +2005,108 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		projectManager.sendAutoReportEmail(null, null, userGroupId, reportType, lastHowManyDays,startDays, reportType + " Report" );
 	}
 
+	public String createAutoReportingConfig(String name, String type,
+			String subject, String cron, Integer startDate, Integer previousDate, Date endDate, Integer configId) {
+		
+		AutoReportingItem autoReportingItem = null;
+		if(configId != 0) {
+			 autoReportingItem = (AutoReportingItem)famstackDataAccessObjectManager.getItemById(configId, AutoReportingItem.class);
+		} 
+		if (autoReportingItem == null) {
+			autoReportingItem = new AutoReportingItem();
+			autoReportingItem.setEnabled(false);
+		}
+		autoReportingItem.setName(name);
+		autoReportingItem.setType(ReportType.valueOf(type));
+		autoReportingItem.setStartDays(startDate);
+		autoReportingItem.setLastHowManyDays(previousDate);
+		autoReportingItem.setCronExpression(cron);
+		
+		//autoReportingItem.setNextRun(new Timestamp(FamstackUtils.getNextRunFromCron(cron, new Date()).getTime()));
+		if (StringUtils.isNotBlank(subject)) {
+			autoReportingItem.setSubject(subject);
+		}
+		if(endDate != null) {
+			autoReportingItem.setEndDate(new Timestamp(endDate.getTime()));
+		}
+		AutoReportingItem autoReportingItemSaved = (AutoReportingItem) famstackDataAccessObjectManager.saveOrUpdateItem(autoReportingItem);
+		return FamstackUtils.getJsonFromObject(autoReportingItemSaved);
+	}
+
+	public void deleteAutoReportingConfig(Integer id) {
+		famstackDataAccessObjectManager.deleteItem((AutoReportingItem)famstackDataAccessObjectManager.getItemById(id, AutoReportingItem.class));
+	}
+
+	public String addEmailAutoReportingConfig(String email, String type, Integer id) {
+
+		AutoReportingItem autoReportingItem = (AutoReportingItem)famstackDataAccessObjectManager.getItemById(id, AutoReportingItem.class);
+		String emails = "";
+		if (autoReportingItem != null) {
+			if("to".equalsIgnoreCase(type)) {
+				emails = autoReportingItem.getToList();
+			} else if("cc".equalsIgnoreCase(type)) {
+				emails = autoReportingItem.getCcList();
+			}
+			Set<String> emailSet = new HashSet<>();
+			if (StringUtils.isNotBlank(emails)) {
+				List<String> emailList = Arrays.asList(emails.split(","));
+				emailSet.addAll(emailList);
+			}
+			emailSet.add(email);
+			emails = String.join(",", emailSet);
+			
+			if("to".equalsIgnoreCase(type)) {
+				autoReportingItem.setToList(emails);
+			} else if("cc".equalsIgnoreCase(type)) {
+				autoReportingItem.setCcList(emails);
+			}
+			famstackDataAccessObjectManager.saveOrUpdateItem(autoReportingItem);
+		}
+		return emails;
+	}
+
+	public String removeEmailAutoReportingConfig(String email, String type,  Integer id) {
+		AutoReportingItem autoReportingItem = (AutoReportingItem)famstackDataAccessObjectManager.getItemById(id, AutoReportingItem.class);
+		String emails = "";
+		if (autoReportingItem != null) {
+			if("to".equalsIgnoreCase(type)) {
+				emails = autoReportingItem.getToList();
+			} else if("cc".equalsIgnoreCase(type)) {
+				emails = autoReportingItem.getCcList();
+			}
+			Set<String> emailSet = new HashSet<>();
+			if (StringUtils.isNotBlank(emails)) {
+				List<String> emailList = Arrays.asList(emails.split(","));
+				emailSet.addAll(emailList);
+			}
+			emailSet.remove(email);
+			emails = String.join(",", emailSet);
+			
+			if("to".equalsIgnoreCase(type)) {
+				autoReportingItem.setToList(emails);
+			} else if("cc".equalsIgnoreCase(type)) {
+				autoReportingItem.setCcList(emails);
+			}
+			famstackDataAccessObjectManager.saveOrUpdateItem(autoReportingItem);
+		}
+		return emails;
+	}
+
+	public void enableOrDisableAutoReportingConfig(Integer id, Boolean enable) {
+		AutoReportingItem autoReportingItem = (AutoReportingItem)famstackDataAccessObjectManager.getItemById(id, AutoReportingItem.class);
+		if (autoReportingItem != null) {
+			autoReportingItem.setEnabled(enable);
+			if (enable) {
+				autoReportingItem.setNextRun(new Timestamp(FamstackUtils.getNextRunFromCron(autoReportingItem.getCronExpression(), new Date()).getTime()));
+			} else {
+				autoReportingItem.setNextRun(null);
+			}
+			famstackDataAccessObjectManager.saveOrUpdateItem(autoReportingItem);
+		}
+	}
+
+	public List<AutoReportingItem> refreshAutoReportingConfig() {
+		 String userGroupId = getFamstackApplicationConfiguration().getCurrentUserGroupId();
+		return (List<AutoReportingItem>)famstackDataAccessObjectManager.executeQuery("from AutoReportingItem where userGroupId = "+userGroupId , null);
+	}
 }
