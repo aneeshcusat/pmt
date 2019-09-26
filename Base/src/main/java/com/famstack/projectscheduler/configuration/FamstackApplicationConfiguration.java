@@ -469,7 +469,10 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	public List<AppConfValueDetails> getNonBillableCategories() {
 		return getCategories("nonBillableCategory");
 	}
-
+	public List<AppConfValueDetails> getStaticNonBillableCategories() {
+		return getAppConfigValues("staticNonBillableCategory", "99999");
+	}
+	
 	public List<AppConfValueDetails> getCategories(String type) {
 		List<AppConfValueDetails> appConfValueDetails = new ArrayList<>();
 		String projectCategoryId = type + getCurrentUserGroupId();
@@ -613,6 +616,17 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		return false;
 	}
 
+	
+	public boolean isStaticNonBillableEnabled() {
+		String value = getSingleValueAppConfig("staticNonBillableCategoryEnabled",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean isRecurringOriginal() {
 		return !isRecurringByCode(getFamstackApplicationConfiguration()
 				.getCurrentUserGroupId());

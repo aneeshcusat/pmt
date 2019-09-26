@@ -189,7 +189,7 @@ tr.clickable:hover {
 					</div>
 					
 					<div class='row tab-pane' id="tab3">
-						<table class="table table table-bordered data-table">
+						<table class="table table table-bordered data-table nonBillableCategoryTypeDiv">
 							<thead>
 								<tr style="font-weight: bold">
 									<th>Non-Billable Type</th>
@@ -204,6 +204,44 @@ tr.clickable:hover {
 									<%@include file="response/appConfigNonBillableCategories.jsp"%>
 							    </tbody>
 						</table>
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Static Non-Billable categories</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="staticNonBillableCategorySelected">
+										<option value="disabled">Disabled</option>
+										<option value="enabled">Enabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="staticNonBillableCategoryEnabled();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="table table table-bordered data-table staticNonBillableCategoryTypeDiv">
+							<thead>
+								<tr style="font-weight: bold">
+									<th>Static Non-Billable Type</th>
+									<th width="70px" style="text-align: center">
+									<c:if test="${currentUserGroupId == '99999' }">
+									<a
+										data-toggle="modal" data-target="#createAppModel" onclick="setAppConfigAction('createStaticNonBillableCategory();')"
+										parentid="0"><i
+											class="fa fa-plus fa-2x" aria-hidden="true"
+											style="color: #95b75d;float:right"></i></a>
+											</c:if>
+											</th>
+								</tr>
+							<thead>
+								<tbody id="staticNonBillableCategoryDiv">
+									<%@include file="response/appConfigStaticNonBillableCategories.jsp"%>
+							    </tbody>
+						</table>
+			
 					</div>
 					
 					<div class='row tab-pane ' id="tab4">
@@ -521,6 +559,28 @@ tr.clickable:hover {
   	 </script>
   </c:forEach>
   </c:if>
+  <c:set var="staticNonBillableCategorySelected" value='staticNonBillableCategoryEnabled${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[staticNonBillableCategorySelected] && not empty appConfigMap[staticNonBillableCategorySelected].appConfValueDetails}">
+  <c:forEach var="staticNonBillableCategoryConf" items="${appConfigMap[staticNonBillableCategorySelected].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#staticNonBillableCategorySelected").val('${staticNonBillableCategoryConf.value}');
+  	 </script>
+  	 <c:if test="${staticNonBillableCategoryConf.value == 'enabled'}">
+  	 <script type="text/javascript">
+  	 	$(".nonBillableCategoryTypeDiv").addClass("hide");
+  	 	$(".statiNonBillableCategoryTypeDiv").removeClass("hide");
+  	 </script>
+  	 </c:if>
+	 <c:if test="${staticNonBillableCategoryConf.value == 'disabled'}">
+  	 <script type="text/javascript">
+  	 	$(".nonBillableCategoryTypeDiv").removeClass("hide");
+  	 	$(".staticNonBillableCategoryTypeDiv").addClass("hide");
+  	 </script>
+  	 </c:if>  	 
+  	 
+  </c:forEach>
+  </c:if>
+ 
  
  
  
@@ -540,6 +600,10 @@ tr.clickable:hover {
 
  function createNonBillableCategory(){
 	 createApplicationConfig('nonBillableCategory');
+ }
+ 
+ function createStaticNonBillableCategory(){
+	 createApplicationConfig('staticNonBillableCategory');
  }
  
  function deleteApplicationConfigVal(name, id, type){
@@ -623,6 +687,26 @@ tr.clickable:hover {
 	    });
  } 
  
+ 
+ function staticNonBillableCategoryEnabled(){
+	 var input1 = $("#staticNonBillableCategorySelected").val();
+	 var type = "staticNonBillableCategoryEnabled";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+		 
+		 if(input1 == 'disabled') {
+			 $(".nonBillableCategoryTypeDiv").removeClass("hide");
+		  	 $(".staticNonBillableCategoryTypeDiv").addClass("hide");
+		 } else {
+			 $(".nonBillableCategoryTypeDiv").addClass("hide");
+		  	 $(".staticNonBillableCategoryTypeDiv").removeClass("hide");
+		 }
+		 
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
 
  function assignManForQckClone(){
 	 var input1 = $("#assignManForQckCloneSelectId").val();
@@ -690,9 +774,15 @@ tr.clickable:hover {
  function refreshNonBillableCategory(){
 	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfigNonBillableCategories", {}, function(data) {
 	        $("#nonBillableCategoryDiv").html(data);
-	    }, function(e) {
-	        famstacklog("ERROR: ", e);
-	    }, false);
+    }, function(e) {
+        famstacklog("ERROR: ", e);
+    }, false);
+	 
+	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfigStaticNonBillableCategories", {}, function(data) {
+	        $("#staticNonBillableCategoryDiv").html(data);
+ }, function(e) {
+     famstacklog("ERROR: ", e);
+ }, false);
  }
  
  
