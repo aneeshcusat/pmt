@@ -2021,8 +2021,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		autoReportingItem.setStartDays(startDate);
 		autoReportingItem.setLastHowManyDays(previousDate);
 		autoReportingItem.setCronExpression(cron);
-		
-		//autoReportingItem.setNextRun(new Timestamp(FamstackUtils.getNextRunFromCron(cron, new Date()).getTime()));
+		if (autoReportingItem.getEnabled()) {
+			autoReportingItem.setNextRun(new Timestamp(FamstackUtils.getNextRunFromCron(cron, new Date()).getTime()));
+		}
 		if (StringUtils.isNotBlank(subject)) {
 			autoReportingItem.setSubject(subject);
 		}

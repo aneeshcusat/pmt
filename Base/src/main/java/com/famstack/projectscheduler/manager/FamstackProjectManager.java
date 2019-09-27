@@ -2053,7 +2053,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 		
 		Date tmpStartDate = new Date(startDate.getTime());
 		Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,
-				startDate, lastHowManyDays);
+				new Date(), lastHowManyDays);
 
 		List<String> dateList = new ArrayList<>();
 		while (tmpStartDate.before(endDate)) {

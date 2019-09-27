@@ -19,7 +19,7 @@
     <tr>
 		<td style="text-align: center;">$index</td>
 		<td style="text-align: center;">$utilization.employeeName</td>
-		<td style="text-align: center;">$utilization.reportingManager</td>
+		<td style="text-align: center;">$!utilization.reportingManager</td>
 		<td style="text-align: center;">$utilization.billableHours</td>
 		<td style="text-align: center;">$utilization.nonBillableHours</td>
 		<td style="text-align: center;">$utilization.leaveOrHoliday</td>

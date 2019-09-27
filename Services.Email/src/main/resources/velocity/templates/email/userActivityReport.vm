@@ -18,7 +18,7 @@
     <tr>
 		<td style="text-align: center;">$index</td>
 		<td style="text-align: center;">$userActivity.employeeName</td>
-		<td style="text-align: center;">$userActivity.reportingManager</td>
+		<td style="text-align: center;">$!userActivity.reportingManager</td>
 		 #foreach ($status in $userActivity.statusList)
 		 	#if($status.status == 'Inactive')
 				<td style="background-color: #f00;text-align: center;">$status.status</td>
