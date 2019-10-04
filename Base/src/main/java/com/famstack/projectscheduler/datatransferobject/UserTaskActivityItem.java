@@ -61,6 +61,9 @@ public class UserTaskActivityItem implements FamstackBaseItem
     @Column(name = "task_name")
     private String taskName;
 
+    @Column(name = "client_name")
+    private String clientName;
+    
     @Column(name = "duration")
     private int durationInMinutes;
 
@@ -310,6 +313,14 @@ public class UserTaskActivityItem implements FamstackBaseItem
 
 	public void setModifiedBy(Integer modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 
 }

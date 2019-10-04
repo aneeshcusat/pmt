@@ -6,9 +6,10 @@ public class UserUtilizationDetails {
 
 	String employeeName;
 	String reportingManager;
+	String emailId;
 	int billableHours;
 	int nonBillableHours;
-	int leaveOrHoliday;
+	int leaveOrHoliday = 0;
 	int noOfWorkingDays;
 
 	public String getEmployeeName() {
@@ -69,6 +70,11 @@ public class UserUtilizationDetails {
 		this.leaveOrHoliday = leaveOrHoliday;
 	}
 
+	
+	public int getLeaveHours() {
+		return leaveOrHoliday;
+	}
+
 	public int getNoOfWorkingDays() {
 		return noOfWorkingDays;
 	}
@@ -91,5 +97,17 @@ public class UserUtilizationDetails {
 
 	public void setReportingManager(String reportingManager) {
 		this.reportingManager = reportingManager;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+	
+	public boolean isNotifyUsers(){
+		return isUnderOrOverUtilized() && leaveOrHoliday == 0;
 	}
 }

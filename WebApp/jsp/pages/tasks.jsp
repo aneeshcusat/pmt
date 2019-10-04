@@ -500,8 +500,8 @@ $(function(){
             	var projectId = $(lastMovedItem.item).find("input.projectId").val();
             	var taskState = $(".taskPlayPause"+taskId).attr("data-task-state");
             	if (taskState == 'paused') {
-            		$(lastMovedItem.sender).sortable('cancel');
-            		return;
+            		//$(lastMovedItem.sender).sortable('cancel');
+            		//return;
             	}
             	resetFileUploadUrl(projectId+"-completed");
             	$(".unassignedDuration").html($(lastMovedItem.item).find("input.duration").val());
@@ -513,7 +513,13 @@ $(function(){
             			adjustStartTime = getTodayDateTime(new Date());//estStartTime
             		}
                 	$("#adjustStartTime1").val(adjustStartTime);  
-                	$('#adjustCompletionTime').val(getTodayDateTime(new Date()));
+                	
+                	var pausedTime = $(lastMovedItem.item).find("input.pausedTime").val();
+                	if (pausedTime != "") {
+                		$('#adjustCompletionTime').val(pausedTime);
+                	} else {
+                		$('#adjustCompletionTime').val(getTodayDateTime(new Date())); 
+                	}
 					adjustStartTimeChanged();                	
                 	var adjustStartTimeDate = new Date(adjustStartTime);
                 	var completionDate = new Date($("#adjustCompletionTime").val());
@@ -558,17 +564,22 @@ $(function(){
 function moveToCompleteTask(taskId){
 	var taskState = $(".taskPlayPause"+taskId).attr("data-task-state");
 	if (taskState == 'paused') {
-		return;
+		//return;
 	}
 	lastMovedItem = new Object();
 	lastMovedItem.item = $(".task-item"+ taskId);
 	var adjustStartTime = $(lastMovedItem.item).find("input.startTime").val();
+	var pausedTime = $(lastMovedItem.item).find("input.pausedTime").val();
 	//var estStartTime = $(lastMovedItem.item).find("input.estStartTime").val();
 	if (adjustStartTime == "") {
 		adjustStartTime = getTodayDateTime(new Date());
 	}
 	$("#adjustStartTime1").val(adjustStartTime);   
-	$('#adjustCompletionTime').val(getTodayDateTime(new Date()));           	
+	if (pausedTime != "") {
+		$('#adjustCompletionTime').val(pausedTime);
+	} else {
+		$('#adjustCompletionTime').val(getTodayDateTime(new Date())); 
+	}
 	adjustStartTimeChanged();                	
 	var adjustStartTimeDate = new Date(adjustStartTime);
 	var completionDate = new Date($("#adjustCompletionTime").val());
@@ -713,6 +724,10 @@ $(document).ready(function () {
 	} catch(err){
 		
 	}
+	
+	setInterval(function() {
+       window.location.reload();
+    }, 300000); 
 	
 }); 
 

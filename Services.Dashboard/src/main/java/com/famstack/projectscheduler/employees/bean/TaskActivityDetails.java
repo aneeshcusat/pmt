@@ -19,6 +19,8 @@ public class TaskActivityDetails
     private String dateId;
 
     private String taskName;
+    
+    private String clientName;
 
     private int userId;
 
@@ -298,4 +300,12 @@ public class TaskActivityDetails
     {
         this.projectType = projectType;
     }
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
 }

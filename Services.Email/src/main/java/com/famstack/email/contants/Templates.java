@@ -81,7 +81,9 @@ public enum Templates
     
     USER_ACTIVITY_REPORT("userActivityReport", "userActivityReport"),
     
-    USER_UTILIZATION_REPORT("userUtilizationReport", "userUtilizationReport");
+    USER_UTILIZATION_REPORT("userUtilizationReport", "userUtilizationReport"), 
+    USER_ACTIVITY_REPORT_DEFAULTER("userActivityDefaulterReport", "userActivityDefaulterReport"), 
+    USER_UTILIZATION_REPORT_DEFAULTER("userUtilizationDefaulterReport", "userUtilizationDefaulterReport");
 
     /** The subjectkey. */
     private String subjectkey;

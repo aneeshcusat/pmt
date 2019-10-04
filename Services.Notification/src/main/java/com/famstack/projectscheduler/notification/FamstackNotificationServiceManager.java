@@ -139,6 +139,14 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
                 notificationEmailItem = getUserUtilizationReportData(object);
                 notificationEmailItem.setTemplates(Templates.USER_UTILIZATION_REPORT);
                 break;
+            case USER_ACTIVITY_REPORT_DEFAULTER:
+                notificationEmailItem = getUserActivityReportDefaulterData(object);
+                notificationEmailItem.setTemplates(Templates.USER_ACTIVITY_REPORT_DEFAULTER);
+                break;
+            case USER_UTILIZATION_REPORT_DEFAULTER:
+                notificationEmailItem = getUserUtilizationReportDefaulterData(object);
+                notificationEmailItem.setTemplates(Templates.USER_UTILIZATION_REPORT_DEFAULTER);
+                break;
             default:
                 break;
         }
@@ -165,7 +173,39 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         }
     }
 
-    private EmailNotificationItem getUserUtilizationReportData(Object object) {
+    private EmailNotificationItem getUserUtilizationReportDefaulterData(
+			Object object) {
+    	EmailNotificationItem notificationEmailItem = new EmailNotificationItem();
+        Map<String, Object> userUtilizationReportData = getReportDefaultersData(
+				object, notificationEmailItem);
+        notificationEmailItem.getData().put("utilizationData", userUtilizationReportData.get("UTILIZATION_DATA"));
+		
+        return notificationEmailItem;
+	}
+
+	private EmailNotificationItem getUserActivityReportDefaulterData(
+			Object object) {
+		EmailNotificationItem notificationEmailItem = new EmailNotificationItem();
+        Map<String, Object> userActivityReportData = getReportDefaultersData(
+				object, notificationEmailItem);
+        notificationEmailItem.getData().put("userActivityData", userActivityReportData.get("ACTIVITY_DATA"));
+        notificationEmailItem.getData().put("dateList",
+        		userActivityReportData.get("DATE_LIST"));
+        return notificationEmailItem;
+	}
+
+	private Map<String, Object> getReportDefaultersData(Object object,
+			EmailNotificationItem notificationEmailItem) {
+		Map<String, Object> userDefaulterReportData = (Map<String, Object>) object;
+        notificationEmailItem.setToList((Set<String>) userDefaulterReportData.get("TO_LIST"));
+        notificationEmailItem.setCcList((Set<String>) userDefaulterReportData.get("CC_LIST"));
+        notificationEmailItem.setSubject((String) userDefaulterReportData.get("subject"));
+        notificationEmailItem.getData().put("teamName", userDefaulterReportData.get("TEAM_NAME"));
+        notificationEmailItem.getData().put("reportDate", userDefaulterReportData.get("REPORT_DATE"));
+		return userDefaulterReportData;
+	}
+
+	private EmailNotificationItem getUserUtilizationReportData(Object object) {
     	EmailNotificationItem notificationEmailItem = getReportingData(object);
         Map<String, Object> userUtilizationReportData = (Map<String, Object>) object;
 		notificationEmailItem.getData().put("utilizationData",
@@ -199,7 +239,10 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
             || notificationType == NotificationType.FORGOT_PASSWORD
 				|| notificationType == NotificationType.USER_REGISTRAION
 				|| notificationType == NotificationType.USER_UPDATE
-				|| notificationType == NotificationType.USER_ACTIVITY_REPORT || notificationType == NotificationType.USER_UTILIZATION_REPORT)
+				|| notificationType == NotificationType.USER_ACTIVITY_REPORT 
+				|| notificationType == NotificationType.USER_UTILIZATION_REPORT
+				|| notificationType == NotificationType.USER_UTILIZATION_REPORT_DEFAULTER
+				|| notificationType == NotificationType.USER_ACTIVITY_REPORT_DEFAULTER)
             ? true : false;
     }
 

@@ -1385,16 +1385,16 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public void updateNonBillableTask(int taskActId, int userId, String type,
 			String taskActCategory, String startDate, String endDate,
-			String comments, Boolean skipWeekEnd) {
+			String comments, Boolean skipWeekEnd,String clientName) {
 		UserTaskActivityItem userTaskActivityItem = famstackUserActivityManager
 				.deleteTaskActivity(taskActId);
 		createNonBillableTask(userId, type, taskActCategory, startDate,
-				endDate, comments, skipWeekEnd);
+				endDate, comments, skipWeekEnd, clientName);
 	}
 
 	public void createNonBillableTask(int userId, String type,
 			String taskActCategory, String startDateString,
-			String endDateString, String comments, Boolean skipWeekEnd) {
+			String endDateString, String comments, Boolean skipWeekEnd, String clientName) {
 		Date startTime = DateUtils.tryParse(startDateString,
 				DateUtils.DATE_TIME_FORMAT);
 		Date endTime = DateUtils.tryParse(endDateString,
@@ -1450,7 +1450,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				famstackUserActivityManager.createCompletedUserActivityItem(
 						userId, startTime, 0, taskName, durationInMinutes,
 						UserTaskType.valueOf(type), taskActCategory,
-						ProjectType.NON_BILLABLE, comments);
+						ProjectType.NON_BILLABLE, comments, clientName);
 			}
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(startTime);
@@ -2002,7 +2002,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public void sendAutoReportEmail(String userGroupId, ReportType reportType, int lastHowManyDays, int startDays) {
-		projectManager.sendAutoReportEmail(null, null, userGroupId, reportType, lastHowManyDays,startDays, reportType + " Report" );
+		projectManager.sendAutoReportEmail(null, null, null, userGroupId, reportType, lastHowManyDays,startDays, reportType + " Report", false );
 	}
 
 	public String createAutoReportingConfig(String name, String type,
@@ -2029,6 +2029,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		}
 		if(endDate != null) {
 			autoReportingItem.setEndDate(new Timestamp(endDate.getTime()));
+		} else {
+			autoReportingItem.setEndDate(null);
 		}
 		AutoReportingItem autoReportingItemSaved = (AutoReportingItem) famstackDataAccessObjectManager.saveOrUpdateItem(autoReportingItem);
 		return FamstackUtils.getJsonFromObject(autoReportingItemSaved);
@@ -2047,7 +2049,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				emails = autoReportingItem.getToList();
 			} else if("cc".equalsIgnoreCase(type)) {
 				emails = autoReportingItem.getCcList();
+			} else if("exdef".equalsIgnoreCase(type)) {
+				emails = autoReportingItem.getExcludeMails();
 			}
+			
 			Set<String> emailSet = new HashSet<>();
 			if (StringUtils.isNotBlank(emails)) {
 				List<String> emailList = Arrays.asList(emails.split(","));
@@ -2060,6 +2065,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				autoReportingItem.setToList(emails);
 			} else if("cc".equalsIgnoreCase(type)) {
 				autoReportingItem.setCcList(emails);
+			} else if("exdef".equalsIgnoreCase(type)) {
+				autoReportingItem.setExcludeMails(emails);
 			}
 			famstackDataAccessObjectManager.saveOrUpdateItem(autoReportingItem);
 		}
@@ -2074,6 +2081,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				emails = autoReportingItem.getToList();
 			} else if("cc".equalsIgnoreCase(type)) {
 				emails = autoReportingItem.getCcList();
+			} else if("exdef".equalsIgnoreCase(type)) {
+				emails = autoReportingItem.getExcludeMails();
 			}
 			Set<String> emailSet = new HashSet<>();
 			if (StringUtils.isNotBlank(emails)) {
@@ -2087,6 +2096,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				autoReportingItem.setToList(emails);
 			} else if("cc".equalsIgnoreCase(type)) {
 				autoReportingItem.setCcList(emails);
+			} else if("exdef".equalsIgnoreCase(type)) {
+				autoReportingItem.setExcludeMails(emails);
 			}
 			famstackDataAccessObjectManager.saveOrUpdateItem(autoReportingItem);
 		}
@@ -2109,5 +2120,13 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public List<AutoReportingItem> refreshAutoReportingConfig() {
 		 String userGroupId = getFamstackApplicationConfiguration().getCurrentUserGroupId();
 		return (List<AutoReportingItem>)famstackDataAccessObjectManager.executeQuery("from AutoReportingItem where userGroupId = "+userGroupId , null);
+	}
+
+	public void enableOrDisableNotifyDefaulters(Integer id, Boolean enable) {
+		AutoReportingItem autoReportingItem = (AutoReportingItem)famstackDataAccessObjectManager.getItemById(id, AutoReportingItem.class);
+		if (autoReportingItem != null) {
+			autoReportingItem.setNotifyDefaulters(enable);
+			famstackDataAccessObjectManager.saveOrUpdateItem(autoReportingItem);
+		}
 	}
 }

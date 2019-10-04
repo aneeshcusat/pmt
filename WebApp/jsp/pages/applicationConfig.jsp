@@ -835,6 +835,19 @@ tr.clickable:hover {
 	 enableOrDisableAutoReportConfig(configId, enabled);
  });
  
+ $(document).on("change",".autoReportNotifyDefaulters",function(){
+	 var configId = $(this).attr("data-configid");
+	 var enabled = $(this).is(":checked");
+	 
+	 enableOrDisableNotifyDefaulters(configId, enabled);
+ });
+ 
+ function enableOrDisableNotifyDefaulters(configId, enabled){
+	 doAjaxRequestWithGlobal("POST", "${applicationHome}/enableOrDisableNotifyDefaulters", {id:configId,enable:enabled}, function(data) {
+     }, function(e) {
+        famstacklog("ERROR: ", e);
+    }, false);
+ }
  
  function enableOrDisableAutoReportConfig(configId, enabled){
 	 doAjaxRequestWithGlobal("POST", "${applicationHome}/enableOrDisableAutoReportingConfig", {id:configId,enable:enabled}, function(data) {

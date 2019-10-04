@@ -514,4 +514,12 @@ public class FamstackDashboardController extends BaseFamstackService
     	famstackDashboardManager.enableOrDisableAutoReportingConfig(id, enable);
     	return "{\"status\": true}";
     }
+    
+    @RequestMapping(value = "/enableOrDisableNotifyDefaulters", method = RequestMethod.POST)
+    @ResponseBody
+    public String enableOrDisableNotifyDefaulters(@RequestParam("id") Integer id,
+    		@RequestParam("enable") Boolean enable) {
+    	famstackDashboardManager.enableOrDisableNotifyDefaulters(id, enable);
+    	return "{\"status\": true}";
+    }
 }

@@ -17,8 +17,9 @@
       	<th width="10%">Report date</th>
       	<th width="15%">Time</th>
       	<th width="20%">To List</th>
-      	<th width="20%">CC list</th>
+      	<th width="20%">CC/Exclude list</th>
       	<th width="2%">Enabled</th>
+      	<th width="2%">Notify Defaulters</th>
       	<th width="2%">Actions</th>
       </tr>
   </thead>
@@ -61,6 +62,7 @@
 			</ul>
 		</td>
   		<td>
+  		<div>
   		<select data-live-search="true"  class="emailcc${autoReportingItem.id}">
 		 <c:if test="${not empty userMap}">
 			<c:forEach var="user" items="${userMap}">
@@ -75,6 +77,27 @@
 					</c:forEach>
 				</c:if>
 			</ul>
+			</div>
+			
+			<div style="margin-top: 10px;">
+			<b>Exclude Email List</b>
+			<select data-live-search="true"  class="emailexdef${autoReportingItem.id}">
+		 <c:if test="${not empty userMap}">
+			<c:forEach var="user" items="${userMap}">
+				  <option value="${user.email}">${user.firstName}</option>
+ 				</c:forEach>
+ 			</c:if>
+		</select><button name="save" onclick="addEmailAutoReportingConfig(${autoReportingItem.id},'exdef')">Add</button><br/>
+  		<ul  style="margin-top: 10px"  class="emailexdeflist${autoReportingItem.id}">
+				<c:if test="${not empty autoReportingItem.excludeMailList}">
+					<c:forEach var="emailId" items="${autoReportingItem.excludeMailList}">		
+						<li>${emailId}<a href="javascript:removeEmailAutoReportingConfig('${emailId}',${autoReportingItem.id},'exdef')"><i class="fa fa-times" style="color: red" aria-hidden="true"></i></a></li>
+					</c:forEach>
+				</c:if>
+			</ul>
+			
+			</div>	
+			
   		</td>
   		
   		<td> 
@@ -83,6 +106,14 @@
   		 </c:if>
   		  <c:if test="${!autoReportingItem.enabled}">
   		 	<input class="autoReportEnabled" type="checkbox" data-configid="${autoReportingItem.id}"/>
+  		 </c:if>
+  		 </td> 
+  		 <td> 
+  		 <c:if test="${autoReportingItem.notifyDefaulters}">
+  		 	<input class="autoReportNotifyDefaulters" type="checkbox" checked="checked"  data-configid="${autoReportingItem.id}"/>
+  		 </c:if>
+  		  <c:if test="${!autoReportingItem.notifyDefaulters}">
+  		 	<input class="autoReportNotifyDefaulters" type="checkbox" data-configid="${autoReportingItem.id}"/>
   		 </c:if>
   		 </td> 
   		 <td> 

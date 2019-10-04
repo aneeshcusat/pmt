@@ -47,7 +47,7 @@ public class ProjectTaskActivityDetails
     private Integer projectClientId;
 
     private String taskName;
-
+    
     private Date taskActivityStartTime;
 
     private Integer taskActivityDuration;

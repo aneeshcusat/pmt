@@ -1,6 +1,6 @@
 #set( $subject = "${subject}")
-<p><strong>Hi ${teamName},</strong></p>
-<p><strong>&nbsp; &nbsp; &nbsp; </strong>Please find below the task utilization for ${reportDate}. Outliers are marked in red.</p>
+<p><strong>Hi All,</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; </strong>You are over/under utilized on ${reportDate}. Please take a corrective action if required.</p>
 <table>
 <tbody>
 <tr style="background-color: #69d5ed;">
@@ -22,7 +22,7 @@
 		<td style="text-align: center;">$!utilization.reportingManager</td>
 		<td style="text-align: center;">$utilization.billableHours</td>
 		<td style="text-align: center;">$utilization.nonBillableHours</td>
-		#if($utilization.leaveHours > 0)
+		#if($utilization.leaveOrHoliday > 0)
 			<td style="background-color: #ff0;text-align: center;">$utilization.leaveOrHoliday</td>
 		#else
 			<td style="text-align: center;">$utilization.leaveOrHoliday</td>

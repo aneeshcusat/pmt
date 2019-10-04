@@ -146,7 +146,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
        // if (userTaskActivityItemOld == null) {
             famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(),
             		startTime, taskItemNew.getTaskId(), taskItemNew.getName(), durationNewMinutes,
-                userTaskType, null, projectItem.getType(), taskDetails.getDescription());
+                userTaskType, null, projectItem.getType(), taskDetails.getDescription(), null);
         /*} else {
             userTaskActivityItemOld.setDurationInMinutes(durationNewMinutes);
             userTaskActivityItemOld.setTaskName(taskDetails.getName());
@@ -797,8 +797,11 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
             taskItem.setActualTimeTaken(actualTimeTaken);
             taskItem.setContributers(contributersList.toString().replace("[", "").replaceAll("]", "").replace("null", ""));
-
+            
             if (taskStatus == TaskStatus.COMPLETED) {
+            	if (taskItem.getTaskPausedTime() != null) {
+            		taskItem.setTaskPausedTime(null);
+            	}
                 calculateBillableAndNonBillableTime(taskId);
             }
             getFamstackDataAccessObjectManager().updateItem(taskItem);

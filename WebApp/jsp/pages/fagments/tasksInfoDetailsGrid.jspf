@@ -228,6 +228,16 @@
 											value="${tasks.taskActivityDetails[0].actualStartTime}" /></span>
 								</div>
 							</div>
+							<c:if test="${not empty tasks.taskPausedTime}">
+							<input type="hidden"
+								class="pausedTime"
+								value='<fmt:formatDate pattern = "yyyy/MM/dd HH:mm" value = "${tasks.taskPausedTime}" />' />
+							</c:if>
+							<c:if test="${empty tasks.taskPausedTime}">
+							<input type="hidden"
+								class="pausedTime"
+								value="" />
+							</c:if>
 							<input type="hidden" class="estStartTime"
 								value="${tasks.startTime}" /> <input type="hidden"
 								class="startTime"

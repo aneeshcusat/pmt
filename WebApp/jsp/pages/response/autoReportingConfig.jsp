@@ -54,6 +54,7 @@
   				<option value="MON,TUE,WED,THU,FRI,SAT,SUN">Day</option>
   				<option value="MON,TUE,WED,THU,FRI">Week Days</option>
   				<option value="SAT,SUN">Weekends</option>
+  				<option value="TUE,WED,THU,FRI,SAT">Tuesday-Saturday</option>
   				<option value="MON">Monday</option>
   				<option value="TUE">Tuesday</option>
   				<option value="WED">Wednesday</option>

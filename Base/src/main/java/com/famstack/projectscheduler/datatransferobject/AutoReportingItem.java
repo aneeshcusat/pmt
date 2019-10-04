@@ -57,12 +57,18 @@ public class AutoReportingItem implements FamstackBaseItem
 
 	@Column(name = "to_lit", columnDefinition = "LONGTEXT")
 	private String toList;
+	
+	@Column(name = "exclude_mail", columnDefinition = "LONGTEXT")
+	private String excludeMails;
 
 	@Column(name = "subject", columnDefinition = "LONGTEXT")
 	private String subject;
 	
 	@Column(name = "enabled")
 	private Boolean enabled;
+	
+	@Column(name = "notify_defaulter")
+	private Boolean notifyDefaulters;
 	
 	@Column(name = "start_days")
 	private Integer startDays;
@@ -198,7 +204,7 @@ public class AutoReportingItem implements FamstackBaseItem
 	}
 
 	public Boolean getEnabled() {
-		return enabled == null ? true : enabled;
+		return enabled == null ? false : enabled;
 	}
 
 	public void setEnabled(Boolean enabled) {
@@ -265,6 +271,8 @@ public class AutoReportingItem implements FamstackBaseItem
 	private String getDayString(String day) {
 		if ("MON,TUE,WED,THU,FRI".equalsIgnoreCase(day)) {
 			return "Week Day";
+		} else 	if ("TUE,WED,THU,FRI,SAT".equalsIgnoreCase(day)) {
+			return "Tuesday-Saturday";
 		} else if ("MON,TUE,WED,THU,FRI,SAT,SUN".equalsIgnoreCase(day)) {
 			return "Day";
 		} else if ("SAT,SUN".equalsIgnoreCase(day)) {
@@ -306,5 +314,28 @@ public class AutoReportingItem implements FamstackBaseItem
 			return DateUtils.format(endDate, DateUtils.DATE_FORMAT);
 		}
 		return "";
+	}
+
+	public Boolean getNotifyDefaulters() {
+		return notifyDefaulters == null ? false : notifyDefaulters;
+	}
+
+	public void setNotifyDefaulters(Boolean notifyDefaulters) {
+		this.notifyDefaulters = notifyDefaulters;
+	}
+
+	public String getExcludeMails() {
+		return excludeMails;
+	}
+
+	public void setExcludeMails(String excludeMails) {
+		this.excludeMails = excludeMails;
+	}
+
+	public List<String> getExcludeMailList(){
+		if (StringUtils.isNotBlank(excludeMails)) {
+			return Arrays.asList(excludeMails.split(","));
+		}
+		return null;
 	}
 }

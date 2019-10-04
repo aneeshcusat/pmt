@@ -49,7 +49,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	public void createCompletedUserActivityItem(int userId, Date startTime,
 			int taskId, String taskName, int durationInMinutes,
 			UserTaskType userTaskType, String taskActCategory,
-			ProjectType projectType, String comment) {
+			ProjectType projectType, String comment, String clientName) {
 		UserTaskActivityItem userTaskActivityItem = createUserActivityItem(
 				userId, startTime, taskId, taskName, durationInMinutes,
 				userTaskType, taskActCategory, projectType, null);
@@ -65,6 +65,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		userTaskActivityItem
 				.setModifiedBy(getFamstackApplicationConfiguration()
 						.getCurrentUserId());
+		userTaskActivityItem.setClientName(clientName);
 		getFamstackDataAccessObjectManager().saveOrUpdateItem(
 				userTaskActivityItem);
 	}
@@ -445,6 +446,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 				.getRecordedStartTime());
 		taskActivityDetails.setRecordedEndTime(userTaskActivityItem
 				.getRecordedEndTime());
+		taskActivityDetails.setClientName(userTaskActivityItem.getClientName());
 		if (userTaskActivityItem.getUserActivityItem() != null
 				&& userTaskActivityItem.getUserActivityItem().getUserItem() != null) {
 			taskActivityDetails.setUserId(userTaskActivityItem
@@ -861,6 +863,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 			projectTaskActivityDetails
 					.setTaskCompletionComments(userTaskActivityItem
 							.getCompletionComment());
+			projectTaskActivityDetails.setClientName(userTaskActivityItem.getClientName());
 			projectTaskActivityDetailsList.add(projectTaskActivityDetails);
 
 			String key = "D" + userTaskActivityItem.getActualStartTime();
@@ -1075,7 +1078,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	public List<UserSiteActivityDetails> getUserSiteActivityForReport(
 			Map<Integer, Map<String, String>> userSiteActivityMap,
 			Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap,
-			List<EmployeeDetails> employeesList, List<String> dateList) {
+			List<EmployeeDetails> employeesList, List<String> dateList, List<String> excludeMailList) {
 
 		List<UserSiteActivityDetails> activeUserList = new ArrayList<>();
 		List<UserSiteActivityDetails> inActiveUserList = new ArrayList<>();
@@ -1083,8 +1086,14 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 
 		if (employeesList != null) {
 			for (EmployeeDetails employeeDetails : employeesList) {
+
+				if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
+					continue;
+				}
+				
 				UserSiteActivityDetails userSiteActivityDetails = new UserSiteActivityDetails();
 				userSiteActivityDetails.setEmployeeName(employeeDetails.getFirstName());
+				userSiteActivityDetails.setEmailId(employeeDetails.getEmail());
 				int reportingMangerId = employeeDetails.getReportingManger();
 				
 				try{
@@ -1119,6 +1128,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 							}
 						} else {
 							userSiteActivityStatus.setStatus("Inactive");
+							userSiteActivityDetails.setIncludeInactive(true);
 							if (index == 0) {
 								isInActive = true;
 							}

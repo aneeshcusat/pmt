@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.famstack.email.FamstackEmailSender;
@@ -341,7 +342,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 		            				}
 		            				String taskName = taskActCategory;
 		            				famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(), weekStartTime, 0, taskName,
-		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskActCategory, ProjectType.NON_BILLABLE, taskCommentsMap.get(taskNameOrId));
+		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskActCategory, ProjectType.NON_BILLABLE, taskCommentsMap.get(taskNameOrId), null);
 		            			}
             				}
             				weekStartTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, weekStartTime, 1);
@@ -1990,10 +1991,18 @@ public class FamstackProjectManager extends BaseFamstackManager
 				logDebug(autoReportingItem.getName());
 				try {
 					if (autoReportingItem.getEnabled()) {
-						List<String> toList = Arrays.asList(autoReportingItem
-								.getToList().split(","));
-						List<String> ccList = Arrays.asList(autoReportingItem
-								.getCcList().split(","));
+						
+						List<String> toList = autoReportingItem
+								.getToList() != null ? Arrays.asList(autoReportingItem
+								.getToList().split(",")) : new ArrayList<String>();
+						
+						List<String> ccList = autoReportingItem
+								.getCcList() != null ?Arrays.asList(autoReportingItem
+								.getCcList().split(",")) :  new ArrayList<String>();
+								
+						List<String> exludeMailList = autoReportingItem
+										.getExcludeMails() != null ?Arrays.asList(autoReportingItem
+										.getExcludeMails().split(",")) :  new ArrayList<String>();
 	
 						
 						logDebug("toList " + toList);
@@ -2003,8 +2012,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 						int lastHowManyDays = autoReportingItem.getLastHowManyDays();
 						int startDays = autoReportingItem.getLastHowManyDays();
 						
-						sendAutoReportEmail(toList, ccList, userGroupId,
-								reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject());
+						sendAutoReportEmail(toList, ccList, exludeMailList, userGroupId,
+								reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject(), autoReportingItem.getNotifyDefaulters());
 					}
 					autoReportingItem
 							.setLastRun(autoReportingItem.getNextRun());
@@ -2046,8 +2055,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 
 	}
 
-	public void sendAutoReportEmail(List<String> toList, List<String> ccList,
-			String userGroupId, ReportType reportType, int lastHowManyDays, int startDays, String subject) {
+	public void sendAutoReportEmail(List<String> toList, List<String> ccList, List<String> excludeMailList,
+			String userGroupId, ReportType reportType, int lastHowManyDays, int startDays, String subject, Boolean notifyDefaulters) {
 		Date startDate = DateUtils.getNextPreviousDate(
 				DateTimePeriod.DAY_START, new Date(), startDays);
 		
@@ -2107,20 +2116,25 @@ public class FamstackProjectManager extends BaseFamstackManager
 			List<UserSiteActivityDetails> activityData = famstackUserActivityManager
 					.getUserSiteActivityForReport(
 					userSiteActivityMap, nonBillativityMap,
-					employeesList, dateList);
+					employeesList, dateList, excludeMailList);
 			if (activityData != null && !activityData.isEmpty()) {
 			notificationDataMap.put("ACTIVITY_DATA", activityData);
 
 			famstackNotificationServiceManager.notifyAll(
 					NotificationType.USER_ACTIVITY_REPORT,
 					notificationDataMap, null);
+			
+			if (notifyDefaulters){
+				List<String> emailList = !ccList.isEmpty() ?  ccList : toList;
+				notifyUserInactiveUser(activityData, new HashSet<>(emailList), dateRange, userGroupDetails.getName(), subject, dateList);
+			}
 			}
 			/******** user site activity end *******/
 		} else if (reportType == ReportType.USER_UTILIZATION) {
 
 			List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(
 startDate, endDate, employeesList,
-userGroupId);
+userGroupId, excludeMailList);
 			
 			logDebug(FamstackUtils.getJsonFromObject(utilizationDetails));
 			if (utilizationDetails != null) {
@@ -2130,13 +2144,90 @@ userGroupId);
 			famstackNotificationServiceManager.notifyAll(
 					NotificationType.USER_UTILIZATION_REPORT,
 					notificationDataMap, null);
+			
+			if (notifyDefaulters){
+				List<String> emailList = !ccList.isEmpty() ?  ccList : toList;
+				notifyUserUnderOverUtilized(utilizationDetails, new HashSet<>(emailList), dateRange, userGroupDetails.getName(), subject);
+			}
+			}
+		} else if (reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY) {
+			//TODO :
+		} 
+		
+	}
+
+	@Async
+	private void notifyUserInactiveUser(
+			List<UserSiteActivityDetails> activityData, HashSet<String> ccEmailList, String dateRange, String teamName, String subject, List<String> dateList) {
+		if (activityData != null) {
+			Set<String> emailIds = new HashSet<>();
+			List<UserSiteActivityDetails> finalActivityData = new ArrayList<>();
+			for (UserSiteActivityDetails activityDetails :activityData) {
+				if(activityDetails.isIncludeInactive()) {
+						emailIds.add(activityDetails.getEmailId());
+						finalActivityData.add(activityDetails);
+				}
+			}
+			
+			if (!finalActivityData.isEmpty()) {
+				try{
+					Map<String, Object> notificationDataMap = new HashMap<>();
+					notificationDataMap.put("REPORT_DATE", dateRange);
+					notificationDataMap.put("TO_LIST", emailIds);
+					notificationDataMap.put("CC_LIST", ccEmailList);
+					notificationDataMap.put("subject", subject);
+					notificationDataMap.put("ACTIVITY_DATA", finalActivityData);
+					
+					famstackNotificationServiceManager.notifyAll(
+							NotificationType.USER_ACTIVITY_REPORT_DEFAULTER,
+							notificationDataMap, null);
+					
+				} catch (Exception e){
+					logError("Unable to notify in active user " + emailIds);
+				}
 			}
 		}
+		
+	}
+
+	@Async
+	private void notifyUserUnderOverUtilized(
+			List<UserUtilizationDetails> utilizationDetails,
+			HashSet<String> ccEmailList, String dateRange, String teamName, String subject) {
+		if (utilizationDetails != null) {
+			Set<String> emailIds = new HashSet<>();
+			List<UserUtilizationDetails> finalUtilizationData = new ArrayList<>();
+			for (UserUtilizationDetails userUtilizationDetails :utilizationDetails) {
+				if(userUtilizationDetails.isNotifyUsers()) {
+						emailIds.add(userUtilizationDetails.getEmailId());
+						finalUtilizationData.add(userUtilizationDetails);
+				}
+			}
+			
+			if (!finalUtilizationData.isEmpty()) {
+				try{
+					Map<String, Object> notificationDataMap = new HashMap<>();
+					notificationDataMap.put("REPORT_DATE", dateRange);
+					notificationDataMap.put("TO_LIST", emailIds);
+					notificationDataMap.put("CC_LIST", ccEmailList);
+					notificationDataMap.put("subject", subject);
+					notificationDataMap.put("UTILIZATION_DATA", finalUtilizationData);
+					
+					famstackNotificationServiceManager.notifyAll(
+							NotificationType.USER_UTILIZATION_REPORT_DEFAULTER,
+							notificationDataMap, null);
+				} catch (Exception e){
+					logError("Unable to notify in active user " + emailIds);
+				}
+			}
+			
+		}
+		
 	}
 
 	public List<UserUtilizationDetails> getAutoReportUtilizationDataForEmail(
 			Date startDate, Date endDate, List<EmployeeDetails> employeesList,
-			String userGroupId) {
+			String userGroupId, List<String> excludeMailList) {
 		
 		int numberOfWorkingDays = DateUtils.getWorkingDaysBetweenTwoDates(startDate, endDate);
 		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
@@ -2186,6 +2277,11 @@ userGroupId);
 			}
 			List<UserUtilizationDetails> underOrOverUtilizedList = new ArrayList<>();
 			for (EmployeeDetails employeeDetails : employeesList) {
+				
+				if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
+					continue;
+				}
+				
 				UserUtilizationDetails userUtilizationDetails = new UserUtilizationDetails();
 				
 				int reportingMangerId = employeeDetails.getReportingManger();
@@ -2199,6 +2295,7 @@ userGroupId);
 				
 				userUtilizationDetails.setEmployeeName(employeeDetails
 						.getFirstName());
+				userUtilizationDetails.setEmailId(employeeDetails.getEmail());
 				userUtilizationDetails.setNoOfWorkingDays(numberOfWorkingDays);
 				Map<String, Integer> utilizationTypeMap = userTotalHoursMap
 						.get(employeeDetails.getId());
@@ -2266,5 +2363,9 @@ userGroupId);
 									+ subActivityDetails
 											.getTaskActivityDuration());
 		}
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(new HashSet<>(null));
 	}
 }

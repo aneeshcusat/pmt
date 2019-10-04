@@ -5,8 +5,10 @@ import java.util.List;
 
 public class UserSiteActivityDetails {
 
-	String employeeName;
-	String reportingManager;
+	private String employeeName;
+	private String reportingManager;
+	private boolean includeInactive;
+	private String emailId;
 	
 	List<UserSiteActivityStatus> statusList;
 
@@ -31,5 +33,21 @@ public class UserSiteActivityDetails {
 
 	public void setReportingManager(String reportingManager) {
 		this.reportingManager = reportingManager;
+	}
+
+	public boolean isIncludeInactive() {
+		return includeInactive;
+	}
+
+	public void setIncludeInactive(boolean includeInactive) {
+		this.includeInactive = includeInactive;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 }

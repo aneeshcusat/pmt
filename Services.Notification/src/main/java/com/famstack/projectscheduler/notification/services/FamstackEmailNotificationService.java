@@ -80,7 +80,11 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
     private Set<String> getFilteredEmailAddressList(Set<String> toList, Templates templates)
     {
         if (templates == Templates.RESET_PASSWORD || templates == Templates.FORGOT_PASSWORD
-            || templates == Templates.USER_REGISTRAION || templates == Templates.USER_UPDATE || templates == Templates.USER_ACTIVITY_REPORT || templates == Templates.USER_UTILIZATION_REPORT) {
+            || templates == Templates.USER_REGISTRAION || templates == Templates.USER_UPDATE 
+            || templates == Templates.USER_ACTIVITY_REPORT 
+            || templates == Templates.USER_UTILIZATION_REPORT
+            || templates == Templates.USER_ACTIVITY_REPORT_DEFAULTER 
+            || templates == Templates.USER_UTILIZATION_REPORT_DEFAULTER) {
             return toList;
         }
 
