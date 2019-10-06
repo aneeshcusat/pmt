@@ -49,6 +49,8 @@
         </div>
         <!-- END MESSAGE BOX-->
           <%@include file="scripts.jsp" %>  
+          
+          <span id="siteseal" style="float: right;"><script async type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=6erGuXEVFcRQqrNWj6nw3D5Fuz96Clw7EB46RQCiBKp9TQYrBKNMulyVjp3e"></script></span>
     </body>
 </html>
 <script>
