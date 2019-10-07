@@ -28,9 +28,9 @@
 			<td style="text-align: center;">$utilization.leaveOrHoliday</td>
 		#end
 		#if($utilization.underOrOverUtilized)
-			<td style="background-color: #f00;text-align: center;">$utilization.utilization</td>
+			<td style="background-color: #f00;text-align: center;">$utilization.utilization %</td>
 		#else
-			<td style="text-align: center;">$utilization.utilization</td>
+			<td style="text-align: center;">$utilization.utilization %</td>
 		#end
 		<td style="text-align: center;">$utilization.totalHours</td>
 	</tr>
