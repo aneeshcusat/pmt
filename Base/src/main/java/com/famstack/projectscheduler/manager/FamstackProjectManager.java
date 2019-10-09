@@ -2276,6 +2276,7 @@ userGroupId, excludeMailList);
 				}
 			}
 			List<UserUtilizationDetails> underOrOverUtilizedList = new ArrayList<>();
+			List<UserUtilizationDetails> leaveOrHolidayUtilizedList = new ArrayList<>();
 			for (EmployeeDetails employeeDetails : employeesList) {
 				
 				if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
@@ -2318,13 +2319,16 @@ userGroupId, excludeMailList);
 					}
 				}
 
-				if (userUtilizationDetails.isUnderOrOverUtilized()) {
+				if (userUtilizationDetails.getLeaveHours() > 0) {
+					leaveOrHolidayUtilizedList.add(userUtilizationDetails);
+				} else if (userUtilizationDetails.isUnderOrOverUtilized()) {
 					underOrOverUtilizedList.add(userUtilizationDetails);
 				} else {
 					userUtilizationDetailsList.add(userUtilizationDetails);
 				}
 			}
 			underOrOverUtilizedList.addAll(userUtilizationDetailsList);
+			underOrOverUtilizedList.addAll(leaveOrHolidayUtilizedList);
 			return underOrOverUtilizedList;
 		}
 		return null;
