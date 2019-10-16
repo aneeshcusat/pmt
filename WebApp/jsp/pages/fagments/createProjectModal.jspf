@@ -8,7 +8,7 @@
 <style>
 
 </style>
-<form:input type="hidden" id="PONumber" path="PONumber"/>
+
 <form:input type="hidden" id="projectId" path="id"/>
 
 <div class="row">
@@ -30,13 +30,42 @@
                             </div>
                          <div class="form-group">
 							<label class="col-xs-3 control-label">Project Type</label>
-							 <div class="col-md-4">
+							 <div class="col-md-4 hide">
                                         <form:select class="form-control select" path="projectSubType" id="projectSubType"  data-live-search="true">
                                         <option value="">- select -</option>
                                         <option value="ADHOC">Ad-Hoc</option>
                                         <option value="FTE">FTE</option>
                                     	</form:select>
                                 </div>
+                                
+                            <form:input type="hidden" path="projectSubType" id="projectSubType"/>
+							<div class="col-xs-9">
+								<div class="btn-group projectSubTypeDiv" data-toggle="buttons">
+									<label class="btn btn-default radioButton" style="padding: 4px 50px;margin-right: 5px;" onclick="clickAdHocType()"> 
+									<input type="radio" id="adhocSubType"
+										value="ADHOC"  /> Ad-Hoc
+									</label> 
+									<label class="btn btn-default radioButton" style="padding: 4px 50px;margin-right: 5px;" onclick="clickFTEType()"> 
+									<input type="radio" id="fteSubType"
+										value="FTE"/> FTE
+									</label>
+								</div>
+							</div>
+						</div>
+                         <div class="form-group">
+							<label class="col-xs-3 control-label">Type</label>
+							<form:input type="hidden" path="type" id="projectType"/>
+							<div class="col-xs-4">
+								<div class="btn-group projectTypeDiv" data-toggle="buttons">
+									<label class="btn btn-default radioButton" style="padding: 4px 5px;margin-right: 5px;" onclick="clickBillableType()"> <input type="radio" id="billable"
+										value="BILLABLE"  /> Billable
+									</label> 
+									<label class="btn btn-default radioButton" style="padding: 4px 5px;margin-right: 5px;" onclick="clickNonBillableType()"> <input type="radio"
+										value="NON_BILLABLE" id="nonbillable" /> Non Billable
+									</label>
+								</div>
+							</div>
+							
 							<label class="col-md-2 control-label">Project Lead</label>
                                 <div class="col-md-3">
                                  <form:select path="projectLead" id="projectLead" name="projectLead" class="form-control select" data-live-search="true">
@@ -48,25 +77,10 @@
 		    						</c:if>
 								</form:select>
                               </div>
-						</div>
-                         <div class="form-group">
-							<label class="col-xs-3 control-label">Type</label>
-							<form:input type="hidden" path="type" id="projectType"/>
-							<div class="col-xs-5">
-								<div class="btn-group projectTypeDiv" data-toggle="buttons">
-									<label class="btn btn-default" onclick="clickBillableType()"> <input type="radio" id="billable"
-										value="BILLABLE"  /> Billable
-									</label> 
-									<label class="btn btn-default" onclick="clickNonBillableType()"> <input type="radio"
-										value="NON_BILLABLE" id="nonbillable" /> Non Billable
-									</label>
-								</div>
-							</div>
 							
 							
-							
-							<label class="col-md-1 control-label">Priority</label>
-                                <div class="col-md-3">
+							<label class="col-md-1 control-label hide">Priority</label>
+                                <div class="col-md-3 hide">
                                         <form:select class="form-control select" path="priority" id="priority"  data-live-search="true">
                                         <option value="">- select -</option>
                                         <option>URGENT</option>
@@ -77,8 +91,8 @@
                                 </div>
 						</div>
 						 <div class="form-group">    
-						 <label class="col-xs-3 control-label">Project Duration (Hrs)</label>
-							<div class="col-xs-4">
+						 <label class="col-xs-3 control-label">Estimated project hours</label>
+							<div class="col-xs-3">
 							<form:input class="form-control select" id="duration" path="durationHrs" type="text"/>
 							 	<%-- <form:select class="form-control select" id="duration" path="duration"  data-live-search="true">
 							 	 	<c:forEach begin="0" end="100" varStatus="loop">
@@ -86,8 +100,8 @@
                                  	</c:forEach>
                                     </form:select> --%>
 							</div>                                    
-                                <label class="col-md-2 control-label">Complexity</label>
-                                <div class="col-md-3">
+                                <label class="col-md-2 control-label hide">Complexity</label>
+                                <div class="col-md-3 hide">
                                         <form:select class="form-control select" id="complexity" path="complexity" data-live-search="true">
                                         <option value="">- select -</option>
                                         <option>BASIC</option>
@@ -95,10 +109,9 @@
                                         <option>COMPLEX</option>
                                     </form:select>
                                 </div>
-                            </div>
-                             <div class="form-group">  
-                          
-                              <label class="col-md-3 control-label">Account</label>
+                                
+                                
+                              <label class="col-md-2 control-label">Account</label>
                                 <div class="col-md-4">
                                         <form:select class="form-control select" id="accountId" path="accountId" data-live-search="true">
                                         <option value="">- select -</option>
@@ -109,7 +122,10 @@
                             			</c:if>
                                     </form:select>
                                     </div>
-                                <label class="col-md-2 control-label">Team</label>
+                            </div>
+                             <div class="form-group">  
+                          
+                                <label class="col-md-3 control-label">Team</label>
                                 <div class="col-md-3">
                                       <form:select class="selectpicker form-control select" path="teamId" id="teamId"  data-live-search="true">
                                           <option value="">- select -</option>
@@ -132,10 +148,8 @@
                             			</c:if>
 										</form:select>
                                 </div>
-                            </div>
-                             <div class="form-group">  
-                              <label class="col-md-3 control-label">Client</label>
-                                <div class="col-md-5">
+                                      <label class="col-md-2 control-label">Client</label>
+                                <div class="col-md-4">
                                         <form:select class="form-control select" path="clientId" id="clientId"  data-live-search="true">
                                         <option value="">- select -</option>
                                         <c:if test="${not empty modelViewMap.accountData}">  
@@ -156,9 +170,12 @@
                                            </c:forEach>
                                          </c:if>
                                     </form:select>
-                                </div>  
+                                </div> 
+                            </div>
+                             <div class="form-group">  
+                         
                                 <div class="col-md-4">
-                                    <span id="POidSpan" style="font-weight: bold;">POID</span>
+                                    <span id="POidSpan" class="hide" style="font-weight: bold;">POID</span>
                                 </div>                                    
                             </div>
                             </div>
@@ -169,6 +186,14 @@
                                         <form:input type="text" class="autocomplete form-control" id="projectcode" path="code"/>
                                 </div>
                             </div>
+                            
+                             <div class="form-group">
+                                <label class="col-md-3 control-label">PO Number</label>
+                                <div class="col-md-9">
+                                        <form:input  type="text" class="autocomplete form-control"  id="PONumber" path="PONumber"/>
+                                </div>
+                            </div>
+                            
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Project Category</label>
                                  <div class="col-md-9">  
@@ -232,13 +257,13 @@
 							</div>
                             
                             <div class="form-group">
-							<label class="col-md-3 control-label">Est Start Time</label>
+							<label class="col-md-3 control-label">Project Start Date</label>
 							<div class="col-md-9">
 								 <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"  autocomplete="off"/>
 							</div>
 							</div>
 							<div class="form-group">
-							<label class="col-md-3 control-label">Est Completion Time</label>
+							<label class="col-md-3 control-label">Project End Date</label>
                                 <div class="col-md-9">
                                        <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"  autocomplete="off"/> 
                                 </div>

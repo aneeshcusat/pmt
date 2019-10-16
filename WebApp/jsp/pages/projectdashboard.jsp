@@ -130,6 +130,11 @@ div#taskDetailsDiv {
     color: #555;
     white-space: nowrap;
 }
+
+.radioButton:hover, .radioButton:focus, .radioButton:active, .radioButton.active {
+    background-color: #c6c3c3;
+    border-color: #DDD;
+}
 </style>
 <!-- START CONTENT FRAME -->
 <div class="content-frame margin5" style="min-height: 500px">
@@ -389,6 +394,7 @@ var clearProjectFormForCreate = function(projectId) {
 	$("#projectActionButton span").html("Save");
 	clearCreateProjectForm();
 	$("#projectcode").val("PRJ" + Math.floor(Date.now() / 1000));
+	$("#PONumber").val("PO" + Math.floor(Date.now() / 1000));
 	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
 	$('#estCompleteTime').val(getTodayDate(new Date()) + " 18:00");
 	
@@ -445,8 +451,12 @@ function clearCreateProjectForm(){
 	//$("#duration").prop("selectedIndex",0);
 	//$('#duration').selectpicker('refresh');
 	$('#duration').val("");
-	$("#projectSubType").prop("selectedIndex",0);
-	$('#projectSubType').selectpicker('refresh');
+	
+	$("#adhocSubType").attr("checked", false);
+	$("#fteSubType").attr("checked", false);
+	$("#projectSubType").val("");
+	$('#adhocSubType').parent().removeClass("active");
+	$('#fteSubType').parent().removeClass("active");
 	
 	$("#projectLead").prop("selectedIndex",0);
 	$('#projectLead').selectpicker('refresh');
@@ -454,6 +464,7 @@ function clearCreateProjectForm(){
 	$("#complexity").prop("selectedIndex",0);
 	$('#complexity').selectpicker('refresh');
 	$("#projectcode").val("");
+	
 	$("#projectId").val("");
 	
 	$("#clientId").prop("selectedIndex",0);
@@ -502,8 +513,14 @@ function initializeCreateProjectForm(project){
 	
 	$("#projectType").val(project.type);
 	
+	if (project.projectSubType == 'ADHOC') {
+		$("#adhocSubType").attr("checked", true);
+		$('#adhocSubType').parent().addClass("active");
+	} else {
+		$("#fteSubType").attr("checked", true);
+		$('#fteSubType').parent().addClass("active");
+	}
 	$("#projectSubType").val(project.projectSubType);
-	$('#projectSubType').selectpicker('refresh');
 	
 	$("#projectLead").val(project.projectLead);
 	$('#projectLead').selectpicker('refresh');
@@ -802,6 +819,15 @@ function initializeCreateProjectForm(project){
 		//$('#clientId').selectpicker('refresh');
 	};
 	
+	
+	var clickAdHocType = function(){
+		$("#projectSubType").val("ADHOC");
+	};
+	
+	var clickFTEType = function(){
+		$("#projectSubType").val("FTE");
+	};
+	
 	$("#accountId").on("change",function(){
 		famstacklog("account id change:" + $(this).val());
 		resetTeam();
@@ -817,7 +843,9 @@ function initializeCreateProjectForm(project){
 		$('.clientOption[filter^='+$(this).val()+']').each(function () { $(this).show(); });
 		$('#clientId').selectpicker('refresh');
 		var PONumber = $( "#teamId option:selected" ).attr("poid");
-		$("#PONumber").val(PONumber);
+		if (PONumber != "") {
+			$("#PONumber").val(PONumber);
+		}
 		$("#POidSpan").html(PONumber);
 		famstacklog("PONumber" + PONumber);
 	});
@@ -849,7 +877,9 @@ function initializeCreateProjectForm(project){
 		$('#teamId').selectpicker('refresh');
 		
 		var PONumber = $( "#teamId option:selected" ).attr("poid");
-		$("#PONumber").val(PONumber);
+		if (PONumber != "") {
+			$("#PONumber").val(PONumber);
+		}
 		$("#POidSpan").html(PONumber);
 		famstacklog("PONumber" + PONumber);
 		

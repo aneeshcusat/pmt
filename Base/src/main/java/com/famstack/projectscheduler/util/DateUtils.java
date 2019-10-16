@@ -297,5 +297,29 @@ public final class DateUtils extends BaseFamstackService
         }
         return new FamstackDateRange(startDate, endDate);
 	}
+
+	
+	public static boolean isLastSundayOfMonthWeek() {
+
+		Calendar lastSundayOfMonthWeek = Calendar.getInstance();
+	    lastSundayOfMonthWeek.set( 2019, 10, 1 );
+	    lastSundayOfMonthWeek.add(Calendar.DATE, -1); 
+	    lastSundayOfMonthWeek.add( Calendar.DAY_OF_MONTH, -( lastSundayOfMonthWeek.get( Calendar.DAY_OF_WEEK ) - 1 ) );
+	   
+	    Calendar currentMonthLastDay = Calendar.getInstance();
+	    Calendar currentDay = Calendar.getInstance();
+
+	    currentMonthLastDay.add(Calendar.MONTH, 1);  
+	    currentMonthLastDay.set(Calendar.DAY_OF_MONTH, 1);  
+	    currentMonthLastDay.add(Calendar.DATE, -1);  
+
+	   if (lastSundayOfMonthWeek.get( Calendar.DAY_OF_MONTH) != currentMonthLastDay.get( Calendar.DAY_OF_MONTH)) {
+		   lastSundayOfMonthWeek.add(Calendar.WEEK_OF_MONTH,1);
+	   }
+	   
+	   return (currentDay.get(Calendar.YEAR) == lastSundayOfMonthWeek.get( Calendar.DAY_OF_MONTH) && 
+			   currentDay.get(Calendar.MONTH) == lastSundayOfMonthWeek.get( Calendar.MONTH) && 
+			   currentDay.get(Calendar.DAY_OF_MONTH) == lastSundayOfMonthWeek.get( Calendar.DAY_OF_MONTH));
+	}
 	
 }

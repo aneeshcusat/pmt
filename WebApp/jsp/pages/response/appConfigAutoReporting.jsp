@@ -126,8 +126,9 @@
   		  <input type="hidden" class="reportingScheduleTime${autoReportingItem.id}" value="${autoReportingItem.cronTime}"/>
   		  <input type="hidden" class="reportingEndDate${autoReportingItem.id}" value='<fmt:formatDate value="${autoReportingItem.endDate}" pattern="yyyy-MM-dd"/>'/>
   		    
-   		 <a href="javascript:deleteAutoReportingConf(${autoReportingItem.id});"><i class="fa fa-times  fa-2x" style="color: red" aria-hidden="true"></i></a>
-     	 <a href="javascript:editautoreporting(${autoReportingItem.id});"><i class="fa fa-pencil-square-o  fa-2x" style="color: blue"  aria-hidden="true"></i></a>
+   		 <a href="javascript:deleteAutoReportingConf(${autoReportingItem.id});" title="Delete"><i class="fa fa-times  fa-2x" style="color: red" aria-hidden="true"></i></a>
+     	 <a href="javascript:editautoreporting(${autoReportingItem.id});" title="Edit"><i class="fa fa-pencil-square-o  fa-2x" style="color: blue"  aria-hidden="true"></i></a>
+     	 <a href="javascript:triggerautoreporting(${autoReportingItem.id});" title="Trigger report email"><i class="fa fa-send-o  fa-2x" style="color: red;padding-top: 10px;"  aria-hidden="true"></i></a>
   		</td>
   	</tr>
   	  </c:forEach>

@@ -2,7 +2,7 @@
 
 <p><strong>Hi All,</strong></p>
 <p><strong>&nbsp; &nbsp; &nbsp; </strong>System shows you are inactive on ${reportDate}. Please take a corrective action if required.</p>
-<table>
+<table style="text-align: center;border: 2px solid lightgrey;">
 <tbody>
 <tr style="background-color: #69d5ed;">
 <td><strong>Sl No</strong></td>
@@ -16,18 +16,18 @@
  #foreach ($userActivity in $userActivityData)
  #set($index = $index+1)
     <tr>
-		<td style="text-align: center;">$index</td>
-		<td style="text-align: center;">$userActivity.employeeName</td>
-		<td style="text-align: center;">$!userActivity.reportingManager</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$index</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$userActivity.employeeName</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$!userActivity.reportingManager</td>
 		 #foreach ($status in $userActivity.statusList)
 		 	#if($status.status == 'Inactive')
-				<td style="background-color: #f00;text-align: center;">$status.status</td>
+				<td style="background-color: #f00;text-align: center;border: 1px solid lightgrey;">$status.status</td>
 			#elseif ($status.status == 'Leave')
-				<td style="background-color: #ff0;text-align: center;">$status.status</td>
+				<td style="background-color: #ff0;text-align: center;border: 1px solid lightgrey;">$status.status</td>
 			#elseif ($status.status == 'Holiday')
-				<td style="background-color: #ff9800;text-align: center;">$status.status</td>
+				<td style="background-color: #ff9800;text-align: center;border: 1px solid lightgrey;">$status.status</td>
 			#else 
-				<td style="text-align: center;">$status.status</td>
+				<td style="text-align: center;border: 1px solid lightgrey;">$status.status</td>
 			#end
 		#end
 	</tr>

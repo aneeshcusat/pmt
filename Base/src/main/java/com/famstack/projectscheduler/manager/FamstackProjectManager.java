@@ -274,7 +274,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 			
 		}
 		
-		createBillableWeeklyTasks(projectDetailsMap, DateUtils.tryParse(weekStartDate, DateUtils.DAY_MONTH_YEAR), taskCommentsMap);
+		createBillableWeeklyTasks(projectDetailsMap, DateUtils.getNextPreviousDate(DateTimePeriod.MINUTE, DateUtils.tryParse(weekStartDate, DateUtils.DAY_MONTH_YEAR), 5), taskCommentsMap);
 		
 	}
 
@@ -1273,6 +1273,10 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setNewProjectCategory((String) data[23]);
 
             projectTaskActivityDetails.setTaskCompletionComments((String) data[24]);
+            
+            projectTaskActivityDetails.setTaskActType(UserTaskType.valueOf((String) data[25]));
+            projectTaskActivityDetails.setTaskActProjType(ProjectType.valueOf((String) data[26]));
+            projectTaskActivityDetails.setTaskActCategory((String) data[27]);
 
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
             key += "T" + data[15];
@@ -1992,28 +1996,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 				try {
 					if (autoReportingItem.getEnabled()) {
 						
-						List<String> toList = autoReportingItem
-								.getToList() != null ? Arrays.asList(autoReportingItem
-								.getToList().split(",")) : new ArrayList<String>();
-						
-						List<String> ccList = autoReportingItem
-								.getCcList() != null ?Arrays.asList(autoReportingItem
-								.getCcList().split(",")) :  new ArrayList<String>();
-								
-						List<String> exludeMailList = autoReportingItem
-										.getExcludeMails() != null ?Arrays.asList(autoReportingItem
-										.getExcludeMails().split(",")) :  new ArrayList<String>();
-	
-						
-						logDebug("toList " + toList);
-						logDebug("ccList " + ccList);
-						String userGroupId = autoReportingItem.getUserGroupId();
-						ReportType reportType = autoReportingItem.getType();
-						int lastHowManyDays = autoReportingItem.getLastHowManyDays();
-						int startDays = autoReportingItem.getLastHowManyDays();
-						
-						sendAutoReportEmail(toList, ccList, exludeMailList, userGroupId,
-								reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject(), autoReportingItem.getNotifyDefaulters());
+						sendAutoReportingNotification(autoReportingItem);
 					}
 					autoReportingItem
 							.setLastRun(autoReportingItem.getNextRun());
@@ -2053,6 +2036,32 @@ public class FamstackProjectManager extends BaseFamstackManager
 
 		}
 
+	}
+
+	public void sendAutoReportingNotification(
+			AutoReportingItem autoReportingItem) {
+		List<String> toList = autoReportingItem
+				.getToList() != null ? Arrays.asList(autoReportingItem
+				.getToList().split(",")) : new ArrayList<String>();
+		
+		List<String> ccList = autoReportingItem
+				.getCcList() != null ?Arrays.asList(autoReportingItem
+				.getCcList().split(",")) :  new ArrayList<String>();
+				
+		List<String> exludeMailList = autoReportingItem
+						.getExcludeMails() != null ?Arrays.asList(autoReportingItem
+						.getExcludeMails().split(",")) :  new ArrayList<String>();
+
+		
+		logDebug("toList " + toList);
+		logDebug("ccList " + ccList);
+		String userGroupId = autoReportingItem.getUserGroupId();
+		ReportType reportType = autoReportingItem.getType();
+		int lastHowManyDays = autoReportingItem.getLastHowManyDays();
+		int startDays = autoReportingItem.getLastHowManyDays();
+		
+		sendAutoReportEmail(toList, ccList, exludeMailList, userGroupId,
+				reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject(), autoReportingItem.getNotifyDefaulters());
 	}
 
 	public void sendAutoReportEmail(List<String> toList, List<String> ccList, List<String> excludeMailList,
@@ -2133,8 +2142,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 		} else if (reportType == ReportType.USER_UTILIZATION) {
 
 			List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(
-startDate, endDate, employeesList,
-userGroupId, excludeMailList);
+					startDate, endDate, employeesList,
+					userGroupId, excludeMailList);
 			
 			logDebug(FamstackUtils.getJsonFromObject(utilizationDetails));
 			if (utilizationDetails != null) {
@@ -2243,7 +2252,6 @@ userGroupId, excludeMailList);
 					projectTaskAssigneeDataList,
 					getFamstackApplicationConfiguration().getAllUsersMap());
 			
-			logDebug("projectTaskAssigneeDataList" + projectTaskAssigneeDataList);
 			Map<Integer, Map<String, Integer>> userTotalHoursMap = new HashMap<>();
 			List<UserUtilizationDetails> userUtilizationDetailsList = new ArrayList<>();
 			if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
@@ -2367,9 +2375,5 @@ userGroupId, excludeMailList);
 									+ subActivityDetails
 											.getTaskActivityDuration());
 		}
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(new HashSet<>(null));
 	}
 }

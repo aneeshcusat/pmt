@@ -2001,8 +2001,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				.getAllRecuringTaskByProjectId(projectId));
 	}
 
-	public void sendAutoReportEmail(String userGroupId, ReportType reportType, int lastHowManyDays, int startDays) {
-		projectManager.sendAutoReportEmail(null, null, null, userGroupId, reportType, lastHowManyDays,startDays, reportType + " Report", false );
+	public void sendAutoReportEmail(Integer reportId) {
+		AutoReportingItem autoReportingItem = (AutoReportingItem)famstackDataAccessObjectManager.getItemById(reportId, AutoReportingItem.class);
+		if (autoReportingItem != null) {
+			projectManager.sendAutoReportingNotification(autoReportingItem);
+		}
 	}
 
 	public String createAutoReportingConfig(String name, String type,

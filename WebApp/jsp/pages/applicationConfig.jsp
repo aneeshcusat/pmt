@@ -971,6 +971,14 @@ tr.clickable:hover {
 	 $(".clearAutoReporting").addClass("hide");
 	 $(".saveAutoReporting").html("Save");
  }
+
+ function triggerautoreporting(reportId){
+	 doAjaxRequestWithGlobal("GET", "${applicationHome}/sendAutoReportEmail", {reportId:reportId}, function(data) {
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	    }, false);
+ }
+
  
  $(".autoReportTimeSelection").on("keypress keyup", function(){
 	 var value = $(this).val();

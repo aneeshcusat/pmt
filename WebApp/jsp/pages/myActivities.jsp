@@ -1,6 +1,106 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>    
 <c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
+<style>
+.container-fluid {
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.list-view-pf-view {
+    background: #ededed;
+    border: none;
+    margin-top: 30px;
+}
+.list-view-pf .list-group-item:first-child {
+    border-top: 1px solid transparent;
+}
+.list-view-pf-checkbox {
+    border-right: 1px solid #d1d1d1;
+    float: left;
+    margin-bottom: 20px;
+    margin-right: 15px;
+    margin-top: 20px;
+    padding: 3px 10px 3px 0;
+}
+.list-view-pf-actions {
+    float: right;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+    -ms-flex-order: 2;
+    order: 2;
+}
+
+.list-view-pf-main-info {
+    -ms-flex-align: start;
+    align-items: flex-start;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1;
+    flex: 1;
+    min-width: 0;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+.list-view-pf-left {
+    display: table-cell;
+    padding-right: 20px;
+    text-align: center;
+    vertical-align: top;
+}
+.list-view-pf-body {
+    -ms-flex-align: center;
+    -ms-grid-row-align: center;
+    align-items: center;
+    display: table-cell;
+    -ms-flex: 1;
+    flex: 1;
+    min-width: 0;
+    vertical-align: top;
+    width: 100%;
+}
+.list-view-pf .list-group-item-heading {
+    font-size: 16px;
+}
+.list-view-pf-description {
+    -ms-flex: 1 0 50%;
+    flex: 1 0 50%;
+}
+.list-view-pf .list-group-item-text {
+    color: currentColor!important;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    
+}
+a {
+    color: #0088ce;
+    text-decoration: none;
+}
+.list-view-pf-additional-info {
+    -ms-flex-align: center;
+    align-items: center;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.list-view-pf-additional-info-item {
+    -ms-flex-align: center;
+    align-items: center;
+    display: inline-block;
+    display: -ms-flexbox;
+    display: flex;
+    margin-right: 20px;
+    max-width: 100%;
+    text-align: center;
+}
+
+additional-info-item .pficon {
+    font-size: 16px;
+    m
+</style>
 <!-- END PAGE TITLE -->                
 <div class="content-frame" style="min-height: 500px; margin-bottom: 50px">     
     <!-- START CONTENT FRAME TOP -->
@@ -67,16 +167,7 @@
 <div class="page-content-wrap">
     <div class="row">
         <div class="col-md-12">
-				<div class="panel panel-default panel-stream">
-					<div class="panel-body">
-						<div class="activity-stream">
-							<ul class="list-unstyled list-stream">
-								<%@include file="includes/myActivityItem.jsp" %>
-								<%@include file="includes/myActivityItem.jsp" %>
-							</ul>
-						</div>
-					</div>
-				</div>
+				<%@include file="includes/myActivityItem.jsp" %>
         </div>
     </div>
 </div>
