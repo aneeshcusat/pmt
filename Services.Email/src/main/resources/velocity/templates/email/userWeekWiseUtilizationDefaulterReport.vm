@@ -1,17 +1,26 @@
 #set( $subject = "${subject}")
 <p><strong>Hi All,</strong></p>
-<p><strong>&nbsp; &nbsp; &nbsp; </strong>You are over/under utilized on ${reportDate}. Please take a corrective action if required.</p>
+<p><strong>&nbsp; &nbsp; &nbsp; </strong>System shows you have not filled time sheet properly for this month. Please take a corrective action if required.</p>
 <table style="text-align: center;border: 2px solid lightgrey;">
 <tbody>
+<tr>
+<td colspan="3">&nbsp;</td>
+#foreach ($weekNumber in $weekNumberList)
+#set($weekRange =  ${dateList.get($weekNumber)})
+<td colspan="4" style="text-align: center;border: 1px solid lightgrey;">$weekRange</td>
+#end
+</tr>
 <tr style="background-color: #69d5ed;">
 <td><strong>Sl No</strong></td>
 <td><strong>Employee Name</strong></td>
 <td><strong>Reporting Manager</strong></td>
-<td><strong>Billable hours</strong></td>
-<td><strong>Non billable hours</strong></td>
-<td><strong>Leave or Holiday</strong></td>
-<td><strong>Utilization</strong></td>
-<td><strong>Total Hours</strong></td>
+#foreach ($weekNumber in $weekNumberList)
+#set($weekRange =  ${dateList.get($weekNumber)})
+<td><strong>B</strong></td>
+<td><strong>NB</strong></td>
+<td><strong>L/H</strong></td>
+<td style="background-color: lightgray;"><strong>Total Hours</strong></td>
+#end
 </tr>
 #set($index = 0)
  #foreach ($utilization in $utilizationData)
@@ -20,19 +29,43 @@
 		<td style="text-align: center;border: 1px solid lightgrey;">$index</td>
 		<td style="text-align: center;border: 1px solid lightgrey;">$utilization.employeeName</td>
 		<td style="text-align: center;border: 1px solid lightgrey;">$!utilization.reportingManager</td>
-		<td style="text-align: center;border: 1px solid lightgrey;">$utilization.billableHours</td>
-		<td style="text-align: center;border: 1px solid lightgrey;">$utilization.nonBillableHours</td>
-		#if($utilization.leaveOrHoliday > 0)
-			<td style="background-color: #ff0;text-align: center;border: 1px solid lightgrey;">$utilization.leaveOrHoliday</td>
-		#else
-			<td style="text-align: center;border: 1px solid lightgrey;">$utilization.leaveOrHoliday</td>
-		#end
-		#if($utilization.underOrOverUtilized)
-			<td style="background-color: #f00;text-align: center;border: 1px solid lightgrey;">$utilization.utilization %</td>
-		#else
-			<td style="text-align: center;border: 1px solid lightgrey;">$utilization.utilization %</td>
-		#end
-		<td style="text-align: center;border: 1px solid lightgrey;">$utilization.totalHours</td>
+		
+		#foreach ($weekNumber in $weekNumberList)
+			 #set($weekUtilizationData =  ${utilization.userUtilizationMap.get($weekNumber)})
+			
+			<td style="text-align: center;border: 1px solid lightgrey;">
+			#if($weekUtilizationData.billableMins > 0)
+				<b>$weekUtilizationData.billableHours</b>
+			#end
+			</td>
+			<td style="text-align: center;border: 1px solid lightgrey;">
+			#if($weekUtilizationData.nonBillableMins > 0)
+				<b>$weekUtilizationData.nonBillableHours</b>
+			#end
+			</td>
+			#if($weekUtilizationData.LeaveHours > 0)
+				<td style="background-color: #ff0;text-align: center;border: 1px solid lightgrey;"><b>$weekUtilizationData.leaveOrHoliday</b></td>
+			#else
+				<td style="text-align: center;border: 1px solid lightgrey;"></td>
+			#end
+			#if($weekUtilizationData.notifyUsers && $weekUtilizationData.futureDateTask == false)
+				<td style="text-align: center;border: 1px solid lightgrey;background-color: #f00;">
+				#if($weekUtilizationData.totalWithLeave > 0)
+					<b>$weekUtilizationData.totalWithLeaveHrs</b>
+				#else
+					0.00
+				#end
+				</td>
+			#else
+				<td style="text-align: center;border: 1px solid lightgrey;background-color: lightgray;">
+				#if($weekUtilizationData.totalWithLeave > 0)
+					<b>$weekUtilizationData.totalWithLeaveHrs</b>
+				#else
+					0.00
+				#end
+				</td>
+			#end
+		#end		
 	</tr>
   #end
 

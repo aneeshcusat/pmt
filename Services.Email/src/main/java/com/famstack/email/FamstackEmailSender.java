@@ -30,7 +30,7 @@ public class FamstackEmailSender extends BaseFamstackService
     {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         emailInfo.setMimeMessage(mimeMessage);
-        logDebug("emailsToList" + emailsToList);
+        System.out.println("emailsToList" + emailsToList);
         javaMailSender.send(famstackEmailTemplateRendererService.createMessage(emailInfo, emailsCCList, emailsBCCList, emailsToList));
     }
 

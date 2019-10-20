@@ -84,7 +84,9 @@ public class FamstackEmailNotificationService extends FamstackBaseNotificationSe
             || templates == Templates.USER_ACTIVITY_REPORT 
             || templates == Templates.USER_UTILIZATION_REPORT
             || templates == Templates.USER_ACTIVITY_REPORT_DEFAULTER 
-            || templates == Templates.USER_UTILIZATION_REPORT_DEFAULTER) {
+            || templates == Templates.USER_UTILIZATION_REPORT_DEFAULTER
+            || templates == Templates.WEEKWISE_USER_UTILIZATION_MONTHLY
+			|| templates == Templates.WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER) {
             return toList;
         }
 

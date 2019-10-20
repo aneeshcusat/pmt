@@ -807,7 +807,8 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 			List<ProjectTaskActivityDetails> allTaskActivityProjectDetailsList,
 			Integer currentUserId, String userGroupId) {
 		Map<String, Object> dataMap = new HashMap<>();
-		dataMap.put("calenderDateStart", startDate);
+		dataMap.put("calenderDateStart", DateUtils.getNextPreviousDate(
+				DateTimePeriod.DAY_START, startDate, 0));
 		dataMap.put("calenderDateEnd", DateUtils.getNextPreviousDate(
 				DateTimePeriod.DAY_END, endDate, 0));
 

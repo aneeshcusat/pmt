@@ -55,7 +55,9 @@ import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.employees.bean.UserSiteActivityDetails;
+import com.famstack.projectscheduler.employees.bean.UserUtilization;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationDetails;
+import com.famstack.projectscheduler.employees.bean.UserUtilizationWeekWiseDetails;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -1165,7 +1167,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 			boolean addSameTaskActTime, Integer userId, String userGroupId)
     {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("startDate", startDate);
+        dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0));
         dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
 
         List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
@@ -1996,7 +1998,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 				try {
 					if (autoReportingItem.getEnabled()) {
 						
-						sendAutoReportingNotification(autoReportingItem);
+						sendAutoReportingNotification(autoReportingItem, false);
 					}
 					autoReportingItem
 							.setLastRun(autoReportingItem.getNextRun());
@@ -2039,7 +2041,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 	}
 
 	public void sendAutoReportingNotification(
-			AutoReportingItem autoReportingItem) {
+			AutoReportingItem autoReportingItem, boolean forceTrigger) {
 		List<String> toList = autoReportingItem
 				.getToList() != null ? Arrays.asList(autoReportingItem
 				.getToList().split(",")) : new ArrayList<String>();
@@ -2061,11 +2063,11 @@ public class FamstackProjectManager extends BaseFamstackManager
 		int startDays = autoReportingItem.getLastHowManyDays();
 		
 		sendAutoReportEmail(toList, ccList, exludeMailList, userGroupId,
-				reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject(), autoReportingItem.getNotifyDefaulters());
+				reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject(), autoReportingItem.getNotifyDefaulters(), forceTrigger);
 	}
 
 	public void sendAutoReportEmail(List<String> toList, List<String> ccList, List<String> excludeMailList,
-			String userGroupId, ReportType reportType, int lastHowManyDays, int startDays, String subject, Boolean notifyDefaulters) {
+			String userGroupId, ReportType reportType, int lastHowManyDays, int startDays, String subject, Boolean notifyDefaulters, boolean forceTrigger) {
 		Date startDate = DateUtils.getNextPreviousDate(
 				DateTimePeriod.DAY_START, new Date(), startDays);
 		
@@ -2160,8 +2162,80 @@ public class FamstackProjectManager extends BaseFamstackManager
 			}
 			}
 		} else if (reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY) {
-			//TODO :
+			
+			if(DateUtils.isLastSundayOfMonthWeek() || forceTrigger){
+			
+				startDate = DateUtils.getFirstDayOfThisMonthWeek();
+				endDate = DateUtils.getLastSundayOfMonthWeek().getTime();
+				Map<String, String> weekRangeBtwTwoDates = DateUtils.getWeekRangeBetwwenTwoDates(startDate, endDate);
+				
+				notificationDataMap.put("DATE_LIST",weekRangeBtwTwoDates);
+				
+				List<String> yearMonthWeekNumberList =DateUtils.getYearMonthWeekNumberBetwwenTwoDates(startDate, endDate);
+				
+				notificationDataMap.put("WEEK_LIST",
+						yearMonthWeekNumberList);
+				
+				List<UserUtilizationWeekWiseDetails> utilizationWeekWiseDetails = getAutoReportUtilizationWeekWiseDataForEmail(
+						startDate, endDate, employeesList,
+						userGroupId, excludeMailList);
+								
+				
+				if (utilizationWeekWiseDetails != null) {
+					
+					notificationDataMap.put("UTILIZATION_DATA",
+							utilizationWeekWiseDetails);
+					famstackNotificationServiceManager.notifyAll(
+							NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY,
+							notificationDataMap, null);
+					if (notifyDefaulters){
+						List<String> emailList = !ccList.isEmpty() ?  ccList : toList;
+						notifyUserWeeklyWiseUnderUtilized(utilizationWeekWiseDetails, new HashSet<>(emailList), dateRange, userGroupDetails.getName(), subject, weekRangeBtwTwoDates, yearMonthWeekNumberList);
+					}
+				}
+			}
 		} 
+		
+	}
+
+
+	private void notifyUserWeeklyWiseUnderUtilized(
+			List<UserUtilizationWeekWiseDetails> utilizationWeekWiseDetails,
+			HashSet<String> ccEmailList, String dateRange, String name,
+			String subject, Map<String, String> weekRangeBtwTwoDates, List<String> yearMonthWeekNumberList) {
+		if (utilizationWeekWiseDetails != null) {
+			Set<String> emailIds = new HashSet<>();
+			List<UserUtilizationWeekWiseDetails> finalUtilizationData = new ArrayList<>();
+			for (UserUtilizationWeekWiseDetails userUtilizationWeekWiseDetails :utilizationWeekWiseDetails) {
+				if(userUtilizationWeekWiseDetails.isNotifyUsers()) {
+						emailIds.add(userUtilizationWeekWiseDetails.getEmailId());
+						finalUtilizationData.add(userUtilizationWeekWiseDetails);
+				}
+			}
+			
+			if (!finalUtilizationData.isEmpty()) {
+				try{
+					Map<String, Object> notificationDataMap = new HashMap<>();
+					notificationDataMap.put("DATE_LIST",
+							weekRangeBtwTwoDates);
+					
+					notificationDataMap.put("WEEK_LIST",
+							yearMonthWeekNumberList);
+					notificationDataMap.put("REPORT_DATE", dateRange);
+					notificationDataMap.put("TO_LIST", emailIds);
+					notificationDataMap.put("CC_LIST", ccEmailList);
+					notificationDataMap.put("subject", subject);
+					notificationDataMap.put("UTILIZATION_DATA", finalUtilizationData);
+					
+					famstackNotificationServiceManager.notifyAll(
+							NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER,
+							notificationDataMap, null);
+				} catch (Exception e){
+					logError("Unable to notify in active user " + emailIds);
+				}
+			}
+			
+		}
 		
 	}
 
@@ -2313,7 +2387,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 					for (String type : utilizationTypeMap.keySet()) {
 						if ("billable".equalsIgnoreCase(type)) {
 							userUtilizationDetails
-									.setBillableHours(utilizationTypeMap
+									.setBillableMins(utilizationTypeMap
 											.get(type));
 						} else if ("leaveOrHoliday".equalsIgnoreCase(type)) {
 							userUtilizationDetails
@@ -2321,7 +2395,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 											.get(type));
 						} else if ("nonBillabile".equalsIgnoreCase(type)) {
 							userUtilizationDetails
-									.setNonBillableHours(utilizationTypeMap
+									.setNonBillableMins(utilizationTypeMap
 											.get(type));
 						}
 					}
@@ -2342,7 +2416,136 @@ public class FamstackProjectManager extends BaseFamstackManager
 		return null;
 	}
 
+	
+
+	private List<UserUtilizationWeekWiseDetails> getAutoReportUtilizationWeekWiseDataForEmail(
+			Date startDate, Date endDate, List<EmployeeDetails> employeesList,
+			String userGroupId, List<String> excludeMailList) {
+		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+		List<UserUtilizationWeekWiseDetails> userUtilizationList = new ArrayList<>();
+		List<UserUtilizationWeekWiseDetails> underOrOverUtilizedList = new ArrayList<>();
+		
+		if (startDate != null && endDate != null) {
+		projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(
+					startDate, endDate, false, true, null, userGroupId));
+	    projectTaskAssigneeDataList.addAll(famstackUserActivityManager
+		    .getAllNonBillableTaskActivities(startDate, endDate, false,
+							true, null, userGroupId));
+			FamstackUtils.sortProjectTaskAssigneeDataList(
+					projectTaskAssigneeDataList,
+					getFamstackApplicationConfiguration().getAllUsersMap());
+			
+			Map<Integer, Map<String,  Map<String, Integer>>> userDateWeekHoursMap = new HashMap<>();
+			//user -> weekId -> taskType -> hour
+			if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
+				for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
+
+					int userId = projectDetails.getUserId();
+					
+					Map<String,  Map<String, Integer>> weekTypeHoursMap = userDateWeekHoursMap
+							.get(userId);
+					if (weekTypeHoursMap == null) {
+						weekTypeHoursMap = new HashMap<>();
+						userDateWeekHoursMap.put(userId, weekTypeHoursMap);
+					}
+					
+					String yearMonthWeekNumber = DateUtils.getYearMonthWeekNumber(projectDetails.getTaskActivityStartTime());
+					
+					 Map<String, Integer> taskTypeHours = weekTypeHoursMap.get(yearMonthWeekNumber);
+					 
+					 if (taskTypeHours == null) {
+						 taskTypeHours = new HashMap<>();
+						 weekTypeHoursMap.put(yearMonthWeekNumber, taskTypeHours);
+					 }
+					 
+					 getUserUtilization(taskTypeHours,projectDetails);
+				}
+				for (EmployeeDetails employeeDetails : employeesList) {
+					
+					if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
+						continue;
+					}
+					List<String> yearMonthWeekNumberList = DateUtils.getYearMonthWeekNumberBetwwenTwoDates(startDate, endDate);
+					
+					UserUtilizationWeekWiseDetails userUtilizationWeekWiseDetails = new UserUtilizationWeekWiseDetails();
+					userUtilizationWeekWiseDetails.createUtilizationMap(yearMonthWeekNumberList, 5);
+					
+					int reportingMangerId = employeeDetails.getReportingManger();
+					try{
+						EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
+						if (reportingEmployeeDetail != null) {
+							userUtilizationWeekWiseDetails.setReportingManager(reportingEmployeeDetail.getFirstName());
+						}
+					}catch(Exception e){
+					}
+					
+					userUtilizationWeekWiseDetails.setEmployeeName(employeeDetails
+							.getFirstName());
+					userUtilizationWeekWiseDetails.setEmailId(employeeDetails.getEmail())
+					;
+					Map<String, Map<String, Integer>> utilizationWeekTypeMap = userDateWeekHoursMap
+							.get(employeeDetails.getId());
+					
+					if (utilizationWeekTypeMap != null) {
+						for(String weekDate : yearMonthWeekNumberList) {
+							Map<String, Integer> utilizationTypeMap = utilizationWeekTypeMap.get(weekDate);
+							if (utilizationTypeMap != null) {
+								UserUtilization userUtilization =userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekDate);
+
+								if (utilizationTypeMap != null) {
+									for (String type : utilizationTypeMap.keySet()) {
+										if ("billable".equalsIgnoreCase(type)) {
+											userUtilization
+													.setBillableMins(utilizationTypeMap
+															.get(type));
+										} else if ("leaveOrHoliday".equalsIgnoreCase(type)) {
+											userUtilization
+													.setLeaveOrHoliday(utilizationTypeMap
+															.get(type));
+										} else if ("nonBillabile".equalsIgnoreCase(type)) {
+											userUtilization
+													.setNonBillableMins(utilizationTypeMap
+															.get(type));
+										}
+									}
+								}
+							}
+						}
+					}
+
+					if (userUtilizationWeekWiseDetails.isUnderOrOverUtilized()) {
+						underOrOverUtilizedList.add(userUtilizationWeekWiseDetails);
+					} else {
+						userUtilizationList.add(userUtilizationWeekWiseDetails);
+					}
+				}
+				underOrOverUtilizedList.addAll(userUtilizationList);
+				//underOrOverUtilizedList.addAll(leaveOrHolidayUtilizedList);
+			}
+		}
+		return underOrOverUtilizedList;
+	}
+	
 	private void getUserUtilization(Map<String, Integer> dateStringHoursMap,
+			ProjectTaskActivityDetails subActivityDetails) {
+		String userUtilizationType = getTaskActivityType(subActivityDetails);
+
+		if (!dateStringHoursMap
+				.containsKey(userUtilizationType)) {
+			dateStringHoursMap.put(userUtilizationType,
+					subActivityDetails
+							.getTaskActivityDuration());
+		} else {
+			dateStringHoursMap
+					.put(userUtilizationType,
+							dateStringHoursMap
+									.get(userUtilizationType)
+									+ subActivityDetails
+											.getTaskActivityDuration());
+		}
+	}
+
+	private String getTaskActivityType(
 			ProjectTaskActivityDetails subActivityDetails) {
 		String userUtilizationType;
 		if (subActivityDetails.getTaskActProjType() == ProjectType.BILLABLE) {
@@ -2361,19 +2564,6 @@ public class FamstackProjectManager extends BaseFamstackManager
 				userUtilizationType = "nonBillabile";
 			}
 		}
-
-		if (!dateStringHoursMap
-				.containsKey(userUtilizationType)) {
-			dateStringHoursMap.put(userUtilizationType,
-					subActivityDetails
-							.getTaskActivityDuration());
-		} else {
-			dateStringHoursMap
-					.put(userUtilizationType,
-							dateStringHoursMap
-									.get(userUtilizationType)
-									+ subActivityDetails
-											.getTaskActivityDuration());
-		}
+		return userUtilizationType;
 	}
 }

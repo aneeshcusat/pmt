@@ -2004,7 +2004,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public void sendAutoReportEmail(Integer reportId) {
 		AutoReportingItem autoReportingItem = (AutoReportingItem)famstackDataAccessObjectManager.getItemById(reportId, AutoReportingItem.class);
 		if (autoReportingItem != null) {
-			projectManager.sendAutoReportingNotification(autoReportingItem);
+			projectManager.sendAutoReportingNotification(autoReportingItem, true);
 		}
 	}
 

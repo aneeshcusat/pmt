@@ -34,6 +34,9 @@
   			<c:if test="${autoReportingItem.type == 'USER_UTILIZATION'}">
   				User Utilization
   			</c:if>
+  			<c:if test="${autoReportingItem.type == 'WEEKWISE_USER_UTILIZATION_MONTHLY'}">
+  				Monthly Utilization
+  			</c:if>
         </td>
   		<td>${autoReportingItem.subject}</td>
   		<td>

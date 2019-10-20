@@ -3,8 +3,12 @@ package com.famstack.projectscheduler.util;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 
@@ -103,6 +107,7 @@ public final class DateUtils extends BaseFamstackService
         } else if (DateTimePeriod.DAY_START == previousTimePeriod) {
             cal.add(Calendar.DAY_OF_MONTH, nextOrPrevious);
             cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+            cal.set(Calendar.MILLISECOND, 0);
         } else if (DateTimePeriod.DAY_END == previousTimePeriod) {
             cal.add(Calendar.DAY_OF_MONTH, nextOrPrevious);
             cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
@@ -300,26 +305,75 @@ public final class DateUtils extends BaseFamstackService
 
 	
 	public static boolean isLastSundayOfMonthWeek() {
-
-		Calendar lastSundayOfMonthWeek = Calendar.getInstance();
-	    lastSundayOfMonthWeek.set( 2019, 10, 1 );
-	    lastSundayOfMonthWeek.add(Calendar.DATE, -1); 
-	    lastSundayOfMonthWeek.add( Calendar.DAY_OF_MONTH, -( lastSundayOfMonthWeek.get( Calendar.DAY_OF_WEEK ) - 1 ) );
-	   
-	    Calendar currentMonthLastDay = Calendar.getInstance();
-	    Calendar currentDay = Calendar.getInstance();
-
-	    currentMonthLastDay.add(Calendar.MONTH, 1);  
-	    currentMonthLastDay.set(Calendar.DAY_OF_MONTH, 1);  
-	    currentMonthLastDay.add(Calendar.DATE, -1);  
-
-	   if (lastSundayOfMonthWeek.get( Calendar.DAY_OF_MONTH) != currentMonthLastDay.get( Calendar.DAY_OF_MONTH)) {
-		   lastSundayOfMonthWeek.add(Calendar.WEEK_OF_MONTH,1);
-	   }
-	   
-	   return (currentDay.get(Calendar.YEAR) == lastSundayOfMonthWeek.get( Calendar.DAY_OF_MONTH) && 
+		Calendar currentDay = Calendar.getInstance();
+	    Calendar lastSundayOfMonthWeek = getLastSundayOfMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -7));
+		 
+	    return (currentDay.get(Calendar.YEAR) == lastSundayOfMonthWeek.get( Calendar.YEAR) && 
 			   currentDay.get(Calendar.MONTH) == lastSundayOfMonthWeek.get( Calendar.MONTH) && 
-			   currentDay.get(Calendar.DAY_OF_MONTH) == lastSundayOfMonthWeek.get( Calendar.DAY_OF_MONTH));
+			   currentDay.get(Calendar.DAY_OF_MONTH) == lastSundayOfMonthWeek.get(Calendar.DAY_OF_MONTH));
+	}
+
+	public static Calendar getLastSundayOfMonthWeek(Date currentDate) {
+		Calendar lastSundayOfMonthWeek = Calendar.getInstance();
+		lastSundayOfMonthWeek.setTime(currentDate);
+		
+		int numberOfTotalDays = lastSundayOfMonthWeek.getActualMaximum(Calendar.DAY_OF_MONTH);
+		lastSundayOfMonthWeek.set(Calendar.DAY_OF_MONTH, numberOfTotalDays);
+		if(lastSundayOfMonthWeek.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+			lastSundayOfMonthWeek.set(Calendar.DAY_OF_WEEK, 7);
+			lastSundayOfMonthWeek.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		return lastSundayOfMonthWeek;
 	}
 	
+	public static Calendar getLastSundayOfMonthWeek() {
+		Calendar lastSundayOfMonthWeek = Calendar.getInstance();
+		return getLastSundayOfMonthWeek(lastSundayOfMonthWeek.getTime());
+	}
+
+	public static Date getFirstDayOfThisMonthWeek() {
+		Calendar lastMondayOfMonthWeek = Calendar.getInstance();
+		//lastMondayOfMonthWeek.add(Calendar.MONTH, 2);
+		
+		lastMondayOfMonthWeek.set(Calendar.DAY_OF_MONTH, 1);
+		if(lastMondayOfMonthWeek.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+			lastMondayOfMonthWeek.add(Calendar.DAY_OF_MONTH, 2 - lastMondayOfMonthWeek.get(Calendar.DAY_OF_WEEK));
+		}
+		lastMondayOfMonthWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		return lastMondayOfMonthWeek.getTime();
+	}
+	
+	
+	public static void main(String[] args) {
+		System.out.println(getWeekRangeBetwwenTwoDates(getFirstDayOfThisMonthWeek(), getLastSundayOfMonthWeek().getTime()));
+	}
+
+	public static String getYearMonthWeekNumber(Date taskActivityStartTime) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(taskActivityStartTime);
+		
+		return "" + calendar.get(Calendar.YEAR) + calendar.get(Calendar.WEEK_OF_YEAR);
+	}
+	
+	public static List<String> getYearMonthWeekNumberBetwwenTwoDates(Date startDate, Date endDate){
+		Date tempStartDate = new Date(startDate.getTime());
+		List<String> yearMonthWeekNumber = new ArrayList<>();
+		do{
+			yearMonthWeekNumber.add(getYearMonthWeekNumber(tempStartDate));
+			tempStartDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, 7);
+		} while (tempStartDate.before(endDate));
+		
+		return yearMonthWeekNumber;
+	}
+	
+	public static Map<String, String> getWeekRangeBetwwenTwoDates(Date startDate, Date endDate){
+		Date tempStartDate = new Date(startDate.getTime());
+		Map<String, String> weekRange = new HashMap<>();
+		do{
+			weekRange.put(getYearMonthWeekNumber(tempStartDate), format(tempStartDate, DATE_FORMAT) +" - " + format(getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, 6), DATE_FORMAT));
+			tempStartDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, 7);
+		} while (tempStartDate.before(endDate));
+		
+		return weekRange;
+	}
 }

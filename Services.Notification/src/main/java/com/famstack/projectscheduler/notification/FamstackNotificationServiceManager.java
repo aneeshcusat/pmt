@@ -147,6 +147,14 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
                 notificationEmailItem = getUserUtilizationReportDefaulterData(object);
                 notificationEmailItem.setTemplates(Templates.USER_UTILIZATION_REPORT_DEFAULTER);
                 break;
+            case WEEKWISE_USER_UTILIZATION_MONTHLY:
+                notificationEmailItem = getUserUtilizationReportData(object);
+                notificationEmailItem.setTemplates(Templates.WEEKWISE_USER_UTILIZATION_MONTHLY);
+                break;    
+            case WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER:
+                notificationEmailItem = getUserUtilizationReportData(object);
+                notificationEmailItem.setTemplates(Templates.WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER);
+                break;     
             default:
                 break;
         }
@@ -221,6 +229,9 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         notificationEmailItem.setSubject((String) userUtilizationReportData.get("subject"));
         notificationEmailItem.getData().put("teamName", userUtilizationReportData.get("TEAM_NAME"));
         notificationEmailItem.getData().put("reportDate", userUtilizationReportData.get("REPORT_DATE"));
+        notificationEmailItem.getData().put("weekNumberList",
+				userUtilizationReportData.get("WEEK_LIST"));
+        
 		notificationEmailItem.getData().put("dateList",
 				userUtilizationReportData.get("DATE_LIST"));
         return notificationEmailItem;
@@ -242,7 +253,10 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
 				|| notificationType == NotificationType.USER_ACTIVITY_REPORT 
 				|| notificationType == NotificationType.USER_UTILIZATION_REPORT
 				|| notificationType == NotificationType.USER_UTILIZATION_REPORT_DEFAULTER
-				|| notificationType == NotificationType.USER_ACTIVITY_REPORT_DEFAULTER)
+				|| notificationType == NotificationType.USER_ACTIVITY_REPORT_DEFAULTER
+				|| notificationType == NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY
+				|| notificationType == NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER
+        		)
             ? true : false;
     }
 
