@@ -4,6 +4,7 @@
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <c:set var="sameDayOnlyTaskEnabled" value="${applicationScope.applicationConfiguraion.sameDayOnlyTaskEnabled}"/>
+<c:set var="taskProjectMappings" value="${applicationScope.applicationConfiguraion.taskProjectCategoryMappings}"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/projectdetails.css?v=${fsVersionNumber}"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/cron/jquery-cron.css"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
@@ -622,7 +623,10 @@
 <!-- recurring project create modal end -->
                       
 </c:if>                        
-                         
+<c:forEach var="taskProjectMap" items="${taskProjectMappings}"> 
+<input type="hidden" data-tskprj="${taskProjectMap.key}" value="${taskProjectMap.value}"/>
+</c:forEach>
+
  <%@include file="includes/footer.jsp" %>  
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
@@ -713,8 +717,15 @@ var clearTaskDetails = function(){
 	$("#projectDuration").html(${projectDetails.durationHrs});
  	$("#taskDuration").html(${projectDetails.unAssignedDuration});
 	$("#taskName").val("${projectDetails.category}");
-	$("#taskcategory").val("${projectDetails.category}");
-	$('#taskcategory').selectpicker('refresh');
+	if($("#taskcategory").length >= 0) {
+		$("#taskcategory").val("${projectDetails.category}");
+		$('#taskcategory').selectpicker('refresh');
+	}
+	if($("#taskitemcategory").length >= 0) {
+		$("#taskitemcategory").prop("selectedIndex", 0);;
+		$('#taskitemcategory').selectpicker('refresh');
+		$("#taskProjectCategory").val("");
+	}
 	$("#description").val("");
 	$("#projectTaskType").prop("selectedIndex", 0);
 	$("#priority").prop("selectedIndex", 0);
@@ -741,6 +752,20 @@ var clearTaskDetails = function(){
 $("#taskcategory").on("change",function(){
 	if($("#taskcategory").prop("selectedIndex") > 0) {
 		$("#taskName").val($(this).val());
+	}
+});
+
+$("#taskitemcategory").on("change",function(){
+	if($("#taskitemcategory").prop("selectedIndex") > 0) {
+		var taskItemCatValue = $(this).val();
+		var taskProjectCategoryInput = $('input[data-tskprj="'+taskItemCatValue+'"]');
+		if (taskProjectCategoryInput == undefined || taskProjectCategoryInput.legnth == 0 ) {
+			$("#taskProjectCategory").val("");
+		} else {
+			$("#taskProjectCategory").val(taskProjectCategoryInput.val());
+		}
+	} else {
+		$("#taskProjectCategory").val("");
 	}
 });
 
@@ -783,6 +808,12 @@ var loadTaskDetails = function(taskId){
  	$("#description").val($("#"+taskId+"description").val());
  	$("#priority").val($("#"+taskId+"priority").val());
  	$('#priority').selectpicker('refresh');
+ 	
+ 	if($("#taskitemcategory").length >= 0) {
+		$("#taskitemcategory").val($("#"+taskId+"taskitemcategory").val());
+		$('#taskitemcategory').selectpicker('refresh');
+		$("#taskProjectCategory").val($("#"+taskId+"taskProjectCategory").val());
+	}
  	
  	$("select.canRecure").val($("#"+taskId+"canRecure").val());
 	$("select.canRecure").selectpicker('refresh');

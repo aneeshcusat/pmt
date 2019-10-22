@@ -98,11 +98,14 @@ tr.clickable:hover {
 			   	 	<tr class="clickable hide">
 			   	 		<td colspan="2"><a href="#tab1" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink active"> <i class="icon-envelope"></i>Company Division</a></td>
 				   	</tr>
+				   	<tr>
+				   		<td colspan="2"><a href="#tab11" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Config</a></td>
+				   	</tr>
 				   	 <tr>
-				   		<td colspan="2"><a href="#tab2" onclick="refreshProjectCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Categories</a></td>
+				   		<td colspan="2"><a href="#tab2" onclick="refreshProjectCategory();" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Categories</a></td>
 				   	</tr>
 				   	<tr>
-				   		<td colspan="2"><a href="#tab21" onclick="refreshNewProjectCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>New Project Categories</a></td>
+				   		<td colspan="2"><a href="#tab21"  onclick="refreshTaskCategory();" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Task Categories</a></td>
 				   	</tr>
 				   	 <tr>
 				   		<td colspan="2"><a href="#tab3" onclick="refreshNonBillableCategory()" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Non-billable Categories</a></td>
@@ -116,9 +119,6 @@ tr.clickable:hover {
 				   	<tr>
 				   		<td colspan="2"><a href="#tab6" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Weekly Time Log</a></td>
 				   	</tr>
-				   	<tr>
-				   		<td colspan="2"><a href="#tab7" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Project Config</a></td>
-				   	</tr>
 				   	
 				   	 <tr class="">
 				   		<td colspan="2"><a href="#tab8" onclick="refreshAutoReportingConfig();" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Automated Reporting config</a></td>
@@ -131,7 +131,7 @@ tr.clickable:hover {
 			<div class="col-md-10" id="applicationConfigDiv"
 				style="box-shadow: 5px 5px 20px #888888; margin-top: 10px">
 				<div class="tab-content">
-					<div class='row tab-pane ' id="tab1">
+					<div class='row tab-pane' id="tab1">
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
@@ -152,7 +152,101 @@ tr.clickable:hover {
 							</tbody>
 						</table>
 					</div>
-					<div class='row tab-pane active' id="tab2">
+					<div class='row tab-pane active' id="tab11">
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Project Task Activity Delete</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="projectTaskActivitySelectId">
+										<option value="disabled">Disabled</option>
+										<option value="enabled">Enabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="projectTaskActivityDelete();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Recurring Project From, Default</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="projectRecurringByCodeSelectId">
+										<option value="disabled">Original Project</option>
+										<option value="enabled">Latest Project</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="projectRecurringByCode();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						
+					     <table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Assignee for Project Quick cloning</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="assignManForQckCloneSelectId">
+										<option value="enabled">Mandatory</option>
+										<option value="disabled">Optional</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="assignManForQckClone();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Project Task Create Restriction for Managers and below roles</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="sameDayOnlyTaskEnabledSelectId">
+										<option value="disabled">No restriction</opiton>
+										<option value="enabled">Same day only</option>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="sameDayOnlyTask();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class='row tab-pane' id="tab2">
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Project categories</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="prjectCategoryEnabled">
+										<option value="enabled">Enabled</option>
+										<option value="disabled">Disabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="prjectCategoryEnabled();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
@@ -168,9 +262,6 @@ tr.clickable:hover {
 									<%@include file="response/appConfigProjectCategories.jsp"%>
 							    </tbody>
 						</table>
-					</div>
-					
-					<div class='row tab-pane' id="tab21">
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
@@ -186,8 +277,63 @@ tr.clickable:hover {
 									<%@include file="response/appConfigNewProjectCategories.jsp"%>
 							    </tbody>
 						</table>
+						
 					</div>
-					
+						<div class='row tab-pane' id="tab21">
+						
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Task project categories</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="taskPrjectCategoryEnabled">
+										<option value="disabled">Disabled</opiton>
+										<option value="enabled">Enabled</option>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="taskPrjectCategoryEnabled();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th>Task Categories</th>
+									<th width="70px" style="text-align: center"><a
+										data-toggle="modal" data-target="#createAppModel"  onclick="setAppConfigAction('createTaskCategory();')"
+										parentid="0"><i
+											class="fa fa-plus fa-2x" aria-hidden="true"
+											style="color: #95b75d;float:right"></i></a></th>
+								</tr>
+							<thead>
+								<tbody id="taskCategoryDiv">
+									<%@include file="response/appConfigTaskCategories.jsp"%>
+							    </tbody>
+						</table>
+						
+						<table class="table table table-bordered data-table taskProjectCategoryMappingsTypeDiv">
+							<thead>
+								<tr style="font-weight: bold">
+									<th width="45%">Task Project Category Mapping</th>
+									<th></th>
+									<th width="70px" style="text-align: center">
+									<a
+										data-toggle="modal" data-target="#createAppModel" onclick="setAppConfigAction('createTaskProjectCategoryMappings();')"
+										parentid="0"><i
+											class="fa fa-plus fa-2x" aria-hidden="true"
+											style="color: #95b75d;float:right"></i></a>
+											</th>
+								</tr>
+							<thead>
+								<tbody id="taskProjectCategoryMappingsDiv">
+									<%@include file="response/appConfigTaskProjectCategoryMappings.jsp"%>
+							    </tbody>
+						</table>
+						</div>
 					<div class='row tab-pane' id="tab3">
 						<table class="table table table-bordered data-table nonBillableCategoryTypeDiv">
 							<thead>
@@ -343,83 +489,7 @@ tr.clickable:hover {
 							</tbody>
 						</table>
 					</div>
-					<div class='row tab-pane ' id="tab7">
-						<table class="table table table-bordered data-table">
-							<thead>
-								<tr style="font-weight: bold">
-									<th colspan="2">Project Task Activity Delete</th>
-								</tr>
-							<thead>
-							<tbody>
-								<tr>
-									<td>
-									<select class="form-control select" id="projectTaskActivitySelectId">
-										<option value="disabled">Disabled</option>
-										<option value="enabled">Enabled</opiton>
-									</select>
-									</td>
-									<td width="70px"><a href="#" onclick="projectTaskActivityDelete();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
-								</tr>
-							</tbody>
-						</table>
-						<table class="table table table-bordered data-table">
-							<thead>
-								<tr style="font-weight: bold">
-									<th colspan="2">Recurring Project From, Default</th>
-								</tr>
-							<thead>
-							<tbody>
-								<tr>
-									<td>
-									<select class="form-control select" id="projectRecurringByCodeSelectId">
-										<option value="disabled">Original Project</option>
-										<option value="enabled">Latest Project</opiton>
-									</select>
-									</td>
-									<td width="70px"><a href="#" onclick="projectRecurringByCode();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
-								</tr>
-							</tbody>
-						</table>
-						
-					     <table class="table table table-bordered data-table">
-							<thead>
-								<tr style="font-weight: bold">
-									<th colspan="2">Assignee for Project Quick cloning</th>
-								</tr>
-							<thead>
-							<tbody>
-								<tr>
-									<td>
-									<select class="form-control select" id="assignManForQckCloneSelectId">
-										<option value="enabled">Mandatory</option>
-										<option value="disabled">Optional</opiton>
-									</select>
-									</td>
-									<td width="70px"><a href="#" onclick="assignManForQckClone();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
-								</tr>
-							</tbody>
-						</table>
-						
-						<table class="table table table-bordered data-table">
-							<thead>
-								<tr style="font-weight: bold">
-									<th colspan="2">Project Task Create Restriction for Managers and below roles</th>
-								</tr>
-							<thead>
-							<tbody>
-								<tr>
-									<td>
-									<select class="form-control select" id="sameDayOnlyTaskEnabledSelectId">
-										<option value="disabled">No restriction</opiton>
-										<option value="enabled">Same day only</option>
-									</select>
-									</td>
-									<td width="70px"><a href="#" onclick="sameDayOnlyTask();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
-								</tr>
-							</tbody>
-						</table>
-						
-					</div>
+					
 					
 					<div class='row tab-pane' id="tab8">
 						<table class="table table table-bordered data-table">
@@ -516,11 +586,29 @@ tr.clickable:hover {
   </c:forEach>
   </c:if>
   
-     <c:set var="projectRecurringByCode" value='projectRecurringByCode${currentUserGroupId}'/>   
+  <c:set var="projectRecurringByCode" value='projectRecurringByCode${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[projectRecurringByCode] && not empty appConfigMap[projectRecurringByCode].appConfValueDetails}">
   <c:forEach var="projectRecurringByCodeConf" items="${appConfigMap[projectRecurringByCode].appConfValueDetails}">
   	 <script type="text/javascript">
   	 	$("#projectRecurringByCodeSelectId").val('${projectRecurringByCodeConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
+   <c:set var="prjectCategoryEnabled" value='prjectCategoryEnabled${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[prjectCategoryEnabled] && not empty appConfigMap[prjectCategoryEnabled].appConfValueDetails}">
+  <c:forEach var="prjectCategoryEnabledConf" items="${appConfigMap[prjectCategoryEnabled].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#prjectCategoryEnabled").val('${prjectCategoryEnabledConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
+   <c:set var="taskPrjectCategoryEnabled" value='taskPrjectCategoryEnabled${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[taskPrjectCategoryEnabled] && not empty appConfigMap[taskPrjectCategoryEnabled].appConfValueDetails}">
+  <c:forEach var="taskPrjectCategoryEnabledConf" items="${appConfigMap[taskPrjectCategoryEnabled].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#taskPrjectCategoryEnabled").val('${taskPrjectCategoryEnabledConf.value}');
   	 </script>
   </c:forEach>
   </c:if>
@@ -588,6 +676,7 @@ tr.clickable:hover {
  
  function setAppConfigAction(callbackFunctionName){
 	 $("#createOrUpdateId").attr("onclick",callbackFunctionName);
+	 $("#firstInputId").val("");
  }
  
  function createProjectCategory(){
@@ -597,6 +686,10 @@ tr.clickable:hover {
  function createNewProjectCategory(){
 	 createApplicationConfig('newProjectCategory');
  }
+ 
+ function createTaskCategory(){
+	 createApplicationConfig('taskCategory');
+ }
 
  function createNonBillableCategory(){
 	 createApplicationConfig('nonBillableCategory');
@@ -604,6 +697,10 @@ tr.clickable:hover {
  
  function createStaticNonBillableCategory(){
 	 createApplicationConfig('staticNonBillableCategory');
+ }
+
+ function createTaskProjectCategoryMappings(){
+	 createApplicationConfig('taskProjectCategoryMappings');
  }
  
  function deleteApplicationConfigVal(name, id, type){
@@ -618,7 +715,7 @@ tr.clickable:hover {
 	 var dataString = {input1: input1, input2: input1,type: type};
 	 doAjaxRequest("POST", "${applicationHome}/createAppConfValue", dataString ,function(data) {
 		 refreshProjectCategory();
-		 refreshNewProjectCategory();
+		 refreshTaskCategory();
 		 refreshNonBillableCategory();
 		 $('#createAppModel').modal('hide');
 	    },function(error) {
@@ -738,6 +835,26 @@ tr.clickable:hover {
 	    });
  }
  
+ function prjectCategoryEnabled(){
+	 var input1 = $("#prjectCategoryEnabled").val();
+	 var type = "prjectCategoryEnabled";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
+ function taskPrjectCategoryEnabled(){
+	 var input1 = $("#taskPrjectCategoryEnabled").val();
+	 var type = "taskPrjectCategoryEnabled";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
  
  function doAjaxDeleteAppConfigVal(id) {
 	 var dataString = {"id" : id};
@@ -746,7 +863,7 @@ tr.clickable:hover {
          var responseJson = JSON.parse(data);
          if (responseJson.status){
         	 refreshProjectCategory();
-        	 refreshNewProjectCategory();
+        	 refreshTaskCategory();
         	 refreshNonBillableCategory();
          }
          $(".message-box").removeClass("open");
@@ -761,11 +878,23 @@ tr.clickable:hover {
 	    }, function(e) {
 	        famstacklog("ERROR: ", e);
 	    }, false);
- }
- 
- function refreshNewProjectCategory(){
+	 
 	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfigNewProjectCategories", {}, function(data) {
 	        $("#newProjectCategoryDiv").html(data);
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	    }, false);
+ }
+ 
+ function refreshTaskCategory(){
+	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfigTaskCategories", {}, function(data) {
+	        $("#taskCategoryDiv").html(data);
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	    }, false);
+	 
+	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfigTaskProjectCategoryMappings", {}, function(data) {
+	        $("#taskProjectCategoryMappingsDiv").html(data);
 	    }, function(e) {
 	        famstacklog("ERROR: ", e);
 	    }, false);

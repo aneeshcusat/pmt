@@ -1,6 +1,7 @@
 <%@page import="com.fasterxml.jackson.annotation.JsonInclude.Include"%>
 <%@include file="includes/header.jsp"%>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
+<c:set var="prjectCategoryEnabled" value="${applicationScope.applicationConfiguraion.prjectCategoryEnabled}"/>
 
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
@@ -364,20 +365,28 @@ var jvalidate = $("#createProjectFormId").validate({
 	code: {
 	   	 required: true
 	},
+	PONumber: {
+	   	 required: true
+	},
 	startTime: {
 	   	 required: true
 	},
 	completionTime: {
 	   	 required: true
-	},
+	}
+	
+	<c:if test="${prjectCategoryEnabled}">
+	,
 	category: {
 	   	 required: true
 	}
-   <c:if test="${currentUserGroupId != 1018}">
 	,
 	newCategory: {
 	   	 required: true
-	},
+	}
+	</c:if>
+	<c:if test="${currentUserGroupId != 1018}">
+	,
 	sowLineItem: {
 	   	 required: true
 	}
@@ -394,7 +403,7 @@ var clearProjectFormForCreate = function(projectId) {
 	$("#projectActionButton span").html("Save");
 	clearCreateProjectForm();
 	$("#projectcode").val("PRJ" + Math.floor(Date.now() / 1000));
-	$("#PONumber").val("PO" + Math.floor(Date.now() / 1000));
+	//$("#PONumber").val("PO" + Math.floor(Date.now() / 1000));
 	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
 	$('#estCompleteTime').val(getTodayDate(new Date()) + " 18:00");
 	

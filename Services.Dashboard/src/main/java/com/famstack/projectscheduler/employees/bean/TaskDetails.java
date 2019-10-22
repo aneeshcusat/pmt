@@ -63,6 +63,10 @@ public class TaskDetails
     private int actualTimeTaken;
 
     private int taskRemainingTime;
+    
+    private String projectCategory;
+
+    private String taskCategory;
 
     public int getTaskId()
     {
@@ -437,4 +441,20 @@ public class TaskDetails
     {
         this.canRecure = canRecure;
     }
+
+	public String getProjectCategory() {
+		return projectCategory;
+	}
+
+	public void setProjectCategory(String projectCategory) {
+		this.projectCategory = projectCategory;
+	}
+
+	public String getTaskCategory() {
+		return taskCategory;
+	}
+
+	public void setTaskCategory(String taskCategory) {
+		this.taskCategory = taskCategory;
+	}
 }

@@ -103,6 +103,12 @@ public class TaskItem implements FamstackBaseItem
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TaskStatus status;
+    
+    @Column(name = "prj_category")
+    private String projectCategory;
+
+    @Column(name = "task_category")
+    private String taskCategory;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
@@ -332,5 +338,21 @@ public class TaskItem implements FamstackBaseItem
     {
         this.canRecure = canRecure;
     }
+
+	public String getProjectCategory() {
+		return projectCategory;
+	}
+
+	public void setProjectCategory(String projectCategory) {
+		this.projectCategory = projectCategory;
+	}
+
+	public String getTaskCategory() {
+		return taskCategory;
+	}
+
+	public void setTaskCategory(String taskCategory) {
+		this.taskCategory = taskCategory;
+	}
 
 }

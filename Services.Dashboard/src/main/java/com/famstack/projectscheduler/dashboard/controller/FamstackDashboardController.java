@@ -423,6 +423,18 @@ public class FamstackDashboardController extends BaseFamstackService
     {
         return new ModelAndView("response/appConfigStaticNonBillableCategories");
     }
+    
+    @RequestMapping("/appConfigTaskCategories")
+    public ModelAndView appConfigTaskCategories(Model model)
+    {
+        return new ModelAndView("response/appConfigTaskCategories");
+    }
+    
+    @RequestMapping("/appConfigTaskProjectCategoryMappings")
+    public ModelAndView appConfigTaskProjectCategoryMappings(Model model)
+    {
+        return new ModelAndView("response/appConfigTaskProjectCategoryMappings");
+    }
 
     @RequestMapping(value = "/triggerEmail", method = RequestMethod.GET)
     @ResponseBody

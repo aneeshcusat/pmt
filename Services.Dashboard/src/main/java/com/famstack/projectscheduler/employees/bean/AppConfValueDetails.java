@@ -89,4 +89,19 @@ public class AppConfValueDetails
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public String getCatTaskValue(){
+    	String[] taskProjectMapping = name.split("=");
+		if (taskProjectMapping.length > 1) {
+			return taskProjectMapping[0];
+		}
+		return "";
+    }
+    
+    public String getCatProjectValue(){
+    	String[] taskProjectMapping = name.split("=");
+		if (taskProjectMapping.length > 1) {
+			return taskProjectMapping[1];
+		}
+		return "";
+    }
 }

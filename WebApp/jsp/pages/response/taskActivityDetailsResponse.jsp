@@ -36,6 +36,10 @@
 <c:set var="helpersNames" value="" />
 <input id="${taskDetails.taskId}helperNames" type="hidden"
 	value="${taskDetails.helperNames}" />
+<input id="${taskDetails.taskId}taskitemcategory" type="hidden"
+	value="${taskDetails.taskCategory}" />
+<input id="${taskDetails.taskId}taskProjectCategory" type="hidden"
+	value="${taskDetails.projectCategory}" />
 
 <div id="taskDetailsContent${taskDetails.taskId}" class="hide">
  		<ul href="#" class="list-group-item">  

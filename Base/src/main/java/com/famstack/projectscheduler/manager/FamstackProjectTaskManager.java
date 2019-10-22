@@ -202,6 +202,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         taskItem.setCanRecure(taskDetails.getCanRecure());
         taskItem.setPriority(taskDetails.getPriority());
         taskItem.setProjectTaskType(taskDetails.getProjectTaskType());
+        taskItem.setProjectCategory(taskDetails.getProjectCategory());
+        taskItem.setTaskCategory(taskDetails.getTaskCategory());
+        
         if(taskItem.getStatus() != TaskStatus.COMPLETED && taskItem.getStatus() !=  TaskStatus.INPROGRESS && taskItem.getStatus() != TaskStatus.CLOSED ) {
 	        taskItem.setProjectItem(projectItem);
 	        taskItem.setUserGroupId(projectItem.getUserGroupId());
@@ -413,6 +416,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setCompletionTime(completionDateString);
             taskDetails.setStatus(taskItem.getStatus());
             taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
+            taskDetails.setProjectCategory(taskItem.getProjectCategory());
+            taskDetails.setTaskCategory(taskItem.getTaskCategory());
             if (isFullLoad) {
                 taskDetails.setTaskActivityDetails(famstackUserActivityManager
                     .getUserTaskActivityDetailsByTaskId(taskItem.getTaskId()));

@@ -469,8 +469,32 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	public List<AppConfValueDetails> getNonBillableCategories() {
 		return getCategories("nonBillableCategory");
 	}
+	
+	public List<AppConfValueDetails> getTaskCategories() {
+		return getCategories("taskCategory");
+	}
+	
 	public List<AppConfValueDetails> getStaticNonBillableCategories() {
 		return getAppConfigValues("staticNonBillableCategory", "99999");
+	}
+	
+	public List<AppConfValueDetails> getTaskProjectCategories() {
+		return getCategories("taskProjectCategoryMappings");
+	}
+	
+	public Map<String, String> getTaskProjectCategoryMappings() {
+		List<String> taskProjectCategoryList = getGlobalAppConfigList("taskProjectCategoryMappings",  getCurrentUserGroupId());
+		Map<String, String> catMapping = new HashMap<>();
+		if(taskProjectCategoryList != null) {
+			for (String taskProjectMapString : taskProjectCategoryList) {
+				String[] taskProjectMapping = taskProjectMapString.split("=");
+				if (taskProjectMapping.length > 1) {
+					catMapping.put(taskProjectMapping[0], taskProjectMapping[1]);
+				}
+			}
+		}
+		
+		return catMapping;
 	}
 	
 	public List<AppConfValueDetails> getCategories(String type) {
@@ -625,6 +649,26 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean isTaskPrjectCategoryEnabled() {
+		String value = getSingleValueAppConfig("taskPrjectCategoryEnabled",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isPrjectCategoryEnabled() {
+		String value = getSingleValueAppConfig("prjectCategoryEnabled",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+
+		if (value != null && "disabled".equalsIgnoreCase(value)) {
+			return false;
+		}
+		return true;
 	}
 	
 	public boolean isRecurringOriginal() {

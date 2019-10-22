@@ -5,6 +5,7 @@
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="projectCategories" value="${applicationScope.applicationConfiguraion.projectCategories}"/>
 <c:set var="newProjectCategories" value="${applicationScope.applicationConfiguraion.newProjectCategories}"/>
+<c:set var="prjectCategoryEnabled" value="${applicationScope.applicationConfiguraion.prjectCategoryEnabled}"/>
 <style>
 
 </style>
@@ -25,7 +26,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Summary</label>
                                 <div class="col-md-9 col-xs-12">                                            
-                                    <form:textarea class="form-control" rows="5" path="description" id="summary"></form:textarea>
+                                    <form:textarea class="form-control" rows="2" path="description" id="summary"></form:textarea>
                                 </div>
                             </div>
                          <div class="form-group">
@@ -193,7 +194,7 @@
                                         <form:input  type="text" class="autocomplete form-control"  id="PONumber" path="PONumber"/>
                                 </div>
                             </div>
-                            
+                            <c:if test="${prjectCategoryEnabled}">
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">Project Category</label>
                                  <div class="col-md-9">  
@@ -219,7 +220,7 @@
                                 </div>
                                 
                             </div>
-                            <c:if test="${currentUserGroupId != 1018}">
+                            
                              <div class="form-group">                                        
                                 <label class="col-md-3 control-label">New Project Category</label>
                                  <div class="col-md-9">  
@@ -241,7 +242,8 @@
                                 </div>
                                 
                             </div>
-                            
+                            </c:if>
+                            <c:if test="${currentUserGroupId != 1018}">
                             <div class="form-group">
 							<label class="col-md-3 control-label">SOW line item</label>
 							<div class="col-md-9">
@@ -249,7 +251,7 @@
 							</div>
 							</div>
 							</c:if>
-                            <div class="form-group">
+                            <div class="form-group hide">
 							<label class="col-md-3 control-label">Quantity</label>
 							<div class="col-md-9">
 								 <form:input type="text" class="form-control" id="quantity" path="quantity"/>

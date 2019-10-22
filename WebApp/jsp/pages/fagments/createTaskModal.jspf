@@ -3,7 +3,8 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="projectCategories" value="${applicationScope.applicationConfiguraion.projectCategories}"/>
-<c:set var="newProjectCategories" value="${applicationScope.applicationConfiguraion.newProjectCategories}"/>
+<c:set var="taskPrjectCategoryEnabled" value="${applicationScope.applicationConfiguraion.taskPrjectCategoryEnabled}"/>
+<c:set var="taskCategories" value="${applicationScope.applicationConfiguraion.taskCategories}"/>
 <div class="row">
 <form:input type="hidden" id="projectId" path="projectId" value="${projectDetails.id}"/>
 <form:input type="hidden" id="taskId" path="taskId"/>
@@ -40,21 +41,15 @@
                      <b id="taskDuration">1</b> Hrs
                      </div>
 				</div>
-				
-				<div class="form-group">                                        
-                         <label class="col-md-2 control-label hide">Project Category</label>
+				 <c:if test="${taskPrjectCategoryEnabled}">
+					<div class="form-group">                                        
+                         <label class="col-md-2 control-label ">Project Category</label>
                           <div class="col-md-9">  
-                             <select class="form-control select hide" id="newCategory" path="newCategory"  data-live-search="true">
-                                 <c:if test="${not empty newProjectCategories }">
-                                 <c:forEach var="projectCategoryConf" items="${newProjectCategories}">
-                                  <option value="${projectCategoryConf.value}">${projectCategoryConf.name}</option>
-                                 </c:forEach>
-                                 </c:if>
-                             </select>
+                            <form:input type="text" readonly="true" class="form-control" id="taskProjectCategory" path="projectCategory" style="color: #333;background-color: #fff;"/> 
                          </div>
                          
                      </div>
-				
+					</c:if>
 				
 				<div class="form-group">
 				<label class="col-md-2 control-label"></label>
@@ -109,6 +104,22 @@
                           </form:select>
                      </div>
 				</div>
+				 <c:if test="${taskPrjectCategoryEnabled}">
+				 <div class="form-group">                                        
+                    <label class="col-md-2 control-label">Task Category</label>
+                     <div class="col-md-10">  
+                        <form:select class="form-control select" id="taskitemcategory" data-live-search="true" path="taskCategory">
+                            <option value="">- select -</option>
+                            <c:if test="${not empty taskCategories }">
+                            <c:forEach var="taskCategoryConf" items="${taskCategories}">
+                             <option value="${taskCategoryConf.value}">${taskCategoryConf.name}</option>
+                            </c:forEach>
+                            </c:if>
+                        </form:select>
+                    </div>
+                </div>
+				</c:if>
+				 <c:if test="${not taskPrjectCategoryEnabled}">
 				<div class="form-group">                                        
                     <label class="col-md-2 control-label">Task Category</label>
                      <div class="col-md-10">  
@@ -134,7 +145,7 @@
                         <span class="help-block">Task category change will modify task name</span>
                     </div>
                 </div>
-				
+				</c:if>
 				<div class="form-group">
 				<label class="col-md-2 control-label assigneeSelectId">Assignee</label>
                      <div class="col-md-4 assigneeSelectId">
