@@ -18,6 +18,34 @@
    		<property name="tracopusConfigEnabled" value="${famstack.tracopusConfigEnabled}"/>
    		<property name="fsVersionNumber" value="${famstack.fsVersionNumber}"/>
    		<property name="staticReportEnabled" value="${famstack.staticReportEnabled}"/>
+   		
+   		<property name="designationMap">
+        <map>
+            <entry key="VicePresident" value="220"/>
+			<entry key="AssociateVicePresident" value="200"/>
+			<entry key="SeniorDirector" value="190"/>
+			<entry key="Director" value="180"/>
+			<entry key="SeniorManager" value="170"/>
+			<entry key="Manager" value="160"/>
+			<entry key="AssociateManager" value="150"/>
+			<entry key="PrincipalDataScientist" value="140"/>
+			<entry key="SeniorProjectExecutive" value="130"/>
+			<entry key="SeniorExecutive" value="120"/>
+			<entry key="Consultant" value="110"/>
+			<entry key="SeniorDataScientist" value="100"/>
+			<entry key="DataScientist" value="90"/>
+			<entry key="AssociateDataScientist" value="80"/>
+			<entry key="AssociateDataScientist" value="70"/>
+			<entry key="VisualizationSpecialist" value="60"/>
+			<entry key="SeniorAnalyst" value="50"/>
+			<entry key="Analyst" value="40"/>
+			<entry key="JuniorAnalyst" value="30"/>
+			<entry key="TraineeAnalyst" value="20"/>
+			<entry key="Trainee" value="10"/>
+
+        </map>
+    </property>
+    
    </bean>
    
    <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">

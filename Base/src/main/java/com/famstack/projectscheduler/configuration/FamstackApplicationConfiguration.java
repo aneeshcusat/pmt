@@ -73,6 +73,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	private static Map<String, Integer> userIdMap = new HashMap<>();
 
 	private final Map<String, String> configSettings = new HashMap<>();
+	
+	private Map<String, Integer> designationMap;
 
 	public void forceInitialize() {
 		appConfigMap.clear();
@@ -184,7 +186,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		return userList;
 	}
 
-	public List<EmployeeDetails> getUserList() {
+	public List<EmployeeDetails> getUserAllList() {
 		List<EmployeeDetails> userList = new ArrayList<>();
 		if (userMap != null) {
 			for (Integer userId : userMap.keySet()) {
@@ -196,6 +198,39 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 			}
 		}
 		sortUserList(userList);
+		return userList;
+	}
+	
+	public List<EmployeeDetails> getUserList() {
+		if(isRestrictionBasedOnDesignation()) {
+			return getFilterdByDesignationUserList();
+		}
+		return getUserAllList();
+	}
+	
+	public List<EmployeeDetails> getFilterdByDesignationUserList() {
+		List<EmployeeDetails> userList = getUserAllList();
+		List<EmployeeDetails> userFilterdList = new ArrayList<>();
+		UserItem currentUser = getCurrentUser();
+		
+		if (currentUser != null && userList != null) {
+			String designation = currentUser.getDesignation();
+			if (StringUtils.isNotBlank(designation)) {
+				Integer currentUserDesignationNumber = designationMap.get(designation);
+				
+				for (EmployeeDetails employeeDetails : userList) {
+					String employDesignation = employeeDetails.getDesignation();
+					Integer employeeDesignationNumber = designationMap.get(employDesignation);
+					
+					if (currentUserDesignationNumber != null && employeeDesignationNumber != null && currentUserDesignationNumber >= employeeDesignationNumber) {
+						userFilterdList.add(employeeDetails);
+					}
+				}
+				
+				return userFilterdList;
+			}
+		}
+		
 		return userList;
 	}
 
@@ -640,6 +675,15 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		return false;
 	}
 
+	public boolean isRestrictionBasedOnDesignation() {
+		String value = getSingleValueAppConfig("restrictionBasedOnDesignation",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	public boolean isStaticNonBillableEnabled() {
 		String value = getSingleValueAppConfig("staticNonBillableCategoryEnabled",
@@ -715,6 +759,14 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		}
 
 		return userActivityEnabledGroupIds;
+	}
+
+	public Map<String, Integer> getDesignationMap() {
+		return designationMap;
+	}
+
+	public void setDesignationMap(Map<String, Integer> designationMap) {
+		this.designationMap = designationMap;
 	}
 
 }

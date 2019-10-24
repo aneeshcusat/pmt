@@ -79,7 +79,6 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
                    
                     if ("Sunday".equalsIgnoreCase(dayString)) {
                     	dayList.add("Week " + DateUtils.getWeekNumber(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, startDate, -1)));
-                    	System.out.println(startDate);
                     	dateList.add("SKIP");
                     	isLastWeekNumber= true;
                     } else {

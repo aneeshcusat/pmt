@@ -1,6 +1,7 @@
 package com.famstack.projectscheduler.manager;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,10 +51,12 @@ public class FamstackStaticXLSImportManager extends BaseFamstackManager
     	newDateRangeList.add(famstackDateRange);
     	 String insertLocation = "F";
     	logInfo("Static report import started : " +  sheetName);
+    	
         try {
         	File file = new File(fullPath);
         	if (file.exists()) {
-	            Workbook workbook =  WorkbookFactory.create(new File(fullPath));
+        		FileInputStream fileInputStream = new FileInputStream(file);
+	            Workbook workbook =  WorkbookFactory.create(fileInputStream);
 	            Sheet sheet = workbook.getSheetAt(0);
 
 	            Row dateRangeRow = getRow(sheet, 1);
@@ -212,6 +215,7 @@ public class FamstackStaticXLSImportManager extends BaseFamstackManager
 		            }
 	            }
 	            workbook.close();
+	            fileInputStream.close();
         	}
         } catch (IOException | EncryptedDocumentException | InvalidFormatException ex) {
             ex.printStackTrace();
@@ -270,7 +274,6 @@ public class FamstackStaticXLSImportManager extends BaseFamstackManager
     			}
     		}
     	} catch(Exception e) {
-    		System.out.println(sheetRow.getRowNum() + "  " + cellNumber);
     		logError(e.getMessage());
     	}
 		return null;

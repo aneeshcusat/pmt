@@ -90,6 +90,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	@Resource
 	FamstackAccountManager famstackAccountManager;
+	
+	@Resource
+	FamstackDataFilterManager famstackDataFilterManager;
 
 	@Resource
 	FamstackProjectCommentManager projectCommentManager;
@@ -379,13 +382,17 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return projectManager.getUserTaskActivityJson(userId, dayfilter);
 	}
 
-	@Deprecated
 	public Map getUserTaskActivity(Integer userId, String monthFilter) {
 		List<TaskActivityDetails> taskActivities = projectManager
 				.getUserTaskActivity(userId, monthFilter);
+		
+		if (getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
+			taskActivities = famstackDataFilterManager.filterTaskActivityDetails(taskActivities);
+		}
+		
 		Map<String, List<TaskActivityDetails>> taskActivitiesMap = new HashMap<>();
 
-		if (taskActivities != null) {
+		if (taskActivities != null && taskActivities.size() > 0) {
 			taskActivitiesMap
 					.put("TODAY", new ArrayList<TaskActivityDetails>());
 			taskActivitiesMap.put("UPCOMING",
@@ -737,6 +744,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			Date endDate) {
 		List<ProjectDetails> projectDetailsList = projectManager
 				.getAllProjectDetailsList(startDate, endDate);
+		
 		return projectDetailsList;
 	}
 
@@ -821,7 +829,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				.dashboardAllUtilization(startDate, endDate, userGroupId,
 						accountId, teamId, subTeamId, userId,
 						isResouceUtilization, isTotalUtilization);
-		System.out.println(dashboardAllutilizationList);
 		for (DashboardUtilizationDetails dashboardOverAllutilization : dashboardAllutilizationList) {
 			if (StringUtils.isNotBlank(teamId)
 					&& !StringUtils.isNotBlank(subTeamId)) {
@@ -835,7 +842,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 						.add(dashboardOverAllutilization);
 			}
 		}
-		System.out.println("Filtered DAUList : " + dashboardAllutilizationList);
 		return dashboardFilterdutilizationList;
 	}
 
@@ -1088,6 +1094,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 					startDate, endDate, uniqueTaskUser, addSameTaskActTime,
 					userId);
 		}
+		
+		if(getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
+			projectDetailsList = famstackDataFilterManager.filterProjectTaskActivityDetails(projectDetailsList);
+		}
 		return projectDetailsList;
 	}
 
@@ -1112,9 +1122,13 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(
 			Date startDate, Date endDate, boolean uniqueList,
 			Integer currentUserId) {
-		return famstackUserActivityManager.getAllNonBillableTaskActivities(
+		List<ProjectTaskActivityDetails> projectTaskActivityDetails = famstackUserActivityManager.getAllNonBillableTaskActivities(
 				startDate, endDate, uniqueList,
 				true, currentUserId);
+		if(getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
+			projectTaskActivityDetails = famstackDataFilterManager.filterProjectTaskActivityDetails(projectTaskActivityDetails);
+		}
+		return projectTaskActivityDetails;
 	}
 
 
@@ -1776,6 +1790,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = getBillableAndNonBillaleSortedListByAssignee(
 				startDate, endDate, true, currentUserId);
+		
+		if (getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
+			projectTaskAssigneeDataList  = famstackDataFilterManager.
+					filterProjectTaskActivityDetails(projectTaskAssigneeDataList);
+		}
 		return getJsonPrjTskWeeklyTaskList(projectTaskAssigneeDataList);
 	}
 
@@ -1835,6 +1854,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 						return 0;
 					}
 				});
+		
+		if(getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
+			projectTaskAssigneeDataList = famstackDataFilterManager.filterProjectTaskActivityDetails(projectTaskAssigneeDataList);
+		}
+		
 		return projectTaskAssigneeDataList;
 
 	}

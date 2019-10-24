@@ -1231,7 +1231,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             if ( data[7] != null) {
             	projectTaskActivityDetails.setProjectType(ProjectType.valueOf((String) data[7]));
             }
-            projectTaskActivityDetails.setProjectCategory((String) data[8]);
+          
             projectTaskActivityDetails.setProjectTeamId((Integer) data[9]);
             projectTaskActivityDetails.setProjectClientId((Integer) data[10]);
 
@@ -1272,7 +1272,19 @@ public class FamstackProjectManager extends BaseFamstackManager
             
             projectTaskActivityDetails.setSowLineItem((String) data[22]);
             
-            projectTaskActivityDetails.setNewProjectCategory((String) data[23]);
+            String projectCategory = (String) data[8];
+            String newProjectCategory = (String) data[23];
+            
+            if(!StringUtils.isNotBlank(projectCategory)){
+            	projectCategory = (String) data[29];
+            }
+            
+            if(!StringUtils.isNotBlank(newProjectCategory)){
+            	newProjectCategory = (String) data[28];
+            }
+            
+            projectTaskActivityDetails.setProjectCategory(projectCategory);
+            projectTaskActivityDetails.setNewProjectCategory(newProjectCategory);
 
             projectTaskActivityDetails.setTaskCompletionComments((String) data[24]);
             
@@ -1852,6 +1864,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 		taskDetails.setStartTime(DateUtils.format(taskStartTime, DateUtils.DATE_TIME_FORMAT));
 		taskDetails.setDuration(taskItem.getDuration());
 		taskDetails.setProjectTaskType(taskItem.getProjectTaskType());
+		taskDetails.setProjectCategory(taskItem.getProjectCategory());
+		taskDetails.setTaskCategory(taskItem.getTaskCategory());
 		return taskDetails;
 	}
 

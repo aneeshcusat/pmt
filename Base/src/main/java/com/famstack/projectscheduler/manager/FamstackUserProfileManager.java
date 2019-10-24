@@ -427,7 +427,6 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeBWDetails.setDateString((String) data[2]);
             empLeaveList.add(employeeBWDetails);
         }
-        System.out.println(empLeaveList);
         return empLeaveList;
 	}
 }

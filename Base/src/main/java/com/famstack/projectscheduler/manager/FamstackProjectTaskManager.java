@@ -27,6 +27,7 @@ import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
+import com.famstack.projectscheduler.dashboard.manager.FamstackDataFilterManager;
 import com.famstack.projectscheduler.datatransferobject.ProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserActivityItem;
@@ -52,6 +53,9 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
 
     @Resource
     FamstackUserProfileManager famstackUserProfileManager;
+    
+    @Resource
+	FamstackDataFilterManager famstackDataFilterManager;
 
     @Resource
     FamstackEmailSender famstackEmailSender;
@@ -117,6 +121,8 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskItemNew.setActualTimeTaken(durationNewMinutes);
             taskItemNew.setReporter(getFamstackUserSessionConfiguration().getLoginResult().getUserItem());
             taskItemNew.setAssignee(taskDetails.getAssignee());
+            taskItemNew.setProjectCategory(taskDetails.getProjectCategory());
+            taskItemNew.setTaskCategory(taskDetails.getTaskCategory());
         } else {
             String helpers = "" + taskDetails.getAssignee();
             if (taskItemNew.getHelpers() != null) {
@@ -456,9 +462,13 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         JSONArray jsonArray = new JSONArray();
         Date startDate = DateUtils.tryParse(startDateString, DateUtils.DATE_FORMAT_CALENDER);
         Date endDate = DateUtils.tryParse(endDateString, DateUtils.DATE_FORMAT_CALENDER);
-
-        for (ProjectTaskActivityDetails projectTaskActivityDetails : getAllProjectTaskAssigneeData(startDate, endDate,
-            userId == -1 ? null : userId, userGroupId)) {
+       List<ProjectTaskActivityDetails> projectTaskActivityDetailsList = getAllProjectTaskAssigneeData(startDate, endDate,
+                userId == -1 ? null : userId, userGroupId);
+       	if (getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
+       		projectTaskActivityDetailsList = famstackDataFilterManager.filterProjectTaskActivityDetails(projectTaskActivityDetailsList);
+       	}
+       
+        for (ProjectTaskActivityDetails projectTaskActivityDetails : projectTaskActivityDetailsList) {
 
             JSONObject jsonObject = new JSONObject();
             String taskTimeString = "";

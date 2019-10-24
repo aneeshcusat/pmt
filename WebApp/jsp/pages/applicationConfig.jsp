@@ -227,6 +227,25 @@ tr.clickable:hover {
 								</tr>
 							</tbody>
 						</table>
+						
+							<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Restriction based on user designation</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="restrictionBasedOnDesignationSelectId">
+										<option value="disabled">No restriction</opiton>
+										<option value="enabled">Restricted</option>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="restrictionBasedOnDesignation();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<div class='row tab-pane' id="tab2">
 						<table class="table table table-bordered data-table">
@@ -639,7 +658,18 @@ tr.clickable:hover {
   	 </script>
   </c:forEach>
   </c:if>
-    <c:set var="weekTLDisableMonthSelectId" value='weekTLDisableMonth${currentUserGroupId}'/>   
+  
+   
+     <c:set var="restrictionBasedOnDesignationSelectId" value='restrictionBasedOnDesignation${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[restrictionBasedOnDesignationSelectId] && not empty appConfigMap[restrictionBasedOnDesignationSelectId].appConfValueDetails}">
+  <c:forEach var="restrictionBasedOnDesignationConf" items="${appConfigMap[restrictionBasedOnDesignationSelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#restrictionBasedOnDesignationSelectId").val('${restrictionBasedOnDesignationConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+
+  <c:set var="weekTLDisableMonthSelectId" value='weekTLDisableMonth${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[weekTLDisableMonthSelectId] && not empty appConfigMap[weekTLDisableMonthSelectId].appConfValueDetails}">
   <c:forEach var="weekTLDisableMonthConf" items="${appConfigMap[weekTLDisableMonthSelectId].appConfValueDetails}">
   	 <script type="text/javascript">
@@ -828,6 +858,16 @@ tr.clickable:hover {
  function sameDayOnlyTask(){
 	 var input1 = $("#sameDayOnlyTaskEnabledSelectId").val();
 	 var type = "sameDayOnlyTask";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
+ function restrictionBasedOnDesignation(){
+	 var input1 = $("#restrictionBasedOnDesignationSelectId").val();
+	 var type = "restrictionBasedOnDesignation";
 	 var dataString = {input1: input1, input2: input1,type: type};
 	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
 	    },function(error) {

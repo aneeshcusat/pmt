@@ -1046,9 +1046,6 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 			hqlQuery = HQLStrings.getString("getUserSiteActivityByDate");
 		}
 
-		System.out.println(hqlQuery);
-		System.out.println(startCalenderDate);
-		System.out.println(endCalenderDate);
 		List<UserUsageActivityItem> userUsageActivityItems = null;
 
 		userUsageActivityItems = (List<UserUsageActivityItem>) getFamstackDataAccessObjectManager()
