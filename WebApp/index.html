@@ -3,8 +3,36 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Welcome to famstack</title>
+<style>
+html, body
+{
+    height: 100%;
+    margin:0;
+    padding:0;
+}
+
+div {
+    position:relative;
+    height: 100%;
+    width:100%;
+}
+
+div img.rotate {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+}
+</style>
 </head>
 <body>
-Welcome to famstack
+<div><img class="rotate" src="/bops/jsp/image/tracopus.gif"/>
+<img alt="" src="/bops/jsp/image/favicon.ico" style="width: 25px;height: 25px;margin-top: 0;margin-right: 5px;padding-top: 0;vertical-align: unset"><span style="font-size: 35px;color: gray;font-weight: 200;opacity:.7">famstack</span>
+</div>
 </body>
+<script>
+	window.location = window.location.href + "bops/dashboard/index";
+</script>
 </html>
