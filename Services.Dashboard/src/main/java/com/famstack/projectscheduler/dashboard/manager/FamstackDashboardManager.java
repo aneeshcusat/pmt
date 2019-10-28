@@ -1553,7 +1553,14 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public List<TaskDetails> loadProjectTaskDetails(int projectId) {
-		return projectManager.getProjectTaskDetails(projectId);
+		List<TaskDetails> taskDetailsList = projectManager.getProjectTaskDetails(projectId);
+		
+		if (getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
+			if (taskDetailsList != null) {
+				//taskDetailsList = famstackDataFilterManager.filterTaskDetails(taskDetailsList);
+			}
+		}
+		return taskDetailsList;
 	}
 
 	public Date getAssigneeSlot(int assigneeId, String startDateTime,
@@ -2049,7 +2056,19 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		autoReportingItem.setLastHowManyDays(previousDate);
 		autoReportingItem.setCronExpression(cron);
 		if (autoReportingItem.getEnabled()) {
-			autoReportingItem.setNextRun(new Timestamp(FamstackUtils.getNextRunFromCron(cron, new Date()).getTime()));
+			
+			if(autoReportingItem.getType() == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY) {
+				Calendar cal = DateUtils.getLastSundayOfMonthWeek();
+				Date nextRunDate = FamstackUtils.getNextRunFromCron(cron, new Date());
+				if(cal != null) {
+					Calendar nextRunCal = Calendar.getInstance();
+					nextRunCal.setTime(nextRunDate);
+					cal.set(Calendar.HOUR, nextRunCal.get(Calendar.HOUR));
+					autoReportingItem.setNextRun(new Timestamp(cal.getTimeInMillis()));
+				}
+			} else {
+				autoReportingItem.setNextRun(new Timestamp(FamstackUtils.getNextRunFromCron(cron, new Date()).getTime()));
+			}
 		}
 		if (StringUtils.isNotBlank(subject)) {
 			autoReportingItem.setSubject(subject);

@@ -2038,6 +2038,17 @@ public class FamstackProjectManager extends BaseFamstackManager
 						nextRun = FamstackUtils.getNextRunFromCron(
 								cronExpression, autoReportingItem.getNextRun());
 					}
+					
+					if(autoReportingItem.getType() == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY) {
+						Calendar cal = DateUtils.getLastSundayOfMonthWeek();
+						Date nextRunDate = FamstackUtils.getNextRunFromCron(cronExpression, autoReportingItem.getNextRun());
+						if(cal != null) {
+							Calendar nextRunCal = Calendar.getInstance();
+							nextRunCal.setTime(nextRunDate);
+							cal.set(Calendar.HOUR, nextRunCal.get(Calendar.HOUR));
+							nextRun = cal.getTime();
+						}
+					} 
 
 					autoReportingItem.setNextRun(nextRun == null ? null
 							: new Timestamp(nextRun.getTime()));

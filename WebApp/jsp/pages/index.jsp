@@ -495,6 +495,11 @@
                <!-- END PAGE CONTENT WRAPPER -->  
 <%@include file="includes/footer.jsp" %>
 <script type="text/javascript" src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/plugins/morris/raphael-min.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/plugins/morris/morris.min.js?v=${fsVersionNumber}"></script>       
+<script type="text/javascript" src="${js}/plugins/rickshaw/d3.v3.js?v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/plugins/rickshaw/rickshaw.min.js?v=${fsVersionNumber}"></script>
+        
 <jsp:useBean id="date" class="java.util.Date"/>
 <fmt:formatDate var="timeHour" value="${date}" pattern="HH"/>
 <fmt:formatDate var="timeMinutes"  value="${date}" pattern="mm"/>
@@ -502,59 +507,7 @@
 <script>
 templatePlugins.init(${timeHour},${timeMinutes});
 
-$(function(){        
-    /* reportrange */
-	    /* Donut dashboard chart */
-	    Morris.Donut({
-	        element: 'dashboard-donut-1',
-	        data:  ${projectTypeJson},
-	        colors: ['#5cb85c',
-	                 '#f0ad4e'],
-	        resize: true
-	    });
-	    /* END Donut dashboard chart */
-	    /* Bar dashboard chart emp */
-	    Morris.Bar({
-	        element: 'dashboard-bar-emp',
-	        data: ${employeeUtilization},
-	        xkey: 'userFirstName',
-	        ykeys: ['billableHours', 'nonBillableHours'],
-	        labels: ['Billable', 'NonBillableHours'],
-	        barColors: ['#33414E', '#1caf9a'],
-	        gridTextSize: '10px',
-	        hideHover: true,
-	        resize: true,
-	        gridLineColor: '#E5E5E5'
-	    });
-    
-	    /* Bar dashboard chart emp */
-	    Morris.Bar({
-	        element: 'dashboard-bar-team',
-	        data:${teamUtilizationJson},
-	        xkey: 'name',
-	        ykeys: ['billable', 'nonBillable'],
-	        labels: ['Billable', 'NonBillable'],
-	        barColors: ['#33414E', '#1caf9a'],
-	        gridTextSize: '10px',
-	        hideHover: true,
-	        resize: true,
-	        gridLineColor: '#E5E5E5'
-	    });
-    
-	    /* Bar dashboard chart emp */
-	    Morris.Bar({
-	        element: 'dashboard-bar-work',
-	        data: ${projectCategoryJson},
-	        xkey: 'categoryName',
-	        ykeys: ['count'],
-	        labels: ['Project Type'],
-	        barColors: ['#33414E', '#1caf9a'],
-	        gridTextSize: '10px',
-	        hideHover: true,
-	        resize: true,
-	        gridLineColor: '#E5E5E5'
-	    });
-    var jvm_wm = new jvm.WorldMap({container: $('#dashboard-map-seles'),
+  var jvm_wm = new jvm.WorldMap({container: $('#dashboard-map-seles'),
         map: 'world_mill_en', 
         backgroundColor: '#FFFFFF',                                      
         regionsSelectable: true,
@@ -566,10 +519,100 @@ $(function(){
                   {latLng: [52.52, 13.40], name: 'Google'},
                   {latLng: [48.85, 2.35], name: 'Cisco'},                                            
                   {latLng: [51.51, -0.13], name: 'HP'}]
-    });    
-    /* END Vector Map */
-    
-});
+    }); 
+	  
+	var emptyDataArray = [];
+	emptyDataArray.push({ label:"no data", value:100 });
+	
+	var projectTypeGraph = Morris.Donut({
+ 	        element: 'dashboard-donut-1',
+ 	        data:  emptyDataArray,
+ 	        colors: ['#5cb85c',
+ 	                 '#f0ad4e'],
+ 	        resize: true
+ 	    });    
+	
+	var  projectCategoryGraph= Morris.Bar({
+	        element: 'dashboard-bar-work',
+	        data: emptyDataArray,
+	        xkey: 'categoryName',
+	        ykeys: ['count'],
+	        labels: ['Project Type'],
+	        barColors: ['#33414E', '#1caf9a'],
+	        gridTextSize: '10px',
+	        hideHover: true,
+	        resize: true,
+	        gridLineColor: '#E5E5E5'
+	    });
+	
+	var teamUtilizationGraph = Morris.Bar({
+        element: 'dashboard-bar-team',
+        data: emptyDataArray,
+        xkey: 'name',
+        ykeys: ['billable', 'nonBillable'],
+        labels: ['Billable', 'NonBillable'],
+        barColors: ['#33414E', '#1caf9a'],
+        gridTextSize: '10px',
+        hideHover: true,
+        resize: true,
+        gridLineColor: '#E5E5E5'
+    });
+	    
+	var employeeUtilizationGraph = Morris.Bar({
+	        element: 'dashboard-bar-emp',
+	        data: emptyDataArray,
+	        xkey: 'userFirstName',
+	        ykeys: ['billableHours', 'nonBillableHours'],
+	        labels: ['Billable', 'NonBillableHours'],
+	        barColors: ['#33414E', '#1caf9a'],
+	        gridTextSize: '10px',
+	        hideHover: true,
+	        resize: true,
+	        gridLineColor: '#E5E5E5'
+	    });
+function getProjectTypeJson() {
+    doAjaxRequestWithGlobal("GET", "${applicationHome}/getProjectTypeJson",  {},function(response) {
+//    	response=response.replace(/"(\w+)"\s*:/g, '$1:');
+    	projectTypeGraph.setData( response.length > 0  ? JSON.parse(response) : emptyDataArray);
+    	projectTypeGraph.redraw();
+    },function(error) {
+    	famstacklog("ERROR: ", error);
+    },false);
+ }
+
+function getProjectCategoryJson() {
+    doAjaxRequestWithGlobal("GET", "${applicationHome}/getProjectCategoryJson",  {},function(response) {
+    	projectCategoryGraph.setData( response.length > 0  ? JSON.parse(response) : emptyDataArray);
+    	projectCategoryGraph.redraw();
+    },function(error) {
+    	famstacklog("ERROR: ", error);
+    },false);
+ }
+
+
+function getTeamUtilizationJson() {
+    doAjaxRequestWithGlobal("GET", "${applicationHome}/getTeamUtilizationJson",  {},function(response) {
+    	teamUtilizationGraph.setData( response.length > 0  ? JSON.parse(response) : emptyDataArray);
+    	teamUtilizationGraph.redraw();  
+    },function(error) {
+    	famstacklog("ERROR: ", error);
+    },false);
+ }
+
+
+function getEmployeeUtilizationJson() {
+    doAjaxRequestWithGlobal("GET", "${applicationHome}/getEmployeeUtilizationJson",  {},function(response) {
+    	employeeUtilizationGraph.setData( response.length > 0  ? JSON.parse(response) : emptyDataArray);
+    	employeeUtilizationGraph.redraw();    	
+    },function(error) {
+    	famstacklog("ERROR: ", error);
+    },false);
+ }
+
+getProjectTypeJson();
+getProjectCategoryJson();
+getTeamUtilizationJson();
+getEmployeeUtilizationJson();
 
 sortOnlineStatus();
 </script>

@@ -281,26 +281,44 @@ public class FamstackDashboardController extends BaseFamstackService
 	
 	        Map<String, Long> projectCountBasedOnStatus = famstackDashboardManager.getProjectsCounts();
 	
-	        String userBillableProductiveJson = famstackDashboardManager.getUserBillableProductiveJson();
-	
-	        String projectTypeJson = famstackDashboardManager.getProjectTypeJson();
-	
-	        String teamUtilizationJson = famstackDashboardManager.getTeamUtilizationJson();
-	
-	        String projectCategoryJson = famstackDashboardManager.getProjectCategoryJson();
-	
 	        List<ClientProjectDetails> clientProject = famstackDashboardManager.getClientProject();
 	
 	        List<ProjectDetails> projectDetails = famstackDashboardManager.getProjectsDataList();
 	
 	        return new ModelAndView("index").addObject("projectsCount", projectCountBasedOnStatus)
-	            .addObject("projectDetails", projectDetails).addObject("employeeUtilization", userBillableProductiveJson)
-	            .addObject("projectTypeJson", projectTypeJson).addObject("teamUtilizationJson", teamUtilizationJson)
-	            .addObject("projectCategoryJson", projectCategoryJson).addObject("clientProject", clientProject);
+	            .addObject("projectDetails", projectDetails).addObject("clientProject", clientProject);
 		}
 		return  new ModelAndView("login");
     }
 
+	@RequestMapping(value = "/getProjectTypeJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String getProjectTypeJson()
+    {
+		return famstackDashboardManager.getProjectTypeJson();
+    }
+	
+	@RequestMapping(value = "/getProjectCategoryJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String getProjectCategoryJson()
+    {
+		return famstackDashboardManager.getProjectCategoryJson();
+    }
+	
+	@RequestMapping(value = "/getTeamUtilizationJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String getTeamUtilizationJson()
+    {
+		return famstackDashboardManager.getTeamUtilizationJson();
+    }
+	
+	@RequestMapping(value = "/getEmployeeUtilizationJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String getEmployeeUtilizationJson()
+    {
+		return famstackDashboardManager.getUserBillableProductiveJson();
+    }
+	
     @RequestMapping(value = "/userPingCheck", method = RequestMethod.POST)
     @ResponseBody
     public String userPingCheck(@RequestParam(name="groupId", defaultValue="") String groupId)

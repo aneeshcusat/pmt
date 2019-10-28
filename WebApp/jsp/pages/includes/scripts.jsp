@@ -19,10 +19,6 @@
         <script type="text/javascript" src="${js}/plugins/scrolltotop/scrolltopcontrol.js?v=${fsVersionNumber}"></script>
         <script type="text/javascript" src="${js}/jquery.cropit.js?v=${fsVersionNumber}"></script>  
         
-        <script type="text/javascript" src="${js}/plugins/morris/raphael-min.js?v=${fsVersionNumber}"></script>
-        <script type="text/javascript" src="${js}/plugins/morris/morris.min.js?v=${fsVersionNumber}"></script>       
-        <script type="text/javascript" src="${js}/plugins/rickshaw/d3.v3.js?v=${fsVersionNumber}"></script>
-        <script type="text/javascript" src="${js}/plugins/rickshaw/rickshaw.min.js?v=${fsVersionNumber}"></script>
         <script type='text/javascript' src="${js}/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js?v=${fsVersionNumber}"></script>
         <script type='text/javascript' src="${js}/plugins/jvectormap/jquery-jvectormap-world-mill-en.js?v=${fsVersionNumber}"></script>                
                         
@@ -35,7 +31,7 @@
         <script type="text/javascript" src="${js}/plugins/blockui/jquery.blockUI.js?v=${fsVersionNumber}"></script>
         <script type="text/javascript" src="${js}/plugins/jeditable/jquery.jeditable.js?v=${fsVersionNumber}"></script>
         <script type="text/javascript" src="${js}/plugins/datepicker/jquery.datetimepicker.full.min.js?v=${fsVersionNumber}"></script>
-        <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js?v=${fsVersionNumber}"></script>
+        <script type="text/javascript" src=" ${js}/plugins/waitme/waitMe.min.js?ver=3.0&v=${fsVersionNumber}"></script>
         <script type="text/javascript" src=" ${js}/plugins/desktopnotification/push_notification.min.js?v=${fsVersionNumber}"></script>
         <!-- END THIS PAGE PLUGINS-->        
 
@@ -126,10 +122,11 @@ var site_settings = "";
     $( document ).ajaxStart(function() {
     	if(!ajaxStartLabelDisabled) {
    		 $(".page-container").waitMe({
-   			effect : "bounce",
+   			effect : "img",
    			text : "",
    			bg : 'rgba(255,255,255,0.7)',
-   			color : "#000"
+   			color : "#000",
+   			source : "${image}/tracopus.gif"
    			});
     	}
    	}).ajaxStop(function() {

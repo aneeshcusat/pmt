@@ -10,6 +10,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
+import com.famstack.projectscheduler.employees.bean.TaskDetails;
 
 @Component
 public class FamstackDataFilterManager extends BaseFamstackService {
@@ -59,6 +60,19 @@ public class FamstackDataFilterManager extends BaseFamstackService {
 		
 		return filteredTaskActivityDetails;
 		
+	}
+
+	public List<TaskDetails> filterTaskDetails(List<TaskDetails> taskDetailsList) {
+		Map<Integer, EmployeeDetails> allUsersMap = getFamstackApplicationConfiguration().getAllUsersMap();
+		List<TaskDetails> filteredTaskDetails = new ArrayList<>();
+		for (TaskDetails  taskDetails : taskDetailsList) {
+
+			if(isUserHasPermission(allUsersMap.get(taskDetails.getAssignee()))) {
+				filteredTaskDetails.add(taskDetails);
+			}
+		}
+		
+		return filteredTaskDetails;
 	}
 
 }

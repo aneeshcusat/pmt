@@ -21,26 +21,25 @@
    		
    		<property name="designationMap">
         <map>
-            <entry key="VicePresident" value="220"/>
-			<entry key="AssociateVicePresident" value="200"/>
-			<entry key="SeniorDirector" value="190"/>
+            <entry key="Vice President" value="220"/>
+			<entry key="Associate Vice President" value="200"/>
+			<entry key="Senior Director" value="190"/>
 			<entry key="Director" value="180"/>
-			<entry key="SeniorManager" value="170"/>
+			<entry key="Senior Manager" value="170"/>
 			<entry key="Manager" value="160"/>
-			<entry key="AssociateManager" value="150"/>
-			<entry key="PrincipalDataScientist" value="140"/>
-			<entry key="SeniorProjectExecutive" value="130"/>
-			<entry key="SeniorExecutive" value="120"/>
+			<entry key="Associate Manager" value="150"/>
+			<entry key="Principal Data Scientist" value="140"/>
+			<entry key="Senior Project Executive" value="130"/>
+			<entry key="Senior Executive" value="120"/>
 			<entry key="Consultant" value="110"/>
-			<entry key="SeniorDataScientist" value="100"/>
-			<entry key="DataScientist" value="90"/>
-			<entry key="AssociateDataScientist" value="80"/>
-			<entry key="AssociateDataScientist" value="70"/>
-			<entry key="VisualizationSpecialist" value="60"/>
-			<entry key="SeniorAnalyst" value="50"/>
+			<entry key="Senior DataScientist" value="100"/>
+			<entry key="Data Scientist" value="90"/>
+			<entry key="Associate Data Scientist" value="80"/>
+			<entry key="Visualization Specialist" value="60"/>
+			<entry key="Senior Analyst" value="50"/>
 			<entry key="Analyst" value="40"/>
-			<entry key="JuniorAnalyst" value="30"/>
-			<entry key="TraineeAnalyst" value="20"/>
+			<entry key="Junior Analyst" value="30"/>
+			<entry key="Trainee Analyst" value="20"/>
 			<entry key="Trainee" value="10"/>
 
         </map>

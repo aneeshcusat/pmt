@@ -121,7 +121,7 @@ tr.clickable:hover {
 				   	</tr>
 				   	
 				   	 <tr class="">
-				   		<td colspan="2"><a href="#tab8" onclick="refreshAutoReportingConfig();" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Automated Reporting config</a></td>
+				   		<td colspan="2"><a href="#tab8" onclick="refreshAutoReportingConfig();" data-toggle="tab" style="font-size: 14px" class="applicationTypeLink"> <i class="icon-envelope"></i>Scheduled Reporting config</a></td>
 				   	</tr>
 			   	 	</tbody>
 			     </table>
@@ -514,7 +514,7 @@ tr.clickable:hover {
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
-									<th colspan="2">Automatic Reporting config</th>
+									<th colspan="2">Scheduled Reporting config</th>
 								</tr>
 							<thead>
 							<tbody>

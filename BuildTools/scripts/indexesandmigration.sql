@@ -92,4 +92,4 @@ INSERT INTO `bops`.`auto_report_info` (`id`, `cc_list`, `created_date`, `cron_ex
 INSERT INTO `bops`.`auto_report_info` (`id`, `cc_list`, `created_date`, `cron_exp`, `last_modified_date`, `last_run`, `name`, `next_run`, `to_lit`, `type`, `user_grp_id`, `no_past_days`) VALUES ('4', 'famstack.bops@gmail.com', '2019-08-05 12:00:00', '0 0 15,17,19 * * ?', '2019-09-08 04:00:31', '2019-9-8 15:00:00', 'Daily utilization', '2019-9-9 15:00:00', 'manyuni.sahu@course5i.com', 'USER_UTILIZATION', '1002', '0');
 
 
-
+--UPDATE user_info SET user_id=CONCAT('temp_',user_id) where user_grp_id != '99999';
