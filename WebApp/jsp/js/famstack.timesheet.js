@@ -11,6 +11,8 @@ function clearWeeklyTimeLogTable(){
 }
 
 function saveCurrentProjectWeekData(clearProjects){
+	$("#weeklyTimeLogSaveButton").attr("disabled", true);
+	$("#weeklyTimeLogSaveNextButton").attr("disabled", true);
 	var dataString = "";
 	var hasError = false;
 	var errorMsg = "";
@@ -83,6 +85,8 @@ function saveCurrentProjectWeekData(clearProjects){
 	});
 	if (hasError){
 		showErrorMessage(errorMsg);
+		$("#weeklyTimeLogSaveButton").removeAttr("disabled");
+		$("#weeklyTimeLogSaveNextButton").removeAttr("disabled");
 	}
 	
 	if (!hasError){
@@ -100,11 +104,15 @@ function saveCurrentProjectWeekData(clearProjects){
 			} else {
 				 showErrorMessage("Unable to save data, please refresh the page and try again");
 			}
+			$("#weeklyTimeLogSaveButton").removeAttr("disabled");
+			$("#weeklyTimeLogSaveNextButton").removeAttr("disabled");
 		}, function(e) {
 	        famstacklog("ERROR: ", e);
 	        famstackalert(e);
 	        getSelectedWeekLoggedData();
 	        showErrorMessage("Unable to save data, please refresh the page and try again");
+	        $("#weeklyTimeLogSaveButton").removeAttr("disabled");
+			$("#weeklyTimeLogSaveNextButton").removeAttr("disabled");
 	    });
 	}
 
