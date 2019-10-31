@@ -2155,7 +2155,18 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		if (autoReportingItem != null) {
 			autoReportingItem.setEnabled(enable);
 			if (enable) {
-				autoReportingItem.setNextRun(new Timestamp(FamstackUtils.getNextRunFromCron(autoReportingItem.getCronExpression(), new Date()).getTime()));
+				if(autoReportingItem.getType() == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY) {
+					Calendar cal = DateUtils.getLastSundayOfMonthWeek();
+					Date nextRunDate = FamstackUtils.getNextRunFromCron(autoReportingItem.getCronExpression(), new Date());
+					if(cal != null) {
+						Calendar nextRunCal = Calendar.getInstance();
+						nextRunCal.setTime(nextRunDate);
+						cal.set(Calendar.HOUR, nextRunCal.get(Calendar.HOUR));
+						autoReportingItem.setNextRun(new Timestamp(cal.getTimeInMillis()));
+					}
+				} else {
+					autoReportingItem.setNextRun(new Timestamp(FamstackUtils.getNextRunFromCron(autoReportingItem.getCronExpression(), new Date()).getTime()));
+				}
 			} else {
 				autoReportingItem.setNextRun(null);
 			}

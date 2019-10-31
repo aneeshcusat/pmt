@@ -33,6 +33,10 @@ public class FamstackDataFilterManager extends BaseFamstackService {
 
 	private boolean isUserHasPermission(EmployeeDetails employeeDetails) {
 		if (employeeDetails != null) {
+			if(getFamstackApplicationConfiguration().getCurrentUser().getId() == employeeDetails.getId()) {
+				return true;
+			}
+			
 			Integer currentUserDesignationNumber = getFamstackApplicationConfiguration().
 					getDesignationMap().get(getFamstackApplicationConfiguration().
 							getCurrentUser().getDesignation());

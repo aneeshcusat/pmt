@@ -21,8 +21,10 @@
    		
    		<property name="designationMap">
         <map>
+        	<entry key="Senior Vice President" value="240"/>	
             <entry key="Vice President" value="220"/>
-			<entry key="Associate Vice President" value="200"/>
+			<entry key="Associate Vice President" value="220"/>
+            <entry key="Assistant Vice President" value="200"/>
 			<entry key="Senior Director" value="190"/>
 			<entry key="Director" value="180"/>
 			<entry key="Senior Manager" value="170"/>
@@ -32,16 +34,22 @@
 			<entry key="Senior Project Executive" value="130"/>
 			<entry key="Senior Executive" value="120"/>
 			<entry key="Consultant" value="110"/>
-			<entry key="Senior DataScientist" value="100"/>
-			<entry key="Data Scientist" value="90"/>
+			<entry key="Senior Data Scientist" value="100"/>
+			<entry key="Data Scientist" value="80"/>
 			<entry key="Associate Data Scientist" value="80"/>
 			<entry key="Visualization Specialist" value="60"/>
 			<entry key="Senior Analyst" value="50"/>
+			<entry key="Lead Software Engineer" value="45"/>
+			<entry key="Lead Engineer" value="45"/>
+			<entry key="Senior Software Engineer" value="44"/>
+			<entry key="Software Engineer" value="43"/>
+			<entry key="Developer" value="43"/>
+			<entry key="Support Team" value="42"/>
+			<entry key="Contract" value="41"/>
 			<entry key="Analyst" value="40"/>
 			<entry key="Junior Analyst" value="30"/>
 			<entry key="Trainee Analyst" value="20"/>
 			<entry key="Trainee" value="10"/>
-
         </map>
     </property>
     

@@ -51,8 +51,10 @@
                     <div class="col-md-9">
                         <form:select path="designation" id="designation" class="form-control select" data-live-search="true">
                               <option value="">- select -</option>
+                              <option>Senior Vice President</option>
                             <option>Vice President</option>
                             <option>Associate Vice President</option>
+                             <option>Assistant Vice President</option> 
                             <option>Senior Director</option>
                             <option>Director</option>
                             <option>Senior Manager</option>
@@ -67,6 +69,13 @@
                             <option>Associate Data Scientist</option>
                             <option>Visualization Specialist</option>
                             <option>Senior Analyst</option>
+                            <option>Lead Software Engineer</option>
+     						<option>Lead Engineer</option>
+   							<option>Senior Software Engineer</option>
+    						<option>Software Engineer</option>
+   							<option>Developer</option>
+   							<option>Support Team</option>
+      						<option>Contract</option>
                             <option>Analyst</option>
                             <option>Junior Analyst</option>
                             <option>Trainee Analyst</option>
