@@ -337,8 +337,8 @@ tr.clickable:hover {
 						<table class="table table table-bordered data-table taskProjectCategoryMappingsTypeDiv">
 							<thead>
 								<tr style="font-weight: bold">
-									<th width="45%">Task Project Category Mapping</th>
-									<th></th>
+									<th width="45%">Task Project Categories</th>
+									<th>Project Categories</th>
 									<th width="70px" style="text-align: center">
 									<a
 										data-toggle="modal" data-target="#createAppModel" onclick="setAppConfigAction('createTaskProjectCategoryMappings();')"

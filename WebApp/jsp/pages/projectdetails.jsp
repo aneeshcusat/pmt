@@ -4,6 +4,7 @@
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <c:set var="sameDayOnlyTaskEnabled" value="${applicationScope.applicationConfiguraion.sameDayOnlyTaskEnabled}"/>
+<c:set var="taskPrjectCategoryEnabled" value="${applicationScope.applicationConfiguraion.taskPrjectCategoryEnabled}"/>
 <c:set var="taskProjectMappings" value="${applicationScope.applicationConfiguraion.taskProjectCategoryMappings}"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/projectdetails.css?v=${fsVersionNumber}"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/cron/jquery-cron.css"/>
@@ -659,6 +660,12 @@
     	    startTime: {
     	    	 required: true
     	    }
+    	    <c:if test="${taskPrjectCategoryEnabled}">
+    	    , 
+    	    projectCategory: {
+    	    	 required: true
+    	    }
+    	    </c:if>
     	  }
     	});
        
