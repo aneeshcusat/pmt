@@ -600,12 +600,12 @@ $("#taskAssignee").on("change", function(){
 });
 
 var openTaskDetails = function (taskId){
-	;
+	
 	$(".taskDetailsTaskName").html($(".task-item" + taskId).find(".taskName").html());
 	$(".taskDetailsDuration").html($(".task-item" + taskId).find("input.duration").val());
 	$(".taskDetailsStartedAt").html($(".task-item" + taskId).find("input.startedAt").val());
 	$(".taskDetailsEstStartTimet").html($(".task-item" + taskId).find("input.estStartTime").val());
-	$(".taskPriority").html($(".task-item" + taskId).find("input.taskPriority").val());
+	/*$(".taskPriority").html($(".task-item" + taskId).find("input.taskPriority").val());*/
 	
 	$(".taskDetailsTaskDescription").html($(".task-item" + taskId).find(".taskDescription").html());
 	$("#taskAssigneeHidden").val($(".task-item" + taskId).find("input.assignee").val());

@@ -90,7 +90,7 @@
                                   <div class="col-md-6">
                                       <p class="text-capitalize"><span class="bold">Project Type </span>: ${projectDetails.type}</p>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-6 hide">
                                       <p class="text-capitalize"><span class="bold text-capitalize">Project Complexity </span>: ${projectDetails.complexity}</p>
                                   </div>
                                   <div class="col-md-6">
@@ -116,7 +116,7 @@
                                   <div class="col-md-6">
                                       <p><span class="bold">Client </span>: ${projectDetails.clientName}</p>
                                   </div>
-                                   <div class="col-md-6">
+                                   <div class="col-md-6 hide">
                                    	<ul class="nav nav-pills nav-stacked labels-info ">
                                  	 <li><span class="bold">Priority </span> : <i class=" fa fa-circle text-danger"></i> ${projectDetails.priority}<p></p></li>
 	                              </ul>

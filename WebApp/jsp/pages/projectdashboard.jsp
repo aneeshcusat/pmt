@@ -365,9 +365,6 @@ var jvalidate = $("#createProjectFormId").validate({
 	code: {
 	   	 required: true
 	},
-	PONumber: {
-	   	 required: true
-	},
 	startTime: {
 	   	 required: true
 	},
