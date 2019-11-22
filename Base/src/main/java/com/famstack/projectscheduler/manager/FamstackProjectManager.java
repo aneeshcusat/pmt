@@ -2190,8 +2190,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 			
 			if(DateUtils.isLastSundayOfMonthWeek() || forceTrigger){
 			
-				startDate = DateUtils.getFirstDayOfThisMonthWeek();
-				endDate = DateUtils.getLastSundayOfMonthWeek().getTime();
+				startDate = DateUtils.getFirstDayOfThisMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -8));
+				endDate = DateUtils.getLastSundayOfMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -8)).getTime();
 				Map<String, String> weekRangeBtwTwoDates = DateUtils.getWeekRangeBetwwenTwoDates(startDate, endDate);
 				
 				notificationDataMap.put("DATE_LIST",weekRangeBtwTwoDates);

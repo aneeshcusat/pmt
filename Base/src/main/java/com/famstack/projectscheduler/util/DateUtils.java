@@ -306,7 +306,7 @@ public final class DateUtils extends BaseFamstackService
 	
 	public static boolean isLastSundayOfMonthWeek() {
 		Calendar currentDay = Calendar.getInstance();
-	    Calendar lastSundayOfMonthWeek = getLastSundayOfMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -7));
+	    Calendar lastSundayOfMonthWeek = getLastSundayOfMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -8));
 		 
 	    return (currentDay.get(Calendar.YEAR) == lastSundayOfMonthWeek.get( Calendar.YEAR) && 
 			   currentDay.get(Calendar.MONTH) == lastSundayOfMonthWeek.get( Calendar.MONTH) && 
@@ -331,7 +331,7 @@ public final class DateUtils extends BaseFamstackService
 		return getLastSundayOfMonthWeek(lastSundayOfMonthWeek.getTime());
 	}
 
-	public static Date getFirstDayOfThisMonthWeek() {
+	public static Date getFirstDayOfThisMonthWeek(Date startDate) {
 		Calendar lastMondayOfMonthWeek = Calendar.getInstance();
 		//lastMondayOfMonthWeek.add(Calendar.MONTH, 2);
 		
@@ -345,7 +345,7 @@ public final class DateUtils extends BaseFamstackService
 	
 	
 	public static void main(String[] args) {
-		System.out.println(getWeekRangeBetwwenTwoDates(getFirstDayOfThisMonthWeek(), getLastSundayOfMonthWeek().getTime()));
+		//System.out.println(getWeekRangeBetwwenTwoDates(getFirstDayOfThisMonthWeek(), getLastSundayOfMonthWeek().getTime()));
 	}
 
 	public static String getYearMonthWeekNumber(Date taskActivityStartTime) {
