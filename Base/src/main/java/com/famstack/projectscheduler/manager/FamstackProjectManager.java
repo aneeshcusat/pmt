@@ -2012,7 +2012,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 				try {
 					if (autoReportingItem.getEnabled()) {
 						
-						sendAutoReportingNotification(autoReportingItem, false);
+						sendAutoReportingNotification(autoReportingItem, false, 8);
 					}
 					autoReportingItem
 							.setLastRun(autoReportingItem.getNextRun());
@@ -2066,7 +2066,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 	}
 
 	public void sendAutoReportingNotification(
-			AutoReportingItem autoReportingItem, boolean forceTrigger) {
+			AutoReportingItem autoReportingItem, boolean forceTrigger, int howManyPreviousDays) {
 		List<String> toList = autoReportingItem
 				.getToList() != null ? Arrays.asList(autoReportingItem
 				.getToList().split(",")) : new ArrayList<String>();
@@ -2088,11 +2088,11 @@ public class FamstackProjectManager extends BaseFamstackManager
 		int startDays = autoReportingItem.getLastHowManyDays();
 		
 		sendAutoReportEmail(toList, ccList, exludeMailList, userGroupId,
-				reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject(), autoReportingItem.getNotifyDefaulters(), forceTrigger);
+				reportType, lastHowManyDays,startDays,  autoReportingItem.getSubject(), autoReportingItem.getNotifyDefaulters(), forceTrigger, howManyPreviousDays);
 	}
 
 	public void sendAutoReportEmail(List<String> toList, List<String> ccList, List<String> excludeMailList,
-			String userGroupId, ReportType reportType, int lastHowManyDays, int startDays, String subject, Boolean notifyDefaulters, boolean forceTrigger) {
+			String userGroupId, ReportType reportType, int lastHowManyDays, int startDays, String subject, Boolean notifyDefaulters, boolean forceTrigger, int howManyPreviousDays) {
 		Date startDate = DateUtils.getNextPreviousDate(
 				DateTimePeriod.DAY_START, new Date(), startDays);
 		
@@ -2190,8 +2190,10 @@ public class FamstackProjectManager extends BaseFamstackManager
 			
 			if(DateUtils.isLastSundayOfMonthWeek() || forceTrigger){
 			
-				startDate = DateUtils.getFirstDayOfThisMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -8));
-				endDate = DateUtils.getLastSundayOfMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -8)).getTime();
+				startDate = DateUtils.getFirstDayOfThisMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -1 * howManyPreviousDays));
+				endDate = DateUtils.getLastSundayOfMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -1 * howManyPreviousDays)).getTime();
+				System.out.println("Start date "  +  startDate);
+				System.out.println("endDate date "  +  endDate);
 				Map<String, String> weekRangeBtwTwoDates = DateUtils.getWeekRangeBetwwenTwoDates(startDate, endDate);
 				
 				notificationDataMap.put("DATE_LIST",weekRangeBtwTwoDates);

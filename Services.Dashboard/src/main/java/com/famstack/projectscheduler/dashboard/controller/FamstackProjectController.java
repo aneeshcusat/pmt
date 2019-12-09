@@ -655,9 +655,9 @@ public class FamstackProjectController extends BaseFamstackService
 
 	@RequestMapping(value = "/sendAutoReportEmail", method = RequestMethod.GET)
     @ResponseBody
-	public String sendAutoReportEmail(@RequestParam("reportId") Integer reportId)
+	public String sendAutoReportEmail(@RequestParam("reportId") Integer reportId, @RequestParam(name="howManyPreviousDays", defaultValue="8") Integer howManyPreviousDays)
     {
-        famstackDashboardManager.sendAutoReportEmail(reportId);
+        famstackDashboardManager.sendAutoReportEmail(reportId, howManyPreviousDays);
     	        
     	return "{\"status\": true}";
     }

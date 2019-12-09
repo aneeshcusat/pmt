@@ -333,7 +333,7 @@ public final class DateUtils extends BaseFamstackService
 
 	public static Date getFirstDayOfThisMonthWeek(Date startDate) {
 		Calendar lastMondayOfMonthWeek = Calendar.getInstance();
-		//lastMondayOfMonthWeek.add(Calendar.MONTH, 2);
+		lastMondayOfMonthWeek.setTime(startDate);
 		
 		lastMondayOfMonthWeek.set(Calendar.DAY_OF_MONTH, 1);
 		if(lastMondayOfMonthWeek.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
@@ -345,7 +345,7 @@ public final class DateUtils extends BaseFamstackService
 	
 	
 	public static void main(String[] args) {
-		//System.out.println(getWeekRangeBetwwenTwoDates(getFirstDayOfThisMonthWeek(), getLastSundayOfMonthWeek().getTime()));
+		System.out.println(getFirstDayOfThisMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -8)));
 	}
 
 	public static String getYearMonthWeekNumber(Date taskActivityStartTime) {

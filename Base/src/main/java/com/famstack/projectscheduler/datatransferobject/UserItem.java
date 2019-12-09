@@ -120,7 +120,19 @@ public class UserItem implements FamstackBaseItem
 
     @Column(name = "is_deleted", columnDefinition = "boolean default false", nullable = false)
     private Boolean deleted;
+    
+    @Column(name = "functional_lead")
+    private Integer functionalLead;
+    
+    @Column(name = "business_head")
+    private Integer businessHead;
+    
+    @Column(name = "location")
+    private String location;
 
+    @Column(name = "level")
+    private String level;
+    
     @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
     @JoinColumn(name = "reporterting_manager")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
@@ -485,6 +497,38 @@ public class UserItem implements FamstackBaseItem
 
 	public void setFundedEmployee(Boolean fundedEmployee) {
 		this.fundedEmployee = fundedEmployee;
+	}
+
+	public Integer getFunctionalLead() {
+		return functionalLead;
+	}
+
+	public void setFunctionalLead(Integer functionalLead) {
+		this.functionalLead = functionalLead;
+	}
+
+	public Integer getBusinessHead() {
+		return businessHead;
+	}
+
+	public void setBusinessHead(Integer businessHead) {
+		this.businessHead = businessHead;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
 }

@@ -539,8 +539,6 @@ function initializeCreateProjectForm(project){
 	
 	$("#complexity").val(project.complexity);
 	$('#complexity').selectpicker('refresh');
-
-	$("#projectcode").val(project.code);
 	
 	$("#projectId").val(project.id);
 	
@@ -566,6 +564,8 @@ function initializeCreateProjectForm(project){
 	$('#clientId').change();
 	
 	$("#watchers").val(project.watchers);
+	
+	$("#projectcode").val(project.code);
 	
 	if (project.watchers != null && project.watchers != "") {
 		var watchersArray = project.watchers.split(",");

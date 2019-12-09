@@ -8,9 +8,7 @@
 <td><strong>Sl No</strong></td>
 <td><strong>Employee Name</strong></td>
 <td><strong>Reporting Manager</strong></td>
- #foreach ($dateString in $dateList)
-	<td><strong>Status ($dateString)</strong></td>
-#end
+<td><strong>Status</strong></td>
 </tr>
 #set($index = 0)
  #foreach ($userActivity in $userActivityData)
