@@ -223,6 +223,12 @@ public class FamstackProjectManager extends BaseFamstackManager
 				taskId = nonBillableTask;
 			}
 			
+			if (taskCommentsMap.get(taskId) != null) {
+				String previousComments = taskCommentsMap.get(taskId);
+				taskComments = previousComments + ", " + taskComments;
+				
+			}
+			
 			taskCommentsMap.put(taskId, taskComments);
 			
 			Map<String, Map<String,Map<String, List<Integer>>>> projectTypeMap = projectDetailsMap.get(projectType);
@@ -252,6 +258,10 @@ public class FamstackProjectManager extends BaseFamstackManager
 			
 			for (int i = 1 ; i <=7;i++) {
 				String taskTime = projectLineItemDetailsArray[i + 4];
+				int taskTimeInMins = 0;
+				if (weekDayTaskTimeList.size() >= i){
+					taskTimeInMins = weekDayTaskTimeList.get(i - 1);
+				}
 				if (StringUtils.isNotBlank(taskTime)) {
 					String[] taskTimeSplit = taskTime.split("[.]");
 					int mins = 0;
@@ -267,9 +277,12 @@ public class FamstackProjectManager extends BaseFamstackManager
 			    	if (StringUtils.isNotBlank(taskTimeSplit[0])) {
 			    		hours = Integer.parseInt(taskTimeSplit[0]);
 			    	}
-					weekDayTaskTimeList.add((hours * 60)  + mins);
+			    	taskTimeInMins += ((hours * 60)  + mins);
+				}
+				if (weekDayTaskTimeList.size() >= i){
+					weekDayTaskTimeList.set(i-1, taskTimeInMins);
 				} else {
-					weekDayTaskTimeList.add(0);
+					weekDayTaskTimeList.add(taskTimeInMins);
 				}
 				
 			}
