@@ -154,7 +154,11 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
             case WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER:
                 notificationEmailItem = getUserUtilizationReportData(object);
                 notificationEmailItem.setTemplates(Templates.WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER);
-                break;     
+                break;  
+            case WEEKLY_PO_ESTIMATION_REPORT:
+                notificationEmailItem = getPOEstimationReportData(object);
+                notificationEmailItem.setTemplates(Templates.WEEKLY_PO_ESTIMATION_REPORT);
+                break;  
             default:
                 break;
         }
@@ -181,7 +185,15 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         }
     }
 
-    private EmailNotificationItem getUserUtilizationReportDefaulterData(
+    private EmailNotificationItem getPOEstimationReportData(Object object) {
+    	EmailNotificationItem notificationEmailItem = getReportingData(object);
+        Map<String, Object> poEstimationReportData = (Map<String, Object>) object;
+		notificationEmailItem.getData().put("estimationData",
+				poEstimationReportData.get("ESTIMATION_DATA"));
+        return notificationEmailItem;
+	}
+
+	private EmailNotificationItem getUserUtilizationReportDefaulterData(
 			Object object) {
     	EmailNotificationItem notificationEmailItem = new EmailNotificationItem();
         Map<String, Object> userUtilizationReportData = getReportDefaultersData(
@@ -256,6 +268,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
 				|| notificationType == NotificationType.USER_ACTIVITY_REPORT_DEFAULTER
 				|| notificationType == NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY
 				|| notificationType == NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER
+				|| notificationType == NotificationType.WEEKLY_PO_ESTIMATION_REPORT
         		)
             ? true : false;
     }

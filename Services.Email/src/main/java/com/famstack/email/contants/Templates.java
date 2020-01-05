@@ -85,7 +85,8 @@ public enum Templates
     USER_ACTIVITY_REPORT_DEFAULTER("userActivityDefaulterReport", "userActivityDefaulterReport"), 
     USER_UTILIZATION_REPORT_DEFAULTER("userUtilizationDefaulterReport", "userUtilizationDefaulterReport"), 
     WEEKWISE_USER_UTILIZATION_MONTHLY("userWeekWiseUtilizationReport", "userWeekWiseUtilizationReport"),
-    WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER("userWeekWiseUtilizationDefaulterReport", "userWeekWiseUtilizationDefaulterReport");
+    WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER("userWeekWiseUtilizationDefaulterReport", "userWeekWiseUtilizationDefaulterReport"), 
+    WEEKLY_PO_ESTIMATION_REPORT("weeklyPOEstimationReport", "weeklyPOEstimationReport");
 
     /** The subjectkey. */
     private String subjectkey;

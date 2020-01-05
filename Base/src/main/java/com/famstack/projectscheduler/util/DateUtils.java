@@ -376,4 +376,18 @@ public final class DateUtils extends BaseFamstackService
 		
 		return weekRange;
 	}
+
+	public static Date getFirstDayOfPrevioushWeek(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		return cal.getTime();
+	}
+
+	public static Date getLastDayOfPreviousWeek(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getFirstDayOfPrevioushWeek(date));
+		cal.add(Calendar.DAY_OF_MONTH, 7);
+		return cal.getTime();
+	}
 }

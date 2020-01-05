@@ -22,6 +22,7 @@
                 <option value="USER_SITE_ACTIVITY">User activity</option>
                 <option value="USER_UTILIZATION">User Utilization</option>
                 <option value="WEEKWISE_USER_UTILIZATION_MONTHLY">Monthly Utilization</option>
+                <option value="WEEKLY_PO_ESTIMATION">PO Estimation</option>
           	</select>
         </td>
   		<td> <textarea class="form-control autoReportSubject" cols="5" rows="2" maxlength="250"  placeholder="Max 250 chars"></textarea></td>
@@ -36,6 +37,7 @@
   			<option value="-6">6 Days before</option>
   			<option value="-7">7 Days before</option>
   			<option value="-8">Month start</option>
+  			<option value="-9">Prev Week start</option>
   		</select>
   			
   		</td>
@@ -50,6 +52,7 @@
   			<option value="-6">6 Days before</option>
   			<option value="-7">7 Days before</option>
   			<option value="-8">Month end</option>
+  			<option value="-9">Prev Week end</option>
   		</select>
   		</td>
   		<td>

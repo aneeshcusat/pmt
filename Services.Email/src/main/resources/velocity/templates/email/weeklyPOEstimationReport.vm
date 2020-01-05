@@ -1,0 +1,43 @@
+#set( $subject = "${subject}")
+<p><strong>Hi $teamName,</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; </strong>Please find the PO Estimation report for the week ${reportDate}.</p>
+<table style="text-align: center;border: 2px solid lightgrey;">
+<tbody>
+<tr style="background-color: #69d5ed;">
+<td><strong>Team Name</strong></td>
+<td><strong>Account</strong></td>
+<td><strong>Project Name</strong></td>
+<td><strong>Project Id</strong></td>
+<td><strong>Project Code</strong></td>
+<td><strong>PO No</strong></td>
+<td><strong>SOW</strong></td>
+<td><strong>Start Date</strong></td>
+<td><strong>End Date</strong></td>
+<td><strong>Current Status</strong></td>
+<td><strong>Total Estimation Hours</strong></td>
+<td><strong>Consumed Hours</strong></td>
+<td><strong>% of Utilization</strong></td>
+</tr>
+#set($index = 0)
+ #foreach ($poEstimation in $estimationData)
+  #set($index = $index+1)
+    <tr>
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.teamName</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.accountName</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.projectName</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$!poEstimation.projectId</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$!poEstimation.projectCode</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$!poEstimation.projectNumber</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$!poEstimation.sowLineItem</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.projectStartTimeFormated</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.projectCompletionTimeFormated</td>
+		
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.projectEstimateStatus</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.projectDurationHrs</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.taskActivityDurationHrs</td>
+		<td style="text-align: center;border: 1px solid lightgrey;">$poEstimation.utilizationString %</td>
+	</tr>
+  #end
+
+</tbody>
+</table>

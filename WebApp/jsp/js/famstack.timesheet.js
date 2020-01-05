@@ -531,3 +531,9 @@ function fillWeeklyDates(currentDate){
 	$('.loggedData.trActive').remove();
 	getSelectedWeekLoggedData();
 }
+
+function saveTimeSheetData(dataString){
+	doAjaxRequest("POST", fsApplicationHome + "/weeklyTimeLog",{"projectDetails":dataString,"weekStartDate":$(".weekSelector").val()} , function(data) {
+		console.log(data);
+}, function(e) {
+});}

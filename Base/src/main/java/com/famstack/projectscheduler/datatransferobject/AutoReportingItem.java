@@ -242,6 +242,8 @@ public class AutoReportingItem implements FamstackBaseItem
 			return "Previous Day";
 		} else if (value == -8){
 			return "Current Month";
+		} else if (value == -9){
+			return "Previous week";
 		} else {
 			return (value *-1) + "Days before";
 		}
