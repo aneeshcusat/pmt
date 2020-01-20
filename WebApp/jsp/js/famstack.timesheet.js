@@ -473,7 +473,6 @@ $('.weekSelector').datepicker({
 	calendarWeeks:true,
 	weekStart:1,
 	daysOfWeekDisabled: [0,2,3,4,5,6],
-	startDate:getLastDayOfMonth(new Date()),
 	autoclose:true
 }).on('changeDate', function(e) {
 	checkValidDate();

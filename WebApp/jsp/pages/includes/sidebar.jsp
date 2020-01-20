@@ -100,6 +100,7 @@
                             <li><a href="${applicationHome}/applicationConfig"><span class="fa fa-cog"></span>Application config</a></li>
                             </c:if>
                             <li><a href="${applicationHome}/userSiteActivity"><span class="fa fa-calendar"></span>User Site Activity</a></li>
+                             <li><a href="${applicationHome}/reports"><span class="fa fa-table"></span>Reports</a></li>
                         </ul>
                     </li>
                     </c:if>

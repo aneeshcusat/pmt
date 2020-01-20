@@ -33,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.famstack.email.FamstackEmailSender;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ProjectStatus;
+import com.famstack.projectscheduler.contants.ReportType;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
@@ -660,6 +661,13 @@ public class FamstackProjectController extends BaseFamstackService
         famstackDashboardManager.sendAutoReportEmail(reportId, howManyPreviousDays);
     	        
     	return "{\"status\": true}";
+    }
+	
+	@RequestMapping(value = "/getReportData", method = RequestMethod.GET)
+    @ResponseBody
+	public String getReportData(@RequestParam("reportType") ReportType reportType, @RequestParam("reportStartDate") String reportStartDate, @RequestParam("reportEndDate") String reportEndDate)
+    {
+        return famstackDashboardManager.getReportData(reportType, reportStartDate, reportEndDate);
     }
     
    

@@ -2319,6 +2319,84 @@ public class FamstackProjectManager extends BaseFamstackManager
 		}
 	}
 
+	
+	public Map<String, Object>  getReportData(String userGroupId, ReportType reportType, Date reportStartDate, Date reportEndDate) {
+		Date startDate = DateUtils.getNextPreviousDate(
+				DateTimePeriod.DAY_START, reportStartDate, 0);
+		
+		Date endDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,
+				reportEndDate, 0);
+
+		List<String> dateList = getReportDateRangeList(startDate, endDate);
+		String dateRange = getReportDateRangeString(dateList); 
+		
+		UserGroupDetails userGroupDetails = getFamstackApplicationConfiguration()
+				.getUserGroupMap().get(
+						userGroupId);
+
+		List<EmployeeDetails> employeesList = getFamstackApplicationConfiguration()
+				.sortedUserList(userGroupId);
+		
+		Map<String, Object> reportDataMap = new HashMap<>();
+
+		reportDataMap.put("REPORT_DATE", dateRange);
+		reportDataMap.put("DATE_LIST", dateList);
+
+		if (reportType == ReportType.USER_SITE_ACTIVITY) {
+
+			Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap = famstackUserActivityManager
+						.getAllNonBillabileActivities(
+						startDate, endDate);
+			
+			Map<Integer, Map<String, String>> userSiteActivityMap = famstackUserActivityManager
+						.getAllUserSiteActivities(
+						startDate, endDate, null);
+
+			List<UserSiteActivityDetails> activityData = famstackUserActivityManager
+					.getUserSiteActivityForReport(
+					userSiteActivityMap, nonBillativityMap,
+					employeesList, dateList, null);
+			reportDataMap.put("DATA", activityData);
+		} else if (reportType == ReportType.USER_UTILIZATION) {
+
+			List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(
+					startDate, endDate, employeesList,
+					userGroupId, null);
+			reportDataMap.put("DATA",
+					utilizationDetails);
+		} else if (reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY) {
+
+				Map<String, String> weekRangeBtwTwoDates = DateUtils.getWeekRangeBetwwenTwoDates(startDate, endDate);
+				reportDataMap.put("DATE_LIST",weekRangeBtwTwoDates);
+				
+				List<String> yearMonthWeekNumberList =DateUtils.getYearMonthWeekNumberBetwwenTwoDates(startDate, endDate);
+				
+				reportDataMap.put("WEEK_LIST",
+						yearMonthWeekNumberList);
+				
+				List<UserUtilizationWeekWiseDetails> utilizationWeekWiseDetails = getAutoReportUtilizationWeekWiseDataForEmail(
+						startDate, endDate, employeesList,
+						userGroupId, null);
+					reportDataMap.put("DATA",
+							utilizationWeekWiseDetails);
+					famstackNotificationServiceManager.notifyAll(
+							NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY,
+							reportDataMap, null);
+		} else if (reportType == ReportType.WEEKLY_PO_ESTIMATION) {
+
+			List<POEstimateProjectTaskActivityDetails> projectTaskActivityDetails = getAutoReportPOEstimationDataForEmail(
+					startDate, endDate, employeesList,
+					userGroupId);
+				reportDataMap.put("DATA",
+						projectTaskActivityDetails);
+		} else if (reportType == ReportType.WEEKLY_PROJECT_HOURS) {
+			
+		}
+		
+		return reportDataMap;
+	}
+
+	
 	private String getReportDateRangeString(List<String> dateList) {
 		String dateRange = "Invalid";
 		if (dateList!= null && dateList.size() > 0) {
@@ -2616,68 +2694,68 @@ public class FamstackProjectManager extends BaseFamstackManager
 					 
 					 getUserUtilization(taskTypeHours,projectDetails);
 				}
-				for (EmployeeDetails employeeDetails : employeesList) {
-					
-					if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
-						continue;
+			}
+			for (EmployeeDetails employeeDetails : employeesList) {
+				
+				if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
+					continue;
+				}
+				List<String> yearMonthWeekNumberList = DateUtils.getYearMonthWeekNumberBetwwenTwoDates(startDate, endDate);
+				
+				UserUtilizationWeekWiseDetails userUtilizationWeekWiseDetails = new UserUtilizationWeekWiseDetails();
+				userUtilizationWeekWiseDetails.createUtilizationMap(yearMonthWeekNumberList, 5);
+				
+				int reportingMangerId = employeeDetails.getReportingManger();
+				try{
+					EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
+					if (reportingEmployeeDetail != null) {
+						userUtilizationWeekWiseDetails.setReportingManager(reportingEmployeeDetail.getFirstName());
 					}
-					List<String> yearMonthWeekNumberList = DateUtils.getYearMonthWeekNumberBetwwenTwoDates(startDate, endDate);
-					
-					UserUtilizationWeekWiseDetails userUtilizationWeekWiseDetails = new UserUtilizationWeekWiseDetails();
-					userUtilizationWeekWiseDetails.createUtilizationMap(yearMonthWeekNumberList, 5);
-					
-					int reportingMangerId = employeeDetails.getReportingManger();
-					try{
-						EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
-						if (reportingEmployeeDetail != null) {
-							userUtilizationWeekWiseDetails.setReportingManager(reportingEmployeeDetail.getFirstName());
-						}
-					}catch(Exception e){
-					}
-					
-					userUtilizationWeekWiseDetails.setEmployeeName(employeeDetails
-							.getFirstName());
-					userUtilizationWeekWiseDetails.setEmailId(employeeDetails.getEmail())
-					;
-					Map<String, Map<String, Integer>> utilizationWeekTypeMap = userDateWeekHoursMap
-							.get(employeeDetails.getId());
-					
-					if (utilizationWeekTypeMap != null) {
-						for(String weekDate : yearMonthWeekNumberList) {
-							Map<String, Integer> utilizationTypeMap = utilizationWeekTypeMap.get(weekDate);
-							if (utilizationTypeMap != null) {
-								UserUtilization userUtilization =userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekDate);
+				}catch(Exception e){
+				}
+				
+				userUtilizationWeekWiseDetails.setEmployeeName(employeeDetails
+						.getFirstName());
+				userUtilizationWeekWiseDetails.setEmailId(employeeDetails.getEmail())
+				;
+				Map<String, Map<String, Integer>> utilizationWeekTypeMap = userDateWeekHoursMap
+						.get(employeeDetails.getId());
+				
+				if (utilizationWeekTypeMap != null) {
+					for(String weekDate : yearMonthWeekNumberList) {
+						Map<String, Integer> utilizationTypeMap = utilizationWeekTypeMap.get(weekDate);
+						if (utilizationTypeMap != null) {
+							UserUtilization userUtilization =userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekDate);
 
-								if (utilizationTypeMap != null) {
-									for (String type : utilizationTypeMap.keySet()) {
-										if ("billable".equalsIgnoreCase(type)) {
-											userUtilization
-													.setBillableMins(utilizationTypeMap
-															.get(type));
-										} else if ("leaveOrHoliday".equalsIgnoreCase(type)) {
-											userUtilization
-													.setLeaveOrHoliday(utilizationTypeMap
-															.get(type));
-										} else if ("nonBillabile".equalsIgnoreCase(type)) {
-											userUtilization
-													.setNonBillableMins(utilizationTypeMap
-															.get(type));
-										}
+							if (utilizationTypeMap != null) {
+								for (String type : utilizationTypeMap.keySet()) {
+									if ("billable".equalsIgnoreCase(type)) {
+										userUtilization
+												.setBillableMins(utilizationTypeMap
+														.get(type));
+									} else if ("leaveOrHoliday".equalsIgnoreCase(type)) {
+										userUtilization
+												.setLeaveOrHoliday(utilizationTypeMap
+														.get(type));
+									} else if ("nonBillabile".equalsIgnoreCase(type)) {
+										userUtilization
+												.setNonBillableMins(utilizationTypeMap
+														.get(type));
 									}
 								}
 							}
 						}
 					}
-
-					if (userUtilizationWeekWiseDetails.isUnderOrOverUtilized()) {
-						underOrOverUtilizedList.add(userUtilizationWeekWiseDetails);
-					} else {
-						userUtilizationList.add(userUtilizationWeekWiseDetails);
-					}
 				}
-				underOrOverUtilizedList.addAll(userUtilizationList);
-				//underOrOverUtilizedList.addAll(leaveOrHolidayUtilizedList);
+
+				if (userUtilizationWeekWiseDetails.isUnderOrOverUtilized()) {
+					underOrOverUtilizedList.add(userUtilizationWeekWiseDetails);
+				} else {
+					userUtilizationList.add(userUtilizationWeekWiseDetails);
+				}
 			}
+			underOrOverUtilizedList.addAll(userUtilizationList);
+			//underOrOverUtilizedList.addAll(leaveOrHolidayUtilizedList);
 		}
 		return underOrOverUtilizedList;
 	}
