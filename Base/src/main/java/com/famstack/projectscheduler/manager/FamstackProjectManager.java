@@ -59,6 +59,7 @@ import com.famstack.projectscheduler.employees.bean.UserSiteActivityDetails;
 import com.famstack.projectscheduler.employees.bean.UserUtilization;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationDetails;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationWeekWiseDetails;
+import com.famstack.projectscheduler.employees.bean.UtilizationProjectDetails;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
@@ -2357,7 +2358,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 					userSiteActivityMap, nonBillativityMap,
 					employeesList, dateList, null);
 			reportDataMap.put("DATA", activityData);
-		} else if (reportType == ReportType.USER_UTILIZATION) {
+		} else if (reportType == ReportType.USER_UTILIZATION || reportType == ReportType.WEEKLY_PROJECT_HOURS) {
 
 			List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(
 					startDate, endDate, employeesList,
@@ -2561,6 +2562,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 					getFamstackApplicationConfiguration().getAllUsersMap());
 			
 			Map<Integer, Map<String, Integer>> userTotalHoursMap = new HashMap<>();
+			Map<Integer, Map<Integer, UtilizationProjectDetails>> projectDetailsMap = new HashMap<>();
+			Map<Integer, Set<Integer>> projectTeamMembers = new HashMap<>();
+			
 			List<UserUtilizationDetails> userUtilizationDetailsList = new ArrayList<>();
 			if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
 				for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
@@ -2578,6 +2582,40 @@ public class FamstackProjectManager extends BaseFamstackManager
 						dateStringHoursMap = new HashMap<>();
 						userTotalHoursMap.put(userId, dateStringHoursMap);
 					}
+					
+					Set<Integer> teamMembers = projectTeamMembers.get(projectDetails.getProjectId());
+					if (teamMembers == null) {
+						teamMembers = new HashSet<>();
+						projectTeamMembers.put(projectDetails.getProjectId(), teamMembers);
+					}
+					
+					teamMembers.add(userId);
+					
+					Map<Integer, UtilizationProjectDetails> utilizationprojectDetailsMap = projectDetailsMap.get(userId);
+					if (utilizationprojectDetailsMap == null) {
+						utilizationprojectDetailsMap = new HashMap<>();
+						projectDetailsMap.put(userId, utilizationprojectDetailsMap);
+					}
+					UtilizationProjectDetails userUtilizationProjectDetails = utilizationprojectDetailsMap.get(projectDetails.getProjectId());
+					
+					if (userUtilizationProjectDetails == null) {
+						userUtilizationProjectDetails = new UtilizationProjectDetails();
+						userUtilizationProjectDetails.setClientName(projectDetails.getClientName());
+						userUtilizationProjectDetails.setEndDate(projectDetails.getProjectCompletionTime());
+						
+						userUtilizationProjectDetails.setMonth(Calendar.getInstance().get(Calendar.MONTH) + 1);
+						userUtilizationProjectDetails.setWeekNumber(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
+						userUtilizationProjectDetails.setYear(Calendar.getInstance().get(Calendar.YEAR));
+						
+						userUtilizationProjectDetails.setProjectName(projectDetails.getProjectName());
+						userUtilizationProjectDetails.setProjectNumber(projectDetails.getProjectNumber());
+						userUtilizationProjectDetails.setStartDate(projectDetails.getProjectStartTime());
+						userUtilizationProjectDetails.setTeamName(projectDetails.getTeamName());
+
+						utilizationprojectDetailsMap.put(projectDetails.getProjectId(), userUtilizationProjectDetails);
+					}
+					
+					
 					getUserUtilization(dateStringHoursMap,
 							projectDetails);
 					if (projectDetails.getSubItems().size() > 0) {
@@ -2612,30 +2650,25 @@ public class FamstackProjectManager extends BaseFamstackManager
 				
 				userUtilizationDetails.setEmployeeName(employeeDetails
 						.getFirstName());
+				userUtilizationDetails.setFunded(employeeDetails.getFundedEmployee());
 				userUtilizationDetails.setEmailId(employeeDetails.getEmail());
 				userUtilizationDetails.setNoOfWorkingDays(numberOfWorkingDays);
 				Map<String, Integer> utilizationTypeMap = userTotalHoursMap
 						.get(employeeDetails.getId());
-
-				if (utilizationTypeMap != null) {
-					for (String type : utilizationTypeMap.keySet()) {
-						if ("billable".equalsIgnoreCase(type)) {
-							userUtilizationDetails
-									.setBillableMins(utilizationTypeMap
-											.get(type));
-						} else if ("leaveOrHoliday".equalsIgnoreCase(type)) {
-							userUtilizationDetails
-									.setLeaveOrHoliday(utilizationTypeMap
-											.get(type));
-						} else if ("nonBillabile".equalsIgnoreCase(type)) {
-							userUtilizationDetails
-									.setNonBillableMins(utilizationTypeMap
-											.get(type));
-						}
-					}
+				
+				Map<Integer, UtilizationProjectDetails> utilizationProjectDetailsMap = projectDetailsMap
+						.get(employeeDetails.getId());
+				
+				userUtilizationDetails.setTeamMembers(getProjectTeamMembersNames(utilizationProjectDetailsMap, projectTeamMembers));
+				List<UtilizationProjectDetails> projectUtilizationDetails = new ArrayList<>();
+				if (utilizationProjectDetailsMap != null) {
+					projectUtilizationDetails.addAll(utilizationProjectDetailsMap.values());
 				}
+				userUtilizationDetails.setUtilizationProjectDetailsList(projectUtilizationDetails);
+				setUtilizationNonBillableHours(userUtilizationDetails,
+						utilizationTypeMap);
 
-				if (userUtilizationDetails.getLeaveHours() > 0) {
+				if (userUtilizationDetails.getLeaveOrHolidayMins() > 0) {
 					leaveOrHolidayUtilizedList.add(userUtilizationDetails);
 				} else if (userUtilizationDetails.isUnderOrOverUtilized()) {
 					underOrOverUtilizedList.add(userUtilizationDetails);
@@ -2648,6 +2681,58 @@ public class FamstackProjectManager extends BaseFamstackManager
 			return underOrOverUtilizedList;
 		}
 		return null;
+	}
+
+	private Set<String> getProjectTeamMembersNames(
+			Map<Integer, UtilizationProjectDetails> utilizationProjectDetailsMap,
+			Map<Integer, Set<Integer>> projectTeamMembers) {
+		Set<String> teamMemberNames = new HashSet<>();
+		if (utilizationProjectDetailsMap != null) {
+			for (Integer projectId : utilizationProjectDetailsMap.keySet()) {
+				UtilizationProjectDetails utilizationProjectDetails = utilizationProjectDetailsMap.get(projectId);
+				Set<Integer> teamMembers = projectTeamMembers.get(projectId);
+				
+				if (teamMembers != null) {
+					for(Integer userId : teamMembers) {
+						EmployeeDetails empDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(userId);
+						if (empDetails != null) {
+							teamMemberNames.add(empDetails.getFirstName());
+						}
+					}
+				}
+			}
+		}
+		return teamMemberNames;
+	}
+
+	private void setUtilizationNonBillableHours(
+			UserUtilization userUtilization,
+			Map<String, Integer> utilizationTypeMap) {
+		if (utilizationTypeMap != null) {
+			for (String type : utilizationTypeMap.keySet()) {
+				if ("billable".equalsIgnoreCase(type)) {
+					userUtilization
+							.setBillableMins(utilizationTypeMap
+									.get(type));
+				} else if ("leaveOrHoliday".equalsIgnoreCase(type)) {
+					userUtilization
+							.setLeaveOrHolidayMins(utilizationTypeMap
+									.get(type));
+				} else if ("nonBillabile".equalsIgnoreCase(type)) {
+					userUtilization
+							.setNonBillableMins(utilizationTypeMap
+									.get(type));
+				}else if ("leave".equalsIgnoreCase(type)) {
+					userUtilization
+					.setLeaveMins(utilizationTypeMap
+							.get(type));
+				}else if ("holiday".equalsIgnoreCase(type)) {
+					userUtilization
+					.setHolidayMins(utilizationTypeMap
+							.get(type));
+				}
+			}
+		}
 	}
 
 	
@@ -2726,24 +2811,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 						Map<String, Integer> utilizationTypeMap = utilizationWeekTypeMap.get(weekDate);
 						if (utilizationTypeMap != null) {
 							UserUtilization userUtilization =userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekDate);
-
-							if (utilizationTypeMap != null) {
-								for (String type : utilizationTypeMap.keySet()) {
-									if ("billable".equalsIgnoreCase(type)) {
-										userUtilization
-												.setBillableMins(utilizationTypeMap
-														.get(type));
-									} else if ("leaveOrHoliday".equalsIgnoreCase(type)) {
-										userUtilization
-												.setLeaveOrHoliday(utilizationTypeMap
-														.get(type));
-									} else if ("nonBillabile".equalsIgnoreCase(type)) {
-										userUtilization
-												.setNonBillableMins(utilizationTypeMap
-														.get(type));
-									}
-								}
-							}
+							
+							setUtilizationNonBillableHours(userUtilization,
+									utilizationTypeMap);
 						}
 					}
 				}
@@ -2788,10 +2858,12 @@ public class FamstackProjectManager extends BaseFamstackManager
 			String taskActCategory = subActivityDetails
 					.getTaskActCategory();
 			if (FamstackConstants.HOLIDAY
-					.equalsIgnoreCase(taskActCategory)
-					|| FamstackConstants.LEAVE
-							.equalsIgnoreCase(taskActCategory)
-					|| FamstackConstants.LEAVE_OR_HOLIDAY
+					.equalsIgnoreCase(taskActCategory)) {
+				userUtilizationType = "holiday";
+			} else if (FamstackConstants.LEAVE
+							.equalsIgnoreCase(taskActCategory)) {
+				userUtilizationType = "leave";
+			} else if (FamstackConstants.LEAVE_OR_HOLIDAY
 							.equalsIgnoreCase(taskActCategory)) {
 				userUtilizationType = "leaveOrHoliday";
 			} else {

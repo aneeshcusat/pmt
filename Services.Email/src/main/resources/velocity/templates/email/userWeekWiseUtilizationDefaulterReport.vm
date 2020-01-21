@@ -43,8 +43,8 @@
 				<b>$weekUtilizationData.nonBillableHours</b>
 			#end
 			</td>
-			#if($weekUtilizationData.LeaveHours > 0)
-				<td style="background-color: #ff0;text-align: center;border: 1px solid lightgrey;"><b>$weekUtilizationData.leaveOrHoliday</b></td>
+			#if($weekUtilizationData.leaveOrHolidayMins > 0)
+				<td style="background-color: #ff0;text-align: center;border: 1px solid lightgrey;"><b>$weekUtilizationData.leaveOrHolidayHours</b></td>
 			#else
 				<td style="text-align: center;border: 1px solid lightgrey;"></td>
 			#end

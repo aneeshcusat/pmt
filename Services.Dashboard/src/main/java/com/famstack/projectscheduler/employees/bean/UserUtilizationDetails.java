@@ -1,5 +1,8 @@
 package com.famstack.projectscheduler.employees.bean;
 
+import java.util.List;
+import java.util.Set;
+
 
 
 public class UserUtilizationDetails  extends UserUtilization{
@@ -7,6 +10,10 @@ public class UserUtilizationDetails  extends UserUtilization{
 	String employeeName;
 	String reportingManager;
 	String emailId;
+	List<UtilizationProjectDetails> utilizationProjectDetailsList;
+	private Set<String> teamMembers;
+	
+	private Boolean funded;
 	
 	public String getEmployeeName() {
 		return employeeName;
@@ -41,6 +48,31 @@ public class UserUtilizationDetails  extends UserUtilization{
 
 	@Override
 	public boolean isNotifyUsers(){
-		return isUnderOrOverUtilized() && leaveOrHoliday == 0;
+		return isUnderOrOverUtilized() && leaveOrHolidayMins == 0;
+	}
+
+	public List<UtilizationProjectDetails> getUtilizationProjectDetailsList() {
+		return utilizationProjectDetailsList;
+	}
+
+	public void setUtilizationProjectDetailsList(
+			List<UtilizationProjectDetails> utilizationProjectDetailsList) {
+		this.utilizationProjectDetailsList = utilizationProjectDetailsList;
+	}
+
+	public Boolean getFunded() {
+		return funded;
+	}
+
+	public void setFunded(Boolean funded) {
+		this.funded = funded;
+	}
+
+	public Set<String> getTeamMembers() {
+		return teamMembers;
+	}
+
+	public void setTeamMembers(Set<String> teamMembers) {
+		this.teamMembers = teamMembers;
 	}
 }

@@ -9,7 +9,7 @@
     <!-- START CONTENT FRAME TOP -->
     <div class="content-frame-top">                        
         <div class="page-title">                    
-            <h2><span class="fa fa-table"></span>Reports</h2>
+            <h2><span class="fa fa-table"></span>&nbsp;Reports</h2>
         </div>  
         
     </div>
@@ -95,6 +95,25 @@
        	<th>Leave or Holiday</th>
        	<th>Utilization</th>
        	<th>Total Hours</th>
+       </tr>
+       
+       	<tr class="reportDataHeader-projecthours">
+       	<th width="50px">Sl No</th>
+       	<th>Team Name</th>
+       	<th>Year</th>
+       	<th>Month</th>
+       	<th>Week NO</th>
+       	<th>Client Name</th>
+       	<th>PO NO</th>
+       	<th>Project Name</th>
+       	<th>Start Date</th>
+       	<th>End Date</th>
+       	<th>Team Members</th>
+       	<th>Funded/Non Funded Resource</th>
+       	<th>Owner Name</th>
+       	<th>Estimated Hours</th>
+       	<th>Actual Hours</th>
+       	<th>Leave/Holiday</th>
        </tr>
        
        <tr class="reportDataHeader-utilization-monthly">

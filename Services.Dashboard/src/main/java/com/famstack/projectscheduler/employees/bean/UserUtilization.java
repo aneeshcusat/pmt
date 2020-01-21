@@ -5,14 +5,16 @@ import java.util.Date;
 public class UserUtilization {
 	int billableMins;
 	int nonBillableMins;
-	int leaveOrHoliday = 0;
+	int leaveOrHolidayMins = 0; 
+	int leaveMins = 0;
+	int holidayMins = 0;
 	int noOfWorkingDays;
 	Date startDate;
 	boolean futureDateTask;
 
 	public double getUtilizationDouble() {
 		if (noOfWorkingDays > 0) {
-			double totalWorkingDayDurationInMins = (noOfWorkingDays * 8 * 60) - (leaveOrHoliday);
+			double totalWorkingDayDurationInMins = (noOfWorkingDays * 8 * 60) - (getLeaveOrHolidayMins());
 			double totalUtilizedInMins = billableMins + nonBillableMins;
 			if (totalWorkingDayDurationInMins > 0) {
 			 return (totalUtilizedInMins/totalWorkingDayDurationInMins) * 100;		
@@ -52,17 +54,17 @@ public class UserUtilization {
 		this.nonBillableMins = nonBillableHours;
 	}
 
-	public String getLeaveOrHoliday() {
-		return getTimeInHrs(leaveOrHoliday);
+	public String getLeaveOrHolidayHours() {
+		return getTimeInHrs(getLeaveOrHolidayMins());
 	}
 
-	public void setLeaveOrHoliday(int leaveOrHoliday) {
-		this.leaveOrHoliday = leaveOrHoliday;
+	public void setLeaveOrHolidayMins(int leaveOrHolidayMins) {
+		this.leaveOrHolidayMins = leaveOrHolidayMins;
 	}
 
 	
-	public int getLeaveHours() {
-		return leaveOrHoliday;
+	public int getLeaveOrHolidayMins() {
+		return leaveOrHolidayMins + leaveMins + holidayMins;
 	}
 
 	public int getNoOfWorkingDays() {
@@ -86,17 +88,17 @@ public class UserUtilization {
 		return billableMins + nonBillableMins;
 	}
 	
-	public int getTotalWithLeave() {
-		return billableMins + nonBillableMins + leaveOrHoliday;
+	public int getTotalWithLeaveMins() {
+		return billableMins + nonBillableMins + getLeaveOrHolidayMins();
 	}
 	
 	public String getTotalWithLeaveHrs() {
-		return getTimeInHrs(getTotalWithLeave());
+		return getTimeInHrs(getTotalWithLeaveMins());
 	}
 
 	public boolean isNotifyUsers() {
-		int totalHours = getTotalWithLeave(); 
-		if (totalHours < getNoOfWorkingDays() * 8 * 60) {
+		int totalMins = getTotalWithLeaveMins(); 
+		if (totalMins < getNoOfWorkingDays() * 8 * 60) {
 			return true;
 		}
 		return false;
@@ -116,5 +118,29 @@ public class UserUtilization {
 
 	public int getNonBillableMins() {
 		return nonBillableMins;
+	}
+
+	public int getLeaveMins() {
+		return leaveMins;
+	}
+
+	public void setLeaveMins(int leaveMins) {
+		this.leaveMins = leaveMins;
+	}
+
+	public int getHolidayMins() {
+		return holidayMins;
+	}
+
+	public void setHolidayMins(int holidayMins) {
+		this.holidayMins = holidayMins;
+	}
+	
+	public String getEstimatedHours() {
+		return getTimeInHrs((noOfWorkingDays * 8 * 60) - holidayMins);
+	}
+	
+	public String getActualHours() {
+		return getTimeInHrs(getTotal() + getLeaveMins());
 	}
 }

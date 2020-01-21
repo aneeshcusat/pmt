@@ -146,7 +146,7 @@ $(".autoReportType").on("change",function(){
 	 $(".autoReportDuration option").remove();
 	 $('.autoReportDuration').append($('<option>').val("DAILY").text("Daily"));
 	 $('.autoReportDuration').append($('<option>').val("WEEKLY").text("Weekly"));
-	 $('.autoReportDuration').append($('<option>').val("WEEKLY_DAILY").text("Weekly Day wise"));
+	 $('.autoReportDuration').append($('<option>').val("WEEKLY_DAILY").text("Weekly Day wise")).css("hide");
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY").text("Monthly"));
 
 	 clearReportDataTable();
@@ -250,6 +250,7 @@ function refreshReportData() {
 function fillReportTableData(data, reportType,autoReportDuration){
 	var fileName = "";
 	var jsonData = JSON.parse(data);
+	console.log(jsonData);
 	 if("USER_SITE_ACTIVITY" == reportType) {
 		 fillUserActivityReportData(data);
 		 fileName = "User Site Activity Report";
@@ -267,8 +268,7 @@ function fillReportTableData(data, reportType,autoReportDuration){
 		 fillPOEstimationReportData(data);
 		 fileName = "PO Estimation Report";
 	 } else  if("WEEKLY_PROJECT_HOURS" == reportType) {
-		 
-		 
+		 fillProjectHoursReportData(data);
 		 fileName = "Weekly Project Hours Report";
 	 }
 	 
@@ -331,10 +331,10 @@ function fillUserUtilizationReportData(data) {
 		}
 		reportBodyHtml += "<td>"+value.billableHours+"</td>";
 		reportBodyHtml += "<td>"+value.nonBillableHours+"</td>";
-		if(parseInt(value.leaveHours) > 0) {
-			reportBodyHtml += "<td><span style='color: brown;font-weight: bold;'>"+value.leaveOrHoliday+"</span></td>";
+		if(parseInt(value.leaveOrHolidayMins) > 0) {
+			reportBodyHtml += "<td><span style='color: brown;font-weight: bold;'>"+value.leaveOrHolidayHours+"</span></td>";
 		} else {
-			reportBodyHtml += "<td>"+value.leaveOrHoliday+"</td>";
+			reportBodyHtml += "<td>"+value.leaveOrHolidayHours+"</td>";
 		}
 		
 	
@@ -388,12 +388,12 @@ function fillUserUtilizationMonthlyReportData(data) {
 			} else {
 				reportBodyHtml += "<td></td>";
 			}
-			if(parseInt(value.userUtilizationMap[weekValue].leaveHours) > 0) {
-				reportBodyHtml += "<td><span style='color: brown;font-weight: bold;'>"+value.userUtilizationMap[weekValue].leaveOrHoliday+"</span></td>";
+			if(parseInt(value.userUtilizationMap[weekValue].leaveOrHolidayMins) > 0) {
+				reportBodyHtml += "<td><span style='color: brown;font-weight: bold;'>"+value.userUtilizationMap[weekValue].leaveOrHolidayHours+"</span></td>";
 			} else {
 				reportBodyHtml += "<td></td>";
 			}
-			if(parseInt(value.userUtilizationMap[weekValue].totalWithLeave) > 0) {
+			if(parseInt(value.userUtilizationMap[weekValue].totalWithLeaveMins) > 0) {
 				if(value.userUtilizationMap[weekValue].notifyUsers) {
 					reportBodyHtml += "<td style='text-align: center;background-color: efefef;font-weight:bold'><span style='color: red;font-weight: bold;'>"+value.userUtilizationMap[weekValue].totalWithLeaveHrs+"</span></td>";
 				} else {
@@ -459,6 +459,112 @@ function fillPOEstimationReportData(data) {
 	$(".reportDataBody").html( reportBodyHtml );
 
 }
+
+function fillProjectHoursReportData(data) {
+	var jsonData = JSON.parse(data);
+	var reportHeader = $(".reportDataTemplate .reportDataHeader-projecthours").clone();
+	var headerHtml = $(reportHeader).html();
+	
+	$(".retportDataHeader").html("<tr>" + headerHtml + "</tr>");
+	
+	var reportBodyHtml="";
+	$.each(jsonData.DATA, function( index, value ) {
+		var teamName = "";
+		var year ="";
+		var month ="";
+		var weekNumber = "";
+		var clientName = "";
+		var projectNumber ="";
+		var projectName ="";
+		var startDateString ="";
+		var endDateString ="";
+		var teamMembers = "";
+		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		
+		$.each(value.utilizationProjectDetailsList, function( projectIndex, projectValue ) {
+			if (teamName != "" && projectValue.teamName != null && projectValue.teamName != ""){
+				teamName += ", " +projectValue.teamName;
+			} else if (projectValue.teamName != null && projectValue.teamName != ""){
+				teamName += projectValue.teamName;
+			}
+			
+			if (year != "" && projectValue.year != null && projectValue.year != ""){
+				year += ", " +projectValue.year;
+			} else {
+				year += projectValue.year;
+			}
+			if (month != "" && projectValue.month != null && projectValue.month != ""){
+				month += ", " +projectValue.month;
+			} else {
+				month += projectValue.month;
+			}
+			if (weekNumber != "" && projectValue.weekNumber != null && projectValue.weekNumber != ""){
+				weekNumber += ", " +projectValue.weekNumber;
+			} else {
+				weekNumber += projectValue.weekNumber;
+			}
+			if (clientName != "" && projectValue.clientName != null && projectValue.clientName != ""){
+				clientName += ", " +projectValue.clientName;
+			} else if (projectValue.clientName != null && projectValue.clientName != ""){
+				clientName += projectValue.clientName;
+			}
+			if (projectNumber != "" && projectValue.projectNumber != null && projectValue.projectNumber != ""){
+				projectNumber += ", " +projectValue.projectNumber;
+			} else if ( projectValue.projectNumber != null && projectValue.projectNumber != ""){
+				projectNumber += projectValue.projectNumber;
+			}
+			if (projectName != "" && projectValue.projectName != null && projectValue.projectName != ""){
+				projectName += ", " +projectValue.projectName;
+			} else if (projectValue.projectName != null && projectValue.projectName != ""){
+				projectName += projectValue.projectName;
+			}
+			if (startDateString != "" && projectValue.startDateString != null && projectValue.startDateString != ""){
+				startDateString += ", " +projectValue.startDateString;
+			} else if (projectValue.startDateString != null && projectValue.startDateString != ""){
+				startDateString += projectValue.startDateString;
+			}
+			if (endDateString != "" && projectValue.endDateString != null && projectValue.endDateString != ""){
+				endDateString += ", " +projectValue.endDateString;
+			} else if (projectValue.endDateString != null && projectValue.endDateString != ""){
+				endDateString += projectValue.endDateString;
+			}
+		});
+		
+		reportBodyHtml += "<td>"+teamName+"</td>";
+		reportBodyHtml += "<td>"+(moment().year())+"</td>";
+		reportBodyHtml += "<td>"+(moment().format('MMMM'))+"</td>";
+		
+		reportBodyHtml += "<td>"+ (moment().week())+"</td>";
+		reportBodyHtml += "<td>"+clientName+"</td>";
+		reportBodyHtml += "<td>"+projectNumber+"</td>";
+		reportBodyHtml += "<td>"+projectName+"</td>";
+		reportBodyHtml += "<td>"+startDateString+"</td>";
+		reportBodyHtml += "<td>"+endDateString+"</td>";
+		
+		reportBodyHtml += "<td>"+value.teamMembers+"</td>";
+
+		if (value.funded == null) {
+			reportBodyHtml += "<td></td>";
+		} else {
+			reportBodyHtml += "<td>"+value.funded+"</td>";
+		}
+		reportBodyHtml += "<td>"+value.employeeName+"</td>";
+		
+		reportBodyHtml += "<td>"+value.estimatedHours+"</td>";
+		reportBodyHtml += "<td>"+value.actualHours+"</td>";
+		
+		if(parseInt(value.leaveOrHolidayMins) > 0) {
+			reportBodyHtml += "<td><span style='color: brown;font-weight: bold;'>"+value.leaveOrHolidayHours+"</span></td>";
+		} else {
+			reportBodyHtml += "<td>"+value.leaveOrHolidayHours+"</td>";
+		}
+		reportBodyHtml += "</tr>";
+	});
+	
+	$(".reportDataBody").html( reportBodyHtml );
+}
+
+
 
 $(".exportButton").on("click", function(){$(".reportDataTable button.xlsx").click();;});
 
