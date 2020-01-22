@@ -82,6 +82,10 @@
 	                    <li><a href="${applicationHome}/projectreporting?format=default"><span class="fa fa-table"></span><span class="xn-text">Project Reporting</span></a></li>
                     </c:if>
                     
+                    <li>
+                    	<a href="${applicationHome}/reports"><span class="fa fa-table"></span><span class="xn-text">Other Reports</span></a>
+                    </li>
+                    
                     <li  class="menuExpandLink xn-openable<c:if test="${expandedPage}"></c:if>">
                         <a href="#"><span class="fa fa-files-o"></span> <span class="xn-text">Additional Features</span></a>
                         <ul>
@@ -100,7 +104,6 @@
                             <li><a href="${applicationHome}/applicationConfig"><span class="fa fa-cog"></span>Application config</a></li>
                             </c:if>
                             <li><a href="${applicationHome}/userSiteActivity"><span class="fa fa-calendar"></span>User Site Activity</a></li>
-                             <li><a href="${applicationHome}/reports"><span class="fa fa-table"></span>Reports</a></li>
                         </ul>
                     </li>
                     </c:if>

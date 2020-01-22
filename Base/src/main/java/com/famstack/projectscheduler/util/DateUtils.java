@@ -351,7 +351,6 @@ public final class DateUtils extends BaseFamstackService
 	public static String getYearMonthWeekNumber(Date taskActivityStartTime) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(taskActivityStartTime);
-		
 		return "" + calendar.get(Calendar.YEAR) + calendar.get(Calendar.WEEK_OF_YEAR);
 	}
 	
@@ -363,6 +362,32 @@ public final class DateUtils extends BaseFamstackService
 			tempStartDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, 7);
 		} while (tempStartDate.before(endDate));
 		
+		return yearMonthWeekNumber;
+	}
+	
+	public static List<String> getYearMonthWeekNumberBetwwenTwoDatesENE(
+			Date startDate, Date endDate) {
+		Date tempStartDate = new Date(startDate.getTime());
+		List<String> yearMonthWeekNumber = new ArrayList<>();
+		Calendar cal = Calendar.getInstance();
+		do{
+			cal.setTime(tempStartDate);
+			String weekNumber = getYearMonthWeekNumber(tempStartDate);
+			int incrementValue = 6;
+			if (cal.get(Calendar.DAY_OF_WEEK) > 2) {
+				incrementValue -= cal.get(Calendar.DAY_OF_WEEK);
+				incrementValue+=2;
+			} else if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
+				incrementValue = 0;
+				weekNumber = "" + cal.get(Calendar.YEAR) + (cal.get(Calendar.WEEK_OF_YEAR) - 1);
+			}
+			Date nextEndDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, incrementValue);
+			if (nextEndDate.after(endDate)) {
+				nextEndDate = endDate;
+			}
+			yearMonthWeekNumber.add(weekNumber);
+			tempStartDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, incrementValue + 1);
+		} while (tempStartDate.before(endDate));
 		return yearMonthWeekNumber;
 	}
 	
@@ -390,4 +415,37 @@ public final class DateUtils extends BaseFamstackService
 		cal.add(Calendar.DAY_OF_MONTH, 7);
 		return cal.getTime();
 	}
+
+	public static Map<String, String> getWeekRangeBetwwenTwoDatesEndToEnd(
+			Date startDate, Date endDate) {
+		Date tempStartDate = new Date(startDate.getTime());
+		Map<String, String> weekRange = new HashMap<>();
+		Calendar cal = Calendar.getInstance();
+		do{
+			cal.setTime(tempStartDate);
+			String weekNumber = getYearMonthWeekNumber(tempStartDate);
+			
+			int incrementValue = 6;
+			if (cal.get(Calendar.DAY_OF_WEEK) > 2) {
+				incrementValue -= cal.get(Calendar.DAY_OF_WEEK);
+				incrementValue+=2;
+			} else if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
+				incrementValue = 0;
+				weekNumber = "" + cal.get(Calendar.YEAR) + (cal.get(Calendar.WEEK_OF_YEAR) - 1);
+			}
+			System.out.println("tempStartDate " + tempStartDate);
+			System.out.println("getYearMonthWeekNumber(tempStartDate)  " + getYearMonthWeekNumber(tempStartDate));
+			System.out.println("incrementValue" + incrementValue );
+			Date nextEndDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, incrementValue);
+			if (nextEndDate.after(endDate)) {
+				nextEndDate = endDate;
+			}
+			weekRange.put(weekNumber, format(tempStartDate, DATE_FORMAT) +" - " + format(nextEndDate, DATE_FORMAT));
+			tempStartDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, incrementValue + 1);
+		} while (tempStartDate.before(endDate));
+		
+		return weekRange;
+	}
+
+	
 }

@@ -2365,13 +2365,18 @@ public class FamstackProjectManager extends BaseFamstackManager
 					userGroupId, null);
 			reportDataMap.put("DATA",
 					utilizationDetails);
-		} else if (reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY) {
-
-				Map<String, String> weekRangeBtwTwoDates = DateUtils.getWeekRangeBetwwenTwoDates(startDate, endDate);
+		} else if (reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY || reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY_ENE) {
+				Map<String, String> weekRangeBtwTwoDates = null;
+				List<String> yearMonthWeekNumberList = null;
+				
+				if (reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY_ENE) {
+					weekRangeBtwTwoDates = DateUtils.getWeekRangeBetwwenTwoDatesEndToEnd(startDate, endDate);
+					yearMonthWeekNumberList =DateUtils.getYearMonthWeekNumberBetwwenTwoDatesENE(startDate, endDate);
+				} else {
+					weekRangeBtwTwoDates = DateUtils.getWeekRangeBetwwenTwoDates(startDate, endDate);
+					yearMonthWeekNumberList =DateUtils.getYearMonthWeekNumberBetwwenTwoDates(startDate, endDate);
+				}
 				reportDataMap.put("DATE_LIST",weekRangeBtwTwoDates);
-				
-				List<String> yearMonthWeekNumberList =DateUtils.getYearMonthWeekNumberBetwwenTwoDates(startDate, endDate);
-				
 				reportDataMap.put("WEEK_LIST",
 						yearMonthWeekNumberList);
 				

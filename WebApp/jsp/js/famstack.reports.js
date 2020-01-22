@@ -148,22 +148,26 @@ $(".autoReportType").on("change",function(){
 	 $('.autoReportDuration').append($('<option>').val("WEEKLY").text("Weekly"));
 	 $('.autoReportDuration').append($('<option>').val("WEEKLY_DAILY").text("Weekly Day wise")).css("hide");
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY").text("Monthly"));
+	 $('.autoReportDuration').append($('<option>').val("MONTHLY_ENE").text("Monthly End to End")).css('hide');
 
 	 clearReportDataTable();
 	 
 	 var selectedValue = $(this).val();
 	 if("USER_SITE_ACTIVITY" == selectedValue) {
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
 	 } else  if("USER_UTILIZATION" == selectedValue) {
 		 
 	 } else  if("WEEKLY_PO_ESTIMATION" == selectedValue) {
 		 $(".autoReportDuration option[value='DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
 	 } else  if("WEEKLY_PROJECT_HOURS" == selectedValue) {
 		 $(".autoReportDuration option[value='DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
 	 }
 	 $(".autoReportDuration").trigger("change");
 });
@@ -182,6 +186,8 @@ $(".autoReportDuration").on("change",function(){
 	 } else if ("WEEKLY_DAILY" == selectedValue) {
 		 $('.weekSelector').removeClass("hide");
 	 } else if ("MONTHLY" == selectedValue) {
+		 $('.monthSelector').removeClass("hide");
+	 } else if ("MONTHLY_ENE" == selectedValue) {
 		 $('.monthSelector').removeClass("hide");
 	 }
 });
@@ -223,6 +229,11 @@ function refreshReportData() {
 			 startDate = firstDayOfMonth;
 			 endDate = lastDayOfMonth;
 		 }
+	 } else if ("MONTHLY_ENE" == autoReportDuration) {
+		 var firstDayOfMonth =  new Date("01-" + $('.monthSelector').val());
+		 var lastDayOfMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+		 startDate = firstDayOfMonth;
+		 endDate = lastDayOfMonth;
 	 }
 	 
 	 var reportStartDate = formatCalenderDate(new Date(startDate));
@@ -235,6 +246,8 @@ function refreshReportData() {
 			 reportType = "WEEKWISE_USER_UTILIZATION_MONTHLY";
 		 } else if ("WEEKLY_DAILY" == autoReportDuration) {
 			 reportType = "DAILYWISE_USER_UTILIZATION_WEEKLY";
+		 } else if ("MONTHLY_ENE" == autoReportDuration) {
+			 reportType = "WEEKWISE_USER_UTILIZATION_MONTHLY_ENE";
 		 }
 	 } else  if("WEEKLY_PO_ESTIMATION" == autoReportType) {
 	 } else  if("WEEKLY_PROJECT_HOURS" == autoReportType) {
@@ -259,10 +272,11 @@ function fillReportTableData(data, reportType,autoReportDuration){
 		 fileName = "User Utilization Report";
 	 } else  if("WEEKWISE_USER_UTILIZATION_MONTHLY" == reportType) {
 		 fillUserUtilizationMonthlyReportData(data);
-		 fileName = "User Montly Utilization Report";
+		 fileName = "User Monthly Utilization Report";
+	 }else  if("WEEKWISE_USER_UTILIZATION_MONTHLY_ENE" == reportType) {
+		 fillUserUtilizationMonthlyReportData(data);
+		 fileName = "User Monthly Utilization Report";
 	 } else  if("DAILYWISE_USER_UTILIZATION_WEEKLY" == reportType) {
-		 
-		 
 		 fileName = "User Weekly Utilization Report";
 	 } else  if("WEEKLY_PO_ESTIMATION" == reportType) {
 		 fillPOEstimationReportData(data);
