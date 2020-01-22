@@ -50,7 +50,7 @@
 			#end
 			#if($weekUtilizationData.notifyUsers && $weekUtilizationData.futureDateTask == false)
 				<td style="text-align: center;border: 1px solid lightgrey;background-color: #f00;">
-				#if($weekUtilizationData.totalWithLeave > 0)
+				#if($weekUtilizationData.totalWithLeaveMins > 0)
 					<b>$weekUtilizationData.totalWithLeaveHrs</b>
 				#else
 					0.00
@@ -58,7 +58,7 @@
 				</td>
 			#else
 				<td style="text-align: center;border: 1px solid lightgrey;background-color: lightgray;">
-				#if($weekUtilizationData.totalWithLeave > 0)
+				#if($weekUtilizationData.totalWithLeaveMins > 0)
 					<b>$weekUtilizationData.totalWithLeaveHrs</b>
 				#else
 					0.00
