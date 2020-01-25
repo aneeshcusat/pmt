@@ -59,8 +59,8 @@
         	</div>
         	
         	<div class="col-md-3" style="text-align: center">
-        		<input class="btn btn-info refreshButton" type="button" value="Refresh"/>
-        		<button class="btn btn-warning clearfix exportButton"><span class="fa fa-file-excel-o"></span> Export</button>
+        		<input class="btn btn-info refreshButton hide" type="button" value="Refresh"/>
+        		<button class="btn btn-warning clearfix exportButton hide"><span class="fa fa-file-excel-o"></span> Export</button>
         	</div>
         </div>
             <div class="col-md-12" style="overflow-x:auto;">

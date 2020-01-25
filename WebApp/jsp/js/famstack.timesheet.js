@@ -151,10 +151,10 @@ function moveToPreviousWeek(){
 	checkValidDate();
 	 var date =  new Date($(".weekSelector").val());
 	 date.setDate(date.getDate() - 7);
-	 if (canMoveToPrevious(date)) {
-		 $('.weekSelector').val(formatDate(date));
-		 fillWeeklyDates(date);
-	}
+	 var proposedDate = new Date(date);
+	 $('.weekSelector').val(formatDate(date));
+	fillWeeklyDates(date);
+	canMoveToPreviousAndEdit(proposedDate);
 }
 
 function moveToNextWeek(){
@@ -441,16 +441,23 @@ function getLastMonday(date) {
 	  return t;
 }
 
-function canMoveToPrevious(proposedDate){
-	
+function canMoveToPreviousAndEdit(proposedDate){
 	if(weekTLDisableMonthEnabled) {
 		var lastMonthDate = getLastDayOfMonth(new Date());
+		var firstDayOfCurrentMonth = new Date(lastMonthDate);
 		if(lastMonthDate.getTime() >= proposedDate.getTime()) {
-			return false;
+			var index = 0;
+			var tempDate = new Date(proposedDate);
+			firstDayOfCurrentMonth.setDate(lastMonthDate.getDate() + 1);
+			
+			do {
+			$(".weekday.day" + (index + 1)).addClass("hide");
+			 tempDate.setDate(tempDate.getDate() + 1);
+			 index++;
+			}
+			while (index < 7 && firstDayOfCurrentMonth.getTime() > tempDate.getTime());
 		}
 	}
-	
-	return true;
 }
 
 function getLastDayOfMonth(date) {
@@ -460,6 +467,7 @@ function getLastDayOfMonth(date) {
 	  } else {
 		  t.setDate(t.getDate() - 90); 
 	  }
+	  t.setHours(0, 0, 0, 0);
 	  return t;
 }
 
@@ -523,6 +531,7 @@ function formatDayDate(currentDate) {
 
 
 function fillWeeklyDates(currentDate){
+	$(".weekday").removeClass("hide");
 	for (var i =1; i < 8; i++) {
 		$(".day"+i).html(formatDayDate(currentDate));
 		currentDate.setDate(currentDate.getDate() + 1);

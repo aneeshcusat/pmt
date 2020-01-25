@@ -54,6 +54,8 @@ function moveToPrevious(){
 	 date.setMonth(date.getMonth() - 1);
 	 $('.monthSelector').val(formatMonthDate(date));
 	 
+	 checkValidDate();
+	 refreshReportData();
 }
 
 function moveToNext(){
@@ -68,6 +70,9 @@ function moveToNext(){
 	 var date =  new Date($(".monthSelector").val());
 	 date.setMonth(date.getMonth() + 1);
 	 $('.monthSelector').val(formatMonthDate(date));
+	 
+	 checkValidDate();
+	 refreshReportData();
 }
 
 function moveToCurrent(){
@@ -79,6 +84,27 @@ function moveToCurrent(){
 	 
 	 var date =  new Date();
 	 $('.monthSelector').val(formatMonthDate(date));
+	 
+	 checkValidDate();
+	 refreshReportData();
+}
+
+function checkValidDate() {
+	
+	var currentSelectedDayDate = $(".dailySelector").val();
+	if (currentSelectedDayDate == "" || currentSelectedDayDate.includes('NaN') || currentSelectedDayDate.includes('undefined')) {
+		 $('.dailySelector').val(formatDate(new Date()));
+	}
+	
+	var currentSelectedWeekDate = $(".weekSelector").val();
+	if (currentSelectedWeekDate == "" || currentSelectedWeekDate.includes('NaN') || currentSelectedWeekDate.includes('undefined')) {
+		$('.weekSelector').val(formatDate(getLastMonday(new Date())));
+	}
+	
+	var currentSelectedMonthDate = $(".monthSelector").val();
+	if (currentSelectedMonthDate == "" || currentSelectedMonthDate.includes('NaN') || currentSelectedMonthDate.includes('undefined')) {
+		$('.monthSelector').val(formatMonthDate(new Date()));
+	}
 }
 
 function getLastMonday(date) {
@@ -196,6 +222,8 @@ $(".autoReportDuration").on("change",function(){
 $(".refreshButton").on("click", refreshReportData);
 
 function refreshReportData() {
+	checkValidDate();
+	
 	var autoReportDuration = $(".autoReportDuration").val();
 	var autoReportType = $(".autoReportType").val();
 	var startDate = "";
@@ -255,6 +283,7 @@ function refreshReportData() {
 	 
 	 doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getReportData",{"reportType":reportType,"reportStartDate":reportStartDate,"reportEndDate":reportEndDate} , function(data) {
 		fillReportTableData(data, reportType, autoReportDuration);
+		$(".exportButton").removeClass("hide");
 	}, function(e) {
 	}, false);
 }
@@ -585,6 +614,7 @@ $(".exportButton").on("click", function(){$(".reportDataTable button.xlsx").clic
 function clearReportDataTable(){
 	 $(".reportDataTable .retportDataHeader").html("");
 	 $(".reportDataTable .reportDataBody").html("");
+	 $(".exportButton").addClass("hide");
 	 if (exportTable != null) {
 		 exportTable.remove();
 	 }
@@ -606,3 +636,7 @@ function initializeExportTable(fileName) {
 	    trimWhitespace: false
 	});
 }
+
+$(document).ready(function(){
+	$(".refreshButton").removeClass("hide");
+});
