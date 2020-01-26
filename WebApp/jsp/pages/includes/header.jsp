@@ -137,7 +137,7 @@
                                 <a href="notifications">Show all notifications</a>
                             </div>                            
                         </div>                        
-                    </li>
+                    </li> 
                     <!-- END Notification -->
                     <!-- TASKS -->
                     <li class="xn-icon-button pull-right">
