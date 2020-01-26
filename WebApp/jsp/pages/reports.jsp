@@ -2,7 +2,7 @@
 <%@include file="includes/header.jsp" %>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 
-<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/reports.css?version=3.4&v=${fsVersionNumber}"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/reports.css?version=3.5&v=${fsVersionNumber}"/>
 
 <!-- START CONTENT FRAME -->
 <div class="content-frame">            
@@ -148,5 +148,5 @@
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=3.8&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.reports.js?version=3.9&v=${fsVersionNumber}"></script> 
  

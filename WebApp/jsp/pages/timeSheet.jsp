@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/gentleSelect/jquery-gentleSelect.css"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/select2/select2.min.css"/>
-<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/timesheet.css?version=3.4&v=${fsVersionNumber}"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/timesheet.css?version=3.5&v=${fsVersionNumber}"/>
 
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="hasFullPermissionVar" value="${(((currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && currentUserGroupId != 1018) || currentUser.userRole == 'SUPERADMIN')}"/>
@@ -180,4 +180,4 @@ var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
 <script type="text/javascript"
 	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js?version=3.8&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.timesheet.js?version=3.9&v=${fsVersionNumber}"></script> 
