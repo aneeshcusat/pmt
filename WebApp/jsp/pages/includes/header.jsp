@@ -157,6 +157,9 @@
                             </div>                            
                         </div>                        
                     </li>
+                     <li class="xn-icon-button pull-right">
+                        <a href="${applicationHome}/messages"><span class="fa fa-envelope"></span></a>                        
+                    </li>
                     <!-- END TASKS -->
                 </ul>
                 <!-- END X-NAVIGATION VERTICAL -->                     
