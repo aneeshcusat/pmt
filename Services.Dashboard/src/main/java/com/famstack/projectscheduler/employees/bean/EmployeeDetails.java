@@ -26,8 +26,6 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
 
     private String empCode;
 
-    private Boolean temporaryEmployee;
-    
     private Boolean fundedEmployee;
 
     private Boolean needPasswordReset;
@@ -52,8 +50,6 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
 
     private String dateOfBirth;
 
-    private int reportingManger;
-
     private Timestamp lastPing;
 
     private Date userAvailableTime;
@@ -63,6 +59,32 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
     private Integer userAccessCode;
     
     private boolean deleted;
+    
+    private String division;
+    
+    private String country;
+    
+    private String department;
+    
+    private String subDepartment;
+    
+    private String location;
+    
+    private String band;
+    
+    private String grade;
+
+    private String dateOfJoin;
+    
+    private String exitDate;
+    
+    private String empType;
+    
+    private String reportertingManagerEmailId;
+    
+    private String deptLeadEmailId;
+    
+    private String lobHeadEmailId;
 
     public boolean isDeleted() {
 		return deleted;
@@ -241,17 +263,6 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
     {
         this.team = team;
     }
-
-    public int getReportingManger()
-    {
-        return reportingManger;
-    }
-
-    public void setReportingManger(int reportingManger)
-    {
-        this.reportingManger = reportingManger;
-    }
-
     public Timestamp getLastPing()
     {
         return lastPing;
@@ -329,16 +340,6 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
         this.empCode = empCode;
     }
 
-    public Boolean getTemporaryEmployee()
-    {
-        return temporaryEmployee == null ? false : temporaryEmployee;
-    }
-
-    public void setTemporaryEmployee(Boolean temporaryEmployee)
-    {
-        this.temporaryEmployee = temporaryEmployee;
-    }
-
     public Boolean getNeedPasswordReset()
     {
         return needPasswordReset == null ? false : needPasswordReset;
@@ -363,6 +364,110 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
 			return firstName.compareTo(employeeDetails.firstName);
 		} 
 		return 0;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public String getSubDepartment() {
+		return subDepartment;
+	}
+
+	public void setSubDepartment(String subDepartment) {
+		this.subDepartment = subDepartment;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getBand() {
+		return band;
+	}
+
+	public void setBand(String band) {
+		this.band = band;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public String getDateOfJoin() {
+		return dateOfJoin;
+	}
+
+	public String getExitDate() {
+		return exitDate;
+	}
+
+	public String getEmpType() {
+		return empType;
+	}
+
+	public void setEmpType(String empType) {
+		this.empType = empType;
+	}
+
+	public String getReportertingManagerEmailId() {
+		return reportertingManagerEmailId;
+	}
+
+	public void setReportertingManagerEmailId(String reportertingManagerEmailId) {
+		this.reportertingManagerEmailId = reportertingManagerEmailId;
+	}
+
+	public String getDeptLeadEmailId() {
+		return deptLeadEmailId;
+	}
+
+	public void setDeptLeadEmailId(String deptLeadEmailId) {
+		this.deptLeadEmailId = deptLeadEmailId;
+	}
+
+	public String getLobHeadEmailId() {
+		return lobHeadEmailId;
+	}
+
+	public void setLobHeadEmailId(String lobHeadEmailId) {
+		this.lobHeadEmailId = lobHeadEmailId;
+	}
+
+	public void setDateOfJoin(String dateOfJoin) {
+		this.dateOfJoin = dateOfJoin;
+	}
+
+	public void setExitDate(String exitDate) {
+		this.exitDate = exitDate;
 	}
 
 }

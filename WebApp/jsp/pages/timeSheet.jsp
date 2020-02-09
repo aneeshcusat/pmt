@@ -87,12 +87,12 @@ var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
 						<td colspan="13" style="background: #fff; text-align: center;">
 							<button type="button" class="btn btn-secondary" onclick="clearWeeklyTimeLogTable();">Clear</button>
 						<button type="button" id="weeklyTimeLogSaveButton" onclick="saveCurrentProjectWeekData(true);"
-							class="btn btn-info">
+							class="btn btn-info hide">
 							<span>Save &amp; Clear</span>
 						</button>
 						
 						<button type="button" id="weeklyTimeLogSaveNextButton" onclick="saveCurrentProjectWeekDataAndMove()"
-							class="btn btn-info">
+							class="btn btn-info hide">
 							<span>Save &amp; Next Week</span>
 						</button>
 						</td>
@@ -180,4 +180,4 @@ var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
 <script type="text/javascript"
 	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js?version=3.9&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.timesheet.js?version=3.12&v=${fsVersionNumber}"></script> 

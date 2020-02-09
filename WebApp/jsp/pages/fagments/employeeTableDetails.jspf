@@ -1,0 +1,30 @@
+
+		<tr class='<c:if test="${!user.deleted}">contact-name</c:if> userDetails${user.id}  <c:if test="${user.deleted}">deletedUser</c:if>' >
+				<td>${user.id} <c:if test="${user.deleted}"><span class="hide">deleted</span></c:if></td>
+				<td>${user.empCode}</td>
+				<td>${user.firstName}</td>
+				<td>${user.email}</td>
+				<td>${user.mobileNumber}</td>
+				<td>${user.team}</td>
+				<td>${user.gender}</td>
+				<td>${user.qualification}</td>
+				<td>${user.designation}</td>
+				<td>${user.role}</td>
+				<td>${userGroupMap[user.userGroupId].name}</td>
+				
+				<td>${user.dateOfJoin}</td>
+				<td>${user.location}</td>
+				<td>${user.country}</td>
+				<td>${user.division}</td>
+				<td>${user.department}</td>
+				<td>${user.subDepartment}</td>
+				<td>${user.band}</td>
+				<td>${user.grade}</td>
+				<td>${user.empType}</td>
+				<td><c:if test="${user.fundedEmployee}">Yes<span class="hide">Funded</span></c:if><c:if test="${!user.fundedEmployee}">No</c:if></td>
+				<td><c:if test="${user.deleted}">Yes<span class="hide">Deleted</span></c:if><c:if test="${!user.deleted}">No</c:if></td>
+				<td><c:if test="${user.needPasswordReset}">No</c:if><c:if test="${!user.needPasswordReset}">Yes<span class="hide">LoggedIn</span></c:if></td>
+				<td style="width: 50px">
+					<a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${user.id}')"><span class="fa fa-edit fa-2x"></span></a>
+				</td>
+		</tr>

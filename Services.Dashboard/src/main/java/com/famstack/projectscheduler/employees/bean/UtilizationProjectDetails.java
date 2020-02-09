@@ -7,6 +7,7 @@ import com.famstack.projectscheduler.util.DateUtils;
 
 public class UtilizationProjectDetails {
 	private String teamName;
+	private String accountName;
 	private Integer year;
 	private Integer month;
 	private Integer weekNumber;
@@ -75,6 +76,12 @@ public class UtilizationProjectDetails {
 	}
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+	public String getAccountName() {
+		return accountName;
+	}
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
 	}
 
 }

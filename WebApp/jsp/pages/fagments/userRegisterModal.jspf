@@ -7,11 +7,11 @@
 <div class="row">
 	<div class="col-md-12">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-4">
 			<!-- START JQUERY VALIDATION PLUGIN -->
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="col-md-3 control-label">First Name</label>
+					<label class="col-md-3 control-label">Employee Name</label>
 					<div class="col-md-9">
 						<form:input path="firstName" type="text" value=""
 							name="firstName" id="firstName" class="form-control" placeholder="eg:Myname"
@@ -41,7 +41,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 control-label">Date of birth:</label>
+					<label class="col-md-3 control-label">Date of birth</label>
 					<div class="col-md-9">
 						 <input type="text" class="form-control dateTimePicker" id="dateOfBirth" name="dateOfBirth"  autocomplete="off"/>
 					</div>
@@ -83,20 +83,18 @@
                         </form:select>
                     </div>
                 </div>
-                
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Employee Type</label>
+                    <div class="col-md-9">
+                        <form:select path="empType" id="empType" class="form-control select" data-live-search="true">
+                            <option value="Permanent">Permanent</option>
+							<option value="Consultant">Consultant</option>
+							<option value="Contract">Contract</option>
+                        </form:select>
+                    </div>
+                </div>
                 
 				<div class="form-group">
-					<label class="col-md-3 control-label">Is Temporary:</label>
-					<div class="col-md-3">
-					<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userGroupId == '1012'}">
-						<input id="temporaryEmployee" type="checkbox" style="margin-top: 7px;"
-							name="temporaryEmployee" class=""/>
-					</c:if>
-					
-					<c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userGroupId == '1012')}">
-						<input id="temporaryEmployee" disabled="disabled" type="checkbox" style="margin-top: 7px;"/>
-					</c:if>
-					</div>
 					<label class="col-md-3 control-label">Is Funded:</label>
 					<div class="col-md-3">
 					<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userGroupId == '1012'}">
@@ -125,20 +123,12 @@
 						    </div>
     					</div>
 				</div>
-
 			</div>
 			<!-- END JQUERY VALIDATION PLUGIN -->
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-4">
 			<!-- From fields start-->
 			<div class="panel-body">
-				<div class="form-group">
-					<label class="col-md-3 control-label">Last Name</label>
-					<div class="col-md-9">
-						<form:input type="text" value="" name="lastName"
-							class="form-control" placeholder="eg:Lastname" id="lastName" tabindex="1" path="lastName"/>
-					</div>
-				</div>
 				<div class="form-group">
 					<label class="col-md-3 control-label">E-mail:</label>
 					<div class="col-md-9">
@@ -150,37 +140,13 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Emp Code:</label>
 					<div class="col-md-9">
-					 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1012'}">
+					 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1012' || currentUser.userRole == 'ADMIN'}">
 						<form:input path="empCode" type="text" value="" name="empCode" id="empCode"
 							class="form-control" placeholder="eg:123456" />
 					</c:if>
-					<c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1012')}">
+					<c:if test="${!(currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1012' || currentUser.userRole == 'ADMIN')}">
 						<input type="text" disabled="disabled" class="form-control" value="" id="empCode"/>
 					</c:if>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label">Team</label>
-					<div class="col-md-9">
-						<form:select path="team" id="team" class="form-control select" data-live-search="true" name="team">
-							  <option value="">- select -</option>
-							  <c:if test="${not empty accountData}">  
-                                <c:forEach var="account" items="${accountData}">
-                                <c:if test="${not empty account.projectTeams}">  
-                                <c:set var="teamIndex" value="1"/>
-                                  <c:forEach var="projectTeam" items="${account.projectTeams}">
-                                   	<optgroup class="teamOption" label="${projectTeam.name}"">
-                                   <c:if test="${not empty projectTeam.projectSubTeams}">  
-                                    <c:forEach var="projectSubTeam" items="${projectTeam.projectSubTeams}">
-                                    	<option>${projectSubTeam.name}</option>
-                                     <c:set var="teamIndex" value="${teamIndex+1}"/>
-                                    </c:forEach>
-                                   </c:if>
-                                  </c:forEach>
-                                </c:if>
-                   			  </c:forEach>
-                   			</c:if>
-						</form:select>
 					</div>
 				</div>
 
@@ -244,12 +210,44 @@
 				<div class="form-group">
 					<label class="col-md-3 control-label">Reporting Manager</label>
 					<div class="col-md-9">
-						<form:select path="reportingManger" id="reportingManger" name="reportingManger" class="form-control select" data-live-search="true">
+						<form:select path="reportertingManagerEmailId" id="reportingManger" name="reportertingManagerEmailId" class="form-control select" data-live-search="true">
 							<option value="">- select -</option>
 							<c:if test="${not empty allUserList}">
     						<c:forEach var="user" items="${allUserList}">
     						 	<c:if test="${user.role == 'ADMIN' || user.role == 'TEAMLEAD' || user.role == 'SUPERADMIN'}">
-    								<option value="${user.id}">${user.firstName}</option>
+    								<option value="${user.email}">${user.firstName}</option>
+    							</c:if>
+    						</c:forEach>
+    						</c:if>
+						</form:select>
+					</div>
+				</div>
+				
+					<div class="form-group">
+					<label class="col-md-3 control-label">Department/Team Lead</label>
+					<div class="col-md-9">
+						<form:select path="deptLeadEmailId" id="deptLeadEmailId" name="deptLeadEmailId" class="form-control select" data-live-search="true">
+							<option value="">- select -</option>
+							<c:if test="${not empty allUserList}">
+    						<c:forEach var="user" items="${allUserList}">
+    						 	<c:if test="${user.role == 'ADMIN' || user.role == 'TEAMLEAD' || user.role == 'SUPERADMIN'}">
+    								<option value="${user.email}">${user.firstName}</option>
+    							</c:if>
+    						</c:forEach>
+    						</c:if>
+						</form:select>
+					</div>
+				</div>
+				
+					<div class="form-group">
+					<label class="col-md-3 control-label">LOB Head</label>
+					<div class="col-md-9">
+						<form:select path="lobHeadEmailId" id="lobHeadEmailId" name="lobHeadEmailId" class="form-control select" data-live-search="true">
+							<option value="">- select -</option>
+							<c:if test="${not empty allUserList}">
+    						<c:forEach var="user" items="${allUserList}">
+    						 	<c:if test="${user.role == 'ADMIN' || user.role == 'TEAMLEAD' || user.role == 'SUPERADMIN'}">
+    								<option value="${user.email}">${user.firstName}</option>
     							</c:if>
     						</c:forEach>
     						</c:if>
@@ -260,7 +258,222 @@
 			<!-- form fields ends -->
 
 		</div>
-
+	<div class="col-md-4">
+		<div class="panel-body">
+		<div class="form-group">
+					<label class="col-md-3 control-label">Date of Joining</label>
+					<div class="col-md-9">
+						 <input type="text" class="form-control DOJdateTimePicker" id="dateOfJoin" name="dateOfJoin"  autocomplete="off"/>
+					</div>
+				</div>
+			<div class="form-group">
+				<label class="col-md-3 control-label">Location</label>
+				<div class="col-md-9">
+					<form:select path="location" id="location" class="form-control select" data-live-search="true" name="location">
+						<option value="">- select -</option>
+						<option value='Bengaluru'>Bengaluru</option>
+						<option value='WA - Washington'>WA - Washington</option>
+						<option value='Mumbai'>Mumbai</option>
+						<option value='RE - Redmond'>RE - Redmond</option>
+						<option value='FL - Florida'>FL - Florida</option>
+						<option value='AZ - Arizona'>AZ - Arizona</option>
+						<option value='Hyderabad'>Hyderabad</option>
+						<option value='CA - California'>CA - California</option>
+						<option value='Dubai'>Dubai</option>
+						<option value='GA - Georgia'>GA - Georgia</option>
+						<option value='NC - North Carolina'>NC - North Carolina</option>
+						<option value='UK'>UK</option>
+						<option value='Gurugram'>Gurugram</option>
+						<option value='OR - Portland'>OR - Portland</option>
+						<option value='New Delhi'>New Delhi</option>
+						<option value='NY - New York'>NY - New York</option>
+						<option value='TX - Austin'>TX - Austin</option>
+						<option value='MA-Worcestor'>MA-Worcestor</option>
+						<option value='TX-Dallas'>TX-Dallas</option>
+					</form:select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-3 control-label">Country</label>
+				<div class="col-md-9">
+					<form:select path="country" id="country" class="form-control select" data-live-search="true" name="country">
+						  <option value="">- select -</option>
+						<option value='India'>India</option>
+						<option value='USA'>USA</option>
+						<option value='UAE'>UAE</option>
+						<option value='UK'>UK</option>
+					</form:select>
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label class="col-md-3 control-label">Division</label>
+				<div class="col-md-9">
+					<form:select path="division" id="division" class="form-control select" data-live-search="true" name="division">
+						  <option value="">- select -</option>
+						  <option value='Market Intelligence'>Market Intelligence</option>
+						<option value='Research AI'>Research AI</option>
+						<option value='AI-Labs'>AI-Labs</option>
+						<option value='Life Sciences'>Life Sciences</option>
+						<option value='Digital & Advanced Analytics'>Digital & Advanced Analytics</option>
+						<option value='Support'>Support</option>
+					</form:select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-3 control-label">Department</label>
+				<div class="col-md-9">
+					<form:select path="department" id="department" class="form-control select" data-live-search="true" name="department">
+						  <option value="">- select -</option>
+						  <option value='Market Intelligence'>Market Intelligence</option>
+						<option value='Research AI'>Research AI</option>
+						<option value='Advisory'>Advisory</option>
+						<option value='Insights & Analytics'>Insights & Analytics</option>
+						<option value='Artificial Intelligence & Product Engineering'>Artificial Intelligence & Product Engineering</option>
+						<option value='Life Sciences'>Life Sciences</option>
+						<option value='Digital & Advanced Analytics'>Digital & Advanced Analytics</option>
+						<option value='Global Primary Research'>Global Primary Research</option>
+						<option value='Research & Analytics'>Research & Analytics</option>
+						<option value='Administration'>Administration</option>
+						<option value='Finance & Accounts'>Finance & Accounts</option>
+						<option value='Marketing & Corporate Communication'>Marketing & Corporate Communication</option>
+						<option value='Visual Services'>Visual Services</option>
+						<option value='Hitech Practice'>Hitech Practice</option>
+						<option value='Human Resources'>Human Resources</option>
+						<option value='Digital Analytics'>Digital Analytics</option>
+						<option value='Information Technology'>Information Technology</option>
+						<option value='Product & Solutions'>Product & Solutions</option>
+						<option value='AMRI'>AMRI</option>
+						<option value='Sales'>Sales</option>
+						<option value='DE, BI & Digital'>DE, BI & Digital</option>
+						<option value='Legal'>Legal</option>
+						<option value='Market Intelligence & Analytics'>Market Intelligence & Analytics</option>
+						<option value='Project Management'>Project Management</option>
+						<option value='Survey Programming'>Survey Programming</option>
+						<option value='Vendor Management'>Vendor Management</option>
+						<option value='Data Processing'>Data Processing</option>
+						<option value='Planning'>Planning</option>
+						<option value='Coding'>Coding</option>
+						<option value='Quality'>Quality</option>
+						<option value='Analytics'>Analytics</option>
+						<option value='Corporate'>Corporate</option>
+						<option value='Documentation & Analysis'>Documentation & Analysis</option>
+						<option value='Finance and Accounts'>Finance and Accounts</option>
+						<option value='Digital Solutions & Consulting'>Digital Solutions & Consulting</option>
+					</form:select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-3 control-label">Sub-Department</label>
+				<div class="col-md-9">
+					<form:select path="subDepartment" id="subDepartment" class="form-control select" data-live-search="true" name="subDepartment">
+						  <option value="">- select -</option>
+						  <option value='AMRI'>AMRI</option>
+						<option value='Global Primary Research'>Global Primary Research</option>
+						<option value='Visual Services'>Visual Services</option>
+						<option value='Market Intelligence'>Market Intelligence</option>
+						<option value='Adomate'>Adomate</option>
+						<option value='Insights & Analytics'>Insights & Analytics</option>
+						<option value='Advisory'>Advisory</option>
+						<option value='Hitech Practice'>Hitech Practice</option>
+						<option value='Artificial Intelligence & Product Engineering'>Artificial Intelligence & Product Engineering</option>
+						<option value='Quality Assurance'>Quality Assurance</option>
+						<option value='Life Sciences'>Life Sciences</option>
+						<option value='Digital & Advanced Analytics'>Digital & Advanced Analytics</option>
+						<option value='Research & Analytics'>Research & Analytics</option>
+						<option value='Sales'>Sales</option>
+						<option value='Administration'>Administration</option>
+						<option value='Finance & Accounts'>Finance & Accounts</option>
+						<option value='Lenovo'>Lenovo</option>
+						<option value='Marketing & Corporate Communication'>Marketing & Corporate Communication</option>
+						<option value='Research And Analytics'>Research And Analytics</option>
+						<option value='Digital and Advanced Analytics'>Digital and Advanced Analytics</option>
+						<option value='Market Intelligence & Analytics'>Market Intelligence & Analytics</option>
+						<option value='Digital Analytics'>Digital Analytics</option>
+						<option value='Project Management'>Project Management</option>
+						<option value='Compensation and Benefits'>Compensation and Benefits</option>
+						<option value='Information Technology'>Information Technology</option>
+						<option value='Product Delivery'>Product Delivery</option>
+						<option value='Product & Solutions'>Product & Solutions</option>
+						<option value='Human Resources'>Human Resources</option>
+						<option value='Digital'>Digital</option>
+						<option value='Product Management'>Product Management</option>
+						<option value='Talent Management'>Talent Management</option>
+						<option value='Solutions & Consulting'>Solutions & Consulting</option>
+						<option value='Advanced Analytics'>Advanced Analytics</option>
+						<option value='Legal'>Legal</option>
+						<option value='Talent Acquisition'>Talent Acquisition</option>
+						<option value='Learning & Development'>Learning & Development</option>
+						<option value='Secondary Primary Research'>Secondary Primary Research</option>
+						<option value='MI,CI & TI'>MI,CI & TI</option>
+						<option value='Project Operations'>Project Operations</option>
+						<option value='Primary Research'>Primary Research</option>
+						<option value='Analytics & Insights'>Analytics & Insights</option>
+						<option value='AM-DP'>AM-DP</option>
+						<option value='Data Processing'>Data Processing</option>
+						<option value='Quality'>Quality</option>
+						<option value='Operations'>Operations</option>
+						<option value='Documentation & Analysis'>Documentation & Analysis</option>
+						<option value='Survey Programming'>Survey Programming</option>
+						<option value='Planning'>Planning</option>
+						<option value='AM-SP'>AM-SP</option>
+						<option value='Vendor Management'>Vendor Management</option>
+						<option value='Analyse'>Analyse</option>
+						<option value='Coding'>Coding</option>
+						<option value='Sales & Marketing'>Sales & Marketing</option>
+						<option value='Research AI'>Research AI</option>
+						<option value='Data Processing '>Data Processing </option>
+						<option value='Analytics'>Analytics</option>
+						<option value='Corporate'>Corporate</option>
+						<option value='Advanced Digital Analytics'>Advanced Digital Analytics</option>
+						<option value='Digital Solutions & Consulting'>Digital Solutions & Consulting</option>
+						<option value='Solutions and Consulting'>Solutions and Consulting</option>
+					</form:select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-3 control-label">Band</label>
+				<div class="col-md-9">
+					<form:select path="band" id="band" class="form-control select" data-live-search="true" name="band">
+						  <option value="">- select -</option>
+						  <option value='Band D'>Band D</option>
+						<option value='Band C'>Band C</option>
+						<option value='Band E'>Band E</option>
+						<option value='Band B'>Band B</option>
+						<option value='Band A'>Band A</option>
+						<option value='Band F'>Band F</option>
+					</form:select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-3 control-label">Grade</label>
+				<div class="col-md-9">
+					<form:select path="grade" id="grade" class="form-control select" data-live-search="true" name="grade">
+						  <option value="">- select -</option>
+						  <option value='D 2'>D 2</option>
+						<option value='D 1'>D 1</option>
+						<option value='C 3'>C 3</option>
+						<option value='E 1'>E 1</option>
+						<option value='B 1'>B 1</option>
+						<option value='B 2'>B 2</option>
+						<option value='C 1'>C 1</option>
+						<option value='C 2'>C 2</option>
+						<option value='B 3'>B 3</option>
+						<option value='A 2'>A 2</option>
+						<option value='F 1'>F 1</option>
+						<option value='E 2'>E 2</option>
+						<option value='D 3'>D 3</option>
+						<option value='F 2'>F 2</option>
+					</form:select>
+				</div>
+			</div>
+			
+		</div>
+	</div>
 	</div>
 </div>
 </div>

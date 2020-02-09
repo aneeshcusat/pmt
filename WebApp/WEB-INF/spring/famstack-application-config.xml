@@ -78,6 +78,7 @@
 		  <entry key="format3" value-ref="famstackXLSExportProcessorFormat3"/>
 		  <entry key="useractivity" value-ref="famstackXLSEmployeeSiteActivity"/>
 		  <entry key="famstackEmpUtilisation" value-ref="famstackXLSEmployeeUtilisationProcessor" />
+		  <entry key="reportProcessor" value-ref="famstackXLSReportProcessor" />
 		</map>
 	</property>
 	</bean>

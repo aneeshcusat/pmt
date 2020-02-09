@@ -667,9 +667,14 @@ public class FamstackProjectController extends BaseFamstackService
     @ResponseBody
 	public String getReportData(@RequestParam("reportType") ReportType reportType, @RequestParam("reportStartDate") String reportStartDate, @RequestParam("reportEndDate") String reportEndDate)
     {
-        return famstackDashboardManager.getReportData(reportType, reportStartDate, reportEndDate);
+        return famstackDashboardManager.getReportDataJson(reportType, reportStartDate, reportEndDate);
     }
-    
-   
+	
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public void downloadReport(@RequestParam("reportType") ReportType reportType,@RequestParam("fileName") String fileName, @RequestParam("reportStartDate") String reportStartDate, @RequestParam("reportEndDate") String reportEndDate, HttpServletRequest request,
+	        HttpServletResponse response)
+    {
+		 famstackXLSExportManager.downloadXLSReport(reportType, fileName, famstackDashboardManager.getReportData(reportType, reportStartDate, reportEndDate), request, response);
+    }
 
 }

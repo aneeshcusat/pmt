@@ -2187,10 +2187,17 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		}
 	}
 
-	public String getReportData(ReportType reportType, String reportStartDate,
+	public String getReportDataJson(ReportType reportType, String reportStartDate,
 			String reportEndDate) {
 		Date startDate = DateUtils.tryParse(reportStartDate, DateUtils.DATE_FORMAT_CALENDER);
 		Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
 		return FamstackUtils.getJsonFromObject(projectManager.getReportData(getFamstackApplicationConfiguration().getCurrentUserGroupId(), reportType, startDate, endDate));
+	}
+	
+	public Map<String, Object> getReportData(ReportType reportType, String reportStartDate,
+			String reportEndDate) {
+		Date startDate = DateUtils.tryParse(reportStartDate, DateUtils.DATE_FORMAT_CALENDER);
+		Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
+		return projectManager.getReportData(getFamstackApplicationConfiguration().getCurrentUserGroupId(), reportType, startDate, endDate);
 	}
 }

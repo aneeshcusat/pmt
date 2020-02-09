@@ -2395,9 +2395,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 					userGroupId);
 				reportDataMap.put("DATA",
 						projectTaskActivityDetails);
-		} else if (reportType == ReportType.WEEKLY_PROJECT_HOURS) {
-			
-		}
+		} 
 		
 		return reportDataMap;
 	}
@@ -2616,7 +2614,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 						userUtilizationProjectDetails.setProjectNumber(projectDetails.getProjectNumber());
 						userUtilizationProjectDetails.setStartDate(projectDetails.getProjectStartTime());
 						userUtilizationProjectDetails.setTeamName(projectDetails.getTeamName());
-
+						userUtilizationProjectDetails.setAccountName(projectDetails.getAccountName());
 						utilizationprojectDetailsMap.put(projectDetails.getProjectId(), userUtilizationProjectDetails);
 					}
 					
@@ -2644,7 +2642,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 				
 				UserUtilizationDetails userUtilizationDetails = new UserUtilizationDetails();
 				
-				int reportingMangerId = employeeDetails.getReportingManger();
+				int reportingMangerId = 0;//employeeDetails.getReportingManger();
 				try{
 					EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
 					if (reportingEmployeeDetail != null) {
@@ -2795,7 +2793,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 				UserUtilizationWeekWiseDetails userUtilizationWeekWiseDetails = new UserUtilizationWeekWiseDetails();
 				userUtilizationWeekWiseDetails.createUtilizationMap(yearMonthWeekNumberList, 5);
 				
-				int reportingMangerId = employeeDetails.getReportingManger();
+				int reportingMangerId = 0;//employeeDetails.getReportingManger();
 				try{
 					EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
 					if (reportingEmployeeDetail != null) {

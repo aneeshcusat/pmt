@@ -55,7 +55,7 @@ function moveToPrevious(){
 	 $('.monthSelector').val(formatMonthDate(date));
 	 
 	 checkValidDate();
-	 refreshReportData();
+	 refreshReportDataOrDownload(false);
 }
 
 function moveToNext(){
@@ -72,7 +72,7 @@ function moveToNext(){
 	 $('.monthSelector').val(formatMonthDate(date));
 	 
 	 checkValidDate();
-	 refreshReportData();
+	 refreshReportDataOrDownload(false);
 }
 
 function moveToCurrent(){
@@ -86,7 +86,7 @@ function moveToCurrent(){
 	 $('.monthSelector').val(formatMonthDate(date));
 	 
 	 checkValidDate();
-	 refreshReportData();
+	 refreshReportDataOrDownload(false);
 }
 
 function checkValidDate() {
@@ -127,7 +127,6 @@ $('.dailySelector').datepicker({
 	defaultDate:new Date(),
 	daysOfWeekHighlighted:1,
 	format: 'dd-M-yyyy',
-	startDate:new Date(),
 	autoclose:true
 }).on('changeDate', function(e) {
 	var date = new Date($(".monthSelector").val());
@@ -156,7 +155,6 @@ $('.monthSelector').datepicker({
 	minViewMode:1,
 	daysOfWeekHighlighted:1,
 	format: 'M-yyyy',
-	startDate:getFirstDayOfMonth(new Date()),
 	autoclose:true
 }).on('changeDate', function(e) {
 	var date = new Date($(".monthSelector").val());
@@ -172,9 +170,9 @@ $(".autoReportType").on("change",function(){
 	 $(".autoReportDuration option").remove();
 	 $('.autoReportDuration').append($('<option>').val("DAILY").text("Daily"));
 	 $('.autoReportDuration').append($('<option>').val("WEEKLY").text("Weekly"));
-	 $('.autoReportDuration').append($('<option>').val("WEEKLY_DAILY").text("Weekly Day wise")).css("hide");
+	 //$('.autoReportDuration').append($('<option>').val("WEEKLY_DAILY").text("Weekly Day wise")).css("hide");
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY").text("Monthly"));
-	 $('.autoReportDuration').append($('<option>').val("MONTHLY_ENE").text("Monthly End to End")).css('hide');
+	 $('.autoReportDuration').append($('<option>').val("MONTHLY_ENE").text("Monthly End to End"));
 
 	 clearReportDataTable();
 	 
@@ -219,9 +217,9 @@ $(".autoReportDuration").on("change",function(){
 });
 
 
-$(".refreshButton").on("click", refreshReportData);
+$(".refreshButton").on("click", function(){refreshReportDataOrDownload(false);});
 
-function refreshReportData() {
+function refreshReportDataOrDownload(isDownload) {
 	checkValidDate();
 	
 	var autoReportDuration = $(".autoReportDuration").val();
@@ -259,7 +257,7 @@ function refreshReportData() {
 		 }
 	 } else if ("MONTHLY_ENE" == autoReportDuration) {
 		 var firstDayOfMonth =  new Date("01-" + $('.monthSelector').val());
-		 var lastDayOfMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+		 var lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
 		 startDate = firstDayOfMonth;
 		 endDate = lastDayOfMonth;
 	 }
@@ -276,48 +274,52 @@ function refreshReportData() {
 			 reportType = "DAILYWISE_USER_UTILIZATION_WEEKLY";
 		 } else if ("MONTHLY_ENE" == autoReportDuration) {
 			 reportType = "WEEKWISE_USER_UTILIZATION_MONTHLY_ENE";
-		 }
+		 } 
 	 } else  if("WEEKLY_PO_ESTIMATION" == autoReportType) {
 	 } else  if("WEEKLY_PROJECT_HOURS" == autoReportType) {
 	 }
 	 
-	 doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getReportData",{"reportType":reportType,"reportStartDate":reportStartDate,"reportEndDate":reportEndDate} , function(data) {
-		fillReportTableData(data, reportType, autoReportDuration);
-		$(".exportButton").removeClass("hide");
-	}, function(e) {
-	}, false);
+	 if(isDownload) {
+		 window.location.href = fsApplicationHome + "/download?reportType=" + reportType + "&reportStartDate=" + reportStartDate + "&reportEndDate=" + reportEndDate +"&fileName=" + downloadXLSFileName;
+	 } else {
+		 doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getReportData",{"reportType":reportType,"reportStartDate":reportStartDate,"reportEndDate":reportEndDate} , function(data) {
+			fillReportTableData(data, reportType, autoReportDuration);
+			$(".exportButton").removeClass("hide");
+	
+		 }, function(e) {
+		}, false);
+	 }
 }
 
+var downloadXLSFileName = "";
 
 function fillReportTableData(data, reportType,autoReportDuration){
-	var fileName = "";
+
 	var jsonData = JSON.parse(data);
 	console.log(jsonData);
 	 if("USER_SITE_ACTIVITY" == reportType) {
 		 fillUserActivityReportData(data);
-		 fileName = "User Site Activity Report";
+		 downloadXLSFileName = "User Site Activity Report";
 	 } else  if("USER_UTILIZATION" == reportType) {
 		 fillUserUtilizationReportData(data);
-		 fileName = "User Utilization Report";
+		 downloadXLSFileName = "User Utilization Report";
 	 } else  if("WEEKWISE_USER_UTILIZATION_MONTHLY" == reportType) {
 		 fillUserUtilizationMonthlyReportData(data);
-		 fileName = "User Monthly Utilization Report";
+		 downloadXLSFileName = "User Monthly Utilization Report";
 	 }else  if("WEEKWISE_USER_UTILIZATION_MONTHLY_ENE" == reportType) {
 		 fillUserUtilizationMonthlyReportData(data);
-		 fileName = "User Monthly Utilization Report";
+		 downloadXLSFileName = "User Monthly Utilization Report";
 	 } else  if("DAILYWISE_USER_UTILIZATION_WEEKLY" == reportType) {
-		 fileName = "User Weekly Utilization Report";
+		 downloadXLSFileName = "User Weekly Utilization Report";
 	 } else  if("WEEKLY_PO_ESTIMATION" == reportType) {
 		 fillPOEstimationReportData(data);
-		 fileName = "PO Estimation Report";
+		 downloadXLSFileName = "PO Estimation Report";
 	 } else  if("WEEKLY_PROJECT_HOURS" == reportType) {
 		 fillProjectHoursReportData(data);
-		 fileName = "Weekly Project Hours Report";
+		 downloadXLSFileName = "Weekly Project Hours Report";
 	 }
 	 
-	 fileName = fileName + "_" + jsonData.REPORT_DATE;
-	 
-	 initializeExportTable(fileName);
+	 initializeExportTable(downloadXLSFileName);
 }
 
 function fillUserActivityReportData(data) {
@@ -379,8 +381,6 @@ function fillUserUtilizationReportData(data) {
 		} else {
 			reportBodyHtml += "<td>"+value.leaveOrHolidayHours+"</td>";
 		}
-		
-	
 		
 		if(value.underOrOverUtilized) {
 			reportBodyHtml += "<td><span style='color:red;font-weight: bold;'>"+value.utilization+" %</span></td>";
@@ -513,6 +513,7 @@ function fillProjectHoursReportData(data) {
 	var reportBodyHtml="";
 	$.each(jsonData.DATA, function( index, value ) {
 		var teamName = "";
+		var accountName = "";
 		var year ="";
 		var month ="";
 		var weekNumber = "";
@@ -529,6 +530,12 @@ function fillProjectHoursReportData(data) {
 				teamName += ", " +projectValue.teamName;
 			} else if (projectValue.teamName != null && projectValue.teamName != ""){
 				teamName += projectValue.teamName;
+			}
+			
+			if (accountName != "" && projectValue.accountName != null && projectValue.accountName != ""){
+				accountName += ", " +projectValue.accountName;
+			} else if (projectValue.accountName != null && projectValue.accountName != ""){
+				accountName += projectValue.accountName;
 			}
 			
 			if (year != "" && projectValue.year != null && projectValue.year != ""){
@@ -574,6 +581,7 @@ function fillProjectHoursReportData(data) {
 		});
 		
 		reportBodyHtml += "<td>"+teamName+"</td>";
+		reportBodyHtml += "<td>"+accountName+"</td>";
 		reportBodyHtml += "<td>"+(moment().year())+"</td>";
 		reportBodyHtml += "<td>"+(moment().format('MMMM'))+"</td>";
 		
@@ -607,9 +615,15 @@ function fillProjectHoursReportData(data) {
 	$(".reportDataBody").html( reportBodyHtml );
 }
 
+var serverDownload = true;
 
-
-$(".exportButton").on("click", function(){$(".reportDataTable button.xlsx").click();;});
+$(".exportButton").on("click", function(){
+	if (serverDownload) {
+		refreshReportDataOrDownload(true);
+	} else {
+		$(".reportDataTable button.xlsx").click();
+	}
+});
 
 function clearReportDataTable(){
 	 $(".reportDataTable .retportDataHeader").html("");

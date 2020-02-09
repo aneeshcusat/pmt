@@ -155,7 +155,7 @@
         <div class="col-md-8  col-xs-10">
                <img src="${applicationHome}/image/${userProile.id}" class="img-thumbnail picture hidden-xs" alt="${userProile.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
            <div class="header">
-                <h2>${userProile.firstName} ${userProile.lastName}</h2><span>
+                <span>
                  <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${userProile.id}')">
 	     			<span class="fa fa-edit fa-2x" style="color: blue"></span>
 	      		</a> 			
@@ -177,10 +177,6 @@
                       <tr>
                         <td>Email</td>
                         <td>${userProile.userId}</td>
-                      </tr>
-                      <tr>
-                        <td>Reporting Manager</td>
-                        <td>${userProile.reportertingManager.firstName}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -221,7 +217,7 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">Cancel</button>
-					<a id="createOrUpdateEmployeeId" href="#" class="btn btn-primary"><span id="userButton">Save</span></a>
+					<a id="createOrUpdateEmployeeId" href="#" class="btn btn-info"><span id="userButton">Save</span></a>
 				</div>
 			</div>
 		</div>
@@ -324,20 +320,43 @@ function processUserResponseData(data) {
 		$(".cropit-preview-image").prop("src", "${applicationHome}/image/" + response.id);
 		
 	$('#role').val(response.role);
-	$('#reportingManger').val(response.reportingManger);
+	$('#reportingManger').val(response.reportertingManagerEmailId);
+	$('#deptLeadEmailId').val(response.deptLeadEmailId);
+	$('#lobHeadEmailId').val(response.lobHeadEmailId);
+	
 	$('#qualification').val(response.qualification);
-	$('#team').val(response.team);
 	$('#userGroupId').val(response.userGroupId);
 	$('#designation').val(response.designation);
 	
+	$('#location').val(response.location);
+	$('#country').val(response.country);
+	$('#division').val(response.division);
+	$('#department').val(response.department);
+	$('#subDepartment').val(response.subDepartment);
+	$('#band').val(response.band);
+	$('#grade').val(response.grade);
+	$('#empType').val(response.empType);
+	
+	$('#dateOfJoin').val(response.dateOfJoin);
+	
 	$('#role').selectpicker('refresh');
 	$('#reportingManger').selectpicker('refresh');
+	$('#deptLeadEmailId').selectpicker('refresh');
+	$('#lobHeadEmailId').selectpicker('refresh');
+	
+	$('#location').selectpicker('refresh');
+	$('#country').selectpicker('refresh');
+	$('#division').selectpicker('refresh');
+	$('#department').selectpicker('refresh');
+	$('#subDepartment').selectpicker('refresh');
+	$('#band').selectpicker('refresh');
+	$('#grade').selectpicker('refresh');
+	$('#empType').selectpicker('refresh');
+	
 	$('#qualification').selectpicker('refresh');
-	$('#team').selectpicker('refresh');
 	$('#userGroupId').selectpicker('refresh');
 	$('#designation').selectpicker('refresh');
 	
-	$('#temporaryEmployee').attr("checked", response.temporaryEmployee);
 	$('#empCode').val(response.empCode);
 }
 

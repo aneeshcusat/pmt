@@ -351,6 +351,7 @@ public final class DateUtils extends BaseFamstackService
 	public static String getYearMonthWeekNumber(Date taskActivityStartTime) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(taskActivityStartTime);
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
 		return "" + calendar.get(Calendar.YEAR) + calendar.get(Calendar.WEEK_OF_YEAR);
 	}
 	
@@ -373,13 +374,13 @@ public final class DateUtils extends BaseFamstackService
 		do{
 			cal.setTime(tempStartDate);
 			String weekNumber = getYearMonthWeekNumber(tempStartDate);
+			
 			int incrementValue = 6;
 			if (cal.get(Calendar.DAY_OF_WEEK) > 2) {
 				incrementValue -= cal.get(Calendar.DAY_OF_WEEK);
 				incrementValue+=2;
 			} else if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
 				incrementValue = 0;
-				weekNumber = "" + cal.get(Calendar.YEAR) + (cal.get(Calendar.WEEK_OF_YEAR) - 1);
 			}
 			Date nextEndDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, incrementValue);
 			if (nextEndDate.after(endDate)) {
@@ -431,7 +432,6 @@ public final class DateUtils extends BaseFamstackService
 				incrementValue+=2;
 			} else if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
 				incrementValue = 0;
-				weekNumber = "" + cal.get(Calendar.YEAR) + (cal.get(Calendar.WEEK_OF_YEAR) - 1);
 			}
 			System.out.println("tempStartDate " + tempStartDate);
 			System.out.println("getYearMonthWeekNumber(tempStartDate)  " + getYearMonthWeekNumber(tempStartDate));

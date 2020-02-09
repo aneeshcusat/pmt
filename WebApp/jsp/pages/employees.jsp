@@ -16,19 +16,22 @@
 .dataTables_filter,.dataTables_length{
 	display: none;
 }
+#DataTables_Table_0_wrapper .dt-buttons{
+	display: none;
+}
 .blueColor{
 	color:blue !important;
 }
     @media screen and (min-width: 800px) {
-    #registerusermodal .modal-dialog  {width:65%;}
+    #registerusermodal .modal-dialog  {width:75%;}
     .cropit-preview {
         background-color: #f8f8f8;
         background-size: cover;
         border: 1px solid #ccc;
         border-radius: 3px;
         margin-top: 7px;
-        width: 175px;
-        height: 175px;
+        width: 150px;
+        height: 150px;
         cursor: move;
       }
 
@@ -109,9 +112,14 @@
                             </div>
                            
                             <div class="col-md-2">
-                            <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN'}">
+                            <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN'}">
                             <a href="javascript:showGridEmployeeDetails();" id="employeesDetailsGridLink"  style="margin-right: 10px;" class="blueColor"><span class="fa fa-th-large fa-3x"></span></a>
                             <a href="javascript:showListEmployeeDetails();" id="employeesDetailsListLink"><span class="fa fa-tasks fa-3x"></span></a>
+                            
+                             <a href="javascript:downloadListEmployeeDetails();" id="downloadEmployeesDetailsListLink" class="hide" style="float:right"><span class="fa fa-download fa-3x"></span></a>
+                             
+							</c:if>
+                             <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN'}">
 							<span style="float: left; margin-right: 5px">Deleted<input type="checkbox" class="showDeletedCheckBox" value="show Deleted" style="margin-left: 10px;"/></span>
 							</c:if>
                             </div>
@@ -145,7 +153,7 @@
     <div class="row" id="employeesDetailsGridDiv">
    		<%@include file="response/employeeList.jsp" %>
    </div>
-   <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN'}">
+   <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN'}">
     <div class="row hide" id="employeesDetailsListDiv">
    	</div>
    </c:if>       
@@ -170,7 +178,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-dismiss="modal">Cancel</button>
-							<a id="createOrUpdateEmployeeId" href="#" class="btn btn-primary"><span id="userButton">Save</span></a>
+							<a id="createOrUpdateEmployeeId" href="#" class="btn btn-info"><span id="userButton">Save</span></a>
 						</div>
 					</div>
 				</div>
@@ -207,9 +215,7 @@ var jvalidate = $("#createUserFormId").validate({
      dateOfBirth: {
          required: false
  	 },
-	team: {
-	       required: false
-	},userGroupId: {
+ 	 userGroupId: {
 	       required: true
 	},
 	role: {
@@ -346,20 +352,43 @@ function processUserResponseData(data) {
 		$(".cropit-preview-image").prop("src", "${applicationHome}/image/" + response.id);
 		
 	$('#role').val(response.role);
-	$('#reportingManger').val(response.reportingManger);
+	$('#reportingManger').val(response.reportertingManagerEmailId);
+	$('#deptLeadEmailId').val(response.deptLeadEmailId);
+	$('#lobHeadEmailId').val(response.lobHeadEmailId);
+	
 	$('#qualification').val(response.qualification);
-	$('#team').val(response.team);
 	$('#userGroupId').val(response.userGroupId);
 	$('#designation').val(response.designation);
 	
+	$('#location').val(response.location);
+	$('#country').val(response.country);
+	$('#division').val(response.division);
+	$('#department').val(response.department);
+	$('#subDepartment').val(response.subDepartment);
+	$('#band').val(response.band);
+	$('#grade').val(response.grade);
+	$('#empType').val(response.empType);
+	
+	$('#dateOfJoin').val(response.dateOfJoin);
+	
 	$('#role').selectpicker('refresh');
 	$('#reportingManger').selectpicker('refresh');
+	$('#deptLeadEmailId').selectpicker('refresh');
+	$('#lobHeadEmailId').selectpicker('refresh');
+	
+	$('#location').selectpicker('refresh');
+	$('#country').selectpicker('refresh');
+	$('#division').selectpicker('refresh');
+	$('#department').selectpicker('refresh');
+	$('#subDepartment').selectpicker('refresh');
+	$('#band').selectpicker('refresh');
+	$('#grade').selectpicker('refresh');
+	$('#empType').selectpicker('refresh');
+	
 	$('#qualification').selectpicker('refresh');
-	$('#team').selectpicker('refresh');
 	$('#userGroupId').selectpicker('refresh');
 	$('#designation').selectpicker('refresh');
 	
-	$('#temporaryEmployee').attr("checked", response.temporaryEmployee);
 	$('#empCode').val(response.empCode);
 	
 }
@@ -384,6 +413,28 @@ function clearUserData() {
 	$('#group').prop('selectedIndex', 0);
 	$('#designation').prop('selectedIndex', 0);
 	$('#reportingManger').val("");
+	$('#deptLeadEmailId').val("");
+	$('#lobHeadEmailId').val("");
+	$('#location').val("");
+	$('#country').val("");
+	$('#division').val("");
+	$('#department').val("");
+	$('#subDepartment').val("");
+	$('#band').val("");
+	$('#grade').val("");
+	$('#empType').val("");
+	$('#dateOfJoin').val("");
+	
+	$('#deptLeadEmailId').selectpicker('refresh');
+	$('#lobHeadEmailId').selectpicker('refresh');
+	$('#location').selectpicker('refresh');
+	$('#country').selectpicker('refresh');
+	$('#division').selectpicker('refresh');
+	$('#department').selectpicker('refresh');
+	$('#subDepartment').selectpicker('refresh');
+	$('#band').selectpicker('refresh');
+	$('#grade').selectpicker('refresh');
+	$('#empType').selectpicker('refresh');
 	$('#role').selectpicker('refresh');
 	$('#reportingManger').selectpicker('refresh');
 	$('#qualification').selectpicker('refresh');
@@ -436,14 +487,24 @@ $('.dateTimePicker').datetimepicker({
 	formatDate:'Y/m/d',
 });
 
+$('.DOJdateTimePicker').datetimepicker({
+	lang:'en',
+	timepicker:false,
+	format:'Y-m-d',
+	formatDate:'Y/m/d',
+});
+
 function showGridEmployeeDetails() {
 	$("#employeesDetailsGridDiv").removeClass("hide");
 	$("#employeesDetailsListDiv").addClass("hide");
-	
+	$("#downloadEmployeesDetailsListLink").addClass("hide");
 	$("#employeesDetailsGridLink").addClass("blueColor");
 	$("#employeesDetailsListLink").removeClass("blueColor");
 }
 
+function downloadListEmployeeDetails(){
+	$(".dt-button.buttons-csv").click();
+}
 
 function reloadEmployeeDetails(){
 	var pageName = "employeeGridPage";
@@ -462,16 +523,12 @@ function reloadEmployeeDetails(){
 			  $('.employeeDataTable').DataTable({ 
 				  	dom: 'Bfrtip',
 			        buttons: [
-			             {
-			                extend: 'excel',
-			                text: 'Download as Excel'
-			            },
+			            	 'csv'
 			        ],
-			    	responsive: true,
-			        "pageLength": 20,
-			        "ordering": true,
-			        "order": [[ 11, 'asc' ]]
-			    
+			    	responsive: false,
+			        "pageLength": -1,
+			        "ordering": false,
+			        "scrollX": true
 			    });
 		}
 		
@@ -486,6 +543,7 @@ function showListEmployeeDetails() {
 	$("#employeesDetailsGridLink").removeClass("blueColor");
 	$("#employeesDetailsListLink").addClass("blueColor");
 	$("#employeesDetailsListDiv").removeClass("hide");
+	$("#downloadEmployeesDetailsListLink").removeClass("hide");
 	reloadEmployeeDetails();
 }
 

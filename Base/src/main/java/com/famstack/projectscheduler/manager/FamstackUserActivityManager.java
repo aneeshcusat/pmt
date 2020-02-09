@@ -1092,7 +1092,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 				UserSiteActivityDetails userSiteActivityDetails = new UserSiteActivityDetails();
 				userSiteActivityDetails.setEmployeeName(employeeDetails.getFirstName());
 				userSiteActivityDetails.setEmailId(employeeDetails.getEmail());
-				int reportingMangerId = employeeDetails.getReportingManger();
+				int reportingMangerId = 0;//employeeDetails.getReportingManger();
 				
 				try{
 				EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);

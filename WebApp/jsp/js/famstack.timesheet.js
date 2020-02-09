@@ -162,7 +162,9 @@ function moveToNextWeek(){
 	 var date =  new Date($(".weekSelector").val());
 	 date.setDate(date.getDate() + 7);
 	 $('.weekSelector').val(formatDate(date));
+	 var proposedDate = new Date(date);
   	fillWeeklyDates(date);
+  	canMoveToPreviousAndEdit(proposedDate);
 }
 
 function moveToCurrentWeek(){
@@ -456,6 +458,11 @@ function canMoveToPreviousAndEdit(proposedDate){
 			 index++;
 			}
 			while (index < 7 && firstDayOfCurrentMonth.getTime() > tempDate.getTime());
+			
+			if (index >= 7) {
+				$("#weeklyTimeLogSaveButton").addClass("hide");
+				$("#weeklyTimeLogSaveNextButton").addClass("hide");
+			}
 		}
 	}
 }
@@ -486,6 +493,7 @@ $('.weekSelector').datepicker({
 	checkValidDate();
 	var date = new Date($(".weekSelector").val());
 	fillWeeklyDates(date);
+	canMoveToPreviousAndEdit(date);
 });;
 });
 
@@ -532,6 +540,9 @@ function formatDayDate(currentDate) {
 
 function fillWeeklyDates(currentDate){
 	$(".weekday").removeClass("hide");
+	$("#weeklyTimeLogSaveButton").removeClass("hide");
+	$("#weeklyTimeLogSaveNextButton").removeClass("hide");
+	
 	for (var i =1; i < 8; i++) {
 		$(".day"+i).html(formatDayDate(currentDate));
 		currentDate.setDate(currentDate.getDate() + 1);

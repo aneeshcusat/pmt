@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -156,25 +157,32 @@ public class FamstackUserProfileManager extends BaseFamstackManager
 
         userItem.setLastName(employeeDetails.getLastName());
         userItem.setDesignation(employeeDetails.getDesignation());
-        if (StringUtils.isNotBlank(employeeDetails.getDateOfBirth())) {
-            try {
-                userItem.setDob(new Date(sdf.parse(employeeDetails.getDateOfBirth()).getTime()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        userItem.setReportertingManager(getUserItemById(employeeDetails.getReportingManger()));
+        userItem.setDob(DateUtils.tryParse(employeeDetails.getDateOfBirth(), DateUtils.DATE_FORMAT_CALENDER));
+        userItem.setReportertingManagerEmailId(employeeDetails.getReportertingManagerEmailId());
         userItem.setFirstName(employeeDetails.getFirstName());
         userItem.setMobileNumber(employeeDetails.getMobileNumber());
         userItem.setQualification(employeeDetails.getQualification());
         userItem.setUserRole(employeeDetails.getRole());
         userItem.setUserAccessCode(employeeDetails.getUserAccessCode());
         userItem.setGender(employeeDetails.getGender());
-        userItem.setTeam(employeeDetails.getTeam());
         userItem.setEmpCode(employeeDetails.getEmpCode());
-        userItem.setTemporaryEmployee(employeeDetails.getTemporaryEmployee());
+       // userItem.setTemporaryEmployee(employeeDetails.getTemporaryEmployee());
         userItem.setFundedEmployee(employeeDetails.getFundedEmployee());
         userItem.setUserGroupId(employeeDetails.getUserGroupId());
+        
+        userItem.setDivision(employeeDetails.getDivision());
+        userItem.setDepartment(employeeDetails.getDepartment());
+        userItem.setCountry(employeeDetails.getCountry());
+        userItem.setSubDepartment(employeeDetails.getSubDepartment());
+        userItem.setLocation(employeeDetails.getLocation());
+        userItem.setBand(employeeDetails.getBand());
+        userItem.setGrade(employeeDetails.getGrade());
+        userItem.setDateOfJoin(DateUtils.tryParse(employeeDetails.getDateOfJoin(), DateUtils.DATE_FORMAT_CALENDER));
+        userItem.setExitDate(DateUtils.tryParse(employeeDetails.getDateOfJoin(), DateUtils.DATE_FORMAT_CALENDER));
+        userItem.setEmpType(employeeDetails.getEmpType());
+        userItem.setDeptLeadEmailId(employeeDetails.getDeptLeadEmailId());
+        userItem.setLobHeadEmailId(employeeDetails.getLobHeadEmailId());
+        
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
     }
 
@@ -255,14 +263,25 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeDetails.setUserAccessCode(userItem.getUserAccessCode());
 
             employeeDetails.setEmpCode(userItem.getEmpCode());
-            employeeDetails.setTemporaryEmployee(userItem.getTemporaryEmployee());
+            //employeeDetails.setTemporaryEmployee(userItem.getTemporaryEmployee());
             employeeDetails.setFundedEmployee(userItem.getFundedEmployee());
             employeeDetails.setNeedPasswordReset(userItem.getNeedPasswordReset());
-
-            if (userItem.getReportertingManager() != null) {
-                employeeDetails.setReportingManger(userItem.getReportertingManager().getId());
-            }
+            employeeDetails.setReportertingManagerEmailId(userItem.getReportertingManagerEmailId());
             employeeDetails.setId(userItem.getId());
+            
+            employeeDetails.setDivision(userItem.getDivision());
+            employeeDetails.setDepartment(userItem.getDepartment());
+            employeeDetails.setCountry(userItem.getCountry());
+            employeeDetails.setSubDepartment(userItem.getSubDepartment());
+            employeeDetails.setLocation(userItem.getLocation());
+            employeeDetails.setBand(userItem.getBand());
+            employeeDetails.setGrade(userItem.getGrade());
+            employeeDetails.setDateOfJoin(DateUtils.format(userItem.getDateOfJoin(), DateUtils.DATE_TIME_FORMAT_CALENDER));
+            employeeDetails.setExitDate(DateUtils.format(userItem.getExitDate(), DateUtils.DATE_TIME_FORMAT_CALENDER));
+            employeeDetails.setEmpType(userItem.getEmpType());
+            employeeDetails.setDeptLeadEmailId(userItem.getDeptLeadEmailId());
+            employeeDetails.setLobHeadEmailId(userItem.getLobHeadEmailId());
+            
             return employeeDetails;
         }
         return null;

@@ -91,9 +91,6 @@ public class UserItem implements FamstackBaseItem
     @Column(name = "emp_code")
     private String empCode;
 
-    @Column(name = "is_temp")
-    private Boolean temporaryEmployee;
-    
     @Column(name = "is_funded")
     private Boolean fundedEmployee;
 
@@ -121,23 +118,45 @@ public class UserItem implements FamstackBaseItem
     @Column(name = "is_deleted", columnDefinition = "boolean default false", nullable = false)
     private Boolean deleted;
     
-    @Column(name = "functional_lead")
-    private Integer functionalLead;
+    @Column(name = "division")
+    private String division;
     
-    @Column(name = "business_head")
-    private Integer businessHead;
+    @Column(name = "country")
+    private String country;
+    
+    @Column(name = "department")
+    private String department;
+    
+    @Column(name = "sub_department")
+    private String subDepartment;
     
     @Column(name = "location")
     private String location;
-
-    @Column(name = "level")
-    private String level;
     
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
-    @JoinColumn(name = "reporterting_manager")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "famstackEntityCache")
-    private UserItem reportertingManager;
+    @Column(name = "band")
+    private String band;
+    
+    @Column(name = "grade")
+    private String grade;
 
+    @Column(name = "date_of_join")
+    private Date dateOfJoin;
+    
+    @Column(name = "exit_date")
+    private Date exitDate;
+    
+    @Column(name = "emp_type")
+    private String empType;
+    
+    @Column(name = "rept_mgr_email_id")
+    private String reportertingManagerEmailId;
+    
+    @Column(name = "dept_lead_email_id")
+    private String deptLeadEmailId;
+    
+    @Column(name = "lob_head_email_id")
+    private String lobHeadEmailId;
+    
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "group_subscribers", joinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "group_id", nullable = false, updatable = false)})
     private Set<GroupItem> groups;
@@ -402,16 +421,6 @@ public class UserItem implements FamstackBaseItem
         this.team = team;
     }
 
-    public UserItem getReportertingManager()
-    {
-        return reportertingManager;
-    }
-
-    public void setReportertingManager(UserItem reportertingManager)
-    {
-        this.reportertingManager = reportertingManager;
-    }
-
     public Set<GroupItem> getGroups()
     {
         return groups;
@@ -481,38 +490,12 @@ public class UserItem implements FamstackBaseItem
         this.empCode = empCode;
     }
 
-    public Boolean getTemporaryEmployee()
-    {
-        return temporaryEmployee;
-    }
-
-    public void setTemporaryEmployee(Boolean temporaryEmployee)
-    {
-        this.temporaryEmployee = temporaryEmployee;
-    }
-
 	public Boolean getFundedEmployee() {
 		return fundedEmployee;
 	}
 
 	public void setFundedEmployee(Boolean fundedEmployee) {
 		this.fundedEmployee = fundedEmployee;
-	}
-
-	public Integer getFunctionalLead() {
-		return functionalLead;
-	}
-
-	public void setFunctionalLead(Integer functionalLead) {
-		this.functionalLead = functionalLead;
-	}
-
-	public Integer getBusinessHead() {
-		return businessHead;
-	}
-
-	public void setBusinessHead(Integer businessHead) {
-		this.businessHead = businessHead;
 	}
 
 	public String getLocation() {
@@ -523,12 +506,100 @@ public class UserItem implements FamstackBaseItem
 		this.location = location;
 	}
 
-	public String getLevel() {
-		return level;
+	public Date getDateOfJoin() {
+		return dateOfJoin;
 	}
 
-	public void setLevel(String level) {
-		this.level = level;
+	public void setDateOfJoin(Date dateOfJoin) {
+		this.dateOfJoin = dateOfJoin;
+	}
+
+	public String getReportertingManagerEmailId() {
+		return reportertingManagerEmailId;
+	}
+
+	public void setReportertingManagerEmailId(String reportertingManagerEmailId) {
+		this.reportertingManagerEmailId = reportertingManagerEmailId;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public String getSubDepartment() {
+		return subDepartment;
+	}
+
+	public void setSubDepartment(String subDepartment) {
+		this.subDepartment = subDepartment;
+	}
+
+	public String getBand() {
+		return band;
+	}
+
+	public void setBand(String band) {
+		this.band = band;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public Date getExitDate() {
+		return exitDate;
+	}
+
+	public void setExitDate(Date exitDate) {
+		this.exitDate = exitDate;
+	}
+
+	public String getEmpType() {
+		return empType;
+	}
+
+	public void setEmpType(String empType) {
+		this.empType = empType;
+	}
+
+	public String getDeptLeadEmailId() {
+		return deptLeadEmailId;
+	}
+
+	public void setDeptLeadEmailId(String deptLeadEmailId) {
+		this.deptLeadEmailId = deptLeadEmailId;
+	}
+
+	public String getLobHeadEmailId() {
+		return lobHeadEmailId;
+	}
+
+	public void setLobHeadEmailId(String lobHeadEmailId) {
+		this.lobHeadEmailId = lobHeadEmailId;
 	}
 
 }

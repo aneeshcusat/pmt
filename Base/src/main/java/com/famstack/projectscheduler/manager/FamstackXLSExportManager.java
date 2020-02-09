@@ -19,6 +19,7 @@ import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.famstack.projectscheduler.contants.ReportType;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.export.processors.FamstackBaseXLSExportProcessor;
@@ -149,6 +150,32 @@ public class FamstackXLSExportManager extends BaseFamstackManager
             ex.printStackTrace();
         }
     }
+    
+    public void downloadXLSReport(ReportType reportType, String fileName, Map<String, Object> dataMap, HttpServletRequest request,
+            HttpServletResponse response)
+        {
+            try {
+              
+               FamstackBaseXLSExportProcessor baseXLSExportProcessor = exportProcessorMap.get("reportProcessor");
+               if(baseXLSExportProcessor != null && dataMap != null && !dataMap.isEmpty()) {
+                   XSSFWorkbook workbook = new XSSFWorkbook();
+                   String dateString = (String) dataMap.get("REPORT_DATE");
+                   Sheet sheet = workbook.createSheet(dateString.replace("/", "-"));
+                  
+                   dataMap.put("workbook", workbook);
+                   dataMap.put("sheet", sheet);
+                   dataMap.put("reportType", reportType);
+                   baseXLSExportProcessor.renderReport(dataMap);
+	               response.setContentType("application/vnd.ms-excel");
+	               response.setHeader("Content-Disposition", "attachment; filename=" + fileName + "_" + dateString + ".xlsx");
+	               workbook.write(response.getOutputStream());
+	               workbook.close();
+	               response.getOutputStream().close();
+               }
+            } catch(Exception e) {
+            	logError(e.getMessage(), e);
+            }
+        }
 
     public Map<String, FamstackBaseXLSExportProcessor> getExportProcessorMap()
     {
