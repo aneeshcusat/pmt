@@ -44,8 +44,6 @@ public class FamstackUserProfileManager extends BaseFamstackManager
     @Resource
     PasswordTokenGenerator passwordTokenGenerator;
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
     /**
      * Login.
      * 
@@ -246,9 +244,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
     {
         if (userItem != null) {
             EmployeeDetails employeeDetails = new EmployeeDetails();
-            if (userItem.getDob() != null) {
-                employeeDetails.setDateOfBirth(sdf.format(userItem.getDob()));
-            }
+            employeeDetails.setDateOfBirth(DateUtils.format(userItem.getDob(), DateUtils.DATE_FORMAT_CALENDER));
             employeeDetails.setDesignation(userItem.getDesignation());
             employeeDetails.setDeleted(userItem.isDeleted());
             employeeDetails.setEmail(userItem.getUserId());
@@ -276,8 +272,8 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeDetails.setLocation(userItem.getLocation());
             employeeDetails.setBand(userItem.getBand());
             employeeDetails.setGrade(userItem.getGrade());
-            employeeDetails.setDateOfJoin(DateUtils.format(userItem.getDateOfJoin(), DateUtils.DATE_TIME_FORMAT_CALENDER));
-            employeeDetails.setExitDate(DateUtils.format(userItem.getExitDate(), DateUtils.DATE_TIME_FORMAT_CALENDER));
+            employeeDetails.setDateOfJoin(DateUtils.format(userItem.getDateOfJoin(), DateUtils.DATE_FORMAT_CALENDER));
+            employeeDetails.setExitDate(DateUtils.format(userItem.getExitDate(), DateUtils.DATE_FORMAT_CALENDER));
             employeeDetails.setEmpType(userItem.getEmpType());
             employeeDetails.setDeptLeadEmailId(userItem.getDeptLeadEmailId());
             employeeDetails.setLobHeadEmailId(userItem.getLobHeadEmailId());

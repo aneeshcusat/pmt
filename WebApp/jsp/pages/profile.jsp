@@ -162,22 +162,163 @@
 	     		</span>
                  <table class="table table-user-information">
                     <tbody>
-                      <tr>
-                        <td>Designation:</td>
-                        <td>${userProile.designation}</td>
-                      </tr>
-                       <tr>
-                        <td>Gender</td>
-                        <td>${userProile.gender}</td>
-                      </tr>
-                      <tr>
-                        <td>Mobile Number</td>
-                        <td>${userProile.mobileNumber}</td>
-                      </tr>
+                     <c:if test="${not empty userProile.userId}">
                       <tr>
                         <td>Email</td>
                         <td>${userProile.userId}</td>
                       </tr>
+                      </c:if>
+                      <c:if test="${not empty userProile.qualification}">
+                      <tr>
+                        <td>Qualification</td>
+                        <td>${userProile.qualification}</td>
+                      </tr>
+                      </c:if>
+                    
+                    
+                     <c:if test="${not empty userProile.dob}">
+                      <tr>
+                        <td>Date of Birth</td>
+                        <td>${userProile.dob}</td>
+                      </tr>
+                      </c:if>
+                      
+                       <c:if test="${not empty userProile.designation}">
+                      <tr>
+                        <td>Designation</td>
+                        <td>${userProile.designation}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.mobileNumber}">
+                      <tr>
+                        <td>Mobile Number</td>
+                        <td>${userProile.mobileNumber}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.empCode}">
+                      <tr>
+                        <td>Employee Code</td>
+                        <td>${userProile.empCode}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.userId}">
+                      <tr>
+                        <td>Email</td>
+                        <td>${userProile.userId}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.division}">
+                      <tr>
+                        <td>Division</td>
+                        <td>${userProile.division}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.country}">
+                      <tr>
+                        <td>Country</td>
+                        <td>${userProile.country}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.department}">
+                      <tr>
+                        <td>Department</td>
+                        <td>${userProile.department}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.subDepartment}">
+                      <tr>
+                        <td>Sub Department</td>
+                        <td>${userProile.subDepartment}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.location}">
+                      <tr>
+                        <td>Location</td>
+                        <td>${userProile.location}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.userId}">
+                      <tr>
+                        <td>Email</td>
+                        <td>${userProile.userId}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.band}">
+                      <tr>
+                        <td>Band</td>
+                        <td>${userProile.band}</td>
+                      </tr>
+                      </c:if>
+                      
+                      
+                       <c:if test="${not empty userProile.grade}">
+                      <tr>
+                        <td>Grade</td>
+                        <td>${userProile.grade}</td>
+                      </tr>
+                      </c:if>
+                    
+                     <c:if test="${not empty userProile.dateOfJoin}">
+                      <tr>
+                        <td>Date Of Join</td>
+                        <td>${userProile.dateOfJoin}</td>
+                      </tr>
+                      </c:if>
+                      
+                       <c:if test="${not empty userProile.exitDate}">
+                      <tr>
+                        <td>Exit Date</td>
+                        <td>${userProile.exitDate}</td>
+                      </tr>
+                      </c:if>
+                      
+                       <c:if test="${not empty userProile.empType}">
+                      <tr>
+                        <td>Employee Type</td>
+                        <td>${userProile.empType}</td>
+                      </tr>
+                      </c:if>
+                      
+                       <c:if test="${not empty userProile.reportertingManagerEmailId}">
+                      <tr>
+                        <td>Reporting Manager</td>
+                        <td>${userProile.reportertingManagerEmailId}</td>
+                      </tr>
+                      </c:if>
+                      
+                       <c:if test="${not empty userProile.deptLeadEmailId}">
+                      <tr>
+                        <td>Department Lead</td>
+                        <td>${userProile.deptLeadEmailId}</td>
+                      </tr>
+                      </c:if>
+                    
+                     <c:if test="${not empty userProile.lobHeadEmailId}">
+                      <tr>
+                        <td>LOB Head</td>
+                        <td>${userProile.lobHeadEmailId}</td>
+                      </tr>
+                      </c:if>
                     </tbody>
                   </table>
            </div>

@@ -46,53 +46,7 @@
 						 <input type="text" class="form-control dateTimePicker" id="dateOfBirth" name="dateOfBirth"  autocomplete="off"/>
 					</div>
 				</div>
-				<div class="form-group">
-                    <label class="col-md-3 control-label">Designation</label>
-                    <div class="col-md-9">
-                        <form:select path="designation" id="designation" class="form-control select" data-live-search="true">
-                              <option value="">- select -</option>
-                              <option>Senior Vice President</option>
-                            <option>Vice President</option>
-                            <option>Associate Vice President</option>
-                             <option>Assistant Vice President</option> 
-                            <option>Senior Director</option>
-                            <option>Director</option>
-                            <option>Senior Manager</option>
-                            <option>Manager</option>
-                            <option>Associate Manager</option>
-                            <option>Principal Data Scientist</option>
-                            <option>Senior Project Executive</option>
-                            <option>Senior Executive</option>
-                            <option>Consultant</option>
-                            <option>Senior Data Scientist</option>
-                            <option>Data Scientist</option>
-                            <option>Associate Data Scientist</option>
-                            <option>Visualization Specialist</option>
-                            <option>Senior Analyst</option>
-                            <option>Lead Software Engineer</option>
-     						<option>Lead Engineer</option>
-   							<option>Senior Software Engineer</option>
-    						<option>Software Engineer</option>
-   							<option>Developer</option>
-   							<option>Support Team</option>
-      						<option>Contract</option>
-                            <option>Analyst</option>
-                            <option>Junior Analyst</option>
-                            <option>Trainee Analyst</option>
-							<option>Trainee</option>
-                        </form:select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 control-label">Employee Type</label>
-                    <div class="col-md-9">
-                        <form:select path="empType" id="empType" class="form-control select" data-live-search="true">
-                            <option value="Permanent">Permanent</option>
-							<option value="Consultant">Consultant</option>
-							<option value="Contract">Contract</option>
-                        </form:select>
-                    </div>
-                </div>
+				
                 
 				<div class="form-group">
 					<label class="col-md-3 control-label">Is Funded:</label>
@@ -182,6 +136,44 @@
 						</form:select>
 					</div>
 				</div>
+<div class="form-group">
+                    <label class="col-md-3 control-label">Designation</label>
+                    <div class="col-md-9">
+                        <form:select path="designation" id="designation" class="form-control select" data-live-search="true">
+                              <option value="">- select -</option>
+                              <option>Senior Vice President</option>
+                            <option>Vice President</option>
+                            <option>Associate Vice President</option>
+                             <option>Assistant Vice President</option> 
+                            <option>Senior Director</option>
+                            <option>Director</option>
+                            <option>Senior Manager</option>
+                            <option>Manager</option>
+                            <option>Associate Manager</option>
+                            <option>Principal Data Scientist</option>
+                            <option>Senior Project Executive</option>
+                            <option>Senior Executive</option>
+                            <option>Consultant</option>
+                            <option>Senior Data Scientist</option>
+                            <option>Data Scientist</option>
+                            <option>Associate Data Scientist</option>
+                            <option>Visualization Specialist</option>
+                            <option>Senior Analyst</option>
+                            <option>Lead Software Engineer</option>
+     						<option>Lead Engineer</option>
+   							<option>Senior Software Engineer</option>
+    						<option>Software Engineer</option>
+   							<option>Developer</option>
+   							<option>Support Team</option>
+      						<option>Contract</option>
+                            <option>Analyst</option>
+                            <option>Junior Analyst</option>
+                            <option>Trainee Analyst</option>
+							<option>Trainee</option>
+                        </form:select>
+                    </div>
+                </div>
+              
 
 				<form:input path="id" type="hidden" id="id"/>
 
@@ -266,6 +258,16 @@
 						 <input type="text" class="form-control DOJdateTimePicker" id="dateOfJoin" name="dateOfJoin"  autocomplete="off"/>
 					</div>
 				</div>
+				  <div class="form-group">
+                    <label class="col-md-3 control-label">Employee Type</label>
+                    <div class="col-md-9">
+                        <form:select path="empType" id="empType" class="form-control select" data-live-search="true">
+                            <option value="Permanent">Permanent</option>
+							<option value="Consultant">Consultant</option>
+							<option value="Contract">Contract</option>
+                        </form:select>
+                    </div>
+                </div>
 			<div class="form-group">
 				<label class="col-md-3 control-label">Location</label>
 				<div class="col-md-9">
