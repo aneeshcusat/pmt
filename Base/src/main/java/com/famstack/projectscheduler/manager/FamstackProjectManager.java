@@ -2641,15 +2641,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 				}
 				
 				UserUtilizationDetails userUtilizationDetails = new UserUtilizationDetails();
-				
-				int reportingMangerId = 0;//employeeDetails.getReportingManger();
-				try{
-					EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
-					if (reportingEmployeeDetail != null) {
-						userUtilizationDetails.setReportingManager(reportingEmployeeDetail.getFirstName());
-					}
-				}catch(Exception e){
-				}
+
+				userUtilizationDetails.setReportingManager(getEmployeeReportingManager(employeeDetails));
 				
 				userUtilizationDetails.setEmployeeName(employeeDetails
 						.getFirstName());
@@ -2783,6 +2776,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 					 getUserUtilization(taskTypeHours,projectDetails);
 				}
 			}
+			Map<String, Integer> numberOfDaysInAWeekMap =  DateUtils.getWeekNumberWeekDayCountMap(startDate, endDate);
 			for (EmployeeDetails employeeDetails : employeesList) {
 				
 				if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
@@ -2791,17 +2785,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 				List<String> yearMonthWeekNumberList = DateUtils.getYearMonthWeekNumberBetwwenTwoDates(startDate, endDate);
 				
 				UserUtilizationWeekWiseDetails userUtilizationWeekWiseDetails = new UserUtilizationWeekWiseDetails();
-				userUtilizationWeekWiseDetails.createUtilizationMap(yearMonthWeekNumberList, 5);
+				userUtilizationWeekWiseDetails.createUtilizationMap(yearMonthWeekNumberList, numberOfDaysInAWeekMap);
 				
-				int reportingMangerId = 0;//employeeDetails.getReportingManger();
-				try{
-					EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
-					if (reportingEmployeeDetail != null) {
-						userUtilizationWeekWiseDetails.setReportingManager(reportingEmployeeDetail.getFirstName());
-					}
-				}catch(Exception e){
-				}
-				
+				userUtilizationWeekWiseDetails.setReportingManager(getEmployeeReportingManager(employeeDetails));
 				userUtilizationWeekWiseDetails.setEmployeeName(employeeDetails
 						.getFirstName());
 				userUtilizationWeekWiseDetails.setEmailId(employeeDetails.getEmail())
@@ -2831,6 +2817,22 @@ public class FamstackProjectManager extends BaseFamstackManager
 			//underOrOverUtilizedList.addAll(leaveOrHolidayUtilizedList);
 		}
 		return underOrOverUtilizedList;
+	}
+
+	private String getEmployeeReportingManager(EmployeeDetails employeeDetails) {
+		try{
+			if (employeeDetails.getReportertingManagerEmailId() != null) {
+				Integer reportingMangerId = getFamstackApplicationConfiguration().getUserIdMap().get(employeeDetails.getReportertingManagerEmailId());
+				if (reportingMangerId != null) {
+					EmployeeDetails reportingEmployeeDetail = getFamstackApplicationConfiguration().getAllUsersMap().get(reportingMangerId);
+					if (reportingEmployeeDetail != null) {
+						return reportingEmployeeDetail.getFirstName();
+					}
+				}
+			}
+		}catch(Exception e){
+		}
+		return null;
 	}
 	
 	private void getUserUtilization(Map<String, Integer> dateStringHoursMap,

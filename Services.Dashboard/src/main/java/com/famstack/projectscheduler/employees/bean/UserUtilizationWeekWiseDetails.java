@@ -45,12 +45,12 @@ public class UserUtilizationWeekWiseDetails {
 		return userUtilizationMap;
 	}
 
-	public void createUtilizationMap(List<String> yearMonthWeekNumberList, int noOfWorkingDays) {
+	public void createUtilizationMap(List<String> yearMonthWeekNumberList, Map<String,Integer> numberOfDaysInAWeekMap) {
 		userUtilizationMap= new HashMap<>();
 		for(String yearMonthWeekNumber: yearMonthWeekNumberList) {
 			String currentWeekNumber = DateUtils.getYearMonthWeekNumber(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -1));
 			UserUtilization userUtilization = new UserUtilization();
-			userUtilization.setNoOfWorkingDays(noOfWorkingDays);
+			userUtilization.setNoOfWorkingDays(numberOfDaysInAWeekMap.get(yearMonthWeekNumber));
 			if (currentWeekNumber.compareTo(yearMonthWeekNumber) < 0) {
 				userUtilization.setFutureDateTask(true);
 			}

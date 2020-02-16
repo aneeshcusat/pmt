@@ -352,7 +352,7 @@ public final class DateUtils extends BaseFamstackService
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(taskActivityStartTime);
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
-		return "" + calendar.get(Calendar.YEAR) + calendar.get(Calendar.WEEK_OF_YEAR);
+		return "" + calendar.get(Calendar.WEEK_OF_YEAR);
 	}
 	
 	public static List<String> getYearMonthWeekNumberBetwwenTwoDates(Date startDate, Date endDate){
@@ -433,9 +433,6 @@ public final class DateUtils extends BaseFamstackService
 			} else if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
 				incrementValue = 0;
 			}
-			System.out.println("tempStartDate " + tempStartDate);
-			System.out.println("getYearMonthWeekNumber(tempStartDate)  " + getYearMonthWeekNumber(tempStartDate));
-			System.out.println("incrementValue" + incrementValue );
 			Date nextEndDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, incrementValue);
 			if (nextEndDate.after(endDate)) {
 				nextEndDate = endDate;
@@ -445,6 +442,33 @@ public final class DateUtils extends BaseFamstackService
 		} while (tempStartDate.before(endDate));
 		
 		return weekRange;
+	}
+
+	public static Map<String, Integer> getWeekNumberWeekDayCountMap(
+			Date startDate, Date endDate) {
+		Date tempStartDate = new Date(startDate.getTime());
+		Map<String, Integer> weekNumberWeekDayCountMap = new HashMap<>();
+		Calendar cal = Calendar.getInstance();
+		do{
+			cal.setTime(tempStartDate);
+			String weekNumber = getYearMonthWeekNumber(tempStartDate);
+			
+			int incrementValue = 6;
+			if (cal.get(Calendar.DAY_OF_WEEK) > 2) {
+				incrementValue -= cal.get(Calendar.DAY_OF_WEEK);
+				incrementValue+=2;
+			} else if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
+				incrementValue = 0;
+			}
+			Date nextEndDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, incrementValue);
+			if (nextEndDate.after(endDate)) {
+				nextEndDate = endDate;
+			}
+			weekNumberWeekDayCountMap.put(weekNumber, getWorkingDaysBetweenTwoDates(tempStartDate, nextEndDate));
+			tempStartDate = getNextPreviousDate(DateTimePeriod.DAY, tempStartDate, incrementValue + 1);
+		} while (tempStartDate.before(endDate));
+		
+		return weekNumberWeekDayCountMap;
 	}
 
 	
