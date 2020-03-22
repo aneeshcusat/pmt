@@ -2877,4 +2877,99 @@ public class FamstackProjectManager extends BaseFamstackManager
 		}
 		return userUtilizationType;
 	}
+
+	public Map<String, Map<String, Object>> getTeamUtilizationChartData(List<String> groupIds,
+			Date startDate, Date endDate) {
+		Date chartStartDate = DateUtils.getNextPreviousDate(
+				DateTimePeriod.DAY_START, startDate, 0);
+		Date chartEndendDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,
+				endDate, 0);
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startDate", chartStartDate);
+		dataMap.put("endDate", chartEndendDate);
+		dataMap.put("groupIds", groupIds);
+				
+		 List<Object[]> result =
+            getFamstackDataAccessObjectManager()
+                .executeAllSQLQueryOrderedBy(HQLStrings.getString("teamwiseUtilizationSQL"), dataMap);
+        Map<String, Map<String, Object>> teamUtilizationData = new HashMap<>();
+        for (int i = 0; i < result.size(); i++) {
+        	 Object[] data = result.get(i);
+        	 Map<String, Object> teamUtilizationMap = new HashMap<>();
+        	 teamUtilizationMap.put("HOLIDAY", ((BigDecimal)data[1]).intValue());
+        	 teamUtilizationMap.put("LEAVE", ((BigDecimal)data[2]).intValue());
+        	 teamUtilizationMap.put("BILLABLE", ((BigDecimal)data[3]).intValue());
+        	 teamUtilizationMap.put("NONBILLABLE", ((BigDecimal)data[4]).intValue());
+        	 teamUtilizationMap.put("USERGROUPID", (String)data[0]);
+        	 int noOfWorkingDays = DateUtils.getWorkingDaysBetweenTwoDates(chartStartDate, chartEndendDate);
+        	 teamUtilizationMap.put("NUMBEROFWORKINGDAYS", noOfWorkingDays == 0 ? 1 : noOfWorkingDays);
+        	 List<EmployeeDetails> listOfEmps = getFamstackApplicationConfiguration().getUsersByGroupMap().get(data[0]);
+        	 Integer empCount = 0; 
+        	 if (listOfEmps != null) {
+        		empCount = listOfEmps.size();
+        	 }
+        	 teamUtilizationMap.put("NUMBEROFEMPS", empCount);
+        	 teamUtilizationData.put((String) data[5], teamUtilizationMap);
+        }
+        
+        return teamUtilizationData;
+	}
+
+	public Map<String, List<Map<String, Object>>> getTeamUtilizationComparisonChartData(
+			String groupIds, String year, String displayWise) {
+
+		String sqlQuery = HQLStrings.getString("teamwiseUtilizationComparisonSQL");
+		sqlQuery+=" and YEAR(actual_start_time) = "+year+" and utai.user_grp_id in ("+groupIds+")  GROUP BY DATE_FORMAT(utai.actual_start_time, "+ ("DateWise".equalsIgnoreCase(displayWise) ? "'%Y%m%d'" : "'%Y%m'") + ")";
+		List<String> groupIdList = Arrays.asList(groupIds.split(","));
+		if (groupIdList.size() > 1) {
+			sqlQuery += " , utai.user_grp_id";
+		}
+		List<Object[]> result =
+	            getFamstackDataAccessObjectManager()
+	                .executeAllSQLQueryOrderedBy(sqlQuery, null);
+		Map<String, Integer> noOfWorkingDaysMap = DateUtils.getNumberOfworkingDaysMap(year);
+        Map<String, List<Map<String, Object>>> teamUtilizationData = new HashMap<>();
+        for(String groupId : groupIdList) {
+        	String groupName = getUserGroupName(groupId);
+        	teamUtilizationData.put(groupName, new ArrayList<Map<String, Object>>());
+        }
+        for (int i = 0; i < result.size(); i++) {
+        	 Object[] data = result.get(i);
+        	 String groupName = getUserGroupName((String)data[0]);
+        	 
+        	 Map<String, Object> teamUtilizationMap = new HashMap<>();
+        	 teamUtilizationMap.put("USERGROUPID", (String)data[0]);
+        	 teamUtilizationMap.put("YEAR", data[1]);
+        	 teamUtilizationMap.put("MONTH", data[2]);
+        	 teamUtilizationMap.put("DATE", data[3]);
+        	 teamUtilizationMap.put("HOLIDAY", ((BigDecimal)data[4]).intValue());
+        	 teamUtilizationMap.put("LEAVE", ((BigDecimal)data[5]).intValue());
+        	 teamUtilizationMap.put("BILLABLE", ((BigDecimal)data[6]).intValue());
+        	 teamUtilizationMap.put("NONBILLABLE", ((BigDecimal)data[7]).intValue());
+        	 
+        	 int noOfWorkingDays = "DateWise".equalsIgnoreCase(displayWise) ? 1 : noOfWorkingDaysMap.get((String)data[1] + Integer.parseInt((String)data[2]));
+        	 
+        	 teamUtilizationMap.put("NUMBEROFWORKINGDAYS", noOfWorkingDays == 0 ? 1 : noOfWorkingDays);
+
+        	 List<EmployeeDetails> listOfEmps = getFamstackApplicationConfiguration().getUsersByGroupMap().get(data[0]);
+        	 Integer empCount = 0; 
+        	 if (listOfEmps != null) {
+        		empCount = listOfEmps.size();
+        	 }
+        	 teamUtilizationMap.put("NUMBEROFEMPS", empCount);
+        	 
+        	 teamUtilizationData.get(groupName).add(teamUtilizationMap);
+        }
+        
+        return teamUtilizationData;
+	}
+
+	private String getUserGroupName(String groupId) {
+		UserGroupDetails groupDetails = getFamstackApplicationConfiguration().getUserGroupMap().get(groupId);
+		String groupName = "Other";
+		if(groupDetails != null) {
+			groupName = groupDetails.getName();
+		}
+		return groupName;
+	}
 }

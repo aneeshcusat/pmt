@@ -11,3 +11,15 @@
 .reportDataTable .xlsx {
 	display:none;
 }
+
+.dataTables_filter,.dataTables_length, #DataTables_Table_0_paginate{
+	display: none;
+}
+caption {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.chartHeader{
+	border: 1px solid #ccc;background-color: #eee;box-shadow: 5px 5px 23px grey;padding-top: 5px;padding-bottom: 5px;margin-bottom: 20px;
+}

@@ -112,7 +112,7 @@ var site_settings = "";
          
          <!--  famstack scripts -->
          <script type="text/javascript" src="${js}/famstack.ajax.js?version=3.2&v=${fsVersionNumber}"></script>
-         <script type="text/javascript" src="${js}/famstack.plugin.js?v=${fsVersionNumber}"></script>
+         <script type="text/javascript" src="${js}/famstack.plugin.js?version=1&v=${fsVersionNumber}"></script>
          <script type="text/javascript" src="${js}/plugins/notify/bootstrap-notify.js?v=${fsVersionNumber}"></script>
         
          <!--  famstack scripts ends -->

@@ -67,6 +67,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	public static Map<Integer, EmployeeDetails> allUsersMap = new HashMap<>();
 
 	private static Map<String, UserGroupDetails> userGroupMap = new HashMap<>();
+	
+	private Map<String, List<EmployeeDetails>> usersByGroupMap = new HashMap<>();
 
 	private static Map<String, AppConfDetails> appConfigMap = new HashMap<>();
 
@@ -132,11 +134,18 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		Map<Integer, EmployeeDetails> userMapTemp = new HashMap<>();
 		Map<Integer, EmployeeDetails> allUserMapTemp = new HashMap<>();
 		Map<String, Integer> userIdMapTemp = new HashMap<>();
-
+		Map<String, List<EmployeeDetails>> usersByGroupMapTmp = new HashMap<>();
 		for (EmployeeDetails employeeDetails : employeeDetailsList) {
 			allUserMapTemp.put(employeeDetails.getId(), employeeDetails);
 			if (!employeeDetails.isDeleted()) {
 				userMapTemp.put(employeeDetails.getId(), employeeDetails);
+				
+				List<EmployeeDetails> usersByGroupList = usersByGroupMapTmp.get(employeeDetails.getUserGroupId());
+				if (usersByGroupList == null) {
+					usersByGroupList = new ArrayList<>();
+					usersByGroupMapTmp.put(employeeDetails.getUserGroupId(), usersByGroupList);
+				}
+				usersByGroupList.add(employeeDetails);
 			}
 			userIdMapTemp.put(employeeDetails.getEmail(),
 					employeeDetails.getId());
@@ -144,10 +153,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		allUsersMap.clear();
 		userMap.clear();
 		userIdMap.clear();
+		usersByGroupMap.clear();
 		userMap.putAll(userMapTemp);
 		userIdMap.putAll(userIdMapTemp);
 		allUsersMap.putAll(allUserMapTemp);
-
+		usersByGroupMap.putAll(usersByGroupMapTmp);
+		
 		famstackRemoteServiceRefreshManager.createOrUpdateRemoteRefreshItem(
 				getFamstackApplicationConfiguration().getInstanceName(),
 				"user", true);
@@ -350,6 +361,9 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	public Map<Integer, EmployeeDetails> getAllUsersMap() {
 		return allUsersMap;
+	}
+	public Map<String, List<EmployeeDetails>> getUsersByGroupMap() {
+		return usersByGroupMap;
 	}
 
 	public List<EmployeeDetails> getAllSortedUsers() {

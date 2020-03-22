@@ -2200,4 +2200,17 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
 		return projectManager.getReportData(getFamstackApplicationConfiguration().getCurrentUserGroupId(), reportType, startDate, endDate);
 	}
+
+	public String getTeamUtilizationChartData(String groupIds, String reportStartDate, String reportEndDate) {
+		Date startDate = DateUtils.tryParse(reportStartDate, DateUtils.DATE_FORMAT_CALENDER);
+		Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
+		Map<String, Map<String, Object>> utilizationData = projectManager.getTeamUtilizationChartData(Arrays.asList(groupIds.split(",")), startDate, endDate);
+		return FamstackUtils.getJsonFromObject(utilizationData);
+	}
+
+	public String getTeamUtilizationComparisonChartData(String groupIds,
+			String year, String displayWise) {
+		Map<String, List<Map<String, Object>>> utilizationData = projectManager.getTeamUtilizationComparisonChartData(groupIds, year, displayWise);
+		return FamstackUtils.getJsonFromObject(utilizationData);
+	}
 }

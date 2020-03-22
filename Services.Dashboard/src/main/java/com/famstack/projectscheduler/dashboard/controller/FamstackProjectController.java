@@ -676,5 +676,19 @@ public class FamstackProjectController extends BaseFamstackService
     {
 		 famstackXLSExportManager.downloadXLSReport(reportType, fileName, famstackDashboardManager.getReportData(reportType, reportStartDate, reportEndDate), request, response);
     }
+	
+	@RequestMapping(value = "/getTeamUtilizationChartData", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTeamUtilizationChartData(@RequestParam("groupIds") String groupIds, @RequestParam("reportStartDate") String reportStartDate, @RequestParam("reportEndDate") String reportEndDate)
+    {
+		return famstackDashboardManager.getTeamUtilizationChartData(groupIds, reportStartDate,  reportEndDate);
+	}
+	
+	@RequestMapping(value = "/getTeamUtilizationComparisonChartData", method = RequestMethod.GET)
+	@ResponseBody
+	public String getTeamUtilizationComparisonChartData(@RequestParam("groupIds") String groupIds, @RequestParam("year") String year, @RequestParam("displayWise") String displayWise)
+    {
+		return famstackDashboardManager.getTeamUtilizationComparisonChartData(groupIds, year,  displayWise);
+	}
 
 }

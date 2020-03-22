@@ -2,7 +2,7 @@
 <%@include file="includes/header.jsp" %>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 
-<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/reports.css?version=3.5&v=${fsVersionNumber}"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/reports.css?version=4.1&v=${fsVersionNumber}"/>
 
 <!-- START CONTENT FRAME -->
 <div class="content-frame">            
@@ -18,7 +18,7 @@
     <!-- START CONTENT FRAME BODY -->
         <div class="row">
         <div class="col-md-12" style="padding-top: 10px;padding-bottom: 10px">
-        	<div class="col-md-2">
+        	<div class="col-md-1">
         	 <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
         	 
     		<select class="form-control" data-live-search="true" id="userGroupSelection">
@@ -37,6 +37,8 @@
 
                 <option value="WEEKLY_PO_ESTIMATION">PO Estimation</option>
                 <option value="WEEKLY_PROJECT_HOURS">Weekly Project Hours</option>
+                
+                <option value="TEAM_UTILIZATION_CHART">Team Utilization Chart</option>
           	</select>
           	</div>
           	<div class="col-md-1">
@@ -46,13 +48,13 @@
           		<option value="MONTHLY">Monthly</option>
           	</select>
           	</div>
-        	<div class="col-md-2"><span style="font-size: 12px; font-weight: bold"></span>
-        		<span class="fa fa-angle-down fa-lg" style="font-weight: bold"/>
+        	<div class="col-md-2">
+        		<span class="fa fa-angle-down fa-lg" style="font-weight: bold"></span>
         		<input readonly="readonly" type='text' class="dailySelector"/>
         		<input readonly="readonly" type='text' class="weekSelector hide"/>
         		<input readonly="readonly" type='text' class="monthSelector hide"/>
         	</div>
-        	<div class="col-md-2 " style="text-align: center;">
+        	<div class="col-md-1 " style="text-align: center;">
 	        	<a href="javascript:moveToPrevious();" style="float: left" title="Previous"><span class="fa fa-angle-left fa-2x" style="font-weight: bold"></span></a>
 	        	<a href="javascript:moveToCurrent();" title="Current"><span style="padding-left: 15px;" class="fa fa-home fa-2x"></span></a>
 	        	<a href="javascript:moveToNext();" style="float: right" title="Next"><span style="padding-left: 15px;font-weight: bold" class="fa fa-angle-right  fa-2x"></span></a>
@@ -62,8 +64,76 @@
         		<input class="btn btn-info refreshButton hide" type="button" value="Refresh"/>
         		<button class="btn btn-warning clearfix exportButton hide"><span class="fa fa-file-excel-o"></span> Export</button>
         	</div>
+        	<div class="col-md-2" style="text-align: center">
+        	<input type="text" class="form-control hide" id="reportSearchBoxId"
+												placeholder="Type here to filter.." />	
+        	</div>
         </div>
-            <div class="col-md-12" style="overflow-x:auto;">
+        <div class="col-md-12 teamUtilizationChartDiv hide">
+        	
+        	<c:if test="${currentUserGroupId == '1001' || currentUserGroupId == '1004' || currentUserGroupId == '1016' || currentUserGroupId == '1007' || currentUserGroupId == '1003' || currentUserGroupId == '1010' 
+        	|| currentUserGroupId == '1006' || currentUserGroupId == '1002' || currentUserGroupId == '1009' || currentUserGroupId == '1005'}">
+        		<input id="teamUtilizationChartGroupIds" value="1001,1004,1016,1007,1003,1010,1006,1002,1009,1005" type="hidden"/>
+			</c:if>
+			
+			<c:if test="${not (currentUserGroupId == '1001' || currentUserGroupId == '1004' || currentUserGroupId == '1016' || currentUserGroupId == '1007' || currentUserGroupId == '1003' || currentUserGroupId == '1010' 
+        	|| currentUserGroupId == '1006' || currentUserGroupId == '1002' || currentUserGroupId == '1009' || currentUserGroupId == '1005')}">
+        		<input id="teamUtilizationChartGroupIds" value="${currentUserGroupId}" type="hidden"/>
+			</c:if>
+			
+			<div class="col-md-12" id="teamUtilizationChart" style="height: 400px;width: 100%;box-shadow: 5px 5px 23px grey;margin-bottom: 20px;"></div>
+			<div class="col-md-12 chartHeader">
+			 	<div class="col-md-9"></div>
+			 	<div class="col-md-1">
+			 		<select class="form-control yearSelect">
+			 			<option value="2020">2020</option>
+                		<option value="2019">2019</option>
+                		<option value="2018">2018</option>
+                		<option value="2017">2017</option>
+                		<option value="2016">2016</option>
+          			</select>
+          		</div>
+			 	<div class="col-md-1">
+			 		<select class="form-control displayWiseSelect">
+			 			<option value="MonthWise">Month wise</option>
+			 			<option value="DateWise">Date wise</option>
+          			</select>
+			 	</div>
+			 	<div class="col-md-1">
+			 		<input class="btn btn-info refreshTeamUtilizationButton" type="button" value="Refresh"/>
+			 	</div>
+			 </div>
+			 <div class="col-md-12" id="teamUtilizationComparisonChart" style="height: 400px;width: 100%;box-shadow: 5px 5px 23px grey;margin-bottom: 20px;"></div>
+			 <div class="col-md-12 chartHeader">
+			 	<div class="col-md-9"><span style="font-size: 19px;font-weight: bold;" class="teamUtlDataText"></span></div>
+			 </div>
+			 <div class="col-md-12" style="margin-bottom:20px">
+           		<table style="margin-bottom: 0px;" class="table table-responsive table-hover table-bordered">
+				     <thead>
+				      <tr>
+				      	 <th>Sl No</th>
+				       	 <th>Team Name</th>
+				       	 <th>Billable Hours (B)</th>
+				       	 <th>Non Billable Hours (NB)</th>
+				       	 <th>Leave Hours (L)</th>
+				       	 <th>Holiday Hours (H)</th>
+				       	 <th>Total Task Hours (B+NB)</th>
+				       	 <th>No Of Work Days (NW)</th>
+				       	 <th>No of Employees (NE)</th>
+				       	 <th>Total Hours (NW*8*60*NE-L-H)</th>
+				       	 <th>Utilization (%)</th>
+				       </tr>
+				    </thead>
+				    <tbody class="teamUtilizationChartDataBody">
+					    
+				    </tbody>
+					<tfoot>
+					</tfoot>
+				</table>
+            </div>
+        </div>
+		</div>
+        <div class="col-md-12" style="overflow-x:auto;">
             <table style="margin-bottom: 0px;" class="table table-responsive table-hover table-bordered reportDataTable">
 			     <thead class="retportDataHeader">
 			       
@@ -149,5 +219,7 @@
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=3.9&v=${fsVersionNumber}"></script> 
- 
+	src="${js}/famstack.reports.js?version=4.1&v=${fsVersionNumber}"></script> 
+  <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
+<script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
+<script type="text/javascript" src="${js}/plugins/canvasjs/canvasjs.js"></script> 

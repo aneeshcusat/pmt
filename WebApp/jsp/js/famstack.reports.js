@@ -119,6 +119,15 @@ function getLastSundayOfMonth(date) {
 	  return t;
 }
 
+function clearReportDataTableOnDateChange(){
+	var autoReportType = $(".autoReportType").val();
+	if (autoReportType != 'TEAM_UTILIZATION_CHART') {
+		clearReportDataTable();
+	} else {
+		refreshReportDataOrDownload(false);
+	}
+}
+
 $(document).ready(function(){
 $('.dailySelector').val(formatDate(new Date()));
 $('.dailySelector').datepicker({ 
@@ -130,7 +139,7 @@ $('.dailySelector').datepicker({
 	autoclose:true
 }).on('changeDate', function(e) {
 	var date = new Date($(".monthSelector").val());
-	clearReportDataTable();
+	clearReportDataTableOnDateChange();
 });;
 	
 $('.weekSelector').val(formatDate(getLastMonday(new Date())));
@@ -145,7 +154,7 @@ $('.weekSelector').datepicker({
 	autoclose:true
 }).on('changeDate', function(e) {
 	var date = new Date($(".weekSelector").val());
-	clearReportDataTable();
+	clearReportDataTableOnDateChange();
 });;
 
 $('.monthSelector').val(formatMonthDate(getFirstDayOfMonth(new Date())));
@@ -158,7 +167,7 @@ $('.monthSelector').datepicker({
 	autoclose:true
 }).on('changeDate', function(e) {
 	var date = new Date($(".monthSelector").val());
-	clearReportDataTable();
+	clearReportDataTableOnDateChange();
 });;
 });
 
@@ -192,12 +201,14 @@ $(".autoReportType").on("change",function(){
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
+	 } else  if("TEAM_UTILIZATION_CHART" == selectedValue) {
+		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
 	 }
 	 $(".autoReportDuration").trigger("change");
 });
 
 $(".autoReportDuration").on("change",function(){
-	 clearReportDataTable();
+	 clearReportDataTableOnDateChange();
 	 
 	 var selectedValue = $(this).val();
 	 $('.monthSelector').addClass("hide");
@@ -217,11 +228,19 @@ $(".autoReportDuration").on("change",function(){
 });
 
 
-$(".refreshButton").on("click", function(){refreshReportDataOrDownload(false);});
+$(".refreshTeamUtilizationButton").on("click", function(){
+	refreshTeamUtilizationComparisonChart();
+});
+
+$(".refreshButton").on("click", function(){
+	refreshReportDataOrDownload(false);
+});
 
 function refreshReportDataOrDownload(isDownload) {
 	checkValidDate();
-	
+	if (dataTable != null) {
+		dataTable.destroy();
+	}
 	var autoReportDuration = $(".autoReportDuration").val();
 	var autoReportType = $(".autoReportType").val();
 	var startDate = "";
@@ -278,16 +297,22 @@ function refreshReportDataOrDownload(isDownload) {
 	 } else  if("WEEKLY_PO_ESTIMATION" == autoReportType) {
 	 } else  if("WEEKLY_PROJECT_HOURS" == autoReportType) {
 	 }
-	 
-	 if(isDownload) {
-		 window.location.href = fsApplicationHome + "/download?reportType=" + reportType + "&reportStartDate=" + reportStartDate + "&reportEndDate=" + reportEndDate +"&fileName=" + downloadXLSFileName;
+
+	 if (autoReportType == "TEAM_UTILIZATION_CHART") {
+		$(".teamUtilizationChartDiv").removeClass("hide");
+		refreshTeamUtilizationChart(reportStartDate, reportEndDate);
 	 } else {
-		 doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getReportData",{"reportType":reportType,"reportStartDate":reportStartDate,"reportEndDate":reportEndDate} , function(data) {
-			fillReportTableData(data, reportType, autoReportDuration);
-			$(".exportButton").removeClass("hide");
-	
-		 }, function(e) {
-		}, false);
+		 if(isDownload) {
+			 window.location.href = fsApplicationHome + "/download?reportType=" + reportType + "&reportStartDate=" + reportStartDate + "&reportEndDate=" + reportEndDate +"&fileName=" + downloadXLSFileName;
+		 } else {
+			 doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getReportData",{"reportType":reportType,"reportStartDate":reportStartDate,"reportEndDate":reportEndDate} , function(data) {
+				fillReportTableData(data, reportType, autoReportDuration);
+				$(".exportButton").removeClass("hide");
+				 $("#reportSearchBoxId").removeClass("hide");
+				 $("#reportSearchBoxId").val("");
+			 }, function(e) {
+			}, false);
+		 }
 	 }
 }
 
@@ -296,7 +321,6 @@ var downloadXLSFileName = "";
 function fillReportTableData(data, reportType,autoReportDuration){
 
 	var jsonData = JSON.parse(data);
-	console.log(jsonData);
 	 if("USER_SITE_ACTIVITY" == reportType) {
 		 fillUserActivityReportData(data);
 		 downloadXLSFileName = "User Site Activity Report";
@@ -626,15 +650,40 @@ $(".exportButton").on("click", function(){
 });
 
 function clearReportDataTable(){
-	 $(".reportDataTable .retportDataHeader").html("");
-	 $(".reportDataTable .reportDataBody").html("");
-	 $(".exportButton").addClass("hide");
+	
+	$(".exportButton").addClass("hide");
+	 $("#reportSearchBoxId").addClass("hide");
+	
+	 if (dataTable != null) {
+		 dataTable.destroy();
+		 dataTable=null;
+	 }
+	 
 	 if (exportTable != null) {
 		 exportTable.remove();
+		 exportTable = null;
 	 }
+	 
+	 $(".reportDataTable .retportDataHeader").html("");
+	 $(".reportDataTable .reportDataBody").html("");
+	 
+	var autoReportType = $(".autoReportType").val();
+	if (autoReportType == "TEAM_UTILIZATION_CHART") {
+		
+	}
+	
+	$(".teamUtilizationChartDiv").addClass("hide");
+	$(".teamUtilizationChartDataBody").html("");
+	
+	if (teamUtilizationChart != null) {
+		teamUtilizationChart.destroy();
+		teamUtilizationChart = null;
+	}
+	
 }
 
 var exportTable = null;
+var dataTable = null;
 function initializeExportTable(fileName) {
 	exportTable = $(".reportDataTable").tableExport({
 		headings: true,
@@ -649,8 +698,457 @@ function initializeExportTable(fileName) {
 	    emptyCSS: ".tableexport-empty", 
 	    trimWhitespace: false
 	});
+	
+	dataTable= $('.reportDataTable').DataTable({ 
+	    responsive: false,
+	    "pageLength": -1,
+	    "ordering": false
+	 });
 }
 
 $(document).ready(function(){
 	$(".refreshButton").removeClass("hide");
 });
+
+$("#reportSearchBoxId").keydown(function(e){
+	$("input[type='search']").val($("#reportSearchBoxId").val());
+	$("input[type='search']").trigger(e);
+});
+
+$("#reportSearchBoxId").keyup(function(e){
+	$("input[type='search']").val($("#reportSearchBoxId").val());
+	$("input[type='search']").trigger(e);
+});
+
+var teamUtilizationChart = null;
+var teamUtilizationComparisonChart = null;
+function initializeTeamUtilizationChart(teamUtilizationData, dateRange){
+	if (teamUtilizationData.length == 0) {
+		return;
+	}
+	var titleText = "Team Utilization Tracker " + dateRange;
+	if (teamUtilizationChart == null) {
+		
+		teamUtilizationChart = new CanvasJS.Chart("teamUtilizationChart", {
+			theme: "light2", // "light2", "dark1", "dark2"
+			animationEnabled: true, // change to true		
+			title:{
+				text: titleText,
+				fontWeight: "normal",
+				fontSize: 20,
+				fontFamily:"Arial"
+			},
+			axisY:{
+				suffix: " %"
+			},
+			axisX:{
+				labelFontSize:12,
+				labelFontFamily:"Arial",
+				labelFontWeight: "lighter"
+			},
+			data: [
+			{
+				type: "column",
+				yValueFormatString: "# '%'",
+				indexLabel: "{y}",
+				dataPoints: teamUtilizationData
+			}
+			]
+		});
+	} else {
+		teamUtilizationChart.options.title.text = titleText;
+		teamUtilizationChart.options.data[0].dataPoints = teamUtilizationData; 
+	}
+	
+	$(".teamUtlDataText").html("Team utilization data - " + dateRange);
+	teamUtilizationChart.render();
+}
+
+
+function initializeTeamUtilizationComparisonChart(teamUtilizationComparisonChartData, dateRange, xAxisDateFormat){
+	if (teamUtilizationComparisonChartData.length == 0) {
+		return;
+	}
+	var titleText = "Team Utilization Yearly Comparison Chart (" + dateRange + ")";
+	if (teamUtilizationComparisonChart == null) {
+		
+		teamUtilizationComparisonChart = new CanvasJS.Chart("teamUtilizationComparisonChart", {
+			theme: "light1", // "light2", "dark1", "dark2"
+			animationEnabled: true, // change to true	
+			zoomEnabled: true,
+			title:{
+				text: titleText,
+				fontWeight: "normal",
+				fontSize: 20,
+				fontFamily:"Arial"	
+			},
+			axisY:{
+				suffix: " %"
+			},
+			toolTip: {
+				shared: true
+			},
+			legend: {
+				cursor: "pointer",
+				verticalAlign: "top",
+				horizontalAlign: "center",
+				dockInsidePlotArea: true,
+			},
+			axisX:{
+				labelFontSize:12,
+				labelFontFamily:"Arial",
+				labelFontWeight: "lighter",
+				valueFormatString: xAxisDateFormat
+			},
+			data: teamUtilizationComparisonChartData
+		});
+	} else {
+		teamUtilizationComparisonChart.options.title.text = titleText;
+		teamUtilizationComparisonChart.options.axisX.valueFormatString = xAxisDateFormat;
+		teamUtilizationComparisonChart.options.data = teamUtilizationComparisonChartData; 
+	}
+	
+	teamUtilizationComparisonChart.render();
+}
+
+function refreshTeamUtilizationChart(reportStartDate, reportEndDate){
+	var groupIds = $("#teamUtilizationChartGroupIds").val();
+	doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getTeamUtilizationChartData",{"groupIds": groupIds,"reportStartDate":reportStartDate,"reportEndDate":reportEndDate} , function(data) {
+		var dateRange = reportStartDate == reportEndDate ? reportEndDate : reportStartDate +" - " + reportEndDate;
+		initializeTeamUtilizationChart(getUtilizationData(data), dateRange);
+		fillTeamUtilizationTableData(data);
+	 }, function(e) {
+	}, false);
+	if (teamUtilizationComparisonChart == null){
+		refreshTeamUtilizationComparisonChart();
+	}
+}
+
+function refreshTeamUtilizationComparisonChart(){
+	var groupIds = $("#teamUtilizationChartGroupIds").val();
+	var displayWiseSelect = $(".displayWiseSelect").val();
+	doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getTeamUtilizationComparisonChartData",{"groupIds": groupIds,"year":$(".yearSelect").val(),"displayWise":displayWiseSelect} , function(data) {
+		initializeTeamUtilizationComparisonChart(getUtilizationComparisonData(data, displayWiseSelect=="DateWise"?true:false), $(".yearSelect").val(), displayWiseSelect=="DateWise"? "DD MMM YYYY": "MMM YYYY");
+	 }, function(e) {
+	}, false);
+}
+
+function fillTeamUtilizationTableData(data){
+	$(".teamUtilizationChartDataBody").html("");
+	var jsonData = JSON.parse(data);
+	var index = 0;
+	var reportBodyHtml = "";
+	$.each(jsonData, function(key, value) {
+	   var noOfWorkingMins = (value.NUMBEROFWORKINGDAYS * 8 * 60);
+		
+	   var billableHours = roundToTwo(value.BILLABLE/60);
+	   var nonBillableHours = roundToTwo(value.NONBILLABLE/60);
+	   var holidayHours = roundToTwo(value.HOLIDAY/60);
+	   var leaveHours = roundToTwo(value.LEAVE/60);
+	   var noOfWorkingDyas = value.NUMBEROFWORKINGDAYS;
+	   var noOfEmps = value.NUMBEROFEMPS;
+	   
+	   var totalTaskMins = value.BILLABLE + value.NONBILLABLE;
+	   var totalMins =(noOfWorkingMins * noOfEmps) - (value.HOLIDAY - value.LEAVE);
+	   var totalTaskHours = roundToTwo(totalTaskMins/60);
+	   var totalHours = roundToTwo(totalMins/60);
+	   
+	   var utilizationPercentage = 0;
+	   if (totalMins > 0) {
+		   utilizationPercentage = roundToTwo((totalTaskMins/totalMins) * 100);
+	   }
+	   
+	   reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+	   reportBodyHtml += "<td style='font-weight: bold;'>"+key+"</td>";
+	   reportBodyHtml += "<td>"+billableHours+"</td>";
+	   reportBodyHtml += "<td>"+nonBillableHours+"</td>";
+	   reportBodyHtml += "<td>"+leaveHours+"</td>";
+	   reportBodyHtml += "<td>"+holidayHours+"</td>";
+	   reportBodyHtml += "<td style='font-weight: bold;background-color: #eee;'>"+totalTaskHours+"</td>";
+	   reportBodyHtml += "<td>"+noOfWorkingDyas+"</td>";
+	   reportBodyHtml += "<td>"+noOfEmps+"</td>";
+	   reportBodyHtml += "<td style='font-weight: bold;background-color: #eee;'>"+totalHours+"</td>";
+	   reportBodyHtml += "<td style='font-weight: bold;background-color: #ccc;'>"+utilizationPercentage+" %</td></tr>";
+	   index +=1;
+	});
+	
+	$(".teamUtilizationChartDataBody").html(reportBodyHtml);
+}
+
+function getUtilizationData(data){
+	var jsonData = JSON.parse(data);
+	taskUtilizationData = [];
+	$.each(jsonData, function(key, value) {
+		
+	   var billableMins = value.BILLABLE;
+	   var nonBillableMins = value.NONBILLABLE;
+	   var noOfWorkingMins = (value.NUMBEROFWORKINGDAYS * 8 * 60);
+	   var holidayMins = value.HOLIDAY;
+	   var leaveMins = value.LEAVE;
+	   var noOfEmps = value.NUMBEROFEMPS;
+		
+	   var totalTaskMins = billableMins + nonBillableMins;
+	   var totalMins =(noOfWorkingMins * noOfEmps) - (holidayMins - leaveMins);
+	   var utilizationPercentage = 0;
+	   if (totalMins > 0) {
+		   utilizationPercentage = (totalTaskMins/totalMins) * 100;
+	   }
+	   
+	   item = {};
+	   item['y'] = utilizationPercentage;
+	   item['label'] = key;
+	   taskUtilizationData.push(item);
+	});
+	
+	return taskUtilizationData;
+}
+
+function getUtilizationComparisonData(data,isDateWise){
+	var jsonData = JSON.parse(data);
+	var taskUtilizationComparisonData = [];
+	
+	$.each(jsonData, function(key, yearDataList) {
+		var dataPoints = [];
+		$.each(yearDataList, function(index, value) {
+		   var noOfWorkingMins = (value.NUMBEROFWORKINGDAYS * 8 * 60);
+			
+		   var totalTaskMins = value.BILLABLE + value.NONBILLABLE;
+		   var totalMins =(noOfWorkingMins * value.NUMBEROFEMPS) - (value.HOLIDAY - value.LEAVE);
+		   var utilizationPercentage = 0;
+		   if (totalMins > 0) {
+			   utilizationPercentage = (totalTaskMins/totalMins) * 100;
+		   }
+		  
+		   
+		   var dataPoint = {};
+		   dataPoint['y'] = utilizationPercentage;
+		   var dateString = '1';
+		   if(isDateWise) {
+			   dateString = value.DATE;
+		   }
+		   dataPoint['x'] = new Date(value.YEAR, parseInt(value.MONTH)-1, dateString);
+		   dataPoints.push(dataPoint);
+		});
+		var item ={};
+		item['type']='line';
+		item['axisYType']='primary';
+		item['name']=key;
+		item['showInLegend']=true;
+		item['markerSize']=0;
+		item['yValueFormatString']= "# ' %'";
+		item['dataPoints']= dataPoints;
+		
+		taskUtilizationComparisonData.push(item);
+	});
+	
+	return taskUtilizationComparisonData;
+}
+
+var teamUtilizationComparisonChartData =[{
+	type:"line",
+	axisYType: "primary",
+	name: "San Fransisco",
+	showInLegend: true,
+	markerSize: 0,
+	yValueFormatString: "# ' %'",
+	dataPoints: [		
+		{ x: new Date(2014, 00, 01), y: 850 },
+		{ x: new Date(2014, 01, 01), y: 889 },
+		{ x: new Date(2014, 02, 01), y: 890 },
+		{ x: new Date(2014, 03, 01), y: 899 },
+		{ x: new Date(2014, 04, 01), y: 903 },
+		{ x: new Date(2014, 05, 01), y: 925 },
+		{ x: new Date(2014, 06, 01), y: 899 },
+		{ x: new Date(2014, 07, 01), y: 875 },
+		{ x: new Date(2014, 08, 01), y: 927 },
+		{ x: new Date(2014, 09, 01), y: 949 },
+		{ x: new Date(2014, 10, 01), y: 946 },
+		{ x: new Date(2014, 11, 01), y: 927 },
+		{ x: new Date(2015, 00, 01), y: 950 },
+		{ x: new Date(2015, 01, 01), y: 998 },
+		{ x: new Date(2015, 02, 01), y: 998 },
+		{ x: new Date(2015, 03, 01), y: 1050 },
+		{ x: new Date(2015, 04, 01), y: 1050 },
+		{ x: new Date(2015, 05, 01), y: 999 },
+		{ x: new Date(2015, 06, 01), y: 998 },
+		{ x: new Date(2015, 07, 01), y: 998 },
+		{ x: new Date(2015, 08, 01), y: 1050 },
+		{ x: new Date(2015, 09, 01), y: 1070 },
+		{ x: new Date(2015, 10, 01), y: 1050 },
+		{ x: new Date(2015, 11, 01), y: 1050 },
+		{ x: new Date(2016, 00, 01), y: 995 },
+		{ x: new Date(2016, 01, 01), y: 1090 },
+		{ x: new Date(2016, 02, 01), y: 1100 },
+		{ x: new Date(2016, 03, 01), y: 1150 },
+		{ x: new Date(2016, 04, 01), y: 1150 },
+		{ x: new Date(2016, 05, 01), y: 1150 },
+		{ x: new Date(2016, 06, 01), y: 1100 },
+		{ x: new Date(2016, 07, 01), y: 1100 },
+		{ x: new Date(2016, 08, 01), y: 1150 },
+		{ x: new Date(2016, 09, 01), y: 1170 },
+		{ x: new Date(2016, 10, 01), y: 1150 },
+		{ x: new Date(2016, 11, 01), y: 1150 },
+		{ x: new Date(2017, 00, 01), y: 1150 },
+		{ x: new Date(2017, 01, 01), y: 1200 },
+		{ x: new Date(2017, 02, 01), y: 1200 },
+		{ x: new Date(2017, 03, 01), y: 1200 },
+		{ x: new Date(2017, 04, 01), y: 1190 },
+		{ x: new Date(2017, 05, 01), y: 1170 }
+	]
+},
+{
+	type: "line",
+	axisYType: "primary",
+	name: "Manhattan",
+	showInLegend: true,
+	markerSize: 0,
+	yValueFormatString: "$#,###k",
+	dataPoints: [
+		{ x: new Date(2014, 00, 01), y: 1200 },
+		{ x: new Date(2014, 01, 01), y: 1200 },
+		{ x: new Date(2014, 02, 01), y: 1190 },
+		{ x: new Date(2014, 03, 01), y: 1180 },
+		{ x: new Date(2014, 04, 01), y: 1250 },
+		{ x: new Date(2014, 05, 01), y: 1270 },
+		{ x: new Date(2014, 06, 01), y: 1300 },
+		{ x: new Date(2014, 07, 01), y: 1300 },
+		{ x: new Date(2014, 08, 01), y: 1358 },
+		{ x: new Date(2014, 09, 01), y: 1410 },
+		{ x: new Date(2014, 10, 01), y: 1480 },
+		{ x: new Date(2014, 11, 01), y: 1500 },
+		{ x: new Date(2015, 00, 01), y: 1500 },
+		{ x: new Date(2015, 01, 01), y: 1550 },
+		{ x: new Date(2015, 02, 01), y: 1550 },
+		{ x: new Date(2015, 03, 01), y: 1590 },
+		{ x: new Date(2015, 04, 01), y: 1600 },
+		{ x: new Date(2015, 05, 01), y: 1590 },
+		{ x: new Date(2015, 06, 01), y: 1590 },
+		{ x: new Date(2015, 07, 01), y: 1620 },
+		{ x: new Date(2015, 08, 01), y: 1670 },
+		{ x: new Date(2015, 09, 01), y: 1720 },
+		{ x: new Date(2015, 10, 01), y: 1750 },
+		{ x: new Date(2015, 11, 01), y: 1820 },
+		{ x: new Date(2016, 00, 01), y: 2000 },
+		{ x: new Date(2016, 01, 01), y: 1920 },
+		{ x: new Date(2016, 02, 01), y: 1750 },
+		{ x: new Date(2016, 03, 01), y: 1850 },
+		{ x: new Date(2016, 04, 01), y: 1750 },
+		{ x: new Date(2016, 05, 01), y: 1730 },
+		{ x: new Date(2016, 06, 01), y: 1700 },
+		{ x: new Date(2016, 07, 01), y: 1730 },
+		{ x: new Date(2016, 08, 01), y: 1720 },
+		{ x: new Date(2016, 09, 01), y: 1740 },
+		{ x: new Date(2016, 10, 01), y: 1750 },
+		{ x: new Date(2016, 11, 01), y: 1750 },
+		{ x: new Date(2017, 00, 01), y: 1750 },
+		{ x: new Date(2017, 01, 01), y: 1770 },
+		{ x: new Date(2017, 02, 01), y: 1750 },
+		{ x: new Date(2017, 03, 01), y: 1750 },
+		{ x: new Date(2017, 04, 01), y: 1730 },
+		{ x: new Date(2017, 05, 01), y: 1730 }
+	]
+},
+{
+	type: "line",
+	axisYType: "primary",
+	name: "Seatle",
+	showInLegend: true,
+	markerSize: 0,
+	yValueFormatString: "$#,###k",
+	dataPoints: [
+		{ x: new Date(2014, 00, 01), y: 409 },
+		{ x: new Date(2014, 01, 01), y: 415 },
+		{ x: new Date(2014, 02, 01), y: 419 },
+		{ x: new Date(2014, 03, 01), y: 429 },
+		{ x: new Date(2014, 04, 01), y: 429 },
+		{ x: new Date(2014, 05, 01), y: 450 },
+		{ x: new Date(2014, 06, 01), y: 450 },
+		{ x: new Date(2014, 07, 01), y: 445 },
+		{ x: new Date(2014, 08, 01), y: 450 },
+		{ x: new Date(2014, 09, 01), y: 450 },
+		{ x: new Date(2014, 10, 01), y: 440 },
+		{ x: new Date(2014, 11, 01), y: 429 },
+		{ x: new Date(2015, 00, 01), y: 435 },
+		{ x: new Date(2015, 01, 01), y: 450 },
+		{ x: new Date(2015, 02, 01), y: 475 },
+		{ x: new Date(2015, 03, 01), y: 475 },
+		{ x: new Date(2015, 04, 01), y: 475 },
+		{ x: new Date(2015, 05, 01), y: 489 },
+		{ x: new Date(2015, 06, 01), y: 495 },
+		{ x: new Date(2015, 07, 01), y: 495 },
+		{ x: new Date(2015, 08, 01), y: 500 },
+		{ x: new Date(2015, 09, 01), y: 508 },
+		{ x: new Date(2015, 10, 01), y: 520 },
+		{ x: new Date(2015, 11, 01), y: 525 },
+		{ x: new Date(2016, 00, 01), y: 525 },
+		{ x: new Date(2016, 01, 01), y: 529 },
+		{ x: new Date(2016, 02, 01), y: 549 },
+		{ x: new Date(2016, 03, 01), y: 550 },
+		{ x: new Date(2016, 04, 01), y: 568 },
+		{ x: new Date(2016, 05, 01), y: 575 },
+		{ x: new Date(2016, 06, 01), y: 579 },
+		{ x: new Date(2016, 07, 01), y: 575 },
+		{ x: new Date(2016, 08, 01), y: 585 },
+		{ x: new Date(2016, 09, 01), y: 589 },
+		{ x: new Date(2016, 10, 01), y: 595 },
+		{ x: new Date(2016, 11, 01), y: 595 },
+		{ x: new Date(2017, 00, 01), y: 595 },
+		{ x: new Date(2017, 01, 01), y: 600 },
+		{ x: new Date(2017, 02, 01), y: 624 },
+		{ x: new Date(2017, 03, 01), y: 635 },
+		{ x: new Date(2017, 04, 01), y: 650 },
+		{ x: new Date(2017, 05, 01), y: 675 }
+	]
+},
+{
+	type: "line",
+	axisYType: "primary",
+	name: "Los Angeles",
+	showInLegend: true,
+	markerSize: 0,
+	yValueFormatString: "$#,###k",
+	dataPoints: [
+		{ x: new Date(2014, 00, 01), y: 529 },
+		{ x: new Date(2014, 01, 01), y: 540 },
+		{ x: new Date(2014, 02, 01), y: 539 },
+		{ x: new Date(2014, 03, 01), y: 565 },
+		{ x: new Date(2014, 04, 01), y: 575 },
+		{ x: new Date(2014, 05, 01), y: 579 },
+		{ x: new Date(2014, 06, 01), y: 589 },
+		{ x: new Date(2014, 07, 01), y: 579 },
+		{ x: new Date(2014, 08, 01), y: 579 },
+		{ x: new Date(2014, 09, 01), y: 579 },
+		{ x: new Date(2014, 10, 01), y: 569 },
+		{ x: new Date(2014, 11, 01), y: 525 },
+		{ x: new Date(2015, 00, 01), y: 535 },
+		{ x: new Date(2015, 01, 01), y: 575 },
+		{ x: new Date(2015, 02, 01), y: 599 },
+		{ x: new Date(2015, 03, 01), y: 619 },
+		{ x: new Date(2015, 04, 01), y: 639 },
+		{ x: new Date(2015, 05, 01), y: 648 },
+		{ x: new Date(2015, 06, 01), y: 640 },
+		{ x: new Date(2015, 07, 01), y: 645 },
+		{ x: new Date(2015, 08, 01), y: 648 },
+		{ x: new Date(2015, 09, 01), y: 649 },
+		{ x: new Date(2015, 10, 01), y: 649 },
+		{ x: new Date(2015, 11, 01), y: 649 },
+		{ x: new Date(2016, 00, 01), y: 650 },
+		{ x: new Date(2016, 01, 01), y: 665 },
+		{ x: new Date(2016, 02, 01), y: 675 },
+		{ x: new Date(2016, 03, 01), y: 695 },
+		{ x: new Date(2016, 04, 01), y: 690 },
+		{ x: new Date(2016, 05, 01), y: 699 },
+		{ x: new Date(2016, 06, 01), y: 699 },
+		{ x: new Date(2016, 07, 01), y: 699 },
+		{ x: new Date(2016, 08, 01), y: 699 },
+		{ x: new Date(2016, 09, 01), y: 699 },
+		{ x: new Date(2016, 10, 01), y: 709 },
+		{ x: new Date(2016, 11, 01), y: 699 },
+		{ x: new Date(2017, 00, 01), y: 700 },
+		{ x: new Date(2017, 01, 01), y: 700 },
+		{ x: new Date(2017, 02, 01), y: 724 },
+		{ x: new Date(2017, 03, 01), y: 739 },
+		{ x: new Date(2017, 04, 01), y: 749 },
+		{ x: new Date(2017, 05, 01), y: 740 }
+	]
+}];

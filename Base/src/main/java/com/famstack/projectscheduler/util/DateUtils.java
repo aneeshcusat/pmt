@@ -471,5 +471,20 @@ public final class DateUtils extends BaseFamstackService
 		return weekNumberWeekDayCountMap;
 	}
 
+	public static Map<String, Integer> getNumberOfworkingDaysMap(String year) {
+		Map<String, Integer> numberOfworkingDaysMap = new HashMap<>();
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.parseInt(year));
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		for(int index = 0; index < 12; index++) {
+			cal.set(Calendar.MONTH, index);
+			Date startDate =cal.getTime();
+			Date endDate = getLastDayOfThisMonth(startDate);
+			numberOfworkingDaysMap.put((year+(index+1)), getWorkingDaysBetweenTwoDates(startDate, endDate));
+		}
+		
+		return numberOfworkingDaysMap;
+	}
+
 	
 }

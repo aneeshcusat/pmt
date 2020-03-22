@@ -99,7 +99,7 @@ public class EmployeeDetailsImportProcessor {
 	        String DOJString = StringUtils.isBlank(DOJ) ?"" :  "date_of_join='"+DOJ+"',";
 	        String DOLString = StringUtils.isBlank(DOL) ?"" :  "exit_date='"+DOL+"',";
 	        
-	        String updateItemSql = "update user_info set gender='"+gender.toLowerCase()+"',grade='"+grade+"',grade='"+grade+"',emp_type='"+empType+"',country='"+country+"',division='"+division+"',sub_department='"+subDepartment+"',band='"+band+"',emp_code='"+empCode+"', first_name='"+empName+"',last_name='', " + DOJString + DOLString + DOBString + "location='"+location+"',designation='"+designation+"', department='"+department+"', rept_mgr_email_id='"+repEmailId.toLowerCase()+"', dept_lead_email_id='"+depEmailId+"', lob_head_email_id='"+lobEmailId+"', user_id=lower(user_id) where lower(user_id)='"+userEmailId.toLowerCase()+"';";
+	        String updateItemSql = "update user_info set gender='"+gender.toLowerCase()+"',grade='"+grade+"',grade='"+grade+"',emp_type='"+empType+"',country='"+country+"',division='"+division+"',sub_department='"+subDepartment+"',band='"+band+"',emp_code='"+empCode+"', first_name='"+empName+"',last_name='', " + DOJString + DOLString + DOBString + "location='"+location+"',designation='"+designation+"', department='"+department+"', rept_mgr_email_id='"+repEmailId.toLowerCase()+"', dept_lead_email_id='"+depEmailId+"', lob_head_email_id='"+lobEmailId+"', user_id='"+userEmailId.toLowerCase()+"' where lower(user_id)='"+userEmailId.toLowerCase()+"';";
 
 	        if(existingEmps.contains(userEmailId.toLowerCase())) {
 	        	availableCount++;
