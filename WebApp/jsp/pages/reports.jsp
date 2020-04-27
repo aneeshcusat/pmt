@@ -82,7 +82,36 @@
 			</c:if>
 			
 			<div class="col-md-12" id="teamUtilizationChart" style="height: 400px;width: 100%;box-shadow: 5px 5px 23px grey;margin-bottom: 20px;"></div>
-			<div class="col-md-12 chartHeader">
+			
+			
+			 <div class="col-md-12 chartHeader">
+			 	<div class="col-md-9"><span style="font-size: 19px;font-weight: bold;" class="teamUtlDataText"></span></div>
+			 </div>
+			 <div class="col-md-12" style="margin-bottom:20px">
+           		<table style="margin-bottom: 0px;" class="table table-responsive table-hover table-bordered">
+				     <thead>
+				      <tr>
+				      	 <th>Sl No</th>
+				       	 <th>Team Name</th>
+				       	 <th>Billable Hours (B)</th>
+				       	 <th>Non Billable Hours (NB)</th>
+				       	 <th>Leave Hours (L)</th>
+				       	 <th>Holiday Hours (H)</th>
+				       	 <th>Total Task Hours (B+NB)</th>
+				       	 <th>No Of Work Days (NW)</th>
+				       	 <th>No of Employees (NE)</th>
+				       	 <th>Total Hours (NW*8*NE-H-L)</th>
+				       	 <th>Utilization (%)</th>
+				       </tr>
+				    </thead>
+				    <tbody class="teamUtilizationChartDataBody">
+					    
+				    </tbody>
+					<tfoot>
+					</tfoot>
+				</table>
+            </div>
+            <div class="col-md-12 chartHeader">
 			 	<div class="col-md-9"></div>
 			 	<div class="col-md-1">
 			 		<select class="form-control yearSelect">
@@ -103,34 +132,7 @@
 			 		<input class="btn btn-info refreshTeamUtilizationButton" type="button" value="Refresh"/>
 			 	</div>
 			 </div>
-			 <div class="col-md-12" id="teamUtilizationComparisonChart" style="height: 400px;width: 100%;box-shadow: 5px 5px 23px grey;margin-bottom: 20px;"></div>
-			 <div class="col-md-12 chartHeader">
-			 	<div class="col-md-9"><span style="font-size: 19px;font-weight: bold;" class="teamUtlDataText"></span></div>
-			 </div>
-			 <div class="col-md-12" style="margin-bottom:20px">
-           		<table style="margin-bottom: 0px;" class="table table-responsive table-hover table-bordered">
-				     <thead>
-				      <tr>
-				      	 <th>Sl No</th>
-				       	 <th>Team Name</th>
-				       	 <th>Billable Hours (B)</th>
-				       	 <th>Non Billable Hours (NB)</th>
-				       	 <th>Leave Hours (L)</th>
-				       	 <th>Holiday Hours (H)</th>
-				       	 <th>Total Task Hours (B+NB)</th>
-				       	 <th>No Of Work Days (NW)</th>
-				       	 <th>No of Employees (NE)</th>
-				       	 <th>Total Hours (NW*8*60*NE-L-H)</th>
-				       	 <th>Utilization (%)</th>
-				       </tr>
-				    </thead>
-				    <tbody class="teamUtilizationChartDataBody">
-					    
-				    </tbody>
-					<tfoot>
-					</tfoot>
-				</table>
-            </div>
+             <div class="col-md-12" id="teamUtilizationComparisonChart" style="height: 400px;width: 100%;box-shadow: 5px 5px 23px grey;margin-bottom: 20px;"></div>
         </div>
 		</div>
         <div class="col-md-12" style="overflow-x:auto;">
@@ -219,7 +221,7 @@
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=4.1&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.reports.js?version=4.3&v=${fsVersionNumber}"></script> 
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
 <script type="text/javascript" src="${js}/plugins/canvasjs/canvasjs.js"></script> 

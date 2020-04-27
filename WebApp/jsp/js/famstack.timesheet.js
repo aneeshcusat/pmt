@@ -4,6 +4,23 @@ $(document).ready(function(){
 	moveToCurrentWeek();
 });
 
+
+function getDateObject(dateString) {
+	var dateArray = dateString.split("-");
+	var year = 2020;
+	var month = 0;
+	var date = 1;
+	if (dateArray.length == 3) {
+		year = dateArray[2];
+		month = monthNames.indexOf(dateArray[1]);
+		date = dateArray[0];
+	} else {
+		year = dateArray[1];
+		month = monthNames.indexOf(dateArray[0]);
+	}
+	return new Date(year, month, date);
+}
+
 function clearWeeklyTimeLogTable(){
 	$(".projectDetailsUpdateRow.active").remove();
 	cloneProjectUpdateTimeRow();
@@ -149,7 +166,7 @@ function checkValidDate() {
 
 function moveToPreviousWeek(){
 	checkValidDate();
-	 var date =  new Date($(".weekSelector").val());
+	 var date =  getDateObject($(".weekSelector").val());
 	 date.setDate(date.getDate() - 7);
 	 var proposedDate = new Date(date);
 	 $('.weekSelector').val(formatDate(date));
@@ -159,7 +176,7 @@ function moveToPreviousWeek(){
 
 function moveToNextWeek(){
 	checkValidDate();
-	 var date =  new Date($(".weekSelector").val());
+	 var date =  getDateObject($(".weekSelector").val());
 	 date.setDate(date.getDate() + 7);
 	 $('.weekSelector').val(formatDate(date));
 	 var proposedDate = new Date(date);
@@ -217,7 +234,7 @@ function fillLoggedData(data){
 			$(loggedDataClone).removeClass("hide").appendTo(".loggedDataTableBody");
 			$(loggedDataClone).addClass("trActive");
 			
-			 var date =  new Date($(".weekSelector").val());
+			 var date =  getDateObject($(".weekSelector").val());
 			 date.setDate(date.getDate() - 1);
 			 for (var i = 0 ; i < 7 ;i++) {
 				 date.setDate(date.getDate() + 1);
@@ -491,19 +508,21 @@ $('.weekSelector').datepicker({
 	autoclose:true
 }).on('changeDate', function(e) {
 	checkValidDate();
-	var date = new Date($(".weekSelector").val());
+	var date = getDateObject($(".weekSelector").val());
 	fillWeeklyDates(date);
 	canMoveToPreviousAndEdit(date);
 });;
 });
+var monthNames = [
+            	    "Jan", "Feb", "Mar",
+            	    "Apr", "May", "Jun", "Jul",
+            	    "Aug", "Sep", "Oct",
+            	    "Nov", 
+            	    "Dec"
+            	  ];
 
 function formatDate(date) {
-	var monthNames = [
-	            	    "Jan", "Feb", "Mar",
-	            	    "Apr", "May", "Jun", "Jul",
-	            	    "Aug", "Sep", "Oct",
-	            	    "Nov", "Dec"
-	            	  ];
+
 	  var day = date.getDate();
 	  var dayString = ""+day;
 	  if (day < 10) {
@@ -518,15 +537,9 @@ function formatDate(date) {
 	  }
 	  return dateformatedString;
 	}
-	
+
 function formatDayDate(currentDate) {
-	var monthNames = [
-	            	    "Jan", "Feb", "Mar",
-	            	    "Apr", "May", "Jun", "Jul",
-	            	    "Aug", "Sep", "Oct",
-	            	    "Nov", 
-	            	    "Dec"
-	            	  ];
+	
 	var weekNames = [
 	            	    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
 	            	  ];

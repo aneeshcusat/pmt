@@ -1414,7 +1414,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		Date endTime = DateUtils.tryParse(endDateString,
 				DateUtils.DATE_TIME_FORMAT);
 
-		int numberOfDays = DateUtils.getNumberOfDaysBetweenTwoDates(startTime,
+		int numberOfDays = DateUtils.getNoOfDaysBetweenTwoDates(startTime,
 				endTime);
 		int durationInMinutes = 0;
 

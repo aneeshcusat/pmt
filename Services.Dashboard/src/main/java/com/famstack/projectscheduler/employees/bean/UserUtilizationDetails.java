@@ -48,7 +48,7 @@ public class UserUtilizationDetails  extends UserUtilization{
 
 	@Override
 	public boolean isNotifyUsers(){
-		return isUnderOrOverUtilized() && leaveOrHolidayMins == 0;
+		return isUnderOrOverUtilized() && getLeaveOrHolidayMins() == 0;
 	}
 
 	public List<UtilizationProjectDetails> getUtilizationProjectDetailsList() {

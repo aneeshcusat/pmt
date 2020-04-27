@@ -141,10 +141,10 @@ public final class DateUtils extends BaseFamstackService
     public static int getTimeDifference(TimeInType typeInType, long latestTime, long previousTime)
     {
         long milliseconds = latestTime - previousTime;
-        int seconds = (int) milliseconds / 1000;
-        int hours = seconds / 3600;
-        int minutes = seconds / 60;
-
+        long seconds = milliseconds / 1000;
+        int hours = (int) (seconds / 3600);
+        int minutes = (int) (seconds / 60);
+        
         switch (typeInType) {
             case HOUR:
                 return hours;
@@ -152,8 +152,6 @@ public final class DateUtils extends BaseFamstackService
                 return (int) milliseconds;
             case MINS:
                 return minutes;
-            case SECONDS:
-                return seconds;
             default:
                 break;
         }
@@ -204,18 +202,13 @@ public final class DateUtils extends BaseFamstackService
         return currentCal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    public static int getNumberOfDaysBetweenTwoDates(Date date1, Date date2)
+    public static int getNoOfDaysBetweenTwoDates(Date date1, Date date2)
     {
         Calendar dateCal1 = Calendar.getInstance();
         Calendar dateCal2 = Calendar.getInstance();
         dateCal1.setTime(date1);
         dateCal2.setTime(date2);
-        dateCal1.set(dateCal1.get(Calendar.YEAR), dateCal1.get(Calendar.MONTH), dateCal1.get(Calendar.DAY_OF_MONTH), 0,
-            0);
-        dateCal2.set(dateCal2.get(Calendar.YEAR), dateCal2.get(Calendar.MONTH), dateCal2.get(Calendar.DAY_OF_MONTH), 0,
-            0);
-
-        return (int) ((dateCal2.getTime().getTime() - dateCal1.getTime().getTime()) / (1000 * 60 * 60 * 24));
+       return (int) ((dateCal2.getTime().getTime() - dateCal1.getTime().getTime()) / (1000 * 60 * 60 * 24));
     }
 
     public static int getWorkingDaysBetweenTwoDates(Date startDate, Date endDate)
@@ -345,8 +338,22 @@ public final class DateUtils extends BaseFamstackService
 	
 	
 	public static void main(String[] args) {
-		System.out.println(getFirstDayOfThisMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -8)));
+		//System.out.println(getFirstDayOfThisMonthWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -8)));
+	
+		//System.out.println(getTimeDifference(TimeInType.MINS, tryParse("2020-06-25 00:51:00", "yyyy-MM-dd HH:mm:ss").getTime(), 
+			//	tryParse("2020-03-25 00:51:00", "yyyy-MM-dd HH:mm:ss").getTime()));
+		
+		Date startTime = DateUtils.tryParse("2020/04/16 23:30",
+				DateUtils.DATE_TIME_FORMAT);
+		Date endTime = DateUtils.tryParse("2020/04/17 23:30",
+				DateUtils.DATE_TIME_FORMAT);
+
+		int numberOfDays = DateUtils.getNoOfDaysBetweenTwoDates(startTime,
+				endTime);
+		
+		System.out.println(numberOfDays);
 	}
+	
 
 	public static String getYearMonthWeekNumber(Date taskActivityStartTime) {
 		Calendar calendar = Calendar.getInstance();

@@ -1,10 +1,11 @@
-function formatDate(date) {
-	var monthNames = [
+var monthNames = [
 	            	    "Jan", "Feb", "Mar",
 	            	    "Apr", "May", "Jun", "Jul",
 	            	    "Aug", "Sep", "Oct",
 	            	    "Nov", "Dec"
 	            	  ];
+function formatDate(date) {
+	
 	  var day = date.getDate();
 	  var dayString = ""+day;
 	  if (day < 10) {
@@ -28,12 +29,7 @@ function formatCalenderDate(date) {
 }
 
 function formatMonthDate(date) {
-	var monthNames = [
-	            	    "Jan", "Feb", "Mar",
-	            	    "Apr", "May", "Jun", "Jul",
-	            	    "Aug", "Sep", "Oct",
-	            	    "Nov", "Dec"
-	            	  ];
+
 	  var monthIndex = date.getMonth();
 	  var year = date.getFullYear();
 	  var dateformatedString =  monthNames[monthIndex] + '-' + year;
@@ -41,16 +37,32 @@ function formatMonthDate(date) {
 	  return dateformatedString;
 	}
 
+function getDateObject(dateString) {
+	var dateArray = dateString.split("-");
+	var year = 2020;
+	var month = 0;
+	var date = 1;
+	if (dateArray.length == 3) {
+		year = dateArray[2];
+		month = monthNames.indexOf(dateArray[1]);
+		date = dateArray[0];
+	} else {
+		year = dateArray[1];
+		month = monthNames.indexOf(dateArray[0]);
+	}
+	return new Date(year, month, date);
+}
+
 function moveToPrevious(){
-	 var date =  new Date($(".weekSelector").val());
+	 var date =  getDateObject($(".weekSelector").val());
 	 date.setDate(date.getDate() - 7);
 	 $('.weekSelector').val(formatDate(date));
 	 
-	 var date =  new Date($(".dailySelector").val());
+	 var date =  getDateObject($(".dailySelector").val());
 	 date.setDate(date.getDate() - 1);
 	 $('.dailySelector').val(formatDate(date));
 	 
-	 var date =  new Date($(".monthSelector").val());
+	 var date = getDateObject($(".monthSelector").val());
 	 date.setMonth(date.getMonth() - 1);
 	 $('.monthSelector').val(formatMonthDate(date));
 	 
@@ -59,15 +71,15 @@ function moveToPrevious(){
 }
 
 function moveToNext(){
-	 var date =  new Date($(".weekSelector").val());
+	 var date =  getDateObject($(".weekSelector").val());
 	 date.setDate(date.getDate() + 7);
 	 $('.weekSelector').val(formatDate(date));
 	 
-	 var date =  new Date($(".dailySelector").val());
+	 var date =  getDateObject($(".dailySelector").val());
 	 date.setDate(date.getDate() + 1);
 	 $('.dailySelector').val(formatDate(date));
 	 
-	 var date =  new Date($(".monthSelector").val());
+	 var date =  getDateObject($(".monthSelector").val());
 	 date.setMonth(date.getMonth() + 1);
 	 $('.monthSelector').val(formatMonthDate(date));
 	 
@@ -138,7 +150,6 @@ $('.dailySelector').datepicker({
 	format: 'dd-M-yyyy',
 	autoclose:true
 }).on('changeDate', function(e) {
-	var date = new Date($(".monthSelector").val());
 	clearReportDataTableOnDateChange();
 });;
 	
@@ -153,7 +164,6 @@ $('.weekSelector').datepicker({
 	daysOfWeekDisabled: [0,2,3,4,5,6],
 	autoclose:true
 }).on('changeDate', function(e) {
-	var date = new Date($(".weekSelector").val());
 	clearReportDataTableOnDateChange();
 });;
 
@@ -166,7 +176,6 @@ $('.monthSelector').datepicker({
 	format: 'M-yyyy',
 	autoclose:true
 }).on('changeDate', function(e) {
-	var date = new Date($(".monthSelector").val());
 	clearReportDataTableOnDateChange();
 });;
 });
@@ -240,29 +249,30 @@ function refreshReportDataOrDownload(isDownload) {
 	checkValidDate();
 	if (dataTable != null) {
 		dataTable.destroy();
+		dataTable = null;
 	}
 	var autoReportDuration = $(".autoReportDuration").val();
 	var autoReportType = $(".autoReportType").val();
 	var startDate = "";
 	var endDate = "";
 	 if("DAILY" == autoReportDuration) {
-		var dayDate = $(".dailySelector").val();
+		var dayDate = getDateObject($(".dailySelector").val());
 		startDate = dayDate;
 		endDate = dayDate;
 	 } else if ("WEEKLY" == autoReportDuration) {
 		 var weekStartDate =  $(".weekSelector").val();
-		 var weekEndDate =  new Date(weekStartDate);
+		 var weekEndDate =  getDateObject(weekStartDate);
 		 weekEndDate.setDate(weekEndDate.getDate() + 6);
-		 startDate = weekStartDate;
+		 startDate = getDateObject(weekStartDate);
 		 endDate = weekEndDate;
 	 } else if ("WEEKLY_DAILY" == autoReportDuration) {
 		 var weekStartDate =  $(".weekSelector").val();
-		 var weekEndDate =  new Date(weekStartDate);
+		 var weekEndDate =  getDateObject(weekStartDate);
 		 weekEndDate.setDate(weekEndDate.getDate() + 6);
-		 startDate = weekStartDate;
+		 startDate = getDateObject(weekStartDate);
 		 endDate = weekEndDate;
 	 } else if ("MONTHLY" == autoReportDuration) {
-		 var monthDate =  new Date("01-" + $('.monthSelector').val());
+		 var monthDate =  getDateObject("01-" + $('.monthSelector').val());
 		 var firstDayOfMonth = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
 		 var lastDayOfMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
 		 var firstMondayOfMonth = getLastMonday(firstDayOfMonth);
@@ -275,14 +285,14 @@ function refreshReportDataOrDownload(isDownload) {
 			 endDate = lastDayOfMonth;
 		 }
 	 } else if ("MONTHLY_ENE" == autoReportDuration) {
-		 var firstDayOfMonth =  new Date("01-" + $('.monthSelector').val());
+		 var firstDayOfMonth = getDateObject("01-" + $('.monthSelector').val());
 		 var lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
 		 startDate = firstDayOfMonth;
 		 endDate = lastDayOfMonth;
 	 }
 	 
-	 var reportStartDate = formatCalenderDate(new Date(startDate));
-	 var reportEndDate = formatCalenderDate(new Date(endDate));
+	 var reportStartDate = formatCalenderDate(startDate);
+	 var reportEndDate = formatCalenderDate(endDate);
 	 
 	 var reportType = autoReportType;
 	 if("USER_SITE_ACTIVITY" == autoReportType) {
@@ -699,6 +709,10 @@ function initializeExportTable(fileName) {
 	    trimWhitespace: false
 	});
 	
+	if($.fn.DataTable.isDataTable( '.reportDataTable' )) {
+		dataTable.destroy();
+		dataTable =null;
+	}	
 	dataTable= $('.reportDataTable').DataTable({ 
 	    responsive: false,
 	    "pageLength": -1,
@@ -731,7 +745,8 @@ function initializeTeamUtilizationChart(teamUtilizationData, dateRange){
 		
 		teamUtilizationChart = new CanvasJS.Chart("teamUtilizationChart", {
 			theme: "light2", // "light2", "dark1", "dark2"
-			animationEnabled: true, // change to true		
+			animationEnabled: true, // change to true	
+			exportEnabled: true,
 			title:{
 				text: titleText,
 				fontWeight: "normal",
@@ -776,6 +791,7 @@ function initializeTeamUtilizationComparisonChart(teamUtilizationComparisonChart
 			theme: "light1", // "light2", "dark1", "dark2"
 			animationEnabled: true, // change to true	
 			zoomEnabled: true,
+			exportEnabled: true,
 			title:{
 				text: titleText,
 				fontWeight: "normal",
@@ -849,7 +865,7 @@ function fillTeamUtilizationTableData(data){
 	   var noOfEmps = value.NUMBEROFEMPS;
 	   
 	   var totalTaskMins = value.BILLABLE + value.NONBILLABLE;
-	   var totalMins =(noOfWorkingMins * noOfEmps) - (value.HOLIDAY - value.LEAVE);
+	   var totalMins =(noOfWorkingMins * noOfEmps) - value.HOLIDAY - value.LEAVE;
 	   var totalTaskHours = roundToTwo(totalTaskMins/60);
 	   var totalHours = roundToTwo(totalMins/60);
 	   
@@ -888,7 +904,7 @@ function getUtilizationData(data){
 	   var noOfEmps = value.NUMBEROFEMPS;
 		
 	   var totalTaskMins = billableMins + nonBillableMins;
-	   var totalMins =(noOfWorkingMins * noOfEmps) - (holidayMins - leaveMins);
+	   var totalMins =(noOfWorkingMins * noOfEmps) - holidayMins - leaveMins;
 	   var utilizationPercentage = 0;
 	   if (totalMins > 0) {
 		   utilizationPercentage = (totalTaskMins/totalMins) * 100;
@@ -897,6 +913,7 @@ function getUtilizationData(data){
 	   item = {};
 	   item['y'] = utilizationPercentage;
 	   item['label'] = key;
+	   item['USERGROUPID']=value.USERGROUPID;
 	   taskUtilizationData.push(item);
 	});
 	
@@ -913,7 +930,7 @@ function getUtilizationComparisonData(data,isDateWise){
 		   var noOfWorkingMins = (value.NUMBEROFWORKINGDAYS * 8 * 60);
 			
 		   var totalTaskMins = value.BILLABLE + value.NONBILLABLE;
-		   var totalMins =(noOfWorkingMins * value.NUMBEROFEMPS) - (value.HOLIDAY - value.LEAVE);
+		   var totalMins =(noOfWorkingMins * value.NUMBEROFEMPS) - value.LEAVE - value.HOLIDAY;
 		   var utilizationPercentage = 0;
 		   if (totalMins > 0) {
 			   utilizationPercentage = (totalTaskMins/totalMins) * 100;
@@ -927,6 +944,7 @@ function getUtilizationComparisonData(data,isDateWise){
 			   dateString = value.DATE;
 		   }
 		   dataPoint['x'] = new Date(value.YEAR, parseInt(value.MONTH)-1, dateString);
+		   dataPoint['USERGROUPID']=value.USERGROUPID;
 		   dataPoints.push(dataPoint);
 		});
 		var item ={};
@@ -943,212 +961,3 @@ function getUtilizationComparisonData(data,isDateWise){
 	
 	return taskUtilizationComparisonData;
 }
-
-var teamUtilizationComparisonChartData =[{
-	type:"line",
-	axisYType: "primary",
-	name: "San Fransisco",
-	showInLegend: true,
-	markerSize: 0,
-	yValueFormatString: "# ' %'",
-	dataPoints: [		
-		{ x: new Date(2014, 00, 01), y: 850 },
-		{ x: new Date(2014, 01, 01), y: 889 },
-		{ x: new Date(2014, 02, 01), y: 890 },
-		{ x: new Date(2014, 03, 01), y: 899 },
-		{ x: new Date(2014, 04, 01), y: 903 },
-		{ x: new Date(2014, 05, 01), y: 925 },
-		{ x: new Date(2014, 06, 01), y: 899 },
-		{ x: new Date(2014, 07, 01), y: 875 },
-		{ x: new Date(2014, 08, 01), y: 927 },
-		{ x: new Date(2014, 09, 01), y: 949 },
-		{ x: new Date(2014, 10, 01), y: 946 },
-		{ x: new Date(2014, 11, 01), y: 927 },
-		{ x: new Date(2015, 00, 01), y: 950 },
-		{ x: new Date(2015, 01, 01), y: 998 },
-		{ x: new Date(2015, 02, 01), y: 998 },
-		{ x: new Date(2015, 03, 01), y: 1050 },
-		{ x: new Date(2015, 04, 01), y: 1050 },
-		{ x: new Date(2015, 05, 01), y: 999 },
-		{ x: new Date(2015, 06, 01), y: 998 },
-		{ x: new Date(2015, 07, 01), y: 998 },
-		{ x: new Date(2015, 08, 01), y: 1050 },
-		{ x: new Date(2015, 09, 01), y: 1070 },
-		{ x: new Date(2015, 10, 01), y: 1050 },
-		{ x: new Date(2015, 11, 01), y: 1050 },
-		{ x: new Date(2016, 00, 01), y: 995 },
-		{ x: new Date(2016, 01, 01), y: 1090 },
-		{ x: new Date(2016, 02, 01), y: 1100 },
-		{ x: new Date(2016, 03, 01), y: 1150 },
-		{ x: new Date(2016, 04, 01), y: 1150 },
-		{ x: new Date(2016, 05, 01), y: 1150 },
-		{ x: new Date(2016, 06, 01), y: 1100 },
-		{ x: new Date(2016, 07, 01), y: 1100 },
-		{ x: new Date(2016, 08, 01), y: 1150 },
-		{ x: new Date(2016, 09, 01), y: 1170 },
-		{ x: new Date(2016, 10, 01), y: 1150 },
-		{ x: new Date(2016, 11, 01), y: 1150 },
-		{ x: new Date(2017, 00, 01), y: 1150 },
-		{ x: new Date(2017, 01, 01), y: 1200 },
-		{ x: new Date(2017, 02, 01), y: 1200 },
-		{ x: new Date(2017, 03, 01), y: 1200 },
-		{ x: new Date(2017, 04, 01), y: 1190 },
-		{ x: new Date(2017, 05, 01), y: 1170 }
-	]
-},
-{
-	type: "line",
-	axisYType: "primary",
-	name: "Manhattan",
-	showInLegend: true,
-	markerSize: 0,
-	yValueFormatString: "$#,###k",
-	dataPoints: [
-		{ x: new Date(2014, 00, 01), y: 1200 },
-		{ x: new Date(2014, 01, 01), y: 1200 },
-		{ x: new Date(2014, 02, 01), y: 1190 },
-		{ x: new Date(2014, 03, 01), y: 1180 },
-		{ x: new Date(2014, 04, 01), y: 1250 },
-		{ x: new Date(2014, 05, 01), y: 1270 },
-		{ x: new Date(2014, 06, 01), y: 1300 },
-		{ x: new Date(2014, 07, 01), y: 1300 },
-		{ x: new Date(2014, 08, 01), y: 1358 },
-		{ x: new Date(2014, 09, 01), y: 1410 },
-		{ x: new Date(2014, 10, 01), y: 1480 },
-		{ x: new Date(2014, 11, 01), y: 1500 },
-		{ x: new Date(2015, 00, 01), y: 1500 },
-		{ x: new Date(2015, 01, 01), y: 1550 },
-		{ x: new Date(2015, 02, 01), y: 1550 },
-		{ x: new Date(2015, 03, 01), y: 1590 },
-		{ x: new Date(2015, 04, 01), y: 1600 },
-		{ x: new Date(2015, 05, 01), y: 1590 },
-		{ x: new Date(2015, 06, 01), y: 1590 },
-		{ x: new Date(2015, 07, 01), y: 1620 },
-		{ x: new Date(2015, 08, 01), y: 1670 },
-		{ x: new Date(2015, 09, 01), y: 1720 },
-		{ x: new Date(2015, 10, 01), y: 1750 },
-		{ x: new Date(2015, 11, 01), y: 1820 },
-		{ x: new Date(2016, 00, 01), y: 2000 },
-		{ x: new Date(2016, 01, 01), y: 1920 },
-		{ x: new Date(2016, 02, 01), y: 1750 },
-		{ x: new Date(2016, 03, 01), y: 1850 },
-		{ x: new Date(2016, 04, 01), y: 1750 },
-		{ x: new Date(2016, 05, 01), y: 1730 },
-		{ x: new Date(2016, 06, 01), y: 1700 },
-		{ x: new Date(2016, 07, 01), y: 1730 },
-		{ x: new Date(2016, 08, 01), y: 1720 },
-		{ x: new Date(2016, 09, 01), y: 1740 },
-		{ x: new Date(2016, 10, 01), y: 1750 },
-		{ x: new Date(2016, 11, 01), y: 1750 },
-		{ x: new Date(2017, 00, 01), y: 1750 },
-		{ x: new Date(2017, 01, 01), y: 1770 },
-		{ x: new Date(2017, 02, 01), y: 1750 },
-		{ x: new Date(2017, 03, 01), y: 1750 },
-		{ x: new Date(2017, 04, 01), y: 1730 },
-		{ x: new Date(2017, 05, 01), y: 1730 }
-	]
-},
-{
-	type: "line",
-	axisYType: "primary",
-	name: "Seatle",
-	showInLegend: true,
-	markerSize: 0,
-	yValueFormatString: "$#,###k",
-	dataPoints: [
-		{ x: new Date(2014, 00, 01), y: 409 },
-		{ x: new Date(2014, 01, 01), y: 415 },
-		{ x: new Date(2014, 02, 01), y: 419 },
-		{ x: new Date(2014, 03, 01), y: 429 },
-		{ x: new Date(2014, 04, 01), y: 429 },
-		{ x: new Date(2014, 05, 01), y: 450 },
-		{ x: new Date(2014, 06, 01), y: 450 },
-		{ x: new Date(2014, 07, 01), y: 445 },
-		{ x: new Date(2014, 08, 01), y: 450 },
-		{ x: new Date(2014, 09, 01), y: 450 },
-		{ x: new Date(2014, 10, 01), y: 440 },
-		{ x: new Date(2014, 11, 01), y: 429 },
-		{ x: new Date(2015, 00, 01), y: 435 },
-		{ x: new Date(2015, 01, 01), y: 450 },
-		{ x: new Date(2015, 02, 01), y: 475 },
-		{ x: new Date(2015, 03, 01), y: 475 },
-		{ x: new Date(2015, 04, 01), y: 475 },
-		{ x: new Date(2015, 05, 01), y: 489 },
-		{ x: new Date(2015, 06, 01), y: 495 },
-		{ x: new Date(2015, 07, 01), y: 495 },
-		{ x: new Date(2015, 08, 01), y: 500 },
-		{ x: new Date(2015, 09, 01), y: 508 },
-		{ x: new Date(2015, 10, 01), y: 520 },
-		{ x: new Date(2015, 11, 01), y: 525 },
-		{ x: new Date(2016, 00, 01), y: 525 },
-		{ x: new Date(2016, 01, 01), y: 529 },
-		{ x: new Date(2016, 02, 01), y: 549 },
-		{ x: new Date(2016, 03, 01), y: 550 },
-		{ x: new Date(2016, 04, 01), y: 568 },
-		{ x: new Date(2016, 05, 01), y: 575 },
-		{ x: new Date(2016, 06, 01), y: 579 },
-		{ x: new Date(2016, 07, 01), y: 575 },
-		{ x: new Date(2016, 08, 01), y: 585 },
-		{ x: new Date(2016, 09, 01), y: 589 },
-		{ x: new Date(2016, 10, 01), y: 595 },
-		{ x: new Date(2016, 11, 01), y: 595 },
-		{ x: new Date(2017, 00, 01), y: 595 },
-		{ x: new Date(2017, 01, 01), y: 600 },
-		{ x: new Date(2017, 02, 01), y: 624 },
-		{ x: new Date(2017, 03, 01), y: 635 },
-		{ x: new Date(2017, 04, 01), y: 650 },
-		{ x: new Date(2017, 05, 01), y: 675 }
-	]
-},
-{
-	type: "line",
-	axisYType: "primary",
-	name: "Los Angeles",
-	showInLegend: true,
-	markerSize: 0,
-	yValueFormatString: "$#,###k",
-	dataPoints: [
-		{ x: new Date(2014, 00, 01), y: 529 },
-		{ x: new Date(2014, 01, 01), y: 540 },
-		{ x: new Date(2014, 02, 01), y: 539 },
-		{ x: new Date(2014, 03, 01), y: 565 },
-		{ x: new Date(2014, 04, 01), y: 575 },
-		{ x: new Date(2014, 05, 01), y: 579 },
-		{ x: new Date(2014, 06, 01), y: 589 },
-		{ x: new Date(2014, 07, 01), y: 579 },
-		{ x: new Date(2014, 08, 01), y: 579 },
-		{ x: new Date(2014, 09, 01), y: 579 },
-		{ x: new Date(2014, 10, 01), y: 569 },
-		{ x: new Date(2014, 11, 01), y: 525 },
-		{ x: new Date(2015, 00, 01), y: 535 },
-		{ x: new Date(2015, 01, 01), y: 575 },
-		{ x: new Date(2015, 02, 01), y: 599 },
-		{ x: new Date(2015, 03, 01), y: 619 },
-		{ x: new Date(2015, 04, 01), y: 639 },
-		{ x: new Date(2015, 05, 01), y: 648 },
-		{ x: new Date(2015, 06, 01), y: 640 },
-		{ x: new Date(2015, 07, 01), y: 645 },
-		{ x: new Date(2015, 08, 01), y: 648 },
-		{ x: new Date(2015, 09, 01), y: 649 },
-		{ x: new Date(2015, 10, 01), y: 649 },
-		{ x: new Date(2015, 11, 01), y: 649 },
-		{ x: new Date(2016, 00, 01), y: 650 },
-		{ x: new Date(2016, 01, 01), y: 665 },
-		{ x: new Date(2016, 02, 01), y: 675 },
-		{ x: new Date(2016, 03, 01), y: 695 },
-		{ x: new Date(2016, 04, 01), y: 690 },
-		{ x: new Date(2016, 05, 01), y: 699 },
-		{ x: new Date(2016, 06, 01), y: 699 },
-		{ x: new Date(2016, 07, 01), y: 699 },
-		{ x: new Date(2016, 08, 01), y: 699 },
-		{ x: new Date(2016, 09, 01), y: 699 },
-		{ x: new Date(2016, 10, 01), y: 709 },
-		{ x: new Date(2016, 11, 01), y: 699 },
-		{ x: new Date(2017, 00, 01), y: 700 },
-		{ x: new Date(2017, 01, 01), y: 700 },
-		{ x: new Date(2017, 02, 01), y: 724 },
-		{ x: new Date(2017, 03, 01), y: 739 },
-		{ x: new Date(2017, 04, 01), y: 749 },
-		{ x: new Date(2017, 05, 01), y: 740 }
-	]
-}];
