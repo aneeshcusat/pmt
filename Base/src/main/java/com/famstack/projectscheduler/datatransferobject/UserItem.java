@@ -17,7 +17,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -156,6 +155,9 @@ public class UserItem implements FamstackBaseItem
     
     @Column(name = "lob_head_email_id")
     private String lobHeadEmailId;
+    
+    @Column(name = "skills", columnDefinition="LONGTEXT")
+    private String skills;
     
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "group_subscribers", joinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "group_id", nullable = false, updatable = false)})
@@ -600,6 +602,14 @@ public class UserItem implements FamstackBaseItem
 
 	public void setLobHeadEmailId(String lobHeadEmailId) {
 		this.lobHeadEmailId = lobHeadEmailId;
+	}
+
+	public String getSkills() {
+		return skills;
+	}
+
+	public void setSkills(String skills) {
+		this.skills = skills;
 	}
 
 }

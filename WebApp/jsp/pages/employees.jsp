@@ -370,6 +370,7 @@ function processUserResponseData(data) {
 	$('#empType').val(response.empType);
 	
 	$('#dateOfJoin').val(response.dateOfJoin);
+	$('#skills').val(response.skills);
 	
 	$('#role').selectpicker('refresh');
 	$('#reportingManger').selectpicker('refresh');
@@ -424,6 +425,7 @@ function clearUserData() {
 	$('#grade').val("");
 	$('#empType').val("");
 	$('#dateOfJoin').val("");
+	$('#skills').val("");
 	
 	$('#deptLeadEmailId').selectpicker('refresh');
 	$('#lobHeadEmailId').selectpicker('refresh');

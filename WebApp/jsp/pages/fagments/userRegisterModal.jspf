@@ -246,18 +246,18 @@
 						</form:select>
 					</div>
 				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Date of Joining</label>
+					<div class="col-md-9">
+						 <input type="text" class="form-control DOJdateTimePicker" id="dateOfJoin" name="dateOfJoin"  autocomplete="off"/>
+					</div>
+				</div>
 			</div>
 			<!-- form fields ends -->
 
 		</div>
 	<div class="col-md-4">
 		<div class="panel-body">
-		<div class="form-group">
-					<label class="col-md-3 control-label">Date of Joining</label>
-					<div class="col-md-9">
-						 <input type="text" class="form-control DOJdateTimePicker" id="dateOfJoin" name="dateOfJoin"  autocomplete="off"/>
-					</div>
-				</div>
 				  <div class="form-group">
                     <label class="col-md-3 control-label">Employee Type</label>
                     <div class="col-md-9">
@@ -471,6 +471,13 @@
 						<option value='D 3'>D 3</option>
 						<option value='F 2'>F 2</option>
 					</form:select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-3 control-label">Skills</label>
+				<div class="col-md-9">
+					 <textarea rows="3" class="form-control skills" id="skills" name="skills"></textarea>
 				</div>
 			</div>
 			

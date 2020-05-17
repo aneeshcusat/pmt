@@ -85,6 +85,8 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
     private String deptLeadEmailId;
     
     private String lobHeadEmailId;
+    
+    private String skills;
 
     public boolean isDeleted() {
 		return deleted;
@@ -468,6 +470,14 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
 
 	public void setExitDate(String exitDate) {
 		this.exitDate = exitDate;
+	}
+
+	public String getSkills() {
+		return skills;
+	}
+
+	public void setSkills(String skills) {
+		this.skills = skills;
 	}
 
 }

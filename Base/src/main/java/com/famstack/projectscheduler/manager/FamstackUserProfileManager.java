@@ -2,8 +2,6 @@ package com.famstack.projectscheduler.manager;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,7 +12,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -30,7 +27,6 @@ import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
-import com.famstack.projectscheduler.util.StringUtils;
 /**
  * The Class UserProfileManager.
  * 
@@ -180,6 +176,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         userItem.setEmpType(employeeDetails.getEmpType());
         userItem.setDeptLeadEmailId(employeeDetails.getDeptLeadEmailId());
         userItem.setLobHeadEmailId(employeeDetails.getLobHeadEmailId());
+        userItem.setSkills(employeeDetails.getSkills());
         
         getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
     }
@@ -277,7 +274,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeDetails.setEmpType(userItem.getEmpType());
             employeeDetails.setDeptLeadEmailId(userItem.getDeptLeadEmailId());
             employeeDetails.setLobHeadEmailId(userItem.getLobHeadEmailId());
-            
+            employeeDetails.setSkills(userItem.getSkills());
             return employeeDetails;
         }
         return null;
@@ -290,6 +287,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         if (userItem != null) {
             // getFamstackDataAccessObjectManager().deleteItem(userItem);
             userItem.setDeleted(true);
+            userItem.setExitDate(new Date());
             famstackDataAccessObjectManager.updateItem(userItem);
             getFamstackApplicationConfiguration().initializeUserMap(getAllEmployeeDataList());
         }

@@ -319,6 +319,13 @@
                         <td>${userProile.lobHeadEmailId}</td>
                       </tr>
                       </c:if>
+                      
+                      <c:if test="${not empty userProile.skills}">
+                      <tr>
+                        <td>Skills</td>
+                        <td>${userProile.skills}</td>
+                      </tr>
+                      </c:if>
                     </tbody>
                   </table>
            </div>
