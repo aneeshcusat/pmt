@@ -265,6 +265,7 @@
                             <option value="Permanent">Permanent</option>
 							<option value="Consultant">Consultant</option>
 							<option value="Contract">Contract</option>
+							<option value="Intern">Intern</option>
                         </form:select>
                     </div>
                 </div>

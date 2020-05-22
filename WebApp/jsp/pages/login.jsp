@@ -82,7 +82,7 @@
 
                 <div>
 				  <h1><span  style="opacity:.5;font-size: 18px"> Project Scheduler</span></h1>
-                  <p style="opacity:.7">©2016 All Rights Reserved. Powered by <c:if test="${tracopusConfigEnabled == true}">Infleca Innovation  Pvt Ltd</c:if><c:if test="${tracopusConfigEnabled == false}">Credencia Business Solutions LLP</c:if>, Privacy and Terms</p>
+                  <p style="opacity:.7">©2016 All Rights Reserved. Powered by <c:if test="${tracopusConfigEnabled == true}">Infleca Innovation  Pvt Ltd</c:if><c:if test="${tracopusConfigEnabled == false}">Infleca Innovation Pvt Ltd</c:if>, Privacy and Terms</p>
                 </div>
               </div>
             </form>
