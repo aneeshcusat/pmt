@@ -491,6 +491,10 @@ function clearCreateProjectForm(){
 	$('#newCategory').selectpicker('refresh');
 	$("#sowLineItem").val("");
 	
+	$("#proposalNo").val("");
+	$("#orderBookRefNo").val("");
+	$("#projectLocation").prop("selectedIndex",0);
+	$('#projectLocation').selectpicker('refresh');
 	
 	$("#watchers").val("");
 	
@@ -557,6 +561,12 @@ function initializeCreateProjectForm(project){
 	$("#newCategory").val(project.newCategory);
 	$('#newCategory').selectpicker('refresh');
 	$("#sowLineItem").val(project.sowLineItem);
+	
+	$("#proposalNo").val(project.proposalNo);
+	$("#orderBookRefNo").val(project.orderBookRefNo);
+	
+	$("#projectLocation").val(project.projectLocation);
+	$('#projectLocation').selectpicker('refresh');
 	
 	$('.clientOption').each(function () { $(this).show(); });
 	$('#clientId').val(project.clientId);

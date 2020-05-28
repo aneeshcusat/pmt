@@ -130,6 +130,15 @@ public class ProjectItem implements FamstackBaseItem
 
     @Column(name = "sow_line_item")
     private String sowLineItem;
+    
+    @Column(name = "order_book_ref_no")
+    private String orderBookRefNo;
+
+    @Column(name = "proposal_no")
+    private String proposalNo;
+    
+    @Column(name = "project_location")
+    private String projectLocation;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "projectItem", cascade = CascadeType.ALL)
     private Set<ProjectCommentItem> projectComments;
@@ -449,6 +458,30 @@ public class ProjectItem implements FamstackBaseItem
 
 	public void setSowLineItem(String sowLineItem) {
 		this.sowLineItem = sowLineItem;
+	}
+
+	public String getOrderBookRefNo() {
+		return orderBookRefNo;
+	}
+
+	public void setOrderBookRefNo(String orderBookRefNo) {
+		this.orderBookRefNo = orderBookRefNo;
+	}
+
+	public String getProposalNo() {
+		return proposalNo;
+	}
+
+	public void setProposalNo(String proposalNo) {
+		this.proposalNo = proposalNo;
+	}
+
+	public String getProjectLocation() {
+		return projectLocation;
+	}
+
+	public void setProjectLocation(String projectLocation) {
+		this.projectLocation = projectLocation;
 	}
 
 }

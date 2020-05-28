@@ -170,6 +170,10 @@ public class FamstackProjectManager extends BaseFamstackManager
             
             projectItem.setSowLineItem(projectDetails.getSowLineItem());
             projectItem.setNewCategory(projectDetails.getNewCategory());
+
+            projectItem.setOrderBookRefNo(projectDetails.getOrderBookRefNo());
+            projectItem.setProposalNo(projectDetails.getProposalNo());
+            projectItem.setProjectLocation(projectDetails.getProjectLocation());
             
             projectItem.setComplexity(projectDetails.getComplexity());
 
@@ -418,6 +422,10 @@ public class FamstackProjectManager extends BaseFamstackManager
         projectItem.setSowLineItem(projectDetails.getSowLineItem());
         projectItem.setNewCategory(projectDetails.getNewCategory());
         
+        projectItem.setOrderBookRefNo(projectDetails.getOrderBookRefNo());
+        projectItem.setProposalNo(projectDetails.getProposalNo());
+        projectItem.setProjectLocation(projectDetails.getProjectLocation());
+        
         projectItem.setComplexity(projectDetails.getComplexity());
         Date startDate = DateUtils.tryParse(projectDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
         Date completionDate = DateUtils.tryParse(projectDetails.getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
@@ -636,6 +644,10 @@ public class FamstackProjectManager extends BaseFamstackManager
 
                 projectDetails.setSowLineItem(projectItem.getSowLineItem());
                 projectDetails.setNewCategory(projectItem.getNewCategory());
+                
+                projectDetails.setOrderBookRefNo(projectItem.getOrderBookRefNo());
+                projectDetails.setProposalNo(projectItem.getProposalNo());
+                projectDetails.setProjectLocation(projectItem.getProjectLocation());
                 
                 projectDetails.setTags(projectItem.getTags());
                 projectDetails.setType(projectItem.getType());

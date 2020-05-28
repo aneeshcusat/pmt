@@ -31,27 +31,28 @@
                             </div>
                          <div class="form-group">
 							<label class="col-xs-3 control-label">Project Type</label>
-							 <div class="col-md-4 hide">
-                                        <form:select class="form-control select" path="projectSubType" id="projectSubType"  data-live-search="true">
-                                        <option value="">- select -</option>
-                                        <option value="ADHOC">Ad-Hoc</option>
-                                        <option value="FTE">FTE</option>
-                                    	</form:select>
-                                </div>
-                                
                             <form:input type="hidden" path="projectSubType" id="projectSubType"/>
-							<div class="col-xs-9">
+							<div class="col-xs-4">
 								<div class="btn-group projectSubTypeDiv" data-toggle="buttons">
-									<label class="btn btn-default radioButton" style="padding: 4px 50px;margin-right: 5px;" onclick="clickAdHocType()"> 
+									<label class="btn btn-default radioButton" style="padding: 4px 5px;margin-right: 5px;" onclick="clickAdHocType()"> 
 									<input type="radio" id="adhocSubType"
 										value="ADHOC"  /> Ad-Hoc
 									</label> 
-									<label class="btn btn-default radioButton" style="padding: 4px 50px;margin-right: 5px;" onclick="clickFTEType()"> 
+									<label class="btn btn-default radioButton" style="padding: 4px 20px;margin-right: 5px;" onclick="clickFTEType()"> 
 									<input type="radio" id="fteSubType"
 										value="FTE"/> FTE
 									</label>
 								</div>
 							</div>
+							
+							<label class="col-md-2 control-label">Project Location</label>
+                            <div class="col-md-3">
+                               <form:select path="projectLocation" id="projectLocation" name="projectLocation" class="form-control select" data-live-search="true">
+								<option value="Offshore">Offshore</option>
+								<option value="Onshore">Onshore</option>
+								</form:select>
+                            </div>
+	
 						</div>
                          <div class="form-group">
 							<label class="col-xs-3 control-label">Type</label>
@@ -250,6 +251,21 @@
 								 <form:input type="text" class="form-control" id="sowLineItem" path="sowLineItem"/>
 							</div>
 							</div>
+							
+							<div class="form-group">
+							<label class="col-md-3 control-label">Order book Ref No.</label>
+							<div class="col-md-9">
+								 <form:input type="text" class="form-control" id="orderBookRefNo" path="orderBookRefNo" autocomplete="false"/>
+							</div>
+							</div>
+							
+							<div class="form-group">
+							<label class="col-md-3 control-label">Proposal No.</label>
+							<div class="col-md-9">
+								 <form:input type="text" class="form-control" id="proposalNo" path="proposalNo" autocomplete="false"/>
+							</div>
+							</div>
+							
 							</c:if>
                             <div class="form-group hide">
 							<label class="col-md-3 control-label">Quantity</label>

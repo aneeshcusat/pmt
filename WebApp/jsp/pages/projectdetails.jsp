@@ -103,7 +103,20 @@
                                    <div class="col-md-6">
                                       <p><span class="bold">SOW Line Item </span>: ${projectDetails.sowLineItem}</p>
                                   </div>
+                                   <div class="col-md-6">
+                                      <p><span class="bold">Order book Ref No. </span>: ${projectDetails.orderBookRefNo}</p>
+                                  </div>
+                                  
+                                  <div class="col-md-6">
+                                      <p><span class="bold">Proposal No.</span>: ${projectDetails.proposalNo}</p>
+                                  </div>
+                                  
 	                              </c:if>
+
+                                  <div class="col-md-6">
+                                      <p><span class="bold">Onshore/ Offshore </span>: ${projectDetails.projectLocation}</p>
+                                  </div>
+
                                   <div class="col-md-6">
                                       <p><span class="bold">Account </span>: ${projectDetails.accountName}</p>
                                   </div>
@@ -384,7 +397,7 @@
                                                <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>
                                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                                                <td width="1%">
-                                               <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('${taskDetails.name}',${taskDetails.taskId},${projectDetails.id});">
+                                               <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('',${taskDetails.taskId},${projectDetails.id});">
                                                <i class="fa fa-times fa-lg" style="color:red" aria-hidden="true"></i></a>
                                               
                                               <div  class="hide taskSearchData">

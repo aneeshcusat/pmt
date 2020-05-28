@@ -91,6 +91,12 @@ public class ProjectDetails
 
     private String sowLineItem;
 
+    private String orderBookRefNo;
+
+    private String proposalNo;
+
+    private String projectLocation;
+
     private List<ProjectDetails> duplicateProjects;
 
     public Integer getId()
@@ -666,5 +672,29 @@ public class ProjectDetails
 
 	public void setSowLineItem(String sowLineItem) {
 		this.sowLineItem = sowLineItem;
+	}
+
+	public String getOrderBookRefNo() {
+		return orderBookRefNo;
+	}
+
+	public void setOrderBookRefNo(String orderBookRefNo) {
+		this.orderBookRefNo = orderBookRefNo;
+	}
+
+	public String getProposalNo() {
+		return proposalNo;
+	}
+
+	public void setProposalNo(String proposalNo) {
+		this.proposalNo = proposalNo;
+	}
+
+	public String getProjectLocation() {
+		return projectLocation;
+	}
+
+	public void setProjectLocation(String projectLocation) {
+		this.projectLocation = projectLocation;
 	}
 }
