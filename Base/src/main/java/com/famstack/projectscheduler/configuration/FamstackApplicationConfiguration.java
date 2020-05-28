@@ -265,7 +265,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		sortUserList(userDetails);
 		return userDetails;
 	}
-	private void sortUserList(List<EmployeeDetails> userList) {
+	
+	public void sortUserList(List<EmployeeDetails> userList) {
 		Collections.sort(userList, new Comparator<EmployeeDetails>() {
 			@Override
 			public int compare(EmployeeDetails employeeDetails1,
@@ -781,6 +782,15 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	public void setDesignationMap(Map<String, Integer> designationMap) {
 		this.designationMap = designationMap;
+	}
+
+	public boolean isEnableUserAcivtiveUtilization() {
+		String value = getSingleValueAppConfig("enableUserAcivtiveUtilization",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "disabled".equalsIgnoreCase(value)) {
+			return false;
+		}
+		return true;
 	}
 
 }

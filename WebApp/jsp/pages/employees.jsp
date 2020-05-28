@@ -315,28 +315,20 @@ function doAjaxUndoDeleteUser(userId, emailId) {
 }
 
 function doAjaxDeleteUser(userId) {
-    $.ajax({
-        type : "GET",
-        contentType : "application/json",
-        url : "${applicationHome}/deleteEmployee",
-        data: "userId="+userId,
-        timeout : 1000,
-        success : function(data) {
-            famstacklog("SUCCESS: ", data);
-            var responseJson = JSON.parse(data);
-            if (responseJson.status){
-            	$(".userDetails"+userId).addClass("deletedUser");
-                $(".message-box").removeClass("open");
-            }
-        },
-        error : function(e) {
-            famstacklog("ERROR: ", e);
-        },
-        done : function(e) {
-            famstacklog("DONE");
-        }
-    });
+	var today = new Date();
+	var exitDate = today.getFullYear() +"-"+(today.getMonth()+1)+"-"+today.getDate();
 
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/deleteEmployee", {"userId":userId, "exitDate":exitDate}, function(data) {
+		 famstacklog("SUCCESS: ", data);
+         var responseJson = JSON.parse(data);
+         if (responseJson.status){
+         	$(".userDetails"+userId).addClass("deletedUser");
+            $(".message-box").removeClass("open");
+         }
+	}, function(e) {
+	   famstacklog("ERROR: ", e);
+	   famstackalert(e);
+	}, false);
 }
 function processUserResponseData(data) {
 	var response = JSON.parse(data);

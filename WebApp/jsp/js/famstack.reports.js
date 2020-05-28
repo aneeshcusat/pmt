@@ -190,6 +190,7 @@ $(".autoReportType").on("change",function(){
 	 $('.autoReportDuration').append($('<option>').val("WEEKLY").text("Weekly"));
 	 //$('.autoReportDuration').append($('<option>').val("WEEKLY_DAILY").text("Weekly Day wise")).css("hide");
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY").text("Monthly"));
+	 $('.autoReportDuration').append($('<option>').val("MONTHLY_WTW").text("Monthly Week to Week"));
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY_ENE").text("Monthly End to End"));
 
 	 clearReportDataTable();
@@ -198,6 +199,7 @@ $(".autoReportType").on("change",function(){
 	 if("USER_SITE_ACTIVITY" == selectedValue) {
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
 	 } else  if("USER_UTILIZATION" == selectedValue) {
 		 
 	 } else  if("WEEKLY_PO_ESTIMATION" == selectedValue) {
@@ -205,13 +207,16 @@ $(".autoReportType").on("change",function(){
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
 	 } else  if("WEEKLY_PROJECT_HOURS" == selectedValue) {
 		 $(".autoReportDuration option[value='DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
 	 } else  if("TEAM_UTILIZATION_CHART" == selectedValue) {
 		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
 	 }
 	 $(".autoReportDuration").trigger("change");
 });
@@ -232,6 +237,8 @@ $(".autoReportDuration").on("change",function(){
 	 } else if ("MONTHLY" == selectedValue) {
 		 $('.monthSelector').removeClass("hide");
 	 } else if ("MONTHLY_ENE" == selectedValue) {
+		 $('.monthSelector').removeClass("hide");
+	 } else if ("MONTHLY_WTW" == selectedValue) {
 		 $('.monthSelector').removeClass("hide");
 	 }
 });
@@ -271,13 +278,13 @@ function refreshReportDataOrDownload(isDownload) {
 		 weekEndDate.setDate(weekEndDate.getDate() + 6);
 		 startDate = getDateObject(weekStartDate);
 		 endDate = weekEndDate;
-	 } else if ("MONTHLY" == autoReportDuration) {
+	 } else if ("MONTHLY" == autoReportDuration || "MONTHLY_WTW" == autoReportDuration) {
 		 var monthDate =  getDateObject("01-" + $('.monthSelector').val());
 		 var firstDayOfMonth = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
 		 var lastDayOfMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
 		 var firstMondayOfMonth = getLastMonday(firstDayOfMonth);
 		 var lastSundayOfMonth = getLastSundayOfMonth(lastDayOfMonth);
-		 if ("USER_UTILIZATION" == autoReportType) {
+		 if ("USER_UTILIZATION" == autoReportType && "MONTHLY_WTW" == autoReportDuration) {
 			 startDate = firstMondayOfMonth;
 			 endDate = lastSundayOfMonth;
 		 } else {
@@ -297,7 +304,7 @@ function refreshReportDataOrDownload(isDownload) {
 	 var reportType = autoReportType;
 	 if("USER_SITE_ACTIVITY" == autoReportType) {
 	 } else  if("USER_UTILIZATION" == autoReportType) {
-		 if ("MONTHLY" == autoReportDuration) {
+		 if ("MONTHLY_WTW" == autoReportDuration) {
 			 reportType = "WEEKWISE_USER_UTILIZATION_MONTHLY";
 		 } else if ("WEEKLY_DAILY" == autoReportDuration) {
 			 reportType = "DAILYWISE_USER_UTILIZATION_WEEKLY";
@@ -415,6 +422,8 @@ function fillUserUtilizationReportData(data) {
 		} else {
 			reportBodyHtml += "<td>"+value.leaveOrHolidayHours+"</td>";
 		}
+		
+		reportBodyHtml += "<td>"+value.noOfWorkingDays+"</td>";
 		
 		if(value.underOrOverUtilized) {
 			reportBodyHtml += "<td><span style='color:red;font-weight: bold;'>"+value.utilization+" %</span></td>";

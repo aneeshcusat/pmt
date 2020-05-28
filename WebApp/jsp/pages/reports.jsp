@@ -165,6 +165,7 @@
        	<th>Billable Hours</th>
        	<th>Non Billable Hours</th>
        	<th>Leave or Holiday</th>
+       	<th>No. Of Work Days</th>
        	<th>Utilization</th>
        	<th>Total Hours</th>
        </tr>

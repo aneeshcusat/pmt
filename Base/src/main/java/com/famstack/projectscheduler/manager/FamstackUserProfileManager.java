@@ -172,7 +172,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         userItem.setBand(employeeDetails.getBand());
         userItem.setGrade(employeeDetails.getGrade());
         userItem.setDateOfJoin(DateUtils.tryParse(employeeDetails.getDateOfJoin(), DateUtils.DATE_FORMAT_CALENDER));
-        userItem.setExitDate(DateUtils.tryParse(employeeDetails.getDateOfJoin(), DateUtils.DATE_FORMAT_CALENDER));
+        userItem.setExitDate(DateUtils.tryParse(employeeDetails.getExitDate(), DateUtils.DATE_FORMAT_CALENDER));
         userItem.setEmpType(employeeDetails.getEmpType());
         userItem.setDeptLeadEmailId(employeeDetails.getDeptLeadEmailId());
         userItem.setLobHeadEmailId(employeeDetails.getLobHeadEmailId());
@@ -280,14 +280,12 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         return null;
 
     }
-
-    public void deleteUserItem(int userId)
+    public void deleteUserItem(int userId, Date exitDate)
     {
         UserItem userItem = getUserItemById(userId);
         if (userItem != null) {
-            // getFamstackDataAccessObjectManager().deleteItem(userItem);
             userItem.setDeleted(true);
-            userItem.setExitDate(new Date());
+            userItem.setExitDate(exitDate);
             famstackDataAccessObjectManager.updateItem(userItem);
             getFamstackApplicationConfiguration().initializeUserMap(getAllEmployeeDataList());
         }
@@ -326,6 +324,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         UserItem userItem = getUserItemById(userId);
         if (userItem != null) {
             userItem.setDeleted(false);
+            userItem.setExitDate(null);
             userItem = (UserItem) famstackDataAccessObjectManager.saveOrUpdateItem(userItem);
         }
         return userItem;

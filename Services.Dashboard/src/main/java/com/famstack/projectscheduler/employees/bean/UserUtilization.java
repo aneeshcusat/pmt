@@ -11,6 +11,8 @@ public class UserUtilization {
 	int noOfWorkingDays;
 	Date startDate;
 	boolean futureDateTask;
+	String userJoinDate;
+	String userExitDate;
 
 	public double getUtilizationDouble() {
 		if (noOfWorkingDays > 0) {
@@ -142,5 +144,21 @@ public class UserUtilization {
 	
 	public String getActualHours() {
 		return getTimeInHrs(getTotal() + getLeaveMins());
+	}
+
+	public String getUserJoinDate() {
+		return userJoinDate;
+	}
+
+	public void setUserJoinDate(String userJoinDate) {
+		this.userJoinDate = userJoinDate;
+	}
+
+	public String getUserExitDate() {
+		return userExitDate;
+	}
+
+	public void setUserExitDate(String userExitDate) {
+		this.userExitDate = userExitDate;
 	}
 }

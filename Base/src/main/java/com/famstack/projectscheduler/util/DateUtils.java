@@ -343,18 +343,18 @@ public final class DateUtils extends BaseFamstackService
 		//System.out.println(getTimeDifference(TimeInType.MINS, tryParse("2020-06-25 00:51:00", "yyyy-MM-dd HH:mm:ss").getTime(), 
 			//	tryParse("2020-03-25 00:51:00", "yyyy-MM-dd HH:mm:ss").getTime()));
 		
-		Date startTime = DateUtils.tryParse("2020/04/16 23:30",
-				DateUtils.DATE_TIME_FORMAT);
-		Date endTime = DateUtils.tryParse("2020/04/17 23:30",
-				DateUtils.DATE_TIME_FORMAT);
-
-		int numberOfDays = DateUtils.getNoOfDaysBetweenTwoDates(startTime,
-				endTime);
+		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START,  DateUtils.tryParse("2012/05/04 23:30",
+				DateUtils.DATE_TIME_FORMAT), 0);
 		
-		System.out.println(numberOfDays);
+		Date endTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,  DateUtils.tryParse("2020/01/19 23:30",
+				DateUtils.DATE_TIME_FORMAT), 0);
+		
+		int numberOfDays = DateUtils.getWorkingDaysBetweenTwoDates(startTime,
+				endTime);
+		System.out.println("numberOfDays :" + numberOfDays);
+		System.out.println(getUsersActualWorkingHours(numberOfDays, "2020-01-01", "2020-01-31", startTime, endTime));
 	}
 	
-
 	public static String getYearMonthWeekNumber(Date taskActivityStartTime) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(taskActivityStartTime);
@@ -492,6 +492,32 @@ public final class DateUtils extends BaseFamstackService
 		
 		return numberOfworkingDaysMap;
 	}
-
+	
+	public static int getUsersActualWorkingHours(int numberOfWorkingDays, String dateOfJoinString,
+			String exitDateString, Date startDate, Date endDate) {
+		int inactiveStoJWorkingDays = 0;
+		int inactiveEndtoExtWorkingDays = 0;
+		Date dateOfJoin = DateUtils.tryParse(dateOfJoinString, DateUtils.DATE_FORMAT_CALENDER);
+		Date exitDate = DateUtils.tryParse(exitDateString, DateUtils.DATE_FORMAT_CALENDER);
+		
+		if(exitDate != null && exitDate.before(endDate) && exitDate.after(startDate)) {
+			inactiveEndtoExtWorkingDays = DateUtils.getWorkingDaysBetweenTwoDates(DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, exitDate, -1), endDate);
+		} 
+		
+		if (dateOfJoin != null && dateOfJoin.after(startDate) && dateOfJoin.before(endDate)) {
+			inactiveStoJWorkingDays =DateUtils.getWorkingDaysBetweenTwoDates(startDate, DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, dateOfJoin, -1));
+		}
+		System.out.println("dateOfJoin" + dateOfJoin);
+		System.out.println("exitDate"+ exitDate);
+		
+		System.out.println("startDate"+ startDate);
+		System.out.println("endDate"+ endDate);
+		
+		System.out.println("inactiveStoJWorkingDays"+ inactiveStoJWorkingDays);
+		System.out.println("inactiveEndtoExtWorkingDays"+ inactiveEndtoExtWorkingDays);
+		
+		int newNumberOfWorkingDays =  (numberOfWorkingDays - inactiveEndtoExtWorkingDays - inactiveStoJWorkingDays);
+		return newNumberOfWorkingDays > 0 ? newNumberOfWorkingDays : 1;
+	}
 	
 }

@@ -430,6 +430,26 @@ tr.clickable:hover {
 								</tr>
 							</tbody>
 						</table>
+						
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">User Utilization-Exclude inactive days</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="enableUserAcivtiveUtilizationId">
+										<option value="disabled">Disabled</opiton>
+										<option value="enabled">Enabled</option>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="enableUserAcivtiveUtilization();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						
 					</div>
 					<div class='row tab-pane ' id="tab5">
 						<table class="table table table-bordered data-table">
@@ -650,6 +670,7 @@ tr.clickable:hover {
   </c:forEach>
   </c:if>
   
+  
    <c:set var="sameDayOnlyTaskEnabledSelectId" value='sameDayOnlyTask${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[sameDayOnlyTaskEnabledSelectId] && not empty appConfigMap[sameDayOnlyTaskEnabledSelectId].appConfValueDetails}">
   <c:forEach var="sameDayOnlyTaskConf" items="${appConfigMap[sameDayOnlyTaskEnabledSelectId].appConfValueDetails}">
@@ -659,6 +680,14 @@ tr.clickable:hover {
   </c:forEach>
   </c:if>
   
+   <c:set var="enableUserAcivtiveUtilizationSelectId" value='enableUserAcivtiveUtilization${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[enableUserAcivtiveUtilizationSelectId] && not empty appConfigMap[enableUserAcivtiveUtilizationSelectId].appConfValueDetails}">
+  <c:forEach var="enableUserAcivtiveUtilizationConf" items="${appConfigMap[enableUserAcivtiveUtilizationSelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#enableUserAcivtiveUtilizationId").val('${enableUserAcivtiveUtilizationConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
    
      <c:set var="restrictionBasedOnDesignationSelectId" value='restrictionBasedOnDesignation${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[restrictionBasedOnDesignationSelectId] && not empty appConfigMap[restrictionBasedOnDesignationSelectId].appConfValueDetails}">
@@ -748,6 +777,18 @@ tr.clickable:hover {
 		 refreshTaskCategory();
 		 refreshNonBillableCategory();
 		 $('#createAppModel').modal('hide');
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
+ 
+ 
+ function enableUserAcivtiveUtilization(){
+	 var input1 = $("#enableUserAcivtiveUtilizationId").val();
+	 var type = "enableUserAcivtiveUtilization";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
 	    },function(error) {
 	    	famstacklog("ERROR: ", error);
 	    });

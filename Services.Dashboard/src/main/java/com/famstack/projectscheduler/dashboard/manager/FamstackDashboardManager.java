@@ -157,8 +157,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return FamstackUtils.getJsonFromObject(employeeDetails);
 	}
 
-	public void deleteUser(int userId) {
-		userProfileManager.deleteUserItem(userId);
+	public void deleteUser(int userId, Date exitDate) {
+		userProfileManager.deleteUserItem(userId, exitDate);
 
 	}
 

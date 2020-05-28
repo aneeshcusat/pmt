@@ -36,6 +36,7 @@ import com.famstack.projectscheduler.security.FamstackAuthenticationToken;
 import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManager;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.security.login.UserSecurityContextBinder;
+import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
 
 @Controller
@@ -191,9 +192,13 @@ public class FamstackUserController extends BaseFamstackService
 
     @RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
     @ResponseBody
-    public String deleteEmployee(@RequestParam("userId") int userId)
+    public String deleteEmployee(@RequestParam("userId") int userId,  @RequestParam(value = "exitDate", defaultValue = "") String exitDateString)
     {
-        famstackDashboardManager.deleteUser(userId);
+    	Date exitDate = null;
+    	if (StringUtils.isNotBlank(exitDateString)) {
+    		exitDate = DateUtils.tryParse(exitDateString, DateUtils.DATE_FORMAT_CALENDER);
+    	}
+        famstackDashboardManager.deleteUser(userId, exitDate);
         getFamstackApplicationConfiguration().initializeUserMap(
                 getFamstackApplicationConfiguration().getFamstackUserProfileManager().getAllEmployeeDataList());
         return "{\"status\": true}";

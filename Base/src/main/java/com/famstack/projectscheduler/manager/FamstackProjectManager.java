@@ -2569,6 +2569,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 			Map<Integer, Set<Integer>> projectTeamMembers = new HashMap<>();
 			
 			List<UserUtilizationDetails> userUtilizationDetailsList = new ArrayList<>();
+			Set<Integer> projectTaskUserSet = new HashSet<>();
 			if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
 				for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
 					logDebug("projectDetails.getTaskActivityDuration" + projectDetails.getTaskActivityDuration());
@@ -2579,6 +2580,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 					
 					logDebug("projectDetails.child" + projectDetails.getChilds());
 					int userId = projectDetails.getUserId();
+					projectTaskUserSet.add(userId);
+					
 					Map<String, Integer> dateStringHoursMap = userTotalHoursMap
 							.get(userId);
 					if (dateStringHoursMap == null) {
@@ -2634,21 +2637,31 @@ public class FamstackProjectManager extends BaseFamstackManager
 			}
 			List<UserUtilizationDetails> underOrOverUtilizedList = new ArrayList<>();
 			List<UserUtilizationDetails> leaveOrHolidayUtilizedList = new ArrayList<>();
-			for (EmployeeDetails employeeDetails : employeesList) {
-				
+			
+			List<EmployeeDetails> projectTaskEmployees = getProjectEmployeesList(projectTaskUserSet, employeesList);
+			
+			for (EmployeeDetails employeeDetails : projectTaskEmployees) {
 				if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
 					continue;
 				}
 				
 				UserUtilizationDetails userUtilizationDetails = new UserUtilizationDetails();
-
+				
+				if (getFamstackApplicationConfiguration().isEnableUserAcivtiveUtilization()) {
+					userUtilizationDetails.setUserExitDate(employeeDetails.getExitDate());
+					userUtilizationDetails.setUserJoinDate(employeeDetails.getDateOfJoin());
+					userUtilizationDetails.setNoOfWorkingDays(DateUtils.getUsersActualWorkingHours(numberOfWorkingDays, employeeDetails.getDateOfJoin(),employeeDetails.getExitDate(), startDate, endDate));
+				} else {
+					userUtilizationDetails.setNoOfWorkingDays(numberOfWorkingDays);
+				}
+				
 				userUtilizationDetails.setReportingManager(getEmployeeReportingManager(employeeDetails));
 				
 				userUtilizationDetails.setEmployeeName(employeeDetails
 						.getFirstName());
 				userUtilizationDetails.setFunded(employeeDetails.getFundedEmployee());
 				userUtilizationDetails.setEmailId(employeeDetails.getEmail());
-				userUtilizationDetails.setNoOfWorkingDays(numberOfWorkingDays);
+				
 				Map<String, Integer> utilizationTypeMap = userTotalHoursMap
 						.get(employeeDetails.getId());
 				
@@ -2677,6 +2690,19 @@ public class FamstackProjectManager extends BaseFamstackManager
 			return underOrOverUtilizedList;
 		}
 		return null;
+	}
+
+	private List<EmployeeDetails> getProjectEmployeesList(Set<Integer> projectTaskUserSet, List<EmployeeDetails> employeeDetailsList) {
+		List<EmployeeDetails> projectTaskEmployees = new ArrayList<>();
+		projectTaskEmployees.addAll(employeeDetailsList);
+		
+		for (Integer projectTaskUserId : projectTaskUserSet) {
+			EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskUserId);
+			if(employeeDetails != null && !projectTaskEmployees.contains(employeeDetails)) {
+				projectTaskEmployees.add(employeeDetails);
+			}
+		}
+		return projectTaskEmployees;
 	}
 
 	private Set<String> getProjectTeamMembersNames(
@@ -2751,12 +2777,13 @@ public class FamstackProjectManager extends BaseFamstackManager
 					getFamstackApplicationConfiguration().getAllUsersMap());
 			
 			Map<Integer, Map<String,  Map<String, Integer>>> userDateWeekHoursMap = new HashMap<>();
+			Set<Integer> projectTaskUserSet = new HashSet<>();
 			//user -> weekId -> taskType -> hour
 			if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
 				for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
 
 					int userId = projectDetails.getUserId();
-					
+					projectTaskUserSet.add(userId);
 					Map<String,  Map<String, Integer>> weekTypeHoursMap = userDateWeekHoursMap
 							.get(userId);
 					if (weekTypeHoursMap == null) {
@@ -2777,8 +2804,10 @@ public class FamstackProjectManager extends BaseFamstackManager
 				}
 			}
 			Map<String, Integer> numberOfDaysInAWeekMap =  DateUtils.getWeekNumberWeekDayCountMap(startDate, endDate);
-			for (EmployeeDetails employeeDetails : employeesList) {
-				
+			
+			List<EmployeeDetails> projectTaskEmployees = getProjectEmployeesList(projectTaskUserSet, employeesList);
+			
+			for (EmployeeDetails employeeDetails : projectTaskEmployees) {
 				if(excludeMailList != null && excludeMailList.contains(employeeDetails.getEmail())) {
 					continue;
 				}

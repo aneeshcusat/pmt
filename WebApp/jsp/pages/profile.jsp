@@ -140,7 +140,21 @@
     width: 33.3%;
    
 }
+.deletedbackground{
+ <c:if test="${userProile.deleted}">
+background-image: url(/bops/jsp/image/deleted.png);
+    background-position: right;
+    background-repeat: no-repeat;
+    opacity: .8;
+    background-size: 20%
+ </c:if>
+}
 
+.table-user-information{
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+}
 
 </style>
   <div class="content-frame">                                    
@@ -151,14 +165,16 @@
            </div>                                                    
        </div>
    <div class="container" style="margin-top: 20px; margin-bottom: 20px;">
-	<div class="row panel">
+	<div class="row panel deletedbackground">
         <div class="col-md-8  col-xs-10">
                <img src="${applicationHome}/image/${userProile.id}" class="img-thumbnail picture hidden-xs" alt="${userProile.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
            <div class="header">
                 <span>
+                <c:if test="${!userProile.deleted}">
                  <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${userProile.id}')">
 	     			<span class="fa fa-edit fa-2x" style="color: blue"></span>
-	      		</a> 			
+	      		</a>
+	      		</c:if> 			
 	     		</span>
                  <table class="table table-user-information">
                     <tbody>
@@ -281,16 +297,24 @@
                      <c:if test="${not empty userProile.dateOfJoin}">
                       <tr>
                         <td>Date Of Join</td>
-                        <td>${userProile.dateOfJoin}</td>
+                        <td><fmt:formatDate value="${userProile.dateOfJoin}" pattern="yyyy-MM-dd" /></td>
                       </tr>
                       </c:if>
                       
-                       <c:if test="${not empty userProile.exitDate}">
+                     
                       <tr>
                         <td>Exit Date</td>
-                        <td>${userProile.exitDate}</td>
+                        <td>
+                        <input type="hidden" id="userId" value="${userProile.id}"/>
+                        <input value="<fmt:formatDate value="${userProile.exitDate}" pattern="yyyy-MM-dd" />" type="text" style="width: 130px;float: left;margin-right: 10px;" class="form-control DOJdateTimePicker" id="exitDate" name="exitDate"  autocomplete="off"/>
+                         
+                        	<button id="updateExitDate" onclick="doAjaxUpdateExitDate();" class="btn btn-danger"><c:if test="${userProile.deleted}">Update</c:if><c:if test="${!userProile.deleted}">Delete</c:if></button>
+                       		<c:if test="${userProile.deleted}">
+                       			<button id="undoDeleteUser" onclick="doAjaxUndoDeleteUser();" class="btn btn-success">Undo Delete User</button>
+                       		</c:if>
+                        </td>
                       </tr>
-                      </c:if>
+                      
                       
                        <c:if test="${not empty userProile.empType}">
                       <tr>
@@ -422,6 +446,13 @@ function doAjaxUpdateUserForm(){
     $('#createUserFormId').submit();
 }
 
+$('.DOJdateTimePicker').datetimepicker({
+	lang:'en',
+	timepicker:false,
+	format:'Y-m-d',
+	formatDate:'Y/m/d',
+});
+
 $('#createUserFormId').ajaxForm(function(response) { 
 	famstacklog(response);
 	var responseJson = JSON.parse(response);
@@ -512,5 +543,30 @@ function processUserResponseData(data) {
 $(function() {
     $('.image-editor').cropit();
   });
+  
+function doAjaxUpdateExitDate() {
+	var userId = $("#userId").val();
+	var exitDate = $("#exitDate").val();
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/deleteEmployee", {"userId":userId, "exitDate":exitDate}, function(data) {
+		 famstacklog("SUCCESS: ", data);
+         var responseJson = JSON.parse(data);
+         if (responseJson.status){
+            window.location.reload(true);
+         }
+	}, function(e) {
+	   famstacklog("ERROR: ", e);
+	   famstackalert(e);
+	}, false);
+}
 
+
+function doAjaxUndoDeleteUser() {
+	var userId = $("#userId").val();
+	doAjaxRequestWithGlobal("GET", "/bops/dashboard/unblockUser", {"userId":userId}, function(data) {
+		 window.location.reload(true);
+	}, function(e) {
+	   famstacklog("ERROR: ", e);
+	   famstackalert(e);
+	}, false);
+}
 </script> 
