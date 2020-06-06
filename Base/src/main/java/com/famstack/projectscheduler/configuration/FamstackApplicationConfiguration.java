@@ -784,13 +784,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		this.designationMap = designationMap;
 	}
 
-	public boolean isEnableUserAcivtiveUtilization() {
-		String value = getSingleValueAppConfig("enableUserAcivtiveUtilization",
-				getFamstackApplicationConfiguration().getCurrentUserGroupId());
-		if (value != null && "disabled".equalsIgnoreCase(value)) {
-			return false;
+	public boolean isEnableUserAcivtiveUtilization(String userGroupId) {
+		String value = getSingleValueAppConfig("enableUserAcivtiveUtilization",userGroupId);
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 }

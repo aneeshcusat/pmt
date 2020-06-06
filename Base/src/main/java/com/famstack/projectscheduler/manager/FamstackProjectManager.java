@@ -2659,12 +2659,14 @@ public class FamstackProjectManager extends BaseFamstackManager
 				
 				UserUtilizationDetails userUtilizationDetails = new UserUtilizationDetails();
 				
-				if (getFamstackApplicationConfiguration().isEnableUserAcivtiveUtilization()) {
+				if (getFamstackApplicationConfiguration().isEnableUserAcivtiveUtilization(userGroupId)) {
 					userUtilizationDetails.setUserExitDate(employeeDetails.getExitDate());
 					userUtilizationDetails.setUserJoinDate(employeeDetails.getDateOfJoin());
 					userUtilizationDetails.setNoOfWorkingDays(DateUtils.getUsersActualWorkingHours(numberOfWorkingDays, employeeDetails.getDateOfJoin(),employeeDetails.getExitDate(), startDate, endDate));
+					userUtilizationDetails.setEnabledUserActiveUtilization(true);
 				} else {
 					userUtilizationDetails.setNoOfWorkingDays(numberOfWorkingDays);
+					userUtilizationDetails.setEnabledUserActiveUtilization(false);
 				}
 				
 				userUtilizationDetails.setReportingManager(getEmployeeReportingManager(employeeDetails));

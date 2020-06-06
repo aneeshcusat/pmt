@@ -13,11 +13,12 @@ public class UserUtilization {
 	boolean futureDateTask;
 	String userJoinDate;
 	String userExitDate;
-
+	boolean enabledUserActiveUtilization;
+	
 	public double getUtilizationDouble() {
 		if (noOfWorkingDays > 0) {
 			double totalWorkingDayDurationInMins = (noOfWorkingDays * 8 * 60) - (getLeaveOrHolidayMins());
-			double totalUtilizedInMins = billableMins + nonBillableMins;
+			double totalUtilizedInMins = billableMins + (enabledUserActiveUtilization ? 0 : nonBillableMins);
 			if (totalWorkingDayDurationInMins > 0) {
 			 return (totalUtilizedInMins/totalWorkingDayDurationInMins) * 100;		
 			}
@@ -37,7 +38,7 @@ public class UserUtilization {
 	    }
 	
 	public String getTotalHours() {
-		return getTimeInHrs(billableMins + nonBillableMins);
+		return getTimeInHrs(billableMins + (enabledUserActiveUtilization ? 0 : nonBillableMins));
 	}
 
 	public String getBillableHours() {
@@ -160,5 +161,13 @@ public class UserUtilization {
 
 	public void setUserExitDate(String userExitDate) {
 		this.userExitDate = userExitDate;
+	}
+
+	public boolean isEnabledUserActiveUtilization() {
+		return enabledUserActiveUtilization;
+	}
+
+	public void setEnabledUserActiveUtilization(boolean enabledUserActiveUtilization) {
+		this.enabledUserActiveUtilization = enabledUserActiveUtilization;
 	}
 }
