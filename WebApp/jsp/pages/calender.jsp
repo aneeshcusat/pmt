@@ -1,10 +1,19 @@
 <%@include file="includes/header.jsp" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Calender</li>
  </ul>
+ <script>
+ <c:if test="${futureHourCaptureDisabled}">
+ var futureHourCaptureDisabled = true;
+ </c:if>
+ <c:if test="${!futureHourCaptureDisabled}">
+ var futureHourCaptureDisabled = false;
+ </c:if>
+ </script>
 <style>
 
 .colorRed {
@@ -118,7 +127,7 @@
  
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js?v=${fsVersionNumber}"></script>
 <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.1&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.2&v=${fsVersionNumber}"></script>
 <script>
 var refreshCalendar = function() {
 	var userId = $("#taskAssigneeId").val();

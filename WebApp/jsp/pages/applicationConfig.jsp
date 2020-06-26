@@ -228,6 +228,25 @@ tr.clickable:hover {
 							</tbody>
 						</table>
 						
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Task future time capture</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="futureHourCaptureDisabledSelectId">
+										<option value="enabled">Enabled</opiton>
+										<option value="disabled">Disabled</option>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="futureHourCaptureDisabled();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						
 							<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
@@ -680,6 +699,15 @@ tr.clickable:hover {
   </c:forEach>
   </c:if>
   
+  <c:set var="futureHourCaptureDisabledSelectId" value='futureHourCaptureDisabled${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[futureHourCaptureDisabledSelectId] && not empty appConfigMap[futureHourCaptureDisabledSelectId].appConfValueDetails}">
+  <c:forEach var="futureHourCaptureDisabledTaskConf" items="${appConfigMap[futureHourCaptureDisabledSelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#futureHourCaptureDisabledSelectId").val('${futureHourCaptureDisabledTaskConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
    <c:set var="enableUserAcivtiveUtilizationSelectId" value='enableUserAcivtiveUtilization${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[enableUserAcivtiveUtilizationSelectId] && not empty appConfigMap[enableUserAcivtiveUtilizationSelectId].appConfValueDetails}">
   <c:forEach var="enableUserAcivtiveUtilizationConf" items="${appConfigMap[enableUserAcivtiveUtilizationSelectId].appConfValueDetails}">
@@ -905,6 +933,18 @@ tr.clickable:hover {
 	    	famstacklog("ERROR: ", error);
 	    });
  }
+ 
+ function futureHourCaptureDisabled(){
+	 var input1 = $("#futureHourCaptureDisabledSelectId").val();
+	 var type = "futureHourCaptureDisabled";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
+ 
  
  function restrictionBasedOnDesignation(){
 	 var input1 = $("#restrictionBasedOnDesignationSelectId").val();

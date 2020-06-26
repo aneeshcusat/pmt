@@ -1,6 +1,16 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>    
+<c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
+<script>
+<c:if test="${futureHourCaptureDisabled}">
+var futureHourCaptureDisabled = true;
+</c:if>
+<c:if test="${!futureHourCaptureDisabled}">
+var futureHourCaptureDisabled = false;
+</c:if>
+</script>
+
 <style>
 .container-fluid {
     padding-right: 20px;
@@ -176,7 +186,7 @@ additional-info-item .pficon {
  <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>       
 <script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.1&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.2&v=${fsVersionNumber}"></script>
 <script>
 
 $(document).ready(function(){

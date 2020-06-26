@@ -684,11 +684,20 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 				|| getFamstackApplicationConfiguration().getCurrentUser()
 						.getUserRole() == UserRole.SUPERADMIN;
 		if (value != null && "enabled".equalsIgnoreCase(value)
-				&& isManagerAndAbove) {
+				&& !isManagerAndAbove) {
 			return true;
 		}
 		return false;
 	}
+	
+	public boolean isFutureHourCaptureDisabled() {
+		String value = getSingleValueAppConfig("futureHourCaptureDisabled",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "disabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}	
 
 	public boolean isRestrictionBasedOnDesignation() {
 		String value = getSingleValueAppConfig("restrictionBasedOnDesignation",

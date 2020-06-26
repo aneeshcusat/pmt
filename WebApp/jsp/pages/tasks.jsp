@@ -1,6 +1,7 @@
 <%@include file="includes/header.jsp"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <c:set var="sameDayOnlyTaskEnabled" value="${applicationScope.applicationConfiguraion.sameDayOnlyTaskEnabled}"/>
+<c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/tasks.css?version=3.3&v=${fsVersionNumber}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="userDetailsMap"
@@ -271,7 +272,7 @@
 	src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.1&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.2&v=${fsVersionNumber}"></script>
 <script>
 
 <c:if test="${sameDayOnlyTaskEnabled}">	
@@ -291,6 +292,16 @@
 	var maxDate = new Date(currentTaskDate);
 </c:if>
 
+ <c:if test="${futureHourCaptureDisabled}">
+ 	var futureHourCaptureDisabled = true;
+	var taskTimeMaxDate = new Date();
+	taskTimeMaxDate.setHours(23);
+	taskTimeMaxDate.setMinutes(59);
+	maxDate = new Date(taskTimeMaxDate);
+ </c:if>
+ <c:if test="${!futureHourCaptureDisabled}">
+ var futureHourCaptureDisabled = false;
+ </c:if>
 
 $(".taskOwnersList").on("click", function(){
 	var hasClass = $("#" + this.id).hasClass("active");

@@ -4,19 +4,39 @@ $("#taskType").on("change", function(){
 	if($("#taskType").val() == "") {
 		$("#taskCreate").hide();
 	}
-	
+	checkFutureTimeCaptureRestriction($("#taskType").val());
 });
 
-$('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 9:00"}).on('dp.change', function(e) {
+
+var startDateRange = $('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 9:00"}).on('dp.change', function(e) {
    adjustStartNBTimeChanged();
 });;
-$('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 17:00"});
+var completionDateRange = $('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 17:00"});
 
-var adjustStartNBTimeChanged=function(){
+var checkFutureTimeCaptureRestriction = function(taskName){
+	if (futureHourCaptureDisabled) {
+		if (taskName.toLowerCase() == 'leave' || taskName.toLowerCase() == "holiday" || taskName.toLowerCase() == 'leaveorholiday'){
+			var taskMaxDate = new Date();
+			taskMaxDate.setMonth(taskMaxDate.getMonth()+6);
+			startDateRange.data("DateTimePicker").maxDate(taskMaxDate);
+			completionDateRange.data("DateTimePicker").maxDate(taskMaxDate);
+			
+		} else {
+			var taskMaxDate = new Date();
+			taskMaxDate.setHours(23);
+			taskMaxDate.setMinutes(59);
+			startDateRange.data("DateTimePicker").maxDate(taskMaxDate);
+			completionDateRange.data("DateTimePicker").maxDate(taskMaxDate);
+		}
+	}
+};
+
+
+var adjustStartNBTimeChanged = function(){
 	var startTime = $('#startDateRange').val();
     var newCompletionDate = getTodayDate(new Date(startTime)) + " 17:00";
     $('#completionDateRange').val(newCompletionDate);
-}
+};
 
 var validateStartAndEndUBTtime = function(){
 	var startDate = $('#startDateRange').val();
@@ -35,7 +55,7 @@ var validateStartAndEndUBTtime = function(){
 	
 	$(".nonBillableTaskCreateText").html("Create");
 	return false;
-}
+};
 
 function reloadNBTime() {
 	 var completedTime = getTodayDateTime(new Date());
@@ -61,7 +81,7 @@ var fillNBTaskCompletionTime =function(diffTime){
 	} else {
 		$(".nonBillableTaskCreateText").html(unBilledButtonAction);
 	}
-}
+};
 
 var createUnbillableTask = function(){
 	var endDate = "";
@@ -107,7 +127,7 @@ var createUnbillableTask = function(){
        
     }, function(e) {
     });
-}
+};
 
 
 var editUnbillableTask = function(taskActId){
@@ -156,7 +176,7 @@ var editUnbillableTask = function(taskActId){
     }, function(e) {
     });
 
-}
+};
 
 var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#userId").val(currentUserId);
@@ -174,7 +194,7 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	$(".nonBillableTaskCreateText").html("Create");
 	$("#unbilledModelTitle").html("Create Non-billable time");
 	$("#taskCreate").hide();
-}
+};
 
 var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, startTime, endTime, clientName) {
 	$("#userId").val(taskActUserId);
@@ -198,7 +218,7 @@ var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, s
 	$(".nonBillableTaskCreateText").html("Update");
 	unBilledButtonAction = "Update";
 	$("#taskCreate").show();
-}
+};
 
 
 var deleteTaskActivityAjax = function(activityId) {
@@ -208,7 +228,7 @@ var deleteTaskActivityAjax = function(activityId) {
 		$(".taskact-item"+activityId).remove();
 	}, function(e) {
 	});
-}
+};
 
 function deleteTaskActivity(activityId, taskName){
 	$(".msgConfirmText").html("Delete task activity");
