@@ -28,7 +28,9 @@ public class ProjectTaskActivityDetails
 
     private String projectNumber;
     
-    private String sowLineItem;
+    private String orderRefNumber;
+    
+    private String proposalNumber;
     
      private String projectName;
 
@@ -535,14 +537,6 @@ public class ProjectTaskActivityDetails
 		return projectDetails;
 	}
 
-	public String getSowLineItem() {
-		return sowLineItem;
-	}
-
-	public void setSowLineItem(String sowLineItem) {
-		this.sowLineItem = sowLineItem;
-	}
-
 	public String getNewProjectCategory() {
 		return newProjectCategory;
 	}
@@ -564,5 +558,21 @@ public class ProjectTaskActivityDetails
 
 	public void setTaskCompletionComments(String taskCompletionComments) {
 		this.taskCompletionComments = taskCompletionComments;
+	}
+
+	public String getOrderRefNumber() {
+		return orderRefNumber;
+	}
+
+	public void setOrderRefNumber(String orderRefNumber) {
+		this.orderRefNumber = orderRefNumber;
+	}
+
+	public String getProposalNumber() {
+		return proposalNumber;
+	}
+
+	public void setProposalNumber(String proposalNumber) {
+		this.proposalNumber = proposalNumber;
 	}
 }

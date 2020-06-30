@@ -381,7 +381,7 @@ public class FamstackXLSExportProcessorDefaultBck extends BaseFamstackService im
             createProjectDetailsColoumn(sheet, 2, "" + (projectDetails.getProjectId() == null ? "" : projectDetails.getProjectId()), projectDetailsRow, textWrapStyle);
 
             createProjectDetailsColoumn(sheet, 3, projectDetails.getProjectNumber(), projectDetailsRow, textWrapStyle);
-            createProjectDetailsColoumn(sheet, 4, projectDetails.getSowLineItem(), projectDetailsRow, textWrapStyle);
+            createProjectDetailsColoumn(sheet, 4, projectDetails.getOrderRefNumber(), projectDetailsRow, textWrapStyle);
             
             createProjectDetailsColoumn(sheet, 5, projectDetails.getProjectName(), projectDetailsRow, textWrapStyle);
             createProjectDetailsColoumn(sheet, 6, projectDetails.getProjectStatus().toString(), projectDetailsRow,

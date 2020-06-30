@@ -800,5 +800,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		}
 		return false;
 	}
-
+	
+	public boolean isUserSkillHoursMappingEnabled() {
+		String value = getSingleValueAppConfig("userSkillHoursMappingEnabled",getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}
 }

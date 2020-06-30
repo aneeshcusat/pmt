@@ -1,0 +1,409 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="currentUserGroupId"
+	value="${applicationScope.applicationConfiguraion.currentUserGroupId}" />
+<c:set var="projectCategories"
+	value="${applicationScope.applicationConfiguraion.projectCategories}" />
+<c:set var="newProjectCategories"
+	value="${applicationScope.applicationConfiguraion.newProjectCategories}" />
+<c:set var="prjectCategoryEnabled"
+	value="${applicationScope.applicationConfiguraion.prjectCategoryEnabled}" />
+<style>
+</style>
+
+<form:input type="hidden" id="projectId" path="id" />
+
+<form:input type="hidden" id="hoursUserSkillMonthlySplit" path="hoursUserSkillMonthlySplitJson"/>
+<input type="hidden" id="fillMonthlySplitDataTotalHours" />
+
+
+<div class="row projectMonthlySplitInfo" style="display: none">
+	<div class="col-md-12" style="overflow-y: scroll;max-height: 450px;min-height:200px;border-bottom: 1px solid #ccc;margin-bottom: 10px;padding: 0;">
+		<table class="table table-responsive table-striped table-bordered">
+			<thead>
+				<tr class="monthlySplitTableHeader">
+
+				</tr>
+			</thead>
+			<tbody class="monthlySplitTableBody">
+				
+			</tbody>
+			<tfoot>
+				<tr class="monthlySplitTableFooter">
+
+				</tr>
+			</tfoot>
+		</table>
+		
+	</div>
+	<a href="javascript:void(0)" class="btn btn-info btn-rounded projectMonthlySplitInfoBackButton" style="float:right">Back</a>
+	<a href="javascript:void(0)" style="padding-le: 10px;float: right;padding-left: 10px;margin-right: 20px;" class="btn btn-primary btn-rounded projectMonthlySplitInfoSaveButton" style="float:right">Save</a>
+	
+</div>
+<div class="row createProjectInfo">
+	<div class="col-md-7">
+
+		<div class="form-group required">
+			<label class="col-md-3 control-label">Project Name </label>
+			<div class="col-md-9">
+				<form:input type="text" class="autocomplete form-control"
+					id="projectName" path="name" />
+			</div>
+		</div>
+		<div class="form-group required">
+			<label class="col-md-3 control-label">Project Start Date</label>
+			<div class="col-md-3">
+				<form:input type="text" class="form-control dateTimePicker"
+					id="estStartTime" path="startTime" autocomplete="off" />
+			</div>
+
+			<label class="col-md-3 control-label">Project End Date</label>
+			<div class="col-md-3">
+				<form:input type="text" class="form-control dateTimePicker"
+					id="estCompleteTime" path="completionTime" autocomplete="off" />
+			</div>
+		</div>
+		<div class="form-group required">
+			<label class="col-xs-3 control-label">Project Type</label>
+			<form:input type="hidden" path="projectSubType" id="projectSubType" />
+			<div class="col-xs-4">
+				<div class="btn-group projectSubTypeDiv" data-toggle="buttons">
+					<label class="btn btn-default radioButton"
+						style="padding: 4px 5px; margin-right: 5px;"
+						onclick="clickAdHocType()"> <input type="radio"
+						id="adhocSubType" value="ADHOC" /> Ad-Hoc
+					</label> <label class="btn btn-default radioButton"
+						style="padding: 4px 20px; margin-right: 5px;"
+						onclick="clickFTEType()"> <input type="radio"
+						id="fteSubType" value="FTE" /> FTE
+					</label>
+				</div>
+			</div>
+
+			<label class="col-md-2 control-label">Project Location</label>
+			<div class="col-md-3">
+				<form:select path="projectLocation" id="projectLocation"
+					name="projectLocation" class="form-control select"
+					data-live-search="true">
+					<option value="Offshore">Offshore</option>
+					<option value="Onshore">Onshore</option>
+				</form:select>
+			</div>
+
+		</div>
+		<div class="form-group required">
+			<label class="col-xs-3 control-label">Type</label>
+			<form:input type="hidden" path="type" id="projectType" />
+			<div class="col-xs-4">
+				<div class="btn-group projectTypeDiv" data-toggle="buttons">
+					<label class="btn btn-default radioButton"
+						style="padding: 4px 5px; margin-right: 5px;"
+						onclick="clickBillableType()"> <input type="radio"
+						id="billable" value="BILLABLE" /> Billable
+					</label> <label class="btn btn-default radioButton"
+						style="padding: 4px 5px; margin-right: 5px;"
+						onclick="clickNonBillableType()"> <input type="radio"
+						value="NON_BILLABLE" id="nonbillable" /> Non Billable
+					</label>
+				</div>
+			</div>
+
+			<label class="col-md-2 control-label">Client Partner/Sales
+				person</label>
+			<div class="col-md-3">
+				<form:input path="clientPartner" id="clientPartner" name="clientPartner"
+					class="form-control"/>
+			</div>
+
+
+			<label class="col-md-1 control-label hide">Priority</label>
+			<div class="col-md-3 hide">
+				<form:select class="form-control select" path="priority"
+					id="priority" data-live-search="true">
+					<option value="">- select -</option>
+					<option>URGENT</option>
+					<option>HIGH</option>
+					<option>MEDIUM</option>
+					<option>LOW</option>
+				</form:select>
+			</div>
+		</div>
+		<div class="form-group required">
+
+			<label class="col-md-2 control-label hide">Complexity</label>
+			<div class="col-md-3 hide">
+				<form:select class="form-control select" id="complexity"
+					path="complexity" data-live-search="true">
+					<option value="">- select -</option>
+					<option>BASIC</option>
+					<option>MEDIUM</option>
+					<option>COMPLEX</option>
+				</form:select>
+			</div>
+
+			<label class="col-md-3 control-label">Project Lead</label>
+			<div class="col-md-3">
+				<form:select path="projectLead" id="projectLead" name="projectLead"
+					class="form-control select" data-live-search="true">
+					<option value="">- select -</option>
+					<c:if test="${not empty userMap}">
+						<c:forEach var="user" items="${userMap}">
+							<option value="${user.id}">${user.firstName}</option>
+						</c:forEach>
+					</c:if>
+				</form:select>
+			</div>
+
+			<label class="col-md-2 control-label">Account</label>
+			<div class="col-md-4">
+				<form:select class="form-control select" id="accountId"
+					path="accountId" data-live-search="true">
+					<option value="">- select -</option>
+					<c:if test="${not empty modelViewMap.accountData}">
+						<c:forEach var="account" items="${modelViewMap.accountData}"
+							varStatus="accountStatus">
+							<option index="${accountStatus.index + 1}" class="accountOption"
+								id="A${account.accountId}" filter="${account.type}"
+								value="${account.accountId}">${account.name}</option>
+						</c:forEach>
+					</c:if>
+				</form:select>
+			</div>
+		</div>
+		<div class="form-group required">
+
+			<label class="col-md-3 text-right">Team</label>
+			<div class="col-md-3">
+				<form:select class="selectpicker form-control select" path="teamId"
+					id="teamId" data-live-search="true">
+					<option value="">- select -</option>
+
+					<c:if test="${not empty modelViewMap.accountData}">
+						<c:forEach var="account" items="${modelViewMap.accountData}">
+							<c:if test="${not empty account.projectTeams}">
+								<c:set var="teamIndex" value="1" />
+								<c:forEach var="projectTeam" items="${account.projectTeams}">
+									<optgroup class="teamOption" filter="${account.accountId}"
+										label="${projectTeam.name}"">
+										<c:if test="${not empty projectTeam.projectSubTeams}">
+											<c:forEach var="projectSubTeam"
+												items="${projectTeam.projectSubTeams}">
+												<option poid="${projectSubTeam.poId}" index="${teamIndex}"
+													class="teamOption" account="${account.accountId}"
+													accountType="${account.type}" filter="${account.accountId}"
+													id="ST${projectSubTeam.subTeamId}"
+													value="${projectSubTeam.subTeamId}">${projectSubTeam.name}</option>
+												<c:set var="teamIndex" value="${teamIndex+1}" />
+											</c:forEach>
+										</c:if>
+								</c:forEach>
+							</c:if>
+						</c:forEach>
+					</c:if>
+				</form:select>
+			</div>
+			<label class="col-md-2 control-label">Client</label>
+			<div class="col-md-4">
+				<form:select class="form-control select" path="clientId"
+					id="clientId" data-live-search="true">
+					<option value="">- select -</option>
+					<c:if test="${not empty modelViewMap.accountData}">
+						<c:forEach var="account" items="${modelViewMap.accountData}">
+							<c:if test="${not empty account.projectTeams}">
+								<c:forEach var="projectTeam" items="${account.projectTeams}">
+									<c:if test="${not empty projectTeam.projectSubTeams}">
+										<c:forEach var="projectSubTeam"
+											items="${projectTeam.projectSubTeams}">
+											<c:if test="${not empty projectSubTeam.clientItems}">
+												<c:forEach var="client"
+													items="${projectSubTeam.clientItems}">
+													<option class="clientOption"
+														account="A${account.accountId}"
+														subteam="ST${projectSubTeam.subTeamId}"
+														accountType="${account.type}"
+														filter="${projectSubTeam.subTeamId}"
+														value="${client.clientId}">${client.name}</option>
+												</c:forEach>
+											</c:if>
+										</c:forEach>
+									</c:if>
+								</c:forEach>
+							</c:if>
+						</c:forEach>
+					</c:if>
+				</form:select>
+			</div>
+		</div>
+		<div class="form-group">
+
+			<div class="col-md-4">
+				<span id="POidSpan" class="hide" style="font-weight: bold;">POID</span>
+			</div>
+		</div>
+
+		<div class="form-group required">
+			<label class="col-md-3 control-label">Order book Ref No.</label>
+			<div class="col-md-9">
+				<form:input type="text" class="form-control" id="orderBookRefNo"
+					path="orderBookRefNo" autocomplete="false" />
+			</div>
+		</div>
+
+		<div class="form-group required">
+			<label class="col-md-3 control-label">Proposal No.</label>
+			<div class="col-md-9">
+				<form:input type="text" class="form-control" id="proposalNo"
+					path="proposalNo" autocomplete="false" />
+			</div>
+		</div>
+		<div class="form-group required">
+			<label class="col-md-3 control-label">Project code</label>
+			<div class="col-md-3">
+				<form:input type="text" class="autocomplete form-control"
+					id="projectcode" path="code" />
+			</div>
+		
+			<label class="col-md-3 custom-control-label">PO Number</label>
+			<div class="col-md-3">
+				<form:input type="text" class="autocomplete form-control"
+					id="PONumber" path="PONumber" />
+			</div>
+		</div>
+	</div>
+	<div class="col-md-5">
+		<div class="form-group required">
+			<label class="col-xs-3 control-label">Estimated project hours</label>
+			<div class="col-xs-5">
+				<form:input class="form-control select" id="duration" readonly="true"
+					path="durationHrs" type="text" />
+				<%-- <form:select class="form-control select" id="duration" path="duration"  data-live-search="true">
+ 	<c:forEach begin="0" end="100" varStatus="loop">
+                               <option>${loop.count}</option>
+                        	</c:forEach>
+                           </form:select> --%>
+			</div>
+			<div class="col-xs-4">
+				<a href="javascript:void(0)" class="btn btn-info btn-rounded monthlySplitButton">Monthly
+					split</a>
+			</div>
+		</div>
+		<div class="form-group required">
+			<div class="col-md-11"
+				style="overflow-y: scroll; height: 350px; margin-left: 10px; float: right">
+				<table class="table table-responsive table-striped table-bordered">
+					<thead>
+						<tr>
+							<th width="70%">Estimated Hours by Skills</th>
+							<th>Hours</th>
+						</tr>
+					</thead>
+					<tbody class="userSkillSplitBody">
+					</tbody>
+					
+					<tfoot class="userSkillSplitFooter">
+						<tr>
+							<td>TOTAL</td> <td class="monthlySplitGrandTotal"></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+		
+		<c:if test="${prjectCategoryEnabled}">
+			<div class="form-group">
+				<label class="col-md-3 control-label">Project Category</label>
+				<div class="col-md-9">
+					<form:select class="form-control select" id="category"
+						path="category" data-live-search="true">
+						<option value="">- select -</option>
+						<c:if test="${not empty projectCategories }">
+							<c:forEach var="projectCategoryConf" items="${projectCategories}">
+								<option value="${projectCategoryConf.value}">${projectCategoryConf.name}</option>
+							</c:forEach>
+						</c:if>
+						<c:if test="${empty projectCategories}">
+							<option>Conceptualization/High-end</option>
+							<option>Collaterals</option>
+							<option>Dashboard</option>
+							<option>Document support (Ms Word/MS Excel)</option>
+							<option>Formatting/Templatizing Document</option>
+							<option>Infographics</option>
+							<option>Motion Graphics</option>
+							<option>Reporting</option>
+							<option>UI/UX</option>
+						</c:if>
+					</form:select>
+				</div>
+
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label">New Project Category</label>
+				<div class="col-md-9">
+					<form:select class="form-control select" id="newCategory"
+						path="newCategory" data-live-search="true">
+						<option value="">- select -</option>
+						<option value="Reporting and Descriptive Analytics">Reporting
+							and Descriptive Analytics</option>
+						<option value="Insightful Analytics">Insightful Analytics</option>
+						<option value="Internal">Internal</option>
+						<option value="Project Management">Project Management</option>
+						<option value="Advanced Analytics">Advanced Analytics</option>
+						<option value="System Integration and Implementation">System
+							Integration and Implementation</option>
+						<option value="Business & Analytics Consulting">Business
+							&amp; Analytics Consulting</option>
+						<c:if test="${not empty newProjectCategories }">
+							<c:forEach var="projectCategoryConf"
+								items="${newProjectCategories}">
+								<option value="${projectCategoryConf.value}">${projectCategoryConf.name}</option>
+							</c:forEach>
+						</c:if>
+					</form:select>
+				</div>
+
+			</div>
+		</c:if>
+		<c:if test="${currentUserGroupId == 1018}">
+			<div class="form-group">
+				<label class="col-md-3 control-label">SOW line item</label>
+				<div class="col-md-9">
+					<form:input type="text" class="form-control" id="sowLineItem"
+						path="sowLineItem" />
+				</div>
+			</div>
+
+
+		</c:if>
+		<div class="form-group hide">
+			<label class="col-md-3 control-label">Quantity</label>
+			<div class="col-md-9">
+				<form:input type="text" class="form-control" id="quantity"
+					path="quantity" />
+			</div>
+		</div>
+
+		<c:if test="${currentUserGroupId == 1018}">
+			<div class="form-group ">
+				<label class="col-md-3 control-label">Watchers</label>
+				<div class="col-md-9" id="watcher_tag_div">
+					<form:input type="text" class="form-control tagsinputWatchers"
+						placeholder="add emails" value="" path="watchers" id="watchers" />
+					<span class="help-block">who all monitoring this project</span>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label">Tags</label>
+				<div class="col-md-9">
+					<form:input type="text" class="tagsinput" placeholder="add a tag"
+						path="tags" id="tags" />
+					<span class="help-block">tag project with keywords</span>
+				</div>
+			</div>
+		</c:if>
+	</div>
+
+</div>

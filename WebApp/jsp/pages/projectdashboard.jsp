@@ -2,6 +2,7 @@
 <%@include file="includes/header.jsp"%>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="prjectCategoryEnabled" value="${applicationScope.applicationConfiguraion.prjectCategoryEnabled}"/>
+<c:set var="userSkillHoursMappingEnabled" value="${applicationScope.applicationConfiguraion.userSkillHoursMappingEnabled}"/>
 
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
@@ -17,11 +18,29 @@
 <script type="text/javascript">
 var assigneeMandatoryForQuickCloning = ${applicationScope.applicationConfiguraion.assignManForQckClone};
 var recurringOriginal = ${applicationScope.applicationConfiguraion.recurringOriginal};
+var userSkillHoursMappingEnabled = ${userSkillHoursMappingEnabled};
 </script>
 <style>
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+.userSkillSplitFooter, .monthlySplitTableFooter {
+    background-color: #ccc;
+    font-size: 14px;
+}
+.form-group.required .control-label:after {
+  content:"*";
+  color:red;
+}
 @media screen and (min-width: 700px) {
+.custom-control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+}
 	#createprojectmodal .modal-dialog {
-		width: 75%;
+		width: 80%;
 	}
 	.disabled .fc-day-content {
 		background-color: #123959;
@@ -217,7 +236,7 @@ div#taskDetailsDiv {
 
 <!-- project create modal start -->
 <div class="modal fade" id="createprojectmodal" tabindex="-1"
-	role="dialog" aria-labelledby="createprojectmodal" aria-hidden="true">
+	role="dialog" aria-labelledby="createprojectmodal" aria-hidden="true" data-backdrop="static">
 	<form:form id="createProjectFormId" action="createProject" method="POST"
 		role="form" class="form-horizontal">
 		<div class="modal-dialog" role="document">
@@ -229,8 +248,13 @@ div#taskDetailsDiv {
 					</button>
 					<h4 class="modal-title" id="myModalLabel">Create a Project</h4>
 				</div>
-				<div class="modal-body">
-					<%@include file="fagments/createProjectModal.jspf"%>
+				<div class="modal-body" style="padding: 10px 10px 10px 5px">
+					<c:if test="${userSkillHoursMappingEnabled}">
+						<%@include file="fagments/newCreateProjectModal.jspf"%>
+					</c:if>
+					<c:if test="${!userSkillHoursMappingEnabled}">
+						<%@include file="fagments/createProjectModal.jspf"%>
+					</c:if>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
@@ -381,15 +405,7 @@ var jvalidate = $("#createProjectFormId").validate({
 	newCategory: {
 	   	 required: true
 	}
-	</c:if>
-	<c:if test="${currentUserGroupId != 1018}">
-	,
-	sowLineItem: {
-	   	 required: true
-	}
-	</c:if>
-
-	
+	</c:if>	
  }
 });
 
@@ -403,6 +419,9 @@ var clearProjectFormForCreate = function(projectId) {
 	//$("#PONumber").val("PO" + Math.floor(Date.now() / 1000));
 	$('#estStartTime').val(getTodayDate(new Date()) + " 08:00");
 	$('#estCompleteTime').val(getTodayDate(new Date()) + " 18:00");
+	if(userSkillHoursMappingEnabled) {
+		initializeCreateFormModel();
+	}
 	
 }
 var isProjectUpdate = false;
@@ -466,10 +485,12 @@ function clearCreateProjectForm(){
 	
 	$("#projectLead").prop("selectedIndex",0);
 	$('#projectLead').selectpicker('refresh');
+	$("#clientPartner").val("");
 	
 	$("#complexity").prop("selectedIndex",0);
 	$('#complexity').selectpicker('refresh');
 	$("#projectcode").val("");
+	
 	
 	$("#projectId").val("");
 	
@@ -507,6 +528,10 @@ function clearCreateProjectForm(){
 	$(".tagsinput span.tag").each(function(){
 		$(this).remove();
 	});
+	
+	$("#hoursUserSkillMonthlySplit").val("");
+	$("#fillMonthlySplitDataTotalHours").val("");
+	
 }
 
 function initializeCreateProjectForm(project){
@@ -534,6 +559,8 @@ function initializeCreateProjectForm(project){
 	
 	$("#projectLead").val(project.projectLead);
 	$('#projectLead').selectpicker('refresh');
+	
+	$("#clientPartner").val(project.clientPartner);
 	
 	$("#priority").val(project.priority);
 	$('#priority').selectpicker('refresh');
@@ -592,6 +619,15 @@ function initializeCreateProjectForm(project){
 			$(".tagsinput").addTag(tagsArray[index]);
 		}
 	}
+	
+
+    if(userSkillHoursMappingEnabled) {
+    	fillUserSkillSplitData();
+    	$(".monthlySplitGrandTotal").html("");
+    	fillMonthlySplitData(project.hoursUserSkillMonthlySplitJson);  
+    	$("#hoursUserSkillMonthlySplit").val(project.hoursUserSkillMonthlySplitJson);
+    	reInitialilzeMonthlySplitTable = false;
+    }
 }
 	
 	$( document ).ready(function(){
@@ -933,12 +969,14 @@ function initializeCreateProjectForm(project){
 		validateEstimatedStartTime($('#estStartTime'));
 		validateEstimatedEndTime($('#estStartTime'),$('#estCompleteTime'));
 		//validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
+		reInitialilzeMonthlySplitTable = true;
 	});
 	
 	$('#estCompleteTime').on("change", function(){
 		validateEstimatedStartTime($('#estStartTime'));
 		validateEstimatedEndTime($('#estStartTime'),$('#estCompleteTime'));
 		//validateProjectDuration($('#estStartTime'), $('#estCompleteTime'), $('#duration'));
+		reInitialilzeMonthlySplitTable = true;
 	});
 	
 	/* $('#duration').on("change", function(){
@@ -1614,6 +1652,188 @@ $('.recurringEndTime').datetimepicker({
 	minDate:new Date()
 });
 
+function initializeCreateFormModel(){
+	$(".projectMonthlySplitInfo").hide();
+	$(".createProjectInfo").show();
+	$("#createprojectmodal .modal-footer").show();
+	$(".monthlySplitGrandTotal").html("");
+	fillUserSkillSplitData();
+	reInitialilzeMonthlySplitTable = true;
+}
+
+var reInitialilzeMonthlySplitTable = true;
+
+$(".monthlySplitButton").on("click", function(){
+		$(".createProjectInfo").hide(1000);
+		$(".projectMonthlySplitInfo").show(1000);
+		$("#createprojectmodal .modal-footer").hide();
+		if (reInitialilzeMonthlySplitTable) {
+			var monthlySplitSavedData = $("#hoursUserSkillMonthlySplit").val();
+			$("#fillMonthlySplitDataTotalHours").val("");
+			fillMonthlySplitData(monthlySplitSavedData != "" ? monthlySplitSavedData : null);
+			reInitialilzeMonthlySplitTable = false;
+		}
+	});
+	
+
+$(".projectMonthlySplitInfoBackButton").on("click", function(){
+	$(".projectMonthlySplitInfo").hide(1000);
+	$(".createProjectInfo").show(1000);
+	$("#createprojectmodal .modal-footer").show();
+});
+
+$(".projectMonthlySplitInfoSaveButton").on("click", function(){
+	fillUserSkillSplitData();
+	$("#hoursUserSkillMonthlySplit").val(JSON.stringify(getMonthlySplitJson()));
+	
+});
+var userSkilsList = ["Primary Research","Secondary Research","Data Analysis","BI Tableau Power Bi etc","Survey Programming","Project Management","Viz","Social Media","Data Engineering","Digital-Web Analytics","Applied AI-Advanced Data Sciences","AI Engineering","Product-Web Development","Others"]
+var monthNames = [
+          	    "Jan", "Feb", "Mar",
+          	    "Apr", "May", "Jun", "Jul",
+          	    "Aug", "Sep", "Oct",
+          	    "Nov", 
+          	    "Dec"
+          	  ];
+          	  
+function getMonthlySplitJson() {
+	var monthlySplitDataJsonObject = {};
+	var userSkillSplitDataJsonObject = {};
+	
+	var monthUserSkillTotal = {};
+	var userSkillTotal = {};
+	var grandTotalHour = 0;
+	
+	$(".monthSplitData").each(function(monthSplitDataIndex, monthSplitDataRow){
+		var monthName = $(monthSplitDataRow).attr("data-month-name");
+		monthlySplitDataJsonObject[monthName] = [];
+		var totalMonthHour = 0;
+		$(monthSplitDataRow).find("input").each(function(monthSkillHourIndex, monthSkillHour) {
+			var hour = $(monthSkillHour).val();
+			var skillName = $(monthSkillHour).attr("data-name");	
+			var hourInt = hour == "" ? 0 : parseInt(hour); 
+			if(hourInt > 0) {
+				var skillNameHourIntObj = {};
+				skillNameHourIntObj[skillName] = hourInt;
+				monthlySplitDataJsonObject[monthName].push(skillNameHourIntObj);
+				totalMonthHour += hourInt;
+				var skillNameHour = userSkillSplitDataJsonObject[skillName];
+				if(!skillNameHour) {
+					userSkillSplitDataJsonObject[skillName] = hourInt;
+				} else {
+					userSkillSplitDataJsonObject[skillName] = skillNameHour + hourInt;
+				}
+
+			}
+		});
+		$(".MTUS_"+monthName).html("<b>"+totalMonthHour+"</b>");
+		grandTotalHour+=totalMonthHour;
+	});
+	
+	fillUserSkillDataTable(userSkillSplitDataJsonObject, grandTotalHour);
+	
+	return monthlySplitDataJsonObject;
+}
+
+function fillUserSkillDataTable(userSkillSplitDataJsonObject, grandTotal) {
+	
+	for (var key in userSkillSplitDataJsonObject) {
+		$(".USTH_"+key).html("<strong>" + userSkillSplitDataJsonObject[key] + "</strong>");
+	}
+	$("td.monthlySplitGrandTotal").html("<b>"+grandTotal+"</b>")
+	$("#fillMonthlySplitDataTotalHours").val(grandTotal);
+	$("#duration").val(grandTotal);
+}
+
+function fillMonthlySplitData(monthlySplitDataJsonObject){
+	var startDate = $("#estStartTime").val();
+	var endDate = $("#estCompleteTime").val();	
+	var monthYearList = getMonthsYearBetweenTwoDates(startDate,endDate );
+	var monthlySplitHeader = "<th>MONTH</th>";
+	var monthlySplitTableFooter = '<td style="width:60px;font-weight:bold">TOTAL</td>';
+	var monthlySplitBody = "";
+	
+	$.each(userSkilsList, function( index, userSkillValue ) {
+		monthlySplitHeader += "<th>"+userSkillValue+"</th>";
+		monthlySplitTableFooter += '<td style="font-weight: bold;" class="USTH_'+getShortString(userSkillValue)+'"></td>';
+	});	
+	monthlySplitHeader += '<th style="font-weight:bold">TOTAL</th>';
+	monthlySplitTableFooter += '<td class="monthlySplitGrandTotal"></td>';
+	
+	$(".monthlySplitTableHeader").html(monthlySplitHeader);
+	$(".monthlySplitTableFooter").html(monthlySplitTableFooter);
+	
+	$.each(monthYearList, function( monthYearIndex, monthYearValue ) {
+		monthlySplitBody += '<tr style="font-weight: bold;" data-month-name="'+monthYearValue+'" class="monthSplitData '+monthYearValue+'"><td>'+monthYearValue+'</td>';
+		$.each(userSkilsList, function( userSkillIndex, userSkillValue ) {
+			monthlySplitBody += '<td class="MUS_'+getShortString(userSkillValue)+'"><input type="number" min="1" max="999" data-name="'+getShortString(userSkillValue)+'" type="text" style="width:50px"/></td>';
+		});	
+		monthlySplitBody += '<td class="MTUS_'+monthYearValue+'" style="font-weight: bold;"></td>'
+		monthlySplitBody += '</tr>';
+	});	
+	$(".monthlySplitTableBody").html(monthlySplitBody);
+	
+	if(monthlySplitDataJsonObject != null) {
+		monthlySplitDataJsonObject = JSON.parse(monthlySplitDataJsonObject);		
+		var userSkillSplitDataJson ={};
+		var grandUserSkillHoursTotal = 0;
+		for(var userSkillMonthkey in monthlySplitDataJsonObject) {
+			var totalMonthHour = 0;
+			var userSkillMonthColumn = $(".monthlySplitTableBody").find("." + userSkillMonthkey);
+			$.each(monthlySplitDataJsonObject[userSkillMonthkey], function(index, userSkillHourObj) {
+				for(var userSkillName in userSkillHourObj) {
+					$(userSkillMonthColumn).find(".MUS_" + userSkillName  + " input").val(userSkillHourObj[userSkillName]);
+					var skillNameHourInt = parseInt(userSkillHourObj[userSkillName]);
+					
+					var skillNameHour = parseInt(userSkillSplitDataJson[userSkillName]);
+					if(!skillNameHour) {
+						userSkillSplitDataJson[userSkillName] = skillNameHourInt;
+					} else {
+						userSkillSplitDataJson[userSkillName] = skillNameHour + skillNameHourInt;
+					}
+					totalMonthHour += skillNameHourInt;			
+				}
+				
+			});
+			$(".MTUS_"+userSkillMonthkey).html("<b>"+totalMonthHour+"</b>");
+			grandUserSkillHoursTotal+=totalMonthHour;
+		}
+		
+		fillUserSkillDataTable(userSkillSplitDataJson, grandUserSkillHoursTotal);
+	}
+}
+
+function getShortString(string){
+	return string.replace(/\ /g, "_");
+}
+function fillUserSkillSplitData(){
+	var userSkillSplitBody = "";
+	
+	$.each(userSkilsList, function( index, userSkillValue ) {
+		userSkillSplitBody += '<tr><td>'+userSkillValue+'</td><td class="USTH_'+getShortString(userSkillValue)+'"></td></tr>';
+	});	
+	
+	$(".userSkillSplitBody").html(userSkillSplitBody);
+}
+
+function getMonthsYearBetweenTwoDates(startDate, endDate){
+	var start      = startDate.split('/');
+	  var end        = endDate.split('/');
+	  var startYear  = parseInt(start[0]);
+	  var endYear    = parseInt(end[0]);
+	  var dates      = [];
+
+	  for(var i = startYear; i <= endYear; i++) {
+	    var endMonth = i != endYear ? 11 : parseInt(end[1]) - 1;
+	    var startMon = i === startYear ? parseInt(start[1])-1 : 0;
+	    for(var j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 : j+1) {
+	      var displayMonth = monthNames[j];
+	      
+	      dates.push([displayMonth,i].join('-'));
+	    }
+	  }
+	  return dates;
+}
 
 $(document).ready(function(){
 	/* MESSAGE BOX */

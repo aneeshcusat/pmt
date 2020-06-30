@@ -175,6 +175,9 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectItem.setProposalNo(projectDetails.getProposalNo());
             projectItem.setProjectLocation(projectDetails.getProjectLocation());
             
+            projectItem.setClientPartner(projectDetails.getClientPartner());
+            projectItem.setHoursUserSkillMonthlySplitJson(projectDetails.getHoursUserSkillMonthlySplitJson());
+            
             projectItem.setComplexity(projectDetails.getComplexity());
 
             projectItem.setStartTime(startTimeStamp);
@@ -425,6 +428,8 @@ public class FamstackProjectManager extends BaseFamstackManager
         projectItem.setOrderBookRefNo(projectDetails.getOrderBookRefNo());
         projectItem.setProposalNo(projectDetails.getProposalNo());
         projectItem.setProjectLocation(projectDetails.getProjectLocation());
+        projectItem.setClientPartner(projectDetails.getClientPartner());
+        projectItem.setHoursUserSkillMonthlySplitJson(projectDetails.getHoursUserSkillMonthlySplitJson());
         
         projectItem.setComplexity(projectDetails.getComplexity());
         Date startDate = DateUtils.tryParse(projectDetails.getStartTime(), DateUtils.DATE_TIME_FORMAT);
@@ -648,6 +653,8 @@ public class FamstackProjectManager extends BaseFamstackManager
                 projectDetails.setOrderBookRefNo(projectItem.getOrderBookRefNo());
                 projectDetails.setProposalNo(projectItem.getProposalNo());
                 projectDetails.setProjectLocation(projectItem.getProjectLocation());
+                projectDetails.setClientPartner(projectItem.getClientPartner());
+                projectDetails.setHoursUserSkillMonthlySplitJson(projectItem.getHoursUserSkillMonthlySplitJson());
                 
                 projectDetails.setTags(projectItem.getTags());
                 projectDetails.setType(projectItem.getType());
@@ -1370,9 +1377,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setTaskId((Integer) data[15]);
             projectTaskActivityDetails.setTaskActivityId((Integer) data[16]);
             projectTaskActivityDetails.setProjectAccountId((Integer) data[20]);
-            
-            projectTaskActivityDetails.setSowLineItem((String) data[22]);
-            
+             
             String projectCategory = (String) data[8];
             String newProjectCategory = (String) data[23];
             
@@ -1393,6 +1398,9 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setTaskActProjType(ProjectType.valueOf((String) data[26]));
             projectTaskActivityDetails.setTaskActCategory((String) data[27]);
             //projectTaskActivityDetails.setProjectDurationHrs((Integer) data[31]);
+          
+            projectTaskActivityDetails.setOrderRefNumber((String) data[31]);
+            projectTaskActivityDetails.setProposalNumber((String) data[32]);  
 
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
             key += "T" + data[15];

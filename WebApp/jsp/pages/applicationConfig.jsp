@@ -247,6 +247,25 @@ tr.clickable:hover {
 							</tbody>
 						</table>
 						
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Estimated project hours by Userskills</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="userSkillHoursMappingEnabledSelectId">
+										<option value="disabled">Disabled</option>
+										<option value="enabled">Enabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="userSkillHoursMappingEnabled();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+						
 							<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
@@ -708,6 +727,16 @@ tr.clickable:hover {
   </c:forEach>
   </c:if>
   
+  <c:set var="userSkillHoursMappingEnabledSelectId" value='userSkillHoursMappingEnabled${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[userSkillHoursMappingEnabledSelectId] && not empty appConfigMap[userSkillHoursMappingEnabledSelectId].appConfValueDetails}">
+  <c:forEach var="userSkillHoursMappingEnabledConf" items="${appConfigMap[userSkillHoursMappingEnabledSelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#userSkillHoursMappingEnabledSelectId").val('${userSkillHoursMappingEnabledConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
+  
    <c:set var="enableUserAcivtiveUtilizationSelectId" value='enableUserAcivtiveUtilization${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[enableUserAcivtiveUtilizationSelectId] && not empty appConfigMap[enableUserAcivtiveUtilizationSelectId].appConfValueDetails}">
   <c:forEach var="enableUserAcivtiveUtilizationConf" items="${appConfigMap[enableUserAcivtiveUtilizationSelectId].appConfValueDetails}">
@@ -944,7 +973,15 @@ tr.clickable:hover {
 	    });
  }
  
- 
+ function userSkillHoursMappingEnabled(){
+	 var input1 = $("#userSkillHoursMappingEnabledSelectId").val();
+	 var type = "userSkillHoursMappingEnabled";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
  
  function restrictionBasedOnDesignation(){
 	 var input1 = $("#restrictionBasedOnDesignationSelectId").val();

@@ -98,6 +98,10 @@ public class ProjectDetails
     private String projectLocation;
 
     private List<ProjectDetails> duplicateProjects;
+    
+    private String hoursUserSkillMonthlySplitJson;
+    
+    private String clientPartner;
 
     public Integer getId()
     {
@@ -696,5 +700,22 @@ public class ProjectDetails
 
 	public void setProjectLocation(String projectLocation) {
 		this.projectLocation = projectLocation;
+	}
+
+	public String getHoursUserSkillMonthlySplitJson() {
+		return hoursUserSkillMonthlySplitJson;
+	}
+
+	public void setHoursUserSkillMonthlySplitJson(
+			String hoursUserSkillMonthlySplitJson) {
+		this.hoursUserSkillMonthlySplitJson = hoursUserSkillMonthlySplitJson;
+	}
+
+	public String getClientPartner() {
+		return clientPartner;
+	}
+
+	public void setClientPartner(String clientPartner) {
+		this.clientPartner = clientPartner;
 	}
 }

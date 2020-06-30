@@ -139,6 +139,12 @@ public class ProjectItem implements FamstackBaseItem
     
     @Column(name = "project_location")
     private String projectLocation;
+    
+    @Column(name = "hrs_usr_skill_monthly_json", columnDefinition="LONGTEXT")
+    private String hoursUserSkillMonthlySplitJson;
+    
+    @Column(name = "client_partner")
+    private String clientPartner;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "projectItem", cascade = CascadeType.ALL)
     private Set<ProjectCommentItem> projectComments;
@@ -482,6 +488,23 @@ public class ProjectItem implements FamstackBaseItem
 
 	public void setProjectLocation(String projectLocation) {
 		this.projectLocation = projectLocation;
+	}
+
+	public String getHoursUserSkillMonthlySplitJson() {
+		return hoursUserSkillMonthlySplitJson;
+	}
+
+	public void setHoursUserSkillMonthlySplitJson(
+			String hoursUserSkillMonthlySplitJson) {
+		this.hoursUserSkillMonthlySplitJson = hoursUserSkillMonthlySplitJson;
+	}
+
+	public String getClientPartner() {
+		return clientPartner;
+	}
+
+	public void setClientPartner(String clientPartner) {
+		this.clientPartner = clientPartner;
 	}
 
 }
