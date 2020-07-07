@@ -37,9 +37,15 @@ import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.DashBoardProjectDetails;
 import com.famstack.projectscheduler.dashboard.bean.DashboardUtilizationDetails;
+import com.famstack.projectscheduler.dashboard.bean.EmployeeResponse;
+import com.famstack.projectscheduler.dashboard.bean.POEstimateProjectTaskActivityDetails;
+import com.famstack.projectscheduler.dashboard.bean.POEstimateResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
+import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
+import com.famstack.projectscheduler.dashboard.bean.SearchRequest;
+import com.famstack.projectscheduler.dashboard.bean.TaskResponse;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.AutoReportingItem;
@@ -1122,9 +1128,18 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(
 			Date startDate, Date endDate, boolean uniqueList,
 			Integer currentUserId) {
+		
+		return getAllNonBillableTaskActivities(startDate, endDate, uniqueList, currentUserId, null);
+		
+	}
+	
+	
+	public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(
+			Date startDate, Date endDate, boolean uniqueList,
+			Integer currentUserId, String teamId) {
 		List<ProjectTaskActivityDetails> projectTaskActivityDetails = famstackUserActivityManager.getAllNonBillableTaskActivities(
 				startDate, endDate, uniqueList,
-				true, currentUserId);
+				true, currentUserId, teamId);
 		if(getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
 			projectTaskActivityDetails = famstackDataFilterManager.filterProjectTaskActivityDetails(projectTaskActivityDetails);
 		}
@@ -2212,5 +2227,112 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			String year, String displayWise) {
 		Map<String, List<Map<String, Object>>> utilizationData = projectManager.getTeamUtilizationComparisonChartData(groupIds, year, displayWise);
 		return FamstackUtils.getJsonFromObject(utilizationData);
+	}
+
+	public List<ProjectDetailsResponse> getProjectList(Date startDate, Date endDate, String teamId) {
+		List<ProjectTaskActivityDetails> projectTaskActivityDetails = projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, teamId);
+		projectTaskActivityDetails.addAll(getAllNonBillableTaskActivities(startDate, endDate, false, null, teamId));
+		
+		List<ProjectDetailsResponse> projectDetailsResponsesList = new ArrayList<>();
+		
+		Map<Integer, ProjectDetailsResponse> projectResponseCache = new HashMap<>();
+		
+		System.out.println("projectTaskActivityDetails: "+ projectTaskActivityDetails.size());
+		
+		if(projectTaskActivityDetails != null) {
+			for (ProjectTaskActivityDetails projectTaskDetail : projectTaskActivityDetails) {
+				ProjectDetailsResponse projectDetailsResponse =projectResponseCache.get(projectTaskDetail.getProjectId());
+				if (projectDetailsResponse == null) {
+					projectDetailsResponse = new ProjectDetailsResponse();
+					projectResponseCache.put(projectTaskDetail.getProjectId(), projectDetailsResponse);
+					//projectDetailsResponseCacheItem.setCreationDate(projectTaskDetail.getProjectCreationTime());
+					projectDetailsResponse.setProjectId(String.valueOf(projectTaskDetail.getProjectId()));
+					if (projectTaskDetail.getProjectId() != 0) {
+						projectDetailsResponse.setOrderBookId(projectTaskDetail.getOrderRefNumber());
+						projectDetailsResponse.setPoNo(projectTaskDetail.getProjectNumber());
+						projectDetailsResponse.setProposalNumber(projectTaskDetail.getProposalNumber());
+						projectDetailsResponse.setClientName(projectTaskDetail.getClientName());
+						projectDetailsResponse.setProjectName(projectTaskDetail.getProjectName());
+						//projectDetailsResponseCacheItem.setLocation(projectTaskDetail.getProjectLocation());
+						projectDetailsResponse.setProjectCategory(projectTaskDetail.getProjectCategory());
+						projectDetailsResponse.setNewProjectCategory(projectTaskDetail.getNewProjectCategory());
+						projectDetailsResponse.setTeamName(projectTaskDetail.getTeamName());
+						//projectDetailsResponseCacheItem.setClientPartner(projectTaskDetail.getClientPartner());
+						projectDetailsResponse.setProjectType(projectTaskDetail.getProjectType() != null ? projectTaskDetail.getProjectType().toString() : null);
+						projectDetailsResponse.setProjectStatus(projectTaskDetail.getProjectStatus() != null ? projectTaskDetail.getProjectStatus().toString() : null);
+					}
+					projectDetailsResponsesList.add(projectDetailsResponse);
+				}
+				TaskResponse taskResponse = new TaskResponse();
+				taskResponse.setTaskDate(DateUtils.format(projectTaskDetail.getTaskActivityStartTime(), DateUtils.DATE_TIME_FORMAT_CALENDER));
+				taskResponse.setTaskName(projectTaskDetail.getTaskName());
+				taskResponse.setTaskCategory(projectTaskDetail.getTaskActCategory());
+				taskResponse.setTotalTaskHours(projectTaskDetail.getDurationInHours());
+				if (projectTaskDetail.getProjectId() == 0) {
+					if ("Leave".equalsIgnoreCase(projectTaskDetail.getTaskActCategory()) || "Holiday".equalsIgnoreCase(projectTaskDetail.getTaskActCategory()) || "LeaveOrHoliday".equalsIgnoreCase(projectTaskDetail.getTaskActCategory()) ) {
+						taskResponse.setLeaveHolidayHours(projectTaskDetail.getDurationInHours());
+					} else {
+						taskResponse.setNonBillableHours(projectTaskDetail.getDurationInHours());
+					}
+					
+				}
+				
+				
+				EmployeeDetails  employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskDetail.getUserId());
+				if(employeeDetails != null) {
+					EmployeeResponse employeeResponse = new EmployeeResponse();
+					employeeResponse.setAllocationPercentage(null);
+					employeeResponse.setDateOfJoining(employeeDetails.getDateOfJoin());
+					employeeResponse.setDesignation(employeeDetails.getDesignation());
+					employeeResponse.setEmail(employeeDetails.getEmail());
+					employeeResponse.setName(employeeDetails.getFirstName());
+					employeeResponse.setPrimarySkill(employeeDetails.getSkills());
+					employeeResponse.setReportingManager(employeeDetails.getReportertingManagerEmailId());
+					employeeResponse.setType(employeeDetails.getEmpType());
+					taskResponse.setEmployee(employeeResponse);
+				}
+				
+				projectDetailsResponse.getTasks().add(taskResponse);
+				
+				}
+		}
+		System.out.println("projectDetailsResponsesList: "+ projectDetailsResponsesList.size());
+		return projectDetailsResponsesList;
+	}
+
+	public List<POEstimateResponse> getPOEstimateList(Date startDate, Date endDate, String teamId) {
+		List<POEstimateProjectTaskActivityDetails> poEstimateProjectTaskActivityDetails = projectManager.getAllProjectPOEstimateDuration(
+				startDate, endDate, teamId);
+		List<POEstimateResponse> poEstimateResponsesList = new ArrayList<>();
+		
+		if (poEstimateProjectTaskActivityDetails != null) {
+			for (POEstimateProjectTaskActivityDetails poEstTaskDetail : poEstimateProjectTaskActivityDetails) {
+				poEstTaskDetail.getProjectId();
+				POEstimateResponse poEstimateResponse = new POEstimateResponse();
+				
+				//poEstimateResponse.setYear("2020");
+				//poEstimateResponse.setMonth("1");
+				poEstimateResponse.setTeam(poEstTaskDetail.getTeamName());
+				poEstimateResponse.setAccount(poEstTaskDetail.getAccountName());
+				poEstimateResponse.setPoNumber(poEstTaskDetail.getProjectNumber());
+				//poEstimateResponse.setOroposalNumber(poEstTaskDetail.getprop);
+				//poEstimateResponse.setOrderBookId(poEstTaskDetail);
+				poEstimateResponse.setProjectId(""+poEstTaskDetail.getProjectId());
+				poEstimateResponse.setClientName(poEstTaskDetail.getClientName());
+				//poEstimateResponse.setClientPartner(poEstTaskDetail);
+				//poEstimateResponse.setDeliveryLeadName(poEstTaskDetail);
+				poEstimateResponse.setProjectName(poEstTaskDetail.getProjectName());
+				poEstimateResponse.setProjectCategory(poEstTaskDetail.getProjectCategory());
+				poEstimateResponse.setNewProjectCategory(poEstTaskDetail.getNewProjectCategory());
+				poEstimateResponse.setStartDate(poEstTaskDetail.getProjectStartTimeFormated());
+				poEstimateResponse.setEndDate(poEstTaskDetail.getProjectCompletionTimeFormated());
+				poEstimateResponse.setProjectStatus(poEstTaskDetail.getProjectStatus().toString());
+				//poEstimateResponse.setSkillSet(poEstTaskDetail.getS);
+				//poEstimateResponse.setLocation(poEstTaskDetail);
+				
+				poEstimateResponsesList.add(poEstimateResponse);
+			}
+		}
+		return poEstimateResponsesList;
 	}
 }

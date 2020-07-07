@@ -39,6 +39,11 @@
     <servlet-name>Famstack-Dashboard-Servlet</servlet-name>
     <url-pattern>/dashboard/*</url-pattern>
 </servlet-mapping> 
+
+<servlet-mapping>
+    <servlet-name>Famstack-Dashboard-Servlet</servlet-name>
+    <url-pattern>/api/*</url-pattern>
+</servlet-mapping> 
 	  
   <!-- Spring security-->
 	<filter>

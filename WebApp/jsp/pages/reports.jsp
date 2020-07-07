@@ -220,7 +220,7 @@
  <script type='text/javascript' src="${js}/plugins/bootstrap/bootstrap-datepicker.js?v=${fsVersionNumber}"></script>  
  <script type='text/javascript' src="${js}/plugins/tableexport/xlsx.core.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
-<script type='text/javascript' src="${js}/plugins/tableexport/tableexport.js"></script>
+<script type='text/javascript' src="${js}/plugins/tableexport/tableexport.min.js"></script>
  <script type="text/javascript"
 	src="${js}/famstack.reports.js?version=4.5&v=${fsVersionNumber}"></script> 
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 

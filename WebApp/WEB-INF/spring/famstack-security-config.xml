@@ -24,8 +24,9 @@
 	    <sec:intercept-url pattern="/dashboard/changePassword*" access="isAnonymous()" />
 	    <sec:intercept-url pattern="/dashboard/initialize/user*" access="permitAll" />
 	    <sec:intercept-url pattern="/dashboard/initialize/account*" access="permitAll" />
-	     <sec:intercept-url pattern="/dashboard/initialize/application*" access="permitAll" />
+	    <sec:intercept-url pattern="/dashboard/initialize/application*" access="permitAll" />
         <sec:intercept-url pattern="/dashboard/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/api/rest/*" access="permitAll"/>
 		<sec:custom-filter position="CHANNEL_FILTER" ref="channelProcessingFilter" />
 		<sec:intercept-url pattern="/monitoring*" access="isAuthenticated()"/>
 		<sec:csrf disabled="true"/>

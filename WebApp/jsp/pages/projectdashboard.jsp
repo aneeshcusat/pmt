@@ -406,6 +406,15 @@ var jvalidate = $("#createProjectFormId").validate({
 	   	 required: true
 	}
 	</c:if>	
+	<c:if test="${currentUserGroupId != 1018}">
+	,
+	orderBookRefNo: {
+	   	 required: true
+	},
+	proposalNo: {
+	   	 required: true
+	}
+	</c:if>
  }
 });
 
@@ -575,8 +584,8 @@ function initializeCreateProjectForm(project){
 	
 	$("#quantity").val(project.quantity);
 	
-	$("#PONumber").val(project.PONumber);
-	$("#POidSpan").html(project.PONumber);
+	$("#PONumber").val(project.ponumber);
+	$("#POidSpan").html(project.ponumber);
 	
 	$('#estStartTime').val(project.startTime);
 	$('#estCompleteTime').val(project.completionTime);
@@ -1766,7 +1775,7 @@ function fillMonthlySplitData(monthlySplitDataJsonObject){
 	$.each(monthYearList, function( monthYearIndex, monthYearValue ) {
 		monthlySplitBody += '<tr style="font-weight: bold;" data-month-name="'+monthYearValue+'" class="monthSplitData '+monthYearValue+'"><td>'+monthYearValue+'</td>';
 		$.each(userSkilsList, function( userSkillIndex, userSkillValue ) {
-			monthlySplitBody += '<td class="MUS_'+getShortString(userSkillValue)+'"><input type="number" min="1" max="999" data-name="'+getShortString(userSkillValue)+'" type="text" style="width:50px"/></td>';
+			monthlySplitBody += '<td class="MUS_'+getShortString(userSkillValue)+'"><input type="number" min="1" data-name="'+getShortString(userSkillValue)+'" type="text" style="width:50px"/></td>';
 		});	
 		monthlySplitBody += '<td class="MTUS_'+monthYearValue+'" style="font-weight: bold;"></td>'
 		monthlySplitBody += '</tr>';
@@ -1858,5 +1867,17 @@ $(document).ready(function(){
 	   return false;
 	});    
 	/* END MESSAGE BOX */
+});
+
+jQuery(document).ready(function($){
+    $('#orderBookRefNo,#proposalNo').keypress(function (e) {
+        var regex = new RegExp("^[0-9a-zA-Z_\. ]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    });
 });
 </script>

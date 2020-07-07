@@ -849,8 +849,9 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 							.getActualStartTime());
 			projectTaskActivityDetails.setUserId(userTaskActivityItem
 					.getUserActivityItem().getUserItem().getId());
-			projectTaskActivityDetails.setProjectName("");
-			projectTaskActivityDetails.setClientName("");
+			projectTaskActivityDetails.setProjectId(0);
+			projectTaskActivityDetails.setProjectName("NON BILLABLE");
+			//projectTaskActivityDetails.setClientName("");
 			projectTaskActivityDetails.setProjectCategory(userTaskActivityItem
 					.getTaskActCategory());
 			projectTaskActivityDetails.setTaskActCategory(userTaskActivityItem

@@ -16,6 +16,7 @@ import org.quartz.CronExpression;
 
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
+import com.famstack.projectscheduler.dashboard.bean.SearchRequest;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.util.StringUtils;
 
@@ -102,5 +103,21 @@ public class FamstackUtils extends BaseFamstackService
 		//0 0 15,17,19 * * ?
 		//0 0 {hours} ? * {weekdays} *
 		//MON,TUE,WED,THU,FRI,SAT,SUN
+	}
+
+	public static SearchRequest getObjectFromJson(String searchRequest) {
+		SearchRequest jsonString = null;
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        try {
+	            jsonString = objectMapper.readValue(searchRequest, SearchRequest.class);
+	        } catch (JsonGenerationException e) {
+	            getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
+	        } catch (JsonMappingException e) {
+	            getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
+	        } catch (IOException e) {
+	            getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
+	        }
+	        return jsonString;
+	   
 	}
 }

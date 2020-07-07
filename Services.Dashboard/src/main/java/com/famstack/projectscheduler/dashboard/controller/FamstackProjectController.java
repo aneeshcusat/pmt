@@ -17,11 +17,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +38,10 @@ import com.famstack.email.FamstackEmailSender;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ReportType;
+import com.famstack.projectscheduler.dashboard.bean.POEstimateResponse;
+import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
+import com.famstack.projectscheduler.dashboard.bean.SearchRequest;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
@@ -48,6 +55,7 @@ import com.famstack.projectscheduler.manager.FamstackXLSExportManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
+import com.famstack.projectscheduler.utils.FamstackUtils;
 
 @Controller
 @SessionAttributes
@@ -690,5 +698,59 @@ public class FamstackProjectController extends BaseFamstackService
     {
 		return famstackDashboardManager.getTeamUtilizationComparisonChartData(groupIds, year,  displayWise);
 	}
-
+	
+	@RequestMapping(value = "/rest/projects/list", method = RequestMethod.POST,  produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity getProjectList(@RequestBody String searchRequest, HttpServletRequest request) {
+		String fClientId ="87534234598763332";
+		String fSecretKey ="knRIhdlZ0eBiO3TGExwR5XbLdTNR2rdTBCYRJpaPAoh0h7HL21UBTR7JE7H43D6a71UYiWGhKn1g4nIQuhRHXxEbJfzRTzjoGLP0";
+		String clientId = request.getHeader("clientId");
+		String securityKey = request.getHeader("secretKey");
+		
+		if (fClientId.equals(clientId) && fSecretKey.equals(securityKey)) {
+		SearchRequest sRequest = FamstackUtils.getObjectFromJson(searchRequest);
+		Date startDate = DateUtils.tryParse(sRequest.getStartDate(), DateUtils.DATE_FORMAT_CALENDER);
+		Date endDate =  DateUtils.tryParse(sRequest.getEndDate(), DateUtils.DATE_FORMAT_CALENDER);
+		
+		if (startDate == null || endDate == null || !StringUtils.isNotBlank(sRequest.getTeamId())) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		List<ProjectDetailsResponse> projectDetailsResponse =  famstackDashboardManager.getProjectList(startDate, endDate, sRequest.getTeamId());
+		  return ResponseEntity
+		            .ok()
+		            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
+		            .body(projectDetailsResponse);
+		}
+		
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	  }
+	
+	@RequestMapping(value = "/rest/projects/poestimate", method = RequestMethod.POST,  produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity getPOEstmateList(@RequestBody String searchRequest, HttpServletRequest request) {
+		String fClientId ="87534234598763332";
+		String fSecretKey ="knRIhdlZ0eBiO3TGExwR5XbLdTNR2rdTBCYRJpaPAoh0h7HL21UBTR7JE7H43D6a71UYiWGhKn1g4nIQuhRHXxEbJfzRTzjoGLP0";
+		String clientId = request.getHeader("clientId");
+		String securityKey = request.getHeader("secretKey");
+		
+		if (fClientId.equals(clientId) && fSecretKey.equals(securityKey)) {
+		SearchRequest sRequest = FamstackUtils.getObjectFromJson(searchRequest);
+		Date startDate = DateUtils.tryParse(sRequest.getStartDate(), DateUtils.DATE_FORMAT_CALENDER);
+		Date endDate =  DateUtils.tryParse(sRequest.getEndDate(), DateUtils.DATE_FORMAT_CALENDER);
+		
+		if (startDate == null || endDate == null || !StringUtils.isNotBlank(sRequest.getTeamId())) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		List<POEstimateResponse> poEstimateResponse = famstackDashboardManager.getPOEstimateList(startDate, endDate, sRequest.getTeamId());
+		  return ResponseEntity
+		            .ok()
+		            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
+		            .body(poEstimateResponse);
+		}
+		
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	  }
+	
 }

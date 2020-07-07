@@ -91,7 +91,6 @@
                             <c:if test="${weeklyTimeLogStatus == 'enabled'}">
                             <li class=""><a href="${applicationHome}/timeSheet"><span class="fa fa-clock-o"></span> Time Sheet</a></li>
                             </c:if>
-                            <li class=""><a href="${applicationHome}/projectTimeline"><span class="fa fa-list-alt"></span> Project Timeline</a></li>
                             <li><a href="${applicationHome}/mileStones"><span class="fa fa-trophy"></span> Milestones</a></li>
                             <li><a href="${applicationHome}/taskAllocator"><span class="fa fa-list"></span> Task Scheduler</a></li>
                             <li><a href="${applicationHome}/accounts"><span class="fa fa-table"></span>Account config</a></li>
