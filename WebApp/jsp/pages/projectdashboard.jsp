@@ -584,9 +584,6 @@ function initializeCreateProjectForm(project){
 	
 	$("#quantity").val(project.quantity);
 	
-	$("#PONumber").val(project.ponumber);
-	$("#POidSpan").html(project.ponumber);
-	
 	$('#estStartTime').val(project.startTime);
 	$('#estCompleteTime').val(project.completionTime);
 
@@ -612,6 +609,11 @@ function initializeCreateProjectForm(project){
 	$("#watchers").val(project.watchers);
 	
 	$("#projectcode").val(project.code);
+	
+
+	$("#PONumber").val(project.ponumber);
+	$("#POidSpan").html(project.ponumber);
+	
 	
 	if (project.watchers != null && project.watchers != "") {
 		var watchersArray = project.watchers.split(",");

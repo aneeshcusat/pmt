@@ -446,7 +446,7 @@ public class ProjectDetails
 
     public void setPONumber(String pONumber)
     {
-        PONumber = pONumber;
+        this.PONumber = pONumber;
     }
 
     public long getProjectCompletionPercentage()

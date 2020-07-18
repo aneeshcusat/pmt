@@ -385,7 +385,7 @@ public class ProjectItem implements FamstackBaseItem
 
     public void setPONumber(String pONumber)
     {
-        PONumber = pONumber;
+        this.PONumber = pONumber;
     }
 
     public String getQuantity()
