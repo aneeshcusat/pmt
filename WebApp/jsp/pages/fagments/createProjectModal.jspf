@@ -12,7 +12,34 @@
 
 <form:input type="hidden" id="projectId" path="id"/>
 
-<div class="row">
+<form:input type="hidden" id="hoursUserSkillMonthlySplit" path="hoursUserSkillMonthlySplitJson"/>
+<input type="hidden" id="fillMonthlySplitDataTotalHours" />
+
+
+<div class="row projectMonthlySplitInfo" style="display: none">
+	<div class="col-md-12" style="overflow-y: scroll;max-height: 450px;min-height:200px;border-bottom: 1px solid #ccc;margin-bottom: 10px;padding: 0;">
+		<table class="table table-responsive table-striped table-bordered">
+			<thead>
+				<tr class="monthlySplitTableHeader">
+
+				</tr>
+			</thead>
+			<tbody class="monthlySplitTableBody">
+				
+			</tbody>
+			<tfoot>
+				<tr class="monthlySplitTableFooter">
+
+				</tr>
+			</tfoot>
+		</table>
+		
+	</div>
+	<a href="javascript:void(0)" class="btn btn-info btn-rounded projectMonthlySplitInfoBackButton" style="float:right">Back</a>
+	<a href="javascript:void(0)" style="padding-le: 10px;float: right;padding-left: 10px;margin-right: 20px;" class="btn btn-primary btn-rounded projectMonthlySplitInfoSaveButton" style="float:right">Save</a>
+	
+</div>
+<div class="row createProjectInfo">
         <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-6">
@@ -93,9 +120,9 @@
                                 </div>
 						</div>
 						 <div class="form-group">    
-						 <label class="col-xs-3 control-label">Estimated project hours</label>
+						 <label class="col-xs-3 control-label">Project code</label>
 							<div class="col-xs-3">
-							<form:input class="form-control select" id="duration" path="durationHrs" type="text"/>
+							 <form:input type="text" class="autocomplete form-control" id="projectcode" path="code"/>
 							 	<%-- <form:select class="form-control select" id="duration" path="duration"  data-live-search="true">
 							 	 	<c:forEach begin="0" end="100" varStatus="loop">
                                         <option>${loop.count}</option>
@@ -183,11 +210,28 @@
                             </div>
                         <div class="col-md-6">
                         <div class="form-group">
-                                <label class="col-md-3 control-label">Project code</label>
-                                <div class="col-md-9">
-                                        <form:input type="text" class="autocomplete form-control" id="projectcode" path="code"/>
+							<label class="col-md-3 control-label">Start Date</label>
+							<div class="col-md-3">
+								 <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"  autocomplete="off"/>
+							</div>
+							
+							<label class="col-md-3 control-label">End Date</label>
+                                <div class="col-md-3">
+                                       <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"  autocomplete="off"/> 
                                 </div>
-                            </div>
+							</div>
+                        
+                        <div class="form-group required">
+							<label class="col-xs-3 control-label">Estimated project hours</label>
+							<div class="col-xs-5">
+								<form:input class="form-control select" id="duration" readonly="true"
+									path="durationHrs" type="text" />
+							</div>
+							<div class="col-xs-4">
+								<a href="javascript:void(0)" class="btn btn-info btn-rounded monthlySplitButton">Monthly
+									split</a>
+							</div>
+						</div>
                             
                              <div class="form-group">
                                 <label class="col-md-3 control-label">PO Number</label>
@@ -274,19 +318,7 @@
 							</div>
 							</div>
                             
-                            <div class="form-group">
-							<label class="col-md-3 control-label">Project Start Date</label>
-							<div class="col-md-9">
-								 <form:input type="text" class="form-control dateTimePicker" id="estStartTime" path="startTime"  autocomplete="off"/>
-							</div>
-							</div>
-							<div class="form-group">
-							<label class="col-md-3 control-label">Project End Date</label>
-                                <div class="col-md-9">
-                                       <form:input type="text" class="form-control dateTimePicker" id="estCompleteTime" path="completionTime"  autocomplete="off"/> 
-                                </div>
-							</div>
-                           <c:if test="${currentUserGroupId == 1018}">
+                                                       <c:if test="${currentUserGroupId == 1018}">
                              <div class="form-group ">
                                 <label class="col-md-3 control-label">Watchers</label>
                                 <div class="col-md-9" id="watcher_tag_div">

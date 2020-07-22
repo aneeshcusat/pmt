@@ -366,7 +366,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 		            				}
 		            				String taskName = taskActCategory;
 		            				famstackUserActivityManager.createCompletedUserActivityItem(taskDetails.getAssignee(), weekStartTime, 0, taskName,
-		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskActCategory, ProjectType.NON_BILLABLE, taskCommentsMap.get(taskNameOrId), null);
+		            						dayTaskTime, UserTaskType.valueOf(userTaskType), taskActCategory, ProjectType.NON_BILLABLE, taskCommentsMap.get(taskNameOrId), null, null, null);
 		            			}
             				}
             				weekStartTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY, weekStartTime, 1);

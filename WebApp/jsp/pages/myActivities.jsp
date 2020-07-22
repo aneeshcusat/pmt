@@ -3,12 +3,7 @@
 <c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
 <script>
-<c:if test="${futureHourCaptureDisabled}">
-var futureHourCaptureDisabled = true;
-</c:if>
-<c:if test="${!futureHourCaptureDisabled}">
-var futureHourCaptureDisabled = false;
-</c:if>
+var futureHourCaptureDisabled = ${futureHourCaptureDisabled};
 </script>
 
 <style>

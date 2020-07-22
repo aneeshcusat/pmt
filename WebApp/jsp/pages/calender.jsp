@@ -7,12 +7,7 @@
      <li class="active">Calender</li>
  </ul>
  <script>
- <c:if test="${futureHourCaptureDisabled}">
- var futureHourCaptureDisabled = true;
- </c:if>
- <c:if test="${!futureHourCaptureDisabled}">
- var futureHourCaptureDisabled = false;
- </c:if>
+ var futureHourCaptureDisabled = ${futureHourCaptureDisabled};
  </script>
 <style>
 

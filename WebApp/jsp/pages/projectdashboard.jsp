@@ -18,7 +18,7 @@
 <script type="text/javascript">
 var assigneeMandatoryForQuickCloning = ${applicationScope.applicationConfiguraion.assignManForQckClone};
 var recurringOriginal = ${applicationScope.applicationConfiguraion.recurringOriginal};
-var userSkillHoursMappingEnabled = ${userSkillHoursMappingEnabled};
+var userSkillHoursMappingEnabled = true;
 </script>
 <style>
 ::-webkit-scrollbar {
@@ -1698,7 +1698,15 @@ $(".projectMonthlySplitInfoSaveButton").on("click", function(){
 	$("#hoursUserSkillMonthlySplit").val(JSON.stringify(getMonthlySplitJson()));
 	
 });
-var userSkilsList = ["Primary Research","Secondary Research","Data Analysis","BI Tableau Power Bi etc","Survey Programming","Project Management","Viz","Social Media","Data Engineering","Digital-Web Analytics","Applied AI-Advanced Data Sciences","AI Engineering","Product-Web Development","Others"]
+
+<c:if test="${userSkillHoursMappingEnabled}">
+var userSkilsList = ["Primary Research","Secondary Research","Data Analysis","BI Tableau Power Bi etc","Survey Programming","Project Management","Viz","Social Media","Data Engineering","Digital-Web Analytics","Applied AI-Advanced Data Sciences","AI Engineering","Product-Web Development","Others"];
+</c:if>
+<c:if test="${!userSkillHoursMappingEnabled}">
+var userSkilsList = ["Estimated hours"];
+</c:if>
+
+
 var monthNames = [
           	    "Jan", "Feb", "Mar",
           	    "Apr", "May", "Jun", "Jul",
@@ -1784,7 +1792,7 @@ function fillMonthlySplitData(monthlySplitDataJsonObject){
 	});	
 	$(".monthlySplitTableBody").html(monthlySplitBody);
 	
-	if(monthlySplitDataJsonObject != null) {
+	if(monthlySplitDataJsonObject != null && monthlySplitDataJsonObject != "") {
 		monthlySplitDataJsonObject = JSON.parse(monthlySplitDataJsonObject);		
 		var userSkillSplitDataJson ={};
 		var grandUserSkillHoursTotal = 0;

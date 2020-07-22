@@ -22,6 +22,10 @@ public class TaskActivityDetails
     
     private String clientName;
 
+    private String teamName;
+    
+    private String clientPartner;
+
     private int userId;
 
     private Date startTime;
@@ -307,5 +311,21 @@ public class TaskActivityDetails
 
 	public void setClientName(String clientName) {
 		this.clientName = clientName;
+	}
+
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
+	public String getClientPartner() {
+		return clientPartner;
+	}
+
+	public void setClientPartner(String clientPartner) {
+		this.clientPartner = clientPartner;
 	}
 }

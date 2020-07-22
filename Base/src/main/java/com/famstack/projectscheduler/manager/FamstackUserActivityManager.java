@@ -49,7 +49,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	public void createCompletedUserActivityItem(int userId, Date startTime,
 			int taskId, String taskName, int durationInMinutes,
 			UserTaskType userTaskType, String taskActCategory,
-			ProjectType projectType, String comment, String clientName) {
+			ProjectType projectType, String comment, String clientName, String teamName, String clientPartner) {
 		UserTaskActivityItem userTaskActivityItem = createUserActivityItem(
 				userId, startTime, taskId, taskName, durationInMinutes,
 				userTaskType, taskActCategory, projectType, null);
@@ -62,6 +62,12 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 				startTime, durationInMinutes).getTime();
 		userTaskActivityItem.setActualEndTime(new Timestamp(endTime));
 		userTaskActivityItem.setRecordedEndTime(new Timestamp(endTime));
+		
+		userTaskActivityItem.setTeamName(teamName);
+		
+		userTaskActivityItem.setClientPartner(clientPartner);
+		
+		
 		userTaskActivityItem
 				.setModifiedBy(getFamstackApplicationConfiguration()
 						.getCurrentUserId());
@@ -446,6 +452,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 				.getRecordedStartTime());
 		taskActivityDetails.setRecordedEndTime(userTaskActivityItem
 				.getRecordedEndTime());
+		
+		taskActivityDetails.setTeamName(userTaskActivityItem.getTeamName());
+		taskActivityDetails.setClientPartner(userTaskActivityItem.getClientPartner());;
+		
+		
 		taskActivityDetails.setClientName(userTaskActivityItem.getClientName());
 		if (userTaskActivityItem.getUserActivityItem() != null
 				&& userTaskActivityItem.getUserActivityItem().getUserItem() != null) {
@@ -538,7 +549,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 									.getCurrentUserId());
 					userTaskActivityItem.setRecordedEndTime(new Timestamp(
 							currentDate.getTime()));
-
+						
 					Date completionTime = userTaskActivityItem
 							.getActualEndTime();
 					Date startTime = userTaskActivityItem.getActualStartTime();

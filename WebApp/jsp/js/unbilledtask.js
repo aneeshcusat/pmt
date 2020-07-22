@@ -115,7 +115,14 @@ var createUnbillableTask = function(){
 	
 	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
 	var clientName =$("#unbilledClientName").val();
-	var dataString = {clientName: clientName, skipWeekEnd:isSkipWeekEnds,userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskUBStartComments").val()};
+	var clientPartner =$("#unbilledClientPartner").val();
+	var teamName =$("#unbilledTeam").val();
+	
+	var dataString = {clientName: clientName, skipWeekEnd:isSkipWeekEnds,
+			userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,
+			startDate:startDate,endDate:endDate,comments:$("#taskUBStartComments").val(),
+			clientPartner:clientPartner,teamName:teamName
+	};
 	doAjaxRequest("POST", "/bops/dashboard/createNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){
@@ -162,8 +169,23 @@ var editUnbillableTask = function(taskActId){
 	
 	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
 	var clientName =$("#unbilledClientName").val();
+	var clientPartner =$("#unbilledClientPartner").val();
+	var teamName =$("#unbilledTeam").val();
 	
-	var dataString = {clientName:clientName,taskActId:taskActId,skipWeekEnd:isSkipWeekEnds,userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,startDate:startDate,endDate:endDate,comments:$("#taskUBStartComments").val()};
+
+	var dataString = {
+		clientName : clientName,
+		taskActId : taskActId,
+		skipWeekEnd : isSkipWeekEnds,
+		userId : $("#userId").val(),
+		type : taskType,
+		taskActCategory : taskActCategory,
+		startDate : startDate,
+		endDate : endDate,
+		comments : $("#taskUBStartComments").val(),
+		clientPartner : clientPartner,
+		teamName : teamName
+	};
 	doAjaxRequest("POST", "/bops/dashboard/updateNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){
@@ -190,13 +212,16 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#skipWeekEnds").prop("checked", true);
 	$("#taskUBStartComments").val("");
 	$("#unbilledClientName").val("");
+	$("#unbilledClientPartner").val("");
+	$("#unbilledTeam").val("");
+	
 	unBilledButtonAction = "Create";
 	$(".nonBillableTaskCreateText").html("Create");
 	$("#unbilledModelTitle").html("Create Non-billable time");
 	$("#taskCreate").hide();
 };
 
-var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, startTime, endTime, clientName) {
+var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, startTime, endTime, clientName, teamName,clientPartner) {
 	$("#userId").val(taskActUserId);
 	$(".unbilledOnBehalfOfDiv").hide();
 	
@@ -215,6 +240,9 @@ var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, s
 	$("#skipWeekEnds").prop("checked", false);
 	$("#taskUBStartComments").val("");
 	$("#unbilledClientName").val(clientName);
+	$("#unbilledClientPartner").val(clientPartner);
+	$("#unbilledTeam").val(teamName);
+	
 	$(".nonBillableTaskCreateText").html("Update");
 	unBilledButtonAction = "Update";
 	$("#taskCreate").show();

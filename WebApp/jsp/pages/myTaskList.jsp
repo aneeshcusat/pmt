@@ -1,5 +1,6 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@include file="includes/header.jsp" %>    
+<c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
 <link rel="stylesheet" type="text/css" href="${fn:escapeXml(css)}/pages/myTaskList.css?v=${fsVersionNumber}"/>
 <style>
@@ -9,6 +10,9 @@
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Task Activities</li>
  </ul>
+  <script>
+ var futureHourCaptureDisabled = ${futureHourCaptureDisabled};
+ </script>
  <!-- END BREADCRUMB -->  
 <div class="content-frame" ng-app="mytasks" style="min-height: 500px; margin-bottom: 50px">     
     <!-- START CONTENT FRAME TOP -->

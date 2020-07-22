@@ -71,6 +71,18 @@
                      	 <input type='text' class="form-control unbilledClientName" id='unbilledClientName' autocomplete="off"/>
                      </div>
 				</div>
+				<div class="form-group">
+				<label class="col-md-4 control-label">Team </label>
+                     <div class="col-md-8" style="margin-top: 7px;">
+                     	 <input type='text' class="form-control unbilledTeam" id='unbilledTeam' autocomplete="off"/>
+                     </div>
+				</div>
+				<div class="form-group">
+				<label class="col-md-4 control-label">Client Partner</label>
+                     <div class="col-md-8" style="margin-top: 7px;">
+                     	 <input type='text' class="form-control unbilledClientPartner" id='unbilledClientPartner' autocomplete="off"/>
+                     </div>
+				</div>
 			</div>
 		</div>
 	</div>

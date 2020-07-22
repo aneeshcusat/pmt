@@ -42,7 +42,9 @@ import com.famstack.projectscheduler.dashboard.bean.POEstimateResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.SearchRequest;
+import com.famstack.projectscheduler.dashboard.bean.TeamResponse;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
+import com.famstack.projectscheduler.datatransferobject.UserGroupItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
@@ -748,6 +750,27 @@ public class FamstackProjectController extends BaseFamstackService
 		            .ok()
 		            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
 		            .body(poEstimateResponse);
+		}
+		
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	  }
+	
+	@RequestMapping(value = "/rest/projects/team", method = RequestMethod.GET,  produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity getTeam(HttpServletRequest request) {
+		String fClientId ="87534234598763332";
+		String fSecretKey ="knRIhdlZ0eBiO3TGExwR5XbLdTNR2rdTBCYRJpaPAoh0h7HL21UBTR7JE7H43D6a71UYiWGhKn1g4nIQuhRHXxEbJfzRTzjoGLP0";
+		String clientId = request.getHeader("clientId");
+		String securityKey = request.getHeader("secretKey");
+		
+		if (fClientId.equals(clientId) && fSecretKey.equals(securityKey)) {
+
+		List<TeamResponse> teamList = famstackDashboardManager.getTeams();
+		
+		return ResponseEntity
+		            .ok()
+		            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
+		            .body(teamList);
 		}
 		
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

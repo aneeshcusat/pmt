@@ -46,6 +46,7 @@ import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.SearchRequest;
 import com.famstack.projectscheduler.dashboard.bean.TaskResponse;
+import com.famstack.projectscheduler.dashboard.bean.TeamResponse;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.AutoReportingItem;
@@ -63,6 +64,7 @@ import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.RecurringProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
+import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.employees.bean.UserStatus;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
@@ -1414,16 +1416,16 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public void updateNonBillableTask(int taskActId, int userId, String type,
 			String taskActCategory, String startDate, String endDate,
-			String comments, Boolean skipWeekEnd,String clientName) {
+			String comments, Boolean skipWeekEnd,String clientName, String teamName, String clientPartner) {
 		UserTaskActivityItem userTaskActivityItem = famstackUserActivityManager
 				.deleteTaskActivity(taskActId);
 		createNonBillableTask(userId, type, taskActCategory, startDate,
-				endDate, comments, skipWeekEnd, clientName);
+				endDate, comments, skipWeekEnd, clientName, teamName, clientPartner);
 	}
 
 	public void createNonBillableTask(int userId, String type,
 			String taskActCategory, String startDateString,
-			String endDateString, String comments, Boolean skipWeekEnd, String clientName) {
+			String endDateString, String comments, Boolean skipWeekEnd, String clientName, String teamName, String clientPartner) {
 		Date startTime = DateUtils.tryParse(startDateString,
 				DateUtils.DATE_TIME_FORMAT);
 		Date endTime = DateUtils.tryParse(endDateString,
@@ -1479,7 +1481,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				famstackUserActivityManager.createCompletedUserActivityItem(
 						userId, startTime, 0, taskName, durationInMinutes,
 						UserTaskType.valueOf(type), taskActCategory,
-						ProjectType.NON_BILLABLE, comments, clientName);
+						ProjectType.NON_BILLABLE, comments, clientName, teamName, clientPartner);
 			}
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(startTime);
@@ -2334,5 +2336,20 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			}
 		}
 		return poEstimateResponsesList;
+	}
+
+	public List<TeamResponse> getTeams() {
+		Map<String, UserGroupDetails> userGrouMap = getFamstackApplicationConfiguration().getUserGroupMap();
+		List<TeamResponse> teamResponseList = new ArrayList<>();
+		for (String userGroupId : userGrouMap.keySet()) {
+			if(!"99999".equalsIgnoreCase(userGroupId)){
+				TeamResponse teamResponse = new TeamResponse();
+				teamResponse.setId(userGroupId);
+				teamResponse.setName(userGrouMap.get(userGroupId).getName());
+				teamResponseList.add(teamResponse);
+			}
+		}
+		
+		return teamResponseList;
 	}
 }

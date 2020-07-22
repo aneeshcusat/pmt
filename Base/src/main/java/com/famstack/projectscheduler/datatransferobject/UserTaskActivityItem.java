@@ -63,6 +63,12 @@ public class UserTaskActivityItem implements FamstackBaseItem
 
     @Column(name = "client_name")
     private String clientName;
+
+    @Column(name = "team_name")
+    private String teamName;
+    
+    @Column(name = "client_partner")
+    private String clientPartner;
     
     @Column(name = "duration")
     private int durationInMinutes;
@@ -321,6 +327,22 @@ public class UserTaskActivityItem implements FamstackBaseItem
 
 	public void setClientName(String clientName) {
 		this.clientName = clientName;
+	}
+
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
+	public String getClientPartner() {
+		return clientPartner;
+	}
+
+	public void setClientPartner(String clientPartner) {
+		this.clientPartner = clientPartner;
 	}
 
 }
