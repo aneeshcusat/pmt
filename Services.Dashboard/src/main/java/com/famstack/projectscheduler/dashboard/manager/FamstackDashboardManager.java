@@ -2255,13 +2255,15 @@ public class FamstackDashboardManager extends BaseFamstackService {
 						projectDetailsResponse.setProposalNumber(projectTaskDetail.getProposalNumber());
 						projectDetailsResponse.setClientName(projectTaskDetail.getClientName());
 						projectDetailsResponse.setProjectName(projectTaskDetail.getProjectName());
-						//projectDetailsResponseCacheItem.setLocation(projectTaskDetail.getProjectLocation());
+						projectDetailsResponse.setLocation(projectTaskDetail.getLocation());
 						projectDetailsResponse.setProjectCategory(projectTaskDetail.getProjectCategory());
 						projectDetailsResponse.setNewProjectCategory(projectTaskDetail.getNewProjectCategory());
 						projectDetailsResponse.setTeamName(projectTaskDetail.getTeamName());
-						//projectDetailsResponseCacheItem.setClientPartner(projectTaskDetail.getClientPartner());
+						projectDetailsResponse.setClientPartner(projectTaskDetail.getClientPartner());
 						projectDetailsResponse.setProjectType(projectTaskDetail.getProjectType() != null ? projectTaskDetail.getProjectType().toString() : null);
 						projectDetailsResponse.setProjectStatus(projectTaskDetail.getProjectStatus() != null ? projectTaskDetail.getProjectStatus().toString() : null);
+						projectDetailsResponse.setEstimatedHours(projectTaskDetail.getEstHoursByMonthSkills());
+
 					}
 					projectDetailsResponsesList.add(projectDetailsResponse);
 				}
@@ -2317,25 +2319,36 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				poEstimateResponse.setTeam(poEstTaskDetail.getTeamName());
 				poEstimateResponse.setAccount(poEstTaskDetail.getAccountName());
 				poEstimateResponse.setPoNumber(poEstTaskDetail.getProjectNumber());
-				//poEstimateResponse.setOroposalNumber(poEstTaskDetail.getprop);
-				//poEstimateResponse.setOrderBookId(poEstTaskDetail);
+				poEstimateResponse.setProposalNumber(poEstTaskDetail.getProposalNumber());
+				poEstimateResponse.setOrderBookId(poEstTaskDetail.getOrderBookId());
 				poEstimateResponse.setProjectId(""+poEstTaskDetail.getProjectId());
 				poEstimateResponse.setClientName(poEstTaskDetail.getClientName());
-				//poEstimateResponse.setClientPartner(poEstTaskDetail);
-				//poEstimateResponse.setDeliveryLeadName(poEstTaskDetail);
+				poEstimateResponse.setClientPartner(poEstTaskDetail.getClientPartner());
+				poEstimateResponse.setDeliveryLeadName(getDeliveryLeadName(poEstTaskDetail.getDeliveryLead()));
 				poEstimateResponse.setProjectName(poEstTaskDetail.getProjectName());
 				poEstimateResponse.setProjectCategory(poEstTaskDetail.getProjectCategory());
 				poEstimateResponse.setNewProjectCategory(poEstTaskDetail.getNewProjectCategory());
 				poEstimateResponse.setStartDate(poEstTaskDetail.getProjectStartTimeFormated());
 				poEstimateResponse.setEndDate(poEstTaskDetail.getProjectCompletionTimeFormated());
 				poEstimateResponse.setProjectStatus(poEstTaskDetail.getProjectStatus().toString());
-				//poEstimateResponse.setSkillSet(poEstTaskDetail.getS);
-				//poEstimateResponse.setLocation(poEstTaskDetail);
+				//poEstimateResponse.setSkillSet(poEstTaskDetail.get);
+				poEstimateResponse.setLocation(poEstTaskDetail.getLocation());
+				poEstimateResponse.setEstimatedHours(poEstTaskDetail.getEstHoursByMonthSkills());
 				
 				poEstimateResponsesList.add(poEstimateResponse);
 			}
 		}
 		return poEstimateResponsesList;
+	}
+
+	private String getDeliveryLeadName(Integer deliveryLead) {
+		if(deliveryLead != null) {
+			EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(deliveryLead);
+			if(employeeDetails != null) {
+				return employeeDetails.getFirstName();
+			}
+		}
+		return null;
 	}
 
 	public List<TeamResponse> getTeams() {

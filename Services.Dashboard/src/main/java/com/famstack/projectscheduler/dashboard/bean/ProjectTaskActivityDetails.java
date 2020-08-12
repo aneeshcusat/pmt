@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import org.json.JSONObject;
 
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
@@ -97,6 +100,13 @@ public class ProjectTaskActivityDetails
     private List<ProjectTaskActivityDetails> subItems;
 
     private List<ProjectTaskActivityDetails> childs;
+    
+    private String location;
+    
+    private String clientPartner;
+    
+	private Map estHoursByMonthSkills;
+	private Integer deliveryLead;
 
     public String getProjectCode()
     {
@@ -574,5 +584,41 @@ public class ProjectTaskActivityDetails
 
 	public void setProposalNumber(String proposalNumber) {
 		this.proposalNumber = proposalNumber;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getClientPartner() {
+		return clientPartner;
+	}
+
+	public void setClientPartner(String clientPartner) {
+		this.clientPartner = clientPartner;
+	}
+
+	public Map getEstHoursByMonthSkills() {
+		return estHoursByMonthSkills;
+	}
+
+	public void setEstHoursByMonthSkills(Map estHoursByMonthSkills) {
+		this.estHoursByMonthSkills = estHoursByMonthSkills;
+	}
+
+	public Integer getDeliveryLead() {
+		return deliveryLead;
+	}
+
+	public void setDeliveryLead(Integer deliveryLead) {
+		this.deliveryLead = deliveryLead;
+	}
+
+	public void setSubItems(List<ProjectTaskActivityDetails> subItems) {
+		this.subItems = subItems;
 	}
 }

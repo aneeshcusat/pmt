@@ -12,6 +12,7 @@ import java.util.Map;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONObject;
 import org.quartz.CronExpression;
 
 import com.famstack.projectscheduler.BaseFamstackService;
@@ -104,6 +105,21 @@ public class FamstackUtils extends BaseFamstackService
 		//0 0 {hours} ? * {weekdays} *
 		//MON,TUE,WED,THU,FRI,SAT,SUN
 	}
+	
+	public static Map getJsonObjectFromJson(String jsonString) {
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        try {
+	            return  objectMapper.readValue(jsonString, Map.class);
+	        } catch (JsonGenerationException e) {
+	            getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
+	        } catch (JsonMappingException e) {
+	            getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
+	        } catch (IOException e) {
+	            getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);
+	        }
+	        return null;
+	}
+
 
 	public static SearchRequest getObjectFromJson(String searchRequest) {
 		SearchRequest jsonString = null;

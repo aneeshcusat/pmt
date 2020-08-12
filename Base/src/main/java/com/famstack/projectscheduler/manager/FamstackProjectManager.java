@@ -1306,9 +1306,25 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setProjectDurationHrs((Integer) data[15]);
             projectTaskActivityDetails.setTaskActivityDuration(((BigDecimal)data[16]).intValue());
             
+            projectTaskActivityDetails.setOrderBookId((String) data[20]);
+            projectTaskActivityDetails.setProposalNumber((String) data[21]);
+            projectTaskActivityDetails.setClientPartner((String) data[22]);
+            projectTaskActivityDetails.setDeliveryLead((Integer) data[23]);
+            projectTaskActivityDetails.setLocation((String) data[24]);
+            projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[25]));
+           
             projectDetailsList.add(projectTaskActivityDetails);
     	}
 		
+	}
+
+	private Map convertStringToJsonObject(
+			String estJson) {
+		if(StringUtils.isNotBlank(estJson)) {
+			System.out.println(FamstackUtils.getJsonObjectFromJson(estJson));
+			return FamstackUtils.getJsonObjectFromJson(estJson);
+		}
+		return null;
 	}
 
 	private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList, List<ProjectTaskActivityDetails> allTaskActProjectDetailsList, List<Object[]> projectItemList)
@@ -1400,8 +1416,13 @@ public class FamstackProjectManager extends BaseFamstackManager
             //projectTaskActivityDetails.setProjectDurationHrs((Integer) data[31]);
           
             projectTaskActivityDetails.setOrderRefNumber((String) data[31]);
-            projectTaskActivityDetails.setProposalNumber((String) data[32]);  
+            projectTaskActivityDetails.setProposalNumber((String) data[32]);
 
+            projectTaskActivityDetails.setClientPartner((String) data[33]);
+            projectTaskActivityDetails.setDeliveryLead((Integer) data[34]);
+            projectTaskActivityDetails.setLocation((String) data[35]);
+            projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[36]));
+            
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
             key += "T" + data[15];
             key += "U" + data[14];

@@ -1,6 +1,9 @@
 package com.famstack.projectscheduler.dashboard.bean;
 
 import java.util.Date;
+import java.util.Map;
+
+import org.json.JSONObject;
 
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
@@ -54,6 +57,13 @@ public class POEstimateProjectTaskActivityDetails
     
     private String clientName;
     
+    private String orderBookId;
+	private String proposalNumber;
+	private String location;
+	private String clientPartner;
+	private Map estHoursByMonthSkills;
+	private Integer deliveryLead;
+	
     public String getProjectCode()
     {
         return projectCode;
@@ -351,5 +361,53 @@ public class POEstimateProjectTaskActivityDetails
     
     public static void main(String[] args) {
 		System.out.println(10/3 * 100);
+	}
+
+	public String getOrderBookId() {
+		return orderBookId;
+	}
+
+	public void setOrderBookId(String orderBookId) {
+		this.orderBookId = orderBookId;
+	}
+
+	public String getProposalNumber() {
+		return proposalNumber;
+	}
+
+	public void setProposalNumber(String proposalNumber) {
+		this.proposalNumber = proposalNumber;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getClientPartner() {
+		return clientPartner;
+	}
+
+	public void setClientPartner(String clientPartner) {
+		this.clientPartner = clientPartner;
+	}
+
+	public Map getEstHoursByMonthSkills() {
+		return estHoursByMonthSkills;
+	}
+
+	public void setEstHoursByMonthSkills(Map estHoursByMonthSkills) {
+		this.estHoursByMonthSkills = estHoursByMonthSkills;
+	}
+
+	public Integer getDeliveryLead() {
+		return deliveryLead;
+	}
+
+	public void setDeliveryLead(Integer deliveryLead) {
+		this.deliveryLead = deliveryLead;
 	}
 }

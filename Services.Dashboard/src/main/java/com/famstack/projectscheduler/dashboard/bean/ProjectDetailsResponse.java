@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.dashboard.bean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -22,6 +23,7 @@ public class ProjectDetailsResponse {
 	String projectType;
 	String projectStatus;
 	List<TaskResponse> tasks;
+	Map estimatedHours;
 	public String getCreationDate() {
 		return creationDate;
 	}
@@ -114,6 +116,12 @@ public class ProjectDetailsResponse {
 	}
 	public void setTasks(List<TaskResponse> tasks) {
 		this.tasks = tasks;
+	}
+	public Map getEstimatedHours() {
+		return estimatedHours;
+	}
+	public void setEstimatedHours(Map estimatedHours) {
+		this.estimatedHours = estimatedHours;
 	}
 	
 }

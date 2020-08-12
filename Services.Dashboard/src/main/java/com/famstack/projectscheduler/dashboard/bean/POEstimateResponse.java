@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.dashboard.bean;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -23,7 +25,7 @@ public class POEstimateResponse {
 	String projectStatus;
 	String skillSet;
 	String location;
-	HoursResponse estimatedHours;
+	Map estimatedHours;
 	HoursResponse utilizedHours;
 	public String getYear() {
 		return year;
@@ -139,10 +141,10 @@ public class POEstimateResponse {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public HoursResponse getEstimatedHours() {
+	public Map getEstimatedHours() {
 		return estimatedHours;
 	}
-	public void setEstimatedHours(HoursResponse estimatedHours) {
+	public void setEstimatedHours(Map estimatedHours) {
 		this.estimatedHours = estimatedHours;
 	}
 	public HoursResponse getUtilizedHours() {
