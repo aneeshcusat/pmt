@@ -464,28 +464,33 @@ function fillUserUtilizationMonthlyReportData(data) {
 			reportBodyHtml += "<td>"+value.reportingManager+"</td>";
 		}
 		$.each(jsonData.WEEK_LIST, function( weekIndex, weekValue ) {
-			if(parseInt(value.userUtilizationMap[weekValue].billableMins) > 0) {
-				reportBodyHtml += "<td>"+value.userUtilizationMap[weekValue].billableHours+"</td>";
-			} else {
-				reportBodyHtml += "<td></td>";
-			}
-			if(parseInt(value.userUtilizationMap[weekValue].nonBillableMins) > 0) {
-				reportBodyHtml += "<td>"+value.userUtilizationMap[weekValue].nonBillableHours+"</td>";
-			} else {
-				reportBodyHtml += "<td></td>";
-			}
-			if(parseInt(value.userUtilizationMap[weekValue].leaveOrHolidayMins) > 0) {
-				reportBodyHtml += "<td><span style='color: brown;font-weight: bold;'>"+value.userUtilizationMap[weekValue].leaveOrHolidayHours+"</span></td>";
-			} else {
-				reportBodyHtml += "<td></td>";
-			}
-			if(parseInt(value.userUtilizationMap[weekValue].totalWithLeaveMins) > 0) {
-				if(value.userUtilizationMap[weekValue].notifyUsers) {
-					reportBodyHtml += "<td style='text-align: center;background-color: efefef;font-weight:bold'><span style='color: red;font-weight: bold;'>"+value.userUtilizationMap[weekValue].totalWithLeaveHrs+"</span></td>";
+			if (value.userUtilizationMap[weekValue] != undefined) {
+				if(parseInt(value.userUtilizationMap[weekValue].billableMins) > 0) {
+					reportBodyHtml += "<td>"+value.userUtilizationMap[weekValue].billableHours+"</td>";
 				} else {
-					reportBodyHtml += "<td style='text-align: center;background-color: efefef;font-weight:bold'>"+value.userUtilizationMap[weekValue].totalWithLeaveHrs+"</td>";	
+					reportBodyHtml += "<td></td>";
+				}
+				if(parseInt(value.userUtilizationMap[weekValue].nonBillableMins) > 0) {
+					reportBodyHtml += "<td>"+value.userUtilizationMap[weekValue].nonBillableHours+"</td>";
+				} else {
+					reportBodyHtml += "<td></td>";
+				}
+				if(parseInt(value.userUtilizationMap[weekValue].leaveOrHolidayMins) > 0) {
+					reportBodyHtml += "<td><span style='color: brown;font-weight: bold;'>"+value.userUtilizationMap[weekValue].leaveOrHolidayHours+"</span></td>";
+				} else {
+					reportBodyHtml += "<td></td>";
+				}
+				if(parseInt(value.userUtilizationMap[weekValue].totalWithLeaveMins) > 0) {
+					if(value.userUtilizationMap[weekValue].notifyUsers) {
+						reportBodyHtml += "<td style='text-align: center;background-color: efefef;font-weight:bold'><span style='color: red;font-weight: bold;'>"+value.userUtilizationMap[weekValue].totalWithLeaveHrs+"</span></td>";
+					} else {
+						reportBodyHtml += "<td style='text-align: center;background-color: efefef;font-weight:bold'>"+value.userUtilizationMap[weekValue].totalWithLeaveHrs+"</td>";	
+					}
+				} else {
+					reportBodyHtml += "<td style='text-align: center;background-color: efefef;font-weight:bold'><span style='color: red;font-weight: bold;'>00.00</span></td>";
 				}
 			} else {
+				reportBodyHtml += "<td></td><td></td><td></td>";
 				reportBodyHtml += "<td style='text-align: center;background-color: efefef;font-weight:bold'><span style='color: red;font-weight: bold;'>00.00</span></td>";
 			}
 		});

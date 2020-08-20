@@ -2212,10 +2212,15 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 	
 	public Map<String, Object> getReportData(ReportType reportType, String reportStartDate,
-			String reportEndDate) {
+			String reportEndDate ) {
+		return getReportData(reportType, reportStartDate, reportEndDate, getFamstackApplicationConfiguration().getCurrentUserGroupId() );
+	}
+	
+	public Map<String, Object> getReportData(ReportType reportType, String reportStartDate,
+			String reportEndDate, String groupId) {
 		Date startDate = DateUtils.tryParse(reportStartDate, DateUtils.DATE_FORMAT_CALENDER);
 		Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
-		return projectManager.getReportData(getFamstackApplicationConfiguration().getCurrentUserGroupId(), reportType, startDate, endDate);
+		return projectManager.getReportData(groupId, reportType, startDate, endDate);
 	}
 
 	public String getTeamUtilizationChartData(String groupIds, String reportStartDate, String reportEndDate) {

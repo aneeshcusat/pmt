@@ -262,7 +262,7 @@
 			<label class="col-md-3 control-label">Project code</label>
 			<div class="col-md-3">
 				<form:input type="text" class="autocomplete form-control"
-					id="projectcode" path="code" />
+					id="projectcode" readonly="true" path="code" />
 			</div>
 		
 			<label class="col-md-3 custom-control-label">PO Number</label>
