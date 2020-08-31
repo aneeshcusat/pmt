@@ -1321,7 +1321,6 @@ public class FamstackProjectManager extends BaseFamstackManager
 	private Map convertStringToJsonObject(
 			String estJson) {
 		if(StringUtils.isNotBlank(estJson)) {
-			System.out.println(FamstackUtils.getJsonObjectFromJson(estJson));
 			return FamstackUtils.getJsonObjectFromJson(estJson);
 		}
 		return null;
@@ -2702,6 +2701,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 				
 				userUtilizationDetails.setEmployeeName(employeeDetails
 						.getFirstName());
+				userUtilizationDetails.setEmpId(employeeDetails
+						.getEmpCode());
 				userUtilizationDetails.setFunded(employeeDetails.getFundedEmployee());
 				userUtilizationDetails.setEmailId(employeeDetails.getEmail());
 				
@@ -2862,6 +2863,8 @@ public class FamstackProjectManager extends BaseFamstackManager
 				userUtilizationWeekWiseDetails.setReportingManager(getEmployeeReportingManager(employeeDetails));
 				userUtilizationWeekWiseDetails.setEmployeeName(employeeDetails
 						.getFirstName());
+				userUtilizationWeekWiseDetails.setEmpId(employeeDetails
+						.getEmpCode());
 				userUtilizationWeekWiseDetails.setEmailId(employeeDetails.getEmail())
 				;
 				Map<String, Map<String, Integer>> utilizationWeekTypeMap = userDateWeekHoursMap

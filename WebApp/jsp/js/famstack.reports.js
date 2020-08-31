@@ -409,6 +409,7 @@ function fillUserUtilizationReportData(data) {
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
 		reportBodyHtml += "<td>"+value.employeeName+"</td>";
+		reportBodyHtml += "<td>"+value.empId+"</td>";
 		
 		if(value.reportingManager == null) {
 			reportBodyHtml += "<td></td>";
@@ -441,7 +442,7 @@ function fillUserUtilizationMonthlyReportData(data) {
 	var jsonData = JSON.parse(data);
 	var reportHeader = $(".reportDataTemplate .reportDataHeader-utilization-monthly").clone();
 	var headerHtml = $(reportHeader).html();
-	var headerWeekList = "<td colspan='3' data-tableexport-colspan='3'></td>";
+	var headerWeekList = "<td colspan='4' data-tableexport-colspan='3'></td>";
 	$.each(jsonData.WEEK_LIST, function( index, weekValue ) {
 		headerHtml +="<th>B</th>";
 		headerHtml +="<th>NB</th>";
@@ -457,7 +458,7 @@ function fillUserUtilizationMonthlyReportData(data) {
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
 		reportBodyHtml += "<td>"+value.employeeName+"</td>";
-		
+		reportBodyHtml += "<td>"+value.empId+"</td>";
 		if(value.reportingManager == null) {
 			reportBodyHtml += "<td></td>";
 		} else {

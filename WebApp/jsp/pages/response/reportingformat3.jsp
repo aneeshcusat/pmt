@@ -16,6 +16,7 @@
 			<th>ID</th>
 			<th>PO ID</th>
 			<th>Resource Name</th>
+			<th>Resource Code</th>
 			<th>Designation</th>
 			<th>Client</th>
 			<th>Project</th>
@@ -52,6 +53,7 @@
 					<td>${project.projectId}</td>
 					<td>${project.projectNumber}</td>
 					<td>${userDetailsMap[project.userId].firstName}</td>
+					<td>${userDetailsMap[project.userId].empCode}</td>
 					<td>${userDetailsMap[project.userId].designation}</td>
 					<td>${project.accountName}</td>
 					<td>${project.projectName}</td>

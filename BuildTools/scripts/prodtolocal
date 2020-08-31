@@ -1,5 +1,6 @@
 UPDATE user_info SET user_id=CONCAT('temp_',user_id) WHERE user_grp_id != '99999';
-delete from  auto_report_info;
+update auto_report_info set enabled=0;
+
 UPDATE user_info SET user_id=REPLACE(user_id,'temp_temp_','') WHERE user_grp_id='99999';
 update auto_report_info set enabled=0;
 

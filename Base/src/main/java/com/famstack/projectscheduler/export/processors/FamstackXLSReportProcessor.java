@@ -125,12 +125,13 @@ public class FamstackXLSReportProcessor extends BaseFamstackService implements F
     	
     	setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
     	setCellValue(sheet, 0, 1, "Employee Name", headerCellStyle);
-    	setCellValue(sheet, 0, 2, "Reporting Manager", headerCellStyle);
-    	setCellValue(sheet, 0, 3, "Billable Hours", headerCellStyle);
-    	setCellValue(sheet, 0, 4, "Non Billable Hours", headerCellStyle);
-    	setCellValue(sheet, 0, 5, "Leave or Holiday", headerCellStyle);
-    	setCellValue(sheet, 0, 6, "Utilization", headerCellStyle);
-    	setCellValue(sheet, 0, 7, "Total Hours", headerCellStyle);
+    	setCellValue(sheet, 0, 2, "Employee Code", headerCellStyle);
+    	setCellValue(sheet, 0, 3, "Reporting Manager", headerCellStyle);
+    	setCellValue(sheet, 0, 4, "Billable Hours", headerCellStyle);
+    	setCellValue(sheet, 0, 5, "Non Billable Hours", headerCellStyle);
+    	setCellValue(sheet, 0, 6, "Leave or Holiday", headerCellStyle);
+    	setCellValue(sheet, 0, 7, "Utilization", headerCellStyle);
+    	setCellValue(sheet, 0, 8, "Total Hours", headerCellStyle);
 
         List<UserUtilizationDetails> data = (List<UserUtilizationDetails>) dataMap.get("DATA");
         
@@ -138,21 +139,22 @@ public class FamstackXLSReportProcessor extends BaseFamstackService implements F
         for (UserUtilizationDetails userUtilizationDetails : data) {
         	setCellValue(sheet, rowIndex, 0, ""+rowIndex, null);
         	setCellValue(sheet, rowIndex, 1, userUtilizationDetails.getEmployeeName(), null);
-        	setCellValue(sheet, rowIndex, 2, userUtilizationDetails.getReportingManager(), null);
-        	setCellValue(sheet, rowIndex, 3, userUtilizationDetails.getBillableHours(), boldCenterValueCellStyle);
-        	setCellValue(sheet, rowIndex, 4, userUtilizationDetails.getNonBillableHours(), boldCenterValueCellStyle);
+        	setCellValue(sheet, rowIndex, 2, userUtilizationDetails.getEmpId(), null);
+        	setCellValue(sheet, rowIndex, 3, userUtilizationDetails.getReportingManager(), null);
+        	setCellValue(sheet, rowIndex, 4, userUtilizationDetails.getBillableHours(), boldCenterValueCellStyle);
+        	setCellValue(sheet, rowIndex, 5, userUtilizationDetails.getNonBillableHours(), boldCenterValueCellStyle);
         	if(userUtilizationDetails.getLeaveOrHolidayMins() > 0) {
-        		setCellValue(sheet, rowIndex, 5, userUtilizationDetails.getLeaveOrHolidayHours(), boldCenterYelloCellStyle);
+        		setCellValue(sheet, rowIndex, 6, userUtilizationDetails.getLeaveOrHolidayHours(), boldCenterYelloCellStyle);
         	} else {
-        		setCellValue(sheet, rowIndex, 5, userUtilizationDetails.getLeaveOrHolidayHours(), boldCenterValueCellStyle);
+        		setCellValue(sheet, rowIndex, 6, userUtilizationDetails.getLeaveOrHolidayHours(), boldCenterValueCellStyle);
         	}
         	if (userUtilizationDetails.isUnderOrOverUtilized()) {
-        		setCellValue(sheet, rowIndex, 6, userUtilizationDetails.getUtilization() + " %", boldCenterRedCellStyle);
+        		setCellValue(sheet, rowIndex, 7, userUtilizationDetails.getUtilization() + " %", boldCenterRedCellStyle);
         	} else {
-        		setCellValue(sheet, rowIndex, 6, userUtilizationDetails.getUtilization() + " %", boldCenterValueCellStyle);
+        		setCellValue(sheet, rowIndex, 7, userUtilizationDetails.getUtilization() + " %", boldCenterValueCellStyle);
         	}
         	
-        	setCellValue(sheet, rowIndex, 7, userUtilizationDetails.getTotalHours(), boldCenterValueCellStyle);
+        	setCellValue(sheet, rowIndex, 8, userUtilizationDetails.getTotalHours(), boldCenterValueCellStyle);
         	rowIndex++;
         }
 	}
@@ -164,53 +166,55 @@ public class FamstackXLSReportProcessor extends BaseFamstackService implements F
     	
     	setCellValue(sheet, 1, 0, "Sl No", headerCellStyle);
     	setCellValue(sheet, 1, 1, "Employee Name", headerCellStyle);
-    	setCellValue(sheet, 1, 2, "Reporting Manager", headerCellStyle);
+    	setCellValue(sheet, 1, 2, "Employee Code", headerCellStyle);
+    	setCellValue(sheet, 1, 3, "Reporting Manager", headerCellStyle);
     	
     	List<String> weekList = (List<String>) dataMap.get("WEEK_LIST");
     	Map<String, String> dateMap = (Map<String, String>) dataMap.get("DATE_LIST");
     	int colIndex = 0;
         for (String weekNumber : weekList) {
         	sheet.addMergedRegion(new CellRangeAddress(0,0,3 + colIndex, 3 + colIndex + 3)); 
-        	setCellValue(sheet, 0, 3 + colIndex, dateMap.get(weekNumber), boldCenterValueCellStyle);
-        	setCellValue(sheet, 1, 3 + colIndex++, "Billable", headerCellStyle);
-        	setCellValue(sheet, 1, 3 + colIndex++, "Non Billable", headerCellStyle);
-        	setCellValue(sheet, 1, 3 + colIndex++, "Leave/Holiday", headerCellStyle);
-        	setCellValue(sheet, 1, 3 + colIndex++, "Total Hours", headerCellStyle);
+        	setCellValue(sheet, 0, 4 + colIndex, dateMap.get(weekNumber), boldCenterValueCellStyle);
+        	setCellValue(sheet, 1, 4 + colIndex++, "Billable", headerCellStyle);
+        	setCellValue(sheet, 1, 4 + colIndex++, "Non Billable", headerCellStyle);
+        	setCellValue(sheet, 1, 4 + colIndex++, "Leave/Holiday", headerCellStyle);
+        	setCellValue(sheet, 1, 4 + colIndex++, "Total Hours", headerCellStyle);
         }
         
         List<UserUtilizationWeekWiseDetails> data = (List<UserUtilizationWeekWiseDetails>) dataMap.get("DATA");
         
         int rowIndex = 2;
         for (UserUtilizationWeekWiseDetails userUtilizationWeekWiseDetails : data) {
-        	setCellValue(sheet, rowIndex, 0, ""+rowIndex, null);
+        	setCellValue(sheet, rowIndex, 0, ""+(rowIndex-1), null);
         	setCellValue(sheet, rowIndex, 1, userUtilizationWeekWiseDetails.getEmployeeName(), null);
-        	setCellValue(sheet, rowIndex, 2, userUtilizationWeekWiseDetails.getReportingManager(), null);
+        	setCellValue(sheet, rowIndex, 2, userUtilizationWeekWiseDetails.getEmpId(), null);
+        	setCellValue(sheet, rowIndex, 3, userUtilizationWeekWiseDetails.getReportingManager(), null);
         	
         	colIndex = 0;
             for (String weekNumber : weekList) {
             	if(userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getBillableMins() > 0) {
-            		setCellValue(sheet, rowIndex, 3 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getBillableHours(), boldCenterValueCellStyle);
+            		setCellValue(sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getBillableHours(), boldCenterValueCellStyle);
             	} else {
-            		setCellValue(sheet, rowIndex, 3 + colIndex++, "", boldCenterValueCellStyle);
+            		setCellValue(sheet, rowIndex, 4 + colIndex++, "", boldCenterValueCellStyle);
             	}
             	if(userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getNonBillableMins() > 0) {
-            		setCellValue(sheet, rowIndex, 3 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getNonBillableHours(), boldCenterValueCellStyle);
+            		setCellValue(sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getNonBillableHours(), boldCenterValueCellStyle);
             	} else {
-            		setCellValue(sheet, rowIndex, 3 + colIndex++, "", boldCenterValueCellStyle);
+            		setCellValue(sheet, rowIndex, 4 + colIndex++, "", boldCenterValueCellStyle);
             	}
             	if(userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getLeaveOrHolidayMins() > 0) {
-            		setCellValue(sheet, rowIndex, 3 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getLeaveOrHolidayHours(), boldCenterYelloCellStyle);
+            		setCellValue(sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getLeaveOrHolidayHours(), boldCenterYelloCellStyle);
             	} else {
-            		setCellValue(sheet, rowIndex, 3 + colIndex++, "", boldCenterValueCellStyle);
+            		setCellValue(sheet, rowIndex, 4 + colIndex++, "", boldCenterValueCellStyle);
             	}
             	if (userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getTotalWithLeaveMins() > 0){
 	            	if (userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).isNotifyUsers()) {
-	            		setCellValue(sheet, rowIndex, 3 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getTotalWithLeaveHrs(), boldCenterRedCellStyle);
+	            		setCellValue(sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getTotalWithLeaveHrs(), boldCenterRedCellStyle);
 	            	} else {
-	            		setCellValue(sheet, rowIndex, 3 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getTotalWithLeaveHrs(), boldCenterValueCellStyle);
+	            		setCellValue(sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber).getTotalWithLeaveHrs(), boldCenterValueCellStyle);
 	            	}
 	            } else {
-	            	setCellValue(sheet, rowIndex, 3 + colIndex++, "00.00", boldCenterRedCellStyle);
+	            	setCellValue(sheet, rowIndex, 4 + colIndex++, "00.00", boldCenterRedCellStyle);
 	            }
             }
             rowIndex++;

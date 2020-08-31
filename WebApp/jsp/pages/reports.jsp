@@ -161,6 +161,7 @@
        	<tr class="reportDataHeader-utilization">
        	<th width="50px">Sl No</th>
        	<th>Employee Name</th>
+       	<th>Employee Code</th>
        	<th>Reporting Manager</th>
        	<th>Billable Hours</th>
        	<th>Non Billable Hours</th>
@@ -193,6 +194,7 @@
        <tr class="reportDataHeader-utilization-monthly">
        	<th width="50px">Sl No</th>
        	<th>Employee Name</th>
+       	<th>Employee Code</th>
        	<th>Reporting Manager</th>
        </tr>
        
@@ -222,7 +224,7 @@
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.min.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=4.6&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.reports.js?version=4.7&v=${fsVersionNumber}"></script> 
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
 <script type="text/javascript" src="${js}/plugins/canvasjs/canvasjs.js"></script> 

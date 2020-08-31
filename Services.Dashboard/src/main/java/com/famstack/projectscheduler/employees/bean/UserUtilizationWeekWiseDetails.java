@@ -15,6 +15,7 @@ public class UserUtilizationWeekWiseDetails {
 	String employeeName;
 	String reportingManager;
 	String emailId;
+	String empId;
 	Map<String, UserUtilization> userUtilizationMap;
 	
 	public String getEmployeeName() {
@@ -79,5 +80,13 @@ public class UserUtilizationWeekWiseDetails {
 			}
 		}
 		return false;
+	}
+
+	public String getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(String empId) {
+		this.empId = empId;
 	}
 }

@@ -10,6 +10,7 @@ public class UserUtilizationDetails  extends UserUtilization{
 	String employeeName;
 	String reportingManager;
 	String emailId;
+	String empId;
 	List<UtilizationProjectDetails> utilizationProjectDetailsList;
 	private Set<String> teamMembers;
 	
@@ -74,5 +75,13 @@ public class UserUtilizationDetails  extends UserUtilization{
 
 	public void setTeamMembers(Set<String> teamMembers) {
 		this.teamMembers = teamMembers;
+	}
+
+	public String getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(String empId) {
+		this.empId = empId;
 	}
 }
