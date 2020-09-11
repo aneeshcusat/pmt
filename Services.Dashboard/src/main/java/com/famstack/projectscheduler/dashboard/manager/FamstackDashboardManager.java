@@ -41,13 +41,15 @@ import com.famstack.projectscheduler.dashboard.bean.EmployeeResponse;
 import com.famstack.projectscheduler.dashboard.bean.POEstimateProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.POEstimateResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
+import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsBySkillsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
-import com.famstack.projectscheduler.dashboard.bean.SearchRequest;
 import com.famstack.projectscheduler.dashboard.bean.TaskResponse;
 import com.famstack.projectscheduler.dashboard.bean.TeamResponse;
 import com.famstack.projectscheduler.dashboard.bean.TeamUtilizatioDetails;
+import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsBySkillsResponse.Resources;
+import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsBySkillsResponse.SkillSetResponse;
 import com.famstack.projectscheduler.dataaccess.FamstackDataAccessObjectManager;
 import com.famstack.projectscheduler.datatransferobject.AutoReportingItem;
 import com.famstack.projectscheduler.datatransferobject.ConfigurationSettingsItem;
@@ -2369,5 +2371,104 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		}
 		
 		return teamResponseList;
+	}
+
+	public List<ProjectDetailsBySkillsResponse> getProjectUtilizationBySkills(Date startDate, Date endDate, String teamId) {
+		String[] teamIds = teamId.split(",");
+		logInfo("Starting getProjectUtilizationBySkills " +  teamId);
+		List<ProjectTaskActivityDetails> projectTaskActivityDetails = new ArrayList<ProjectTaskActivityDetails>();
+		List<ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponsesList = new ArrayList<>();
+		for (String id : Arrays.asList(teamIds)) {
+			projectTaskActivityDetails.addAll(projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, id));
+			logInfo("Retrived team project details : " + id + ", size : " + projectTaskActivityDetails.size());
+		}
+		
+		Map<String, ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponsesCacheMap = new HashMap<>();
+		
+		if (projectTaskActivityDetails != null) {
+			logInfo("Started Processing project details :");
+			for(ProjectTaskActivityDetails projectTaskActivityDetail : projectTaskActivityDetails) {
+				logInfo("Processing project details : " + projectTaskActivityDetail.getProjectId());
+				String monthYear = DateUtils.getMonthYear(projectTaskActivityDetail.getTaskActivityStartTime());
+				String key = "" + projectTaskActivityDetail.getProjectId();
+				key += monthYear;
+				key += projectTaskActivityDetail.getUserGroupId();
+				ProjectDetailsBySkillsResponse projectDetailsBySkillsResponse = projectDetailsBySkillsResponsesCacheMap.get(key);
+				if(projectDetailsBySkillsResponse == null) {
+					projectDetailsBySkillsResponse = new ProjectDetailsBySkillsResponse();
+					projectDetailsBySkillsResponse.setMonthYear(monthYear);
+		            projectDetailsBySkillsResponse.setTeam(getFamstackApplicationConfiguration().getUserGroupMap().get(projectTaskActivityDetail.getUserGroupId()).getName());
+		            projectDetailsBySkillsResponse.setClientPartner(projectTaskActivityDetail.getClientPartner());
+		            projectDetailsBySkillsResponse.setPoNumber(projectTaskActivityDetail.getProjectNumber());
+		            projectDetailsBySkillsResponse.setOrderBookId(projectTaskActivityDetail.getOrderRefNumber());
+		            projectDetailsBySkillsResponse.setProposalNumber(projectTaskActivityDetail.getProposalNumber());
+		            projectDetailsBySkillsResponse.setProjectId(""+projectTaskActivityDetail.getProjectId());
+		            projectDetailsBySkillsResponse.setProjectName(projectTaskActivityDetail.getProjectName());
+		            projectDetailsBySkillsResponse.setLocation(projectTaskActivityDetail.getLocation());
+		            projectDetailsBySkillsResponse.setClientName(projectTaskActivityDetail.getClientName());
+		            projectDetailsBySkillsResponse.setSkills(new HashMap<String, SkillSetResponse>());
+					projectDetailsBySkillsResponsesCacheMap.put(key, projectDetailsBySkillsResponse);
+					
+					Map<String, List<Map<String, Integer>>> estimatedHoursBySkills = projectTaskActivityDetail.getEstHoursByMonthSkills();
+					if (estimatedHoursBySkills != null) {
+						List<Map<String, Integer>> estimatedSkills = estimatedHoursBySkills.get(monthYear);
+						if (estimatedSkills != null) {
+							for (Map<String, Integer> estSkillMap : estimatedSkills) {
+								for (String skill : estSkillMap.keySet()) {
+									SkillSetResponse skillsSetResponse = new SkillSetResponse();
+									skillsSetResponse.setEstimatedHours(estSkillMap.get(skill));
+								 projectDetailsBySkillsResponse.getSkills().put(skill, skillsSetResponse);
+								}
+							}
+						}
+					}
+				} 
+				
+				String employeeSkill = getEmployeeSkill(projectTaskActivityDetail.getUserId());
+				if (employeeSkill == null) {
+					employeeSkill = "Other";
+				}
+				SkillSetResponse skillsSetResponse =  projectDetailsBySkillsResponse.getSkills().get(employeeSkill);
+				if (skillsSetResponse == null) {
+					skillsSetResponse = new SkillSetResponse();
+					projectDetailsBySkillsResponse.getSkills().put(employeeSkill, skillsSetResponse);
+				}
+				skillsSetResponse.addTotalHours(projectTaskActivityDetail.getTaskActivityDuration());
+				
+				List<Resources> resources = skillsSetResponse.getResources();
+				if (resources == null) {
+					resources = new ArrayList<Resources>();
+					skillsSetResponse.setResources(resources);
+				}
+				Resources resource = resources.stream().filter(res -> res.getId() == projectTaskActivityDetail.getUserId().intValue()).findAny()                                      // If 'findAny' then return found
+		                .orElse(null);
+				if(resource == null) {
+				  resource = new Resources();
+				  resource.setId(projectTaskActivityDetail.getUserId());
+				  resources.add(resource);
+				}
+				resource.addMinsSpent(projectTaskActivityDetail.getTaskActivityDuration());
+				EmployeeDetails  employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetail.getUserId());
+				if (employeeDetails != null) {
+					resource.setName(employeeDetails.getFirstName());
+					resource.setEmployeeCode(employeeDetails.getEmpCode());
+				}
+				
+				projectDetailsBySkillsResponsesList.add(projectDetailsBySkillsResponse);
+			}
+		}
+		
+		logInfo("Processing project details completed");
+		
+		return projectDetailsBySkillsResponsesList;
+	}
+
+	private String getEmployeeSkill(Integer userId) {
+		EmployeeDetails  employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(userId);
+		if (employeeDetails != null) {
+			return employeeDetails.getSkills();
+		}
+		return null;
+		
 	}
 }

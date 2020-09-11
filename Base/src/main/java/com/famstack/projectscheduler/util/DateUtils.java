@@ -343,16 +343,25 @@ public final class DateUtils extends BaseFamstackService
 		//System.out.println(getTimeDifference(TimeInType.MINS, tryParse("2020-06-25 00:51:00", "yyyy-MM-dd HH:mm:ss").getTime(), 
 			//	tryParse("2020-03-25 00:51:00", "yyyy-MM-dd HH:mm:ss").getTime()));
 		
-		Date startTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START,  DateUtils.tryParse("2012/05/04 23:30",
-				DateUtils.DATE_TIME_FORMAT), 0);
+		/*
+		 * Date startTime =
+		 * DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START,
+		 * DateUtils.tryParse("2012/05/04 23:30", DateUtils.DATE_TIME_FORMAT),
+		 * 0);
+		 * 
+		 * Date endTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,
+		 * DateUtils.tryParse("2020/01/19 23:30", DateUtils.DATE_TIME_FORMAT),
+		 * 0);
+		 * 
+		 * int numberOfDays = DateUtils.getWorkingDaysBetweenTwoDates(startTime,
+		 * endTime); System.out.println("numberOfDays :" + numberOfDays);
+		 * System.out.println(getUsersActualWorkingHours(numberOfDays,
+		 * "2020-01-01", "2020-01-31", startTime, endTime));
+		 
+		 *
+		 */
 		
-		Date endTime = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END,  DateUtils.tryParse("2020/01/19 23:30",
-				DateUtils.DATE_TIME_FORMAT), 0);
-		
-		int numberOfDays = DateUtils.getWorkingDaysBetweenTwoDates(startTime,
-				endTime);
-		System.out.println("numberOfDays :" + numberOfDays);
-		System.out.println(getUsersActualWorkingHours(numberOfDays, "2020-01-01", "2020-01-31", startTime, endTime));
+		System.out.println(getMonthYear(new Date()));
 	}
 	
 	public static String getYearMonthWeekNumber(Date taskActivityStartTime) {
@@ -519,5 +528,8 @@ public final class DateUtils extends BaseFamstackService
 		int newNumberOfWorkingDays =  (numberOfWorkingDays - inactiveEndtoExtWorkingDays - inactiveStoJWorkingDays);
 		return newNumberOfWorkingDays > 0 ? newNumberOfWorkingDays : 1;
 	}
-	
+
+	public static String getMonthYear(Date taskActivityStartTime) {
+		return new SimpleDateFormat("MMM-YYYY").format(taskActivityStartTime);
+	}
 }

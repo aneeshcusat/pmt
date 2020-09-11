@@ -39,6 +39,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ReportType;
 import com.famstack.projectscheduler.dashboard.bean.POEstimateResponse;
+import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsBySkillsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.SearchRequest;
@@ -803,4 +804,32 @@ public class FamstackProjectController extends BaseFamstackService
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	  }
 
+
+@RequestMapping(value = "/rest/projects/detailsbyskills", method = RequestMethod.POST,  produces = MediaType.APPLICATION_JSON_VALUE)
+@ResponseBody
+public ResponseEntity getProjectUtilizationBySkills(@RequestBody String searchRequest, HttpServletRequest request) {
+	String fClientId ="87534234598763332";
+	String fSecretKey ="knRIhdlZ0eBiO3TGExwR5XbLdTNR2rdTBCYRJpaPAoh0h7HL21UBTR7JE7H43D6a71UYiWGhKn1g4nIQuhRHXxEbJfzRTzjoGLP0";
+	String clientId = request.getHeader("clientId");
+	String securityKey = request.getHeader("secretKey");
+	
+	if (fClientId.equals(clientId) && fSecretKey.equals(securityKey)) {
+	SearchRequest sRequest = FamstackUtils.getObjectFromJson(searchRequest);
+	Date startDate = DateUtils.tryParse(sRequest.getStartDate(), DateUtils.DATE_FORMAT_CALENDER);
+	Date endDate =  DateUtils.tryParse(sRequest.getEndDate(), DateUtils.DATE_FORMAT_CALENDER);
+	
+	if (startDate == null || endDate == null || !StringUtils.isNotBlank(sRequest.getTeamId())) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	}
+	
+	List<ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponse = famstackDashboardManager.getProjectUtilizationBySkills(startDate, endDate, sRequest.getTeamId());
+	logInfo("Returning projectDetails Size : " + projectDetailsBySkillsResponse.size());
+	return ResponseEntity
+	            .ok()
+	            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
+	            .body(projectDetailsBySkillsResponse);
+	}
+	
+	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+  }
 }

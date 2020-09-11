@@ -1225,7 +1225,7 @@ public class FamstackProjectManager extends BaseFamstackManager
         logDebug("projectItemList" + projectItemList);
         logDebug("startDate" + startDate);
         logDebug("endDate" + endDate);
-        mapProjectsList(projectDetailsList,projectDetailsUniqueTasksList, allTaskActProjectDetailsList, projectItemList);
+        mapProjectsList(projectDetailsList,projectDetailsUniqueTasksList, allTaskActProjectDetailsList, projectItemList, userGroupId);
         
         if (!addSameTaskActTime) {
         	return allTaskActProjectDetailsList;
@@ -1326,7 +1326,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 		return null;
 	}
 
-	private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList, List<ProjectTaskActivityDetails> allTaskActProjectDetailsList, List<Object[]> projectItemList)
+	private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList, List<ProjectTaskActivityDetails>  projectDetailsUniqueTasksList, List<ProjectTaskActivityDetails> allTaskActProjectDetailsList, List<Object[]> projectItemList, String userGroupId)
     {
 
         /*
@@ -1421,6 +1421,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setDeliveryLead((Integer) data[34]);
             projectTaskActivityDetails.setLocation((String) data[35]);
             projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[36]));
+            projectTaskActivityDetails.setUserGroupId(userGroupId);
             
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
             key += "T" + data[15];

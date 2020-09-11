@@ -105,6 +105,8 @@ public class ProjectTaskActivityDetails
     
     private String clientPartner;
     
+    private String userGroupId;
+    
 	private Map estHoursByMonthSkills;
 	private Integer deliveryLead;
 
@@ -620,5 +622,13 @@ public class ProjectTaskActivityDetails
 
 	public void setSubItems(List<ProjectTaskActivityDetails> subItems) {
 		this.subItems = subItems;
+	}
+
+	public String getUserGroupId() {
+		return userGroupId;
+	}
+
+	public void setUserGroupId(String userGroupId) {
+		this.userGroupId = userGroupId;
 	}
 }
