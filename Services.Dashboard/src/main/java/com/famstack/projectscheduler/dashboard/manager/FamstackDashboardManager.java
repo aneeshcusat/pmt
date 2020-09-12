@@ -2432,6 +2432,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 							}
 						}
 					}
+					
+					projectDetailsBySkillsResponsesList.add(projectDetailsBySkillsResponse);
 				} 
 				
 				String employeeSkill = getEmployeeSkill(projectTaskActivityDetail.getUserId());
@@ -2463,8 +2465,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 					resource.setName(employeeDetails.getFirstName());
 					resource.setEmployeeCode(employeeDetails.getEmpCode());
 				}
-				
-				projectDetailsBySkillsResponsesList.add(projectDetailsBySkillsResponse);
 			}
 		}
 		

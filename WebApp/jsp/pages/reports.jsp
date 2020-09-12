@@ -40,7 +40,10 @@
                 <option value="WEEKLY_PROJECT_HOURS">Weekly Project Hours</option>
                 
                 <option value="TEAM_UTILIZATION_CHART">Team Utilization Chart</option>
+                <c:if test="${currentUserGroupId == '1001' || currentUserGroupId == '1004' || currentUserGroupId == '1016' || currentUserGroupId == '1007' || currentUserGroupId == '1003' || currentUserGroupId == '1010' 
+        	|| currentUserGroupId == '1006' || currentUserGroupId == '1002' || currentUserGroupId == '1009' || currentUserGroupId == '1005'}">
                 <option value="ROJECT_DETAILS_BY_SKILLS">Project Estimate vs Actual</option>
+                </c:if>
           	</select>
           	</div>
           	<div class="col-md-1 reportHeaderInputs">
