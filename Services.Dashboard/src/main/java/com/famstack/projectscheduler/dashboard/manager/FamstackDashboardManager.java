@@ -2427,7 +2427,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 								for (String skill : estSkillMap.keySet()) {
 									SkillSetResponse skillsSetResponse = new SkillSetResponse();
 									skillsSetResponse.setEstimatedHours(estSkillMap.get(skill));
-								 projectDetailsBySkillsResponse.getSkills().put(skill, skillsSetResponse);
+								 projectDetailsBySkillsResponse.getSkills().put(skill.replaceAll("_", " "), skillsSetResponse);
 								}
 							}
 						}
