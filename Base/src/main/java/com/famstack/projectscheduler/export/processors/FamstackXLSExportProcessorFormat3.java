@@ -201,22 +201,31 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
             createProjectDetailsColoumn(sheet, 8, projectDetails.getClientName(), projectDetailsRow);
             createProjectDetailsColoumn(sheet, 9, getProjectType(projectDetails.getProjectType()), projectDetailsRow);
             createProjectDetailsColoumn(sheet, 10, projectDetails.getTaskName(), projectDetailsRow);
-            createProjectDetailsColoumn(sheet, 11, projectDetails.getTaskCompletionComments(), projectDetailsRow);
-          
 
             int dateCellIndex = dateList.indexOf(projectDateString);
             
             createTaskTimeCell(sheet, 12 + dateCellIndex,
                 projectDetails.getTaskActivityDuration(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
-            
+            String comments = "("+DateUtils.format(projectDetails.getTaskActivityStartTime(), "dd-MMM")+") - " + projectDetails.getTaskCompletionComments();
+			
             if (projectDetails.getSubItems().size() > 0) {
             	for (ProjectTaskActivityDetails subActivityDetails : projectDetails.getSubItems()) {
             		 projectDateString = DateUtils.format(subActivityDetails.getTaskActivityStartTime(), DateUtils.DATE_MONTH_YEAR);
             		 dateCellIndex = dateList.indexOf(projectDateString);
                      createTaskTimeCell(sheet, 12 + dateCellIndex,
                     		 subActivityDetails.getTaskActivityDuration(), projectDetailsRow, xssfCellProjectTaskHrsStyle);
+            
+                 	if (StringUtils.isNotBlank(subActivityDetails.getTaskCompletionComments())) {
+    					if (StringUtils.isNotBlank(comments)) {
+    						comments+=", ";
+    					}
+    					comments+=  "("+DateUtils.format(subActivityDetails.getTaskActivityStartTime(), "dd-MMM")+") - " + subActivityDetails.getTaskCompletionComments();
+    				}
+    			
             	}
             }
+            createProjectDetailsColoumn(sheet, 11, comments, projectDetailsRow);
+            
         }
     }
 

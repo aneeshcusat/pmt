@@ -1919,8 +1919,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			jsonObject.put("project",
 					projectTaskActivityDetails.getProjectName());
 			jsonObject.put("task", projectTaskActivityDetails.getTaskName());
-			jsonObject.put("comments",
-					projectTaskActivityDetails.getTaskCompletionComments());
+			
 			JSONObject timeData = new JSONObject();
 			String dateString = DateUtils.format(
 					projectTaskActivityDetails.getTaskActivityStartTime(),
@@ -1928,6 +1927,8 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			timeData.put(dateString,
 					projectTaskActivityDetails.getDurationInHours());
 			weekTotal += projectTaskActivityDetails.getTaskActivityDuration();
+			String comments = "("+DateUtils.format(projectTaskActivityDetails.getTaskActivityStartTime(), "dd-MMM")+") - " + projectTaskActivityDetails.getTaskCompletionComments();
+			
 			for (ProjectTaskActivityDetails subItem : projectTaskActivityDetails
 					.getSubItems()) {
 				dateString = DateUtils.format(
@@ -1935,8 +1936,17 @@ public class FamstackDashboardManager extends BaseFamstackService {
 						DateUtils.DAY_MONTH_YEAR);
 				timeData.put(dateString, subItem.getDurationInHours());
 				weekTotal += subItem.getTaskActivityDuration();
+			
+				if (StringUtils.isNotBlank(subItem.getTaskCompletionComments())) {
+					if (StringUtils.isNotBlank(comments)) {
+						comments+="</br>";
+					}
+					comments+=  "("+DateUtils.format(subItem.getTaskActivityStartTime(), "dd-MMM")+") - " + subItem.getTaskCompletionComments();
+				}
 			}
-
+			jsonObject.put("comments",
+					comments);
+			
 			int hours = weekTotal / 60;
 			int minutes = weekTotal % 60;
 			timeData.put("weekdayTotal",
@@ -2388,7 +2398,6 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		if (projectTaskActivityDetails != null) {
 			logInfo("Started Processing project details :");
 			for(ProjectTaskActivityDetails projectTaskActivityDetail : projectTaskActivityDetails) {
-				logInfo("Processing project details : " + projectTaskActivityDetail.getProjectId());
 				String monthYear = DateUtils.getMonthYear(projectTaskActivityDetail.getTaskActivityStartTime());
 				String key = "" + projectTaskActivityDetail.getProjectId();
 				key += monthYear;
@@ -2396,6 +2405,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				ProjectDetailsBySkillsResponse projectDetailsBySkillsResponse = projectDetailsBySkillsResponsesCacheMap.get(key);
 				if(projectDetailsBySkillsResponse == null) {
 					projectDetailsBySkillsResponse = new ProjectDetailsBySkillsResponse();
+					 projectDetailsBySkillsResponse.setAccount(projectTaskActivityDetail.getAccountName());
 					projectDetailsBySkillsResponse.setMonthYear(monthYear);
 		            projectDetailsBySkillsResponse.setTeam(getFamstackApplicationConfiguration().getUserGroupMap().get(projectTaskActivityDetail.getUserGroupId()).getName());
 		            projectDetailsBySkillsResponse.setClientPartner(projectTaskActivityDetail.getClientPartner());

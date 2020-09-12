@@ -45,7 +45,6 @@ import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.SearchRequest;
 import com.famstack.projectscheduler.dashboard.bean.TeamResponse;
 import com.famstack.projectscheduler.dashboard.manager.FamstackDashboardManager;
-import com.famstack.projectscheduler.datatransferobject.UserGroupItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
 import com.famstack.projectscheduler.employees.bean.ApplicationDetails;
@@ -687,6 +686,23 @@ public class FamstackProjectController extends BaseFamstackService
     {
 		 famstackXLSExportManager.downloadXLSReport(reportType, fileName, famstackDashboardManager.getReportData(reportType, reportStartDate, reportEndDate), request, response);
     }
+	
+	@RequestMapping(value = "/downloadProjectReportBySkill", method = RequestMethod.GET)
+	  public void downloadProjectReportBySkill(@RequestParam("fileName") String fileName,
+	      @RequestParam("reportStartDate") String reportStartDate,
+	      @RequestParam("reportEndDate") String reportEndDate,  @RequestParam("teamIds") String teamIds,
+	      HttpServletRequest request, HttpServletResponse response) {
+	    Date startDate = DateUtils.tryParse(reportStartDate, DateUtils.DATE_FORMAT_CALENDER);
+	    Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
+
+	    List<ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponse =
+	        famstackDashboardManager.getProjectUtilizationBySkills(startDate, endDate, teamIds);
+	    Map<String, Object> dataMap = new HashMap<>();
+	    dataMap.put("DATA", projectDetailsBySkillsResponse);
+
+	    famstackXLSExportManager.downloadProjectsBySkills(dataMap, fileName, request, response);
+	  }
+
 	
 	@RequestMapping(value = "/getTeamUtilizationChartData", method = RequestMethod.GET)
 	@ResponseBody

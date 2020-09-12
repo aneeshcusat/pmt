@@ -79,6 +79,7 @@
 		  <entry key="useractivity" value-ref="famstackXLSEmployeeSiteActivity"/>
 		  <entry key="famstackEmpUtilisation" value-ref="famstackXLSEmployeeUtilisationProcessor" />
 		  <entry key="reportProcessor" value-ref="famstackXLSReportProcessor" />
+		  <entry key="projectDetailsBySkillsProcessor" value-ref="famstackProjectDetailsBySkillsProcessor" />
 		</map>
 	</property>
 	</bean>

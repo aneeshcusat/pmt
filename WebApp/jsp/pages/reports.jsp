@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="includes/header.jsp" %>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
+<c:set var="userGroupMap" value="${applicationScope.applicationConfiguraion.userGroupMap}"/>
 
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/reports.css?version=4.1&v=${fsVersionNumber}"/>
 
@@ -39,34 +40,41 @@
                 <option value="WEEKLY_PROJECT_HOURS">Weekly Project Hours</option>
                 
                 <option value="TEAM_UTILIZATION_CHART">Team Utilization Chart</option>
+                <option value="ROJECT_DETAILS_BY_SKILLS">Project Estimate vs Actual</option>
           	</select>
           	</div>
-          	<div class="col-md-1">
+          	<div class="col-md-1 reportHeaderInputs">
           	<select class="form-control autoReportDuration">
           		<option value="DAILY">Daily</option>
           		<option value="WEEKLY">Weekly</option>
           		<option value="MONTHLY">Monthly</option>
           	</select>
           	</div>
-        	<div class="col-md-2">
+        	<div class="col-md-2 reportHeaderInputs">
         		<span class="fa fa-angle-down fa-lg" style="font-weight: bold"></span>
         		<input readonly="readonly" type='text' class="dailySelector"/>
         		<input readonly="readonly" type='text' class="weekSelector hide"/>
         		<input readonly="readonly" type='text' class="monthSelector hide"/>
         	</div>
-        	<div class="col-md-1 " style="text-align: center;">
+        	<div class="col-md-1 reportHeaderInputs" style="text-align: center;">
 	        	<a href="javascript:moveToPrevious();" style="float: left" title="Previous"><span class="fa fa-angle-left fa-2x" style="font-weight: bold"></span></a>
 	        	<a href="javascript:moveToCurrent();" title="Current"><span style="padding-left: 15px;" class="fa fa-home fa-2x"></span></a>
 	        	<a href="javascript:moveToNext();" style="float: right" title="Next"><span style="padding-left: 15px;font-weight: bold" class="fa fa-angle-right  fa-2x"></span></a>
         	</div>
         	
-        	<div class="col-md-3" style="text-align: center">
+        	<div class="col-md-3 reportHeaderInputs" style="text-align: center">
         		<input class="btn btn-info refreshButton hide" type="button" value="Refresh"/>
         		<button class="btn btn-warning clearfix exportButton hide"><span class="fa fa-file-excel-o"></span> Export</button>
         	</div>
-        	<div class="col-md-2" style="text-align: center">
+        	<div class="col-md-2 "col-md-3 reportHeaderInputs"" style="text-align: center">
         	<input type="text" class="form-control hide" id="reportSearchBoxId"
 												placeholder="Type here to filter.." />	
+        	</div>
+        	<div class="col-md-2 hide monthRangeSelectorDiv">
+        		<input type="text" class="form-control monthRangeSelector" name="monthRangeSelector" />
+        	</div>
+        	<div class="col-md-2 hide monthRangeSelectorDiv">
+        		<button class="btn btn-warning clearfix downloadButton"><span class="fa fa-file-excel-o"></span> Download</button>
         	</div>
         </div>
         <div class="col-md-12 teamUtilizationChartDiv hide">
@@ -146,6 +154,29 @@
 				<tfoot>
 				</tfoot>
 			</table>
+			
+			<div class="col-md-6 projectestvsactualDiv hide">
+				<div class="col-md-12"><span style="font-size: 13px;font-weight: bold">Teams</span>
+				</div>
+				<div class="col-md-12"">
+					<div class="col-md-12 teamIdsCheckbox">
+						 <c:if test="${not empty userGroupMap}">
+				    		<c:forEach var="userGroupMapItem" items="${userGroupMap}">	
+				    			 		<c:if test="${userGroupMapItem.value.userGroupId == '1001' || userGroupMapItem.value.userGroupId == '1004' || userGroupMapItem.value.userGroupId == '1016' || userGroupMapItem.value.userGroupId == '1007' || userGroupMapItem.value.userGroupId == '1003' || userGroupMapItem.value.userGroupId == '1010' 
+        								|| userGroupMapItem.value.userGroupId == '1006' || userGroupMapItem.value.userGroupId == '1002' || userGroupMapItem.value.userGroupId == '1009' || userGroupMapItem.value.userGroupId == '1005'}">	
+				    			<div class="col-md-6 dbcheckbox">
+								  <div class="checkbox checkbox-info checkbox-circle">
+			                        <input  <c:if test="${currentUserGroupId == userGroupMapItem.value.userGroupId}">checked</c:if> class="rescbutfilter" id="${userGroupMapItem.value.userGroupId}" type="checkbox" value="${userGroupMapItem.value.userGroupId}">
+			                        <label for="${userGroupMapItem.value.userGroupId}">
+			                            ${userGroupMapItem.value.name}
+			                        </label>
+			                    </div>
+					 			</div>
+					 			</c:if>
+							</c:forEach>
+						</c:if>
+					</div>
+				</div>	
             </div>
         </div>
     </div>                    
@@ -224,7 +255,7 @@
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.min.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=4.7&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.reports.js?version=4.8&v=${fsVersionNumber}"></script> 
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
 <script type="text/javascript" src="${js}/plugins/canvasjs/canvasjs.js"></script> 

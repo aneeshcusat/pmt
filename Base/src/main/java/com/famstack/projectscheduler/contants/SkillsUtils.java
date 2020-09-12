@@ -21,7 +21,6 @@ public class SkillsUtils {
 		userSkills.add("Applied AI / Advanced Data Sciences");
 		userSkills.add("AI Engineering");
 		userSkills.add("Product / Web Development");
-		userSkills.add("Others");
 		
 		return userSkills;
 	}

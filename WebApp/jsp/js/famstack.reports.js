@@ -194,8 +194,10 @@ $(".autoReportType").on("change",function(){
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY_ENE").text("Monthly End to End"));
 
 	 clearReportDataTable();
-	 
-	 var selectedValue = $(this).val();
+	 $(".reportHeaderInputs").removeClass("hide");
+	$(".projectestvsactualDiv").addClass("hide"); 
+	$(".monthRangeSelectorDiv").addClass("hide");
+	var selectedValue = $(this).val();
 	 if("USER_SITE_ACTIVITY" == selectedValue) {
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
@@ -217,6 +219,10 @@ $(".autoReportType").on("change",function(){
 	 } else  if("TEAM_UTILIZATION_CHART" == selectedValue) {
 		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
 		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
+	 } else  if("ROJECT_DETAILS_BY_SKILLS" == selectedValue) {
+		 $(".reportHeaderInputs").addClass("hide");
+		$(".projectestvsactualDiv").removeClass("hide");
+		$(".monthRangeSelectorDiv").removeClass("hide");
 	 }
 	 $(".autoReportDuration").trigger("change");
 });
@@ -674,6 +680,26 @@ $(".exportButton").on("click", function(){
 	}
 });
 
+$(".downloadButton").on("click", function(){
+	var dateString = $(".monthRangeSelector").val();
+	var dateRange =	dateString.split(" - ");
+	var startDate =  getDateObject("01-" +dateRange[0]);
+	var endDate =  getDateObject("01-" +dateRange[1]);
+	var endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0);
+	var reportStartDate = formatCalenderDate(startDate);
+	var reportEndDate= formatCalenderDate(endDate);
+	var downloadXLSFileName ="Project_Details_Estimate_vs_Actual_" + dateString;
+	 var teamIds ="";
+	$('.teamIdsCheckbox input[type=checkbox]:checked').each(function () {
+       teamIds += (this.checked ? $(this).val() : "") + ",";
+  	}); 
+
+	if(teamIds != "") {
+		teamIds = teamIds.substring(0,teamIds.length - 1);
+		window.location.href = fsApplicationHome + "/downloadProjectReportBySkill?reportStartDate=" + reportStartDate + "&reportEndDate=" + reportEndDate +"&fileName=" + downloadXLSFileName+"&teamIds=" + teamIds;
+	}
+});
+
 function clearReportDataTable(){
 	
 	$(".exportButton").addClass("hide");
@@ -976,3 +1002,20 @@ function getUtilizationComparisonData(data,isDateWise){
 	
 	return taskUtilizationComparisonData;
 }
+
+$(function() {
+  $('input[name="monthRangeSelector"]').daterangepicker({
+    timePicker: false,
+       
+        autoclose: true,
+        locale: {
+	 		calendarMode : 'month',
+			format: 'MMM-YYYY',
+            applyLabel: 'Apply Date',
+            fromLabel: 'First Date',
+            toLabel: 'Second Date',
+            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            firstDay: 1
+        }
+  });
+});
