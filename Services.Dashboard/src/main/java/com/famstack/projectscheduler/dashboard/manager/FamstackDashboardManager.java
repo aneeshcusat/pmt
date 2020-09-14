@@ -32,6 +32,7 @@ import com.famstack.projectscheduler.contants.ProjectActivityType;
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.ReportType;
+import com.famstack.projectscheduler.contants.SkillsUtils;
 import com.famstack.projectscheduler.contants.TaskStatus;
 import com.famstack.projectscheduler.contants.UserTaskType;
 import com.famstack.projectscheduler.dashboard.bean.ClientProjectDetails;
@@ -2427,7 +2428,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 								for (String skill : estSkillMap.keySet()) {
 									SkillSetResponse skillsSetResponse = new SkillSetResponse();
 									skillsSetResponse.setEstimatedHours(estSkillMap.get(skill));
-								 projectDetailsBySkillsResponse.getSkills().put(skill.replaceAll("_", " "), skillsSetResponse);
+								 projectDetailsBySkillsResponse.getSkills().put(SkillsUtils.getUserSkillMapping(skill.replaceAll("_", " ")), skillsSetResponse);
 								}
 							}
 						}
@@ -2437,9 +2438,12 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				} 
 				
 				String employeeSkill = getEmployeeSkill(projectTaskActivityDetail.getUserId());
-				if (employeeSkill == null) {
-					employeeSkill = "Other";
+				if (!StringUtils.isNotBlank(employeeSkill)) {
+					employeeSkill = "Others";
+				} else {
+					employeeSkill = SkillsUtils.getUserSkillMapping(employeeSkill);
 				}
+				
 				SkillSetResponse skillsSetResponse =  projectDetailsBySkillsResponse.getSkills().get(employeeSkill);
 				if (skillsSetResponse == null) {
 					skillsSetResponse = new SkillSetResponse();

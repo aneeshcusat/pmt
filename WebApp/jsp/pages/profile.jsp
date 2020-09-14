@@ -170,7 +170,7 @@ background-image: url(/bops/jsp/image/deleted.png);
                <img src="${applicationHome}/image/${userProile.id}" class="img-thumbnail picture hidden-xs" alt="${userProile.firstName}" onerror="this.src='${assets}/images/users/no-image.jpg'"/>
            <div class="header">
                 <span>
-                <c:if test="${!userProile.deleted}">
+                <c:if test="${!userProile.deleted && false}">
                  <a data-toggle="modal" class="profile-control-left" data-target="#registerusermodal" onclick="javascript:loadUser('${userProile.id}')">
 	     			<span class="fa fa-edit fa-2x" style="color: blue"></span>
 	      		</a>

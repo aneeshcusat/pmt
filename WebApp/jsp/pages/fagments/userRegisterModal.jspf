@@ -478,7 +478,7 @@
 			<div class="form-group">
 				<label class="col-md-3 control-label">Skills</label>
 				<div class="col-md-9">
-					 <textarea rows="3" class="form-control skills" id="skills" name="skills"></textarea>
+					 <input type="text" class="form-control skills" id="skills" name="skills"/>
 				</div>
 			</div>
 			
