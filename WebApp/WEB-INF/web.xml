@@ -9,7 +9,7 @@
     <param-value>/famstack</param-value>
   </context-param>
   <session-config>
-    <session-timeout>1440</session-timeout>
+    <session-timeout>30</session-timeout>
   </session-config>
   
   <context-param>
@@ -102,6 +102,10 @@
     <error-page>
        <error-code>403</error-code>
        <location>/dashboard/dashboard</location>
+    </error-page>
+    <error-page>
+       <error-code>405</error-code>
+       <location>/dashboard/pageNotFound</location>
     </error-page>
     
     <error-page>

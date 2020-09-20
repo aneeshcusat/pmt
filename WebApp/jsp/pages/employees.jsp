@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="includes/header.jsp" %>
 <c:set var="allSortedUsers" value="${applicationScope.applicationConfiguraion.allSortedUsers}"/>
+
 <c:set var="employeeAccess" value="false"/>
 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userGroupId == '1012'}">
 	<c:set var="employeeAccess" value="true"/> 

@@ -9,14 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.famstack.projectscheduler.util.StringUtils;
+
 @Component
 public class FamstackProjectFileManager extends BaseFamstackManager {
 
 	public void uploadFile(MultipartFile file, String projectCode, HttpServletRequest request) {
+		projectCode = sanitize(projectCode);
 		if (!file.isEmpty()) {
 			try {
 				String uploadsDir = "/uploads/";
-				String realPathtoUploads = request.getServletContext().getRealPath(uploadsDir);
+				String realPathtoUploads = getFilePath(uploadsDir);
 				File uploadLocationFile = new File(realPathtoUploads);
 				if (!uploadLocationFile.exists()) {
 					uploadLocationFile.mkdir();
@@ -39,10 +42,15 @@ public class FamstackProjectFileManager extends BaseFamstackManager {
 		}
 	}
 
+	private String getFilePath(String uploadsDir) {
+		return getFamstackApplicationConfiguration().getFileUploadLocation();
+	}
+
 	public List<String> getProjectFiles(String projectCode, HttpServletRequest request) {
+		projectCode = sanitize(projectCode);
 		List<String> filesName = new ArrayList<>();
 		String uploadsDir = "/uploads/";
-		String realPathtoUploads = request.getServletContext().getRealPath(uploadsDir);
+		String realPathtoUploads = getFilePath(uploadsDir);
 		String projectFileLocation = realPathtoUploads + "/" + projectCode + "/";
 		File projectFile = new File(projectFileLocation);
 		if (projectFile.exists()) {
@@ -56,11 +64,22 @@ public class FamstackProjectFileManager extends BaseFamstackManager {
 		return filesName;
 	}
 
+	private String sanitize(String fileName) {
+		if(StringUtils.isNotBlank(fileName) ) {
+			fileName = fileName.replaceAll("/...", "");
+			fileName = fileName.replaceAll("/..", "");
+			fileName = fileName.replaceAll("%00", "");
+		}
+		return fileName;
+	}
+
 	public void deleteFile(String fileName, String projectCode, HttpServletRequest request) {
+		fileName = sanitize(fileName);
+		projectCode = sanitize(projectCode);
 		logDebug("file to be deleted : " + fileName);
 		logDebug("folder name :" + projectCode);
 		String uploadsDir = "/uploads/";
-		String realPathtoUploads = request.getServletContext().getRealPath(uploadsDir);
+		String realPathtoUploads = getFilePath(uploadsDir);
 		String projectFileLocation = realPathtoUploads + "/" + projectCode + "/" + fileName;
 		File projectFile = new File(projectFileLocation);
 		if (projectFile.exists()) {
@@ -70,9 +89,11 @@ public class FamstackProjectFileManager extends BaseFamstackManager {
 	}
 
 	public File getFile(String fileName, String projectCode, HttpServletRequest request) {
-
+		fileName = sanitize(fileName);
+		projectCode = sanitize(projectCode);
+		
 		String uploadsDir = "/uploads/";
-		String realPathtoUploads = request.getServletContext().getRealPath(uploadsDir);
+		String realPathtoUploads = getFilePath(uploadsDir);
 		String projectFileLocation = realPathtoUploads + "/" + projectCode + "/" + fileName;
 		File projectFile = new File(projectFileLocation);
 		if (projectFile.exists()) {
@@ -80,5 +101,4 @@ public class FamstackProjectFileManager extends BaseFamstackManager {
 		}
 		return null;
 	}
-
 }

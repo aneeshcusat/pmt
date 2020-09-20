@@ -339,7 +339,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
 			Row row, int columnNumber, String label, boolean isBold) {
 		Cell cell =  getCell(row, columnNumber);
         cell.setCellStyle(getRightAllighStyle(workbook, isBold));
-        cell.setCellValue(label);
+        setCellValue(cell, label);
 	}
 
 	private CellStyle getRightAllighStyle(XSSFWorkbook workbook, boolean isBold) {
@@ -540,7 +540,7 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             userCell.setCellStyle(cellStyle);
         }
         // sheet.autoSizeColumn(projectDetailsColumnCount);
-        userCell.setCellValue(value);
+        setCellValue(userCell, value);
     }
 
     private void createTaskTimeCell(Sheet sheet, int columnIndex, Integer userTaskTimeMins,Double userTaskTimeXls, Row projectDetailsRow,
@@ -573,15 +573,15 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         Row userRow = sheet.getRow(2);
         Row userIdHeaderRow = sheet.getRow(4);
         Row userDetailsHeaderRow = sheet.getRow(5);
-        teamNameRow.getCell(0).setCellValue(teamName);
-        monthRow.getCell(1).setCellValue(dateString);
+        teamNameRow.getCell(0).setCellValue(sanitizeCellValue(teamName));
+        monthRow.getCell(1).setCellValue(sanitizeCellValue(dateString));
 
         int userDetailsColumnCount = 1;
         if (employees != null) {
             userRow.getCell(1).setCellValue(employees.size());
             for (EmployeeDetails employeeDetails : employees) {
                 Cell userHeaderCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 15);
-                userHeaderCell.setCellValue(employeeDetails.getFirstName() + (StringUtils.isNotBlank(employeeDetails.getSkills()) ?" (" + employeeDetails.getSkills() + ")" : ""));
+                setCellValue(userHeaderCell, employeeDetails.getFirstName() + (StringUtils.isNotBlank(employeeDetails.getSkills()) ?" (" + employeeDetails.getSkills() + ")" : ""));
                 userHeaderCell.setCellStyle(xssfCellUserHeaderStyle);
                 
                 Cell userIdHeaderCell = getCell(userIdHeaderRow, userDetailsColumnCount + 15);
@@ -601,11 +601,15 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             Cell projectTotalCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 15);
             sheet.autoSizeColumn(userDetailsColumnCount + 15);
             projectTotalCell.setCellStyle(xssfCellUserHeaderStyle);
-            projectTotalCell.setCellValue("Project Total Hrs");
+            setCellValue(projectTotalCell, "Project Total Hrs");
         }
     }
 
-    private Cell getCell(Row row, int cellNumber)
+    private void setCellValue(Cell cell, String value) {
+		cell.setCellValue(sanitizeCellValue(value));
+	}
+
+	private Cell getCell(Row row, int cellNumber)
     {
         Cell cell = row.getCell(cellNumber);
         if (cell == null) {

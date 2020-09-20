@@ -35,7 +35,6 @@
 	  gtag('config', 'UA-147513705-2');
 	</script>
 
-    	<!-- Famstack serverInstanceName : ${serverInstanceName} -->
         <!-- META SECTION -->
         <title><c:if test="${tracopusConfigEnabled == false}">Famstack&trade;</c:if><c:if test="${tracopusConfigEnabled == true}">Tracopus</c:if> - Project scheduler</title>            
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

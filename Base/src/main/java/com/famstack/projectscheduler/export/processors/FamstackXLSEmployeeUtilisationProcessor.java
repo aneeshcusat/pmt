@@ -207,7 +207,7 @@ public class FamstackXLSEmployeeUtilisationProcessor extends BaseFamstackService
             cell = row.createCell(colIndex);
         }
 
-        cell.setCellValue(value);
+        cell.setCellValue(sanitizeCellValue(value));
 
         if (cellStyle != null) {
             cell.setCellStyle(cellStyle);

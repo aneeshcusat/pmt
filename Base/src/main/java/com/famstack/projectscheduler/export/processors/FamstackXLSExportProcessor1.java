@@ -102,7 +102,7 @@ public class FamstackXLSExportProcessor1 extends BaseFamstackService implements 
             projectDataCell.setCellStyle(cellStyle);
         }
         // sheet.autoSizeColumn(projectDetailsColumnCount);
-        projectDataCell.setCellValue(value);
+        projectDataCell.setCellValue(sanitizeCellValue(value));
     }
 
 }

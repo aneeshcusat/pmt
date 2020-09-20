@@ -1,6 +1,8 @@
 package com.famstack.projectscheduler.configuration;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import org.springframework.context.annotation.Scope;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.contants.DashBoardDateRange;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManager;
 import com.famstack.projectscheduler.security.login.LoginResult;
 import com.famstack.projectscheduler.security.login.LoginResult.Status;
 import com.famstack.projectscheduler.util.DateTimePeriod;
@@ -31,6 +34,8 @@ public class FamstackUserSessionConfiguration implements Serializable
 
     /** The login result. */
     private LoginResult loginResult;
+    
+    private String csrToken;
 
     private Date userLastActivityDate;
 
@@ -148,5 +153,24 @@ public class FamstackUserSessionConfiguration implements Serializable
     {
         this.userLastActivityDate = userLastActivityDate;
     }
+
+	public String getCsrToken() {
+		return csrToken;
+	}
+	
+	public String getCsrTokenRef() {
+		try {
+			csrToken = URLEncoder.encode(FamstackSecurityTokenManager.encryptStringWithDate("CSRToken",
+					"H8SUvSYy4#EWdgdzEBYiYn16di7HfSng"), "UTF-8");
+			return csrToken;
+		} catch (UnsupportedEncodingException e) {
+		}
+		
+		return "";
+	}
+
+	public void setCsrToken(String csrToken) {
+		this.csrToken = csrToken;
+	}
 
 }

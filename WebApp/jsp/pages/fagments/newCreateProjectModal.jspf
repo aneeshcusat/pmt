@@ -10,9 +10,10 @@
 	value="${applicationScope.applicationConfiguraion.newProjectCategories}" />
 <c:set var="prjectCategoryEnabled"
 	value="${applicationScope.applicationConfiguraion.prjectCategoryEnabled}" />
+	<c:set var="csrToken" value="${applicationScope.applicationConfiguraion.csrTokenRef}"/>
 <style>
 </style>
-
+<form:input path="csrToken" type="hidden" value="${csrToken}"/>
 <form:input type="hidden" id="projectId" path="id" />
 
 <form:input type="hidden" id="hoursUserSkillMonthlySplit" path="hoursUserSkillMonthlySplitJson"/>

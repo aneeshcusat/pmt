@@ -619,6 +619,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             }
             ProjectDetails projectDetails = new ProjectDetails();
             projectDetails.setCode(projectItem.getCode());
+            projectDetails.setUserGroupId(projectItem.getUserGroupId());
             projectDetails.setId(projectItem.getProjectId());
             projectDetails.setName(projectItem.getName());
             projectDetails.setDeleted(projectItem.getDeleted());

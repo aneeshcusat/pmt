@@ -19,6 +19,8 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
     private String userGroupId;
 
     private String firstName;
+    
+    private String csrToken;
 
     private String lastName;
 
@@ -83,6 +85,8 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
     private String reportertingManagerEmailId;
     
     private String deptLeadEmailId;
+    
+    private String hashKey;
     
     private String lobHeadEmailId;
     
@@ -478,6 +482,22 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
 
 	public void setSkills(String skills) {
 		this.skills = skills;
+	}
+
+	public String getHashKey() {
+		return hashKey;
+	}
+
+	public void setHashKey(String hashKey) {
+		this.hashKey = hashKey;
+	}
+
+	public String getCsrToken() {
+		return csrToken;
+	}
+
+	public void setCsrToken(String csrToken) {
+		this.csrToken = csrToken;
 	}
 
 }

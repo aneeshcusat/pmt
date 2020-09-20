@@ -1,5 +1,4 @@
 This is an automated notification please do not reply.
 Please login and reset your password to use the system
 Username : ${emailId}
-password : ${password}
-Url : ${url}/login
+Url : ${url}

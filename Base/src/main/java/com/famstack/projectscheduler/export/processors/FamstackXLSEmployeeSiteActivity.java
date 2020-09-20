@@ -71,11 +71,11 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
                         Row row = getRow(sheet, rowIndex);
                         Cell cell = getCell(sheet, row, colIndex++);
 
-                        cell.setCellValue(employees.get(userId).getFirstName());
+                        setCellValue(cell, employees.get(userId).getFirstName());
                         cell = getCell(sheet, row, colIndex++);
 
                         UserGroupDetails userGroupDetails = userGroupMap.get(employees.get(userId).getUserGroupId());
-                        cell.setCellValue(userGroupDetails == null ? "" : userGroupDetails.getName());
+                        setCellValue(cell, userGroupDetails == null ? "" : userGroupDetails.getName());
                         Map<String, String> userActivity = exportDataList.get(userId);
                         Map<String, UserTaskActivityItem> nonBillableTaskItem = nonBillativityMap.get(userId);
                         if (userActivity != null) {
@@ -83,7 +83,7 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
                             for (String userActiveDate : userActivity.keySet()) {
                                 colIndex = dateList.indexOf(userActiveDate) + 2;
                                 cell = getCell(sheet, row, colIndex);
-                                cell.setCellValue("Active");
+                                setCellValue(cell, "Active");
                             }
                         }
 
@@ -98,7 +98,7 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
                                     && (FamstackConstants.LEAVE.equalsIgnoreCase(userTaskActivityItem.getTaskActCategory()) || 
                                     		FamstackConstants.HOLIDAY.equalsIgnoreCase(userTaskActivityItem.getTaskActCategory()) ||
                                     		FamstackConstants.LEAVE_OR_HOLIDAY.equalsIgnoreCase(userTaskActivityItem.getTaskActCategory()))) {
-                                    cell.setCellValue(userTaskActivityItem.getTaskActCategory());
+                                	setCellValue(cell, userTaskActivityItem.getTaskActCategory());
                                     String startTimeString =
                                         DateUtils.format(new Date(userTaskActivityItem.getActualStartTime().getTime()),
                                             DateUtils.DATE_TIME_FORMAT);
@@ -121,7 +121,11 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
 
     }
 
-    private Comment getComment(XSSFWorkbook workBook, XSSFSheet sheet, String commentString)
+   private void setCellValue(Cell cell, String value) {
+	   cell.setCellValue(sanitizeCellValue(value));		
+	}
+
+ private Comment getComment(XSSFWorkbook workBook, XSSFSheet sheet, String commentString)
     {
         XSSFCreationHelper richTextFactory = workBook.getCreationHelper();
         XSSFDrawing drawing = sheet.createDrawingPatriarch();
@@ -137,12 +141,12 @@ public class FamstackXLSEmployeeSiteActivity extends BaseFamstackService impleme
         int colIndex = 0;
         Row row = getRow(sheet, 0);
         Cell cell = getCell(sheet, row, colIndex++);
-        cell.setCellValue("Employee Names");
+        setCellValue(cell, "Employee Names");
         cell = getCell(sheet, row, colIndex++);
-        cell.setCellValue("Team Name");
+        setCellValue(cell, "Team Name");
         for (String headerDate : dateList) {
             cell = getCell(sheet, row, colIndex++);
-            cell.setCellValue(headerDate);
+            setCellValue(cell, headerDate);
         }
     }
 

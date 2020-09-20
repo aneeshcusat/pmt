@@ -477,20 +477,24 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return userProfileManager.isValidUserResetKey(key, userId);
 	}
 
-	public boolean changePassword(String userName, String oldPassword,
+	public boolean changePassword(String userName, String key, String oldPassword,
 			String password) {
-		boolean status = userProfileManager.changePassword(userName,
-				oldPassword, password);
 		Integer userId = FamstackApplicationConfiguration.getUserIdMap().get(
 				userName);
-		EmployeeDetails employeeDetails = null;
+		boolean status = false;
+		 if (isValidKeyForUserReset(key, userId)) {
+			  status = userProfileManager.changePassword(userName,
+				oldPassword, password);
+			  EmployeeDetails employeeDetails = null;
 
-		if (userId != null) {
-			employeeDetails = getFamstackApplicationConfiguration()
-					.getUserMap().get(userId);
-		}
+				if (userId != null) {
+					employeeDetails = getFamstackApplicationConfiguration()
+							.getUserMap().get(userId);
+				}
 
-		notifyAll(NotificationType.RESET_PASSWORD, employeeDetails);
+				notifyAll(NotificationType.RESET_PASSWORD, employeeDetails);
+		 }
+		
 		return status;
 	}
 

@@ -81,7 +81,7 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
       CellStyle cellStyle) {
     Row row = getRow(sheet, rowIndex);
     Cell cell = getCell(sheet, row, colIndex);
-    cell.setCellValue(value);
+    cell.setCellValue(sanitizeCellValue(value));
     if (cellStyle != null) {
       cell.setCellStyle(cellStyle);
     } else {

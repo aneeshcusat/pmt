@@ -45,22 +45,24 @@
                     <form class="form-horizontal" method="post">
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input type="text" class="form-control" placeholder="Email id" id="emailId"/>
+                            <input type="text" class="form-control" placeholder="Email id" id="emailId" autocomplete="off"/>
                         </div>
                     </div>
-                     <div class="form-group">
+                    <input type="hidden" class="form-control" placeholder="Current Password" id="currentPassword" value="none"/>
+                    <input type="hidden" class="form-control" placeholder="Current key" id="key" value="${param.key}"/>
+                    <%--  <div class="form-group">
                         <div class="col-md-12">
                             <input type="password" class="form-control" placeholder="Current Password" id="currentPassword"/>
                         </div>
-                    </div>
+                    </div>  --%>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input type="password" class="form-control" placeholder="New Password" id="password"/>
+                            <input type="password" class="form-control" placeholder="New Password" id="password" autocomplete="off"/>
                         </div>
                     </div>
                      <div class="form-group">
                         <div class="col-md-12">
-                            <input type="password" class="form-control" placeholder="Confirm Password" id="confPassword"/>
+                            <input type="password" class="form-control" placeholder="Confirm Password" id="confPassword" autocomplete="off"/>
                         </div>
                     </div>
                     <span id="invalidLoginSpan" style="color: red;display: none">Invalid credentials</span>
@@ -150,7 +152,7 @@
     		return;
     	}
     	famstacklog("jello");
-    	var dataString = {"email": $('#emailId').val(), "oldPassword": $('#currentPassword').val() , "password": $('#password').val(), "confPassword": $('#confPassword').val() };
+    	var dataString = {"email": $('#emailId').val(), "oldPassword": $('#currentPassword').val(), "key": $('#key').val() , "password": $('#password').val(), "confPassword": $('#confPassword').val() };
     	
 		doAjaxRequest("POST", "/bops/dashboard/changePassword", dataString,
 		function(response) {

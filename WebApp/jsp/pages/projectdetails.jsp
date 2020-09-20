@@ -17,7 +17,7 @@
  </ul>
  <!-- END BREADCRUMB -->  
 	
-<c:if test="${projectDetails == null}">
+<c:if test="${projectDetails == null or currentUserGroupId != projectDetails.userGroupId}">
 <div class="content-frame" style=" min-height: 500px;">    
 	<div class="content-frame-top" style="padding:0 0 0 0">  
 		<div class="row">
@@ -28,7 +28,7 @@
 	</div>     
 </div>
 </c:if>
-<c:if test="${projectDetails != null}">
+<c:if test="${projectDetails != null and currentUserGroupId == projectDetails.userGroupId}">
 <!-- START CONTENT FRAME -->
 <div class="content-frame">    
 	<div class="content-frame-top" style="padding:0 0 0 0">  
@@ -907,6 +907,8 @@ $(document).ready(function() {
   		$("#my-dropzone").dropzone({
   			url : "${applicationHome}/uploadfile/${projectDetails.id}",
   			addRemoveLinks : false,
+  			acceptedFiles: ".jpeg,.jpg,.png,.gif,.doc,.docx,.xls,.xlsx,.pdf",
+  			maxFilesize: 10, 
   			success : function(file, response) {
   				var imgName = response;
   				file.previewElement.classList.add("dz-success");

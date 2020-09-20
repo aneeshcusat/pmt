@@ -12,6 +12,18 @@
 <c:set var="weeklyLogTaskEnabled" value='${applicationScope.applicationConfiguraion.weeklyTimeLogNewTaskEnabled}'/>
 <c:set var="weekTLDisableMonthEnabled" value='${applicationScope.applicationConfiguraion.weekTLDisableMonthEnabled}'/>
 
+ <c:set var="weeklyTimeLog" value='weeklyTimeLog${currentUserGroupId}'/>   
+  <c:set var="weeklyTimeLogStatus" value='disabled'/>  
+<c:if test="${not empty appConfigMap[weeklyTimeLog] && not empty appConfigMap[weeklyTimeLog].appConfValueDetails}">
+<c:forEach var="weeklyTimeLogConf" items="${appConfigMap[weeklyTimeLog].appConfValueDetails}">
+<c:set var="weeklyTimeLogStatus" value='${weeklyTimeLogConf.value}'/>  
+</c:forEach>
+</c:if>
+
+ <c:if test="${weeklyTimeLogStatus == 'disabled'}">
+ <h4>Timesheet not enabled</h4>
+</c:if>
+				  
 <script type="text/javascript">
 var taskCreateEnabled = ${weeklyLogTaskEnabled};
 var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
@@ -21,6 +33,7 @@ var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Time sheet</li>
  </ul>
+ <c:if test="${weeklyTimeLogStatus == 'enabled'}">
 <!-- START CONTENT FRAME -->
 <div class="content-frame">            
     <!-- START CONTENT FRAME TOP -->
@@ -169,6 +182,7 @@ var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
         </div>
         
     </div>                    
+ </c:if>
     <!-- END CONTENT FRAME BODY -->
 <!-- END CONTENT FRAME -->                                
  <%@include file="includes/footer.jsp" %>   

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.configuration.FamstackUserSessionConfiguration;
+import com.famstack.projectscheduler.util.StringUtils;
 
 /**
  * The Class BaseFamstackService.
@@ -151,5 +152,32 @@ public class BaseFamstackService
     {
         return famstackUserSessionConfiguration;
     }
+    
+    public String sanitizeCellValue(String value) {
 
+        if( StringUtils.isNotBlank(value)) {
+        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
+        		value = value.substring(1);	
+        	}
+        	System.out.println(value);
+        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
+        		value = value.substring(1);		
+        	}
+        	System.out.println(value);
+        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
+        		value = value.substring(1);	
+        	}
+        	System.out.println(value);
+        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
+        		value = value.substring(1);	
+        	}
+        	System.out.println(value);
+        }
+        
+        return value;
+    }
+    
+    public static void main(String[] args) {
+		new BaseFamstackService().sanitizeCellValue("=+-@hello");
+	}
 }

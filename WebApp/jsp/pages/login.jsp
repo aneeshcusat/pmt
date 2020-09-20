@@ -59,12 +59,12 @@
               <form class="form-horizontal" method="post" id="loginForm">
               <h1>Welcome, Please Sign In</h1>
              <div>
-                <input type="email" class="form-control" placeholder="Email id" id="emailId" name="email"/>
+                <input type="email" class="form-control" placeholder="Email id" id="emailId" name="email" autocomplete="off"/>
               </div>
               <div>
                  <input type="password" class="form-control" placeholder="Password" id="password" name="password"/>
               </div>
-              <span id="invalidLoginSpan" style="color: red;display: none">Invalid credentials</span>
+              <span id="invalidLoginSpan" style="color: red;display: none"></span>
               <div>
                 <a class="btn btn-info btn-block submit"  href="javascript:invokeLoginAjax()">Log in</a>
                 <a class="reset_pass" href="/bops/dashboard/forgotpassword">Lost your password?</a>
@@ -143,7 +143,8 @@
 							}
 						} else if(responseJsonObj.status == false && responseJsonObj.passwordreset == true)  {
 							window.location = "/bops/dashboard/resetpassword?key="+encodeURIComponent(responseJsonObj.key)+"&uid="+responseJsonObj.uid;
-						} else {
+						} else if(responseJsonObj.status == false) {
+							$("#invalidLoginSpan").html(responseJsonObj.error);
 							$("#invalidLoginSpan").show();
 						}
 					}, function(e) {

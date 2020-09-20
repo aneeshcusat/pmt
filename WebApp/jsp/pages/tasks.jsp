@@ -634,6 +634,8 @@ Dropzone.autoDiscover = false;
 var myDropZone = $("#my-dropzone").dropzone({
 	url : "${applicationHome}/uploadfile/completed",
 	addRemoveLinks : false,
+	acceptedFiles: ".jpeg,.jpg,.png,.gif,.doc,.docx,.xls,.xlsx,.pdf",
+	maxFilesize: 10, 
 	success : function(file, response) {
 		file.previewElement.classList.add("dz-success");
 		famstacklog(file.name);

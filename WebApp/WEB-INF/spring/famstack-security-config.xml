@@ -19,7 +19,8 @@
 	    <sec:intercept-url pattern="/dashboard/login*" access="isAnonymous()" />
 	    <sec:intercept-url pattern="/dashboard/resetpassword*" access="isAnonymous()" />
 	    <sec:intercept-url pattern="/dashboard/forgotpassword*" access="isAnonymous()" />
-	    <sec:intercept-url pattern="/dashboard/forgotPassword*" access="isAnonymous()" />
+	    <sec:intercept-url pattern="/dashboard/passwordreset*" access="isAnonymous()" />
+	     <sec:intercept-url pattern="/dashboard/forgotPassword*" access="isAnonymous()" />
 	    <sec:intercept-url pattern="/dashboard/sendMail*" access="isAnonymous()" />
 	    <sec:intercept-url pattern="/dashboard/changePassword*" access="isAnonymous()" />
 	    <sec:intercept-url pattern="/dashboard/initialize/user*" access="permitAll" />

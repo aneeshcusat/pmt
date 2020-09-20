@@ -127,6 +127,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public String getEmpUtlAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate,
     		@PathVariable(value = "userGroupId") String userGroupId)
     {
+    	try {
+       	 Integer.parseInt(userGroupId);
+        } catch(Exception e){
+       	 return "{}"; 
+        }
         return famstackDashboardManager.getEmpUtlAjaxFullcalendar(startDate, endDate, userGroupId);
     }
     
@@ -135,6 +140,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public String getEmpBWAjaxFullcalendar(@RequestParam("start") String startDate, @RequestParam("end") String endDate,
     		@PathVariable(value = "userGroupId") String userGroupId)
     {
+    	try {
+          	 Integer.parseInt(userGroupId);
+           } catch(Exception e){
+          	 return "{}"; 
+           }
         return famstackDashboardManager.getEmpBWAjaxFullcalendar(startDate, endDate, userGroupId);
     }
     
@@ -143,6 +153,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public String dashboardOverAllUtilizationPercentage(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
     {
+    	try {
+          	 Integer.parseInt(userGroupId);
+           } catch(Exception e){
+          	 return "{}"; 
+           }
     	 FamstackDateRange famstackDateRange = DateUtils.parseDateRangeString(dateRange);
          Date startDate = famstackDateRange.getStartDate();
          Date endDate = famstackDateRange.getEndDate();
@@ -155,6 +170,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public String dashboardOverAllUtilization(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
     {
+    	try {
+          	 Integer.parseInt(userGroupId);
+           } catch(Exception e){
+          	 return "{}"; 
+           }
     	 FamstackDateRange famstackDateRange = DateUtils.parseDateRangeString(dateRange);
          Date startDate = famstackDateRange.getStartDate();
          Date endDate = famstackDateRange.getEndDate();
@@ -166,6 +186,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public ModelAndView dashboardAccountUtilizationChart(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
     {
+    	try {
+          	 Integer.parseInt(userGroupId);
+           } catch(Exception e){
+        	   userGroupId = "0";
+           }
     	FamstackDateRange famstackDateRange = DateUtils.parseDateRangeString(dateRange);
         Date startDate = famstackDateRange.getStartDate();
         Date endDate = famstackDateRange.getEndDate();
@@ -183,6 +208,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public ModelAndView dashboardTotalUtilizationCompare(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountIds") String accountIds,@RequestParam("teamIds") String teamIds,@RequestParam("subTeamIds") String subTeamIds,@RequestParam("userIds") String userIds)
     {
+    	try {
+          	 Integer.parseInt(userGroupId);
+           } catch(Exception e){
+        	   userGroupId = "0";
+           }
     	 FamstackDateRange famstackDateRange = DateUtils.parseDateRangeString(dateRange);
          Date startDate = famstackDateRange.getStartDate();
          Date endDate = famstackDateRange.getEndDate();
@@ -202,6 +232,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public String dashboardChartTeamsCompare(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountIds") String accountIds,@RequestParam("teamIds") String teamIds,@RequestParam("subTeamIds") String subTeamIds,@RequestParam("userIds") String userIds, @PathVariable("type") String type)
     {
+    	try {
+          	 Integer.parseInt(userGroupId);
+           } catch(Exception e){
+          	 return "{}"; 
+           }
     	return dashboardChartResourcesCompare(userGroupId, dateRange, accountIds, teamIds, subTeamIds, "", type);
     }
     
@@ -213,6 +248,12 @@ public class FamstackDashboardController extends BaseFamstackService
     	 FamstackDateRange famstackDateRange = DateUtils.parseDateRangeString(dateRange);
          Date startDate = famstackDateRange.getStartDate();
          Date endDate = famstackDateRange.getEndDate();
+         
+         try {
+        	 Integer.parseInt(userGroupId);
+         } catch(Exception e){
+        	 return "{\"lineColors\":[],\"data\":[],\"ykeys\":[],\"labels\":[]}"; 
+         }
          
          Map<String,  Map<String, DashboardUtilizationDetails>> dashboardOverAllutilizationMap = famstackDashboardManager.dashboarAllUtilizationListCompare(startDate, endDate, userGroupId, accountIds, teamIds, subTeamIds,userIds,type);
         
@@ -237,6 +278,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public ModelAndView dashboardTotalUtilizationChart(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId, @PathVariable("viewType") String viewType)
     {
+		try {
+	       	 Integer.parseInt(userGroupId);
+	        } catch(Exception e){
+	        	userGroupId = "0";
+	        }
 		 FamstackDateRange famstackDateRange = DateUtils.parseDateRangeString(dateRange);
 	     Date startDate = famstackDateRange.getStartDate();
 	     Date endDate = famstackDateRange.getEndDate();
@@ -255,6 +301,11 @@ public class FamstackDashboardController extends BaseFamstackService
     public ModelAndView dashboardResourceUtilizationChart(@RequestParam("userGroupId") String userGroupId, @RequestParam("dateRange") String dateRange,
     		@RequestParam("accountId") String accountId,@RequestParam("teamId") String teamId,@RequestParam("subTeamId") String subTeamId,@RequestParam("userId") String userId)
     {
+    	try {
+          	 Integer.parseInt(userGroupId);
+           } catch(Exception e){
+        	   userGroupId = "0";
+           }
     	 FamstackDateRange famstackDateRange = DateUtils.parseDateRangeString(dateRange);
 	     Date startDate = famstackDateRange.getStartDate();
 	     Date endDate = famstackDateRange.getEndDate();

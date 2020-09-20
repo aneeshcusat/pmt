@@ -45,6 +45,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 
 	@Resource
 	FamstackRemoteServiceRefreshManager famstackRemoteServiceRefreshManager;
+	
+	private String fileUploadLocation;
 
 	private String hostName;
 
@@ -53,6 +55,8 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	private String protocol;
 
 	private String staticFilesLocation;
+	
+	private Boolean csrEnabled;
 
 	private String instanceName;
 
@@ -807,5 +811,31 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 			return true;
 		}
 		return false;
+	}
+
+	public String getFileUploadLocation() {
+		return fileUploadLocation;
+		
+	}
+
+	public void setFileUploadLocation(String fileUploadLocation) {
+		this.fileUploadLocation = fileUploadLocation;
+	}
+
+	public String getCsrTokenRef() {
+		
+		return getFamstackUserSessionConfiguration().getCsrTokenRef();
+	}
+
+	public Boolean getCsrEnabled() {
+		return csrEnabled;
+	}
+
+	public void setCsrEnabled(Boolean csrEnabled) {
+		this.csrEnabled = csrEnabled;
+	}
+
+	public boolean validateCsrToken(String csrTokenString) {
+		return csrEnabled ? csrTokenString.equals( getFamstackUserSessionConfiguration().getCsrToken()) : true;
 	}
 }

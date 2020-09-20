@@ -24,8 +24,12 @@ public class ProjectDetails
 {
 
     private Integer id;
+    
+    private String userGroupId;
 
     private String name;
+    
+    private String csrToken;
 
     private String code;
 
@@ -717,5 +721,21 @@ public class ProjectDetails
 
 	public void setClientPartner(String clientPartner) {
 		this.clientPartner = clientPartner;
+	}
+
+	public String getUserGroupId() {
+		return userGroupId;
+	}
+
+	public void setUserGroupId(String userGroupId) {
+		this.userGroupId = userGroupId;
+	}
+
+	public String getCsrToken() {
+		return csrToken;
+	}
+
+	public void setCsrToken(String csrToken) {
+		this.csrToken = csrToken;
 	}
 }

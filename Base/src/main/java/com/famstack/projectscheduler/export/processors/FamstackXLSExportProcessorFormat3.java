@@ -108,12 +108,12 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
         for (String headerDate : dateList) {
         	Cell cell = getCell(sheet, rowDate, colIndex);
         	if (!"SKIP".equalsIgnoreCase(headerDate)) {
-        		cell.setCellValue(headerDate);
+        		cell.setCellValue(sanitizeCellValue(headerDate));
         		sheet.autoSizeColumn(colIndex);
         	}
             
             cell = getCell(sheet, rowDay, colIndex++);
-            cell.setCellValue(dayList.get(dayIndexCount++));
+            cell.setCellValue(sanitizeCellValue(dayList.get(dayIndexCount++)));
         }
     }
     
@@ -269,7 +269,7 @@ public class FamstackXLSExportProcessorFormat3 extends BaseFamstackService imple
         if (userCell == null) {
             userCell = projectDetailsRow.createCell(projectDetailsColumnCount);
         }
-        userCell.setCellValue(value);
+        userCell.setCellValue(sanitizeCellValue(value));
     }
 
     private void createTaskTimeCell(Sheet sheet, int columnIndex, Integer userTaskTime, Row projectDetailsRow, CellStyle cellStyle)

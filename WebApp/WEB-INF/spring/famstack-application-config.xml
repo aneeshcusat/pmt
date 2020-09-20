@@ -11,6 +11,8 @@
    <context:component-scan base-package="com.famstack.projectscheduler" />
    
    <bean id="famstackApplicationConfiguration" class="com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration" init-method="forceInitialize">
+   		<property name="fileUploadLocation" value="${famstack.fileUploadLocation}"/>
+   		<property name="csrEnabled" value="${famstack.csrEnabled}"/>
    		<property name="protocol" value="${famstack.protocol}"/>
    		<property name="hostName" value="${famstack.hostName}"/>
    		<property name="portNumber" value="${famstack.portNumber}"/>

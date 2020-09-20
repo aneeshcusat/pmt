@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.notification;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +21,7 @@ import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.notification.bean.EmailNotificationItem;
 import com.famstack.projectscheduler.notification.services.FamstackBaseNotificationService;
+import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManager;
 import com.famstack.projectscheduler.util.StringUtils;
 
 @Service
@@ -432,7 +435,14 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         notificationEmailItem.getData().put("firstName", employeeDetails.getFirstName());
         notificationEmailItem.getData().put("password", employeeDetails.getPassword());
         notificationEmailItem.getData().put("phoneNumber", employeeDetails.getMobileNumber());
-        notificationEmailItem.getData().put("url", getFamstackApplicationConfiguration().getUrl());
+        String key = "";
+		try {
+			key = URLEncoder.encode(FamstackSecurityTokenManager.encryptStringWithDate(employeeDetails.getHashKey(),
+					employeeDetails.getHashKey()), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+        notificationEmailItem.getData().put("url", getFamstackApplicationConfiguration().getUrl() + "/resetpassword?key="+key+"&uid="+employeeDetails.getId());
         return notificationEmailItem;
     }
 
@@ -445,5 +455,4 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
     {
         this.notificationServices = notificationServices;
     }
-
 }

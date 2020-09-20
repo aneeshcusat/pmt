@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -75,6 +76,8 @@ public class FamstackProjectController extends BaseFamstackService
     
     @Resource
     FamstackEmailSender famstackEmailSender;
+    
+    private static final List<String> contentTypes = Arrays.asList("image/png","application/pdf", "image/jpeg", "image/gif", "text/plain", "application/msword", "application/vnd.ms-excel");
 
     @RequestMapping(value = "/projects", method = RequestMethod.GET)
     public ModelAndView listProjects()
@@ -397,7 +400,12 @@ public class FamstackProjectController extends BaseFamstackService
     public String createProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,
         Model model)
     {
-        int projectId = famstackDashboardManager.createProject(projectDetails);
+    	int projectId = 0;
+    	if (getFamstackApplicationConfiguration().validateCsrToken(projectDetails.getCsrToken())) {
+    		 projectId = famstackDashboardManager.createProject(projectDetails);
+    	} else {
+    		 return "{\"status\": false,\"errorCode\": \"Unauthorized access\"}";
+    	}
         return "{\"status\": true,\"projectId\": " + projectId + "}";
     }
 
@@ -498,7 +506,11 @@ public class FamstackProjectController extends BaseFamstackService
     public String updateProject(@ModelAttribute("projectDetails") ProjectDetails projectDetails, BindingResult result,
         Model model)
     {
-        famstackDashboardManager.updateProject(projectDetails);
+    	if (getFamstackApplicationConfiguration().validateCsrToken(projectDetails.getCsrToken())) {
+    		famstackDashboardManager.updateProject(projectDetails);
+    	} else {
+    		 return "{\"status\": false, \"error\": \"Unauthorized Access\"}";
+    	}
         return "{\"status\": true}";
     }
 
@@ -547,8 +559,12 @@ public class FamstackProjectController extends BaseFamstackService
     public String uploadProjectFile(@PathVariable(value = "projectCode") String projectCode,
         @RequestParam("file") MultipartFile file, HttpServletRequest request)
     {
-        famstackDashboardManager.uploadProjectFile(file, projectCode, request);
-        return "{\"status\": true}";
+    	String fileContentType = file.getContentType();
+        if(contentTypes.contains(fileContentType)) {
+        	famstackDashboardManager.uploadProjectFile(file, projectCode, request);
+        	 return "{\"status\": true}";
+        }
+        return "{\"status\": false}";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/deletefile/{projectCode}")

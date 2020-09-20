@@ -165,7 +165,14 @@ public class UserItem implements FamstackBaseItem
 
     @Column(name = "user_access_code")
     private Integer userAccessCode;
+    
+    @Column(name = "login_attempt_count")
+    private Integer loginAttemptCount;
 
+    @Column(name = "account_locked")
+    private Boolean accountLocked = false;
+
+    
     public int getCreatedBy()
     {
         return createdBy;
@@ -610,6 +617,22 @@ public class UserItem implements FamstackBaseItem
 
 	public void setSkills(String skills) {
 		this.skills = skills;
+	}
+
+	public Integer getLoginAttemptCount() {
+		return loginAttemptCount == null ? 0 : loginAttemptCount;
+	}
+
+	public void setLoginAttemptCount(Integer loginAttemptCount) {
+		this.loginAttemptCount = loginAttemptCount;
+	}
+
+	public Boolean isAccountLocked() {
+		return accountLocked == null ? false : accountLocked;
+	}
+
+	public void setAccountLocked(Boolean accountLocked) {
+		this.accountLocked = accountLocked;
 	}
 
 }

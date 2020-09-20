@@ -75,9 +75,10 @@ public class FamstackUserController extends BaseFamstackService
                 + authentication.getLoginResult().getHashKey() + "\", \"uid\": \""
                 + authentication.getLoginResult().getUserItem().getId() + "\"}";
 
+        }  else if (authentication.getLoginResult().getStatus() == Status.USER_ACCOUNT_LOCKED) {
+        	 return "{\"status\": false, \"error\": \"Account Locked. Please reset your password!\"}";
         }
-
-        return "{\"status\": false, \"error\": \"Bad Credentials\"}";
+        return "{\"status\": false, \"error\": \"Invalid Credentials\"}";
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -91,12 +92,14 @@ public class FamstackUserController extends BaseFamstackService
     }
 
     @RequestMapping(value = "/resetpassword", method = RequestMethod.GET)
-    public String resetPassword(@RequestParam("key") String key, @RequestParam("uid") int userId)
+    public ModelAndView resetPassword(@RequestParam("key") String key, @RequestParam("uid") int userId)
     {
+    	System.out.println(key);
         if (famstackDashboardManager.isValidKeyForUserReset(key, userId)) {
-            return "passwordreset";
+            return new ModelAndView("passwordreset").addObject("key",
+            		key);
         } else {
-            return "login";
+            return new ModelAndView("login");
         }
     }
 
@@ -111,11 +114,11 @@ public class FamstackUserController extends BaseFamstackService
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
     @ResponseBody
     public String changePassword(@RequestParam("email") String username,
-        @RequestParam("oldPassword") String oldPassword, @RequestParam("password") String password,
+        @RequestParam("oldPassword") String oldPassword, @RequestParam("key") String key, @RequestParam("password") String password,
         @RequestParam("confPassword") String confPassword)
     {
         if (password.equalsIgnoreCase(confPassword)
-            && famstackDashboardManager.changePassword(username, oldPassword, password)) {
+            && famstackDashboardManager.changePassword(username,key, oldPassword, password)) {
             return "{\"status\": true}";
         }
 
@@ -165,9 +168,13 @@ public class FamstackUserController extends BaseFamstackService
         BindingResult result, Model model)
     {
         try {
-            famstackDashboardManager.createUser(employeeDetails);
-            getFamstackApplicationConfiguration().initializeUserMap(
+        	if (getFamstackApplicationConfiguration().validateCsrToken(employeeDetails.getCsrToken())) {
+        		famstackDashboardManager.createUser(employeeDetails);
+        		getFamstackApplicationConfiguration().initializeUserMap(
                     getFamstackApplicationConfiguration().getFamstackUserProfileManager().getAllEmployeeDataList());
+        	} else {
+        		return "{\"status\": false,\"errorCode\": \"Unauthorized access\"}";
+        	}
         } catch (Exception e) {
             return "{\"status\": false,\"errorCode\": \"Duplicate\"}";
         }
@@ -181,9 +188,13 @@ public class FamstackUserController extends BaseFamstackService
         BindingResult result, Model model)
     {
         try {
-            famstackDashboardManager.updateUser(employeeDetails);
-            getFamstackApplicationConfiguration().initializeUserMap(
+        	if (getFamstackApplicationConfiguration().validateCsrToken(employeeDetails.getCsrToken())) {
+        		famstackDashboardManager.updateUser(employeeDetails);
+        		getFamstackApplicationConfiguration().initializeUserMap(
                     getFamstackApplicationConfiguration().getFamstackUserProfileManager().getAllEmployeeDataList());
+        	} else {
+        		return "{\"status\": false,\"errorCode\": \"Unauthorized access\"}";
+        	}
         } catch (Exception e) {
             return "{\"status\": false,\"errorCode\": \"Duplicate\"}";
         }

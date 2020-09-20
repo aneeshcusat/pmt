@@ -27,6 +27,7 @@ import com.famstack.projectscheduler.contants.SkillsUtils;
 import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsBySkillsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsBySkillsResponse.Resources;
 import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsBySkillsResponse.SkillSetResponse;
+import com.famstack.projectscheduler.util.StringUtils;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -60,7 +61,7 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
       CellStyle cellStyle) {
     Row row = getRow(sheet, rowIndex);
     Cell cell = getCell(sheet, row, colIndex);
-    cell.setCellValue(value);
+    cell.setCellValue(sanitizeCellValue(value));
     if (cellStyle != null) {
       cell.setCellStyle(cellStyle);
     } else {
@@ -129,8 +130,8 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
 	    		  }
 	    		  
 	    		  if (allSkills.indexOf(skill) == -1) {
+	    			  setCellValue(sheet, 1, resouceSkillHoursCellIndex + allSkills.size(), StringUtils.isNotBlank(skill) ? skill : "Others", headerValueCellStyle);
 	    			  allSkills.add(skill);
-	    			  setCellValue(sheet, 1, resouceSkillHoursCellIndex + allSkills.size(), "".equals(skill)?"Other":skill, headerValueCellStyle);
 	    		  }
 	    		  if( skills.get(skill).getEstimatedHours() > 0) {
 	    			  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getEstimatedHours(), valueCellStyle);

@@ -59,7 +59,7 @@
               <form class="form-horizontal" method="post" id="forgotForm">
               <h1>Reset your password</h1>
              <div>
-                <input type="email" class="form-control" placeholder="Email id" id="emailId" name="email"/>
+                <input type="email" class="form-control" placeholder="Email id" id="emailId" name="email" autocomplete="off"/>
               </div>
               <span id="invalidLoginSpan" style="color: red;display: none">Unable to recognize email id</span>
               <div>

@@ -51,7 +51,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
     {
         LoginResult loginResult = new LoginResult();
         UserItem userItem = getUserItem(name);
-        if (userItem != null) {
+        if (userItem != null && !userItem.isAccountLocked()) {
             String encryptPassword = FamstackSecurityTokenManager.encryptString(password, userItem.getHashkey());
             if (userItem.getPassword().equals(encryptPassword)) {
                 if (userItem.getNeedPasswordReset()) {
@@ -64,10 +64,21 @@ public class FamstackUserProfileManager extends BaseFamstackManager
                         .setLastPing(new Timestamp(new Date().getTime()));
                 }
                 loginResult.setUserItem(userItem);
+                userItem.setLoginAttemptCount(0);
                 return loginResult;
+            } else {
+            	userItem.setLoginAttemptCount(userItem.getLoginAttemptCount() + 1);
+            	if (userItem.getLoginAttemptCount() > 5) {
+            		userItem.setAccountLocked(true);
+            	}
             }
+            getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
         }
-        loginResult.setStatus(Status.FAILED);
+        if (userItem.isAccountLocked()) {
+        	 loginResult.setStatus(Status.USER_ACCOUNT_LOCKED);
+        } else {
+        	 loginResult.setStatus(Status.FAILED);
+        }
         return loginResult;
 
     }
@@ -126,6 +137,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeDetails.setEmail(userName);
             employeeDetails.setFirstName(userItem.getFirstName());
             employeeDetails.setId(userItem.getId());
+            employeeDetails.setHashKey(userItem.getHashkey());
             employeeDetails.setMobileNumber(userItem.getMobileNumber());
             return employeeDetails;
         }
@@ -254,6 +266,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeDetails.setRole(userItem.getUserRole());
             employeeDetails.setUserGroupId(userItem.getUserGroupId());
             employeeDetails.setUserAccessCode(userItem.getUserAccessCode());
+            employeeDetails.setHashKey(userItem.getHashkey());
 
             employeeDetails.setEmpCode(userItem.getEmpCode());
             //employeeDetails.setTemporaryEmployee(userItem.getTemporaryEmployee());
@@ -308,13 +321,15 @@ public class FamstackUserProfileManager extends BaseFamstackManager
     {
         UserItem userItem = getUserItem(userName);
         if (userItem != null) {
-            String encryptPassword = FamstackSecurityTokenManager.encryptString(oldPassword, userItem.getHashkey());
-            if (userItem.getPassword().equals(encryptPassword)) {
+//            String encryptPassword = FamstackSecurityTokenManager.encryptString(oldPassword, userItem.getHashkey());
+  //          if (userItem.getPassword().equals(encryptPassword)) {
                 userItem.setPassword(FamstackSecurityTokenManager.encryptString(password, userItem.getHashkey()));
                 userItem.setNeedPasswordReset(false);
+                userItem.setAccountLocked(false);
+                userItem.setLoginAttemptCount(0);
                 getFamstackDataAccessObjectManager().updateItem(userItem);
                 return true;
-            }
+    //        }
         }
         return false;
     }
