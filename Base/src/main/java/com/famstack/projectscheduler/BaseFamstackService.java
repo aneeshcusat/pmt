@@ -154,30 +154,29 @@ public class BaseFamstackService
     }
     
     public String sanitizeCellValue(String value) {
-
-        if( StringUtils.isNotBlank(value)) {
-        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
-        		value = value.substring(1);	
-        	}
-        	System.out.println(value);
-        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
-        		value = value.substring(1);		
-        	}
-        	System.out.println(value);
-        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
-        		value = value.substring(1);	
-        	}
-        	System.out.println(value);
-        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
-        		value = value.substring(1);	
-        	}
-        	System.out.println(value);
-        }
-        
+    	try {
+	        if( StringUtils.isNotBlank(value)) {
+	        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
+	        		value = value.substring(1);	
+	        	}
+	        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
+	        		value = value.substring(1);		
+	        	}
+	        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
+	        		value = value.substring(1);	
+	        	}
+	        	if( "=-+@".indexOf(value.charAt(0)) >= 0) {
+	        		value = value.substring(1);	
+	        	}
+	        }
+		}catch(Exception e) {
+			System.out.println("eror" + e.getMessage());
+	        System.out.println("["+ value +"]");
+		}
         return value;
     }
     
     public static void main(String[] args) {
-		new BaseFamstackService().sanitizeCellValue("=+-@hello");
+		new BaseFamstackService().sanitizeCellValue("- ");
 	}
 }

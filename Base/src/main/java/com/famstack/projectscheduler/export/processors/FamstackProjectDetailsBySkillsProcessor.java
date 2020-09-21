@@ -125,21 +125,22 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
 	    		  int skillIndex =  SkillsUtils.getUserSkillList().indexOf(skill);
 	    		  if (skillIndex < 0) {
 	    			  skillIndex = SkillsUtils.getUserSkillList().size();
-	    			  totalOtherHours+=skills.get(skill).getEstimatedHours();
+	    			  totalOtherHours+=skills.get(skill).getTotalHours();
 	    			  estOtherHours+= skills.get(skill).getEstimatedHours();
+	    		  } else {
+	    			  if( skills.get(skill).getEstimatedHours() > 0) {
+		    			  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getEstimatedHours(), valueCellStyle);
+		    		  }
+		    		  if( skills.get(skill).getTotalHours() > 0) {
+		    			  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getTotalHours(), valueCellStyle);
+		    		  }
 	    		  }
 	    		  
 	    		  if (allSkills.indexOf(skill) == -1) {
 	    			  setCellValue(sheet, 1, resouceSkillHoursCellIndex + allSkills.size(), StringUtils.isNotBlank(skill) ? skill : "Others", headerValueCellStyle);
 	    			  allSkills.add(skill);
 	    		  }
-	    		  if( skills.get(skill).getEstimatedHours() > 0) {
-	    			  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getEstimatedHours(), valueCellStyle);
-	    		  }
-	    		  if( skills.get(skill).getTotalHours() > 0) {
-	    			  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getTotalHours(), valueCellStyle);
-	    		  }
-	    		  if (skills.get(skill).getResources() != null) {
+	    			  if (skills.get(skill).getResources() != null) {
 	    			  String resourceHours = "";
 	    			  for (Resources resource : skills.get(skill).getResources()) {
 	    				  if (resource.getHoursSpent() > 0) {
@@ -148,6 +149,7 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
 	    			  }
 	    			  setCellValue(sheet, rowIndex, resouceSkillHoursCellIndex + allSkills.indexOf(skill), resourceHours, valueLeftCellStyle);
 	    		  }
+    		  
 	    	  }
 	    	  if(totalOtherHours > 0) {
 	    		  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + SkillsUtils.getUserSkillList().size(), "" + totalOtherHours, valueCellStyle);
