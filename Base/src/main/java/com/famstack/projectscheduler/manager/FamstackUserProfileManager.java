@@ -107,7 +107,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         return null;
     }
 
-    public void createUserItem(EmployeeDetails employeeDetails)
+    public UserItem createUserItem(EmployeeDetails employeeDetails)
     {
         String hashKey = passwordTokenGenerator.generate(32);
         String password = passwordTokenGenerator.generate(8);
@@ -118,7 +118,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         userItem.setNeedPasswordReset(true);
         userItem.setDeleted(false);
         employeeDetails.setPassword(password);
-        saveUserItem(employeeDetails, userItem);
+        return saveUserItem(employeeDetails, userItem);
     }
 
     public EmployeeDetails updateUserPasswordForReset(String userName)
@@ -152,7 +152,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         }
     }
 
-    private void saveUserItem(EmployeeDetails employeeDetails, UserItem userItem)
+    private UserItem saveUserItem(EmployeeDetails employeeDetails, UserItem userItem)
     {
         userItem.setUserId(employeeDetails.getEmail());
 
@@ -190,7 +190,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         userItem.setLobHeadEmailId(employeeDetails.getLobHeadEmailId());
         userItem.setSkills(employeeDetails.getSkills());
         
-        getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
+        return (UserItem) getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
     }
 
     private byte[] getImageBytes(String filePhoto)

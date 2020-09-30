@@ -3,6 +3,7 @@ package com.famstack.projectscheduler.dashboard.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +56,7 @@ import com.famstack.projectscheduler.employees.bean.TaskDetails;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
 import com.famstack.projectscheduler.manager.FamstackStaticXLSImportManager;
 import com.famstack.projectscheduler.manager.FamstackXLSExportManager;
+import com.famstack.projectscheduler.manager.MIMECheck;
 import com.famstack.projectscheduler.util.DateTimePeriod;
 import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.StringUtils;
@@ -559,11 +561,25 @@ public class FamstackProjectController extends BaseFamstackService
     public String uploadProjectFile(@PathVariable(value = "projectCode") String projectCode,
         @RequestParam("file") MultipartFile file, HttpServletRequest request)
     {
+    	
     	String fileContentType = file.getContentType();
-        if(contentTypes.contains(fileContentType)) {
-        	famstackDashboardManager.uploadProjectFile(file, projectCode, request);
-        	 return "{\"status\": true}";
-        }
+    	System.out.println("fileContentType " + fileContentType);
+    
+        try {
+        	int intArray[] = new int[10];
+        	InputStream ins = file.getInputStream();
+        	for (int i = 0; i < 8; i++) {
+        		int intval = ins.read();
+        		intArray[i] = intval;
+            }
+			if(MIMECheck.isAllowedFiles(intArray) && !MIMECheck.isHarmFul(intArray)) {
+				System.out.println("Uploading file");
+				famstackDashboardManager.uploadProjectFile(file, projectCode, request);
+				 return "{\"status\": true}";
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         return "{\"status\": false}";
     }
 

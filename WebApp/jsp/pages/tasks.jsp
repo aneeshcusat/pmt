@@ -637,8 +637,12 @@ var myDropZone = $("#my-dropzone").dropzone({
 	acceptedFiles: ".jpeg,.jpg,.png,.gif,.doc,.docx,.xls,.xlsx,.pdf",
 	maxFilesize: 10, 
 	success : function(file, response) {
+	if (response.status){
 		file.previewElement.classList.add("dz-success");
 		famstacklog(file.name);
+	 } else {
+	    	 file.previewElement.classList.add("dz-error");
+	       }
 	},
 	error : function(file, response) {
 		file.previewElement.classList.add("dz-error");

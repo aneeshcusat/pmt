@@ -571,7 +571,8 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
         Row teamNameRow = sheet.getRow(0);
         Row monthRow = sheet.getRow(1);
         Row userRow = sheet.getRow(2);
-        Row userIdHeaderRow = sheet.getRow(4);
+        Row userIdHeaderRow = sheet.getRow(3);
+        Row skillHeaderRow = sheet.getRow(4);
         Row userDetailsHeaderRow = sheet.getRow(5);
         teamNameRow.getCell(0).setCellValue(sanitizeCellValue(teamName));
         monthRow.getCell(1).setCellValue(sanitizeCellValue(dateString));
@@ -581,12 +582,15 @@ public class FamstackXLSExportProcessorDefault extends BaseFamstackService imple
             userRow.getCell(1).setCellValue(employees.size());
             for (EmployeeDetails employeeDetails : employees) {
                 Cell userHeaderCell = getCell(userDetailsHeaderRow, userDetailsColumnCount + 15);
-                setCellValue(userHeaderCell, employeeDetails.getFirstName() + (StringUtils.isNotBlank(employeeDetails.getSkills()) ?" (" + employeeDetails.getSkills() + ")" : ""));
+                setCellValue(userHeaderCell, employeeDetails.getFirstName());
                 userHeaderCell.setCellStyle(xssfCellUserHeaderStyle);
                 
                 Cell userIdHeaderCell = getCell(userIdHeaderRow, userDetailsColumnCount + 15);
                 userIdHeaderCell.setCellValue(employeeDetails.getId());
                 userIdHeaderCell.setCellStyle(hiddenStyle);
+                
+                Cell skillHeaderCell = getCell(skillHeaderRow, userDetailsColumnCount + 15);
+                setCellValue(skillHeaderCell, StringUtils.isNotBlank(employeeDetails.getSkills()) ? employeeDetails.getSkills()  : "");
                 
                 sheet.autoSizeColumn(userDetailsColumnCount + 15);
                 userDetailsColumnCount++;

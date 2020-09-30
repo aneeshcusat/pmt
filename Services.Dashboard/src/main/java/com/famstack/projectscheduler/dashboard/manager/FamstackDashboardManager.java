@@ -135,7 +135,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public Map<String, String> createUser(EmployeeDetails employeeDetails) {
 		Map<String, String> errorMap = new HashMap<String, String>();
-		userProfileManager.createUserItem(employeeDetails);
+		UserItem userItem = userProfileManager.createUserItem(employeeDetails);
+		employeeDetails.setHashKey(userItem.getHashkey());
+		employeeDetails.setId(userItem.getId());
 		notifyAll(NotificationType.USER_REGISTRAION, employeeDetails);
 		return errorMap;
 	}

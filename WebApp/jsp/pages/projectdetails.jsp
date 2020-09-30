@@ -910,6 +910,7 @@ $(document).ready(function() {
   			acceptedFiles: ".jpeg,.jpg,.png,.gif,.doc,.docx,.xls,.xlsx,.pdf",
   			maxFilesize: 10, 
   			success : function(file, response) {
+  		       if (response.status){
   				var imgName = response;
   				file.previewElement.classList.add("dz-success");
   				var fileIcon = "fa-file-text";
@@ -918,7 +919,10 @@ $(document).ready(function() {
   				}
   				
   				$("#upladedFilesList").append('<li><a href="${applicationHome}/download/${projectDetails.id}/'+file.name+'?fileName='+file.name+'"><i class="fa '+fileIcon+'"></i>'+file.name+'</a></li>');
-  			},
+  		       } else {
+  		    	 file.previewElement.classList.add("dz-error");
+  		       }
+  		      },
   			error : function(file, response) {
   				file.previewElement.classList.add("dz-error");
   			}
