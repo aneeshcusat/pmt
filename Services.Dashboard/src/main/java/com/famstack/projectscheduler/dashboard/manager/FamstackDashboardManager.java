@@ -44,6 +44,7 @@ import com.famstack.projectscheduler.dashboard.bean.POEstimateResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectCategoryDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsBySkillsResponse;
 import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsResponse;
+import com.famstack.projectscheduler.dashboard.bean.ProjectDetailsResponse.ProjectEstimate;
 import com.famstack.projectscheduler.dashboard.bean.ProjectStatusDetails;
 import com.famstack.projectscheduler.dashboard.bean.ProjectTaskActivityDetails;
 import com.famstack.projectscheduler.dashboard.bean.TaskResponse;
@@ -2255,7 +2256,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return FamstackUtils.getJsonFromObject(utilizationData);
 	}
 
-	public List<ProjectDetailsResponse> getProjectList(Date startDate, Date endDate, String teamId) {
+	public List<ProjectDetailsResponse> getProjectList(Date startDate, Date endDate, String teamId, int version) {
 		List<ProjectTaskActivityDetails> projectTaskActivityDetails = projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, teamId);
 		projectTaskActivityDetails.addAll(getAllNonBillableTaskActivities(startDate, endDate, false, null, teamId));
 		
@@ -2286,7 +2287,24 @@ public class FamstackDashboardManager extends BaseFamstackService {
 						projectDetailsResponse.setClientPartner(projectTaskDetail.getClientPartner());
 						projectDetailsResponse.setProjectType(projectTaskDetail.getProjectType() != null ? projectTaskDetail.getProjectType().toString() : null);
 						projectDetailsResponse.setProjectStatus(projectTaskDetail.getProjectStatus() != null ? projectTaskDetail.getProjectStatus().toString() : null);
-						projectDetailsResponse.setEstimatedHours(projectTaskDetail.getEstHoursByMonthSkills());
+						Map<String, List<Map<String, Integer>>> estimatedHours = projectTaskDetail.getEstHoursByMonthSkills();
+						if (version == 1 && estimatedHours != null) {
+							List<ProjectEstimate> projectEstimates = new ArrayList<>(); 
+							for (String month : estimatedHours.keySet()) {
+								for(Map<String, Integer> estmap : estimatedHours.get(month)) {
+									for (String activity : estmap.keySet()) {
+										ProjectEstimate projectEstimate = new ProjectEstimate();
+										projectEstimate.setMonth(month);
+										projectEstimate.setActivity(activity.replaceAll("_", " "));
+										projectEstimate.setEstimate(estmap.get(activity));
+										projectEstimates.add(projectEstimate);
+									}
+								}
+							}
+							projectDetailsResponse.setProjectEstimate(projectEstimates);
+						} else {
+							projectDetailsResponse.setEstimatedHours(estimatedHours);
+						}
 
 					}
 					projectDetailsResponsesList.add(projectDetailsResponse);

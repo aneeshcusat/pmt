@@ -108,6 +108,9 @@ public class FamstackUtils extends BaseFamstackService
 	public static Map getJsonObjectFromJson(String jsonString) {
 	        ObjectMapper objectMapper = new ObjectMapper();
 	        try {
+	        	if(StringUtils.isNotBlank(jsonString)) {
+	        		jsonString =  jsonString.replaceAll("_", " ");
+	        	}
 	            return  objectMapper.readValue(jsonString, Map.class);
 	        } catch (JsonGenerationException e) {
 	            getStaticLogger(FamstackUtils.class).error(e.getMessage(), e);

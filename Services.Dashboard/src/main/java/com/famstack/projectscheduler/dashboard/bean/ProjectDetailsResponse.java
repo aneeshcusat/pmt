@@ -24,6 +24,9 @@ public class ProjectDetailsResponse {
 	String projectStatus;
 	List<TaskResponse> tasks;
 	Map estimatedHours;
+	
+	List<ProjectEstimate> projectEstimate;
+	
 	public String getCreationDate() {
 		return creationDate;
 	}
@@ -123,5 +126,35 @@ public class ProjectDetailsResponse {
 	public void setEstimatedHours(Map estimatedHours) {
 		this.estimatedHours = estimatedHours;
 	}
-	
+	 
+	public static class ProjectEstimate {
+		String month;
+		String activity;
+		int estimate;
+		public String getMonth() {
+			return month;
+		}
+		public void setMonth(String month) {
+			this.month = month;
+		}
+		public String getActivity() {
+			return activity;
+		}
+		public void setActivity(String activity) {
+			this.activity = activity;
+		}
+		public int getEstimate() {
+			return estimate;
+		}
+		public void setEstimate(int estimate) {
+			this.estimate = estimate;
+		}
+	}
+
+	public List<ProjectEstimate> getProjectEstimate() {
+		return projectEstimate;
+	}
+	public void setProjectEstimate(List<ProjectEstimate> projectEstimate) {
+		this.projectEstimate = projectEstimate;
+	}
 }

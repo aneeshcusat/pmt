@@ -767,7 +767,35 @@ public class FamstackProjectController extends BaseFamstackService
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		
-		List<ProjectDetailsResponse> projectDetailsResponse =  famstackDashboardManager.getProjectList(startDate, endDate, sRequest.getTeamId());
+		List<ProjectDetailsResponse> projectDetailsResponse =  famstackDashboardManager.getProjectList(startDate, endDate, sRequest.getTeamId(), 0);
+		  return ResponseEntity
+		            .ok()
+		            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
+		            .body(projectDetailsResponse);
+		}
+		
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	  }
+	
+
+	@RequestMapping(value = "/rest/projects/v1/list", method = RequestMethod.POST,  produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity getProjectV1List(@RequestBody String searchRequest, HttpServletRequest request) {
+		String fClientId ="87534234598763332";
+		String fSecretKey ="knRIhdlZ0eBiO3TGExwR5XbLdTNR2rdTBCYRJpaPAoh0h7HL21UBTR7JE7H43D6a71UYiWGhKn1g4nIQuhRHXxEbJfzRTzjoGLP0";
+		String clientId = request.getHeader("clientId");
+		String securityKey = request.getHeader("secretKey");
+		
+		if (fClientId.equals(clientId) && fSecretKey.equals(securityKey)) {
+		SearchRequest sRequest = FamstackUtils.getObjectFromJson(searchRequest);
+		Date startDate = DateUtils.tryParse(sRequest.getStartDate(), DateUtils.DATE_FORMAT_CALENDER);
+		Date endDate =  DateUtils.tryParse(sRequest.getEndDate(), DateUtils.DATE_FORMAT_CALENDER);
+		
+		if (startDate == null || endDate == null || !StringUtils.isNotBlank(sRequest.getTeamId())) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		List<ProjectDetailsResponse> projectDetailsResponse =  famstackDashboardManager.getProjectList(startDate, endDate, sRequest.getTeamId(), 1);
 		  return ResponseEntity
 		            .ok()
 		            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
