@@ -2,6 +2,8 @@ package com.famstack.projectscheduler.employees.bean;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.UserTaskType;
 
@@ -26,6 +28,16 @@ public class TaskActivityDetails
     
     private String clientPartner;
 
+    private String division;
+    
+    private String account;
+    
+    private String orderBookNumber;
+    
+    private String referenceNo;
+    
+    private String actProjectName;
+    
     private int userId;
 
     private Date startTime;
@@ -327,5 +339,45 @@ public class TaskActivityDetails
 
 	public void setClientPartner(String clientPartner) {
 		this.clientPartner = clientPartner;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getOrderBookNumber() {
+		return orderBookNumber;
+	}
+
+	public void setOrderBookNumber(String orderBookNumber) {
+		this.orderBookNumber = orderBookNumber;
+	}
+
+	public String getReferenceNo() {
+		return referenceNo;
+	}
+
+	public void setReferenceNo(String referenceNo) {
+		this.referenceNo = referenceNo;
+	}
+
+	public String getActProjectName() {
+		return actProjectName;
+	}
+
+	public void setActProjectName(String actProjectName) {
+		this.actProjectName = actProjectName;
 	}
 }

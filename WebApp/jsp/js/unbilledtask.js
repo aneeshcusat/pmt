@@ -1,13 +1,145 @@
+var clienNameCodetMapping = [
+ {name:"Agilent", value:"AGL"},
+ {name:"Amazon", value:"AMZ"},
+ {name:"Colgate", value:"CPL"},
+ {name:"Dell", value:"DEL"},
+ {name:"Facebook", value:"FCB"},
+ {name:"Fuel Cycle", value:"FCL"},
+ {name:"Google", value:"GOO"},
+ {name:"Hyundai Motor", value:"HMR"},
+ {name:"IEEE", value:"IEE"},
+ {name:"iHeart Media", value:"IHM"},
+ {name:"Intel", value:"ITL"},
+ {name:"Lenovo", value:"LEN"},
+ {name:"Lululemon", value:"LUL"},
+ {name:"MBRDI", value:"MBR"},
+ {name:"Microsoft", value:"MSF"},
+ {name:"Motorola", value:"MLA"},
+ {name:"Mozilla", value:"MOZ"},
+ {name:"OnePlus", value:"OPL"},
+ {name:"Pepsi", value:"PEP"},
+ {name:"PG & E", value:"PGE"},
+ {name:"Roofoods Ltd", value:"RFL"},
+ {name:"T-mobile", value:"TML"},
+ {name:"Unilever", value:"ULR"},
+ {name:"YouTube", value:"YTE"},
+ {name:"3M", value:"3MM"},
+ {name:"Mars", value:"MRS"},
+ {name:"HDFC", value:"HFC"},
+ {name:"Autodesk", value:"ADK"},
+ {name:"Sazerac", value:"SZC"},
+ {name:"NBF", value:"NBF"},
+ {name:"Airtel", value:"ATL"},
+ {name:"Hotel Champs", value:"HCP"}
+]
+
+var categoryCodeMapping = [
+{name: "LEAVE", value: "101"},
+{name: "Client onsite trips and visits", value: "102"},
+{name: "Compliance Management", value: "103"},
+{name: "Internal team meetings, conferences and offsites", value: "104"},
+{name: "Administrative and management", value: "105"},
+{name: "Holiday", value: "106"},
+{name: "Knowledge development and training", value: "107"},
+{name: "Internal product/solution development and support", value: "{division}210"},
+{name: "Proposals", value: "{division}{clientCode}211"},
+{name: "POC and Pilot Projects", value: "{division}212"},
+{name: "Marketing Collateral and Campaigns", value: "{division}213"},
+{name: "Additional support on projects post closure", value: "{division}{clientCode}213"}
+]
+
+$('input[name = "ubdivision"]').on("change", function(){
+	setReferenceNo();
+});
+$(".unbilledClientPartner").on("change", function(){
+	setReferenceNo();
+});
 //unbilled task start
 $("#taskType").on("change", function(){
 	$("#taskCreate").show();
 	if($("#taskType").val() == "") {
 		$("#taskCreate").hide();
 	}
+	var taskTypeVal = $("#taskType").val();
+	if (taskTypeVal != "" && taskTypeVal.startsWith("Internal")){
+		$(".ubaccountId option[value != 'Internal']").hide();
+		$(".ubaccountId").val("Internal");
+		$('.ubaccountId').selectpicker('refresh');
+	} else {
+		$(".ubaccountId option").show();
+		$(".ubaccountId").prop("selectedIndex",0);
+		$('.ubaccountId').selectpicker('refresh');
+	}
+
+	changeFieldsOnTaskTypeChange(taskTypeVal);
+	
+	setReferenceNo();
 	checkFutureTimeCaptureRestriction($("#taskType").val());
 });
 
+function changeFieldsOnTaskTypeChange(taskTypeVal) {
+	$(".divisionGroupDiv").show();
+	$(".ubaccountId").show();
+	$(".divisionGroup").show();
+	$(".unbilledTeamDiv").show();
+	$(".unbilledClientPartnerDiv").show();
+	$(".ubreferenceNoDiv").show();
+	
+	if(taskTypeVal == 'LEAVE' || taskTypeVal == 'Holiday' || taskTypeVal.startsWith("Compliance Management")) {
+			
+			$(".divisionGroupDiv").hide();
+			$(".ubaccountIdDiv").hide();
+			$(".unbilledTeamDiv").hide();
+			$(".unbilledClientPartnerDiv").hide();
+			$(".ubreferenceNoDiv").hide();
+			$(".unbilledClientName").addClass("hide");
+			$(".uborderbooknodiv").addClass("hide");
+	} else {
+		if (taskTypeVal != "" && taskTypeVal.startsWith("Additional support")){
+			$(".unbilledClientName").removeClass("hide");
+			$(".uborderbooknodiv").removeClass("hide");
+		} else {
+			$(".unbilledClientName").addClass("hide");
+			$(".uborderbooknodiv").addClass("hide");
+		}
+	}
+}
 
+function setReferenceNo(){
+	$(".ubreferenceNo").val("");
+	var taskTypeVal = $("#taskType").val();
+	var clientVal = $(".unbilledClientPartner").val();
+	var divisionVal = $('input[name = "ubdivision"]:checked').val()
+	var catCode = "";
+	var clientCode ="";
+	if (taskTypeVal != ""){
+		$.each(categoryCodeMapping, function(i,categoryItem) {
+		 if (categoryItem.name == taskTypeVal) {
+			catCode = categoryItem.value;
+			}
+		}); 
+	} 
+	if (taskTypeVal != ""){
+		$.each(clienNameCodetMapping, function(index,clientItem) {
+		 if (clientItem.name == clientVal) {
+			clientCode = clientItem.value;
+			}
+		}); 
+	}
+
+	if (catCode != "" && catCode.includes("{clientCode}")) {
+		catCode = catCode.replace("{clientCode}", clientCode);
+	}
+	
+	if (catCode != "" && catCode.includes("{division}") && divisionVal != undefined) {
+		catCode = catCode.replace("{division}", divisionVal);
+	}
+	if (catCode != "") {
+		catCode = catCode.replace("{clientCode}", "");
+		catCode = catCode.replace("{division}", "");
+		$(".ubreferenceNo").val(catCode);
+	}
+}
 var startDateRange = $('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 9:00"}).on('dp.change', function(e) {
    adjustStartNBTimeChanged();
 });;
@@ -87,6 +219,11 @@ var createUnbillableTask = function(){
 	var endDate = "";
 	var startDate = "";
 	$("#userId").removeClass("error");
+	
+	$(".unbilledClientPartner").removeClass("error");
+	$(".unbilledTeam").removeClass("error");
+	$(".ubaccountId").removeClass("error");
+	
 	if ($("#taskType").val() != "") {
 		startDate = $("#startDateRange").val();
 		endDate = $("#completionDateRange").val();
@@ -105,23 +242,52 @@ var createUnbillableTask = function(){
 	
 	if (taskType == "LEAVE"){
 		taskActCategory = "Leave";
-		
 	} else if (taskType == "MEETING"){
 		taskActCategory = "Meeting";
 	} else {
 		taskActCategory = taskType;
 		taskType = "OTHER";
 	}
-	
-	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
-	var clientName =$("#unbilledClientName").val();
+	var validationEnabled = true;
+	if(taskType == 'LEAVE' || taskType == 'Holiday' || taskType.startsWith("Compliance Management")) {
+		validationEnabled= false;	
+	}
+
 	var clientPartner =$("#unbilledClientPartner").val();
 	var teamName =$("#unbilledTeam").val();
+	var actProjectName =$("#ubactProjectName").val();
+	var accountId =$("#ubaccountId").val();
+	var division =$('input[name = "ubdivision"]:checked').val();
+	if (division == undefined) {
+		division = "";
+	}
+	if (validationEnabled) {
+		if (clientPartner == "") {
+			$(".unbilledClientPartner").addClass("error");
+			return;
+		}
+		if (teamName == "") {
+			$(".unbilledTeam").addClass("error");
+			return;
+		}
+		if (ubaccountId == "") {
+			$(".ubaccountId").addClass("error");
+			return;
+		}
+		if (division == "") {
+			return;
+		}
+	}
+	var clientName =$("#unbilledClientName").val();
+	var orderBookNumber =$("#uborderbookno").val();
+	var referenceNo =$("#ubreferenceNo").val();
+	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
 	
 	var dataString = {clientName: clientName, skipWeekEnd:isSkipWeekEnds,
 			userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,
 			startDate:startDate,endDate:endDate,comments:$("#taskUBStartComments").val(),
-			clientPartner:clientPartner,teamName:teamName
+			clientPartner:clientPartner,teamName:teamName,
+			account:accountId,orderBookNumber:orderBookNumber,referenceNo:referenceNo,actProjectName:actProjectName,division:division
 	};
 	doAjaxRequest("POST", "/bops/dashboard/createNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
@@ -141,6 +307,11 @@ var editUnbillableTask = function(taskActId){
 	var endDate = "";
 	var startDate = "";
 	$("#userId").removeClass("error");
+	$(".unbilledClientPartner").removeClass("error");
+	$(".unbilledTeam").removeClass("error");
+	$(".ubaccountId").removeClass("error");
+	
+	
 	if ($("#taskType").val() != "") {
 		startDate = $("#startDateRange").val();
 		endDate = $("#completionDateRange").val();
@@ -167,25 +338,48 @@ var editUnbillableTask = function(taskActId){
 		taskType = "OTHER";
 	}
 	
-	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
-	var clientName =$("#unbilledClientName").val();
+	var validationEnabled = true;
+	if(taskType == 'LEAVE' || taskType == 'Holiday' || taskType.startsWith("Compliance Management")) {
+		validationEnabled= false;	
+	}
+	
 	var clientPartner =$("#unbilledClientPartner").val();
 	var teamName =$("#unbilledTeam").val();
+	var actProjectName =$("#ubactProjectName").val();
+	var accountId =$("#ubaccountId").val();
+	var division =$('input[name = "ubdivision"]:checked').val();
+	if (division == undefined) {
+		division = "";
+	}
+	if (validationEnabled) {
+		if (clientPartner == "") {
+			$(".unbilledClientPartner").addClass("error");
+			return;
+		}
+		if (teamName == "") {
+			$(".unbilledTeam").addClass("error");
+			return;
+		}
+		if (ubaccountId == "") {
+			$(".ubaccountId").addClass("error");
+			return;
+		}
+		if (division == "") {
+			return;
+		}
+	}
+	var clientName =$("#unbilledClientName").val();
+	var orderBookNumber =$("#uborderbookno").val();
+	var referenceNo =$("#ubreferenceNo").val();
+	var isSkipWeekEnds = $("#skipWeekEnds").prop("checked") == true;
 	
-
-	var dataString = {
-		clientName : clientName,
-		taskActId : taskActId,
-		skipWeekEnd : isSkipWeekEnds,
-		userId : $("#userId").val(),
-		type : taskType,
-		taskActCategory : taskActCategory,
-		startDate : startDate,
-		endDate : endDate,
-		comments : $("#taskUBStartComments").val(),
-		clientPartner : clientPartner,
-		teamName : teamName
+	var dataString = {taskActId : taskActId,clientName: clientName, skipWeekEnd:isSkipWeekEnds,
+			userId:$("#userId").val(),type:taskType,taskActCategory:taskActCategory,
+			startDate:startDate,endDate:endDate,comments:$("#taskUBStartComments").val(),
+			clientPartner:clientPartner,teamName:teamName,
+			account:accountId,orderBookNumber:orderBookNumber,referenceNo:referenceNo,actProjectName:actProjectName,division:division
 	};
+	
 	doAjaxRequest("POST", "/bops/dashboard/updateNonBillableTask", dataString, function(data) {
         var responseJson = JSON.parse(data);
         if (responseJson.status){
@@ -213,15 +407,28 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	$("#taskUBStartComments").val("");
 	$("#unbilledClientName").val("");
 	$("#unbilledClientPartner").val("");
-	$("#unbilledTeam").val("");
+	//$("#unbilledTeam").val("");
+	$("#ubactProjectName").val("");
+	$("#ubreferenceNo").val("");
+	$("#uborderbookno").val("");
 	
+	$("#ubaccountId").val("");
+	$('input[name = "ubdivision"]').attr('checked', false);
+	$(".divisionGroup label").removeClass("active");
+	$(".unbilledClientPartner").prop("selectedIndex",0);
+	$(".ubaccountId").prop("selectedIndex",0);
+	$('.unbilledClientPartner').selectpicker('refresh');
+	$('.ubaccountId').selectpicker('refresh');
+	$(".unbilledClientName").addClass("hide");
+	$(".uborderbooknodiv").addClass("hide");
+		
 	unBilledButtonAction = "Create";
 	$(".nonBillableTaskCreateText").html("Create");
 	$("#unbilledModelTitle").html("Create Non-billable time");
 	$("#taskCreate").hide();
 };
 
-var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, startTime, endTime, clientName, teamName,clientPartner) {
+var editUnbillableFormForCreate = function(taskActId,division,account,orderBookNumber,referenceNo,actProjectName,taskActUserId, taskType, startTime, endTime, clientName, teamName,clientPartner) {
 	$("#userId").val(taskActUserId);
 	$(".unbilledOnBehalfOfDiv").hide();
 	
@@ -241,8 +448,19 @@ var editUnbillableFormForCreate = function(taskActId, taskActUserId, taskType, s
 	$("#taskUBStartComments").val("");
 	$("#unbilledClientName").val(clientName);
 	$("#unbilledClientPartner").val(clientPartner);
+	$('#unbilledClientPartner').selectpicker('refresh');
 	$("#unbilledTeam").val(teamName);
+	$('#unbilledTeam').selectpicker('refresh');
 	
+	$("#division-"+division).trigger("click");
+	$("#ubaccountId").val(account);
+	$("#uborderbookno").val(orderBookNumber);
+	$("#ubreferenceNo").val(referenceNo);
+	$("#ubactProjectName").val(actProjectName);
+
+	changeFieldsOnTaskTypeChange(taskType);
+
+	$('#ubaccountId').selectpicker('refresh');
 	$(".nonBillableTaskCreateText").html("Update");
 	unBilledButtonAction = "Update";
 	$("#taskCreate").show();

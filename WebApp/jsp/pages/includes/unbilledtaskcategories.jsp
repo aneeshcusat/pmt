@@ -27,8 +27,19 @@
 <c:if test="${staticUnbilledEnabled }">
 	<c:if test="${not empty staticNonBillableCategories }">
 		<option value="LEAVE">Leave</option>
-		<c:forEach var="staticNonBillableCategoriesConf" items="${staticNonBillableCategories}">
+		<%-- <c:forEach var="staticNonBillableCategoriesConf" items="${staticNonBillableCategories}">
 			<option value="${staticNonBillableCategoriesConf.value}">${staticNonBillableCategoriesConf.name}</option>
-		</c:forEach>
+		</c:forEach> --%>
+		<option value="Client onsite trips and visits">Client onsite trips and visits</option>
+		<option value="Compliance Management">Compliance Management</option>
+		<option value="Internal team meetings, conferences and offsites">Internal team meetings, conferences and offsites</option>
+		<option value="Administrative and management">Administrative and management</option>
+		<option value="Holiday">Holiday</option>
+		<option value="Knowledge development and training">Knowledge development and training</option>
+		<option value="Internal product/solution development and support">Internal product/solution development and support</option>
+		<option value="Proposals">Proposals</option>
+		<option value="POC and Pilot Projects">POC and Pilot Projects</option>
+		<option value="Marketing Collateral and Campaigns">Marketing Collateral and Campaigns</option>
+		<option value="Additional support on projects post closure">Additional support on projects post closure</option>
 	</c:if>
 </c:if>

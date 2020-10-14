@@ -61,6 +61,7 @@
     <property name="attributes">
         <map>
             <entry key="applicationConfiguraion" value-ref="famstackApplicationConfiguration"/>
+            <entry key="accountConfiguraion" value-ref="famstackAccountManager"/>
         </map>
     </property>
 	</bean>

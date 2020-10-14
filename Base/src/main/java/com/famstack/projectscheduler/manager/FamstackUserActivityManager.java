@@ -49,7 +49,9 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	public void createCompletedUserActivityItem(int userId, Date startTime,
 			int taskId, String taskName, int durationInMinutes,
 			UserTaskType userTaskType, String taskActCategory,
-			ProjectType projectType, String comment, String clientName, String teamName, String clientPartner) {
+			ProjectType projectType, String comment, String clientName, String teamName, String clientPartner,
+			String division, String account, String orderBookNumber, String referenceNo, String actProjectName
+			) {
 		UserTaskActivityItem userTaskActivityItem = createUserActivityItem(
 				userId, startTime, taskId, taskName, durationInMinutes,
 				userTaskType, taskActCategory, projectType, null);
@@ -62,6 +64,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 				startTime, durationInMinutes).getTime();
 		userTaskActivityItem.setActualEndTime(new Timestamp(endTime));
 		userTaskActivityItem.setRecordedEndTime(new Timestamp(endTime));
+		
+		
+		userTaskActivityItem.setDivision(division);
+		userTaskActivityItem.setAccount(account);
+		userTaskActivityItem.setOrderBookNumber(orderBookNumber);
+		userTaskActivityItem.setReferenceNo(referenceNo);
+		userTaskActivityItem.setActProjectName(actProjectName);
 		
 		userTaskActivityItem.setTeamName(teamName);
 		
@@ -456,6 +465,11 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		taskActivityDetails.setTeamName(userTaskActivityItem.getTeamName());
 		taskActivityDetails.setClientPartner(userTaskActivityItem.getClientPartner());;
 		
+		taskActivityDetails.setDivision(userTaskActivityItem.getDivision());
+		taskActivityDetails.setAccount(userTaskActivityItem.getAccount());
+		taskActivityDetails.setOrderBookNumber(userTaskActivityItem.getOrderBookNumber());
+		taskActivityDetails.setReferenceNo(userTaskActivityItem.getReferenceNo());
+		taskActivityDetails.setActProjectName(userTaskActivityItem.getActProjectName());
 		
 		taskActivityDetails.setClientName(userTaskActivityItem.getClientName());
 		if (userTaskActivityItem.getUserActivityItem() != null

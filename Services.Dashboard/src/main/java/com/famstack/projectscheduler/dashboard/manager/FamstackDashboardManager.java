@@ -1426,16 +1426,20 @@ public class FamstackDashboardManager extends BaseFamstackService {
 
 	public void updateNonBillableTask(int taskActId, int userId, String type,
 			String taskActCategory, String startDate, String endDate,
-			String comments, Boolean skipWeekEnd,String clientName, String teamName, String clientPartner) {
+			String comments, Boolean skipWeekEnd,String clientName, String teamName, String clientPartner,
+			String division, String account, String orderBookNumber, String referenceNo, String actProjectName) {
 		UserTaskActivityItem userTaskActivityItem = famstackUserActivityManager
 				.deleteTaskActivity(taskActId);
 		createNonBillableTask(userId, type, taskActCategory, startDate,
-				endDate, comments, skipWeekEnd, clientName, teamName, clientPartner);
+				endDate, comments, skipWeekEnd, clientName, teamName, clientPartner,
+				 division, account, orderBookNumber, referenceNo, actProjectName
+				);
 	}
 
 	public void createNonBillableTask(int userId, String type,
 			String taskActCategory, String startDateString,
-			String endDateString, String comments, Boolean skipWeekEnd, String clientName, String teamName, String clientPartner) {
+			String endDateString, String comments, Boolean skipWeekEnd, String clientName, String teamName, String clientPartner,
+			String division, String account, String orderBookNumber, String referenceNo, String actProjectName) {
 		Date startTime = DateUtils.tryParse(startDateString,
 				DateUtils.DATE_TIME_FORMAT);
 		Date endTime = DateUtils.tryParse(endDateString,
@@ -1491,7 +1495,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				famstackUserActivityManager.createCompletedUserActivityItem(
 						userId, startTime, 0, taskName, durationInMinutes,
 						UserTaskType.valueOf(type), taskActCategory,
-						ProjectType.NON_BILLABLE, comments, clientName, teamName, clientPartner);
+						ProjectType.NON_BILLABLE, comments, clientName, teamName, clientPartner,
+						 division, account, orderBookNumber, referenceNo, actProjectName
+						);
 			}
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(startTime);

@@ -142,3 +142,7 @@ border-bottom: 1px solid lightgray;
 .autocomplete-suggestions strong { font-weight: normal; color: #13d42d; font-size: 13px; }
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+.divisionGroup .btn-default:hover, .divisionGroup .btn-default:focus, .divisionGroup .btn-default:active, .divisionGroup .btn-default.active{
+    background-color: #d2d1d1;
+}

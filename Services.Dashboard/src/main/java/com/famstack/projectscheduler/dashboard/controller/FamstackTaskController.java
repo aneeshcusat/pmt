@@ -151,28 +151,47 @@ public class FamstackTaskController extends BaseFamstackService
 
     @RequestMapping(value = "/createNonBillableTask", method = RequestMethod.POST)
     @ResponseBody
-    public String createNonBillableTask(@RequestParam("userId") int userId, @RequestParam("type") String type,
+    public String createNonBillableTask(@RequestParam("userId") int userId, 
+    	@RequestParam("type") String type,
         @RequestParam("taskActCategory") String taskActCategory, @RequestParam("startDate") String startDate,
         @RequestParam("endDate") String endDate, @RequestParam("comments") String comments,
         @RequestParam(value = "skipWeekEnd", defaultValue = "true") Boolean skipWeekEnd,
-        @RequestParam("clientName") String clientName,  @RequestParam("teamName") String teamName,  @RequestParam("clientPartner") String clientPartner)
+        @RequestParam("clientName") String clientName, 
+        @RequestParam("teamName") String teamName,  
+        @RequestParam("clientPartner") String clientPartner,
+        @RequestParam("division") String division,
+        @RequestParam("account") String account,
+        @RequestParam("orderBookNumber") String orderBookNumber,
+        @RequestParam("referenceNo") String referenceNo,
+        @RequestParam("actProjectName") String actProjectName
+    		)
     {
         famstackDashboardManager.createNonBillableTask(userId, type, taskActCategory, startDate, endDate, comments,
-            skipWeekEnd, clientName, teamName, clientPartner);
+            skipWeekEnd, clientName, teamName, clientPartner,
+            division, account, orderBookNumber, referenceNo, actProjectName
+        		);
         return "{\"status\": true}";
     }
 
     @RequestMapping(value = "/updateNonBillableTask", method = RequestMethod.POST)
     @ResponseBody
-    public String updateNonBillableTask(@RequestParam("taskActId") int taskActId, @RequestParam("userId") int userId,
-        @RequestParam("type") String type, @RequestParam("taskActCategory") String taskActCategory,
-        @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
-        @RequestParam("comments") String comments,
-        @RequestParam(value = "skipWeekEnd", defaultValue = "true") Boolean skipWeekEnd,@RequestParam("clientName") String clientName,
-        @RequestParam("teamName") String teamName,  @RequestParam("clientPartner") String clientPartner)
+    public String updateNonBillableTask(@RequestParam("taskActId") int taskActId, @RequestParam("userId") int userId, 
+    		@RequestParam("type") String type,
+            @RequestParam("taskActCategory") String taskActCategory, @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate, @RequestParam("comments") String comments,
+            @RequestParam(value = "skipWeekEnd", defaultValue = "true") Boolean skipWeekEnd,
+            @RequestParam("clientName") String clientName, 
+            @RequestParam("teamName") String teamName,  
+            @RequestParam("clientPartner") String clientPartner,
+            @RequestParam("division") String division,
+            @RequestParam("account") String account,
+            @RequestParam("orderBookNumber") String orderBookNumber,
+            @RequestParam("referenceNo") String referenceNo,
+            @RequestParam("actProjectName") String actProjectName
+    		)
     {
         famstackDashboardManager.updateNonBillableTask(taskActId, userId, type, taskActCategory, startDate, endDate,
-            comments, skipWeekEnd,clientName, teamName, clientPartner);
+            comments, skipWeekEnd,clientName, teamName, clientPartner,  division, account, orderBookNumber, referenceNo, actProjectName);
         return "{\"status\": true}";
     }
 

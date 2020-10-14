@@ -5,6 +5,14 @@
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="staticUnbilledEnabled" value="${currentUserGroupId=='1005' || currentUserGroupId=='1002' || currentUserGroupId=='1006' || currentUserGroupId=='1010' || currentUserGroupId=='1001' || currentUserGroupId=='1003' || currentUserGroupId=='1009' || currentUserGroupId=='1007' || currentUserGroupId=='1016' || currentUserGroupId=='1004'}"/>
 <c:set var="nonBillableCategories" value="${applicationScope.applicationConfiguraion.nonBillableCategories}"/>
+<c:set var="accounts" value="${applicationScope.accountConfiguraion.accountMap}"/>
+<c:set var="clients" value="${applicationScope.accountConfiguraion.clientMap}"/>
+<style>
+.form-group.required .control-label:after {
+    content: "*";
+    color: red;
+}
+</style>
 <div class="row">
 	<div class="col-md-12">
 		<div class="row">
@@ -30,59 +38,157 @@
 				</c:otherwise>
 				
 				</c:choose>
-				<div class="form-group">
-				<label class="col-md-3 control-label">Type</label>
+				<div class="form-group required">
+				<label class="col-md-3 control-label">Category</label>
                      <div class="col-md-9">
                          <select path="taskType" id="taskType" name="taskType" class="form-control" data-live-search="true">
 							 <%@include file="../includes/unbilledtaskcategories.jsp"%>   
 						</select>
                      </div>
 				</div>
-			<div class="form-group">
+				
+					<div class="form-group required divisionGroupDiv">
+				<label class="col-md-3 control-label">Division</label>
+                     <div class="col-md-9">
+                         	<div class="btn-group divisionGroup" data-toggle="buttons">
+							<label class="btn btn-default" id="division-DAA"> <input type="radio"
+								name="ubdivision" value="DAA" /> DAA
+							</label> <label class="btn btn-default"> <input type="radio"
+								name="ubdivision" value="MIA" id="division-MIA"/> MIA
+							</label>
+							<label class="btn btn-default"> <input type="radio"
+								name="ubdivision" value="LS" id="division-LS"/> LS
+							</label>
+							<label class="btn btn-default"> <input type="radio"
+								name="ubdivision" value="RAI" id="division-RAI"/> RAI
+							</label>
+						</div>
+                     </div>
+				</div>
+
+				<div class="form-group required ubaccountIdDiv">
+					<label class="col-md-3 control-label">Account</label>
+					<div class="col-md-9">
+						<select class="form-control select ubaccountId" id="ubaccountId"
+							path="accountId" data-live-search="true">
+							<option value="">- select -</option>
+							<c:if test="${not empty accounts}">
+								<c:forEach var="account" items="${accounts}"
+									varStatus="accountStatus">
+									<option index="${accountStatus.index + 1}"
+										class="accountOption" value="${account}">${account}</option>
+								</c:forEach>
+							</c:if>
+							</select>
+					</div>
+				</div>
+				
+				<div class="form-group required unbilledClientPartnerDiv">
+				<label class="col-md-3 control-label">Client Partner</label>
+                     <div class="col-md-9" style="">
+                     	 	<select class="form-control select unbilledClientPartner" id="unbilledClientPartner"
+							 data-live-search="true">
+							<option value="">- select -</option>
+							<option value="Agilent">Agilent</option>
+							<option value="Amazon">Amazon</option>
+							<option value="Colgate">Colgate</option>
+							<option value="Dell">Dell</option>
+							<option value="Facebook">Facebook</option>
+							<option value="Fuel Cycle">Fuel Cycle</option>
+							<option value="Google">Google</option>
+							<option value="Hyundai Motor">Hyundai Motor</option>
+							<option value="IEEE">IEEE</option>
+							<option value="iHeart Media">iHeart Media</option>
+							<option value="Intel">Intel</option>
+							<option value="Lenovo">Lenovo</option>
+							<option value="Lululemon">Lululemon</option>
+							<option value="MBRDI">MBRDI</option>
+							<option value="Microsoft">Microsoft</option>
+							<option value="Motorola">Motorola</option>
+							<option value="Mozilla">Mozilla</option>
+							<option value="OnePlus">OnePlus</option>
+							<option value="Pepsi">Pepsi</option>
+							<option value="PG & E">PG & E</option>
+							<option value="Roofoods Ltd">Roofoods Ltd</option>
+							<option value="T-mobile">T-mobile</option>
+							<option value="Unilever">Unilever</option>
+							<option value="YouTube">YouTube</option>
+							<option value="3M">3M</option>
+							<option value="Mars">Mars</option>
+							<option value="HDFC">HDFC</option>
+							<option value="Autodesk">Autodesk</option>
+							<option value="Sazerac">Sazerac</option>
+							<option value="NBF">NBF</option>
+							<option value="Airtel">Airtel</option>
+							<option value="Hotel Champs">Hotel Champs</option>
+							</select>
+                     </div>
+				</div>
+					
+				<div class="form-group required unbilledTeamDiv">
+				<label class="col-md-3 control-label">Requesting Team </label>
+	                     <div class="col-md-9" style="">
+                     	 <select class="form-control unbilledTeam" data-live-search="true" id="unbilledTeam">
+			               <c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
+			                <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.name}">${userGroup.value.name}</option>
+			               </c:forEach>
+			           </select>
+                     	 
+                     </div>
+				</div>
+
+				<div class="form-group">
 				<label class="col-md-3 control-label">Comments : </label>
                      <div class="col-md-9">
-                            <textarea class="form-control" id="taskUBStartComments"  style="height: 100px"></textarea> 
-                         <span class="help-block">required description</span>
+                            <textarea class="form-control" id="taskUBStartComments"  style="height: 30px"></textarea> 
                      </div>
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="form-group dateRange">
+				<div class="form-group dateRange required">
 				<label class="col-md-4 control-label ">Start Date </label>
-                     <div class="col-md-8" style="margin-top: 7px;">
+                     <div class="col-md-8" style="">
                      	 <input type='text' class="form-control dateTimePicker" id='startDateRange' autocomplete="off"/>
                      </div>
 				</div>
-				<div class="form-group dateRange">
+				<div class="form-group dateRange required">
 				<label class="col-md-4 control-label">Completion Date </label>
-                     <div class="col-md-8" style="margin-top: 7px;">
+                     <div class="col-md-8" style="">
                      	 <input type='text' class="form-control dateTimePicker" id='completionDateRange' autocomplete="off"/>
                      </div>
 				</div>
 				<div class="form-group">
 				<label class="col-md-4 control-label ">Skip Weekends </label>
-                     <div class="col-md-8" style="margin-top: 7px;">
+                     <div class="col-md-8" style="margin-top: 7px">
                      	 <input type="checkbox" class="" id='skipWeekEnds' checked="checked"/>
                      </div>
 				</div>
-				<div class="form-group">
+					<div class="form-group">
+				<label class="col-md-4 control-label">Project/Activity Name </label>
+                     <div class="col-md-8"  style="margin-top: 5px">
+                     	 <input type='text' class="form-control ubactProjectName" id='ubactProjectName' autocomplete="off"/>
+                     </div>
+				</div>
+				<div class="form-group ubreferenceNoDiv">
+				<label class="col-md-4 control-label">Reference No</label>
+                     <div class="col-md-8"  style="">
+                     	 <input type='text' style="color: #000;" class="form-control ubreferenceNo" readonly="readonly" id='ubreferenceNo' autocomplete="off"/>
+                     </div>
+				</div>
+				
+				<div class="form-group hide uborderbooknodiv">
+				<label class="col-md-4 control-label">Order book No </label>
+                     <div class="col-md-8"  style="">
+                     	 <input type='text' class="form-control uborderbookno" id='uborderbookno' autocomplete="off"/>
+                     </div>
+				</div>
+			<div class="form-group  hide unbilledClientName">
 				<label class="col-md-4 control-label">Client </label>
-                     <div class="col-md-8" style="margin-top: 7px;">
+                     <div class="col-md-8"  style="">
                      	 <input type='text' class="form-control unbilledClientName" id='unbilledClientName' autocomplete="off"/>
                      </div>
 				</div>
-				<div class="form-group">
-				<label class="col-md-4 control-label">Team </label>
-                     <div class="col-md-8" style="margin-top: 7px;">
-                     	 <input type='text' class="form-control unbilledTeam" id='unbilledTeam' autocomplete="off"/>
-                     </div>
-				</div>
-				<div class="form-group">
-				<label class="col-md-4 control-label">Client Partner</label>
-                     <div class="col-md-8" style="margin-top: 7px;">
-                     	 <input type='text' class="form-control unbilledClientPartner" id='unbilledClientPartner' autocomplete="off"/>
-                     </div>
-				</div>
+				
 			</div>
 		</div>
 	</div>

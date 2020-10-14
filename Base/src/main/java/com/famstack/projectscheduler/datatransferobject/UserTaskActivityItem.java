@@ -70,6 +70,21 @@ public class UserTaskActivityItem implements FamstackBaseItem
     @Column(name = "client_partner")
     private String clientPartner;
     
+    @Column(name = "division")
+    private String division;
+    
+    @Column(name = "account")
+    private String account;
+    
+    @Column(name = "order_book_number")
+    private String orderBookNumber;
+    
+    @Column(name = "reference_no")
+    private String referenceNo;
+    
+    @Column(name = "act_prj_name")
+    private String actProjectName;
+    
     @Column(name = "duration")
     private int durationInMinutes;
 
@@ -343,6 +358,46 @@ public class UserTaskActivityItem implements FamstackBaseItem
 
 	public void setClientPartner(String clientPartner) {
 		this.clientPartner = clientPartner;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getOrderBookNumber() {
+		return orderBookNumber;
+	}
+
+	public void setOrderBookNumber(String orderBookNumber) {
+		this.orderBookNumber = orderBookNumber;
+	}
+
+	public String getReferenceNo() {
+		return referenceNo;
+	}
+
+	public void setReferenceNo(String referenceNo) {
+		this.referenceNo = referenceNo;
+	}
+
+	public String getActProjectName() {
+		return actProjectName;
+	}
+
+	public void setActProjectName(String actProjectName) {
+		this.actProjectName = actProjectName;
 	}
 
 }

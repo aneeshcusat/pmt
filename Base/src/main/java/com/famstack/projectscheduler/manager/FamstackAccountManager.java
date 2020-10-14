@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -134,6 +135,13 @@ public class FamstackAccountManager extends BaseFamstackManager
     {
         return accountMap;
     }
+    
+    public List<String> getAccountMap()
+    {
+    	return accountMap.keySet().stream()
+        .map((key) -> accountMap.get(key).getName()).distinct()
+        .collect(Collectors.toList());
+    }
 
     public static Map<Integer, ProjectTeamDetails> getTeammap()
     {
@@ -150,6 +158,13 @@ public class FamstackAccountManager extends BaseFamstackManager
         return clientMap;
     }
 
+    public  List<String> getClientMap()
+    {
+    	return clientMap.keySet().stream()
+    	        .map((key) -> clientMap.get(key).getName()).distinct()
+    	        .collect(Collectors.toList());
+    }
+   
     public void createAccount(String name, String holder, String type, int id)
     {
         AccountItem accountItem = (AccountItem) famstackDataAccessObjectManager.getItemById(id, AccountItem.class);
