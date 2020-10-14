@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+
 public class ProjectDetailsResponse {
 	String creationDate;
 	String projectId;
@@ -23,8 +23,9 @@ public class ProjectDetailsResponse {
 	String projectType;
 	String projectStatus;
 	List<TaskResponse> tasks;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	Map estimatedHours;
-	
+
 	List<ProjectEstimate> projectEstimate;
 	
 	public String getCreationDate() {
@@ -152,7 +153,7 @@ public class ProjectDetailsResponse {
 	}
 
 	public List<ProjectEstimate> getProjectEstimate() {
-		return projectEstimate;
+		return projectEstimate == null ? new ArrayList<>() : projectEstimate;
 	}
 	public void setProjectEstimate(List<ProjectEstimate> projectEstimate) {
 		this.projectEstimate = projectEstimate;

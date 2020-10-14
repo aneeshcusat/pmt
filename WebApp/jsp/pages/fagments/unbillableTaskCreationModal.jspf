@@ -72,23 +72,6 @@
 						<select class="form-control select ubaccountId" id="ubaccountId"
 							path="accountId" data-live-search="true">
 							<option value="">- select -</option>
-							<c:if test="${not empty accounts}">
-								<c:forEach var="account" items="${accounts}"
-									varStatus="accountStatus">
-									<option index="${accountStatus.index + 1}"
-										class="accountOption" value="${account}">${account}</option>
-								</c:forEach>
-							</c:if>
-							</select>
-					</div>
-				</div>
-				
-				<div class="form-group required unbilledClientPartnerDiv">
-				<label class="col-md-3 control-label">Client Partner</label>
-                     <div class="col-md-9" style="">
-                     	 	<select class="form-control select unbilledClientPartner" id="unbilledClientPartner"
-							 data-live-search="true">
-							<option value="">- select -</option>
 							<option value="Agilent">Agilent</option>
 							<option value="Amazon">Amazon</option>
 							<option value="Colgate">Colgate</option>
@@ -100,6 +83,7 @@
 							<option value="IEEE">IEEE</option>
 							<option value="iHeart Media">iHeart Media</option>
 							<option value="Intel">Intel</option>
+							<option value="Internal">Internal</option>
 							<option value="Lenovo">Lenovo</option>
 							<option value="Lululemon">Lululemon</option>
 							<option value="MBRDI">MBRDI</option>
@@ -121,6 +105,27 @@
 							<option value="NBF">NBF</option>
 							<option value="Airtel">Airtel</option>
 							<option value="Hotel Champs">Hotel Champs</option>
+							</select>
+					</div>
+				</div>
+				
+				<div class="form-group required unbilledClientPartnerDiv">
+				<label class="col-md-3 control-label">Client Partner</label>
+                     <div class="col-md-9" style="">
+                     	 	<select class="form-control select unbilledClientPartner" id="unbilledClientPartner"
+							 data-live-search="true">
+							 <option value="">- select -</option>
+							 <option value="Mohit Mukheja">Mohit Mukheja</option>
+							<option value="Bhaskar Dey">Bhaskar Dey</option>
+							<option value="Gary Nearn">Gary Nearn</option>
+							<option value="Anumod Purushotaman">Anumod Purushotaman</option>
+							<option value="Shreyas Sundaresh">Shreyas Sundaresh</option>
+							<option value="Nischay Mathur">Nischay Mathur</option>
+							<option value="Tapabrata Bhattacharya">Tapabrata Bhattacharya</option>
+							<option value="Kiran Nandavaravu">Kiran Nandavaravu</option>
+							<option value="Joseph Sursock">Joseph Sursock</option>
+							<option value="Rahul Tenglikar">Rahul Tenglikar</option>
+							<option value="Varun Vig">Varun Vig</option>
 							</select>
                      </div>
 				</div>

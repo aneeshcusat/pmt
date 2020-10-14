@@ -2338,6 +2338,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 					employeeResponse.setDesignation(employeeDetails.getDesignation());
 					employeeResponse.setEmail(employeeDetails.getEmail());
 					employeeResponse.setName(employeeDetails.getFirstName());
+					employeeResponse.setEmployeeCode(employeeDetails.getEmpCode());
 					employeeResponse.setPrimarySkill(employeeDetails.getSkills());
 					employeeResponse.setReportingManager(employeeDetails.getReportertingManagerEmailId());
 					employeeResponse.setType(employeeDetails.getEmpType());

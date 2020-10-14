@@ -2,17 +2,19 @@ package com.famstack.projectscheduler.dashboard.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EmployeeResponse {
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	Integer id;
 	String email;
 	String name;
 	String designation;
 	String type;
+	String employeeCode;
 	
 	String dateOfJoining;
 	String reportingManager;
 	String primarySkill;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	String allocationPercentage;
 	
 	public String getName() {
@@ -69,5 +71,11 @@ public class EmployeeResponse {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	public String getEmployeeCode() {
+		return employeeCode;
+	}
+	public void setEmployeeCode(String employeeCode) {
+		this.employeeCode = employeeCode;
 	}
 }

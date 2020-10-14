@@ -1,4 +1,4 @@
-var clienNameCodetMapping = [
+var accountNameCodetMapping = [
  {name:"Agilent", value:"AGL"},
  {name:"Amazon", value:"AMZ"},
  {name:"Colgate", value:"CPL"},
@@ -10,6 +10,7 @@ var clienNameCodetMapping = [
  {name:"IEEE", value:"IEE"},
  {name:"iHeart Media", value:"IHM"},
  {name:"Intel", value:"ITL"},
+ {name:"Internal", value:""},
  {name:"Lenovo", value:"LEN"},
  {name:"Lululemon", value:"LUL"},
  {name:"MBRDI", value:"MBR"},
@@ -41,17 +42,17 @@ var categoryCodeMapping = [
 {name: "Administrative and management", value: "105"},
 {name: "Holiday", value: "106"},
 {name: "Knowledge development and training", value: "107"},
-{name: "Internal product/solution development and support", value: "{division}210"},
-{name: "Proposals", value: "{division}{clientCode}211"},
-{name: "POC and Pilot Projects", value: "{division}212"},
-{name: "Marketing Collateral and Campaigns", value: "{division}213"},
-{name: "Additional support on projects post closure", value: "{division}{clientCode}213"}
+{name: "Internal product/solution development and support", value: "{division}{accountCode}210"},
+{name: "Proposals", value: "{division}{accountCode}211"},
+{name: "POC and Pilot Projects", value: "{division}{accountCode}212"},
+{name: "Marketing Collateral and Campaigns", value: "{division}{accountCode}213"},
+{name: "Additional support on projects post closure", value: "{division}{accountCode}213"}
 ]
 
 $('input[name = "ubdivision"]').on("change", function(){
 	setReferenceNo();
 });
-$(".unbilledClientPartner").on("change", function(){
+$(".ubaccountId").on("change", function(){
 	setReferenceNo();
 });
 //unbilled task start
@@ -77,16 +78,29 @@ $("#taskType").on("change", function(){
 	checkFutureTimeCaptureRestriction($("#taskType").val());
 });
 
+function disableAdditionalFileds(taskTypeVal){
+	if(taskTypeVal == 'LEAVE' 
+		|| taskTypeVal == 'Holiday' 
+		|| taskTypeVal.startsWith("Compliance Management")
+		|| taskTypeVal.startsWith("Client onsite trips")
+		|| taskTypeVal.startsWith("Internal team meetings")
+		|| taskTypeVal.startsWith("Administrative and management")
+		|| taskTypeVal.startsWith("Knowledge development")
+		
+		) {
+		return true;
+	}
+	return false;
+}
 function changeFieldsOnTaskTypeChange(taskTypeVal) {
 	$(".divisionGroupDiv").show();
-	$(".ubaccountId").show();
-	$(".divisionGroup").show();
+	$(".ubaccountIdDiv").show();
+	$(".divisionGroupDiv").show();
 	$(".unbilledTeamDiv").show();
 	$(".unbilledClientPartnerDiv").show();
 	$(".ubreferenceNoDiv").show();
 	
-	if(taskTypeVal == 'LEAVE' || taskTypeVal == 'Holiday' || taskTypeVal.startsWith("Compliance Management")) {
-			
+	if (disableAdditionalFileds(taskTypeVal)) {
 			$(".divisionGroupDiv").hide();
 			$(".ubaccountIdDiv").hide();
 			$(".unbilledTeamDiv").hide();
@@ -108,10 +122,10 @@ function changeFieldsOnTaskTypeChange(taskTypeVal) {
 function setReferenceNo(){
 	$(".ubreferenceNo").val("");
 	var taskTypeVal = $("#taskType").val();
-	var clientVal = $(".unbilledClientPartner").val();
+	var accountVal = $("#ubaccountId").val();
 	var divisionVal = $('input[name = "ubdivision"]:checked').val()
 	var catCode = "";
-	var clientCode ="";
+	var accountCode ="";
 	if (taskTypeVal != ""){
 		$.each(categoryCodeMapping, function(i,categoryItem) {
 		 if (categoryItem.name == taskTypeVal) {
@@ -120,22 +134,22 @@ function setReferenceNo(){
 		}); 
 	} 
 	if (taskTypeVal != ""){
-		$.each(clienNameCodetMapping, function(index,clientItem) {
-		 if (clientItem.name == clientVal) {
-			clientCode = clientItem.value;
+		$.each(accountNameCodetMapping, function(index,accountItem) {
+		 if (accountItem.name == accountVal) {
+			accountCode = accountItem.value;
 			}
 		}); 
 	}
 
-	if (catCode != "" && catCode.includes("{clientCode}")) {
-		catCode = catCode.replace("{clientCode}", clientCode);
+	if (catCode != "" && catCode.includes("{accountCode}")) {
+		catCode = catCode.replace("{accountCode}", accountCode);
 	}
 	
 	if (catCode != "" && catCode.includes("{division}") && divisionVal != undefined) {
 		catCode = catCode.replace("{division}", divisionVal);
 	}
 	if (catCode != "") {
-		catCode = catCode.replace("{clientCode}", "");
+		catCode = catCode.replace("{accountCode}", "");
 		catCode = catCode.replace("{division}", "");
 		$(".ubreferenceNo").val(catCode);
 	}
@@ -249,7 +263,7 @@ var createUnbillableTask = function(){
 		taskType = "OTHER";
 	}
 	var validationEnabled = true;
-	if(taskActCategory == 'LEAVE' || taskActCategory == 'Holiday' || taskActCategory.startsWith("Compliance Management")) {
+	if(disableAdditionalFileds(taskActCategory)) {
 		validationEnabled= false;	
 	}
 
@@ -339,7 +353,7 @@ var editUnbillableTask = function(taskActId){
 	}
 	
 	var validationEnabled = true;
-	if(taskActCategory == 'LEAVE' || taskActCategory == 'Holiday' || taskActCategory.startsWith("Compliance Management")) {
+	if(disableAdditionalFileds(taskActCategory)) {
 		validationEnabled= false;	
 	}
 	

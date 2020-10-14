@@ -2,18 +2,21 @@ package com.famstack.projectscheduler.dashboard.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TaskResponse {
 	String taskDate;
 	EmployeeResponse employee;
 	String taskName;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	String billableHours;
 	String nonBillableHours;
 	String leaveHolidayHours;
 	String totalTaskHours;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	String totalHours;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	String utilizationPercentage;
 	String taskCategory;
+	
 	public EmployeeResponse getEmployee() {
 		return employee;
 	}
