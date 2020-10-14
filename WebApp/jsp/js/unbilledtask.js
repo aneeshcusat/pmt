@@ -249,7 +249,7 @@ var createUnbillableTask = function(){
 		taskType = "OTHER";
 	}
 	var validationEnabled = true;
-	if(taskType == 'LEAVE' || taskType == 'Holiday' || taskType.startsWith("Compliance Management")) {
+	if(taskActCategory == 'LEAVE' || taskActCategory == 'Holiday' || taskActCategory.startsWith("Compliance Management")) {
 		validationEnabled= false;	
 	}
 
@@ -339,7 +339,7 @@ var editUnbillableTask = function(taskActId){
 	}
 	
 	var validationEnabled = true;
-	if(taskType == 'LEAVE' || taskType == 'Holiday' || taskType.startsWith("Compliance Management")) {
+	if(taskActCategory == 'LEAVE' || taskActCategory == 'Holiday' || taskActCategory.startsWith("Compliance Management")) {
 		validationEnabled= false;	
 	}
 	
