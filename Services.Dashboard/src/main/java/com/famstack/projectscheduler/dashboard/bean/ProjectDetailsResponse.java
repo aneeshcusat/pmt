@@ -8,7 +8,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 
 public class ProjectDetailsResponse {
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	String creationDate;
+	String startDate;
+	String endDate;
+	String account;
+	String deliveryLead;
 	String projectId;
 	String orderBookId;
 	String poNo;
@@ -157,5 +162,29 @@ public class ProjectDetailsResponse {
 	}
 	public void setProjectEstimate(List<ProjectEstimate> projectEstimate) {
 		this.projectEstimate = projectEstimate;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	public String getAccount() {
+		return account;
+	}
+	public void setAccount(String account) {
+		this.account = account;
+	}
+	public String getDeliveryLead() {
+		return deliveryLead;
+	}
+	public void setDeliveryLead(String deliveryLead) {
+		this.deliveryLead = deliveryLead;
 	}
 }

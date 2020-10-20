@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.json.JSONObject;
-
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.TaskStatus;
@@ -259,6 +257,17 @@ public class ProjectTaskActivityDetails
     {
         this.projectCompletionTime = projectCompletionTime;
     }
+    
+    public String getProjectStartTimeFormated()
+    {
+        return DateUtils.format(projectStartTime, DateUtils.DATE_FORMAT);
+    }
+
+    public String getProjectCompletionTimeFormated()
+    {
+        return DateUtils.format(projectCompletionTime, DateUtils.DATE_FORMAT);
+    }
+    
 
     public String getClientName()
     {

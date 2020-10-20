@@ -6,12 +6,15 @@ var accountNameCodetMapping = [
  {name:"Facebook", value:"FCB"},
  {name:"Fuel Cycle", value:"FCL"},
  {name:"Google", value:"GOO"},
+{name:"Grammarly", value:"GRY"},
  {name:"Hyundai Motor", value:"HMR"},
  {name:"IEEE", value:"IEE"},
  {name:"iHeart Media", value:"IHM"},
  {name:"Intel", value:"ITL"},
  {name:"Internal", value:""},
  {name:"Lenovo", value:"LEN"},
+{name:"LS", value:"LS"},
+{name:"RAI", value:"RAI"},
  {name:"Lululemon", value:"LUL"},
  {name:"MBRDI", value:"MBR"},
  {name:"Microsoft", value:"MSF"},
@@ -54,6 +57,8 @@ $('input[name = "ubdivision"]').on("change", function(){
 });
 $(".ubaccountId").on("change", function(){
 	setReferenceNo();
+	changeFieldsOnTaskTypeChange($(".ubaccountId").val());
+	$(".ubaccountIdDiv").show();
 });
 //unbilled task start
 $("#taskType").on("change", function(){
@@ -80,10 +85,14 @@ $("#taskType").on("change", function(){
 
 function disableAdditionalFileds(taskTypeVal){
 	if(taskTypeVal == 'LEAVE' 
+		|| taskTypeVal == 'Leave' 
 		|| taskTypeVal == 'Holiday' 
+		|| taskTypeVal == 'LS' 
+		|| taskTypeVal == 'RAI' 
+		|| taskTypeVal == 'Grammarly' 
+		|| (taskTypeVal.startsWith('Internal') && !taskTypeVal.startsWith("Internal product"))
 		|| taskTypeVal.startsWith("Compliance Management")
 		|| taskTypeVal.startsWith("Client onsite trips")
-		|| taskTypeVal.startsWith("Internal team meetings")
 		|| taskTypeVal.startsWith("Administrative and management")
 		|| taskTypeVal.startsWith("Knowledge development")
 		
@@ -105,15 +114,15 @@ function changeFieldsOnTaskTypeChange(taskTypeVal) {
 			$(".ubaccountIdDiv").hide();
 			$(".unbilledTeamDiv").hide();
 			$(".unbilledClientPartnerDiv").hide();
-			$(".ubreferenceNoDiv").hide();
-			$(".unbilledClientName").addClass("hide");
+			//$(".ubreferenceNoDiv").hide();
+			//$(".unbilledClientName").addClass("hide");
 			$(".uborderbooknodiv").addClass("hide");
 	} else {
 		if (taskTypeVal != "" && taskTypeVal.startsWith("Additional support")){
-			$(".unbilledClientName").removeClass("hide");
+			//$(".unbilledClientName").removeClass("hide");
 			$(".uborderbooknodiv").removeClass("hide");
 		} else {
-			$(".unbilledClientName").addClass("hide");
+			//$(".unbilledClientName").addClass("hide");
 			$(".uborderbooknodiv").addClass("hide");
 		}
 	}
@@ -141,11 +150,11 @@ function setReferenceNo(){
 		}); 
 	}
 
-	if (catCode != "" && catCode.includes("{accountCode}")) {
+	if (catCode != "" && catCode.includes("{accountCode}") && !disableAdditionalFileds(taskTypeVal)) {
 		catCode = catCode.replace("{accountCode}", accountCode);
 	}
 	
-	if (catCode != "" && catCode.includes("{division}") && divisionVal != undefined) {
+	if (catCode != "" && catCode.includes("{division}") && divisionVal != undefined && !disableAdditionalFileds(taskTypeVal) && !disableAdditionalFileds(accountVal)) {
 		catCode = catCode.replace("{division}", divisionVal);
 	}
 	if (catCode != "") {
@@ -262,16 +271,26 @@ var createUnbillableTask = function(){
 		taskActCategory = taskType;
 		taskType = "OTHER";
 	}
-	var validationEnabled = true;
-	if(disableAdditionalFileds(taskActCategory)) {
-		validationEnabled= false;	
-	}
-
+	var accountId =$("#ubaccountId").val();
+	
 	var clientPartner =$("#unbilledClientPartner").val();
 	var teamName =$("#unbilledTeam").val();
 	var actProjectName =$("#ubactProjectName").val();
-	var accountId =$("#ubaccountId").val();
 	var division =$('input[name = "ubdivision"]:checked').val();
+
+	var validationEnabled = true;
+	if(disableAdditionalFileds(taskActCategory) || "Internal" == accountId || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
+		validationEnabled= false;	
+		clientPartner ="";
+		division ="";
+		if ("Internal" != accountId &&  "LS" != accountId && "RAI" != accountId && "Grammarly" != accountId) {
+			accountId ="";
+		}
+		orderBookNumber ="";
+		clientName="";
+		teamName="";
+	}
+
 	if (division == undefined) {
 		division = "";
 	}
@@ -352,16 +371,25 @@ var editUnbillableTask = function(taskActId){
 		taskType = "OTHER";
 	}
 	
-	var validationEnabled = true;
-	if(disableAdditionalFileds(taskActCategory)) {
-		validationEnabled= false;	
-	}
+	var accountId =$("#ubaccountId").val();
 	
 	var clientPartner =$("#unbilledClientPartner").val();
 	var teamName =$("#unbilledTeam").val();
 	var actProjectName =$("#ubactProjectName").val();
-	var accountId =$("#ubaccountId").val();
 	var division =$('input[name = "ubdivision"]:checked').val();
+
+	var validationEnabled = true;
+	if(disableAdditionalFileds(taskActCategory) || "Internal" == accountId  || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
+		validationEnabled= false;	
+		clientPartner ="";
+		division ="";
+		if ("Internal" != accountId &&  "LS" != accountId && "RAI" != accountId && "Grammarly" != accountId) {
+			accountId ="";
+		}
+		orderBookNumber ="";
+		clientName="";
+		teamName="";
+	}	
 	if (division == undefined) {
 		division = "";
 	}
@@ -433,7 +461,7 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 	$(".ubaccountId").prop("selectedIndex",0);
 	$('.unbilledClientPartner').selectpicker('refresh');
 	$('.ubaccountId').selectpicker('refresh');
-	$(".unbilledClientName").addClass("hide");
+	//$(".unbilledClientName").addClass("hide");
 	$(".uborderbooknodiv").addClass("hide");
 		
 	unBilledButtonAction = "Create";
@@ -473,7 +501,11 @@ var editUnbillableFormForCreate = function(taskActId,division,account,orderBookN
 	$("#ubactProjectName").val(actProjectName);
 
 	changeFieldsOnTaskTypeChange(taskType);
-
+	changeFieldsOnTaskTypeChange(account);
+	
+	if("Internal" == account  || "LS" == account || "RAI" == account || "Grammarly" == account) {
+		$(".ubaccountIdDiv").show();
+	}
 	$('#ubaccountId').selectpicker('refresh');
 	$(".nonBillableTaskCreateText").html("Update");
 	unBilledButtonAction = "Update";

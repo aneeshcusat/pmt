@@ -3,8 +3,6 @@ package com.famstack.projectscheduler.dashboard.bean;
 import java.util.Date;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import com.famstack.projectscheduler.contants.ProjectStatus;
 import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;

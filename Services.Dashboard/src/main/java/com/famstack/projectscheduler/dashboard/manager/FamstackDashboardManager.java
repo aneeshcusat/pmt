@@ -2281,6 +2281,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 					//projectDetailsResponseCacheItem.setCreationDate(projectTaskDetail.getProjectCreationTime());
 					projectDetailsResponse.setProjectId(String.valueOf(projectTaskDetail.getProjectId()));
 					if (projectTaskDetail.getProjectId() != 0) {
+						projectDetailsResponse.setStartDate(projectTaskDetail.getProjectStartTimeFormated());
+						projectDetailsResponse.setEndDate(projectTaskDetail.getProjectCompletionTimeFormated());
+						projectDetailsResponse.setAccount(projectTaskDetail.getAccountName());
+						projectDetailsResponse.setDeliveryLead(getDeliveryLeadName(projectTaskDetail.getDeliveryLead()));
 						projectDetailsResponse.setOrderBookId(projectTaskDetail.getOrderRefNumber());
 						projectDetailsResponse.setPoNo(projectTaskDetail.getProjectNumber());
 						projectDetailsResponse.setProposalNumber(projectTaskDetail.getProposalNumber());
