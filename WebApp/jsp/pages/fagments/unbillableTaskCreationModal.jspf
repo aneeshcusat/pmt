@@ -89,8 +89,8 @@
 							<option value="IEEE">IEEE</option>
 							<option value="Intel">Intel</option>
 							<option value="Internal">Internal</option>
-							<option value="Internal-DAA">Internal-DAA</option>
-							<option value="Internal-MIA">Internal-MIA</option>
+							<option value="Internal DAA">Internal DAA</option>
+							<option value="Internal MIA">Internal MIA</option>
 							<option value="LS">LS</option>
 							<option value="Lenovo">Lenovo</option>
 							<option value="Lululemon">Lululemon</option>
