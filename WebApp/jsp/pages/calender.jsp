@@ -2,12 +2,15 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
+<c:set var="staticUnbilledEnabled" value="${applicationScope.applicationConfiguraion.staticNonBillableEnabled}"/>
+
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
      <li class="active">Calender</li>
  </ul>
  <script>
  var futureHourCaptureDisabled = ${futureHourCaptureDisabled};
+ var newFieldsEnabled = ${staticUnbilledEnabled};
  </script>
 <style>
 
@@ -122,7 +125,7 @@
  
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js?v=${fsVersionNumber}"></script>
 <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.14&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.16&v=${fsVersionNumber}"></script>
 <script>
 var refreshCalendar = function() {
 	var userId = $("#taskAssigneeId").val();

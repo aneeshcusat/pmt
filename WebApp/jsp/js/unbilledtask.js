@@ -79,10 +79,11 @@ $("#taskType").on("change", function(){
 		$(".ubaccountId").prop("selectedIndex",0);
 		$('.ubaccountId').selectpicker('refresh');
 	}
-
-	changeFieldsOnTaskTypeChange(taskTypeVal);
 	
-	setReferenceNo();
+	if(newFieldsEnabled) {
+		changeFieldsOnTaskTypeChange(taskTypeVal);
+		setReferenceNo();
+	}
 	checkFutureTimeCaptureRestriction($("#taskType").val());
 });
 
@@ -284,7 +285,7 @@ var createUnbillableTask = function(){
 	var division =$('input[name = "ubdivision"]:checked').val();
 
 	var validationEnabled = true;
-	if(disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal") || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
+	if(!newFieldsEnabled || disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal") || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
 		validationEnabled= false;	
 		clientPartner ="";
 		if (!taskActCategory.startsWith("Internal product")) {
@@ -386,7 +387,7 @@ var editUnbillableTask = function(taskActId){
 	var division =$('input[name = "ubdivision"]:checked').val();
 
 	var validationEnabled = true;
-	if(disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal")  || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
+	if(!newFieldsEnabled || disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal")  || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
 		validationEnabled= false;	
 		clientPartner ="";
 		if (!taskActCategory.startsWith("Internal product")) {
@@ -509,11 +510,13 @@ var editUnbillableFormForCreate = function(taskActId,division,account,orderBookN
 	$("#ubreferenceNo").val(referenceNo);
 	$("#ubactProjectName").val(actProjectName);
 	
-	//changeFieldsOnTaskTypeChange(account);
-	changeFieldsOnTaskTypeChange(taskType);
-	
-	if((account.startsWith("Internal") && !taskType.startsWith("Internal product"))  || "LS" == account || "RAI" == account || "Grammarly" == account) {
-		$(".ubaccountIdDiv").show();
+	if(newFieldsEnabled) {
+		//changeFieldsOnTaskTypeChange(account);
+		changeFieldsOnTaskTypeChange(taskType);
+		
+		if((account.startsWith("Internal") && !taskType.startsWith("Internal product"))  || "LS" == account || "RAI" == account || "Grammarly" == account) {
+			$(".ubaccountIdDiv").show();
+		}
 	}
 	$('#ubaccountId').selectpicker('refresh');
 	$(".nonBillableTaskCreateText").html("Update");
