@@ -155,6 +155,7 @@
                             <option>Principal Data Scientist</option>
                             <option>Senior Project Executive</option>
                             <option>Senior Executive</option>
+                            <option>Senior Consultant</option>
                             <option>Consultant</option>
                             <option>Senior Data Scientist</option>
                             <option>Data Scientist</option>
@@ -305,6 +306,7 @@
 					<form:select path="country" id="country" class="form-control select" data-live-search="true" name="country">
 						  <option value="">- select -</option>
 						<option value='India'>India</option>
+						<option value='Singapore'>Singapore</option>
 						<option value='USA'>USA</option>
 						<option value='UAE'>UAE</option>
 						<option value='UK'>UK</option>

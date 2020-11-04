@@ -179,7 +179,7 @@
                      	 <input type='text' class="form-control ubactProjectName" id='ubactProjectName' autocomplete="off"/>
                      </div>
 				</div>
-				<div class="form-group  unbilledClientName">
+				<div class="form-group  unbilledClientNameDiv">
 				<label class="col-md-4 control-label">Client </label>
                      <div class="col-md-8"  style="">
                      	 <input type='text' class="form-control unbilledClientName" id='unbilledClientName' autocomplete="off"/>

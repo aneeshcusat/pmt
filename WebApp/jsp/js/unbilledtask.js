@@ -76,6 +76,11 @@ $("#taskType").on("change", function(){
 		$(".ubaccountId").prop("selectedIndex",0);
 		$('.ubaccountId').selectpicker('refresh');
 	}
+	
+	$(".unbilledClientNameDiv").show();
+	if(disableClientAdditionalFileds(taskTypeVal)) {
+		$(".unbilledClientNameDiv").hide();
+	}
 
 	changeFieldsOnTaskTypeChange(taskTypeVal);
 	
@@ -96,6 +101,21 @@ function disableAdditionalFileds(taskTypeVal){
 		|| taskTypeVal.startsWith("Administrative and management")
 		|| taskTypeVal.startsWith("Knowledge development")
 		
+		) {
+		return true;
+	}
+	return false;
+}
+
+function disableClientAdditionalFileds(taskTypeVal){
+	if(taskTypeVal == 'LEAVE' 
+		|| taskTypeVal == 'Leave' 
+		|| taskTypeVal == 'Holiday' 
+		|| taskTypeVal.startsWith("Internal product")
+		|| taskTypeVal.startsWith("Internal team meetings")
+		|| taskTypeVal.startsWith("Compliance Management")
+		|| taskTypeVal.startsWith("Administrative and management")
+		|| taskTypeVal.startsWith("Knowledge development")
 		) {
 		return true;
 	}
@@ -505,6 +525,10 @@ var editUnbillableFormForCreate = function(taskActId,division,account,orderBookN
 	
 	if("Internal" == account  || "LS" == account || "RAI" == account || "Grammarly" == account) {
 		$(".ubaccountIdDiv").show();
+	}
+	$(".unbilledClientNameDiv").show();
+	if(disableClientAdditionalFileds(taskType)) {
+		$(".unbilledClientNameDiv").hide();
 	}
 	$('#ubaccountId').selectpicker('refresh');
 	$(".nonBillableTaskCreateText").html("Update");
