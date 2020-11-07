@@ -299,11 +299,11 @@ var createUnbillableTask = function(){
 	var division =$('input[name = "ubdivision"]:checked').val();
 
 	var validationEnabled = true;
-	if(disableAdditionalFileds(taskActCategory) || "Internal" == accountId || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
+	if(disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal") || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
 		validationEnabled= false;	
 		clientPartner ="";
 		division ="";
-		if ("Internal" != accountId &&  "LS" != accountId && "RAI" != accountId && "Grammarly" != accountId) {
+		if (!accountId.startsWith("Internal") &&  "LS" != accountId && "RAI" != accountId && "Grammarly" != accountId) {
 			accountId ="";
 		}
 		orderBookNumber ="";
@@ -399,11 +399,11 @@ var editUnbillableTask = function(taskActId){
 	var division =$('input[name = "ubdivision"]:checked').val();
 
 	var validationEnabled = true;
-	if(disableAdditionalFileds(taskActCategory) || "Internal" == accountId  || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
+	if(disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal")  || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
 		validationEnabled= false;	
 		clientPartner ="";
 		division ="";
-		if ("Internal" != accountId &&  "LS" != accountId && "RAI" != accountId && "Grammarly" != accountId) {
+		if (!accountId.startsWith("Internal") &&  "LS" != accountId && "RAI" != accountId && "Grammarly" != accountId) {
 			accountId ="";
 		}
 		orderBookNumber ="";
@@ -523,7 +523,7 @@ var editUnbillableFormForCreate = function(taskActId,division,account,orderBookN
 	changeFieldsOnTaskTypeChange(taskType);
 	changeFieldsOnTaskTypeChange(account);
 	
-	if("Internal" == account  || "LS" == account || "RAI" == account || "Grammarly" == account) {
+	if(account.startsWith("Internal")  || "LS" == account || "RAI" == account || "Grammarly" == account) {
 		$(".ubaccountIdDiv").show();
 	}
 	$(".unbilledClientNameDiv").show();
