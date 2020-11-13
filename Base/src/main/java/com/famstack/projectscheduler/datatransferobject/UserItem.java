@@ -114,7 +114,7 @@ public class UserItem implements FamstackBaseItem
     @Column(name = "need_password_reset")
     private Boolean needPasswordReset;
 
-    @Column(name = "is_deleted", columnDefinition = "boolean default false", nullable = false)
+    @Column(name = "is_deleted")
     private Boolean deleted;
     
     @Column(name = "division")
@@ -486,7 +486,7 @@ public class UserItem implements FamstackBaseItem
 
     public Boolean getDeleted()
     {
-        return deleted;
+        return deleted ==  null ? false : deleted;
     }
 
     public String getEmpCode()

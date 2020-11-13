@@ -272,6 +272,22 @@
 					id="PONumber" path="PONumber" />
 			</div>
 		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label">Does this project involve any PII?</label>
+			<div class="col-md-1">
+				<label class="btn" style="padding: 0px 5px"> <input type="radio" id="ppi-true"
+					name="ppi" value="true" /> YES
+				</label> <label class="btn" style="padding: 0px 5px"> <input type="radio" id="ppi-false"
+					name="ppi" value="false"/> NO
+				</label> 
+			</div>
+			<label class="col-md-2 control-label">Watchers</label>
+			<div class="col-md-6" id="watcher_tag_div">
+				<form:input type="text" class="form-control tagsinputWatchers"
+					placeholder="add emails" value="" path="watchers" id="watchers" />
+				<span class="help-block">who all monitoring this project</span>
+			</div>
+		</div>
 	</div>
 	<div class="col-md-5">
 		<div class="form-group required">
@@ -387,15 +403,6 @@
 		</div>
 
 		<c:if test="${currentUserGroupId == 1018}">
-			<div class="form-group ">
-				<label class="col-md-3 control-label">Watchers</label>
-				<div class="col-md-9" id="watcher_tag_div">
-					<form:input type="text" class="form-control tagsinputWatchers"
-						placeholder="add emails" value="" path="watchers" id="watchers" />
-					<span class="help-block">who all monitoring this project</span>
-				</div>
-			</div>
-
 			<div class="form-group">
 				<label class="col-md-3 control-label">Tags</label>
 				<div class="col-md-9">

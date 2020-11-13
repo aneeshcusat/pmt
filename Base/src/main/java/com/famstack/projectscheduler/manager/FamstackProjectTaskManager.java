@@ -108,6 +108,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         if (taskItemNew == null) {
             taskItemNew = new TaskItem();
             taskItemNew.setName(taskDetails.getName());
+            taskItemNew.setClient(taskDetails.getClient());
             taskItemNew.setCanRecure(false);
             taskItemNew.setStatus(TaskStatus.COMPLETED);
             taskItemNew.setDescription(taskDetails.getDescription());
@@ -205,6 +206,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
     {
         taskItem.setDescription(taskDetails.getDescription());
         taskItem.setName(taskDetails.getName());
+        taskItem.setClient(taskDetails.getClient());
         taskItem.setCanRecure(taskDetails.getCanRecure());
         taskItem.setPriority(taskDetails.getPriority());
         taskItem.setProjectTaskType(taskDetails.getProjectTaskType());
@@ -413,6 +415,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
             taskDetails.setTaskRemainingTime(taskItem.getTaskRemainingTime());
             taskDetails.setTaskId(taskItem.getTaskId());
             taskDetails.setName(taskItem.getName());
+            taskDetails.setClient(taskItem.getClient());
             taskDetails.setCanRecure(taskItem.getCanRecure());
             taskDetails.setDuration(taskItem.getDuration());
             taskDetails.setTaskPausedTime(taskItem.getTaskPausedTime());

@@ -67,6 +67,8 @@ public class TaskDetails
     private String projectCategory;
 
     private String taskCategory;
+    
+    private String client;
 
     public int getTaskId()
     {
@@ -456,5 +458,13 @@ public class TaskDetails
 
 	public void setTaskCategory(String taskCategory) {
 		this.taskCategory = taskCategory;
+	}
+
+	public String getClient() {
+		return client;
+	}
+
+	public void setClient(String client) {
+		this.client = client;
 	}
 }

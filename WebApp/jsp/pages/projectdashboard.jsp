@@ -474,6 +474,8 @@ function clearCreateProjectForm(){
 	$("#summary").val("");
 	
 	$("#billable").attr("checked", false);
+	$("#ppi-true").prop("checked", false);
+	$("#ppi-false").prop("checked", false);
 	$("#projectType").val("");
 	$("#nonbillable").attr("checked", false);
 	$('#billable').parent().removeClass("active");
@@ -570,6 +572,12 @@ function initializeCreateProjectForm(project){
 	$('#projectLead').selectpicker('refresh');
 	
 	$("#clientPartner").val(project.clientPartner);
+	
+	if(project.ppi) {
+		$("#ppi-true").prop("checked", true);
+	} else {
+		$("#ppi-false").prop("checked", true);
+	}
 	
 	$("#priority").val(project.priority);
 	$('#priority').selectpicker('refresh');

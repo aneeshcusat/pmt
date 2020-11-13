@@ -94,3 +94,10 @@ INSERT INTO `bops`.`auto_report_info` (`id`, `cc_list`, `created_date`, `cron_ex
 
 --UPDATE user_info SET user_id=CONCAT('temp_',user_id) where user_grp_id != '99999';
 --update auto_report_info set enabled=false;
+
+
+ALTER TABLE `bops`.`project_info` 
+ADD COLUMN `has_ppi` BIT(1) NULL DEFAULT false;
+
+ALTER TABLE `bops`.`task_info` 
+ADD COLUMN `client` varchar(200) NULL;

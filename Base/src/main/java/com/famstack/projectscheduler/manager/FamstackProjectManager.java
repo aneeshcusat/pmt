@@ -161,6 +161,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectItem.setCode(projectDetails.getCode());
             projectItem.setDescription(projectDetails.getDescription());
             projectItem.setName(projectName);
+            projectItem.setPpi(projectDetails.getPpi());
             projectItem.setQuantity(projectDetails.getQuantity());
             projectItem.setPriority(projectDetails.getPriority());
             projectItem.setProjectSubType(projectDetails.getProjectSubType());
@@ -419,6 +420,8 @@ public class FamstackProjectManager extends BaseFamstackManager
         projectItem.setQuantity(projectDetails.getQuantity());
         projectItem.setPriority(projectDetails.getPriority());
         projectItem.setProjectSubType(projectDetails.getProjectSubType());
+        projectItem.setPpi(projectDetails.getPpi());
+        
         projectItem.setProjectLead(projectDetails.getProjectLead());
 
         projectItem.setPONumber(projectDetails.getPONumber());
@@ -619,6 +622,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             }
             ProjectDetails projectDetails = new ProjectDetails();
             projectDetails.setCode(projectItem.getCode());
+            projectDetails.setPpi(projectItem.getPpi());
             projectDetails.setUserGroupId(projectItem.getUserGroupId());
             projectDetails.setId(projectItem.getProjectId());
             projectDetails.setName(projectItem.getName());
@@ -635,6 +639,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectDetails.setStatus(projectItem.getStatus());
             projectDetails.setCreatedDate(projectItem.getCreatedDate());
             projectDetails.setProjectSubType(projectItem.getProjectSubType());
+            projectDetails.setPpi(projectItem.getPpi());
             projectDetails.setProjectLead(projectItem.getProjectLead());
             projectDetails.setClientId(projectItem.getClientId());
             projectDetails.setAccountId(projectItem.getAccountId());
@@ -1422,6 +1427,8 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setDeliveryLead((Integer) data[34]);
             projectTaskActivityDetails.setLocation((String) data[35]);
             projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[36]));
+            
+            projectTaskActivityDetails.setClientName((String) data[37]);
             projectTaskActivityDetails.setUserGroupId(userGroupId);
             
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);

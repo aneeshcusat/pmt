@@ -748,6 +748,9 @@ var clearTaskDetails = function(){
 	}
 	$("#description").val("");
 	$("#projectTaskType").prop("selectedIndex", 0);
+	$("#taskClient").prop("selectedIndex", 0);
+	$("#taskClient").selectpicker('refresh');
+	
 	$("#priority").prop("selectedIndex", 0);
 	$("select.canRecure").prop("selectedIndex", 0);
 	
@@ -813,6 +816,8 @@ var loadTaskDetails = function(taskId){
     $("#estStartTime").val($("#"+taskId+"startTime").val());
  	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});
  	$("#taskName").val($("#"+taskId+"name").val());
+ 	$("#taskClient").val($("#"+taskId+"taskClient").val());
+ 	$('#taskClient').selectpicker('refresh');
  	var projectTaskType = $("#"+taskId+"projectTaskType").val();
  	$("#projectTaskType").val("PRODUCTIVE");
  	famstacklog("projectTaskType" + projectTaskType);

@@ -16,6 +16,7 @@ import com.famstack.projectscheduler.employees.bean.ClientDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
 import com.famstack.projectscheduler.manager.FamstackAccountManager;
 import com.famstack.projectscheduler.util.DateUtils;
+import com.famstack.projectscheduler.util.StringUtils;
 
 public class ProjectTaskActivityDetails
 {
@@ -529,7 +530,9 @@ public class ProjectTaskActivityDetails
 	}
 
 	public void setClientName(String clientName) {
-		this.clientName = clientName;
+		if(StringUtils.isNotBlank(clientName)) {
+			this.clientName = clientName;
+		}
 	}
 
 	public Double getTaskActivityTimeXls() {

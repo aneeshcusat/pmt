@@ -7,6 +7,7 @@
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
 	<c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 <input id="${taskDetails.taskId}name" type="hidden" value="${taskDetails.name}"/>
+<input id="${taskDetails.taskId}taskClient" type="hidden" value="${taskDetails.client}"/>
 <input id="${taskDetails.taskId}projectTaskType" type="hidden"
 	value="${taskDetails.projectTaskType}" />
 	<input id="${taskDetails.taskId}priority" type="hidden"

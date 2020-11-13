@@ -106,6 +106,8 @@ public class ProjectDetails
     private String hoursUserSkillMonthlySplitJson;
     
     private String clientPartner;
+    
+    private Boolean ppi;
 
     public Integer getId()
     {
@@ -737,5 +739,13 @@ public class ProjectDetails
 
 	public void setCsrToken(String csrToken) {
 		this.csrToken = csrToken;
+	}
+
+	public Boolean getPpi() {
+		return ppi;
+	}
+
+	public void setPpi(Boolean ppi) {
+		this.ppi = ppi;
 	}
 }

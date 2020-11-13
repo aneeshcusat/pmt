@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Column;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import com.famstack.projectscheduler.notification.bean.EmailNotificationItem;
 import com.famstack.projectscheduler.notification.services.FamstackBaseNotificationService;
 import com.famstack.projectscheduler.security.hasher.FamstackSecurityTokenManager;
 import com.famstack.projectscheduler.util.StringUtils;
+import com.famstack.projectscheduler.utils.FamstackUtils;
 
 @Service
 public class FamstackNotificationServiceManager extends BaseFamstackService
@@ -272,6 +275,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
 				|| notificationType == NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY
 				|| notificationType == NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER
 				|| notificationType == NotificationType.WEEKLY_PO_ESTIMATION_REPORT
+				|| notificationType == NotificationType.PROJECT_CREATE
         		)
             ? true : false;
     }
@@ -284,13 +288,14 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         notificationEmailItem.getData().put("url", getFamstackApplicationConfiguration().getUrl());
         notificationEmailItem.setToList(getToListForProjectUpdates(projectDetails));
         notificationEmailItem.setSubscriberList(getSubscribersIdForProjectUpdates(projectDetails));
-        notificationEmailItem.getData().put("id", projectDetails.getId());
+        notificationEmailItem.getData().put("projectId", projectDetails.getId());
         notificationEmailItem.getData().put("name", projectDetails.getName());
         notificationEmailItem.getData().put("code", projectDetails.getCode());
         notificationEmailItem.getData().put("description", projectDetails.getDescription());
         notificationEmailItem.getData().put("createdDate", projectDetails.getCreatedDate());
         notificationEmailItem.getData().put("lastModifiedDate", projectDetails.getLastModifiedDate());
         notificationEmailItem.getData().put("projectType", projectDetails.getType());
+        notificationEmailItem.getData().put("projectSubType", projectDetails.getProjectSubType());
         notificationEmailItem.getData().put("complexity", projectDetails.getComplexity());
         notificationEmailItem.getData().put("accountName", projectDetails.getAccountName());
         notificationEmailItem.getData().put("quantity", projectDetails.getQuantity());
@@ -305,6 +310,14 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         notificationEmailItem.getData().put("clientName", projectDetails.getClientName());
         notificationEmailItem.getData().put("teamName", projectDetails.getTeamName());
         notificationEmailItem.getData().put("subTeamName", projectDetails.getSubTeamName());
+        notificationEmailItem.getData().put("ppi", projectDetails.getPpi());
+        notificationEmailItem.getData().put("newCategory", projectDetails.getNewCategory());
+        notificationEmailItem.getData().put("sowLineItem", projectDetails.getSowLineItem());
+        notificationEmailItem.getData().put("orderBookRefNo", projectDetails.getOrderBookRefNo());
+        notificationEmailItem.getData().put("proposalNo", projectDetails.getProposalNo());
+        notificationEmailItem.getData().put("projectLocation", projectDetails.getProjectLocation());
+        notificationEmailItem.getData().put("clientPartner", projectDetails.getClientPartner());
+        notificationEmailItem.getData().put("hoursUserSkillMonthly", FamstackUtils.getJsonObjectFromJson(projectDetails.getHoursUserSkillMonthlySplitJson()));
 
         return notificationEmailItem;
     }

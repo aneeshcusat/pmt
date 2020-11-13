@@ -125,7 +125,11 @@ public class ProjectItem implements FamstackBaseItem
     @Column(name = "deleted")
     private Boolean deleted;
     
-    @Column(name = "new_category")
+    @Column(name = "has_ppi")
+    private Boolean ppi;
+    
+   
+	@Column(name = "new_category")
     private String newCategory;
 
     @Column(name = "sow_line_item")
@@ -483,7 +487,7 @@ public class ProjectItem implements FamstackBaseItem
 	}
 
 	public String getProjectLocation() {
-		return projectLocation;
+		return projectLocation ;
 	}
 
 	public void setProjectLocation(String projectLocation) {
@@ -506,5 +510,12 @@ public class ProjectItem implements FamstackBaseItem
 	public void setClientPartner(String clientPartner) {
 		this.clientPartner = clientPartner;
 	}
+	 public Boolean getPpi() {
+			return ppi;
+		}
+
+		public void setPpi(Boolean ppi) {
+			this.ppi = ppi; 
+		}
 
 }

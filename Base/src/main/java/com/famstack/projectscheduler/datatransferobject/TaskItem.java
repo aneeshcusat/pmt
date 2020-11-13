@@ -109,6 +109,9 @@ public class TaskItem implements FamstackBaseItem
 
     @Column(name = "task_category")
     private String taskCategory;
+    
+    @Column(name = "client")
+    private String client;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
@@ -353,6 +356,14 @@ public class TaskItem implements FamstackBaseItem
 
 	public void setTaskCategory(String taskCategory) {
 		this.taskCategory = taskCategory;
+	}
+
+	public String getClient() {
+		return client;
+	}
+
+	public void setClient(String client) {
+		this.client = client;
 	}
 
 }

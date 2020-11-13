@@ -552,8 +552,13 @@ public class FamstackProjectController extends BaseFamstackService
     public ModelAndView loadProject(@PathVariable("projectId") int projectId, HttpServletRequest request)
     {
         ProjectDetails projectDetails = famstackDashboardManager.getProjectDetails(projectId, request);
+        AccountDetails accountDetails =   null;
+        List<AccountDetails> accountDetailsList = famstackDashboardManager.getAccountDataList();
+        if (projectDetails != null && accountDetailsList != null) {
+         accountDetails =  famstackDashboardManager.getAccountDataList().stream().filter(account -> account.getAccountId() == projectDetails.getAccountId()).findAny().orElse(null);
+        }
         return new ModelAndView("projectdetails", "command", new TaskDetails()).addObject("projectDetails",
-            projectDetails);
+            projectDetails).addObject("accountDetails", accountDetails);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/uploadfile/{projectCode}")

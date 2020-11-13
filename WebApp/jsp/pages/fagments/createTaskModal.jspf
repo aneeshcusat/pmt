@@ -95,6 +95,29 @@
                           </form:select>
                      </div>
                      
+                      <label class="col-md-2 control-label">Client</label>
+                     <div class="col-md-4">  
+                        <form:select class="form-control select" id="taskClient" data-live-search="true" path="client">
+                            <option value="">- select -</option>
+                            
+                            <c:if test="${not empty accountDetails }">
+                              <c:if test="${not empty accountDetails.projectTeams}">  
+                                <c:forEach var="projectTeam" items="${accountDetails.projectTeams}">
+                                 <c:if test="${not empty projectTeam.projectSubTeams}">  
+                                  <c:forEach var="projectSubTeam" items="${projectTeam.projectSubTeams}">
+                                  		<c:if test="${not empty projectSubTeam.clientItems}">  
+                                    <c:forEach var="client" items="${projectSubTeam.clientItems}">
+                                     <option value="${client.name}">${client.name}</option>
+                                    </c:forEach>
+                                   </c:if>
+                                  </c:forEach>
+                                 </c:if>
+                                </c:forEach>
+                                </c:if>
+                            </c:if>
+                        </form:select>
+                    </div>
+                     
                      <label class="col-md-2 control-label hide">Priority</label>
                      <div class="col-md-4 hide">
                          <form:select class="form-control select" path="priority" id="priority">
