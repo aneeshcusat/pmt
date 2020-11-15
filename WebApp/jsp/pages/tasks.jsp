@@ -4,6 +4,8 @@
 <c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/tasks.css?version=3.3&v=${fsVersionNumber}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
+<c:set var="staticUnbilledEnabled" value="${applicationScope.applicationConfiguraion.staticNonBillableEnabled}"/>
+
 <c:set var="userDetailsMap"
 	value="${applicationScope.applicationConfiguraion.userMap}" />
 <ul class="breadcrumb">
@@ -19,6 +21,7 @@
 </c:if>
 </style>
 <script>
+var newFieldsEnabled = ${staticUnbilledEnabled};
  var taskTimerMap = {};
   
  function getCompletedTaskTime(taskId){
@@ -272,7 +275,7 @@
 	src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.15&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.16&v=${fsVersionNumber}"></script>
 <script>
 
 <c:if test="${sameDayOnlyTaskEnabled}">	

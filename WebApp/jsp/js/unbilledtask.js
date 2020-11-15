@@ -12,6 +12,8 @@ var accountNameCodetMapping = [
  {name:"iHeart Media", value:"IHM"},
  {name:"Intel", value:"ITL"},
  {name:"Internal", value:""},
+ {name:"Internal DAA", value:""},
+ {name:"Internal MIA", value:""},
  {name:"Lenovo", value:"LEN"},
 {name:"LS", value:"LS"},
 {name:"RAI", value:"RAI"},

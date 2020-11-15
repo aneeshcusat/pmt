@@ -12,7 +12,16 @@
     content: "*";
     color: red;
 }
+
+<c:if test="${!staticUnbilledEnabled }">
+.divisionGroupDiv, .ubaccountIdDiv, .divisionGroupDiv, .unbilledTeamDiv, .unbilledClientPartnerDiv, .ubreferenceNoDiv{
+	display: none;
+}
+
+</c:if>
 </style>
+
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="row">
@@ -89,8 +98,8 @@
 							<option value="IEEE">IEEE</option>
 							<option value="Intel">Intel</option>
 							<option value="Internal">Internal</option>
-							<option value="Internal-DAA">Internal-DAA</option>
-							<option value="Internal-MIA">Internal-MIA</option>
+							<option value="Internal DAA">Internal DAA</option>
+							<option value="Internal MIA">Internal MIA</option>
 							<option value="LS">LS</option>
 							<option value="Lenovo">Lenovo</option>
 							<option value="Lululemon">Lululemon</option>
@@ -146,7 +155,6 @@
                      	 
                      </div>
 				</div>
-
 				<div class="form-group">
 				<label class="col-md-3 control-label">Comments : </label>
                      <div class="col-md-9">
@@ -198,7 +206,6 @@
                      	 <input type='text' class="form-control uborderbookno" id='uborderbookno' autocomplete="off"/>
                      </div>
 				</div>
-			
 				
 			</div>
 		</div>
