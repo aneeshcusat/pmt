@@ -3,7 +3,7 @@
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="userGroupMap" value="${applicationScope.applicationConfiguraion.userGroupMap}"/>
 
-<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/reports.css?version=4.1&v=${fsVersionNumber}"/>
+<link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/reports.css?version=4.2&v=${fsVersionNumber}"/>
 
 <!-- START CONTENT FRAME -->
 <div class="content-frame">            
@@ -42,7 +42,8 @@
                 <option value="TEAM_UTILIZATION_CHART">Team Utilization Chart</option>
                 <c:if test="${currentUserGroupId == '1001' || currentUserGroupId == '1004' || currentUserGroupId == '1016' || currentUserGroupId == '1007' || currentUserGroupId == '1003' || currentUserGroupId == '1010' 
         	|| currentUserGroupId == '1006' || currentUserGroupId == '1002' || currentUserGroupId == '1009' || currentUserGroupId == '1005'}">
-                <option value="ROJECT_DETAILS_BY_SKILLS">Project Estimate vs Actual</option>
+                <option value="PROJECT_DETAILS_BY_SKILLS">Project Estimate vs Actual</option>
+                <option value="UTILIZATION_BY_SKILLS">Utilization By Skills</option>
                 </c:if>
           	</select>
           	</div>
@@ -51,6 +52,7 @@
           		<option value="DAILY">Daily</option>
           		<option value="WEEKLY">Weekly</option>
           		<option value="MONTHLY">Monthly</option>
+          		
           	</select>
           	</div>
         	<div class="col-md-2 reportHeaderInputs">
@@ -58,6 +60,7 @@
         		<input readonly="readonly" type='text' class="dailySelector"/>
         		<input readonly="readonly" type='text' class="weekSelector hide"/>
         		<input readonly="readonly" type='text' class="monthSelector hide"/>
+        		<input type="text" class="monthDateRangeSelector hide" name="monthRangeSelector"  style="width: 150px;"/>
         	</div>
         	<div class="col-md-1 reportHeaderInputs" style="text-align: center;">
 	        	<a href="javascript:moveToPrevious();" style="float: left" title="Previous"><span class="fa fa-angle-left fa-2x" style="font-weight: bold"></span></a>
@@ -205,6 +208,15 @@
        	<th>Total Hours</th>
        </tr>
        
+       	<tr class="reportDataHeader-utilizationbyskills">
+       	<th width="50px">Sl No</th>
+       	<th>Skillset</th>
+       	<th>Month</th>
+       	<th>Billable Hours</th>
+       	<th>Non Billable Hours</th>
+       	<th>Total Hours</th>
+       </tr>
+       
        	<tr class="reportDataHeader-projecthours">
        	<th width="50px">Sl No</th>
        	<th>Team Name</th>
@@ -258,7 +270,7 @@
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.min.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=4.8&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.reports.js?version=4.10&v=${fsVersionNumber}"></script> 
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
 <script type="text/javascript" src="${js}/plugins/canvasjs/canvasjs.js"></script> 

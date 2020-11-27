@@ -1,4 +1,4 @@
-.weekSelector,.monthSelector,.dailySelector{
+.weekSelector,.monthSelector,.dailySelector, .monthDateRangeSelector{
     border: none;
     font-size: 13px;
     font-weight: bold;

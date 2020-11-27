@@ -27,6 +27,7 @@ import com.famstack.projectscheduler.employees.bean.UserSiteActivityDetails;
 import com.famstack.projectscheduler.employees.bean.UserSiteActivityStatus;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationDetails;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationWeekWiseDetails;
+import com.famstack.projectscheduler.employees.bean.UtilizationBySkill;
 import com.famstack.projectscheduler.employees.bean.UtilizationProjectDetails;
 
 @Component
@@ -73,11 +74,39 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
         fillPOEstimationReportData(dataMap, sheet, workBook);
       } else if (ReportType.WEEKLY_PROJECT_HOURS == reportType) {
         fillProjectHoursReportData(dataMap, sheet, workBook);
-      }
+      } else if (ReportType.UTILIZATION_BY_SKILLS == reportType) {
+          fillUtilizationBySkillsReportData(dataMap, sheet, workBook);
+        }
     }
   }
 
-  private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
+  private void fillUtilizationBySkillsReportData(Map<String, Object> dataMap, XSSFSheet sheet, XSSFWorkbook workBook) {
+	  	setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
+	    setCellValue(sheet, 0, 1, "Skillset", headerCellStyle);
+	    setCellValue(sheet, 0, 2, "Month", headerCellStyle);
+	    setCellValue(sheet, 0, 3, "Billable Hours", headerCellStyle);
+	    setCellValue(sheet, 0, 4, "Non Billable Hours", headerCellStyle);
+	    setCellValue(sheet, 0, 5, "Total Hours", headerCellStyle);
+
+	    List<UtilizationBySkill> data = (List<UtilizationBySkill>) dataMap.get("DATA");
+
+	    int rowIndex = 1;
+	    for (UtilizationBySkill utilizationBySkill : data) {
+	      setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
+	      setCellValue(sheet, rowIndex, 1, utilizationBySkill.getSkill(), null);
+	      setCellValue(sheet, rowIndex, 2, utilizationBySkill.getMonthYear(), null);
+	      setCellValue(sheet, rowIndex, 3, utilizationBySkill.getBillableHours(),
+	          boldCenterValueCellStyle);
+	      setCellValue(sheet, rowIndex, 4, utilizationBySkill.getNonBillableHours(),
+	          boldCenterValueCellStyle);
+	      setCellValue(sheet, rowIndex, 5, utilizationBySkill.getTotalHrs(),
+	          boldCenterValueCellStyle);
+	      rowIndex++;
+	    }
+	
+}
+
+private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
       CellStyle cellStyle) {
     Row row = getRow(sheet, rowIndex);
     Cell cell = getCell(sheet, row, colIndex);

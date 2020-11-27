@@ -15,8 +15,8 @@ var accountNameCodetMapping = [
  {name:"Internal DAA", value:""},
  {name:"Internal MIA", value:""},
  {name:"Lenovo", value:"LEN"},
-{name:"LS", value:"LS"},
-{name:"RAI", value:"RAI"},
+ {name:"LS", value:"LS"},
+ {name:"RAI", value:"RAI"},
  {name:"Lululemon", value:"LUL"},
  {name:"MBRDI", value:"MBR"},
  {name:"Microsoft", value:"MSF"},
@@ -25,6 +25,7 @@ var accountNameCodetMapping = [
  {name:"OnePlus", value:"OPL"},
  {name:"Pepsi", value:"PEP"},
  {name:"PG & E", value:"PGE"},
+ {name:"R J Reynolds", value:"RJR"},
  {name:"Roofoods Ltd", value:"RFL"},
  {name:"T-mobile", value:"TML"},
  {name:"Unilever", value:"ULR"},
@@ -49,9 +50,10 @@ var categoryCodeMapping = [
 {name: "Knowledge development and training", value: "107"},
 {name: "Internal product/solution development and support", value: "{division}{accountCode}210"},
 {name: "Proposals", value: "{division}{accountCode}211"},
-{name: "POC and Pilot Projects", value: "{division}{accountCode}212"},
-{name: "Marketing Collateral and Campaigns", value: "{division}{accountCode}213"},
-{name: "Additional support on projects post closure", value: "{division}{accountCode}213"}
+{name: "POC", value: "{division}{accountCode}212"},
+{name: "Free Pilot", value: "{division}214"},
+{name: "Marketing Collateral and Campaigns", value: "{division}{accountCode}215"},
+{name: "Additional support on projects post closure", value: "{division}{accountCode}215"}
 ]
 
 $('input[name = "ubdivision"]').on("change", function(){
@@ -83,10 +85,11 @@ $("#taskType").on("change", function(){
 	if(disableClientAdditionalFileds(taskTypeVal)) {
 		$(".unbilledClientNameDiv").hide();
 	}
-
-	changeFieldsOnTaskTypeChange(taskTypeVal);
 	
-	setReferenceNo();
+	if(newFieldsEnabled) {
+		changeFieldsOnTaskTypeChange(taskTypeVal);
+		setReferenceNo();
+	}
 	checkFutureTimeCaptureRestriction($("#taskType").val());
 });
 
@@ -132,13 +135,15 @@ function changeFieldsOnTaskTypeChange(taskTypeVal) {
 	$(".ubreferenceNoDiv").show();
 	
 	if (disableAdditionalFileds(taskTypeVal)) {
-			$(".divisionGroupDiv").hide();
+			$(".uborderbooknodiv").addClass("hide");
 			$(".ubaccountIdDiv").hide();
 			$(".unbilledTeamDiv").hide();
 			$(".unbilledClientPartnerDiv").hide();
 			//$(".ubreferenceNoDiv").hide();
 			//$(".unbilledClientName").addClass("hide");
-			$(".uborderbooknodiv").addClass("hide");
+			if (!taskTypeVal.startsWith("Internal product")) {
+				$(".divisionGroupDiv").hide();
+			}
 	} else {
 		if (taskTypeVal != "" && taskTypeVal.startsWith("Additional support")){
 			//$(".unbilledClientName").removeClass("hide");
@@ -301,10 +306,12 @@ var createUnbillableTask = function(){
 	var division =$('input[name = "ubdivision"]:checked').val();
 
 	var validationEnabled = true;
-	if(disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal") || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
+	if(!newFieldsEnabled || disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal") || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
 		validationEnabled= false;	
 		clientPartner ="";
-		division ="";
+		if (!taskActCategory.startsWith("Internal product")) {
+			division ="";
+		}
 		if (!accountId.startsWith("Internal") &&  "LS" != accountId && "RAI" != accountId && "Grammarly" != accountId) {
 			accountId ="";
 		}
@@ -401,10 +408,12 @@ var editUnbillableTask = function(taskActId){
 	var division =$('input[name = "ubdivision"]:checked').val();
 
 	var validationEnabled = true;
-	if(disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal")  || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
+	if(!newFieldsEnabled || disableAdditionalFileds(taskActCategory) || accountId.startsWith("Internal")  || "LS" == accountId || "RAI" == accountId || "Grammarly" == accountId) {
 		validationEnabled= false;	
 		clientPartner ="";
-		division ="";
+		if (!taskActCategory.startsWith("Internal product")) {
+			division ="";
+		}
 		if (!accountId.startsWith("Internal") &&  "LS" != accountId && "RAI" != accountId && "Grammarly" != accountId) {
 			accountId ="";
 		}
@@ -521,16 +530,18 @@ var editUnbillableFormForCreate = function(taskActId,division,account,orderBookN
 	$("#uborderbookno").val(orderBookNumber);
 	$("#ubreferenceNo").val(referenceNo);
 	$("#ubactProjectName").val(actProjectName);
-
-	changeFieldsOnTaskTypeChange(taskType);
-	changeFieldsOnTaskTypeChange(account);
 	
-	if(account.startsWith("Internal")  || "LS" == account || "RAI" == account || "Grammarly" == account) {
-		$(".ubaccountIdDiv").show();
-	}
-	$(".unbilledClientNameDiv").show();
-	if(disableClientAdditionalFileds(taskType)) {
-		$(".unbilledClientNameDiv").hide();
+	if(newFieldsEnabled) {
+		//changeFieldsOnTaskTypeChange(account);
+		changeFieldsOnTaskTypeChange(taskType);
+		
+		if((account.startsWith("Internal") && !taskType.startsWith("Internal product"))  || "LS" == account || "RAI" == account || "Grammarly" == account) {
+			$(".ubaccountIdDiv").show();
+		}
+		$(".unbilledClientNameDiv").show();
+		if(disableClientAdditionalFileds(taskType)) {
+			$(".unbilledClientNameDiv").hide();
+		}
 	}
 	$('#ubaccountId').selectpicker('refresh');
 	$(".nonBillableTaskCreateText").html("Update");

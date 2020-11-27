@@ -192,6 +192,7 @@ $(".autoReportType").on("change",function(){
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY").text("Monthly"));
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY_WTW").text("Monthly Week to Week"));
 	 $('.autoReportDuration').append($('<option>').val("MONTHLY_ENE").text("Monthly End to End"));
+	 $(".autoReportDuration option[value='DATE_RANGE']").remove();
 
 	 clearReportDataTable();
 	 $(".reportHeaderInputs").removeClass("hide");
@@ -219,11 +220,18 @@ $(".autoReportType").on("change",function(){
 	 } else  if("TEAM_UTILIZATION_CHART" == selectedValue) {
 		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
 		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
-	 } else  if("ROJECT_DETAILS_BY_SKILLS" == selectedValue) {
-		 $(".reportHeaderInputs").addClass("hide");
+	 } else  if("PROJECT_DETAILS_BY_SKILLS" == selectedValue) {
+		$(".reportHeaderInputs").addClass("hide");
 		$(".projectestvsactualDiv").removeClass("hide");
 		$(".monthRangeSelectorDiv").removeClass("hide");
-	 }
+	 } else  if("UTILIZATION_BY_SKILLS" == selectedValue) {
+		 $(".autoReportDuration option[value='DAILY']").remove();
+		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
+		 $(".autoReportDuration option[value='WEEKLY']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
+		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
+		 $('.autoReportDuration').append($('<option>').val("DATE_RANGE").text("Date Range"));
+	}
 	 $(".autoReportDuration").trigger("change");
 });
 
@@ -234,6 +242,7 @@ $(".autoReportDuration").on("change",function(){
 	 $('.monthSelector').addClass("hide");
 	 $(".weekSelector").addClass("hide");
 	 $(".dailySelector").addClass("hide");
+	 $(".monthDateRangeSelector").addClass("hide");
 	 if("DAILY" == selectedValue) {
 		 $(".dailySelector").removeClass("hide");
 	 } else if ("WEEKLY" == selectedValue) {
@@ -246,6 +255,8 @@ $(".autoReportDuration").on("change",function(){
 		 $('.monthSelector').removeClass("hide");
 	 } else if ("MONTHLY_WTW" == selectedValue) {
 		 $('.monthSelector').removeClass("hide");
+	 } else if ("DATE_RANGE" == selectedValue) {
+		 $(".monthDateRangeSelector").removeClass("hide");
 	 }
 });
 
@@ -302,6 +313,12 @@ function refreshReportDataOrDownload(isDownload) {
 		 var lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
 		 startDate = firstDayOfMonth;
 		 endDate = lastDayOfMonth;
+	 } else if("DATE_RANGE" == autoReportDuration) {
+		 var dateString = $(".monthDateRangeSelector").val();
+			var dateRange =	dateString.split(" - ");
+			 startDate =  getDateObject("01-" +dateRange[0]);
+			 endDate =  getDateObject("01-" +dateRange[1]);
+			 endDate = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0);
 	 }
 	 
 	 var reportStartDate = formatCalenderDate(startDate);
@@ -364,6 +381,9 @@ function fillReportTableData(data, reportType,autoReportDuration){
 	 } else  if("WEEKLY_PROJECT_HOURS" == reportType) {
 		 fillProjectHoursReportData(data);
 		 downloadXLSFileName = "Weekly Project Hours Report";
+	 } else  if("UTILIZATION_BY_SKILLS" == reportType) {
+		 fillUtilizationBySkillsReportData(data);
+		 downloadXLSFileName = "Utilisation By Skills Report";
 	 }
 	 
 	 initializeExportTable(downloadXLSFileName);
@@ -399,6 +419,27 @@ function fillUserActivityReportData(data) {
 			
 		});
 		reportBodyHtml += "</tr>";
+	});
+	
+	$(".reportDataBody").html( reportBodyHtml );
+}
+
+function fillUtilizationBySkillsReportData(data) {
+	var jsonData = JSON.parse(data);
+	var reportHeader = $(".reportDataTemplate .reportDataHeader-utilizationbyskills").clone();
+	var headerHtml = $(reportHeader).html();
+	
+	$(".retportDataHeader").html("<tr>" + headerHtml + "</tr>");
+	
+	var reportBodyHtml="";
+	$.each(jsonData.DATA, function( index, value ) {
+		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		reportBodyHtml += "<td>"+value.skill+"</td>";
+		reportBodyHtml += "<td>"+value.monthYear+"</td>";
+		
+		reportBodyHtml += "<td>"+value.billableHours+"</td>";
+		reportBodyHtml += "<td>"+value.nonBillableHours+"</td>";
+		reportBodyHtml += "<td>"+value.totalHrs+"</td>";
 	});
 	
 	$(".reportDataBody").html( reportBodyHtml );
@@ -1019,3 +1060,20 @@ $(function() {
         }
   });
 });
+
+$(function() {
+	  $('input[name="monthDateRangeSelector"]').daterangepicker({
+	    timePicker: false,
+	       
+	        autoclose: true,
+	        locale: {
+		 		calendarMode : 'month',
+				format: 'MMM-YYYY',
+	            applyLabel: 'Apply Date',
+	            fromLabel: 'First Date',
+	            toLabel: 'Second Date',
+	            monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+	            firstDay: 1
+	        }
+	  });
+	});

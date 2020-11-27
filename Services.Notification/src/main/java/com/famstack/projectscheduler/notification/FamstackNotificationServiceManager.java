@@ -419,7 +419,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         if (StringUtils.isNotBlank(watchers)) {
             String[] watchersArray = watchers.split(",");
             for (String watcher : watchersArray) {
-                Integer watcherId = FamstackApplicationConfiguration.getUserIdMap().get(watcher);
+                Integer watcherId = FamstackApplicationConfiguration.getUserIdMap().get(watcher.toLowerCase());
 
                 if (watcherId != null) {
                     toList.add(watcherId);

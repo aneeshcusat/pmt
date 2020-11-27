@@ -151,7 +151,7 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 				}
 				usersByGroupList.add(employeeDetails);
 			}
-			userIdMapTemp.put(employeeDetails.getEmail(),
+			userIdMapTemp.put(employeeDetails.getEmail().toLowerCase(),
 					employeeDetails.getId());
 		}
 		allUsersMap.clear();

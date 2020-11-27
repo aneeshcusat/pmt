@@ -483,7 +483,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public boolean changePassword(String userName, String key, String oldPassword,
 			String password) {
 		Integer userId = FamstackApplicationConfiguration.getUserIdMap().get(
-				userName);
+				userName.toLowerCase());
 		boolean status = false;
 		 if (isValidKeyForUserReset(key, userId)) {
 			  status = userProfileManager.changePassword(userName,
