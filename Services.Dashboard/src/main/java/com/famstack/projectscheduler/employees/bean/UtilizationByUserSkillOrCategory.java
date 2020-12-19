@@ -1,21 +1,17 @@
 package com.famstack.projectscheduler.employees.bean;
 
-public class UtilizationBySkill {
+public class UtilizationByUserSkillOrCategory {
 	int billableMins;
 	int nonBillableMins;
 	int leaveMins = 0;
 	int holidayMins = 0;
 	String monthYear = null;
-	String skill = null;
+	String skillOrCategory = null;
+	String employeeName = null;
+	String employeeCode = null;
+	String designation = null;
+	Integer employeeId = null;
 	
-	 public String getSkill() {
-		return skill;
-	}
-
-	public void setSkill(String skill) {
-		this.skill = skill;
-	}
-
 	public String getMonthYear() {
 		return monthYear;
 	}
@@ -77,5 +73,45 @@ public class UtilizationBySkill {
 
 	public void setHolidayMins(int holidayMins) {
 		this.holidayMins = holidayMins;
+	}
+
+	public String getSkillOrCategory() {
+		return skillOrCategory;
+	}
+
+	public void setSkillOrCategory(String skillOrCategory) {
+		this.skillOrCategory = skillOrCategory;
+	}
+
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public Integer getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Integer employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public String getEmployeeCode() {
+		return employeeCode;
+	}
+
+	public void setEmployeeCode(String employeeCode) {
+		this.employeeCode = employeeCode;
+	}
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
 	}
 }

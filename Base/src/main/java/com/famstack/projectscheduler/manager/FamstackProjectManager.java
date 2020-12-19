@@ -59,7 +59,7 @@ import com.famstack.projectscheduler.employees.bean.UserSiteActivityDetails;
 import com.famstack.projectscheduler.employees.bean.UserUtilization;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationDetails;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationWeekWiseDetails;
-import com.famstack.projectscheduler.employees.bean.UtilizationBySkill;
+import com.famstack.projectscheduler.employees.bean.UtilizationByUserSkillOrCategory;
 import com.famstack.projectscheduler.employees.bean.UtilizationProjectDetails;
 import com.famstack.projectscheduler.notification.FamstackNotificationServiceManager;
 import com.famstack.projectscheduler.util.DateTimePeriod;
@@ -2392,9 +2392,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 
 		reportDataMap.put("REPORT_DATE", dateRange);
 		reportDataMap.put("DATE_LIST", dateList);
-		if(reportType == ReportType.UTILIZATION_BY_SKILLS){
-			reportDataMap.put("DATA", getUtilizationByUserSkill(startDate, endDate, employeesList, userGroupId));
-		}
+		if(reportType == ReportType.UTILIZATION_BY_SKILLS || reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS || reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY){
+			reportDataMap.put("DATA", getUtilizationByEmployeeProjecctCategoryOrSkill(startDate, endDate, employeesList, userGroupId, reportType));
+		} 
 		else if (reportType == ReportType.USER_SITE_ACTIVITY) {
 
 			Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap = famstackUserActivityManager
@@ -2453,6 +2453,146 @@ public class FamstackProjectManager extends BaseFamstackManager
 	}
 
 	
+	private Object getUtilizationByEmployeeProjecctCategoryOrSkill(Date startDate, Date endDate,
+			List<EmployeeDetails> employeesList, String userGroupId, ReportType reportType) {
+	
+	List<UtilizationByUserSkillOrCategory> utilizationBySkillList = new ArrayList<>();
+	List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+
+	if (startDate != null && endDate != null) {
+		projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(
+				startDate, endDate, false, true, null, userGroupId));
+		projectTaskAssigneeDataList.addAll(famstackUserActivityManager
+	    .getAllNonBillableTaskActivities(startDate, endDate, false,
+						true, null, userGroupId));
+		//month:userid:skill:type:hours
+		Map<String,Map<Integer, Map<String, Map<String, Integer>>>> monthYearUserIdSkillHoursMap = new HashMap<>();
+		
+		if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
+			for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
+				
+				String skillOrCategory = projectDetails.getProjectCategory() == null ? "Other" : projectDetails.getProjectCategory();
+				
+				if(projectDetails.getProjectCategory() == null) {
+					System.out.println("ProjectCategory NULL : " + projectDetails);
+				}
+				
+				if (reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY && "Holiday".equalsIgnoreCase(skillOrCategory) || "Leave".equalsIgnoreCase(skillOrCategory)){
+					continue;
+				}
+				String monthYear = DateUtils.getMonthYear(projectDetails.getTaskActivityStartTime());
+				
+				int userId = projectDetails.getUserId();
+				int userIdValue = 0;
+				if (reportType != ReportType.UTILIZATION_BY_SKILLS) {
+					userIdValue = userId;
+				}
+				Map<Integer, Map<String, Map<String, Integer>>> userIdSkillHoursMap = monthYearUserIdSkillHoursMap.get(monthYear);
+				
+				if (userIdSkillHoursMap == null) {
+					userIdSkillHoursMap = new HashMap<>();
+					monthYearUserIdSkillHoursMap.put(monthYear, userIdSkillHoursMap);
+				}
+				
+				Map<String, Map<String, Integer>> userSkillHoursMap = userIdSkillHoursMap.get(userIdValue);
+				
+				if (userSkillHoursMap == null) {
+					userSkillHoursMap = new HashMap<>();
+					userIdSkillHoursMap.put(userIdValue, userSkillHoursMap);
+				}
+				
+				
+				if (reportType != ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY) {
+					EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(userId);
+					skillOrCategory = employeeDetails !=null && StringUtils.isNotBlank(employeeDetails.getSkills()) ? employeeDetails.getSkills()  : "Other";
+				}
+				
+				
+				Map<String, Integer> hoursMap = userSkillHoursMap
+						.get(skillOrCategory);
+				
+				if (hoursMap == null) {
+					hoursMap = new HashMap<>();
+					userSkillHoursMap.put(skillOrCategory, hoursMap);
+				}
+				
+				getUserUtilization(hoursMap,
+						projectDetails);
+			}
+		}
+		
+		for(String monthYear : monthYearUserIdSkillHoursMap.keySet()) {
+			
+			for(Integer userId : monthYearUserIdSkillHoursMap.get(monthYear).keySet()) {
+				List<UtilizationByUserSkillOrCategory> skillList = new ArrayList<>();
+				for(String skillOrCategory : monthYearUserIdSkillHoursMap.get(monthYear).get(userId).keySet()) {
+					UtilizationByUserSkillOrCategory utilizationByUserSkillOrCategory = new UtilizationByUserSkillOrCategory();
+					utilizationByUserSkillOrCategory.setMonthYear(monthYear);
+					utilizationByUserSkillOrCategory.setSkillOrCategory(skillOrCategory);
+					if (reportType != ReportType.UTILIZATION_BY_SKILLS) {
+						EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(userId);
+						if (employeeDetails != null) {
+							utilizationByUserSkillOrCategory.setEmployeeCode(employeeDetails.getEmpCode());
+							utilizationByUserSkillOrCategory.setEmployeeId(employeeDetails.getId());
+							utilizationByUserSkillOrCategory.setDesignation(employeeDetails.getDesignation());
+							utilizationByUserSkillOrCategory.setEmployeeName(employeeDetails.getFirstName());
+						}
+					}
+					Map<String, Integer> hoursMap = monthYearUserIdSkillHoursMap.get(monthYear).get(userId).get(skillOrCategory);
+					
+					for(String type : hoursMap.keySet()) {
+						if ("billable".equalsIgnoreCase(type)) {
+							utilizationByUserSkillOrCategory
+									.setBillableMins(hoursMap
+											.get(type));
+						} else if ("nonBillabile".equalsIgnoreCase(type)) {
+							utilizationByUserSkillOrCategory
+									.setNonBillableMins(hoursMap
+											.get(type));
+						}else if ("leave".equalsIgnoreCase(type)) {
+							utilizationByUserSkillOrCategory
+							.setLeaveMins(hoursMap
+									.get(type));
+						}else if ("holiday".equalsIgnoreCase(type)) {
+							utilizationByUserSkillOrCategory
+							.setHolidayMins(hoursMap
+									.get(type));
+						}
+					}
+					skillList.add(utilizationByUserSkillOrCategory);
+				}
+				if (reportType == ReportType.UTILIZATION_BY_SKILLS) {
+					Collections.sort(skillList, new Comparator<UtilizationByUserSkillOrCategory>() {
+						@Override
+						public int compare(
+								UtilizationByUserSkillOrCategory utilizationBySkill1,
+								UtilizationByUserSkillOrCategory utilizationBySkill2) {
+								return utilizationBySkill1.getSkillOrCategory().compareTo(
+										utilizationBySkill2.getSkillOrCategory());
+						}
+					});
+				}
+				utilizationBySkillList.addAll(skillList);
+			}
+			
+		}
+	}
+	if (reportType != ReportType.UTILIZATION_BY_SKILLS) {
+		Collections.sort(utilizationBySkillList, new Comparator<UtilizationByUserSkillOrCategory>() {
+			@Override
+			public int compare(
+					UtilizationByUserSkillOrCategory utilizationBySkill1,
+					UtilizationByUserSkillOrCategory utilizationBySkill2) {
+				return utilizationBySkill1.getEmployeeName().compareTo(
+						utilizationBySkill2.getEmployeeName());
+			}
+		});
+	}
+	return utilizationBySkillList;
+}
+
+
+
 	private String getReportDateRangeString(List<String> dateList) {
 		String dateRange = "Invalid";
 		if (dateList!= null && dateList.size() > 0) {
@@ -2598,93 +2738,6 @@ public class FamstackProjectManager extends BaseFamstackManager
 		
 	}
 	
-	public List<UtilizationBySkill> getUtilizationByUserSkill(
-			Date startDate, Date endDate, List<EmployeeDetails> employeesList,
-			String userGroupId) {
-		
-		List<UtilizationBySkill> utilizationBySkillList = new ArrayList<>();
-		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
-
-		if (startDate != null && endDate != null) {
-			projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(
-					startDate, endDate, false, true, null, userGroupId));
-			projectTaskAssigneeDataList.addAll(famstackUserActivityManager
-		    .getAllNonBillableTaskActivities(startDate, endDate, false,
-							true, null, userGroupId));
-			//month:skill:type:hours
-			Map<String, Map<String, Map<String, Integer>>> monthYearUserSkillHoursMap = new HashMap<>();
-			
-			if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
-				for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
-
-					String monthYear = DateUtils.getMonthYear(projectDetails.getTaskActivityStartTime());
-					
-					int userId = projectDetails.getUserId();
-					Map<String, Map<String, Integer>> userSkillHoursMap = monthYearUserSkillHoursMap.get(monthYear);
-					
-					if (userSkillHoursMap == null) {
-						userSkillHoursMap = new HashMap<>();
-						monthYearUserSkillHoursMap.put(monthYear, userSkillHoursMap);
-					}
-					EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(userId);
-					String userSkill = employeeDetails !=null && StringUtils.isNotBlank(employeeDetails.getSkills()) ? employeeDetails.getSkills()  : "Other";
-					
-					Map<String, Integer> hoursMap = userSkillHoursMap
-							.get(userSkill);
-					
-					if (hoursMap == null) {
-						hoursMap = new HashMap<>();
-						userSkillHoursMap.put(userSkill, hoursMap);
-					}
-					
-					getUserUtilization(hoursMap,
-							projectDetails);
-				}
-			}
-			
-			for(String monthYear : monthYearUserSkillHoursMap.keySet()) {
-				List<UtilizationBySkill> skillList = new ArrayList<>();
-				for(String skill : monthYearUserSkillHoursMap.get(monthYear).keySet()) {
-					UtilizationBySkill utilizationBySkill = new UtilizationBySkill();
-					utilizationBySkill.setMonthYear(monthYear);
-					utilizationBySkill.setSkill(skill);
-					Map<String, Integer> hoursMap = monthYearUserSkillHoursMap.get(monthYear).get(skill);
-					for(String type : hoursMap.keySet()) {
-						if ("billable".equalsIgnoreCase(type)) {
-							utilizationBySkill
-									.setBillableMins(hoursMap
-											.get(type));
-						} else if ("nonBillabile".equalsIgnoreCase(type)) {
-							utilizationBySkill
-									.setNonBillableMins(hoursMap
-											.get(type));
-						}else if ("leave".equalsIgnoreCase(type)) {
-							utilizationBySkill
-							.setLeaveMins(hoursMap
-									.get(type));
-						}else if ("holiday".equalsIgnoreCase(type)) {
-							utilizationBySkill
-							.setHolidayMins(hoursMap
-									.get(type));
-						}
-					}
-					skillList.add(utilizationBySkill);
-				}
-				Collections.sort(skillList, new Comparator<UtilizationBySkill>() {
-					@Override
-					public int compare(
-							UtilizationBySkill utilizationBySkill1,
-							UtilizationBySkill utilizationBySkill2) {
-							return utilizationBySkill1.getSkill().compareTo(
-									utilizationBySkill2.getSkill());
-					}
-				});
-				utilizationBySkillList.addAll(skillList);
-			}
-		}
-		return utilizationBySkillList;
-	}
-
 	public List<UserUtilizationDetails> getAutoReportUtilizationDataForEmail(
 			Date startDate, Date endDate, List<EmployeeDetails> employeesList,
 			String userGroupId, List<String> excludeMailList) {

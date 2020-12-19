@@ -44,6 +44,8 @@
         	|| currentUserGroupId == '1006' || currentUserGroupId == '1002' || currentUserGroupId == '1009' || currentUserGroupId == '1005'}">
                 <option value="PROJECT_DETAILS_BY_SKILLS">Project Estimate vs Actual</option>
                 <option value="UTILIZATION_BY_SKILLS">Utilization By Skills</option>
+                 <option value="UTILIZATION_BY_EMPLOYEE_BY_SKILLS">Utilization By User Skills</option>
+                 <option value="UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY">Utilization By Project category</option>
                 </c:if>
           	</select>
           	</div>
@@ -216,6 +218,28 @@
        	<th>Non Billable Hours</th>
        	<th>Total Hours</th>
        </tr>
+       <tr class="reportDataHeader-utilizationbyuserskills">
+       	<th width="50px">Sl No</th>
+       	<th>Employee Code</th>
+       	<th>Employee Name</th>
+       	<th>Designation</th>
+       	<th>Skillset</th>
+       	<th>Month</th>
+       	<th>Billable Hours</th>
+       	<th>Non Billable Hours</th>
+       	<th>Total Hours</th>
+       </tr>
+       <tr class="reportDataHeader-utilizationbyprojectcategory">
+       	<th width="50px">Sl No</th>
+       	<th>Employee Code</th>
+       	<th>Employee Name</th>
+       	<th>Designation</th>
+       	<th>Category</th>
+       	<th>Month</th>
+       	<th>Billable Hours</th>
+       	<th>Non Billable Hours</th>
+       	<th>Total Hours</th>
+       </tr>
        
        	<tr class="reportDataHeader-projecthours">
        	<th width="50px">Sl No</th>
@@ -270,7 +294,7 @@
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.min.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=4.10&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.reports.js?version=4.11&v=${fsVersionNumber}"></script> 
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
 <script type="text/javascript" src="${js}/plugins/canvasjs/canvasjs.js"></script> 

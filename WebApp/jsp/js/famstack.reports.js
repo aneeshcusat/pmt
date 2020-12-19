@@ -224,7 +224,7 @@ $(".autoReportType").on("change",function(){
 		$(".reportHeaderInputs").addClass("hide");
 		$(".projectestvsactualDiv").removeClass("hide");
 		$(".monthRangeSelectorDiv").removeClass("hide");
-	 } else  if("UTILIZATION_BY_SKILLS" == selectedValue) {
+	 } else  if("UTILIZATION_BY_SKILLS" == selectedValue || "UTILIZATION_BY_EMPLOYEE_BY_SKILLS" == selectedValue || "UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY" == selectedValue) {
 		 $(".autoReportDuration option[value='DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY']").remove();
@@ -381,9 +381,12 @@ function fillReportTableData(data, reportType,autoReportDuration){
 	 } else  if("WEEKLY_PROJECT_HOURS" == reportType) {
 		 fillProjectHoursReportData(data);
 		 downloadXLSFileName = "Weekly Project Hours Report";
-	 } else  if("UTILIZATION_BY_SKILLS" == reportType) {
-		 fillUtilizationBySkillsReportData(data);
-		 downloadXLSFileName = "Utilisation By Skills Report";
+	 } else  if("UTILIZATION_BY_SKILLS" == reportType || "UTILIZATION_BY_EMPLOYEE_BY_SKILLS" == reportType || "UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY" == reportType) {
+		 fillUtilizationBySkillsReportData(data, reportType);
+		 downloadXLSFileName = "UTILIZATION_BY_SKILLS" == reportType 
+		 	? "Utilisation By Skills Report" : "UTILIZATION_BY_EMPLOYEE_BY_SKILLS" == reportType 
+		 			? "Utilisation By User Skills Report" : "UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY" == reportType 
+		 					? "Utilisation By Project Category Report" : ''  ;
 	 }
 	 
 	 initializeExportTable(downloadXLSFileName);
@@ -424,9 +427,18 @@ function fillUserActivityReportData(data) {
 	$(".reportDataBody").html( reportBodyHtml );
 }
 
-function fillUtilizationBySkillsReportData(data) {
+function fillUtilizationBySkillsReportData(data, reportType) {
 	var jsonData = JSON.parse(data);
-	var reportHeader = $(".reportDataTemplate .reportDataHeader-utilizationbyskills").clone();
+	
+	var type = 'utilizationbyskills';
+	
+	 if("UTILIZATION_BY_EMPLOYEE_BY_SKILLS" == reportType) {
+		 type = 'utilizationbyuserskills';
+	 }else if("UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY" == reportType){
+		 type = 'utilizationbyprojectcategory';
+	 }
+	
+	var reportHeader = $(".reportDataTemplate .reportDataHeader-" + type).clone();
 	var headerHtml = $(reportHeader).html();
 	
 	$(".retportDataHeader").html("<tr>" + headerHtml + "</tr>");
@@ -434,7 +446,14 @@ function fillUtilizationBySkillsReportData(data) {
 	var reportBodyHtml="";
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
-		reportBodyHtml += "<td>"+value.skill+"</td>";
+		
+		if("UTILIZATION_BY_SKILLS" != reportType){
+			reportBodyHtml += "<td>"+value.employeeCode+"</td>";
+			reportBodyHtml += "<td>"+value.employeeName+"</td>";
+			reportBodyHtml += "<td>"+value.designation+"</td>";
+		}
+		
+		reportBodyHtml += "<td>"+value.skillOrCategory+"</td>";
 		reportBodyHtml += "<td>"+value.monthYear+"</td>";
 		
 		reportBodyHtml += "<td>"+value.billableHours+"</td>";

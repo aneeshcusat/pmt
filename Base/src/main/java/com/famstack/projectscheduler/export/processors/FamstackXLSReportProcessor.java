@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.export.processors;
 
 import java.util.List;
 import java.util.Map;
+
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ReportType;
 import com.famstack.projectscheduler.dashboard.bean.POEstimateProjectTaskActivityDetails;
@@ -27,7 +29,7 @@ import com.famstack.projectscheduler.employees.bean.UserSiteActivityDetails;
 import com.famstack.projectscheduler.employees.bean.UserSiteActivityStatus;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationDetails;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationWeekWiseDetails;
-import com.famstack.projectscheduler.employees.bean.UtilizationBySkill;
+import com.famstack.projectscheduler.employees.bean.UtilizationByUserSkillOrCategory;
 import com.famstack.projectscheduler.employees.bean.UtilizationProjectDetails;
 
 @Component
@@ -74,32 +76,48 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
         fillPOEstimationReportData(dataMap, sheet, workBook);
       } else if (ReportType.WEEKLY_PROJECT_HOURS == reportType) {
         fillProjectHoursReportData(dataMap, sheet, workBook);
-      } else if (ReportType.UTILIZATION_BY_SKILLS == reportType) {
-          fillUtilizationBySkillsReportData(dataMap, sheet, workBook);
+      } else  if(ReportType.UTILIZATION_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
+          fillUtilizationBySkillsReportData(dataMap, sheet, workBook, reportType);
         }
     }
   }
 
-  private void fillUtilizationBySkillsReportData(Map<String, Object> dataMap, XSSFSheet sheet, XSSFWorkbook workBook) {
+  private void fillUtilizationBySkillsReportData(Map<String, Object> dataMap, XSSFSheet sheet, XSSFWorkbook workBook, ReportType reportType) {
 	  	setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
-	    setCellValue(sheet, 0, 1, "Skillset", headerCellStyle);
-	    setCellValue(sheet, 0, 2, "Month", headerCellStyle);
-	    setCellValue(sheet, 0, 3, "Billable Hours", headerCellStyle);
-	    setCellValue(sheet, 0, 4, "Non Billable Hours", headerCellStyle);
-	    setCellValue(sheet, 0, 5, "Total Hours", headerCellStyle);
+	  	 int rowHeaderCount = 1;
+	  	 if(ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
+	  		  setCellValue(sheet, 0, rowHeaderCount++, "Employee Code", headerCellStyle);
+	  		  setCellValue(sheet, 0, rowHeaderCount++, "Employe Name", headerCellStyle);
+	  		  setCellValue(sheet, 0, rowHeaderCount++, "Designation", headerCellStyle);
+	      }
+	  	 if(ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
+	  		 setCellValue(sheet, 0, rowHeaderCount++, "Category", headerCellStyle);
+	  	 } else {
+	  		 setCellValue(sheet, 0, rowHeaderCount++, "Skillset", headerCellStyle);
+	  	 }
+	    setCellValue(sheet, 0, rowHeaderCount++, "Month", headerCellStyle);
+	    setCellValue(sheet, 0, rowHeaderCount++, "Billable Hours", headerCellStyle);
+	    setCellValue(sheet, 0, rowHeaderCount++, "Non Billable Hours", headerCellStyle);
+	    setCellValue(sheet, 0, rowHeaderCount++, "Total Hours", headerCellStyle);
 
-	    List<UtilizationBySkill> data = (List<UtilizationBySkill>) dataMap.get("DATA");
+	    List<UtilizationByUserSkillOrCategory> data = (List<UtilizationByUserSkillOrCategory>) dataMap.get("DATA");
 
 	    int rowIndex = 1;
-	    for (UtilizationBySkill utilizationBySkill : data) {
+	    for (UtilizationByUserSkillOrCategory byUserSkillOrCategory : data) {
 	      setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
-	      setCellValue(sheet, rowIndex, 1, utilizationBySkill.getSkill(), null);
-	      setCellValue(sheet, rowIndex, 2, utilizationBySkill.getMonthYear(), null);
-	      setCellValue(sheet, rowIndex, 3, utilizationBySkill.getBillableHours(),
+	      int rowCount = 1;
+	      if(ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
+	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getEmployeeCode(), null);
+	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getEmployeeName(), null);
+	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getDesignation(), null);
+	      }
+	      setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getSkillOrCategory(), null);
+	      setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getMonthYear(), null);
+	      setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getBillableHours(),
 	          boldCenterValueCellStyle);
-	      setCellValue(sheet, rowIndex, 4, utilizationBySkill.getNonBillableHours(),
+	      setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getNonBillableHours(),
 	          boldCenterValueCellStyle);
-	      setCellValue(sheet, rowIndex, 5, utilizationBySkill.getTotalHrs(),
+	      setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getTotalHrs(),
 	          boldCenterValueCellStyle);
 	      rowIndex++;
 	    }

@@ -136,18 +136,7 @@
 	                              </div>
 	                              <input type="hidden" id="hdn_project_id" value="${projectDetails.id}">
 	                              <c:if test="${projectDetails.status != 'NEW'}">
-                                  <div class="col-md-6">
-                                      <p><span class="bold">Assignee </span>:
-                                       
-                                        <c:if test="${not empty projectDetails.contributers}">
-                                 			<c:forEach var="contributer" items="${projectDetails.contributers}" varStatus="taskIndex"> 
-		                                      <span class="project_team">
-		                                         <a href="#"><img alt="image" src="${applicationHome}/image/${contributer}" title="${employeeMap[contributer].firstName}"  onerror="this.src='${assets}/images/users/no-image.jpg'"></a>
-		                                      </span>
-                                      </c:forEach>
-                                      </c:if>
-                                      </p>
-                                  </div>
+                                  
 									</c:if>
                                   <div class="col-lg-12">
                                      

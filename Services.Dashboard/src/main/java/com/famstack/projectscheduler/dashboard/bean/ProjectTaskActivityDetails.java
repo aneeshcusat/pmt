@@ -643,4 +643,27 @@ public class ProjectTaskActivityDetails
 	public void setUserGroupId(String userGroupId) {
 		this.userGroupId = userGroupId;
 	}
+
+	@Override
+	public String toString() {
+		return "ProjectTaskActivityDetails [projectStartTime=" + projectStartTime + ", projectCompletionTime="
+				+ projectCompletionTime + ", projectCode=" + projectCode + ", projectId=" + projectId
+				+ ", projectNumber=" + projectNumber + ", orderRefNumber=" + orderRefNumber + ", proposalNumber="
+				+ proposalNumber + ", projectName=" + projectName + ", projectStatus=" + projectStatus
+				+ ", projectType=" + projectType + ", projectCategory=" + projectCategory + ", newProjectCategory="
+				+ newProjectCategory + ", projectAccountId=" + projectAccountId + ", projectTeamId=" + projectTeamId
+				+ ", projectClientId=" + projectClientId + ", taskName=" + taskName + ", taskActivityStartTime="
+				+ taskActivityStartTime + ", taskActivityDuration=" + taskActivityDuration
+				+ ", taskActActivityDuration=" + taskActActivityDuration + ", taskActivityTimeXls="
+				+ taskActivityTimeXls + ", userId=" + userId + ", taskActivityId=" + taskActivityId + ", taskId="
+				+ taskId + ", taskActivityEndTime=" + taskActivityEndTime + ", taskStatus=" + taskStatus
+				+ ", taskPausedTime=" + taskPausedTime + ", taskActType=" + taskActType + ", taskActProjType="
+				+ taskActProjType + ", taskActCategory=" + taskActCategory + ", taskStartTime=" + taskStartTime
+				+ ", taskCompletionTime=" + taskCompletionTime + ", taskDuration=" + taskDuration + ", projectLead="
+				+ projectLead + ", accountName=" + accountName + ", teamName=" + teamName + ", subTeamName="
+				+ subTeamName + ", clientName=" + clientName + ", taskCompletionComments=" + taskCompletionComments
+				+ ", subItems=" + subItems + ", childs=" + childs + ", location=" + location + ", clientPartner="
+				+ clientPartner + ", userGroupId=" + userGroupId + ", estHoursByMonthSkills=" + estHoursByMonthSkills
+				+ ", deliveryLead=" + deliveryLead + "]";
+	}
 }
