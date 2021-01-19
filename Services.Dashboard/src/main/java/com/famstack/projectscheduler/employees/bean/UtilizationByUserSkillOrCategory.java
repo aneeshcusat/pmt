@@ -1,5 +1,7 @@
 package com.famstack.projectscheduler.employees.bean;
 
+import java.util.Set;
+
 public class UtilizationByUserSkillOrCategory {
 	int billableMins;
 	int nonBillableMins;
@@ -11,6 +13,7 @@ public class UtilizationByUserSkillOrCategory {
 	String employeeCode = null;
 	String designation = null;
 	Integer employeeId = null;
+	Set<String> projectAccounts;
 	
 	public String getMonthYear() {
 		return monthYear;
@@ -113,5 +116,13 @@ public class UtilizationByUserSkillOrCategory {
 
 	public void setDesignation(String designation) {
 		this.designation = designation;
+	}
+
+	public void setProjectAccounts(Set<String> projectAccounts) {
+		this.projectAccounts = projectAccounts;
+	}
+	
+	public Set<String> getProjectAccounts() {
+		return projectAccounts;
 	}
 }

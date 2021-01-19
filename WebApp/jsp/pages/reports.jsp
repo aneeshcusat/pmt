@@ -46,6 +46,7 @@
                 <option value="UTILIZATION_BY_SKILLS">Utilization By Skills</option>
                  <option value="UTILIZATION_BY_EMPLOYEE_BY_SKILLS">Utilization By User Skills</option>
                  <option value="UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY">Utilization By Project category</option>
+                 <option value="TIME_SHEET_DUMP">Daily Timesheet Report</option>
                 </c:if>
           	</select>
           	</div>
@@ -210,6 +211,32 @@
        	<th>Total Hours</th>
        </tr>
        
+       	<tr class="reportDataHeader-timesheetdump">
+													
+       	<th width="50px">Sl No</th>
+       	<th>Employee Name</th>
+       	<th>Employee Code</th>
+       	<th>Delivery Lead</th>
+       	<th>Client</th>
+       	<th>Project code</th>
+       	<th>ID</th>
+       	<th>PO Id</th>
+       	<th>Order book Ref</th>
+       	<th>Proposal Number</th>
+       	<th>Project Name</th>
+       	<th>Project Status</th>
+       	<th>Project Category</th>
+       	<th>New Project Category</th>
+       	<th>Task Name</th>
+       	<th>Account</th>
+       	<th>Team</th>
+       	<th>Sub Team</th>
+       	<th>Date</th>
+       	<th>Actual Hours Spent</th>
+       	<th>comment</th>
+       	<th>Updated Date & Time</th>
+       </tr>
+       
        	<tr class="reportDataHeader-utilizationbyskills">
        	<th width="50px">Sl No</th>
        	<th>Skillset</th>
@@ -235,6 +262,7 @@
        	<th>Employee Name</th>
        	<th>Designation</th>
        	<th>Category</th>
+       	<th>Accounts</th>
        	<th>Month</th>
        	<th>Billable Hours</th>
        	<th>Non Billable Hours</th>
@@ -270,6 +298,11 @@
        
         <tr class="reportDataHeader-poestimation">
         <th><strong>Sl No</strong></th>
+        <th><strong>Client Name</strong></th>
+        <th><strong>Order book ref id</strong></th>
+		<th><strong>Proposal Number</strong></th>
+		<th><strong>Offshore/Onshore</strong></th>
+		<th><strong>Delivery Lead</strong></th>
        	<th><strong>Team Name</strong></th>
 		<th><strong>Account</strong></th>
 		<th><strong>Project Name</strong></th>
@@ -294,7 +327,7 @@
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.min.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=4.11&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.reports.js?version=4.13&v=${fsVersionNumber}"></script> 
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
 <script type="text/javascript" src="${js}/plugins/canvasjs/canvasjs.js"></script> 

@@ -62,6 +62,8 @@ public class POEstimateProjectTaskActivityDetails
 	private Map estHoursByMonthSkills;
 	private Integer deliveryLead;
 	
+	private String deliveryLeadName;
+	
     public String getProjectCode()
     {
         return projectCode;
@@ -362,7 +364,7 @@ public class POEstimateProjectTaskActivityDetails
 	}
 
 	public String getOrderBookId() {
-		return orderBookId;
+		return orderBookId != null ? orderBookId : "";
 	}
 
 	public void setOrderBookId(String orderBookId) {
@@ -370,7 +372,7 @@ public class POEstimateProjectTaskActivityDetails
 	}
 
 	public String getProposalNumber() {
-		return proposalNumber;
+		return proposalNumber != null ? proposalNumber : "";
 	}
 
 	public void setProposalNumber(String proposalNumber) {
@@ -378,7 +380,7 @@ public class POEstimateProjectTaskActivityDetails
 	}
 
 	public String getLocation() {
-		return location;
+		return location != null ? location : "";
 	}
 
 	public void setLocation(String location) {
@@ -404,8 +406,16 @@ public class POEstimateProjectTaskActivityDetails
 	public Integer getDeliveryLead() {
 		return deliveryLead;
 	}
-
+	
 	public void setDeliveryLead(Integer deliveryLead) {
 		this.deliveryLead = deliveryLead;
+	}
+
+	public void setDeliveryLeadName(String deliveryLeadName) {
+		this.deliveryLeadName = deliveryLeadName;
+	}
+
+	public String getDeliveryLeadName() {
+		return deliveryLeadName;
 	}
 }

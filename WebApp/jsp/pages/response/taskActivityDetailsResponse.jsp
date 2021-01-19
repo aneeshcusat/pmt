@@ -90,10 +90,7 @@
 			items="${taskDetails.taskActivityDetails}" varStatus="taskIndex">
 			<ul
 				class="list-group-item taskActivityTime${taskActivityDetail.taskActivityId}">
-				<img alt="image"
-					src="${applicationHome}/image/${taskActivityDetail.userId}"
-					class="pull-left"
-					onerror="this.src='${assets}/images/users/no-image.jpg'">
+				
 				<span class="contacts-title" style="font-size: 10px">${taskActivityDetail.userTaskType}
 					[${taskDetails.name}] Task Activity</span>
 				<c:choose>

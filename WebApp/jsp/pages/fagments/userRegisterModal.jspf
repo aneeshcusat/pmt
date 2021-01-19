@@ -173,6 +173,7 @@
                             <option>Junior Analyst</option>
                             <option>Trainee Analyst</option>
 							<option>Trainee</option>
+							<option>Intern</option>
                         </form:select>
                     </div>
                 </div>

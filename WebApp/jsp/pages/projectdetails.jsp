@@ -711,7 +711,7 @@
     	 }); 
    	
 var clearTaskDetails = function(){
-	getAssignJsonData();
+	//getAssignJsonData();
     $("#taskId").val("");
     var taskDate = new Date();
 	var projectEndDate = new Date('${projectDetails.completionTime}');
@@ -797,10 +797,10 @@ var getAssignJsonData = function(){
 	   });
 }
 
-getAssignJsonData();
+//getAssignJsonData();
 
 var loadTaskDetails = function(taskId){
-	getAssignJsonData();
+	//getAssignJsonData();
 	$("#taskId").val(taskId);
     $("#estStartTime").val($("#"+taskId+"startTime").val());
  	$("#unassignedDuration").html(${projectDetails.unAssignedDuration});

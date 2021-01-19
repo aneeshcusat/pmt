@@ -206,11 +206,9 @@ $(".autoReportType").on("change",function(){
 	 } else  if("USER_UTILIZATION" == selectedValue) {
 		 
 	 } else  if("WEEKLY_PO_ESTIMATION" == selectedValue) {
-		 $(".autoReportDuration option[value='DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
-		 $(".autoReportDuration option[value='MONTHLY']").remove();
-		 $(".autoReportDuration option[value='MONTHLY_ENE']").remove();
 		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
+		 $('.autoReportDuration').append($('<option>').val("DATE_RANGE").text("Date Range"));
 	 } else  if("WEEKLY_PROJECT_HOURS" == selectedValue) {
 		 $(".autoReportDuration option[value='DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
@@ -224,7 +222,10 @@ $(".autoReportType").on("change",function(){
 		$(".reportHeaderInputs").addClass("hide");
 		$(".projectestvsactualDiv").removeClass("hide");
 		$(".monthRangeSelectorDiv").removeClass("hide");
-	 } else  if("UTILIZATION_BY_SKILLS" == selectedValue || "UTILIZATION_BY_EMPLOYEE_BY_SKILLS" == selectedValue || "UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY" == selectedValue) {
+	 } else if ("TIME_SHEET_DUMP" == selectedValue) { 
+		 $('.autoReportDuration').append($('<option>').val("DATE_RANGE").text("Date Range"));
+		 $(".autoReportDuration option[value='MONTHLY_WTW']").remove();
+	 }else  if("UTILIZATION_BY_SKILLS" == selectedValue || "UTILIZATION_BY_EMPLOYEE_BY_SKILLS" == selectedValue || "UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY" == selectedValue) {
 		 $(".autoReportDuration option[value='DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY_DAILY']").remove();
 		 $(".autoReportDuration option[value='WEEKLY']").remove();
@@ -387,6 +388,9 @@ function fillReportTableData(data, reportType,autoReportDuration){
 		 	? "Utilisation By Skills Report" : "UTILIZATION_BY_EMPLOYEE_BY_SKILLS" == reportType 
 		 			? "Utilisation By User Skills Report" : "UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY" == reportType 
 		 					? "Utilisation By Project Category Report" : ''  ;
+	 } else if ("TIME_SHEET_DUMP" == reportType) { 
+		 fillTimesheetDumpReportData(data);
+		 downloadXLSFileName = "Timesheet dump";
 	 }
 	 
 	 initializeExportTable(downloadXLSFileName);
@@ -454,11 +458,50 @@ function fillUtilizationBySkillsReportData(data, reportType) {
 		}
 		
 		reportBodyHtml += "<td>"+value.skillOrCategory+"</td>";
+		if("UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY" == reportType){
+			reportBodyHtml += "<td>"+value.projectAccounts.map(function(account) {return account;})+"</td>";
+		}
 		reportBodyHtml += "<td>"+value.monthYear+"</td>";
 		
 		reportBodyHtml += "<td>"+value.billableHours+"</td>";
 		reportBodyHtml += "<td>"+value.nonBillableHours+"</td>";
 		reportBodyHtml += "<td>"+value.totalHrs+"</td>";
+	});
+	
+	$(".reportDataBody").html( reportBodyHtml );
+}
+
+function fillTimesheetDumpReportData(data){
+	var jsonData = JSON.parse(data);
+	var reportHeader = $(".reportDataTemplate .reportDataHeader-timesheetdump").clone();
+	var headerHtml = $(reportHeader).html();
+	
+	$(".retportDataHeader").html("<tr>" + headerHtml + "</tr>");
+	
+	var reportBodyHtml="";
+	$.each(jsonData.DATA, function( index, value ) {
+		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		reportBodyHtml += "<td>"+value.fullName+"</td>";
+		reportBodyHtml += "<td>"+value.employeeeId+"</td>";
+		reportBodyHtml += "<td>"+value.deliveryLead+"</td>";
+		reportBodyHtml += "<td>"+value.clientName+"</td>";
+		reportBodyHtml += "<td>"+value.projectCode+"</td>";
+		reportBodyHtml += "<td>"+value.projectId+"</td>";
+		reportBodyHtml += "<td>"+value.projectNumber+"</td>";
+		reportBodyHtml += "<td>"+value.orderRefNumber+"</td>";
+		reportBodyHtml += "<td>"+value.proposalNumber+"</td>";
+		reportBodyHtml += "<td>"+value.projectName+"</td>";
+		reportBodyHtml += "<td>"+value.projectStatus+"</td>";
+		reportBodyHtml += "<td>"+value.projectCategory+"</td>";
+		reportBodyHtml += "<td>"+value.newProjectCategory+"</td>";
+		reportBodyHtml += "<td>"+value.taskName+"</td>";
+		reportBodyHtml += "<td>"+value.accountName+"</td>";
+		reportBodyHtml += "<td>"+value.teamName+"</td>";
+		reportBodyHtml += "<td>"+value.subTeamName+"</td>";
+		reportBodyHtml += "<td>"+value.taskActivityStartTime+"</td>";
+		reportBodyHtml += "<td>"+value.durationInHours+"</td>";
+		reportBodyHtml += "<td>"+value.taskCompletionComments+"</td>";
+		reportBodyHtml += "<td>"+value.taskRecordedActivityStartTime+"</td></tr>";
 	});
 	
 	$(".reportDataBody").html( reportBodyHtml );
@@ -578,6 +621,11 @@ function fillPOEstimationReportData(data) {
 	var reportBodyHtml="";
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		reportBodyHtml += "<td style='text-align: center;'>"+value.clientName+"</td>";
+		reportBodyHtml += "<td style='text-align: center;'>"+value.orderBookId+"</td>";
+		reportBodyHtml += "<td style='text-align: center;'>"+value.proposalNumber+"</td>";
+		reportBodyHtml += "<td style='text-align: center;'>"+value.location+"</td>";
+		reportBodyHtml += "<td style='text-align: center;'>"+value.deliveryLeadName+"</td>";
 		reportBodyHtml += "<td style='text-align: center;'>"+value.teamName+"</td>";
 		reportBodyHtml += "<td style='text-align: center;'>"+value.accountName+"</td>";
 		reportBodyHtml += "<td style='text-align: center;'>"+value.projectName+"</td>";

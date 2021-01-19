@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
@@ -48,6 +49,7 @@ import com.famstack.projectscheduler.datatransferobject.RecurringProjectItem;
 import com.famstack.projectscheduler.datatransferobject.TaskItem;
 import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.employees.bean.AccountDetails;
+import com.famstack.projectscheduler.employees.bean.DailyTimesheetDumpDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectSubTeamDetails;
@@ -1317,6 +1319,9 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setProposalNumber((String) data[21]);
             projectTaskActivityDetails.setClientPartner((String) data[22]);
             projectTaskActivityDetails.setDeliveryLead((Integer) data[23]);
+            EmployeeDetails employeeDetails  = getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetails.getDeliveryLead());
+            projectTaskActivityDetails.setDeliveryLeadName(employeeDetails != null ? employeeDetails.getFirstName() : "");
+            
             projectTaskActivityDetails.setLocation((String) data[24]);
             projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[25]));
            
@@ -1430,6 +1435,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[36]));
             
             projectTaskActivityDetails.setClientName((String) data[37]);
+            projectTaskActivityDetails.setRecordedTaskStartTime((Date) data[38]);
             projectTaskActivityDetails.setUserGroupId(userGroupId);
             
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
@@ -2356,9 +2362,6 @@ public class FamstackProjectManager extends BaseFamstackManager
 			List<POEstimateProjectTaskActivityDetails> projectTaskActivityDetails = getAutoReportPOEstimationDataForEmail(
 					startDate, endDate, employeesList,
 					userGroupId);
-			System.out.println("startDate" + startDate);
-			System.out.println("endDate" + endDate);
-			logDebug(FamstackUtils.getJsonFromObject(projectTaskActivityDetails));
 			if (projectTaskActivityDetails != null && !projectTaskActivityDetails.isEmpty()) {
 				notificationDataMap.put("REPORT_DATE", getReportDateRangeString(getReportDateRangeList(startDate, endDate)));
 				notificationDataMap.put("ESTIMATION_DATA",
@@ -2392,7 +2395,10 @@ public class FamstackProjectManager extends BaseFamstackManager
 
 		reportDataMap.put("REPORT_DATE", dateRange);
 		reportDataMap.put("DATE_LIST", dateList);
-		if(reportType == ReportType.UTILIZATION_BY_SKILLS || reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS || reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY){
+		if (reportType == ReportType.TIME_SHEET_DUMP){
+			reportDataMap.put("DATA", getDailyTimesheetDump(startDate, endDate, employeesList, userGroupId, reportType));
+		}
+		else if(reportType == ReportType.UTILIZATION_BY_SKILLS || reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS || reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY){
 			reportDataMap.put("DATA", getUtilizationByEmployeeProjecctCategoryOrSkill(startDate, endDate, employeesList, userGroupId, reportType));
 		} 
 		else if (reportType == ReportType.USER_SITE_ACTIVITY) {
@@ -2452,6 +2458,70 @@ public class FamstackProjectManager extends BaseFamstackManager
 		return reportDataMap;
 	}
 
+	private List<DailyTimesheetDumpDetails> getDailyTimesheetDump(Date startDate, Date endDate,
+			List<EmployeeDetails> employeesList, String userGroupId, ReportType reportType) {
+	
+	List<DailyTimesheetDumpDetails> dailyTimesheetDumpDetailsList = new ArrayList<>();
+	List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
+
+	if (startDate != null && endDate != null) {
+		projectTaskAssigneeDataList.addAll(getAllProjectTaskAssigneeData(
+				startDate, endDate, false, false, null, userGroupId));
+		projectTaskAssigneeDataList.addAll(famstackUserActivityManager
+	    .getAllNonBillableTaskActivities(startDate, endDate, false,
+	    		false, null, userGroupId));
+		if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
+			for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
+				
+				DailyTimesheetDumpDetails dailyTimesheetDumpDetails = new DailyTimesheetDumpDetails();
+				
+				EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(projectDetails.getUserId());
+				if (employeeDetails != null) {
+					dailyTimesheetDumpDetails.setFullName( employeeDetails.getFirstName());
+					dailyTimesheetDumpDetails.setEmployeeeId( employeeDetails.getEmpCode());
+				}
+				
+				employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(projectDetails.getDeliveryLead());
+				if (employeeDetails != null) {
+					dailyTimesheetDumpDetails.setDeliveryLead(employeeDetails.getFirstName());
+				}
+				
+				dailyTimesheetDumpDetails.setClientName(projectDetails.getClientName());
+				dailyTimesheetDumpDetails.setProjectCode(projectDetails.getProjectCode());
+				dailyTimesheetDumpDetails.setProjectId(projectDetails.getProjectId() != null ? ""+projectDetails.getProjectId() : "");
+				dailyTimesheetDumpDetails.setProjectNumber(projectDetails.getProjectNumber());
+				dailyTimesheetDumpDetails.setOrderRefNumber(projectDetails.getOrderRefNumber());
+				dailyTimesheetDumpDetails.setProposalNumber(projectDetails.getProposalNumber());
+				dailyTimesheetDumpDetails.setProjectName(projectDetails.getProjectName());
+				dailyTimesheetDumpDetails.setProjectStatus(projectDetails.getProjectStatus() != null ? ""+projectDetails.getProjectStatus() : "");
+				dailyTimesheetDumpDetails.setProjectCategory(projectDetails.getProjectCategory());
+				dailyTimesheetDumpDetails.setNewProjectCategory(projectDetails.getNewProjectCategory());
+				dailyTimesheetDumpDetails.setTaskName(projectDetails.getTaskName());
+				dailyTimesheetDumpDetails.setAccountName(projectDetails.getAccountName());
+				dailyTimesheetDumpDetails.setTeamName(projectDetails.getTeamName());
+				dailyTimesheetDumpDetails.setSubTeamName(projectDetails.getSubTeamName());
+				dailyTimesheetDumpDetails.setTaskStartTime(projectDetails.getTaskStartTime());
+				dailyTimesheetDumpDetails.setDurationInHours(projectDetails.getDurationInHours());
+				dailyTimesheetDumpDetails.setActDurationInHours(projectDetails.getActDurationInHours());
+				dailyTimesheetDumpDetails.setTaskCompletionComments(projectDetails.getTaskCompletionComments());
+				dailyTimesheetDumpDetails.setTaskActivityStartTime(projectDetails.getTaskActivityStartTime());
+				dailyTimesheetDumpDetails.setTaskRecordedActivityStartTime(projectDetails.getRecordedTaskStartTime());
+				dailyTimesheetDumpDetailsList.add(dailyTimesheetDumpDetails);
+			}
+		}
+	}
+	
+	Collections.sort(dailyTimesheetDumpDetailsList, new Comparator<DailyTimesheetDumpDetails>() {
+		@Override
+		public int compare(
+				DailyTimesheetDumpDetails dailyTimesheetDumpDetails1,
+				DailyTimesheetDumpDetails dailyTimesheetDumpDetails2) {
+				return dailyTimesheetDumpDetails1.getFullName().compareTo(
+						dailyTimesheetDumpDetails2.getFullName());
+		}
+	});
+	return dailyTimesheetDumpDetailsList;
+	}
 	
 	private Object getUtilizationByEmployeeProjecctCategoryOrSkill(Date startDate, Date endDate,
 			List<EmployeeDetails> employeesList, String userGroupId, ReportType reportType) {
@@ -2467,6 +2537,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 						true, null, userGroupId));
 		//month:userid:skill:type:hours
 		Map<String,Map<Integer, Map<String, Map<String, Integer>>>> monthYearUserIdSkillHoursMap = new HashMap<>();
+		Map<String, Map<Integer, Map<String, Set<String>>>> monthUserCategoryProjectAccountMap = new HashMap<>();
 		
 		if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
 			for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
@@ -2481,7 +2552,10 @@ public class FamstackProjectManager extends BaseFamstackManager
 					continue;
 				}
 				String monthYear = DateUtils.getMonthYear(projectDetails.getTaskActivityStartTime());
-				
+				if("Dec-2021".equals(monthYear)){
+					System.out.println("");
+					DateUtils.getMonthYear(projectDetails.getTaskActivityStartTime());
+				}
 				int userId = projectDetails.getUserId();
 				int userIdValue = 0;
 				if (reportType != ReportType.UTILIZATION_BY_SKILLS) {
@@ -2493,13 +2567,26 @@ public class FamstackProjectManager extends BaseFamstackManager
 					userIdSkillHoursMap = new HashMap<>();
 					monthYearUserIdSkillHoursMap.put(monthYear, userIdSkillHoursMap);
 				}
+				 Map<Integer, Map<String, Set<String>>> userCategoryProjectAccountMap = monthUserCategoryProjectAccountMap.get(monthYear);
 				
+				 if(userCategoryProjectAccountMap == null) {
+					 userCategoryProjectAccountMap = new HashMap<>();
+					 monthUserCategoryProjectAccountMap.put(monthYear, userCategoryProjectAccountMap);
+					 
+				 }
 				Map<String, Map<String, Integer>> userSkillHoursMap = userIdSkillHoursMap.get(userIdValue);
 				
 				if (userSkillHoursMap == null) {
 					userSkillHoursMap = new HashMap<>();
 					userIdSkillHoursMap.put(userIdValue, userSkillHoursMap);
 				}
+				
+				Map<String, Set<String>> categoryProjectAccountMap = userCategoryProjectAccountMap.get(userIdValue);
+				if(categoryProjectAccountMap == null) {
+					categoryProjectAccountMap = new HashMap<>();
+					userCategoryProjectAccountMap.put(userIdValue, categoryProjectAccountMap);
+				 }
+				
 				
 				
 				if (reportType != ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY) {
@@ -2516,6 +2603,14 @@ public class FamstackProjectManager extends BaseFamstackManager
 					userSkillHoursMap.put(skillOrCategory, hoursMap);
 				}
 				
+				Set<String> projectAccountMap = categoryProjectAccountMap.get(skillOrCategory);
+				if(projectAccountMap == null) {
+					projectAccountMap = new TreeSet<>();
+					categoryProjectAccountMap.put(skillOrCategory, projectAccountMap);
+				 }
+				if (projectDetails.getAccountName() != null) {
+					projectAccountMap.add(projectDetails.getAccountName());
+				}
 				getUserUtilization(hoursMap,
 						projectDetails);
 			}
@@ -2529,6 +2624,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 					UtilizationByUserSkillOrCategory utilizationByUserSkillOrCategory = new UtilizationByUserSkillOrCategory();
 					utilizationByUserSkillOrCategory.setMonthYear(monthYear);
 					utilizationByUserSkillOrCategory.setSkillOrCategory(skillOrCategory);
+					utilizationByUserSkillOrCategory.setProjectAccounts(monthUserCategoryProjectAccountMap.get(monthYear).get(userId).get(skillOrCategory));
 					if (reportType != ReportType.UTILIZATION_BY_SKILLS) {
 						EmployeeDetails employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(userId);
 						if (employeeDetails != null) {

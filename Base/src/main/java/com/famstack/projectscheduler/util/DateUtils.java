@@ -530,6 +530,8 @@ public final class DateUtils extends BaseFamstackService
 	}
 
 	public static String getMonthYear(Date taskActivityStartTime) {
-		return new SimpleDateFormat("MMM-YYYY").format(taskActivityStartTime);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(taskActivityStartTime);
+		return  new SimpleDateFormat("MMM").format(cal.getTime()) + "-" + cal.get(Calendar.YEAR);
 	}
 }

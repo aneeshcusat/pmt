@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.contants.ReportType;
 import com.famstack.projectscheduler.dashboard.bean.POEstimateProjectTaskActivityDetails;
+import com.famstack.projectscheduler.employees.bean.DailyTimesheetDumpDetails;
 import com.famstack.projectscheduler.employees.bean.UserSiteActivityDetails;
 import com.famstack.projectscheduler.employees.bean.UserSiteActivityStatus;
 import com.famstack.projectscheduler.employees.bean.UserUtilizationDetails;
@@ -76,13 +77,90 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
         fillPOEstimationReportData(dataMap, sheet, workBook);
       } else if (ReportType.WEEKLY_PROJECT_HOURS == reportType) {
         fillProjectHoursReportData(dataMap, sheet, workBook);
-      } else  if(ReportType.UTILIZATION_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
+      }  else if (ReportType.TIME_SHEET_DUMP == reportType) {
+          fillTimeSheetDumpReportData(dataMap, sheet, workBook);
+        } else  if(ReportType.UTILIZATION_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
           fillUtilizationBySkillsReportData(dataMap, sheet, workBook, reportType);
         }
     }
   }
 
-  private void fillUtilizationBySkillsReportData(Map<String, Object> dataMap, XSSFSheet sheet, XSSFWorkbook workBook, ReportType reportType) {
+  private void fillTimeSheetDumpReportData(Map<String, Object> dataMap, XSSFSheet sheet, XSSFWorkbook workBook) {
+	  
+	  setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
+	    
+	    setCellValue(sheet, 0, 1, "Employee Name", headerCellStyle);
+	    setCellValue(sheet, 0, 2, "Employee Code", headerCellStyle);
+	    setCellValue(sheet, 0, 3, "Delivery Lead", headerCellStyle);
+	    setCellValue(sheet, 0, 4, "Client", headerCellStyle);
+	    setCellValue(sheet, 0, 5, "Project code", headerCellStyle);
+	    setCellValue(sheet, 0, 6, "ID", headerCellStyle);
+	    setCellValue(sheet, 0, 7, "PO Id", headerCellStyle);
+	    setCellValue(sheet, 0, 8, "Order book Ref", headerCellStyle);
+	    setCellValue(sheet, 0, 9, "Proposal Number", headerCellStyle);
+	    setCellValue(sheet, 0, 10, "Project Name", headerCellStyle);
+	    setCellValue(sheet, 0, 11, "Project Status", headerCellStyle);
+	    setCellValue(sheet, 0, 12, "Project Category", headerCellStyle);
+	    setCellValue(sheet, 0, 13, "New Project Category", headerCellStyle);
+	    setCellValue(sheet, 0, 14, "Task Name", headerCellStyle);
+	    setCellValue(sheet, 0, 15, "Account", headerCellStyle);
+	    setCellValue(sheet, 0, 16, "Team", headerCellStyle);
+	    setCellValue(sheet, 0, 17, "Sub Team", headerCellStyle);
+	    setCellValue(sheet, 0, 18, "Date", headerCellStyle);
+	    setCellValue(sheet, 0, 19, "Actual Hours Spent", headerCellStyle);
+	    setCellValue(sheet, 0, 20, "comment", headerCellStyle);
+	    setCellValue(sheet, 0, 21, "Updated Date & Time", headerCellStyle);
+
+	    List<DailyTimesheetDumpDetails> data =
+	        (List<DailyTimesheetDumpDetails>) dataMap.get("DATA");
+
+	    int rowIndex = 1;
+	    for (DailyTimesheetDumpDetails dailyTimesheetDumpDetails : data) {
+	      setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
+	      setCellValue(sheet, rowIndex, 1, dailyTimesheetDumpDetails.getFullName(), null);
+	      setCellValue(sheet, rowIndex, 2, dailyTimesheetDumpDetails.getEmployeeeId(), null);
+	      setCellValue(sheet, rowIndex, 3, dailyTimesheetDumpDetails.getDeliveryLead(), null);
+	      setCellValue(sheet, rowIndex, 4, dailyTimesheetDumpDetails.getClientName(), null);
+	      setCellValue(sheet, rowIndex, 5, dailyTimesheetDumpDetails.getProjectCode(), null);
+	      setCellValue(sheet, rowIndex, 6, dailyTimesheetDumpDetails.getProjectId(), null);
+	      
+	      setCellValue(sheet, rowIndex, 7, dailyTimesheetDumpDetails.getProjectNumber(), null);
+	      setCellValue(sheet, rowIndex, 8, dailyTimesheetDumpDetails.getOrderRefNumber(), null);
+	      setCellValue(sheet, rowIndex, 9, dailyTimesheetDumpDetails.getProposalNumber(), null);
+	      setCellValue(sheet, rowIndex, 10, "" + dailyTimesheetDumpDetails.getProjectName(),
+	          null);
+	      setCellValue(sheet, rowIndex, 11, dailyTimesheetDumpDetails.getProjectStatus(), null);
+	      setCellValue(sheet, rowIndex, 12, dailyTimesheetDumpDetails.getProjectCategory(),
+	          null);
+	      setCellValue(sheet, rowIndex, 13, dailyTimesheetDumpDetails.getNewProjectCategory(), null);
+	      setCellValue(sheet, rowIndex, 14,
+	          dailyTimesheetDumpDetails.getTaskName(), null);
+	      setCellValue(sheet, rowIndex, 15,
+	          dailyTimesheetDumpDetails.getAccountName(), null);
+	      setCellValue(sheet, rowIndex, 16,
+	          dailyTimesheetDumpDetails.getTeamName(),
+	          null);
+	      setCellValue(sheet, rowIndex, 17,
+	          dailyTimesheetDumpDetails.getSubTeamName(),
+	          null);
+	      setCellValue(sheet, rowIndex, 18,
+	           dailyTimesheetDumpDetails.getTaskActivityDate(),
+	          null);
+	      setCellValue(sheet, rowIndex, 19,
+	          dailyTimesheetDumpDetails.getDurationInHours(),
+	          null);
+	      setCellValue(sheet, rowIndex, 20,
+		          dailyTimesheetDumpDetails.getTaskCompletionComments(),
+		          null);
+	      setCellValue(sheet, rowIndex, 21,
+		          dailyTimesheetDumpDetails.getTaskRecordedActivityStartTime(),
+		          null);
+	      rowIndex++;
+	    }
+	
+}
+
+private void fillUtilizationBySkillsReportData(Map<String, Object> dataMap, XSSFSheet sheet, XSSFWorkbook workBook, ReportType reportType) {
 	  	setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
 	  	 int rowHeaderCount = 1;
 	  	 if(ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
@@ -92,6 +170,7 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 	      }
 	  	 if(ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
 	  		 setCellValue(sheet, 0, rowHeaderCount++, "Category", headerCellStyle);
+	  		 setCellValue(sheet, 0, rowHeaderCount++, "Accounts", headerCellStyle);
 	  	 } else {
 	  		 setCellValue(sheet, 0, rowHeaderCount++, "Skillset", headerCellStyle);
 	  	 }
@@ -111,7 +190,11 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getEmployeeName(), null);
 	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getDesignation(), null);
 	      }
+	    
 	      setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getSkillOrCategory(), null);
+	      if(ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType){
+	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getProjectAccounts() != null && byUserSkillOrCategory.getProjectAccounts().size() > 0 ? byUserSkillOrCategory.getProjectAccounts().toString() : "", null);
+	      }
 	      setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getMonthYear(), null);
 	      setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getBillableHours(),
 	          boldCenterValueCellStyle);
@@ -306,19 +389,25 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
       XSSFWorkbook workBook) {
 
     setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
-    setCellValue(sheet, 0, 1, "Team Name", headerCellStyle);
-    setCellValue(sheet, 0, 2, "Account Name", headerCellStyle);
-    setCellValue(sheet, 0, 3, "Project Name", headerCellStyle);
-    setCellValue(sheet, 0, 4, "Project Id", headerCellStyle);
-    setCellValue(sheet, 0, 5, "Project Code", headerCellStyle);
-    setCellValue(sheet, 0, 6, "PO No", headerCellStyle);
-    setCellValue(sheet, 0, 7, "SOW", headerCellStyle);
-    setCellValue(sheet, 0, 8, "Start Date", headerCellStyle);
-    setCellValue(sheet, 0, 9, "End Date", headerCellStyle);
-    setCellValue(sheet, 0, 10, "Current Status", headerCellStyle);
-    setCellValue(sheet, 0, 11, "Total Estimation Hours", headerCellStyle);
-    setCellValue(sheet, 0, 12, "Consumed Hours", headerCellStyle);
-    setCellValue(sheet, 0, 13, "% of Utilization", headerCellStyle);
+    
+    setCellValue(sheet, 0, 1, "Client Name", headerCellStyle);
+    setCellValue(sheet, 0, 2, "Order book ref id", headerCellStyle);
+    setCellValue(sheet, 0, 3, "Proposal Number", headerCellStyle);
+    setCellValue(sheet, 0, 4, "Offshore/Onshore", headerCellStyle);
+    setCellValue(sheet, 0, 5, "Delivery Lead", headerCellStyle);
+    setCellValue(sheet, 0, 6, "Team Name", headerCellStyle);
+    setCellValue(sheet, 0, 7, "Account Name", headerCellStyle);
+    setCellValue(sheet, 0, 8, "Project Name", headerCellStyle);
+    setCellValue(sheet, 0, 9, "Project Id", headerCellStyle);
+    setCellValue(sheet, 0, 10, "Project Code", headerCellStyle);
+    setCellValue(sheet, 0, 11, "PO No", headerCellStyle);
+    setCellValue(sheet, 0, 12, "SOW", headerCellStyle);
+    setCellValue(sheet, 0, 13, "Start Date", headerCellStyle);
+    setCellValue(sheet, 0, 14, "End Date", headerCellStyle);
+    setCellValue(sheet, 0, 15, "Current Status", headerCellStyle);
+    setCellValue(sheet, 0, 16, "Total Estimation Hours", headerCellStyle);
+    setCellValue(sheet, 0, 17, "Consumed Hours", headerCellStyle);
+    setCellValue(sheet, 0, 18, "% of Utilization", headerCellStyle);
 
     List<POEstimateProjectTaskActivityDetails> data =
         (List<POEstimateProjectTaskActivityDetails>) dataMap.get("DATA");
@@ -326,29 +415,35 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
     int rowIndex = 1;
     for (POEstimateProjectTaskActivityDetails pOEstimateProjectTaskActivityDetails : data) {
       setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
-      setCellValue(sheet, rowIndex, 1, pOEstimateProjectTaskActivityDetails.getTeamName(), null);
-      setCellValue(sheet, rowIndex, 2, pOEstimateProjectTaskActivityDetails.getAccountName(), null);
-      setCellValue(sheet, rowIndex, 3, pOEstimateProjectTaskActivityDetails.getProjectName(), null);
-      setCellValue(sheet, rowIndex, 4, "" + pOEstimateProjectTaskActivityDetails.getProjectId(),
+      setCellValue(sheet, rowIndex, 1, pOEstimateProjectTaskActivityDetails.getClientName(), null);
+      setCellValue(sheet, rowIndex, 2, pOEstimateProjectTaskActivityDetails.getOrderBookId(), null);
+      setCellValue(sheet, rowIndex, 3, pOEstimateProjectTaskActivityDetails.getProposalNumber(), null);
+      setCellValue(sheet, rowIndex, 4, pOEstimateProjectTaskActivityDetails.getLocation(), null);
+      setCellValue(sheet, rowIndex, 5, pOEstimateProjectTaskActivityDetails.getDeliveryLeadName(), null);
+      
+      setCellValue(sheet, rowIndex, 6, pOEstimateProjectTaskActivityDetails.getTeamName(), null);
+      setCellValue(sheet, rowIndex, 7, pOEstimateProjectTaskActivityDetails.getAccountName(), null);
+      setCellValue(sheet, rowIndex, 8, pOEstimateProjectTaskActivityDetails.getProjectName(), null);
+      setCellValue(sheet, rowIndex, 9, "" + pOEstimateProjectTaskActivityDetails.getProjectId(),
           null);
-      setCellValue(sheet, rowIndex, 5, pOEstimateProjectTaskActivityDetails.getProjectCode(), null);
-      setCellValue(sheet, rowIndex, 6, pOEstimateProjectTaskActivityDetails.getProjectNumber(),
+      setCellValue(sheet, rowIndex, 10, pOEstimateProjectTaskActivityDetails.getProjectCode(), null);
+      setCellValue(sheet, rowIndex, 11, pOEstimateProjectTaskActivityDetails.getProjectNumber(),
           null);
-      setCellValue(sheet, rowIndex, 7, pOEstimateProjectTaskActivityDetails.getSowLineItem(), null);
-      setCellValue(sheet, rowIndex, 8,
+      setCellValue(sheet, rowIndex, 12, pOEstimateProjectTaskActivityDetails.getSowLineItem(), null);
+      setCellValue(sheet, rowIndex, 13,
           pOEstimateProjectTaskActivityDetails.getProjectStartTimeFormated(), null);
-      setCellValue(sheet, rowIndex, 9,
+      setCellValue(sheet, rowIndex, 14,
           pOEstimateProjectTaskActivityDetails.getProjectCompletionTimeFormated(), null);
-      setCellValue(sheet, rowIndex, 10,
+      setCellValue(sheet, rowIndex, 15,
           pOEstimateProjectTaskActivityDetails.getProjectEstimateStatus(),
           boldCenterValueCellStyle);
-      setCellValue(sheet, rowIndex, 11,
+      setCellValue(sheet, rowIndex, 16,
           "" + pOEstimateProjectTaskActivityDetails.getProjectDurationHrs(),
           boldCenterValueCellStyle);
-      setCellValue(sheet, rowIndex, 12,
+      setCellValue(sheet, rowIndex, 17,
           "" + pOEstimateProjectTaskActivityDetails.getTaskActivityDurationHrs(),
           boldCenterValueCellStyle);
-      setCellValue(sheet, rowIndex, 13,
+      setCellValue(sheet, rowIndex, 18,
           pOEstimateProjectTaskActivityDetails.getUtilizationString() + "%",
           boldCenterValueCellStyle);
       rowIndex++;

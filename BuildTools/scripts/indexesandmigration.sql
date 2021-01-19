@@ -101,3 +101,10 @@ ADD COLUMN `has_ppi` BIT(1) NULL DEFAULT false;
 
 ALTER TABLE `bops`.`task_info` 
 ADD COLUMN `client` varchar(200) NULL;
+
+
+
+SET SQL_SAFE_UPDATES = 0;
+update bops.user_info set user_id = LOWER(user_id), rept_mgr_email_id = LOWER(rept_mgr_email_id); 
+
+INSERT INTO `bops`.`user_group_item` (`id`,`name`,`company_name`,`company_id`,`user_grp_id`) VALUES (1020,"Data Governance Team","Course5i","bops","1020");

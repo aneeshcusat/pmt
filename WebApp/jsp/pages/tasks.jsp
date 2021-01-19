@@ -275,7 +275,7 @@ var newFieldsEnabled = ${staticUnbilledEnabled};
 	src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.17&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.18&v=${fsVersionNumber}"></script>
 <script>
 
 <c:if test="${sameDayOnlyTaskEnabled}">	

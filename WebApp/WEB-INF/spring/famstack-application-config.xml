@@ -53,6 +53,7 @@
 			<entry key="Junior Analyst" value="30"/>
 			<entry key="Trainee Analyst" value="20"/>
 			<entry key="Trainee" value="10"/>
+			<entry key="Intern" value="10"/>
         </map>
     </property>
     

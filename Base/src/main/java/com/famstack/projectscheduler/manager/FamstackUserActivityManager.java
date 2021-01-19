@@ -872,6 +872,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 			projectTaskActivityDetails
 					.setTaskActivityStartTime(userTaskActivityItem
 							.getActualStartTime());
+			projectTaskActivityDetails.setRecordedTaskStartTime(userTaskActivityItem.getRecordedStartTime());
 			projectTaskActivityDetails.setUserId(userTaskActivityItem
 					.getUserActivityItem().getUserItem().getId());
 			projectTaskActivityDetails.setProjectId(0);

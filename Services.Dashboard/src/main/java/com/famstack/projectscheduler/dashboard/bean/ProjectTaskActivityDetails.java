@@ -81,6 +81,8 @@ public class ProjectTaskActivityDetails
     private Date taskStartTime;
 
     private Date taskCompletionTime;
+    
+    private Date  recordedTaskStartTime;
 
     private int taskDuration;
     
@@ -665,5 +667,13 @@ public class ProjectTaskActivityDetails
 				+ ", subItems=" + subItems + ", childs=" + childs + ", location=" + location + ", clientPartner="
 				+ clientPartner + ", userGroupId=" + userGroupId + ", estHoursByMonthSkills=" + estHoursByMonthSkills
 				+ ", deliveryLead=" + deliveryLead + "]";
+	}
+
+	public Date getRecordedTaskStartTime() {
+		return recordedTaskStartTime;
+	}
+
+	public void setRecordedTaskStartTime(Date recordedTaskStartTime) {
+		this.recordedTaskStartTime = recordedTaskStartTime;
 	}
 }
