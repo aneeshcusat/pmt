@@ -147,7 +147,7 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 	           dailyTimesheetDumpDetails.getTaskActivityDate(),
 	          null);
 	      setCellValue(sheet, rowIndex, 19,
-	          dailyTimesheetDumpDetails.getDurationInHours(),
+	          dailyTimesheetDumpDetails.getActDurationInHours(),
 	          null);
 	      setCellValue(sheet, rowIndex, 20,
 		          dailyTimesheetDumpDetails.getTaskCompletionComments(),

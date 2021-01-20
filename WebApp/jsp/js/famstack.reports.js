@@ -499,7 +499,7 @@ function fillTimesheetDumpReportData(data){
 		reportBodyHtml += "<td>"+value.teamName+"</td>";
 		reportBodyHtml += "<td>"+value.subTeamName+"</td>";
 		reportBodyHtml += "<td>"+value.taskActivityStartTime+"</td>";
-		reportBodyHtml += "<td>"+value.durationInHours+"</td>";
+		reportBodyHtml += "<td>"+value.actDurationInHours+"</td>";
 		reportBodyHtml += "<td>"+value.taskCompletionComments+"</td>";
 		reportBodyHtml += "<td>"+value.taskRecordedActivityStartTime+"</td></tr>";
 	});
