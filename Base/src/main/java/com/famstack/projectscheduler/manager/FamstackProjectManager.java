@@ -1436,6 +1436,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             
             projectTaskActivityDetails.setClientName((String) data[37]);
             projectTaskActivityDetails.setRecordedTaskStartTime((Date) data[38]);
+            projectTaskActivityDetails.setLastModifiedTime((Date) data[39]);
             projectTaskActivityDetails.setUserGroupId(userGroupId);
             
             String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
@@ -2506,6 +2507,9 @@ public class FamstackProjectManager extends BaseFamstackManager
 				dailyTimesheetDumpDetails.setTaskCompletionComments(projectDetails.getTaskCompletionComments());
 				dailyTimesheetDumpDetails.setTaskActivityStartTime(projectDetails.getTaskActivityStartTime());
 				dailyTimesheetDumpDetails.setTaskRecordedActivityStartTime(projectDetails.getRecordedTaskStartTime());
+				dailyTimesheetDumpDetails.setLastModifiedTime(projectDetails.getLastModifiedTime());
+				dailyTimesheetDumpDetails.setActDurationInMins(projectDetails.getTaskActActivityDuration());
+				
 				dailyTimesheetDumpDetailsList.add(dailyTimesheetDumpDetails);
 			}
 		}

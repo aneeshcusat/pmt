@@ -24,10 +24,20 @@ public class DailyTimesheetDumpDetails {
 	private String subTeamName;
 	private Date taskStartTime;
 	private String durationInHours;
+	
 	private String actDurationInHours;
+	private Integer actDurationInMins;
 	private String taskCompletionComments;
 	private Date taskRecordedActivityStartTime;
 	private Date taskActivityStartTime;
+	private Date lastModifiedTime;
+	
+	public String getLastModifiedTime() {
+		return lastModifiedTime != null ? DateUtils.format(lastModifiedTime, DateUtils.DATE_TIME_FORMAT) : "";
+	}
+	public void setLastModifiedTime(Date lastModifiedTime) {
+		this.lastModifiedTime = lastModifiedTime;
+	}
 	public String getFullName() {
 		return fullName != null ? fullName : "";
 	}
@@ -168,5 +178,11 @@ public class DailyTimesheetDumpDetails {
 	}
 	public void setEmployeeeId(String employeeeId) {
 		this.employeeeId = employeeeId;
+	}
+	public Integer getActDurationInMins() {
+		return actDurationInMins != null ? actDurationInMins : 0;
+	}
+	public void setActDurationInMins(Integer actDurationInMins) {
+		this.actDurationInMins = actDurationInMins;
 	}
 }

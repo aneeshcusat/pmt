@@ -22,7 +22,7 @@ C:\apps\mysql-8.0.15-winx64\bin>mysql -u root --skip-password
 ---mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'bops1234';
 
 to support workbench login
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'bops1234';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
 
 CREATE USER 'bops'@'%' IDENTIFIED BY 'bops1234';
 ALTER USER 'bops'@'%' IDENTIFIED WITH mysql_native_password BY 'bops1234';

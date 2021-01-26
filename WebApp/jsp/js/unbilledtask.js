@@ -7,6 +7,7 @@ var accountNameCodetMapping = [
  {name:"Fuel Cycle", value:"FCL"},
  {name:"Google", value:"GOO"},
  {name:"Grammarly", value:"GRY"},
+ {name:"HSA-Yemen", value:"HSA"},
  {name:"Hyundai Motor", value:"HMR"},
  {name:"IEEE", value:"IEE"},
  {name:"INMOBI", value:"INM"},

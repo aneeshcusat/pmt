@@ -108,6 +108,16 @@ public class ProjectTaskActivityDetails
     
     private String userGroupId;
     
+    private Date lastModifiedTime;
+    
+	public Date getLastModifiedTime() {
+		return lastModifiedTime;
+	}
+
+	public void setLastModifiedTime(Date lastModifiedTime) {
+		this.lastModifiedTime = lastModifiedTime;
+	}
+
 	private Map estHoursByMonthSkills;
 	private Integer deliveryLead;
 

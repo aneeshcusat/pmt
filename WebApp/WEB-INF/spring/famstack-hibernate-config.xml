@@ -21,16 +21,16 @@
 		<property name="testOnBorrow" value="true"/>
 		<property name="testWhileIdle" value="true"/>
 		<property name="testOnReturn" value="false"/>
-		<property name="validationInterval" value="30000"/>
-		<property name="initialSize" value="${hibernate.initialSize}"/>
-		<property name="removeAbandonedTimeout" value="60"/>
+		<property name="validationInterval" value="34000"/>
+		<property name="initialSize" value="34"/>
+		<property name="removeAbandonedTimeout" value="55"/>
 		<property name="removeAbandoned" value="true"/>
-		<property name="timeBetweenEvictionRunsMillis" value="30000"/>
-		<property name="maxActive" value="1000"/>
-		<property name="minIdle" value="100"/>
-		<property name="maxWait" value="60000"/>
+		<property name="timeBetweenEvictionRunsMillis" value="34000"/>
+		<property name="maxActive" value="377"/>
+		<property name="maxIdle" value="233"/>
+		<property name="minIdle" value="89"/>
 		<property name="logAbandoned" value="true"/>
-		<property name="minEvictableIdleTimeMillis" value="30000"/>
+		<property name="minEvictableIdleTimeMillis" value="55000"/>
 		<property name="jdbcInterceptors" value="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"/>
 		<property name="jmxEnabled" value="true"/>
 		<!-- <property name="maxTotal" value="-1"/>

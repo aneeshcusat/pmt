@@ -501,7 +501,7 @@ function fillTimesheetDumpReportData(data){
 		reportBodyHtml += "<td>"+value.taskActivityStartTime+"</td>";
 		reportBodyHtml += "<td>"+value.actDurationInHours+"</td>";
 		reportBodyHtml += "<td>"+value.taskCompletionComments+"</td>";
-		reportBodyHtml += "<td>"+value.taskRecordedActivityStartTime+"</td></tr>";
+		reportBodyHtml += "<td>"+value.lastModifiedTime+"</td></tr>";
 	});
 	
 	$(".reportDataBody").html( reportBodyHtml );

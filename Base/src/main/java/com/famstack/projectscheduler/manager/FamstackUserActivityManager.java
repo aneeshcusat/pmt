@@ -888,10 +888,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 			projectTaskActivityDetails
 					.setTaskActivityDuration(userTaskActivityItem
 							.getDurationInMinutes());
+			projectTaskActivityDetails.setTaskActActivityDuration(userTaskActivityItem.getDurationInMinutes());
 			projectTaskActivityDetails
 					.setTaskCompletionComments(userTaskActivityItem
 							.getCompletionComment());
 			projectTaskActivityDetails.setClientName(userTaskActivityItem.getClientName());
+			projectTaskActivityDetails.setLastModifiedTime(userTaskActivityItem.getLastModifiedDate());
+			
 			projectTaskActivityDetailsList.add(projectTaskActivityDetails);
 
 			String key = "D" + userTaskActivityItem.getActualStartTime();

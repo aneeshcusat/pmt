@@ -40,6 +40,10 @@ public class UserUtilization {
 	public String getTotalHours() {
 		return getTimeInHrs(billableMins + (enabledUserActiveUtilization ? 0 : nonBillableMins));
 	}
+	
+	public Integer getTotalMins() {
+		return billableMins + (enabledUserActiveUtilization ? 0 : nonBillableMins);
+	}
 
 	public String getBillableHours() {
 		return getTimeInHrs(billableMins);

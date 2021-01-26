@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -45,6 +46,9 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
   private XSSFCellStyle boldCenterRedCellStyle = null;
   private XSSFCellStyle boldCenterYelloCellStyle = null;
   private XSSFCellStyle boldCenterValueCellStyle = null;
+  private XSSFCellStyle boldCenterTimeValueCellStyle = null;
+  private XSSFCellStyle boldCenterTimeYelloCellStyle = null;
+  
 
   @Override
   public void renderReport(Map<String, Object> dataMap) {
@@ -61,6 +65,11 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
       valueCellStyle = initializeCellStyle(workBook, null, false, valueCellStyle, null);
       boldCenterValueCellStyle = initializeCellStyle(workBook, null, true, boldCenterValueCellStyle,
           HorizontalAlignment.CENTER);
+      
+      boldCenterTimeValueCellStyle =  initializeCellStyle(workBook, null, true, boldCenterTimeValueCellStyle,
+              HorizontalAlignment.CENTER, true);
+      boldCenterTimeYelloCellStyle = initializeCellStyle(workBook, getColor(247, 251, 91, colorIndexYellow), true,
+    		  boldCenterTimeYelloCellStyle, HorizontalAlignment.CENTER, true);
 
       ReportType reportType = (ReportType) dataMap.get("reportType");
       if (ReportType.USER_SITE_ACTIVITY == reportType) {
@@ -146,14 +155,13 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 	      setCellValue(sheet, rowIndex, 18,
 	           dailyTimesheetDumpDetails.getTaskActivityDate(),
 	          null);
-	      setCellValue(sheet, rowIndex, 19,
-	          dailyTimesheetDumpDetails.getActDurationInHours(),
-	          null);
+	      setCellValue(sheet, rowIndex, 19,convertToActualTimeString(dailyTimesheetDumpDetails.getActDurationInMins()),
+	          boldCenterTimeValueCellStyle);
 	      setCellValue(sheet, rowIndex, 20,
 		          dailyTimesheetDumpDetails.getTaskCompletionComments(),
 		          null);
 	      setCellValue(sheet, rowIndex, 21,
-		          dailyTimesheetDumpDetails.getTaskRecordedActivityStartTime(),
+		          dailyTimesheetDumpDetails.getLastModifiedTime(),
 		          null);
 	      rowIndex++;
 	    }
@@ -222,6 +230,21 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
     }
   }
 
+private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Double value,
+	      CellStyle cellStyle) {
+	    Row row = getRow(sheet, rowIndex);
+	    Cell cell = getCell(sheet, row, colIndex);
+	    cell.setCellValue(value);
+	    if (cellStyle != null) {
+	      cell.setCellStyle(cellStyle);
+	    } else {
+	      cell.setCellStyle(valueCellStyle);
+	    }
+	    if (rowIndex < 2) {
+	      sheet.autoSizeColumn(colIndex);
+	    }
+	  }
+
   private void fillUserActivityReportData(Map<String, Object> dataMap, Sheet sheet,
       XSSFWorkbook workBook) {
 
@@ -276,16 +299,16 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
       setCellValue(sheet, rowIndex, 1, userUtilizationDetails.getEmployeeName(), null);
       setCellValue(sheet, rowIndex, 2, userUtilizationDetails.getEmpId(), null);
       setCellValue(sheet, rowIndex, 3, userUtilizationDetails.getReportingManager(), null);
-      setCellValue(sheet, rowIndex, 4, userUtilizationDetails.getBillableHours(),
-          boldCenterValueCellStyle);
-      setCellValue(sheet, rowIndex, 5, userUtilizationDetails.getNonBillableHours(),
-          boldCenterValueCellStyle);
+      setCellValue(sheet, rowIndex, 4, convertToActualTimeString(userUtilizationDetails.getBillableMins()),
+          boldCenterTimeValueCellStyle);
+      setCellValue(sheet, rowIndex, 5, convertToActualTimeString(userUtilizationDetails.getNonBillableMins()),
+          boldCenterTimeValueCellStyle);
       if (userUtilizationDetails.getLeaveOrHolidayMins() > 0) {
-        setCellValue(sheet, rowIndex, 6, userUtilizationDetails.getLeaveOrHolidayHours(),
-            boldCenterYelloCellStyle);
+        setCellValue(sheet, rowIndex, 6, convertToActualTimeString(userUtilizationDetails.getLeaveOrHolidayMins()),
+            boldCenterTimeYelloCellStyle);
       } else {
-        setCellValue(sheet, rowIndex, 6, userUtilizationDetails.getLeaveOrHolidayHours(),
-            boldCenterValueCellStyle);
+        setCellValue(sheet, rowIndex, 6, convertToActualTimeString(userUtilizationDetails.getLeaveOrHolidayMins()),
+            boldCenterTimeValueCellStyle);
       }
       if (userUtilizationDetails.isUnderOrOverUtilized()) {
         setCellValue(sheet, rowIndex, 7, userUtilizationDetails.getUtilization() + " %",
@@ -295,8 +318,8 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
             boldCenterValueCellStyle);
       }
 
-      setCellValue(sheet, rowIndex, 8, userUtilizationDetails.getTotalHours(),
-          boldCenterValueCellStyle);
+      setCellValue(sheet, rowIndex, 8, convertToActualTimeString(userUtilizationDetails.getTotalMins()),
+          boldCenterTimeValueCellStyle);
       rowIndex++;
     }
   }
@@ -527,9 +550,13 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
     }
     return projectDetailsRow;
   }
+  private XSSFCellStyle initializeCellStyle(XSSFWorkbook workbook, XSSFColor colorIndex,
+	      boolean isBold, XSSFCellStyle cellStyle, HorizontalAlignment horizontalAlignment) {
+	  return initializeCellStyle(workbook, colorIndex, isBold, cellStyle, horizontalAlignment, false);
+  }
 
   private XSSFCellStyle initializeCellStyle(XSSFWorkbook workbook, XSSFColor colorIndex,
-      boolean isBold, XSSFCellStyle cellStyle, HorizontalAlignment horizontalAlignment) {
+      boolean isBold, XSSFCellStyle cellStyle, HorizontalAlignment horizontalAlignment, boolean timeCell) {
     if (cellStyle == null) {
       cellStyle = workbook.createCellStyle();
       if (colorIndex != null) {
@@ -554,6 +581,11 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
 
       cellStyle.setBorderTop(BorderStyle.THIN);
       cellStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+      
+      if(timeCell) {
+    	CreationHelper createHelper = workbook.getCreationHelper();
+      	cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("[h]:mm"));
+      }
     }
     return cellStyle;
   }
@@ -563,5 +595,18 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value,
       color = new XSSFColor(new java.awt.Color(R, G, B));
     }
     return color;
+  }
+  
+  private double convertToActualTimeString(Integer timeInMins)
+  {
+
+      if (timeInMins != null && timeInMins > 0) {
+          int hour = timeInMins / 60;
+          int minutes = timeInMins % 60;
+          return hour / 24d + (minutes / 60d) / 24d;
+      }
+
+      return 0;
+
   }
 }
