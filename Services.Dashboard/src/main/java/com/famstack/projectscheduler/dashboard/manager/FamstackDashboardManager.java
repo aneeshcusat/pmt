@@ -757,6 +757,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	public String searchForProjectNamesCodePoIdJson(String query) {
 		return projectManager.searchForProjectNamesCodePoIdJson(query);
 	}
+	
+	public String getAllTasksJson(int projectId, int howManyOldData) {
+		return projectManager.getAllTasksJson(projectId, howManyOldData);
+	}
 
 	public List<ProjectDetails> getAllProjectDetailsList(Date startDate,
 			Date endDate) {

@@ -23,7 +23,7 @@
 		<property name="testOnReturn" value="false"/>
 		<property name="validationInterval" value="34000"/>
 		<property name="initialSize" value="34"/>
-		<property name="removeAbandonedTimeout" value="55"/>
+		<property name="removeAbandonedTimeout" value="1800"/>
 		<property name="removeAbandoned" value="true"/>
 		<property name="timeBetweenEvictionRunsMillis" value="34000"/>
 		<property name="maxActive" value="377"/>
@@ -31,7 +31,7 @@
 		<property name="minIdle" value="89"/>
 		<property name="logAbandoned" value="true"/>
 		<property name="minEvictableIdleTimeMillis" value="55000"/>
-		<property name="jdbcInterceptors" value="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"/>
+		<property name="jdbcInterceptors" value="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;org.apache.tomcat.jdbc.pool.interceptor.ResetAbandonedTimer"/>
 		<property name="jmxEnabled" value="true"/>
 		<!-- <property name="maxTotal" value="-1"/>
 		<property name="maxWaitMillis" value="60000"/>
@@ -101,9 +101,12 @@
 				<prop key="hibernate.format_sql">${hibernate.debug}</prop>
 				<prop key="hibernate.use_sql_comments">${hibernate.debug}</prop>
 				<prop key="hibernate.jdbc.batch_size">10</prop>
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
 				<prop key="hibernate.enable_lazy_load_no_trans">true</prop>
         		<prop key="hibernate.cache.use_second_level_cache">false</prop>
-                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+                <prop key="hibernate.query.plan_cache_max_size">50</prop>
+                <prop key="hibernate.query.plan_parameter_metadata_max_size">50</prop>
                 <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
                 <prop key="net.sf.ehcache.configurationResourceName">ehcache.xml</prop>  
 			</props>

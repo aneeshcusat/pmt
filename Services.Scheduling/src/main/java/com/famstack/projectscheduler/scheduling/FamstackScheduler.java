@@ -42,7 +42,6 @@ public class FamstackScheduler extends BaseFamstackService
     
     private boolean enabled;
 
-    @Async
     public void scheduleJob()
     {
     	if (enabled) {

@@ -156,7 +156,7 @@ public class ProjectItem implements FamstackBaseItem
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "projectItem", cascade = CascadeType.ALL)
     private Set<ProjectActivityItem> projectActivityItem;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "projectItem", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "projectItem", cascade = CascadeType.ALL)
     private Set<TaskItem> taskItems;
 
     public String getName()

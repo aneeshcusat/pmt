@@ -82,7 +82,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         return taskItem;
 
     }
-
+//remove task items
     public void createExtraTaskItem(TaskDetails taskDetails, ProjectItem projectItem)
     {
     	 Set<TaskItem> taskItems = projectItem.getTaskItems();
@@ -782,7 +782,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
         return userTaskActivityList;
     }
-
+//remove taks item
     private void checkTaskIsDisabled(TaskItem taskItem, TaskDetails taskDetails)
     {
         if (taskItem.getProjectTaskType() == ProjectTaskType.REVIEW) {
@@ -995,7 +995,7 @@ public class FamstackProjectTaskManager extends BaseFamstackManager
         }
 
     }
-
+//remove task item
     private void updateProjectStatus(int projectId)
     {
         ProjectItem projectItem =

@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.export.processors;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,8 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
   private XSSFCellStyle boldCenterValueCellStyle = null;
   private XSSFCellStyle boldCenterTimeValueCellStyle = null;
   private XSSFCellStyle boldCenterTimeYelloCellStyle = null;
+  private XSSFCellStyle valueDateCellStyle = null;
+  private XSSFCellStyle valueDateTimeCellStyle = null;
   
 
   @Override
@@ -67,9 +70,12 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
           HorizontalAlignment.CENTER);
       
       boldCenterTimeValueCellStyle =  initializeCellStyle(workBook, null, true, boldCenterTimeValueCellStyle,
-              HorizontalAlignment.CENTER, true);
+              HorizontalAlignment.CENTER, "[h]:mm");
       boldCenterTimeYelloCellStyle = initializeCellStyle(workBook, getColor(247, 251, 91, colorIndexYellow), true,
-    		  boldCenterTimeYelloCellStyle, HorizontalAlignment.CENTER, true);
+    		  boldCenterTimeYelloCellStyle, HorizontalAlignment.CENTER, "[h]:mm");
+      
+      valueDateCellStyle = initializeCellStyle(workBook, null, false, valueDateCellStyle, null, "yyyy/m/dd");
+      valueDateTimeCellStyle = initializeCellStyle(workBook, null, false, valueDateTimeCellStyle, null, "yyyy/m/dd hh:mm");
 
       ReportType reportType = (ReportType) dataMap.get("reportType");
       if (ReportType.USER_SITE_ACTIVITY == reportType) {
@@ -153,8 +159,8 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 	          dailyTimesheetDumpDetails.getSubTeamName(),
 	          null);
 	      setCellValue(sheet, rowIndex, 18,
-	           dailyTimesheetDumpDetails.getTaskActivityDate(),
-	          null);
+	           dailyTimesheetDumpDetails.getTaskActivityStartTime(),
+	           valueDateCellStyle);
 	      setCellValue(sheet, rowIndex, 19,convertToActualTimeString(dailyTimesheetDumpDetails.getActDurationInMins()),
 	          boldCenterTimeValueCellStyle);
 	      setCellValue(sheet, rowIndex, 20,
@@ -162,7 +168,7 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 		          null);
 	      setCellValue(sheet, rowIndex, 21,
 		          dailyTimesheetDumpDetails.getLastModifiedTime(),
-		          null);
+		          valueDateTimeCellStyle);
 	      rowIndex++;
 	    }
 	
@@ -235,6 +241,22 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Double value,
 	    Row row = getRow(sheet, rowIndex);
 	    Cell cell = getCell(sheet, row, colIndex);
 	    cell.setCellValue(value);
+	    if (cellStyle != null) {
+	      cell.setCellStyle(cellStyle);
+	    } else {
+	      cell.setCellStyle(valueCellStyle);
+	    }
+	    if (rowIndex < 2) {
+	      sheet.autoSizeColumn(colIndex);
+	    }
+	  }
+private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Date value,
+	      CellStyle cellStyle) {
+	    Row row = getRow(sheet, rowIndex);
+	    Cell cell = getCell(sheet, row, colIndex);
+	    if(value != null){
+	    	cell.setCellValue(value);
+	    }
 	    if (cellStyle != null) {
 	      cell.setCellStyle(cellStyle);
 	    } else {
@@ -552,11 +574,11 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Double value,
   }
   private XSSFCellStyle initializeCellStyle(XSSFWorkbook workbook, XSSFColor colorIndex,
 	      boolean isBold, XSSFCellStyle cellStyle, HorizontalAlignment horizontalAlignment) {
-	  return initializeCellStyle(workbook, colorIndex, isBold, cellStyle, horizontalAlignment, false);
+	  return initializeCellStyle(workbook, colorIndex, isBold, cellStyle, horizontalAlignment, null);
   }
 
   private XSSFCellStyle initializeCellStyle(XSSFWorkbook workbook, XSSFColor colorIndex,
-      boolean isBold, XSSFCellStyle cellStyle, HorizontalAlignment horizontalAlignment, boolean timeCell) {
+      boolean isBold, XSSFCellStyle cellStyle, HorizontalAlignment horizontalAlignment, String dateFormat) {
     if (cellStyle == null) {
       cellStyle = workbook.createCellStyle();
       if (colorIndex != null) {
@@ -582,9 +604,9 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Double value,
       cellStyle.setBorderTop(BorderStyle.THIN);
       cellStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
       
-      if(timeCell) {
+      if(dateFormat != null) {
     	CreationHelper createHelper = workbook.getCreationHelper();
-      	cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("[h]:mm"));
+      	cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(dateFormat));
       }
     }
     return cellStyle;

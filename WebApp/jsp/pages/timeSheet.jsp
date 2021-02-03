@@ -23,10 +23,13 @@
  <c:if test="${weeklyTimeLogStatus == 'disabled'}">
  <h4>Timesheet not enabled</h4>
 </c:if>
-				  
 <script type="text/javascript">
 var taskCreateEnabled = ${weeklyLogTaskEnabled};
 var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
+var howManyOldData = -365;
+<c:if test="${currentUserGroupId == '1018'}">
+howManyOldData = -600;
+</c:if>
 </script>
 
  <ul class="breadcrumb">
@@ -194,4 +197,4 @@ var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
 <script type="text/javascript"
 	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js?version=4.0&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.timesheet.js?version=4.3&v=${fsVersionNumber}"></script> 

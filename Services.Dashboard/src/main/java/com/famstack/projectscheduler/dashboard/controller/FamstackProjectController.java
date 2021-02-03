@@ -396,6 +396,13 @@ public class FamstackProjectController extends BaseFamstackService
     {
         return famstackDashboardManager.searchForProjectNamesCodePoIdJson(query);
     }
+    
+    @RequestMapping(value = "/getAllTasksJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String getAllTasksJson(@RequestParam("projectId") Integer projectId, @RequestParam("howManyOldData") Integer howManyOldData)
+    {
+        return famstackDashboardManager.getAllTasksJson(projectId, howManyOldData);
+    }
 
     @RequestMapping(value = "/createProject", method = RequestMethod.POST)
     @ResponseBody

@@ -327,7 +327,16 @@ function fillProjectDetails(projectDetailsUpdateRowClone,project) {
 		content:'content',
 		template:'<div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-body">'+projectDetailsHtml+'</div></div>'
 	});
-	fillTaskDetails(projectDetailsUpdateRowClone, project.tasks, project.projectCategory);
+	
+	doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getAllTasksJson",{"projectId":project.data, "howManyOldData":howManyOldData} , function(data) {
+		famstacklog(data);
+		var responseJson = JSON.parse(data);
+		fillTaskDetails(projectDetailsUpdateRowClone, responseJson.tasks, project.projectCategory);
+	}, function(e) {
+        famstacklog("ERROR: ", e);
+        famstackalert(e);
+    }, false);
+	
 }
 
 function fillTaskDetails(projectDetailsUpdateRowClone, tasks, projectCategory){

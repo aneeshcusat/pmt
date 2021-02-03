@@ -498,10 +498,10 @@ function fillTimesheetDumpReportData(data){
 		reportBodyHtml += "<td>"+value.accountName+"</td>";
 		reportBodyHtml += "<td>"+value.teamName+"</td>";
 		reportBodyHtml += "<td>"+value.subTeamName+"</td>";
-		reportBodyHtml += "<td>"+value.taskActivityStartTime+"</td>";
+		reportBodyHtml += "<td>"+value.taskActivityStartTimeFormated+"</td>";
 		reportBodyHtml += "<td>"+value.actDurationInHours+"</td>";
 		reportBodyHtml += "<td>"+value.taskCompletionComments+"</td>";
-		reportBodyHtml += "<td>"+value.lastModifiedTime+"</td></tr>";
+		reportBodyHtml += "<td>"+value.lastModifiedTimeFormated+"</td></tr>";
 	});
 	
 	$(".reportDataBody").html( reportBodyHtml );

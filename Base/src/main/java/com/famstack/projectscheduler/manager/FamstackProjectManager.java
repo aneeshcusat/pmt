@@ -389,16 +389,22 @@ public class FamstackProjectManager extends BaseFamstackManager
 		
 	}
 
-	private TaskItem getTaskItemFromProject(ProjectItem projectItem,
-			String taskNameOrId) {
-		if (projectItem != null && projectItem.getTaskItems() != null) {
-			for(TaskItem taskItem : projectItem.getTaskItems()) {
-				if(taskItem.getName().equalsIgnoreCase(taskNameOrId)) {
-					return taskItem;
-				}
-			}
+	private TaskItem getTaskItemFromProject(ProjectItem projectItem, String taskNameOrId) {
+		try{
+		  Map<String, Object> dataMap = new HashMap<>();
+	        dataMap.put("taskName", taskNameOrId);
+	        dataMap.put("projectId", projectItem.getProjectId());
+	        List<TaskItem> taskItems =
+	            ( List<TaskItem>) getFamstackDataAccessObjectManager().executeQuery(HQLStrings.getString("getTaskByNameOrId"),
+			    dataMap);
+	        
+	        if (taskItems != null && taskItems.size() >0 ){
+	        	return taskItems.get(0);
+	        }
+		} catch(Exception e){
+			logError("getTaskItemFromProject failed ", e);
 		}
-		return null;
+	    return null;
 	}
 
 	private void notifyProjectTaskAssignment(ProjectDetails projectDetails, List<TaskDetails> allTaskDetailsList)
@@ -469,13 +475,12 @@ public class FamstackProjectManager extends BaseFamstackManager
     {
         ProjectItem projectItem =
             (ProjectItem) famstackDataAccessObjectManager.getItemById(projectId, ProjectItem.class);
+       
         if (projectItem != null) {
-            Set<TaskItem> taskItems = projectItem.getTaskItems();
-            if (!taskItems.isEmpty()) {
-                for (TaskItem taskItem : taskItems) {
-                    famstackProjectTaskManager.deleteAllTaskActivitiesItem(taskItem.getTaskId());
-                }
-            }
+        	Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("projectId", projectId);
+            famstackDataAccessObjectManager.executeSQLUpdate(HQLStrings.getString("deleteAllUserTaskItemsByTaskIds"), dataMap);
+        	famstackDataAccessObjectManager.executeSQLUpdate(HQLStrings.getString("deleteTaskItemsByProjectId"), dataMap);
             famstackDataAccessObjectManager.deleteItem(projectItem);
         }
     }
@@ -565,7 +570,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     public ProjectStatus getProjectStatus(ProjectItem projectItem)
     {
-
+    	// get project status
         List<TaskStatus> taskStatsList = new ArrayList<>();
         if (projectItem != null) {
             for (TaskItem taskItem : projectItem.getTaskItems()) {
@@ -630,6 +635,7 @@ public class FamstackProjectManager extends BaseFamstackManager
             projectDetails.setId(projectItem.getProjectId());
             projectDetails.setName(projectItem.getName());
             projectDetails.setDeleted(projectItem.getDeleted());
+            //remove
             projectDetails.setProjectTaskDeatils(famstackProjectTaskManager.mapProjectTaskDetails(
                 projectItem.getTaskItems(), isFullLoad));
             projectDetails.setDurationHrs(projectItem.getDurationHrs());
@@ -987,13 +993,14 @@ public class FamstackProjectManager extends BaseFamstackManager
         jsonProductListObject.put("suggestions", jsonArray);
         return jsonProductListObject.toString();
     }
-    
+    // to do check task item
     public String searchForProjectNamesCodePoIdJson(String query)
     {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("name", query + "%");
         dataMap.put("code", query + "%");
         dataMap.put("PONumber", query + "%");
+        dataMap.put("date", new Date());
         
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonProductListObject = new JSONObject();
@@ -1011,29 +1018,39 @@ public class FamstackProjectManager extends BaseFamstackManager
             jsonObject.put("projectPOId", projectItem.getPONumber());
             jsonObject.put("projectCategory", projectItem.getCategory());
             jsonObject.put("projectDate", projectItem.getCompletionTime());
-            
-            if (projectItem.getTaskItems() != null) {
-            	JSONArray jsonTaskArray = new JSONArray();
-            	for (TaskItem taskItem : projectItem.getTaskItems()) {
-            		JSONObject jsonTaskObject = new JSONObject();
-            		jsonTaskObject.put("name", taskItem.getName());
-            		jsonTaskObject.put("id", taskItem.getTaskId());
-            		jsonTaskObject.put("status", taskItem.getStatus());
-            		jsonTaskObject.put("timeTaken", taskItem.getActualTimeTaken());
-            		jsonTaskObject.put("startTime", taskItem.getStartTime());
-            		jsonTaskObject.put("endTime", taskItem.getCompletionTime());
-            		jsonTaskArray.put(jsonTaskObject);
-            	}
-            	
-            	jsonObject.put("tasks", jsonTaskArray);
-            }
+          
             jsonArray.put(jsonObject);
         }
         jsonProductListObject.put("suggestions", jsonArray);
         return jsonProductListObject.toString();
     }
     
-    
+    public String getAllTasksJson(int projectId,int howManyOldData){
+    	Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("projectId", projectId);
+        dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, new Date(), howManyOldData));
+    	List<?> taskItems =
+                famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("searchTasksByProjectId"), dataMap);
+    	JSONArray jsonArray = new JSONArray();
+    	JSONObject jsonObject = new JSONObject();
+    	if (taskItems != null) {
+        	JSONArray jsonTaskArray = new JSONArray();
+        	for (Object taskItemObj : taskItems) {
+        		TaskItem taskItem = (TaskItem) taskItemObj;
+        		JSONObject jsonTaskObject = new JSONObject();
+        		jsonTaskObject.put("name", taskItem.getName());
+        		jsonTaskObject.put("id", taskItem.getTaskId());
+        		jsonTaskObject.put("status", taskItem.getStatus());
+        		jsonTaskObject.put("timeTaken", taskItem.getActualTimeTaken());
+        		jsonTaskObject.put("startTime", taskItem.getStartTime());
+        		jsonTaskObject.put("endTime", taskItem.getCompletionTime());
+        		jsonTaskArray.put(jsonTaskObject);
+        	}
+        	
+        	jsonObject.put("tasks", jsonTaskArray);
+        }
+    	return jsonObject.toString();
+    }
 
     public List<ProjectDetails> getAllProjectDetailsList(Date startDate, Date endDate)
     {
@@ -1976,6 +1993,7 @@ public class FamstackProjectManager extends BaseFamstackManager
 
     }
 
+    //to do remove
     private List<TaskDetails> getUpdatedRecureTaskDetailsList(ProjectItem projectItem)
     {
         List<TaskDetails> taskDetailsList = new ArrayList<>();

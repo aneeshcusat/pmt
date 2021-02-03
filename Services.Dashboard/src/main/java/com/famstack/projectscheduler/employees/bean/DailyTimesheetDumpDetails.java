@@ -32,8 +32,12 @@ public class DailyTimesheetDumpDetails {
 	private Date taskActivityStartTime;
 	private Date lastModifiedTime;
 	
-	public String getLastModifiedTime() {
+	public String getLastModifiedTimeFormated() {
 		return lastModifiedTime != null ? DateUtils.format(lastModifiedTime, DateUtils.DATE_TIME_FORMAT) : "";
+	}
+	
+	public Date getLastModifiedTime() {
+		return lastModifiedTime;
 	}
 	public void setLastModifiedTime(Date lastModifiedTime) {
 		this.lastModifiedTime = lastModifiedTime;
@@ -158,8 +162,11 @@ public class DailyTimesheetDumpDetails {
 	public void setTaskCompletionComments(String taskCompletionComments) {
 		this.taskCompletionComments = taskCompletionComments;
 	}
-	public String getTaskActivityStartTime() {
+	public String getTaskActivityStartTimeFormated() {
 		return taskActivityStartTime != null ? DateUtils.format(taskActivityStartTime, DateUtils.DATE_TIME_FORMAT) : "";
+	}
+	public Date getTaskActivityStartTime() {
+		return taskActivityStartTime;
 	}
 	public String getTaskActivityDate() {
 		return taskActivityStartTime != null ? DateUtils.format(taskActivityStartTime, DateUtils.DATE_FORMAT) : "";

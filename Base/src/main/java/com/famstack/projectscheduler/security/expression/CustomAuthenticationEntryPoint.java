@@ -28,7 +28,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
      * org.springframework.security.core.AuthenticationException)
      */
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.sendError(SC_UNAUTHORIZED);
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws ServletException {
+        try {
+			response.sendError(SC_UNAUTHORIZED);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 }

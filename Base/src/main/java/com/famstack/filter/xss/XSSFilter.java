@@ -20,8 +20,12 @@ public class XSSFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
-        chain.doFilter(new XSSRequestWrapper((HttpServletRequest) request), response);
+        throws ServletException {
+        try {
+			chain.doFilter(new XSSRequestWrapper((HttpServletRequest) request), response);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
 }
