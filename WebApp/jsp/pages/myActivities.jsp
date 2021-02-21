@@ -184,7 +184,7 @@ additional-info-item .pficon {
  <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>       
 <script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.19&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.21&v=${fsVersionNumber}"></script>
 <script>
 
 $(document).ready(function(){

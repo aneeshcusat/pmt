@@ -55,7 +55,8 @@ var categoryCodeMapping = [
 {name: "POC", value: "{division}{accountCode}212"},
 {name: "Free Pilot", value: "{division}214"},
 {name: "Marketing Collateral and Campaigns", value: "{division}{accountCode}215"},
-{name: "Additional support on projects post closure", value: "{division}{accountCode}215"}
+{name: "Additional support on projects post closure", value: "{division}{accountCode}215"},
+{name: "Downtime due to Technical / IT related Issues", value: "{division}{accountCode}216"}
 ]
 
 $('input[name = "ubdivision"]').on("change", function(){
@@ -97,7 +98,8 @@ $("#taskType").on("change", function(){
 
 function disableAdditionalFileds(taskTypeVal){
 	if(taskTypeVal == 'LEAVE' 
-		|| taskTypeVal == 'Leave' 
+		|| taskTypeVal == 'Leave'
+		|| taskTypeVal == 'Downtime due to Technical'
 		|| taskTypeVal == 'Holiday' 
 		|| taskTypeVal == 'LS' 
 		|| taskTypeVal == 'RAI' 
@@ -117,6 +119,7 @@ function disableAdditionalFileds(taskTypeVal){
 function disableClientAdditionalFileds(taskTypeVal){
 	if(taskTypeVal == 'LEAVE' 
 		|| taskTypeVal == 'Leave' 
+		|| taskTypeVal == 'Downtime due to Technical'
 		|| taskTypeVal == 'Holiday' 
 		|| taskTypeVal.startsWith("Internal product")
 		|| taskTypeVal.startsWith("Internal team meetings")
