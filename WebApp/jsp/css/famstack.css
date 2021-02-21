@@ -129,19 +129,19 @@ border-bottom: 1px solid lightgray;
 	font-size: 11px;
 }
 
-.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto;width:300px }
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
 .autocomplete-suggestion {
 	padding: 5px 5px 5px 10px;
     white-space: nowrap;
-    overflow: hidden;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 20px;
     border-top: 1px solid #ccc;
+    font-weight: 600;
 }
 .autocomplete-selected { background: #428bca; color:#fff }
-.autocomplete-suggestions strong { font-weight: normal; color: #13d42d; font-size: 13px; }
+.autocomplete-suggestions strong { font-weight: 600; color: #13d42d; font-size: 13px; }
 .autocomplete-group { padding: 2px 5px; }
-.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000;font-size: 13px; }
 
 .divisionGroup .btn-default:hover, .divisionGroup .btn-default:focus, .divisionGroup .btn-default:active, .divisionGroup .btn-default.active{
     background-color: #d2d1d1;

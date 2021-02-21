@@ -5,6 +5,8 @@
 <c:set var="allUserList" value="${applicationScope.applicationConfiguraion.allUserList}"/>
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="csrToken" value="${applicationScope.applicationConfiguraion.csrTokenRef}"/>
+<c:set var="employeeSkills" value="${applicationScope.applicationConfiguraion.employeeSkills}"/>
+		
 <form:input path="csrToken" type="hidden" value="${csrToken}"/>
 <div class="row">
 	<div class="col-md-12">
@@ -479,11 +481,21 @@
 					</form:select>
 				</div>
 			</div>
-			
 			<div class="form-group">
 				<label class="col-md-3 control-label">Skills</label>
 				<div class="col-md-9">
-					 <input type="text" class="form-control skills" id="skills" name="skills"/>
+					<c:if test="${not empty employeeSkills }">
+					<form:select class="form-control select" id="skills" path="skills" data-live-search="true">
+						<option value="">- select -</option>
+							<c:forEach var="employeeSkillConf"
+								items="${employeeSkills}">
+								<option value="${employeeSkillConf.value}">${employeeSkillConf.name}</option>
+							</c:forEach>
+					</form:select>
+					</c:if>
+					<c:if test="${empty employeeSkills }">
+						<input type="text" class="form-control skills" id="skills" name="skills"/>
+					</c:if>
 				</div>
 			</div>
 			

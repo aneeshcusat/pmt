@@ -470,9 +470,20 @@ function getLastMonday(date) {
 }
 
 function canMoveToPreviousAndEdit(proposedDate){
-	if(weekTLDisableMonthEnabled) {
+	if(weekTLDisableMonthEnabled || restrictTimesheetTillNextDay) {
+		
 		var lastMonthDate = getLastDayOfMonth(new Date());
 		var firstDayOfCurrentMonth = new Date(lastMonthDate);
+		if (restrictTimesheetTillNextDay) {
+			lastMonthDate = new Date();
+			lastMonthDate.setHours(0, 0, 0, 0); ;
+			if(new Date().getHours() < 15) {
+				lastMonthDate.setDate(lastMonthDate.getDate() - 2);
+			} else {
+				lastMonthDate.setDate(lastMonthDate.getDate() - 1);
+			}
+			firstDayOfCurrentMonth = lastMonthDate;
+		}
 		if(lastMonthDate.getTime() >= proposedDate.getTime()) {
 			var index = 0;
 			var tempDate = new Date(proposedDate);
@@ -520,7 +531,21 @@ $('.weekSelector').datepicker({
 	var date = getDateObject($(".weekSelector").val());
 	fillWeeklyDates(date);
 	canMoveToPreviousAndEdit(date);
-});;
+});
+
+
+$('input[type="number"].weekday').on('keyup',function(){
+    v = parseInt($(this).val());
+    console.log(v);
+    min = parseInt($(this).attr('min'));
+    max = parseInt($(this).attr('max'));
+
+    if (v < min){
+        $(this).val(min);
+    } else if (v > max){
+        $(this).val(max);
+    }
+})
 });
 var monthNames = [
             	    "Jan", "Feb", "Mar",

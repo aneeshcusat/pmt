@@ -493,6 +493,25 @@ public class FamstackDashboardController extends BaseFamstackService
         return new ModelAndView("response/appConfigStaticNonBillableCategories");
     }
     
+    @RequestMapping("/appConfigprojectSalesPerson")
+    public ModelAndView appConfigProjectSalesperson(Model model)
+    {
+        return new ModelAndView("response/appConfigProjectSalesperson");
+    }
+    
+    @RequestMapping("/appConfigemployeeSkill")
+    public ModelAndView appConfigEmployeeSkills(Model model)
+    {
+        return new ModelAndView("response/appConfigEmployeeSkills");
+    }
+    
+    @RequestMapping("/appConfigprojectNotification")
+    public ModelAndView appConfigProjectNotificationEmail(Model model)
+    {
+        return new ModelAndView("response/appConfigProjectNotificationEmail");
+    }
+    
+    
     @RequestMapping("/appConfigTaskCategories")
     public ModelAndView appConfigTaskCategories(Model model)
     {

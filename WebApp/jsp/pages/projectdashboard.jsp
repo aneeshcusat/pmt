@@ -3,6 +3,7 @@
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="prjectCategoryEnabled" value="${applicationScope.applicationConfiguraion.prjectCategoryEnabled}"/>
 <c:set var="userSkillHoursMappingEnabled" value="${applicationScope.applicationConfiguraion.userSkillHoursMappingEnabled}"/>
+<c:set var="allowProjectCreationOnlyForSuperAdmin" value="${applicationScope.applicationConfiguraion.allowProjectCreationOnlyForSuperAdmin}"/>
 
  <!-- START BREADCRUMB -->
  <ul class="breadcrumb">
@@ -172,10 +173,10 @@ div#taskDetailsDiv {
 				<div class="panel-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="input-group">
-									<div class="input-group-addon">
-										<span class="fa fa-search"></span>
+								<div class="input-group-btn">
+										<a data-placement="right" style="height: 30px;" class="btn btn-default searchPopOver" data-toggle="popover" data-container="body"  type="button" data-html="true" href="#"><span class="glyphicon glyphicon-search" style="margin:3px 0 0 0"></span></a></li>
 									</div>
 									<input type="text" class="form-control" id="projectSearchBoxId"
 										placeholder="Search for a project.." />
@@ -183,8 +184,28 @@ div#taskDetailsDiv {
 										<button type="button" class="hide btn btn-primary projectSearchBtn"  onclick="searchAllProjectDetails($('#projectSearchBoxId').val());">Search</button>
 									</div>
 								</div>
+							    <div id="popover-content" class="hide">
+							      <form class="form-inline" role="form">
+							        <div class="form-group"> 
+							          <input class="headerSearch search-query orderBookRefNoSearchText" id="orderBookRefNoSearchText" type="text" placeholder="Order Book Ref No..." />
+							          <input onclick="searchProjectsByOrderBookRefOrProposal($('.popover-content #orderBookRefNoSearchText').val(), $('.popover-content #proposalSearchText').val())" class="btn btn-primary" id="projectListSearchButtonNew" type="button" value="Search" />  
+							          <span style="display: block; padding: 5px 0 5px 0"></span>
+							           <input class="headerSearch search-query proposalSearchText" id="proposalSearchText" type="text" placeholder="Proposal Number..." />
+							          <input  onclick="closeSearchPopOver()" class="btn btn-default" id="projectListSearchButtoncancel" type="button" value="Cancel" />
+							        </div>
+							      </form>
+							    </div>
+  
 							</div>
-								<div class="col-md-1">
+								
+			                <div class="col-md-3" >
+					             	 <span id="reportrange" class="dtrange dateFilterDiv">                                            
+            							<span>${dateRange}</span><b class="caret"></b>
+        							</span>
+        								<input style="margin-left:10px" class="btn btn-default dateFilterDiv" type="button" value="Filter" onclick="loadAllProjectDetails($('#daterangeText').val());"></input>
+        								<input type="hidden" id="daterangeText" value="hello" /> 
+        					</div>
+        					<div class="col-md-2">
         							<p style="text-align:center;margin :0 0 0px;">Show Archived</p>
 									<p style="text-align: center;margin :0 0 0px">
 									<div class="slideThree">	
@@ -195,13 +216,6 @@ div#taskDetailsDiv {
 									
 									</p>
 							</div>
-			                <div class="col-md-3" >
-					             	 <span id="reportrange" class="dtrange dateFilterDiv">                                            
-            							<span>${dateRange}</span><b class="caret"></b>
-        							</span>
-        								<input style="margin-left:10px" class="btn btn-default dateFilterDiv" type="button" value="Filter" onclick="loadAllProjectDetails($('#daterangeText').val());"></input>
-        								<input type="hidden" id="daterangeText" value="hello" /> 
-        					</div>
         					<div class="col-md-2" >
         						<c:if test="${currentUser.userRole == 'SUPERADMIN'}">
        							   <select class="form-control" data-live-search="true" id="userGroupSelection">
@@ -213,10 +227,10 @@ div#taskDetailsDiv {
        							</c:if>
         					</div>
 							<div class="col-md-2">
-								  <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
+								  <c:if test="${currentUser.userRole == 'SUPERADMIN' || (currentUser.userRole == 'ADMIN' && !allowProjectCreationOnlyForSuperAdmin)}">
 								<a data-toggle="modal" data-target="#createprojectmodal" onclick="clearProjectFormForCreate()"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
-									Create a new Project
+									Create Project
 								</a>
 								</c:if>
 							</div>
@@ -525,6 +539,7 @@ function clearCreateProjectForm(){
 	
 	$("#proposalNo").val("");
 	$("#orderBookRefNo").val("");
+	$("#orderBookRefNoHidden").val("");
 	$("#projectLocation").prop("selectedIndex",0);
 	$('#projectLocation').selectpicker('refresh');
 	
@@ -605,6 +620,7 @@ function initializeCreateProjectForm(project){
 	
 	$("#proposalNo").val(project.proposalNo);
 	$("#orderBookRefNo").val(project.orderBookRefNo);
+	$("#orderBookRefNoHidden").val(project.orderBookRefNo);
 	
 	$("#projectLocation").val(project.projectLocation);
 	$('#projectLocation').selectpicker('refresh');
@@ -653,15 +669,28 @@ function initializeCreateProjectForm(project){
 		$("input[type='search']").parent().hide();
 	});
 	
-	$('.autocomplete').autocomplete(
+	/* $('.autocomplete.projectName').autocomplete(
 		{
+			minChars : 6,
 			serviceUrl: '${applicationHome}/getProjectJson',
 			onSelect : function(suggestion) {
 				if(!isProjectUpdate && !isProjectDuplicate) {	
 					//loadProjectForClone(suggestion.data);
 				}
 			}
-		});
+		}); */
+	$('.autocomplete.orderBookRefNo').autocomplete(
+			{
+				minChars : 6,
+				noCache:true,
+				serviceUrl: '${applicationHome}/getProjectByOrderRefNoJson',
+				onSelect : function(suggestion) {
+					var oldOrderRefNo = $(".orderBookRefNoHidden").val();					
+					if((!isProjectUpdate && !isProjectDuplicate)  || (suggestion.value != oldOrderRefNo)) {
+						loadProjectForClone(suggestion.data);
+					}
+				}
+			});
 
 	function doAjaxCreateProjectForm() {
 		if (validateEstimatedEndTime() && validateProjectType()) {
@@ -1172,6 +1201,25 @@ var searchAllProjectDetails = function(searchString) {
         famstacklog("ERROR: ", e);
         famstackalert(e);
     });
+}
+
+
+var closeSearchPopOver = function(data){
+	$(".searchPopOver").popover('hide');
+}
+var searchProjectsByOrderBookRefOrProposal = function(orderBookRefNo, proposalNumber) {
+	console.log("orderBookRefNo: " + orderBookRefNo);	
+	console.log("proposalNumber: " + proposalNumber);	
+	if(proposalNumber != "" || orderBookRefNo != "") {
+		var dataString = {"orderBookRefNo" : orderBookRefNo, "proposalNumber" : proposalNumber, includeArchive:$("input.includeArchive").is(":checked")};
+		doAjaxRequest("GET", "${applicationHome}/searchProjectByOrderBookRefOrProposal", dataString, function(data) {
+	        fillProjectData(data);
+	        closeSearchPopOver();
+	    }, function(e) {
+	        famstacklog("ERROR: ", e);
+	        famstackalert(e);
+	    });
+	}
 }
 
 var fillProjectData = function(data){
@@ -1898,4 +1946,13 @@ jQuery(document).ready(function($){
         return false;
     });
 });
+
+$(".searchPopOver").popover({
+    html: true, 
+	content: function() {
+          return $('#popover-content').html();
+        }
+});
+
+
 </script>

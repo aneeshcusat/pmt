@@ -11,6 +11,7 @@
 <c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="weeklyLogTaskEnabled" value='${applicationScope.applicationConfiguraion.weeklyTimeLogNewTaskEnabled}'/>
 <c:set var="weekTLDisableMonthEnabled" value='${applicationScope.applicationConfiguraion.weekTLDisableMonthEnabled}'/>
+<c:set var="restrictTimesheetTillNextDay" value='${applicationScope.applicationConfiguraion.restrictTimesheetTillNextDay}'/>
 
  <c:set var="weeklyTimeLog" value='weeklyTimeLog${currentUserGroupId}'/>   
   <c:set var="weeklyTimeLogStatus" value='disabled'/>  
@@ -26,6 +27,7 @@
 <script type="text/javascript">
 var taskCreateEnabled = ${weeklyLogTaskEnabled};
 var weekTLDisableMonthEnabled = ${weekTLDisableMonthEnabled};
+var restrictTimesheetTillNextDay = ${restrictTimesheetTillNextDay};
 var howManyOldData = -365;
 <c:if test="${currentUserGroupId == '1018'}">
 howManyOldData = -600;
@@ -197,4 +199,4 @@ howManyOldData = -600;
 <script type="text/javascript"
 	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js?version=4.3&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.timesheet.js?version=4.6&v=${fsVersionNumber}"></script> 

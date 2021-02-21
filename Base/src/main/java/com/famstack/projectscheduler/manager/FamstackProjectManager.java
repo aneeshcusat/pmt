@@ -993,6 +993,28 @@ public class FamstackProjectManager extends BaseFamstackManager
         jsonProductListObject.put("suggestions", jsonArray);
         return jsonProductListObject.toString();
     }
+    
+    public String getProjectByOrderRefNoJson(String orderRefNo)
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("orderBookRefNo", orderRefNo + "%");
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonProductListObject = new JSONObject();
+        List<?> projectItems =
+            famstackDataAccessObjectManager.executeQuery(HQLStrings.getString("searchForProjectOrderBookRefNo"), dataMap);
+
+        for (Object projectItemObj : projectItems) {
+            ProjectItem projectItem = (ProjectItem) projectItemObj;
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("value", projectItem.getOrderBookRefNo());
+            jsonObject.put("data", projectItem.getProjectId());
+            jsonObject.put("name", projectItem.getName());
+            jsonArray.put(jsonObject);
+        }
+        jsonProductListObject.put("suggestions", jsonArray);
+        return jsonProductListObject.toString();
+    }
     // to do check task item
     public String searchForProjectNamesCodePoIdJson(String query)
     {
@@ -3317,4 +3339,31 @@ public class FamstackProjectManager extends BaseFamstackManager
 		}
 		return groupName;
 	}
+
+	public List<ProjectDetails> searchProjectDetails(String orderBookRefNo, String proposalNo,
+			Boolean includeArchive) {
+		
+	        List<ProjectDetails> projectDetailsList = new ArrayList<>();
+
+	        Map<String, Object> dataMap = new HashMap<>();
+	        String queryString = HQLStrings.getString("getPrimaryProjectsSearchByProposal");
+	        if(StringUtils.isNotBlank(orderBookRefNo) && StringUtils.isNotBlank(proposalNo)){
+	        	dataMap.put("orderBookRefNo", orderBookRefNo);
+	        	dataMap.put("proposalNo", proposalNo);
+	        	queryString = HQLStrings.getString("getPrimaryProjectsSearchByOrderBookOrProposal");
+	        } else if(StringUtils.isNotBlank(orderBookRefNo)){
+	        	queryString = HQLStrings.getString("getPrimaryProjectsSearchByOrderBook");
+	        	dataMap.put("orderBookRefNo", orderBookRefNo);
+	        } else {
+	        	dataMap.put("proposalNo", proposalNo);
+	        }
+	        
+	        List<?> projectItemList =
+	            famstackDataAccessObjectManager.executeQueryOrderedBy(
+	            		queryString, dataMap,
+	                HQLStrings.getString("getPrimaryProjectsItems-OrderBy"));
+
+	        getProjectsList(projectDetailsList, projectItemList, false, includeArchive);
+	        return projectDetailsList;
+		}
 }

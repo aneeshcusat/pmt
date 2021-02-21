@@ -532,6 +532,16 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		return getAppConfigValues("staticNonBillableCategory", "99999");
 	}
 	
+	public List<AppConfValueDetails> getEmployeeSkills() {
+		return getAppConfigValues("employeeSkill", "99999");
+	}
+	public List<AppConfValueDetails> getProjectNotifications() {
+		return getAppConfigValues("projectNotification", "99999");
+	}
+	public List<AppConfValueDetails> getProjectSalesPersons() {
+		return getAppConfigValues("projectSalesPerson", "99999");
+	}
+	
 	public List<AppConfValueDetails> getTaskProjectCategories() {
 		return getCategories("taskProjectCategoryMappings");
 	}
@@ -757,6 +767,15 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		return false;
 	}
 	
+	public boolean isRestrictTimesheetTillNextDay() {
+		String value = getSingleValueAppConfig("restrictTimesheetTillNextDay",
+				getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean isWeeklyTimeLogNewTaskEnabled() {
 		String value = getSingleValueAppConfig("weeklyTimeLogNewTask",
 				getFamstackApplicationConfiguration().getCurrentUserGroupId());
@@ -807,6 +826,14 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 	
 	public boolean isUserSkillHoursMappingEnabled() {
 		String value = getSingleValueAppConfig("userSkillHoursMappingEnabled",getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		if (value != null && "enabled".equalsIgnoreCase(value)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isAllowProjectCreationOnlyForSuperAdmin() {
+		String value = getSingleValueAppConfig("allowProjectCreationOnlyForSuperAdmin",getFamstackApplicationConfiguration().getCurrentUserGroupId());
 		if (value != null && "enabled".equalsIgnoreCase(value)) {
 			return true;
 		}

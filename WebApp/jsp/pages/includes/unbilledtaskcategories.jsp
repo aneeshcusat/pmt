@@ -34,6 +34,7 @@
 		<option value="Administrative and management">Administrative and management</option>
 		<option value="Client onsite trips and visits">Client onsite trips and visits</option>
 		<option value="Compliance Management">Compliance Management</option>
+		<option value="Downtime due to Technical / IT related Issues">Downtime due to Technical / IT related Issues</option>
 		<option value="Free Pilot">Free Pilot</option>
 		<option value="Holiday">Holiday</option>
 		<option value="Internal product/solution development and support">Internal product/solution development and support</option>

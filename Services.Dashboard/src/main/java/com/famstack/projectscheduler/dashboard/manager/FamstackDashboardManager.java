@@ -2524,4 +2524,15 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return null;
 		
 	}
+
+	public String getProjectByOrderRefNoJson(String orderRefNo) {
+		return projectManager.getProjectByOrderRefNoJson(orderRefNo);
+	}
+
+	public List<ProjectDetails> searchProjectByOrderBookRefOrProposal(String orderBookRefNo, String proposalNumber,
+			Boolean includeArchive) {
+		return projectManager
+		.searchProjectDetails(orderBookRefNo,proposalNumber, includeArchive);
+
+	}
 }

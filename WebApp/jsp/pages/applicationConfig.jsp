@@ -153,6 +153,89 @@ tr.clickable:hover {
 						</table>
 					</div>
 					<div class='row tab-pane active' id="tab11">
+					
+					<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th>Client Name/Salesperson</th>
+									<th width="70px" style="text-align: center">
+										<c:if test="${currentUserGroupId == '99999' }">
+								
+									<a
+										data-toggle="modal" data-target="#createAppModel"  onclick="setAppConfigAction('createProjectSalesperson();')"
+										parentid="0"><i
+											class="fa fa-plus fa-2x" aria-hidden="true"
+											style="color: #95b75d;float:right"></i></a>
+											</c:if>
+											</th>
+								</tr>
+							<thead>
+								<tbody id="projectSalesPersonDiv">
+									<%@include file="response/appConfigProjectSalesperson.jsp"%>
+							    </tbody>
+						</table>
+						
+						
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th>Employee Skills</th>
+									<th width="70px" style="text-align: center">
+										<c:if test="${currentUserGroupId == '99999' }">
+								
+									<a
+										data-toggle="modal" data-target="#createAppModel"  onclick="setAppConfigAction('createEmployeeSkills();')"
+										parentid="0"><i
+											class="fa fa-plus fa-2x" aria-hidden="true"
+											style="color: #95b75d;float:right"></i></a>
+											</c:if>
+											</th>
+								</tr>
+							<thead>
+								<tbody id="employeeSkillDiv">
+									<%@include file="response/appConfigEmployeeSkills.jsp"%>
+							    </tbody>
+						</table>
+						
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th>Project Notification Email</th>
+									<th width="70px" style="text-align: center">
+										<c:if test="${currentUserGroupId == '99999' }">
+								
+									<a
+										data-toggle="modal" data-target="#createAppModel"  onclick="setAppConfigAction('createProjectNotificationEmail();')"
+										parentid="0"><i
+											class="fa fa-plus fa-2x" aria-hidden="true"
+											style="color: #95b75d;float:right"></i></a>
+											</c:if>
+											</th>
+								</tr>
+							<thead>
+								<tbody id="projectNotificationDiv">
+									<%@include file="response/appConfigProjectNotificationEmail.jsp"%>
+							    </tbody>
+						</table>
+					<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Restrict Project Creation Only for SuperAdmin</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="allowProjectCreationOnlyForSuperAdminSelectId">
+										<option value="disabled">Disabled</option>
+										<option value="enabled">Enabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="restricProjectCreation();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					
 						<table class="table table table-bordered data-table">
 							<thead>
 								<tr style="font-weight: bold">
@@ -565,6 +648,24 @@ tr.clickable:hover {
 								</tr>
 							</tbody>
 						</table>
+						<table class="table table table-bordered data-table">
+							<thead>
+								<tr style="font-weight: bold">
+									<th colspan="2">Restrict timesheet till Next day 3 pm</th>
+								</tr>
+							<thead>
+							<tbody>
+								<tr>
+									<td>
+									<select class="form-control select" id="restrictTimesheetTillNextDaySelectId">
+										<option value="disabled">Disabled</option>
+										<option value="enabled">Enabled</opiton>
+									</select>
+									</td>
+									<td width="70px"><a href="#" onclick="createRestrictTimesheetTillNextDay();" style="float:right"><i class="fa fa-save fa-2x" style="color:blue" aria-hidden="true"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					
 					
@@ -708,6 +809,15 @@ tr.clickable:hover {
   </c:forEach>
   </c:if>
   
+  <c:set var="allowProjectCreationOnlyForSuperAdminSelectId" value='allowProjectCreationOnlyForSuperAdmin${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[allowProjectCreationOnlyForSuperAdminSelectId] && not empty appConfigMap[allowProjectCreationOnlyForSuperAdminSelectId].appConfValueDetails}">
+  <c:forEach var="allowProjectCreationOnlyForSuperAdminConf" items="${appConfigMap[allowProjectCreationOnlyForSuperAdminSelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#allowProjectCreationOnlyForSuperAdminSelectId").val('${allowProjectCreationOnlyForSuperAdminConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
   
    <c:set var="sameDayOnlyTaskEnabledSelectId" value='sameDayOnlyTask${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[sameDayOnlyTaskEnabledSelectId] && not empty appConfigMap[sameDayOnlyTaskEnabledSelectId].appConfValueDetails}">
@@ -763,6 +873,16 @@ tr.clickable:hover {
   	 </script>
   </c:forEach>
   </c:if>
+  
+  <c:set var="restrictTimesheetTillNextDaySelectId" value='restrictTimesheetTillNextDay${currentUserGroupId}'/>   
+  <c:if test="${not empty appConfigMap[restrictTimesheetTillNextDaySelectId] && not empty appConfigMap[restrictTimesheetTillNextDaySelectId].appConfValueDetails}">
+  <c:forEach var="restrictTimesheetTillNextDaySelectIdConf" items="${appConfigMap[restrictTimesheetTillNextDaySelectId].appConfValueDetails}">
+  	 <script type="text/javascript">
+  	 	$("#restrictTimesheetTillNextDaySelectId").val('${restrictTimesheetTillNextDaySelectIdConf.value}');
+  	 </script>
+  </c:forEach>
+  </c:if>
+  
   <c:set var="staticNonBillableCategorySelected" value='staticNonBillableCategoryEnabled${currentUserGroupId}'/>   
   <c:if test="${not empty appConfigMap[staticNonBillableCategorySelected] && not empty appConfigMap[staticNonBillableCategorySelected].appConfValueDetails}">
   <c:forEach var="staticNonBillableCategoryConf" items="${appConfigMap[staticNonBillableCategorySelected].appConfValueDetails}">
@@ -811,6 +931,16 @@ tr.clickable:hover {
 	 createApplicationConfig('nonBillableCategory');
  }
  
+ function createProjectSalesperson(){
+	 createApplicationConfig('projectSalesPerson');
+ }
+ 
+ function createEmployeeSkills(){
+	 createApplicationConfig('employeeSkill');
+ }
+ function createProjectNotificationEmail(){
+	 createApplicationConfig('projectNotification');
+ }
  function createStaticNonBillableCategory(){
 	 createApplicationConfig('staticNonBillableCategory');
  }
@@ -833,6 +963,7 @@ tr.clickable:hover {
 		 refreshProjectCategory();
 		 refreshTaskCategory();
 		 refreshNonBillableCategory();
+		 refreshMultivalueList(type);
 		 $('#createAppModel').modal('hide');
 	    },function(error) {
 	    	famstacklog("ERROR: ", error);
@@ -901,7 +1032,18 @@ tr.clickable:hover {
 	    	famstacklog("ERROR: ", error);
 	    });
  }
+ 
+ function createRestrictTimesheetTillNextDay(){
+	 var input1 = $("#restrictTimesheetTillNextDaySelectId").val();
+	 var type = "restrictTimesheetTillNextDay";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
 
+ 
  function projectRecurringByCode(){
 	 var input1 = $("#projectRecurringByCodeSelectId").val();
 	 var type = "projectRecurringByCode";
@@ -946,6 +1088,16 @@ tr.clickable:hover {
  function projectTaskActivityDelete(){
 	 var input1 = $("#projectTaskActivitySelectId").val();
 	 var type = "projectTaskActivityDelete";
+	 var dataString = {input1: input1, input2: input1,type: type};
+	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
+	    },function(error) {
+	    	famstacklog("ERROR: ", error);
+	    });
+ }
+ 
+ function restricProjectCreation(){
+	 var input1 = $("#allowProjectCreationOnlyForSuperAdminSelectId").val();
+	 var type = "allowProjectCreationOnlyForSuperAdmin";
 	 var dataString = {input1: input1, input2: input1,type: type};
 	 doAjaxRequest("POST", "${applicationHome}/updateAppConfValue", dataString ,function(data) {
 	    },function(error) {
@@ -1023,6 +1175,9 @@ tr.clickable:hover {
         	 refreshProjectCategory();
         	 refreshTaskCategory();
         	 refreshNonBillableCategory();
+        	 refreshMultivalueList("employeeSkill");
+        	 refreshMultivalueList("projectNotification");
+        	 refreshMultivalueList("projectSalesPerson");
          }
          $(".message-box").removeClass("open");
      }, function(e) {
@@ -1070,6 +1225,14 @@ tr.clickable:hover {
  }, function(e) {
      famstacklog("ERROR: ", e);
  }, false);
+ }
+ 
+ function refreshMultivalueList(type){
+	 doAjaxRequestWithGlobal("GET", "${applicationHome}/appConfig"+type, {}, function(data) {
+	        $("#"+type+"Div").html(data);
+    }, function(e) {
+        famstacklog("ERROR: ", e);
+    }, false);
  }
  
  

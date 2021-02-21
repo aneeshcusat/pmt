@@ -194,6 +194,20 @@ public class FamstackProjectController extends BaseFamstackService
         modelAndView.setViewName("response/projectdashboardList");
         return modelAndView;
     }
+    
+    @RequestMapping("/searchProjectByOrderBookRefOrProposal")
+    public ModelAndView searchProjectByOrderBookRefOrProposal(
+        @RequestParam(value = "proposalNumber", defaultValue = "") String proposalNumber,
+        @RequestParam(value = "orderBookRefNo", defaultValue = "") String orderBookRefNo,
+        @RequestParam(value = "includeArchive", defaultValue = "false") Boolean includeArchive, Model model)
+    {
+        
+        List<ProjectDetails> projectData = famstackDashboardManager.searchProjectByOrderBookRefOrProposal(orderBookRefNo, proposalNumber, includeArchive);
+
+        ModelAndView modelAndView = getProjectPageModelView(projectData);
+        modelAndView.setViewName("response/projectdashboardList");
+        return modelAndView;
+    }
 
     @RequestMapping(value = "/mileStones", method = RequestMethod.GET)
     public ModelAndView getMilestones()
@@ -389,6 +403,14 @@ public class FamstackProjectController extends BaseFamstackService
     {
         return famstackDashboardManager.getProjectNameJson(query);
     }
+    
+    @RequestMapping(value = "/getProjectByOrderRefNoJson", method = RequestMethod.GET)
+    @ResponseBody
+    public String getProjectByOrderRefNoJson(@RequestParam("query") String orderRefNo)
+    {
+        return famstackDashboardManager.getProjectByOrderRefNoJson(orderRefNo);
+    }
+    
     
     @RequestMapping(value = "/getProjectNamesCodePoIdJson", method = RequestMethod.GET)
     @ResponseBody

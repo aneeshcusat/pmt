@@ -51,25 +51,25 @@
 			      	</td>
 			      	
 			      	<td>
-			      		 <input type="number"  min="0" class="form-control weekday day1"/>
+			      		 <input type="number"  min="0" max="18" class="form-control weekday day1"/>
 			      	</td>
 			      	<td>
-			      		<input type="number"  min="0" class="form-control weekday day2"/>
+			      		<input type="number"  min="0" max="18" class="form-control weekday day2"/>
 			      	</td>
 			      	<td>
-			      		<input type="number"  min="0" class="form-control weekday day3"/>
+			      		<input type="number"  min="0" max="18" class="form-control weekday day3"/>
 			      	</td>
 			      	<td>
-			      		<input type="number"  min="0" class="form-control weekday day4"/>
+			      		<input type="number"  min="0" max="18" class="form-control weekday day4"/>
 			      	</td>
 			      	<td>
-			      		<input type="number"  min="0" class="form-control weekday day5"/>
+			      		<input type="number"  min="0" max="18" class="form-control weekday day5"/>
 			      	</td>
 			      	<td>
-			      		<input type="number"  min="0" class="form-control weekday day6"/>
+			      		<input type="number"  min="0" max="18" class="form-control weekday day6"/>
 			      	</td>
 			      	<td>
-			      		<input type="number"  min="0" class="form-control weekday day7"/>
+			      		<input type="number"  min="0" max="18" class="form-control weekday day7"/>
 			      	</td>
 			      	<td style="background: #f1f5f9;padding-top: 15px;font-size: 10px;font-weight: bold;">
 			      		<span class="weekdayTotal" style="padding-left: 5px">00:00</span>

@@ -18,6 +18,7 @@ import com.famstack.projectscheduler.BaseFamstackService;
 import com.famstack.projectscheduler.configuration.FamstackApplicationConfiguration;
 import com.famstack.projectscheduler.contants.NotificationType;
 import com.famstack.projectscheduler.datatransferobject.UserItem;
+import com.famstack.projectscheduler.employees.bean.AppConfValueDetails;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.ProjectDetails;
 import com.famstack.projectscheduler.employees.bean.TaskDetails;
@@ -276,6 +277,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
 				|| notificationType == NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY_DEFAULTER
 				|| notificationType == NotificationType.WEEKLY_PO_ESTIMATION_REPORT
 				|| notificationType == NotificationType.PROJECT_CREATE
+				|| notificationType == NotificationType.PROJECT_UPDATE
         		)
             ? true : false;
     }
@@ -286,7 +288,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         notificationEmailItem = new EmailNotificationItem();
         ProjectDetails projectDetails = (ProjectDetails) object;
         notificationEmailItem.getData().put("url", getFamstackApplicationConfiguration().getUrl());
-        notificationEmailItem.setToList(getToListForProjectUpdates(projectDetails));
+        notificationEmailItem.setToList(getToListForProjectUpdates(projectDetails, true));
         notificationEmailItem.setSubscriberList(getSubscribersIdForProjectUpdates(projectDetails));
         notificationEmailItem.getData().put("projectId", projectDetails.getId());
         notificationEmailItem.getData().put("name", projectDetails.getName());
@@ -334,7 +336,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
             ProjectDetails projectDetails = (ProjectDetails) dataMap.get("projectDetails");
 
             if (projectDetails != null) {
-                notificationEmailItem.setToList(getToListForProjectUpdates(projectDetails));
+                notificationEmailItem.setToList(getToListForProjectUpdates(projectDetails, false));
                 notificationEmailItem.setSubscriberList(getSubscribersIdForProjectUpdates(projectDetails));
             }
             notificationEmailItem.getToList().addAll(getToListForTaskUpdate(taskDetails));
@@ -388,7 +390,7 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         }
     }
 
-    private Set<String> getToListForProjectUpdates(ProjectDetails projectDetails)
+    private Set<String> getToListForProjectUpdates(ProjectDetails projectDetails, boolean targetToGroup)
     {
         Set<String> toList = new HashSet<>();
         String reporterEmail = null;
@@ -399,6 +401,15 @@ public class FamstackNotificationServiceManager extends BaseFamstackService
         if (StringUtils.isNotBlank(watchers)) {
             String[] watchersArray = watchers.split(",");
             toList.addAll(Arrays.asList(watchersArray));
+        }
+        
+        if(targetToGroup) {
+        List<AppConfValueDetails> appConfValueDetails = getFamstackApplicationConfiguration().getProjectNotifications();
+        if (appConfValueDetails != null) {
+			for(AppConfValueDetails appConfValueDetail : appConfValueDetails) {
+				toList.add(appConfValueDetail.getValue());
+			}
+		  }
         }
         if (reporterEmail !=null) {
         	toList.add(reporterEmail);

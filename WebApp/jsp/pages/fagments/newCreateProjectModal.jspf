@@ -11,6 +11,9 @@
 <c:set var="prjectCategoryEnabled"
 	value="${applicationScope.applicationConfiguraion.prjectCategoryEnabled}" />
 	<c:set var="csrToken" value="${applicationScope.applicationConfiguraion.csrTokenRef}"/>
+	
+<c:set var="projectSalesPersons" value="${applicationScope.applicationConfiguraion.projectSalesPersons}"/>
+	
 <style>
 </style>
 <form:input path="csrToken" type="hidden" value="${csrToken}"/>
@@ -47,9 +50,24 @@
 	<div class="col-md-7">
 
 		<div class="form-group required">
+			<label class="col-md-3 control-label">Order book Ref No.</label>
+			<div class="col-md-4">
+				<form:input type="text" class="form-control autocomplete orderBookRefNo" id="orderBookRefNo"
+					path="orderBookRefNo" autocomplete="false" />
+					<input type="hidden" class="orderBookRefNoHidden" id="orderBookRefNoHidden"/>
+			</div>
+		
+			<label class="col-md-2 control-label">Proposal No.</label>
+			<div class="col-md-3">
+				<form:input type="text" class="form-control" id="proposalNo"
+					path="proposalNo" autocomplete="false" />
+			</div>
+		</div>
+		
+		<div class="form-group required">
 			<label class="col-md-3 control-label">Project Name </label>
 			<div class="col-md-9">
-				<form:input type="text" class="autocomplete form-control"
+				<form:input type="text" class="form-control projectName"
 					id="projectName" path="name" />
 			</div>
 		</div>
@@ -114,8 +132,21 @@
 			<label class="col-md-2 control-label">Client Partner/Sales
 				person</label>
 			<div class="col-md-3">
-				<form:input path="clientPartner" id="clientPartner" name="clientPartner"
+			
+			<c:if test="${not empty projectSalesPersons }">
+					<form:select class="form-control select" path="clientPartner" id="clientPartner" name="clientPartner" data-live-search="true">
+						<option value="">- select -</option>
+							<c:forEach var="projectSalesPersonConf"
+								items="${projectSalesPersons}">
+								<option value="${projectSalesPersonConf.value}">${projectSalesPersonConf.name}</option>
+							</c:forEach>
+					</form:select>
+					</c:if>
+					<c:if test="${empty projectSalesPersons }">
+						<form:input path="clientPartner" id="clientPartner" name="clientPartner"
 					class="form-control"/>
+					</c:if>
+				
 			</div>
 
 
@@ -244,21 +275,6 @@
 			</div>
 		</div>
 
-		<div class="form-group required">
-			<label class="col-md-3 control-label">Order book Ref No.</label>
-			<div class="col-md-9">
-				<form:input type="text" class="form-control" id="orderBookRefNo"
-					path="orderBookRefNo" autocomplete="false" />
-			</div>
-		</div>
-
-		<div class="form-group required">
-			<label class="col-md-3 control-label">Proposal No.</label>
-			<div class="col-md-9">
-				<form:input type="text" class="form-control" id="proposalNo"
-					path="proposalNo" autocomplete="false" />
-			</div>
-		</div>
 		<div class="form-group required">
 			<label class="col-md-3 control-label">Project code</label>
 			<div class="col-md-3">

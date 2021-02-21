@@ -166,11 +166,23 @@ var site_settings = "";
     	if(error.status != 401 && error.status != 0) {
 	       	var subject = "[${serverInstanceName}]["+ error.url + "][" +error.status +"] : ["+ exception +"] :";
 	    	var message = "Error has occured - user name [${currentUser.userId}] Page URL ["+window.location.href+"]" ;
-	    	doAjaxRequestWithGlobal("GET", "${applicationHome}/triggerEmail",  {subject:subject,body:message},function(data) {
-				famstacklog("data: ", data);
-		    },function(error) {
-		    	famstacklog("ERROR: ", error);
-		    },false);
+	    	
+	    	 $.ajax({
+	    	       type : "GET",
+	    	       url : "${applicationHome}/triggerEmail" ,
+	    	       data: {subject:subject,body:message},
+	    	       timeout : 60000,
+	    	       global:false,
+	    	       beforeSend: function(jqXHR, settings) {
+	    	           jqXHR.url = settings.url;
+	    	       },
+	    	       success : function(data) {
+	    	    	   famstacklog("data: ", data);
+	    	       },
+	    	       error : function(jqXHR, exception) {
+	    	    	   famstacklog("data: ", data);
+	    	       }
+	    	   });
 	    }
     }
     
