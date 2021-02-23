@@ -99,7 +99,7 @@ $("#taskType").on("change", function(){
 function disableAdditionalFileds(taskTypeVal){
 	if(taskTypeVal == 'LEAVE' 
 		|| taskTypeVal == 'Leave'
-		|| taskTypeVal == 'Downtime due to Technical'
+		|| taskTypeVal.startsWith('Downtime due to Technical')
 		|| taskTypeVal == 'Holiday' 
 		|| taskTypeVal == 'LS' 
 		|| taskTypeVal == 'RAI' 
@@ -119,7 +119,7 @@ function disableAdditionalFileds(taskTypeVal){
 function disableClientAdditionalFileds(taskTypeVal){
 	if(taskTypeVal == 'LEAVE' 
 		|| taskTypeVal == 'Leave' 
-		|| taskTypeVal == 'Downtime due to Technical'
+		|| taskTypeVal.startsWith('Downtime due to Technical')
 		|| taskTypeVal == 'Holiday' 
 		|| taskTypeVal.startsWith("Internal product")
 		|| taskTypeVal.startsWith("Internal team meetings")
