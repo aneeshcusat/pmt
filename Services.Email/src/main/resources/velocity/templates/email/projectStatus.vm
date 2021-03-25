@@ -19,29 +19,68 @@
 
                   <h1>Project status!</h1>
 
-                  <br>Name : $!name
-                 	<br>Code : $!code
-					<br>projectType: $!projectType
-					<br>accountName: $!accountName
-					<br>category : $!category
-					<br>priority :$!priority
-					<br>startTime :$!startTime
-					<br>completionTime : $!completionTime
-					<br>duration :$!duration
-					<br>PONumber: $!PONumber
-					<br>clientName :$!clientName
-					<br>teamName : $!teamName
-					<br>subTeamName : $!subTeamName
-					<br>has ppi : $!ppi
-					<br>newCategory : $!newCategory
-					<br>sowLineItem : $!sowLineItem
-					<br>orderBookRefNo : $!orderBookRefNo
-					<br>proposalNo : $!proposalNo
-					<br>projectLocation : $!projectLocation
-					<br>clientPartner : $!clientPartner
-					<br>subTeamName : $!subTeamName
-					<br>hoursUserSkillMonthly : $!hoursUserSkillMonthly
-                  <br>
+				<table>
+					<tr>
+						<td>Project Name :</td><td>$!name</td>
+					</tr>
+					<tr>
+						<td>Project Number :</td><td>$!code</td>
+					</tr>
+					<tr>
+						<td>Project Type :</td><td>$!projectType</td>
+					</tr>
+					<tr>
+						<td>Account Name :</td><td>$!accountName</td>
+					</tr>
+					<tr>
+						<td>Category :</td><td>$!category</td>
+					</tr>
+					<tr>
+						<td>Priority :</td><td>$!priority</td>
+					</tr>
+					<tr>
+						<td>Start Date Time :</td><td>$!startTime</td>
+					</tr>
+					<tr>
+						<td>Completion Date Time :</td><td>$!completionTime</td>
+					</tr>
+					<tr>
+						<td>Duration :</td><td>$!duration</td>
+					</tr>
+					<tr>
+						<td>Purchase Order Number :</td><td>$!PONumber</td>
+					</tr>
+					<tr>
+						<td>Client POC :</td><td>$!clientName</td>
+					</tr>
+					<tr>
+						<td>Team Name :</td><td>$!teamName</td>
+					</tr>
+					<tr>
+						<td>Sub Team Name :</td><td>$!subTeamName</td>
+					</tr>
+					<tr>
+						<td>Has PII  :</td><td>$!ppi</td>
+					</tr>
+					<tr>
+						<td>SOW Line Item :</td><td>$!sowLineItem</td>
+					</tr>
+					<tr>
+						<td>Order Book Ref No :</td><td>$!orderBookRefNo</td>
+					</tr>
+					<tr>
+						<td>Proposal No :</td><td>$!proposalNo</td>
+					</tr>
+					<tr>
+						<td>Project Location :</td><td>$!projectLocation</td>
+					</tr>
+					<tr>
+						<td>Client Partner :</td><td>$!clientPartner</td>
+					</tr>
+					<tr>
+						<td>Project Estimation By User Skills :</td><td>$!hoursUserSkillMonthly</td>
+					</tr>
+				</table>
 
                   <table width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
                     <tbody><tr>

@@ -694,6 +694,31 @@ function initializeCreateProjectForm(project){
 
 	function doAjaxCreateProjectForm() {
 		if (validateEstimatedEndTime() && validateProjectType()) {
+			if(userSkillHoursMappingEnabled) {
+				var isPPI = $("#ppi-true").val();
+				var watchersArray = $("#watchers").val().split(",");
+				if (!watchersArray.includes("DG.DAA@course5i.com")) {
+					watchersArray.push("DG.DAA@course5i.com");
+				}
+				if (!watchersArray.includes("DG.MIA@course5i.com")) {
+					watchersArray.push("DG.MIA@course5i.com");
+				}
+				if ($('#ppi-true').is(':checked')) {
+					if (!watchersArray.includes("datacompliance@course5i.com")) {
+						watchersArray.push("datacompliance@course5i.com");
+					}
+				} else {
+					jQuery.grep(watchersArray, function(value) {
+						  return value != "datacompliance@course5i.com";
+					})
+				}
+				jQuery.grep(watchersArray, function(value) {
+					  return value != "";
+				})
+				 $("#watchers").val(watchersArray.join());
+				console.log(watchersArray.join());	
+			}
+			
 			$('#createProjectFormId').submit();
 		}
 	}
