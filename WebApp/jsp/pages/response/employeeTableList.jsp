@@ -33,6 +33,7 @@
 				<th>Employment Type</th>	
 				
 				<th>IsFunded</th>
+				<th>Exit Date</th>
 				<th>IsDeleted</th>
 				<th>LoggedIn?</th>
 				<th></th>

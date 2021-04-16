@@ -120,6 +120,7 @@ function saveCurrentProjectWeekData(clearProjects){
 				}
 			} else {
 				 showErrorMessage("Unable to save data, please refresh the page and try again");
+				 getSelectedWeekLoggedData();
 			}
 			$("#weeklyTimeLogSaveButton").removeAttr("disabled");
 			$("#weeklyTimeLogSaveNextButton").removeAttr("disabled");

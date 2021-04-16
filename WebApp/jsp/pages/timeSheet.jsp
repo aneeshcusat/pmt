@@ -121,10 +121,10 @@ howManyOldData = -600;
         </div>
          <div class="row loggedTimeDiv hide">
         <div class="col-md-12">
-        	<div class="col-md-10"><span style="font-size: 12px; font-weight: bold">Logged hours for this week</span></div>
+        	<div class="col-md-9"><span style="font-size: 12px; font-weight: bold">Logged hours for this week</span></div>
         	<div class="col-md-2">
 				<c:if  test="${hasFullPermissionVar eq 'true'}">
-					<select class="form-control loggedUserIdSelector">
+					<select class="form-control loggedUserIdSelector" style="padding-top: 0px;padding-bottom: 0px; height: 20px;">
 					<option value="">All</option>
 					<c:if test="${not empty userMap}">
   							<c:forEach var="user" items="${userMap}">
@@ -138,6 +138,9 @@ howManyOldData = -600;
    					</c:if>
    					</select>
    				</c:if>
+   			</div>
+   			<div class="col-md-1">
+   				<a href="javascript:getSelectedWeekLoggedData();" title="Refresh Week" class="float:right"><span class="fa fa-refresh fa-lg" style="font-weight: bold; color:blue"></span></a>
         	</div>
         </div>
         <div class="col-md-12" style="padding-top: 10px;padding-bottom: 10px">
@@ -199,4 +202,4 @@ howManyOldData = -600;
 <script type="text/javascript"
 	src="${js}/plugins/select2/select2.full.min.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript"
-	src="${js}/famstack.timesheet.js?version=4.6&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.timesheet.js?version=4.7&v=${fsVersionNumber}"></script> 
