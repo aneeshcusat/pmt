@@ -385,6 +385,15 @@ public class ProjectDetails
         }
         return 0;
     }
+    
+    public boolean isProjectDateExceed()
+    {
+    	if (getCompletionTime() != null) {
+    		Date completionDate = DateUtils.tryParse(getCompletionTime(), DateUtils.DATE_TIME_FORMAT);
+    		return completionDate.before(new Date());   
+    	}
+    	return false;
+    }
 
     public Set<Integer> getContributers()
     {

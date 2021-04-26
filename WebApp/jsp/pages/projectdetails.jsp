@@ -337,7 +337,7 @@
                           </div>
                           
                            <div class="col-md-4 text-right">
-                            <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
+                            <c:if test="${!projectDetails.projectDateExceed && (currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD')}">
                             <a data-toggle="modal"  data-backdrop="static" data-target="#createtaskmodal" onclick="clearTaskDetails();" class="btn btn-success line-height-15" 
                             >
                                <span class="fa fa-plus"></span> Create a Task</a>

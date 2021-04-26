@@ -5,6 +5,7 @@ var accountNameCodetMapping = [
  {name:"Dell", value:"DEL"},
  {name:"Facebook", value:"FCB"},
  {name:"Fuel Cycle", value:"FCL"},
+ {name:"Ceribell", value:"GBL"},
  {name:"Google", value:"GOO"},
  {name:"Grammarly", value:"GRY"},
  {name:"HSA-Yemen", value:"HSA"},

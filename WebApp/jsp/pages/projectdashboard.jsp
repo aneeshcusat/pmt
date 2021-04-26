@@ -696,7 +696,11 @@ function initializeCreateProjectForm(project){
 		if (validateEstimatedEndTime() && validateProjectType()) {
 			if(userSkillHoursMappingEnabled) {
 				var isPPI = $("#ppi-true").val();
-				var watchersArray = $("#watchers").val().split(",");
+				var watchersArray = [];
+				if ($("#watchers").val() != null && $("#watchers").val() != "") {
+					watchersArray = $("#watchers").val().split(",");
+				}
+				
 				if (!watchersArray.includes("DG.DAA@course5i.com")) {
 					watchersArray.push("DG.DAA@course5i.com");
 				}
