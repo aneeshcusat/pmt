@@ -1425,6 +1425,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			projectTaskActivityDetails.setClientName((String) data[37]);
 			projectTaskActivityDetails.setRecordedTaskStartTime((Date) data[38]);
 			projectTaskActivityDetails.setLastModifiedTime((Date) data[39]);
+			projectTaskActivityDetails.setProjectSubType((String) data[40]);
 			projectTaskActivityDetails.setUserGroupId(userGroupId);
 
 			String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);

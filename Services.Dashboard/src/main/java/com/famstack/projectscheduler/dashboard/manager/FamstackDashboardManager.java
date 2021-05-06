@@ -2445,6 +2445,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				ProjectDetailsBySkillsResponse projectDetailsBySkillsResponse = projectDetailsBySkillsResponsesCacheMap.get(key);
 				if(projectDetailsBySkillsResponse == null) {
 					projectDetailsBySkillsResponse = new ProjectDetailsBySkillsResponse();
+					projectDetailsBySkillsResponse.setProjectSubType(projectTaskActivityDetail.getProjectSubType());
 					 projectDetailsBySkillsResponse.setAccount(projectTaskActivityDetail.getAccountName());
 					projectDetailsBySkillsResponse.setMonthYear(monthYear);
 		            projectDetailsBySkillsResponse.setTeam(getFamstackApplicationConfiguration().getUserGroupMap().get(projectTaskActivityDetail.getUserGroupId()).getName());

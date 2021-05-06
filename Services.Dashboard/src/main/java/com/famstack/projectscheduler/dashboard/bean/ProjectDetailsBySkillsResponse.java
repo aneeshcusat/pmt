@@ -21,6 +21,7 @@ public class ProjectDetailsBySkillsResponse {
 	String projectName;
 	String projectCategory;
 	String newProjectCategory;
+	String projectSubType;
 	String startDate;
 	String endDate;
 	String location;
@@ -248,5 +249,13 @@ public static Double convertMinsToHours(int mins) {
 	int hours = mins / 60; //since both are ints, you get an int
 	int minutes = mins % 60;
 	return Double.valueOf(String.format("%d.%02d", hours, minutes));
+}
+
+public String getProjectSubType() {
+	return projectSubType;
+}
+
+public void setProjectSubType(String projectSubType) {
+	this.projectSubType = projectSubType;
 }
 }

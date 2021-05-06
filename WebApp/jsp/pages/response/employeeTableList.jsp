@@ -15,6 +15,7 @@
 				<th>Code</th>
 				<th>Name</th>
 				<th>Email</th>
+				<th>Reporting Manager email</th>
 				<th>Mobile</th>
 				<th>Team</th>
 				<th>Gender</th>

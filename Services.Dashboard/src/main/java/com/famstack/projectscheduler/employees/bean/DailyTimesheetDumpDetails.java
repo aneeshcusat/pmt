@@ -6,6 +6,7 @@ import com.famstack.projectscheduler.util.DateUtils;
 
 public class DailyTimesheetDumpDetails {
 	private String fullName;
+	private String reportingManagerName;
 	private String employeeeId;
 	private String deliveryLead;
 	private String clientName;
@@ -191,5 +192,13 @@ public class DailyTimesheetDumpDetails {
 	}
 	public void setActDurationInMins(Integer actDurationInMins) {
 		this.actDurationInMins = actDurationInMins;
+	}
+
+	public String getReportingManagerName() {
+		return reportingManagerName == null ? "" : reportingManagerName;
+	}
+
+	public void setReportingManagerName(String reportingManagerName) {
+		this.reportingManagerName = reportingManagerName;
 	}
 }

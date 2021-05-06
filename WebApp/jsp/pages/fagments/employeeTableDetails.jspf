@@ -4,6 +4,7 @@
 				<td>${user.empCode}</td>
 				<td>${user.firstName}</td>
 				<td>${user.email}</td>
+				<td>${user.reportertingManagerEmailId}</td>
 				<td>${user.mobileNumber}</td>
 				<td>${user.team}</td>
 				<td>${user.gender}</td>

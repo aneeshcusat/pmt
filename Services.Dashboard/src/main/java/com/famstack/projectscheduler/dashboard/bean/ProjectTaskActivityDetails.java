@@ -98,6 +98,8 @@ public class ProjectTaskActivityDetails
     
     private String taskCompletionComments;
     
+    private String projectSubType;
+    
     private List<ProjectTaskActivityDetails> subItems;
 
     private List<ProjectTaskActivityDetails> childs;
@@ -685,5 +687,13 @@ public class ProjectTaskActivityDetails
 
 	public void setRecordedTaskStartTime(Date recordedTaskStartTime) {
 		this.recordedTaskStartTime = recordedTaskStartTime;
+	}
+
+	public String getProjectSubType() {
+		return projectSubType;
+	}
+
+	public void setProjectSubType(String projectSubType) {
+		this.projectSubType = projectSubType;
 	}
 }

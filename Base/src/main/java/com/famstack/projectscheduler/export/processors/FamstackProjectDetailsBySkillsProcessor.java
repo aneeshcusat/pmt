@@ -101,6 +101,7 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
     if (projectDetailsBySkillsList != null) {
     	List<String> allSkills = new ArrayList<>(SkillsUtils.getUserSkillList());
 	    for (ProjectDetailsBySkillsResponse projectDetailsBySkill : projectDetailsBySkillsList) {
+	      setCellValue(sheet, rowIndex, 1, projectDetailsBySkill.getProjectSubType(), null);
 	      setCellValue(sheet, rowIndex, 2, projectDetailsBySkill.getAccount(), null);
 	      setCellValue(sheet, rowIndex, 3, projectDetailsBySkill.getTeam(), null);
 	      setCellValue(sheet, rowIndex, 4, projectDetailsBySkill.getClientPartner(), null);
