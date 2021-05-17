@@ -567,7 +567,7 @@ function initializeCreateProjectForm(project){
 	if (project.type == 'BILLABLE') {
 		$("#billable").attr("checked", true);
 		$('#billable').parent().addClass("active");
-	} else {
+	} else if (project.projectSubType == 'NON_BILLABLE'){
 		$("#nonbillable").attr("checked", true);
 		$('#nonbillable').parent().addClass("active");
 	}
@@ -577,7 +577,7 @@ function initializeCreateProjectForm(project){
 	if (project.projectSubType == 'ADHOC') {
 		$("#adhocSubType").attr("checked", true);
 		$('#adhocSubType').parent().addClass("active");
-	} else {
+	} else if (project.projectSubType == 'FTE'){
 		$("#fteSubType").attr("checked", true);
 		$('#fteSubType').parent().addClass("active");
 	}
