@@ -42,6 +42,7 @@
 		<option value="Knowledge development and training">Knowledge development and training</option>
 		<option value="Marketing Collateral and Campaigns">Marketing Collateral and Campaigns</option>
 		<option value="POC">POC</option>
+		<option value="Presales">Presales</option>
 		<option value="Proposals">Proposals</option>
 	</c:if>
 </c:if>

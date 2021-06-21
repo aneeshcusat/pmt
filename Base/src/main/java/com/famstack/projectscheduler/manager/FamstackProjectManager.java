@@ -1905,7 +1905,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 					TaskItem taskItem = (TaskItem) famstackDataAccessObjectManager
 							.getItemById(recurringProjectItem.getTaskId(), TaskItem.class);
 
-					ProjectItem projectItem = taskItem.getProjectItem();
+					ProjectItem projectItem = taskItem != null ? taskItem.getProjectItem() : null;
 					
 					if (projectItem != null && isExceedProjectTime(projectItem.getCompletionTime().getTime())) {
 						logInfo("Project time exceed for task so deleting recurring");

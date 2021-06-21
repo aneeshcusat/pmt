@@ -57,7 +57,8 @@ var categoryCodeMapping = [
 {name: "Free Pilot", value: "{division}214"},
 {name: "Marketing Collateral and Campaigns", value: "{division}{accountCode}215"},
 {name: "Additional support on projects post closure", value: "{division}{accountCode}215"},
-{name: "Downtime due to Technical / IT related Issues", value: "{division}{accountCode}216"}
+{name: "Downtime due to Technical / IT related Issues", value: "{division}{accountCode}216"},
+{name: "Presales", value: "{division}{accountCode}217"}
 ]
 
 $('input[name = "ubdivision"]').on("change", function(){
