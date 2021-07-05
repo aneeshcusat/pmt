@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -975,11 +976,10 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	// to do check task item
 	public String searchForProjectNamesCodePoIdJson(String query) {
 		Map<String, Object> dataMap = new HashMap<>();
-		dataMap.put("name", query + "%");
-		dataMap.put("code", query + "%");
-		dataMap.put("PONumber", query + "%");
+		dataMap.put("name", "%" + query + "%");
+		dataMap.put("code", "%" + query + "%");
+		dataMap.put("PONumber", "%" + query + "%");
 		dataMap.put("date", new Date());
-
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonProductListObject = new JSONObject();
 		List<?> projectItems = famstackDataAccessObjectManager
@@ -1342,8 +1342,12 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		ProjectTaskActivityDetails projectUniqueItemDetails;
 
 		for (int i = 0; i < projectItemList.size(); i++) {
-			ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
 			Object[] data = projectItemList.get(i);
+			if (Objects.isNull(data[3])) {
+				continue;
+			}
+			ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
+			
 			projectTaskActivityDetails.setProjectStartTime((Date) data[0]);
 			projectTaskActivityDetails.setProjectCompletionTime((Date) data[1]);
 			projectTaskActivityDetails.setProjectCode((String) data[2]);

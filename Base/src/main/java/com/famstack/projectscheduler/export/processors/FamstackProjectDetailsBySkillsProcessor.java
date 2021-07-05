@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -38,6 +39,7 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
   private XSSFCellStyle headerValueCellStyle = null;
   private XSSFCellStyle valueCellStyle = null;
   private XSSFCellStyle valueLeftCellStyle = null;
+  private XSSFCellStyle timeValueCellStyle = null;
 
   @Override
   public void renderReport(Map<String, Object> dataMap) {
@@ -53,6 +55,10 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
               HorizontalAlignment.CENTER, false);
       valueLeftCellStyle = initializeCellStyle(workBook, null, true, valueLeftCellStyle,
               HorizontalAlignment.LEFT, false);
+      timeValueCellStyle = initializeCellStyle(workBook, null, true, valueCellStyle,
+              HorizontalAlignment.CENTER, false);
+      CreationHelper createHelper = workBook.getCreationHelper();
+      timeValueCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("[h]:mm"));
       fillProjectDetailsBySkillReportData(dataMap, sheet, workBook);
     }
   }
@@ -70,6 +76,14 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
     if (rowIndex < 2) {
       sheet.autoSizeColumn(colIndex);
     }
+  }
+  
+  private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Double value,
+	      CellStyle cellStyle) {
+	    Row row = getRow(sheet, rowIndex);
+	    Cell cell = getCell(sheet, row, colIndex);
+	    cell.setCellValue(value);
+	    cell.setCellStyle(cellStyle);
   }
 
   private Cell getCell(Sheet sheet, Row row, int cellNumber) {
@@ -153,7 +167,8 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
     		  
 	    	  }
 	    	  if(totalOtherHours > 0) {
-	    		  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + SkillsUtils.getUserSkillList().size(), "" + totalOtherHours, valueCellStyle);
+	    		  Double totalOtherHoursXls = convertToActualTimeString(totalOtherHours);
+	    		  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + SkillsUtils.getUserSkillList().size(), totalOtherHoursXls, timeValueCellStyle);
 	    	  }
 	    	  if (estOtherHours > 0) {
 	    		  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + SkillsUtils.getUserSkillList().size(), "" + estOtherHours, valueCellStyle);
@@ -169,7 +184,18 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
     }
   }
 
+  private double convertToActualTimeString(Double timeInMins)
+  {
 
+      if (timeInMins != null && timeInMins > 0) {
+          double hour = timeInMins / 60;
+          double minutes = timeInMins % 60;
+          return hour / 24d + (minutes / 60d) / 24d;
+      }
+
+      return 0;
+  }
+  
   private XSSFCellStyle initializeCellStyle(XSSFWorkbook workbook, XSSFColor colorIndex,
       boolean isBold, XSSFCellStyle cellStyle, HorizontalAlignment horizontalAlignment, boolean border) {
     if (cellStyle == null) {

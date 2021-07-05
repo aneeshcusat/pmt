@@ -2328,7 +2328,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				taskResponse.setTaskName(projectTaskDetail.getTaskName());
 				taskResponse.setTaskCategory(projectTaskDetail.getTaskActCategory());
 				taskResponse.setTotalTaskHours(projectTaskDetail.getDurationInHours());
+				taskResponse.setId(projectTaskDetail.getTaskActivityId());
+				taskResponse.setUpdatedTime(DateUtils.format(projectTaskDetail.getLastModifiedTime(), DateUtils.DATE_TIME_FORMAT_CALENDER));
 				if (projectTaskDetail.getProjectId() == 0) {
+					
 					if ("Leave".equalsIgnoreCase(projectTaskDetail.getTaskActCategory()) || "Holiday".equalsIgnoreCase(projectTaskDetail.getTaskActCategory()) || "LeaveOrHoliday".equalsIgnoreCase(projectTaskDetail.getTaskActCategory()) ) {
 						taskResponse.setLeaveHolidayHours(projectTaskDetail.getDurationInHours());
 					} else {

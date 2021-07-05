@@ -386,9 +386,10 @@
                                                <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>
                                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                                                <td width="1%">
+                                                <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
                                                <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('',${taskDetails.taskId},${projectDetails.id});">
                                                <i class="fa fa-times fa-lg" style="color:red" aria-hidden="true"></i></a>
-                                              
+                                              </c:if>
                                               <div  class="hide taskSearchData">
                                               	<span>${userDetailsMap[taskDetails.assignee].firstName} ${userDetailsMap[taskDetails.assignee].lastName}</span>
                                              	<span>${taskDetails.name}</span>

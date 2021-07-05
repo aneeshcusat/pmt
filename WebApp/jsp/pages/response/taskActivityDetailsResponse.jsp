@@ -159,11 +159,13 @@
 					<p>Completion Comment :${taskActivityDetail.completionComment}</p>
 				</c:if>
 				<div class="list-group-controls">
+					<c:if test="${currentUser.userRole == 'SUPERADMIN'}">
 					<button style="background-color: transparent; border: 0px;"
 						data-box="#confirmationbox" class="mb-control deleteTaskActivity"
 						onclick="deleteTaskActivity('${taskActivityDetail.taskActivityId}', '${taskActivityDetail.taskName}');">
 						<i class="fa fa-times fa-2x" style="color: red" aria-hidden="true"></i>
 					</button>
+					</c:if>
 				</div>
 							</ul>
 		</c:forEach>

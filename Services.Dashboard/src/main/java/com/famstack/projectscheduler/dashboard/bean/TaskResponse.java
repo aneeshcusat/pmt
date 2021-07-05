@@ -1,10 +1,13 @@
 package com.famstack.projectscheduler.dashboard.bean;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class TaskResponse {
+	Integer id;
 	String taskDate;
-	EmployeeResponse employee;
+	String updatedTime;
 	String taskName;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	String billableHours;
@@ -16,6 +19,7 @@ public class TaskResponse {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	String utilizationPercentage;
 	String taskCategory;
+	EmployeeResponse employee;
 	
 	public EmployeeResponse getEmployee() {
 		return employee;
@@ -77,5 +81,17 @@ public class TaskResponse {
 	}
 	public void setTaskCategory(String taskCategory) {
 		this.taskCategory = taskCategory;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public void setUpdatedTime(String lastModifiedTime) {
+		this.updatedTime = lastModifiedTime;	
+	}
+	public String getUpdatedTime() {
+		return updatedTime;
 	}
 }

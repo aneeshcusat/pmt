@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>	
 <c:if test="${(taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER') || itemType == 'ALL'}">
 	<li class="list-group-item taskact-item userId${taskActivites.userId} taskact-item${taskActivites.taskActivityId}">
 		<div class="task-item">
@@ -34,7 +35,7 @@
 		</div>
 		
 		<div class="task-edit">
-			<c:if test="${taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER' || projectTaskActivityDeleteEnabled == 'true'}">
+			<c:if test="${(taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER' || projectTaskActivityDeleteEnabled == 'true') && currentUser.userRole == 'SUPERADMIN'}">
 				<a href="#" onclick="deleteTaskActivity('${taskActivites.taskActivityId}','${taskActivites.taskName}')"  data-box="#confirmationbox" class="deleteTask mb-control1">
 					<i class="fa fa-times fa-1x" style="color:red" aria-hidden="true"></i>
 				</a>
