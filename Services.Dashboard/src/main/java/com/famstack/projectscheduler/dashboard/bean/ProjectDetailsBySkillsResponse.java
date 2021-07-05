@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.dashboard.bean;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -50,10 +51,10 @@ public static class SkillSetResponse{
 		this.totalHours+=taskActivityDuration;
 	}
 	public Double getTotalHours() {
-		if(totalHours > 0) {
+	/*	if(totalHours > 0) {
 			return convertMinsToHours(totalHours);
-		}
-		return  (double) totalHours;
+		}*/
+		return Objects.nonNull(totalHours) ? Double.valueOf(totalHours) : 0 ;
 	}
 	public void setTotalHours(Integer totalHours) {
 		this.totalHours = totalHours;

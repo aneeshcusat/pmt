@@ -55,8 +55,10 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
               HorizontalAlignment.CENTER, false);
       valueLeftCellStyle = initializeCellStyle(workBook, null, true, valueLeftCellStyle,
               HorizontalAlignment.LEFT, false);
-      timeValueCellStyle = initializeCellStyle(workBook, null, true, valueCellStyle,
+      
+      timeValueCellStyle = initializeCellStyle(workBook, null, true, timeValueCellStyle,
               HorizontalAlignment.CENTER, false);
+      
       CreationHelper createHelper = workBook.getCreationHelper();
       timeValueCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("[h]:mm"));
       fillProjectDetailsBySkillReportData(dataMap, sheet, workBook);
@@ -147,7 +149,8 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
 		    			  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getEstimatedHours(), valueCellStyle);
 		    		  }
 		    		  if( skills.get(skill).getTotalHours() > 0) {
-		    			  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getTotalHours(), valueCellStyle);
+		    			  Double totalOtherHoursXls = convertToActualTimeString(skills.get(skill).getTotalHours());
+		    			  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + skillIndex, totalOtherHoursXls , timeValueCellStyle);
 		    		  }
 	    		  }
 	    		  
