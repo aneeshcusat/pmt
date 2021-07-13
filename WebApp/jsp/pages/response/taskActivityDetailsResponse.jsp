@@ -159,7 +159,7 @@
 					<p>Completion Comment :${taskActivityDetail.completionComment}</p>
 				</c:if>
 				<div class="list-group-controls">
-					<c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+					<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1018'}">
 					<button style="background-color: transparent; border: 0px;"
 						data-box="#confirmationbox" class="mb-control deleteTaskActivity"
 						onclick="deleteTaskActivity('${taskActivityDetail.taskActivityId}', '${taskActivityDetail.taskName}');">

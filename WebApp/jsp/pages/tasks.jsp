@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/tasks.css?version=3.3&v=${fsVersionNumber}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="staticUnbilledEnabled" value="${applicationScope.applicationConfiguraion.staticNonBillableEnabled}"/>
-
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <c:set var="userDetailsMap"
 	value="${applicationScope.applicationConfiguraion.userMap}" />
 <ul class="breadcrumb">
@@ -133,10 +133,10 @@ var newFieldsEnabled = ${staticUnbilledEnabled};
 							</div>
 							<div class="col-md-3">
 								  
-								  <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
+								  <%-- <a data-toggle="modal" data-target="#unbillableTaskCreationModal" onclick="clearUnbillableFormForCreate(${currentUser.id})"
 									class="btn btn-success btn-block"> <span class="fa fa-plus"></span>
 									Record Non-billable Time.
-									</a>
+									</a> --%>
 								
 							</div>
 						</div>
@@ -275,8 +275,14 @@ var newFieldsEnabled = ${staticUnbilledEnabled};
 	src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>
 <script type="text/javascript"
 	src="${js}/plugins/dropzone/dropzone.min.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.24&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.25&v=${fsVersionNumber}"></script>
 <script>
+
+var disableDateNoMoreThanYesterday = true;
+
+<c:if test="${currentUserGroupId == 1018 || currentUser.userRole == 'SUPERADMIN'}">
+	disableDateNoMoreThanYesterday = false;
+</c:if>
 
 <c:if test="${sameDayOnlyTaskEnabled}">	
 	var currentTaskDate = new Date();
@@ -306,6 +312,26 @@ var newFieldsEnabled = ${staticUnbilledEnabled};
  var futureHourCaptureDisabled = false;
  </c:if>
 
+ if(disableDateNoMoreThanYesterday) {
+	 minDate= getYesterdayOrLastFriday();
+	 maxDate = new Date();
+ }
+ 
+ function getYesterdayOrLastFriday() {
+	 var currentDayIndex = new Date().getDay();
+	 var yesterday = new Date();
+	 if ( currentDayIndex == 1) {
+		 yesterday.setDate(yesterday.getDate() - 3)
+	 } else if (currentDayIndex == 0) {
+		 yesterday.setDate(yesterday.getDate() - 2)
+	 } else {
+		 yesterday.setDate(yesterday.getDate() - 1)
+	 }
+	 yesterday.setHours(00);
+	 yesterday.setMinutes(00);
+	 return yesterday;
+ }
+ 
 $(".taskOwnersList").on("click", function(){
 	var hasClass = $("#" + this.id).hasClass("active");
 	$(".taskOwnersList").removeClass("active");

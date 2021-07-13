@@ -5,6 +5,8 @@
 	<spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 	<c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
+	<c:set var="allowProjectCreationOnlyForSuperAdmin" value="${applicationScope.applicationConfiguraion.allowProjectCreationOnlyForSuperAdmin}"/>
+	
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
 			    <c:if test="${not empty projectDetailsData}">
 			    	<tr class="projectDuplicate${projectId}">
@@ -63,6 +65,8 @@
 				        	<td width="6%">${project.actualDurationInHrs}</td>
 				        	<td width="5%">${project.durationHrs}</td>
 				        	<td width="18%">
+				        	  <c:if test="${currentUser.userRole == 'SUPERADMIN' || (currentUser.userRole == 'ADMIN' && !allowProjectCreationOnlyForSuperAdmin)}">
+						
 								<a href="#" style="margin-right: 7px;color:blue"  title="Clone this project"  data-toggle="modal" data-target="#createprojectmodal"
 									onclick="loadProjectForClone('${project.id}')">
 									<span class="fa fa-files-o fa-2x" ></span>
@@ -86,7 +90,7 @@
 							<c:if test='${project.deleted != true }'>
 								<input type="checkbox" class="prjectDeleteArchive prjectDeleteArchive${project.id}"  style="margin-left: 7px" data-projectId="${project.id}"/>
 							</c:if>
-							
+							</c:if>
 							</td>
 			        	</tr>
 					</c:forEach>

@@ -382,6 +382,17 @@ public final class DateUtils extends BaseFamstackService
 		return yearMonthWeekNumber;
 	}
 	
+	public static List<String> getYearMonthNumberBetwwenTwoDates(Date startDate, Date endDate){
+		Date tempStartDate = new Date(startDate.getTime());
+		List<String> yearMonthNumber = new ArrayList<>();
+		do{
+			yearMonthNumber.add(format(tempStartDate, "MMM-YYYY"));
+			tempStartDate = getNextPreviousDate(DateTimePeriod.MONTH, tempStartDate, 1);
+		} while (tempStartDate.before(endDate));
+		
+		return yearMonthNumber;
+	}
+	
 	public static List<String> getYearMonthWeekNumberBetwwenTwoDatesENE(
 			Date startDate, Date endDate) {
 		Date tempStartDate = new Date(startDate.getTime());

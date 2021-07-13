@@ -40,8 +40,9 @@
                 <option value="WEEKLY_PROJECT_HOURS">Weekly Project Hours</option>
                 
                 <option value="TEAM_UTILIZATION_CHART">Team Utilization Chart</option>
-                
-                <option value="PROJECT_DETAILS_BY_SKILLS">Project Estimate vs Actual</option>
+                <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+                	<option value="PROJECT_DETAILS_BY_SKILLS">Project Estimate vs Actual</option>
+                </c:if>
                 <option value="UTILIZATION_BY_SKILLS">Utilization By Skills</option>
                  <option value="UTILIZATION_BY_EMPLOYEE_BY_SKILLS">Utilization By User Skills</option>
                  <option value="UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY">Utilization By Project category</option>

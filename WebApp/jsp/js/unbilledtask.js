@@ -40,8 +40,12 @@ var accountNameCodetMapping = [
  {name:"Sazerac", value:"SZC"},
  {name:"NBF", value:"NBF"},
  {name:"Airtel", value:"ATL"},
- {name:"Hotel Champs", value:"HCP"}
+ {name:"Hotel Champs", value:"HCP"},
+ {name:"Cello", value:"CEL"},
+ {name:"FleishmanHillard", value:"FHD"},
+ {name:"LRW", value:"LRW"}
 ]
+
 
 var categoryCodeMapping = [
 {name: "LEAVE", value: "101"},
@@ -60,6 +64,8 @@ var categoryCodeMapping = [
 {name: "Downtime due to Technical / IT related Issues", value: "{division}{accountCode}216"},
 {name: "Presales", value: "{division}{accountCode}217"}
 ]
+
+var editMode = false;
 
 $('input[name = "ubdivision"]').on("change", function(){
 	setReferenceNo();
@@ -197,13 +203,29 @@ function setReferenceNo(){
 		$(".ubreferenceNo").val(catCode);
 	}
 }
+
+function getYesterdayOrLastFriday() {
+	var yesterday = new Date();
+	 var currentDayIndex = new Date().getDay();
+	 if ( currentDayIndex == 1) {
+		 yesterday.setDate(yesterday.getDate() - 3)
+	 } else if (currentDayIndex == 0) {
+		 yesterday.setDate(yesterday.getDate() - 2)
+	 } else {
+		 yesterday.setDate(yesterday.getDate() - 1)
+	 }
+	 yesterday.setHours(00);
+	 yesterday.setMinutes(00);
+	 return yesterday;
+}
+
 var startDateRange = $('#startDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 9:00"}).on('dp.change', function(e) {
    adjustStartNBTimeChanged();
 });;
 var completionDateRange = $('#completionDateRange').datetimepicker({ sideBySide: true, format: 'YYYY/MM/DD HH:mm',useCurrent: false,defaultDate:getTodayDate(new Date()) + " 17:00"});
 
 var checkFutureTimeCaptureRestriction = function(taskName){
-	if (futureHourCaptureDisabled) {
+	if (futureHourCaptureDisabled && editMode == false) {
 		if (taskName.toLowerCase() == 'leave' || taskName.toLowerCase() == "holiday" || taskName.toLowerCase() == 'leaveorholiday'){
 			var taskMaxDate = new Date();
 			taskMaxDate.setMonth(taskMaxDate.getMonth()+6);
@@ -216,6 +238,30 @@ var checkFutureTimeCaptureRestriction = function(taskName){
 			taskMaxDate.setMinutes(59);
 			startDateRange.data("DateTimePicker").maxDate(taskMaxDate);
 			completionDateRange.data("DateTimePicker").maxDate(taskMaxDate);
+			
+			var startDateRangeTime = new Date($('#startDateRange').val());
+			if(startDateRangeTime.getDate() > new Date().getDate()) {
+				$('#startDateRange').val(getTodayDate(new Date()) + " 9:00");
+			}
+			var completionDateRangeTime = new Date($('#completionDateRange').val());
+			if(completionDateRangeTime.getDate() > new Date().getDate()) {
+				$('#completionDateRange').val(getTodayDate(new Date()) + " 17:00");
+			}
+		}
+	}
+	
+	if(yesterdayCaptureRestrictionEnabled && editMode == false) {
+		var minTaskYesterdayDate = getYesterdayOrLastFriday();
+		startDateRange.data("DateTimePicker").minDate(minTaskYesterdayDate);
+		completionDateRange.data("DateTimePicker").minDate(minTaskYesterdayDate);
+		
+		var startDateRangeTime = new Date($('#startDateRange').val());
+		if(startDateRangeTime.getDate() < minTaskYesterdayDate.getDate()) {
+			$('#startDateRange').val(getTodayDate(new Date()) + " 9:00");
+		}
+		var completionDateRangeTime = new Date($('#completionDateRange').val());
+		if(completionDateRangeTime.getDate() < minTaskYesterdayDate.getDate()) {
+			$('#completionDateRange').val(getTodayDate(new Date()) + " 17:00");
 		}
 	}
 };
@@ -475,6 +521,7 @@ var editUnbillableTask = function(taskActId){
 };
 
 var clearUnbillableFormForCreate = function(currentUserId) {
+	editMode = false;
 	$("#userId").val(currentUserId);
 	if ($("select#userId").length >0){
 		$(".unbilledOnBehalfOfDiv").show();
@@ -509,6 +556,7 @@ var clearUnbillableFormForCreate = function(currentUserId) {
 };
 
 var editUnbillableFormForCreate = function(taskActId,division,account,orderBookNumber,referenceNo,actProjectName,taskActUserId, taskType, startTime, endTime, clientName, teamName,clientPartner) {
+	editMode = true;
 	$("#userId").val(taskActUserId);
 	$(".unbilledOnBehalfOfDiv").hide();
 	
@@ -522,8 +570,33 @@ var editUnbillableFormForCreate = function(taskActId,division,account,orderBookN
 	$("#unbilledModelTitle").html("Update Non-billable time");
 	$("#taskType").val(taskType);
 	$(".taskActCreateBtn").attr("onclick", "editUnbillableTask("+taskActId+")");
+	var todayDate = new Date().getDate();
+	var afterSixtyDate = new Date().setDate(todayDate + 60);
+	var beforeSixtyDate = new Date().setDate(todayDate - 60);
+	startDateRange.data("DateTimePicker").maxDate(new Date(afterSixtyDate));
+	startDateRange.data("DateTimePicker").minDate(new Date(beforeSixtyDate));
+	
+	completionDateRange.data("DateTimePicker").maxDate(new Date(afterSixtyDate));
+	completionDateRange.data("DateTimePicker").minDate(new Date(beforeSixtyDate));
+	
+	var minTaskTime = new Date(startTime);
+	minTaskTime.setHours(05);
+	minTaskTime.setMinutes(00);
+	var maxTaskTime = new Date(endTime);
+	maxTaskTime.setHours(23);
+	maxTaskTime.setMinutes(59);
+	
+	startDateRange.data("DateTimePicker").maxDate(new Date(maxTaskTime));
+	startDateRange.data("DateTimePicker").minDate(new Date(minTaskTime));
+	
+	completionDateRange.data("DateTimePicker").maxDate(new Date(maxTaskTime));
+	completionDateRange.data("DateTimePicker").minDate(new Date(minTaskTime));
+	
+	
+	
 	$("#startDateRange").val(getTodayDateTime(new Date(startTime)));
 	$("#completionDateRange").val(getTodayDateTime(new Date(endTime)));
+	
 	$("#skipWeekEnds").prop("checked", false);
 	$("#taskUBStartComments").val("");
 	$("#unbilledClientName").val(clientName);

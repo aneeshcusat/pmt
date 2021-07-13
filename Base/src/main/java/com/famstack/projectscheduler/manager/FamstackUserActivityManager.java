@@ -55,6 +55,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		UserTaskActivityItem userTaskActivityItem = createUserActivityItem(
 				userId, startTime, taskId, taskName, durationInMinutes,
 				userTaskType, taskActCategory, projectType, null);
+		
 		userTaskActivityItem.setCompletionComment(comment);
 		userTaskActivityItem.setRecordedStartTime(new Timestamp(startTime
 				.getTime()));
@@ -1211,5 +1212,10 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		}
 
 		return projectDetailsList;
+	}
+
+	public void updateNonBillableTask(UserTaskActivityItem userTaskActivityItem) {
+		getFamstackDataAccessObjectManager().saveOrUpdateItem(
+				userTaskActivityItem);
 	}
 }

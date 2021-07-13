@@ -1197,7 +1197,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate,
-			boolean getUnique, boolean addSameTaskActTime, Integer userId, String userGroupId) {
+			boolean getUnique, boolean addSameTaskActTime, Integer userId, String userGroupIds) {
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0));
 		dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
@@ -1206,11 +1206,11 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList = new ArrayList<>();
 		List<ProjectTaskActivityDetails> allTaskActProjectDetailsList = new ArrayList<>();
 		String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
-		if (userGroupId == null) {
-			userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+		if (userGroupIds == null) {
+			userGroupIds = getFamstackUserSessionConfiguration().getUserGroupId();
 		}
 		if (userId == null) {
-			sqlQuery += " and utai.user_grp_id = " + userGroupId;
+				sqlQuery += " and utai.user_grp_id in (" + userGroupIds + ")";
 		}
 		if (userId != null) {
 			sqlQuery += " and uai.id = " + userId;
@@ -1223,7 +1223,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		logDebug("startDate" + startDate);
 		logDebug("endDate" + endDate);
 		mapProjectsList(projectDetailsList, projectDetailsUniqueTasksList, allTaskActProjectDetailsList,
-				projectItemList, userGroupId);
+				projectItemList);
 
 		if (!addSameTaskActTime) {
 			return allTaskActProjectDetailsList;
@@ -1325,8 +1325,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 	private void mapProjectsList(List<ProjectTaskActivityDetails> projectDetailsList,
 			List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList,
-			List<ProjectTaskActivityDetails> allTaskActProjectDetailsList, List<Object[]> projectItemList,
-			String userGroupId) {
+			List<ProjectTaskActivityDetails> allTaskActProjectDetailsList, List<Object[]> projectItemList) {
 
 		/*
 		 * projectStartTime projectCompletionTime projectCode projectId
@@ -1430,7 +1429,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			projectTaskActivityDetails.setRecordedTaskStartTime((Date) data[38]);
 			projectTaskActivityDetails.setLastModifiedTime((Date) data[39]);
 			projectTaskActivityDetails.setProjectSubType((String) data[40]);
-			projectTaskActivityDetails.setUserGroupId(userGroupId);
+			projectTaskActivityDetails.setUserGroupId((String) data[41]);
 
 			String key = "D" + DateUtils.format((Date) data[12], DateUtils.DATE_FORMAT);
 			key += "T" + data[15];
@@ -3206,6 +3205,58 @@ public class FamstackProjectManager extends BaseFamstackManager {
 				HQLStrings.getString("getPrimaryProjectsItems-OrderBy"));
 
 		getProjectsList(projectDetailsList, projectItemList, false, includeArchive);
+		return projectDetailsList; 
+	}
+
+	public List<ProjectTaskActivityDetails> getAllProjectWithoutTasksAssigneeData(Date startDate,Date endDate, String userGroupIds) {
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0));
+		dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
+
+		String sqlQuery = HQLStrings.getString("getProjectWithoutAssigneeData");
+		sqlQuery += " and user_grp_id in (" + userGroupIds + ")";
+		
+		List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
+
+		List<Object[]> projectItemList = famstackDataAccessObjectManager.executeAllSQLQueryOrderedBy(sqlQuery, dataMap);
+		logDebug("projectItemList" + projectItemList);
+
+		
+		for (int i = 0; i < projectItemList.size(); i++) {
+			Object[] data = projectItemList.get(i);
+			if (Objects.isNull(data[3])) {
+				continue;
+			}
+			ProjectTaskActivityDetails projectTaskActivityDetails = new ProjectTaskActivityDetails();
+			
+			projectTaskActivityDetails.setProjectId((Integer) data[0]);
+			projectTaskActivityDetails.setProjectName((String) data[1]);
+			projectTaskActivityDetails.setUserGroupId((String) data[2]);
+			projectTaskActivityDetails.setProjectCode((String) data[3]);
+
+			if (data[4] != null) {
+				projectTaskActivityDetails.setProjectType(ProjectType.valueOf((String) data[4]));
+			}
+			
+			projectTaskActivityDetails.setProjectStartTime((Date) data[5]);
+			projectTaskActivityDetails.setTaskActivityStartTime((Date) data[5]);
+			projectTaskActivityDetails.setProjectCompletionTime((Date) data[6]);
+
+			projectTaskActivityDetails.setProjectStatus(ProjectStatus.valueOf((String) data[7]));
+
+			projectTaskActivityDetails.setProjectAccountId((Integer) data[8]);
+			projectTaskActivityDetails.setProjectTeamId((Integer) data[9]);
+			projectTaskActivityDetails.setProjectClientId((Integer) data[10]);
+
+			projectTaskActivityDetails.setProjectNumber((String) data[11]);
+			projectTaskActivityDetails.setOrderRefNumber((String) data[12]);
+			projectTaskActivityDetails.setProposalNumber((String) data[13]);
+			projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[14]));
+			projectTaskActivityDetails.setClientPartner((String) data[15]);
+			projectTaskActivityDetails.setTaskActivityDuration(0);
+			projectDetailsList.add(projectTaskActivityDetails);
+		}
+		
 		return projectDetailsList;
 	}
 }

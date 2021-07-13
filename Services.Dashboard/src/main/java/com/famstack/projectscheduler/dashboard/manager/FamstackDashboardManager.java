@@ -12,12 +12,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -87,6 +91,8 @@ import com.famstack.projectscheduler.util.DateUtils;
 import com.famstack.projectscheduler.util.LimitedQueue;
 import com.famstack.projectscheduler.util.StringUtils;
 import com.famstack.projectscheduler.utils.FamstackUtils;
+
+import net.bull.javamelody.internal.common.LOG;
 
 @Component
 public class FamstackDashboardManager extends BaseFamstackService {
@@ -1429,15 +1435,50 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public void updateNonBillableTask(int taskActId, int userId, String type,
-			String taskActCategory, String startDate, String endDate,
+			String taskActCategory, String startDateString, String endDateString,
 			String comments, Boolean skipWeekEnd,String clientName, String teamName, String clientPartner,
 			String division, String account, String orderBookNumber, String referenceNo, String actProjectName) {
 		UserTaskActivityItem userTaskActivityItem = famstackUserActivityManager
-				.deleteTaskActivity(taskActId);
-		createNonBillableTask(userId, type, taskActCategory, startDate,
+				.getUserTaskActivityItem(taskActId);
+		if(userTaskActivityItem != null) {
+			Date startTime = DateUtils.tryParse(startDateString,
+					DateUtils.DATE_TIME_FORMAT);
+			Date endTime = DateUtils.tryParse(endDateString,
+					DateUtils.DATE_TIME_FORMAT);
+			
+			userTaskActivityItem.setCompletionComment(comments);
+			userTaskActivityItem.setRecordedStartTime(new Timestamp(startTime
+					.getTime()));
+			userTaskActivityItem.setActualStartTime(new Timestamp(startTime
+					.getTime()));
+			userTaskActivityItem.setActualEndTime(new Timestamp(endTime.getTime()));
+			userTaskActivityItem.setRecordedEndTime(new Timestamp(endTime.getTime()));
+			
+			userTaskActivityItem.setDivision(division);
+			userTaskActivityItem.setAccount(account);
+			userTaskActivityItem.setOrderBookNumber(orderBookNumber);
+			userTaskActivityItem.setReferenceNo(referenceNo);
+			userTaskActivityItem.setActProjectName(actProjectName);
+			userTaskActivityItem.setTaskActCategory(taskActCategory);
+			userTaskActivityItem.setTeamName(teamName);
+			userTaskActivityItem.setClientName(clientName);
+			userTaskActivityItem.setClientPartner(clientPartner);
+			userTaskActivityItem.setActProjectName(actProjectName);
+			int durationInMinutes = (int) ((endTime.getTime() - startTime
+					.getTime()) / (1000 * 60));
+			userTaskActivityItem.setDurationInMinutes(durationInMinutes);
+			
+			userTaskActivityItem
+					.setModifiedBy(getFamstackApplicationConfiguration()
+							.getCurrentUserId());
+			userTaskActivityItem.setClientName(clientName);
+
+			famstackUserActivityManager.updateNonBillableTask(userTaskActivityItem);
+		}
+		/*createNonBillableTask(userId, type, taskActCategory, startDate,
 				endDate, comments, skipWeekEnd, clientName, teamName, clientPartner,
 				 division, account, orderBookNumber, referenceNo, actProjectName
-				);
+				);*/
 	}
 
 	public void createNonBillableTask(int userId, String type,
@@ -2426,15 +2467,35 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return teamResponseList;
 	}
 
-	public List<ProjectDetailsBySkillsResponse> getProjectUtilizationBySkills(Date startDate, Date endDate, String teamId) {
-		String[] teamIds = teamId.split(",");
-		logInfo("Starting getProjectUtilizationBySkills " +  teamId);
-		List<ProjectTaskActivityDetails> projectTaskActivityDetails = new ArrayList<ProjectTaskActivityDetails>();
+	public List<ProjectDetailsBySkillsResponse> getProjectUtilizationBySkills(Date startDate, Date endDate, String teamIds) {
+
+		logInfo("Starting getProjectUtilizationBySkills " +  teamIds);
+		
 		List<ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponsesList = new ArrayList<>();
-		for (String id : Arrays.asList(teamIds)) {
-			projectTaskActivityDetails.addAll(projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, id));
-			logInfo("Retrived team project details : " + id + ", size : " + projectTaskActivityDetails.size());
+		List<ProjectTaskActivityDetails> projectTaskActivityDetails = new ArrayList<>();
+		projectTaskActivityDetails.addAll(projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, teamIds));
+
+		List<ProjectTaskActivityDetails> projectsWithoutTasks = projectManager.getAllProjectWithoutTasksAssigneeData(startDate, endDate, teamIds);
+		
+		if(CollectionUtils.isNotEmpty(projectTaskActivityDetails) || CollectionUtils.isNotEmpty(projectsWithoutTasks)) {
+			
+			List<Integer> projectIds = Objects.nonNull(projectTaskActivityDetails) ? 
+					projectTaskActivityDetails.stream().map(projectTask -> projectTask.getProjectId()).collect(Collectors.toList()) : null;
+
+			if (Objects.nonNull(projectIds) && Objects.nonNull(projectsWithoutTasks)){
+				logInfo("PROJECT Task ids size : " + projectIds.size());
+				logInfo("PROJECT DETAILS FOR  SKILL Before Size : " + projectsWithoutTasks.size());
+				List<ProjectTaskActivityDetails> projectDetails =projectsWithoutTasks.stream().filter(projectTasks -> !projectIds.contains(projectTasks.getProjectId())).collect(Collectors.toList());
+				logInfo("PROJECT DETAILS FOR SKILL after Size : " + (projectDetails != null ? "" + projectDetails.size() : "null") );
+				logInfo("PROJECT DETAILS: " + projectDetails );
+				projectTaskActivityDetails.addAll(projectDetails);
+			} else if (Objects.nonNull(projectsWithoutTasks)){
+				projectTaskActivityDetails.addAll(projectsWithoutTasks);
+			}
 		}
+		List<String> monthRange = DateUtils.getYearMonthNumberBetwwenTwoDates(startDate, endDate);
+		logInfo("MonthRage : " + monthRange);
+		logInfo("Retrived team project details : " + teamIds + ", size : " + projectTaskActivityDetails.size());
 		
 		Map<String, ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponsesCacheMap = new HashMap<>();
 		
@@ -2446,10 +2507,32 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				key += monthYear;
 				key += projectTaskActivityDetail.getUserGroupId();
 				ProjectDetailsBySkillsResponse projectDetailsBySkillsResponse = projectDetailsBySkillsResponsesCacheMap.get(key);
+				
 				if(projectDetailsBySkillsResponse == null) {
 					projectDetailsBySkillsResponse = new ProjectDetailsBySkillsResponse();
+					projectDetailsBySkillsResponse.setSkills(new HashMap<String, SkillSetResponse>());
+					for (String montYearString : monthRange) {
+						Map<String, List<Map<String, Integer>>> estimatedHoursBySkills = projectTaskActivityDetail.getEstHoursByMonthSkills();
+						if (estimatedHoursBySkills != null) { 
+							
+							List<Map<String, Integer>> estimatedSkills = estimatedHoursBySkills.get(montYearString);
+							if (estimatedSkills != null) {
+								for (Map<String, Integer> estSkillMap : estimatedSkills) {
+									for (String skill : estSkillMap.keySet()) {
+										SkillSetResponse skillsSetResponse = new SkillSetResponse();
+										skillsSetResponse.setEstimatedHours(estSkillMap.get(skill));
+									 projectDetailsBySkillsResponse.getSkills().put(SkillsUtils.getUserSkillMapping(skill.replaceAll("_", " ")), skillsSetResponse);
+									}
+								}
+							}
+						}
+					}
+					if (projectDetailsBySkillsResponse.getSkills().size() == 0 && projectTaskActivityDetail.getTaskId() == null) {
+						logInfo("No skill Mapping for the selected months Project Id : " + projectTaskActivityDetail.getProjectId());
+						continue;
+					}
 					projectDetailsBySkillsResponse.setProjectSubType(projectTaskActivityDetail.getProjectSubType());
-					 projectDetailsBySkillsResponse.setAccount(projectTaskActivityDetail.getAccountName());
+					projectDetailsBySkillsResponse.setAccount(projectTaskActivityDetail.getAccountName());
 					projectDetailsBySkillsResponse.setMonthYear(monthYear);
 		            projectDetailsBySkillsResponse.setTeam(getFamstackApplicationConfiguration().getUserGroupMap().get(projectTaskActivityDetail.getUserGroupId()).getName());
 		            projectDetailsBySkillsResponse.setClientPartner(projectTaskActivityDetail.getClientPartner());
@@ -2460,22 +2543,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		            projectDetailsBySkillsResponse.setProjectName(projectTaskActivityDetail.getProjectName());
 		            projectDetailsBySkillsResponse.setLocation(projectTaskActivityDetail.getLocation());
 		            projectDetailsBySkillsResponse.setClientName(projectTaskActivityDetail.getClientName());
-		            projectDetailsBySkillsResponse.setSkills(new HashMap<String, SkillSetResponse>());
+		            
 					projectDetailsBySkillsResponsesCacheMap.put(key, projectDetailsBySkillsResponse);
 					
-					Map<String, List<Map<String, Integer>>> estimatedHoursBySkills = projectTaskActivityDetail.getEstHoursByMonthSkills();
-					if (estimatedHoursBySkills != null) {
-						List<Map<String, Integer>> estimatedSkills = estimatedHoursBySkills.get(monthYear);
-						if (estimatedSkills != null) {
-							for (Map<String, Integer> estSkillMap : estimatedSkills) {
-								for (String skill : estSkillMap.keySet()) {
-									SkillSetResponse skillsSetResponse = new SkillSetResponse();
-									skillsSetResponse.setEstimatedHours(estSkillMap.get(skill));
-								 projectDetailsBySkillsResponse.getSkills().put(SkillsUtils.getUserSkillMapping(skill.replaceAll("_", " ")), skillsSetResponse);
-								}
-							}
-						}
-					}
 					
 					projectDetailsBySkillsResponsesList.add(projectDetailsBySkillsResponse);
 				} 
@@ -2501,16 +2571,18 @@ public class FamstackDashboardManager extends BaseFamstackService {
 				}
 				Resources resource = resources.stream().filter(res -> res.getId() == projectTaskActivityDetail.getUserId().intValue()).findAny()                                      // If 'findAny' then return found
 		                .orElse(null);
-				if(resource == null) {
-				  resource = new Resources();
-				  resource.setId(projectTaskActivityDetail.getUserId());
-				  resources.add(resource);
-				}
-				resource.addMinsSpent(projectTaskActivityDetail.getTaskActivityDuration());
-				EmployeeDetails  employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetail.getUserId());
-				if (employeeDetails != null) {
-					resource.setName(employeeDetails.getFirstName());
-					resource.setEmployeeCode(employeeDetails.getEmpCode());
+				if(Objects.nonNull(projectTaskActivityDetail.getUserId())) {
+					if(resource == null) {
+					  resource = new Resources();
+					  resource.setId(projectTaskActivityDetail.getUserId());
+					  resources.add(resource);
+					}
+					resource.addMinsSpent(projectTaskActivityDetail.getTaskActivityDuration());
+					EmployeeDetails  employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetail.getUserId());
+					if (employeeDetails != null) {
+						resource.setName(employeeDetails.getFirstName());
+						resource.setEmployeeCode(employeeDetails.getEmpCode());
+					}
 				}
 			}
 		}

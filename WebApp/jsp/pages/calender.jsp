@@ -3,6 +3,7 @@
 <c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 <c:set var="staticUnbilledEnabled" value="${applicationScope.applicationConfiguraion.staticNonBillableEnabled}"/>
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 
  <ul class="breadcrumb">
      <li><a href="${applicationHome}/index">Home</a></li>  
@@ -10,6 +11,13 @@
  </ul>
  <script>
  var futureHourCaptureDisabled = ${futureHourCaptureDisabled};
+ 
+ var yesterdayCaptureRestrictionEnabled = true;
+ 
+ <c:if test="${currentUserGroupId == 1018 || currentUser.userRole == 'SUPERADMIN'}">
+ 	yesterdayCaptureRestrictionEnabled = false;
+ </c:if>
+ 
  var newFieldsEnabled = ${staticUnbilledEnabled};
  </script>
 <style>
@@ -125,7 +133,7 @@
  
 <script type="text/javascript" src="${js}/plugins/fullcalendar/fullcalendar.min.js?v=${fsVersionNumber}"></script>
 <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.24&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.25&v=${fsVersionNumber}"></script>
 <script>
 var refreshCalendar = function() {
 	var userId = $("#taskAssigneeId").val();

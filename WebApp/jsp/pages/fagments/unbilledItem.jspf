@@ -35,7 +35,7 @@
 		</div>
 		
 		<div class="task-edit">
-			<c:if test="${(taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER' || projectTaskActivityDeleteEnabled == 'true') && currentUser.userRole == 'SUPERADMIN'}">
+			<c:if test="${(taskActivites.userTaskType == 'LEAVE' || taskActivites.userTaskType == 'MEETING' || taskActivites.userTaskType == 'OTHER' || projectTaskActivityDeleteEnabled == 'true') && (currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1018')}">
 				<a href="#" onclick="deleteTaskActivity('${taskActivites.taskActivityId}','${taskActivites.taskName}')"  data-box="#confirmationbox" class="deleteTask mb-control1">
 					<i class="fa fa-times fa-1x" style="color:red" aria-hidden="true"></i>
 				</a>

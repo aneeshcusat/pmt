@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>	
 <c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
+<c:set var="allowProjectCreationOnlyForSuperAdmin" value="${applicationScope.applicationConfiguraion.allowProjectCreationOnlyForSuperAdmin}"/>
 <spring:url value="/jsp/assets" var="assets" htmlEscape="true"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="applicationHome" value="${contextPath}/dashboard"/>
@@ -23,7 +24,8 @@
 			        	<th width="6%">Time Taken</th>
 			        	<th width="5%">Est Hrs</th>
 			        	<th width="18%">
-			        	<c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN'}">
+			        	  <c:if test="${currentUser.userRole == 'SUPERADMIN' || (currentUser.userRole == 'ADMIN' && !allowProjectCreationOnlyForSuperAdmin)}">
+							
 			        	<span class="dropdown">
 					          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Actions <span class="caret"></span></a>
 					          <ul class="dropdown-menu deleteProjectDropDown hide">
@@ -109,6 +111,8 @@
 			            <td>${project.actualDurationInHrs}</td>
 			            <td>${project.durationHrs}</td>
 			            <td>
+			              <c:if test="${currentUser.userRole == 'SUPERADMIN' || (currentUser.userRole == 'ADMIN' && !allowProjectCreationOnlyForSuperAdmin)}">
+							
 							<a href="#" style="margin-right: 7px;color:darkgreen"  title="Edit this project"  data-toggle="modal" data-target="#createprojectmodal" 
 								onclick="loadProjectForUpdate('${project.id}')">
 								<span class="fa fa-pencil  fa-2x"></span>
@@ -125,6 +129,7 @@
 							</c:if>
 							<c:if test='${project.deleted != true }'>
 								<input type="checkbox" class="prjectDeleteArchive prjectDeleteArchive${project.id}"  style="margin-left: 7px" data-projectId="${project.id}"/>
+							</c:if>
 							</c:if>
 						</td>
 			        </tr>
@@ -186,6 +191,8 @@
 											<!-- task assign start -->
 										</div>
 										<div class="col-md-1">
+										 <c:if test="${currentUser.userRole == 'SUPERADMIN' || (currentUser.userRole == 'ADMIN' && !allowProjectCreationOnlyForSuperAdmin)}">
+						
 											<div class="col-md-12 col-xs-12">
 												<a href="javascript:void(0)" style="color:blue"
 													title="Clone this project" data-toggle="modal"
@@ -200,7 +207,7 @@
 													<span class="fa fa-save fa-3x"></span>
 												</a>
 											</div>
-								
+								</c:if>
 										</div>
 									</div>
 								</div>

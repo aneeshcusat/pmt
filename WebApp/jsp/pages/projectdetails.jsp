@@ -386,7 +386,7 @@
                                                <td  width="10%"><span class="label label-${taskHealth}">${taskDetails.status}</span></td>
                                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD'}">
                                                <td width="1%">
-                                                <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+                                                <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1018'}">
                                                <a data-box="#confirmationbox" class="mb-control" onclick="deleteTask('',${taskDetails.taskId},${projectDetails.id});">
                                                <i class="fa fa-times fa-lg" style="color:red" aria-hidden="true"></i></a>
                                               </c:if>
@@ -407,9 +407,11 @@
                                                	</c:if>
                                                </td>
                                                 <td width="1%">
+                                                 <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1018'}">
                                                 	<a href="#" style="color:blue" title="Recurring Task" data-toggle="modal" data-target="#recurringtaskmodal" onclick="recurringTaskModel('${taskDetails.taskId}','${projectDetails.id}')">
 														<span class="fa fa-recycle fa-lg recurringSpinTask${taskDetails.taskId}"></span>
 													</a>
+													</c:if>
                                                 </td>
                                             	</c:if>
                                             	<%@include file="response/taskActivityDetailsResponse.jsp"%>
@@ -1155,7 +1157,8 @@ $("#estStartTime").on("change",function(){
 	}
 	
 	if(startTaskDate < startProjectDate && !sameDayOnlyTaskEnabled) {
-		$("#estStartTime").css("border", "1px solid red");
+		//$("#estStartTime").css("border", "1px solid red");
+		$("#estStartTime").val(getTodayDate(new Date()) + " 08:00");
 		return;
 	} else {
 		$("#estStartTime").css("border", "1px solid #D5D5D5");

@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 <spring:url value="/jsp/assets" var="assets" htmlEscape="true" />
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <c:set var="userDetailsMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
@@ -71,7 +72,7 @@
 							<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmit(${project.taskId},'${project.taskActivityId}')" value="Save"><i class="fa fa-check" style="color: green" aria-hidden="true"></i></button>
 							<button style="background-color: transparent; border: 0px;" onclick="hideTaskActActualTimeEdit('${project.taskActivityId}')" value="Cancel"><i class="fa fa-undo" style="color: gray" aria-hidden="true"></i></button>
 						</span>
-						<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty project.taskActivityEndTime}">
+						<c:if test="${(currentUser.userRole == 'SUPERADMIN' || (currentUser.userRole == 'ADMIN' && currentUserGroupId == 1018)) && not empty project.taskActivityEndTime}">
 							<a href="javascript:void(0)" class=" ${project.taskActivityId}taskTimeEditLink" onclick="showTaskActActualTimeEdit('${project.taskActivityId}')"  style="margin-left: 10px">
 							<span class="fa fa-pencil"></span></a>
 						</c:if>
@@ -107,8 +108,8 @@
 									<input type="text" placeholder="hh" class="durationTxt taskActHHTimeEdit${project.taskActivityId}"/>
 									<input type="text" value="0" placeholder="mm" class="durationTxt taskActMMTimeEdit${project.taskActivityId}"/> 
 								</span>
-								<c:if test="${(currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN' || currentUser.userRole == 'TEAMLEAD') && not empty project.taskActivityEndTime}">
-								<span style="text-align:right;" class="${project.taskActivityId}taskActTimeEdit">
+								<c:if test="${(currentUser.userRole == 'SUPERADMIN' || (currentUser.userRole == 'ADMIN' && currentUserGroupId == 1018)) && not empty project.taskActivityEndTime}">
+						<span style="text-align:right;" class="${project.taskActivityId}taskActTimeEdit">
 									<button style="background-color: transparent; border: 0px;" onclick="taskActActualTimeSubmitPop(${project.taskId},'${project.taskActivityId}','${project.taksUserDateKey}',$(this))" value="Save"><i class="fa fa-check  fa-lg" style="color: green" aria-hidden="true"></i></button>
 								</span>
 								</c:if>

@@ -3,9 +3,16 @@
 <c:set var="futureHourCaptureDisabled" value="${applicationScope.applicationConfiguraion.futureHourCaptureDisabled}"/>
 <c:set var="fsVersionNumber" value="${applicationScope.applicationConfiguraion.fsVersionNumber}"/>
 <c:set var="staticUnbilledEnabled" value="${applicationScope.applicationConfiguraion.staticNonBillableEnabled}"/>
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
+<c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 
 <script>
 var futureHourCaptureDisabled = ${futureHourCaptureDisabled};
+var yesterdayCaptureRestrictionEnabled = true;
+
+<c:if test="${currentUserGroupId == 1018 || currentUser.userRole == 'SUPERADMIN'}">
+	yesterdayCaptureRestrictionEnabled = false;
+</c:if>
 var newFieldsEnabled = ${staticUnbilledEnabled};
 </script>
 
@@ -184,7 +191,7 @@ additional-info-item .pficon {
  <script type='text/javascript' src="${js}/plugins/datepicker/bootstrap-datetimepicker_new.min.js?v=${fsVersionNumber}"></script>       
 <script type="text/javascript"
 	src="${js}/plugins/bootstrap/bootstrap-select.js?v=${fsVersionNumber}"></script>
-<script type="text/javascript" src="${js}/unbilledtask.js?version=2.24&v=${fsVersionNumber}"></script>
+<script type="text/javascript" src="${js}/unbilledtask.js?version=2.25&v=${fsVersionNumber}"></script>
 <script>
 
 $(document).ready(function(){
