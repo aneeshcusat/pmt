@@ -25,6 +25,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import com.famstack.projectscheduler.BaseFamstackService;
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.contants.ReportType;
 import com.famstack.projectscheduler.dashboard.bean.POEstimateProjectTaskActivityDetails;
 import com.famstack.projectscheduler.employees.bean.DailyTimesheetDumpDetails;
@@ -115,16 +116,17 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 	    setCellValue(sheet, 0, 9, "Proposal Number", headerCellStyle);
 	    setCellValue(sheet, 0, 10, "Project Name", headerCellStyle);
 	    setCellValue(sheet, 0, 11, "Project Status", headerCellStyle);
-	    setCellValue(sheet, 0, 12, "Project Category", headerCellStyle);
-	    setCellValue(sheet, 0, 13, "New Project Category", headerCellStyle);
-	    setCellValue(sheet, 0, 14, "Task Name", headerCellStyle);
-	    setCellValue(sheet, 0, 15, "Account", headerCellStyle);
-	    setCellValue(sheet, 0, 16, "Team", headerCellStyle);
-	    setCellValue(sheet, 0, 17, "Sub Team", headerCellStyle);
-	    setCellValue(sheet, 0, 18, "Date", headerCellStyle);
-	    setCellValue(sheet, 0, 19, "Actual Hours Spent", headerCellStyle);
-	    setCellValue(sheet, 0, 20, "comment", headerCellStyle);
-	    setCellValue(sheet, 0, 21, "Updated Date & Time", headerCellStyle);
+	    setCellValue(sheet, 0, 12, "Project Type", headerCellStyle);
+	    setCellValue(sheet, 0, 13, "Project Category", headerCellStyle);
+	    setCellValue(sheet, 0, 14, "New Project Category", headerCellStyle);
+	    setCellValue(sheet, 0, 15, "Task Name", headerCellStyle);
+	    setCellValue(sheet, 0, 16, "Account", headerCellStyle);
+	    setCellValue(sheet, 0, 17, "Team", headerCellStyle);
+	    setCellValue(sheet, 0, 18, "Sub Team", headerCellStyle);
+	    setCellValue(sheet, 0, 19, "Date", headerCellStyle);
+	    setCellValue(sheet, 0, 20, "Actual Hours Spent", headerCellStyle);
+	    setCellValue(sheet, 0, 21, "comment", headerCellStyle);
+	    setCellValue(sheet, 0, 22, "Updated Date & Time", headerCellStyle);
 
 	    List<DailyTimesheetDumpDetails> data =
 	        (List<DailyTimesheetDumpDetails>) dataMap.get("DATA");
@@ -145,33 +147,39 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 	      setCellValue(sheet, rowIndex, 10, "" + dailyTimesheetDumpDetails.getProjectName(),
 	          null);
 	      setCellValue(sheet, rowIndex, 11, dailyTimesheetDumpDetails.getProjectStatus(), null);
-	      setCellValue(sheet, rowIndex, 12, dailyTimesheetDumpDetails.getProjectCategory(),
+	      setCellValue(sheet, rowIndex, 12, toString(dailyTimesheetDumpDetails.getProjectType()),
 	          null);
-	      setCellValue(sheet, rowIndex, 13, dailyTimesheetDumpDetails.getNewProjectCategory(), null);
-	      setCellValue(sheet, rowIndex, 14,
-	          dailyTimesheetDumpDetails.getTaskName(), null);
+	      setCellValue(sheet, rowIndex, 13, dailyTimesheetDumpDetails.getProjectCategory(),
+		          null);
+	      setCellValue(sheet, rowIndex, 14, dailyTimesheetDumpDetails.getNewProjectCategory(), null);
 	      setCellValue(sheet, rowIndex, 15,
-	          dailyTimesheetDumpDetails.getAccountName(), null);
+	          dailyTimesheetDumpDetails.getTaskName(), null);
 	      setCellValue(sheet, rowIndex, 16,
+	          dailyTimesheetDumpDetails.getAccountName(), null);
+	      setCellValue(sheet, rowIndex, 17,
 	          dailyTimesheetDumpDetails.getTeamName(),
 	          null);
-	      setCellValue(sheet, rowIndex, 17,
+	      setCellValue(sheet, rowIndex, 18,
 	          dailyTimesheetDumpDetails.getSubTeamName(),
 	          null);
-	      setCellValue(sheet, rowIndex, 18,
+	      setCellValue(sheet, rowIndex, 19,
 	           dailyTimesheetDumpDetails.getTaskActivityStartTime(),
 	           valueDateCellStyle);
-	      setCellValue(sheet, rowIndex, 19,convertToActualTimeString(dailyTimesheetDumpDetails.getActDurationInMins()),
+	      setCellValue(sheet, rowIndex, 20,convertToActualTimeString(dailyTimesheetDumpDetails.getActDurationInMins()),
 	          boldCenterTimeValueCellStyle);
-	      setCellValue(sheet, rowIndex, 20,
+	      setCellValue(sheet, rowIndex, 21,
 		          dailyTimesheetDumpDetails.getTaskCompletionComments(),
 		          null);
-	      setCellValue(sheet, rowIndex, 21,
+	      setCellValue(sheet, rowIndex, 22,
 		          dailyTimesheetDumpDetails.getLastModifiedTime(),
 		          valueDateTimeCellStyle);
 	      rowIndex++;
 	    }
 	
+}
+
+private String toString(Object value) {
+	return value !=null ? value.toString() : "";
 }
 
 private void fillUtilizationBySkillsReportData(Map<String, Object> dataMap, XSSFSheet sheet, XSSFWorkbook workBook, ReportType reportType) {

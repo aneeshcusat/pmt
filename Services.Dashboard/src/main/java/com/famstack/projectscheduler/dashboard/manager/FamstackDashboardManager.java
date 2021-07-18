@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -2485,13 +2486,11 @@ public class FamstackDashboardManager extends BaseFamstackService {
 			if (Objects.nonNull(projectIds) && Objects.nonNull(projectsWithoutTasks)){
 				logInfo("PROJECT Task ids size : " + projectIds.size());
 				logInfo("PROJECT DETAILS FOR  SKILL Before Size : " + projectsWithoutTasks.size());
-				List<ProjectTaskActivityDetails> projectDetails =projectsWithoutTasks.stream().filter(projectTasks -> !projectIds.contains(projectTasks.getProjectId())).collect(Collectors.toList());
-				logInfo("PROJECT DETAILS FOR SKILL after Size : " + (projectDetails != null ? "" + projectDetails.size() : "null") );
-				logInfo("PROJECT DETAILS: " + projectDetails );
-				projectTaskActivityDetails.addAll(projectDetails);
-			} else if (Objects.nonNull(projectsWithoutTasks)){
-				projectTaskActivityDetails.addAll(projectsWithoutTasks);
-			}
+				projectsWithoutTasks = projectsWithoutTasks.stream().filter(projectTasks -> !projectIds.contains(projectTasks.getProjectId())).collect(Collectors.toList());
+				logInfo("PROJECT DETAILS FOR SKILL after Size : " + (projectsWithoutTasks != null ? "" + projectsWithoutTasks.size() : "null") );
+				logInfo("PROJECT DETAILS: " + projectsWithoutTasks );
+				//projectTaskActivityDetails.addAll(projectDetails);
+			} 
 		}
 		List<String> monthRange = DateUtils.getYearMonthNumberBetwwenTwoDates(startDate, endDate);
 		logInfo("MonthRage : " + monthRange);
@@ -2499,22 +2498,105 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		
 		Map<String, ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponsesCacheMap = new HashMap<>();
 		
+		//projectTaskActivityDetails = projectTaskActivityDetails.stream().filter(project -> project.getProjectId() == 2036602).collect(Collectors.toList());
+		
 		if (projectTaskActivityDetails != null) {
 			logInfo("Started Processing project details :");
 			for(ProjectTaskActivityDetails projectTaskActivityDetail : projectTaskActivityDetails) {
-				String monthYear = DateUtils.getMonthYear(projectTaskActivityDetail.getTaskActivityStartTime());
-				String key = "" + projectTaskActivityDetail.getProjectId();
-				key += monthYear;
-				key += projectTaskActivityDetail.getUserGroupId();
-				ProjectDetailsBySkillsResponse projectDetailsBySkillsResponse = projectDetailsBySkillsResponsesCacheMap.get(key);
+				String key = projectTaskActivityDetail.getProjectId() + "#" + projectTaskActivityDetail.getUserGroupId();
+				
+				ProjectDetailsBySkillsResponse projectDetailsBySkillsResponse = projectDetailsBySkillsResponsesCacheMap.get(key);;
+				Date taskActivityTime = projectTaskActivityDetail.getTaskActivityStartTime();
+				
+				if(Objects.isNull(projectDetailsBySkillsResponse)) {
+					projectDetailsBySkillsResponse = getProjectDetailsBySkillResponse(projectTaskActivityDetail);
+					projectDetailsBySkillsResponsesList.add(projectDetailsBySkillsResponse);
+					projectDetailsBySkillsResponsesCacheMap.put(key, projectDetailsBySkillsResponse);
+					
+					Map<String, List<Map<String, Integer>>> estimatedHoursBySkills = projectTaskActivityDetail.getEstHoursByMonthSkills();
+					if(estimatedHoursBySkills != null) {
+						for (String montYearString : monthRange) {
+							List<Map<String, Integer>> estimatedSkills = estimatedHoursBySkills!=null?estimatedHoursBySkills.get(montYearString):null;
+							if (estimatedSkills != null) {
+								Map<String, SkillSetResponse> skillMap = new HashMap<>();
+								
+								for (Map<String, Integer> estSkillMap : estimatedSkills) {
+									for (String skill : estSkillMap.keySet()) {
+										SkillSetResponse skillsSetResponse = new SkillSetResponse();
+										skillsSetResponse.setEstimatedHours(estSkillMap.get(skill));
+										skillMap.put(skill, skillsSetResponse);
+									}
+								}
+								
+								projectDetailsBySkillsResponse.getMonthsSkills().put(montYearString, skillMap);
+							} 
+						}
+					}
+				}
+								
+				if(Objects.nonNull(taskActivityTime)) {
+					String monthYear = DateUtils.getMonthYear(projectTaskActivityDetail.getTaskActivityStartTime());
+					Map<String, SkillSetResponse> monthSkillMap = projectDetailsBySkillsResponse.getMonthsSkills().get(monthYear);
+					if(Objects.isNull(monthSkillMap)){
+						monthSkillMap = new HashMap<>();
+						projectDetailsBySkillsResponse.getMonthsSkills().put(monthYear, monthSkillMap);
+					}
+					String employeeSkill = getEmployeeSkill(projectTaskActivityDetail.getUserId());
+					if (!StringUtils.isNotBlank(employeeSkill)) {
+						employeeSkill = "Others";
+					} else {
+						employeeSkill = SkillsUtils.getUserSkillMapping(employeeSkill);
+					}
+					
+					SkillSetResponse skillSetResponse = monthSkillMap.get(employeeSkill);
+					
+					if(Objects.isNull(skillSetResponse)) {
+						skillSetResponse =  new SkillSetResponse();
+						monthSkillMap.put(employeeSkill,skillSetResponse);
+					}
+
+					skillSetResponse.addTotalHours(projectTaskActivityDetail.getTaskActivityDuration());
+					
+					List<Resources> resources = skillSetResponse.getResources();
+					if (resources == null) {
+						resources = new ArrayList<Resources>();
+						skillSetResponse.setResources(resources);
+					}
+					if(Objects.nonNull(projectTaskActivityDetail.getUserId())) {
+						Resources resource = resources.stream().filter(res -> res.getId() == projectTaskActivityDetail.getUserId().intValue()).findAny()                                      // If 'findAny' then return found
+				                .orElse(null);
+					
+						if(resource == null) {
+						  resource = new Resources();
+						  resource.setId(projectTaskActivityDetail.getUserId());
+						  resources.add(resource);
+						}
+						resource.addMinsSpent(projectTaskActivityDetail.getTaskActivityDuration());
+						EmployeeDetails  employeeDetails = getFamstackApplicationConfiguration().getAllUsersMap().get(projectTaskActivityDetail.getUserId());
+						if (employeeDetails != null) {
+							resource.setName(employeeDetails.getFirstName());
+							resource.setEmployeeCode(employeeDetails.getEmpCode());
+						}
+					}
+				}
+				
+			}
+		}
+				/*
+				------------------------------------------------
+				if (projectTaskActivityDetail.getTaskActivityStartTime() != null) {
+					String monthYear = DateUtils.getMonthYear(projectTaskActivityDetail.getTaskActivityStartTime());
+					String key = "" + projectTaskActivityDetail.getProjectId();
+					key += monthYear;
+					key += projectTaskActivityDetail.getUserGroupId();
+					ProjectDetailsBySkillsResponse projectDetailsBySkillsResponse = projectDetailsBySkillsResponsesCacheMap.get(key);
+				}
 				
 				if(projectDetailsBySkillsResponse == null) {
-					projectDetailsBySkillsResponse = new ProjectDetailsBySkillsResponse();
-					projectDetailsBySkillsResponse.setSkills(new HashMap<String, SkillSetResponse>());
-					for (String montYearString : monthRange) {
-						Map<String, List<Map<String, Integer>>> estimatedHoursBySkills = projectTaskActivityDetail.getEstHoursByMonthSkills();
-						if (estimatedHoursBySkills != null) { 
-							
+					projectDetailsBySkillsResponse = getProjectDetailsBySkillResponse(projectTaskActivityDetail);
+					
+					if (estimatedHoursBySkills != null) { 
+						for (String montYearString : monthRange) {
 							List<Map<String, Integer>> estimatedSkills = estimatedHoursBySkills.get(montYearString);
 							if (estimatedSkills != null) {
 								for (Map<String, Integer> estSkillMap : estimatedSkills) {
@@ -2531,22 +2613,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 						logInfo("No skill Mapping for the selected months Project Id : " + projectTaskActivityDetail.getProjectId());
 						continue;
 					}
-					projectDetailsBySkillsResponse.setProjectSubType(projectTaskActivityDetail.getProjectSubType());
-					projectDetailsBySkillsResponse.setAccount(projectTaskActivityDetail.getAccountName());
-					projectDetailsBySkillsResponse.setMonthYear(monthYear);
-		            projectDetailsBySkillsResponse.setTeam(getFamstackApplicationConfiguration().getUserGroupMap().get(projectTaskActivityDetail.getUserGroupId()).getName());
-		            projectDetailsBySkillsResponse.setClientPartner(projectTaskActivityDetail.getClientPartner());
-		            projectDetailsBySkillsResponse.setPoNumber(projectTaskActivityDetail.getProjectNumber());
-		            projectDetailsBySkillsResponse.setOrderBookId(projectTaskActivityDetail.getOrderRefNumber());
-		            projectDetailsBySkillsResponse.setProposalNumber(projectTaskActivityDetail.getProposalNumber());
-		            projectDetailsBySkillsResponse.setProjectId(""+projectTaskActivityDetail.getProjectId());
-		            projectDetailsBySkillsResponse.setProjectName(projectTaskActivityDetail.getProjectName());
-		            projectDetailsBySkillsResponse.setLocation(projectTaskActivityDetail.getLocation());
-		            projectDetailsBySkillsResponse.setClientName(projectTaskActivityDetail.getClientName());
+					
 		            
 					projectDetailsBySkillsResponsesCacheMap.put(key, projectDetailsBySkillsResponse);
-					
-					
 					projectDetailsBySkillsResponsesList.add(projectDetailsBySkillsResponse);
 				} 
 				
@@ -2585,11 +2654,31 @@ public class FamstackDashboardManager extends BaseFamstackService {
 					}
 				}
 			}
-		}
+		}*/
 		
 		logInfo("Processing project details completed");
-		
+		//System.out.println(projectDetailsBySkillsResponsesList);
 		return projectDetailsBySkillsResponsesList;
+	}
+
+	private ProjectDetailsBySkillsResponse getProjectDetailsBySkillResponse(
+			ProjectTaskActivityDetails projectTaskActivityDetail) {
+		ProjectDetailsBySkillsResponse projectDetailsBySkillsResponse;
+		projectDetailsBySkillsResponse = new ProjectDetailsBySkillsResponse();
+		projectDetailsBySkillsResponse.setProjectSubType(projectTaskActivityDetail.getProjectSubType());
+		projectDetailsBySkillsResponse.setAccount(projectTaskActivityDetail.getAccountName());
+		projectDetailsBySkillsResponse.setTeam(getFamstackApplicationConfiguration().getUserGroupMap()
+				.get(projectTaskActivityDetail.getUserGroupId()).getName());
+		projectDetailsBySkillsResponse.setClientPartner(projectTaskActivityDetail.getClientPartner());
+		projectDetailsBySkillsResponse.setPoNumber(projectTaskActivityDetail.getProjectNumber());
+		projectDetailsBySkillsResponse.setOrderBookId(projectTaskActivityDetail.getOrderRefNumber());
+		projectDetailsBySkillsResponse.setProposalNumber(projectTaskActivityDetail.getProposalNumber());
+		projectDetailsBySkillsResponse.setProjectId(""+projectTaskActivityDetail.getProjectId());
+		projectDetailsBySkillsResponse.setProjectName(projectTaskActivityDetail.getProjectName());
+		projectDetailsBySkillsResponse.setLocation(projectTaskActivityDetail.getLocation());
+		projectDetailsBySkillsResponse.setClientName(projectTaskActivityDetail.getClientName());
+		projectDetailsBySkillsResponse.setProjectType(projectTaskActivityDetail.getProjectType().toString());
+		return projectDetailsBySkillsResponse;
 	}
 
 	private String getEmployeeSkill(Integer userId) {

@@ -2427,6 +2427,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 					}
 
 					dailyTimesheetDumpDetails.setClientName(projectDetails.getClientName());
+					dailyTimesheetDumpDetails.setProjectType(projectDetails.getProjectType());
 					dailyTimesheetDumpDetails.setProjectCode(projectDetails.getProjectCode());
 					dailyTimesheetDumpDetails.setProjectId(
 							projectDetails.getProjectId() != null ? "" + projectDetails.getProjectId() : "");
@@ -3239,7 +3240,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			}
 			
 			projectTaskActivityDetails.setProjectStartTime((Date) data[5]);
-			projectTaskActivityDetails.setTaskActivityStartTime((Date) data[5]);
+			//projectTaskActivityDetails.setTaskActivityStartTime((Date) data[5]);
 			projectTaskActivityDetails.setProjectCompletionTime((Date) data[6]);
 
 			projectTaskActivityDetails.setProjectStatus(ProjectStatus.valueOf((String) data[7]));
@@ -3254,6 +3255,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[14]));
 			projectTaskActivityDetails.setClientPartner((String) data[15]);
 			projectTaskActivityDetails.setTaskActivityDuration(0);
+			projectTaskActivityDetails.setProjectSubType((String) data[16]);
 			projectDetailsList.add(projectTaskActivityDetails);
 		}
 		

@@ -1,5 +1,6 @@
 package com.famstack.projectscheduler.dashboard.bean;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -7,15 +8,16 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectDetailsBySkillsResponse {
-	String monthYear;
 	String team;
 	String account;
 	String poNumber;
 	String proposalNumber;
 	String orderBookId;
 	String projectId;
+	String projectType;
 	String clientName;
 	String clientPartner;
 	String deliveryLeadName;
@@ -26,7 +28,8 @@ public class ProjectDetailsBySkillsResponse {
 	String startDate;
 	String endDate;
 	String location;
-	Map<String, SkillSetResponse> skills;
+	//months[skills].skillHours
+	Map<String, Map<String, SkillSetResponse>> monthsSkills;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)	
 public static class SkillSetResponse{
@@ -58,6 +61,11 @@ public static class SkillSetResponse{
 	}
 	public void setTotalHours(Integer totalHours) {
 		this.totalHours = totalHours;
+	}
+	@Override
+	public String toString() {
+		return "SkillSetResponse [totalHours=" + totalHours + ", estimatedHours=" + estimatedHours + ", resources="
+				+ resources + "]";
 	}
 }
 
@@ -107,15 +115,12 @@ public static class Resources{
 	public void addMinsSpent(Integer addMinsSpent) {
 		this.hoursSpent += addMinsSpent;
 	}
+	@Override
+	public String toString() {
+		return "Resources [name=" + name + ", email=" + email + ", id=" + id + ", employeeCode=" + employeeCode
+				+ ", hoursSpent=" + hoursSpent + "]";
+	}
 	
-}
-
-public String getMonthYear() {
-	return monthYear;
-}
-
-public void setMonthYear(String monthYear) {
-	this.monthYear = monthYear;
 }
 
 public String getTeam() {
@@ -238,12 +243,13 @@ public void setLocation(String location) {
 	this.location = location;
 }
 
-public Map<String, SkillSetResponse> getSkills() {
-	return skills;
+public Map<String, Map<String, SkillSetResponse>> getMonthsSkills() {
+	monthsSkills = monthsSkills == null ? new HashMap<>() : monthsSkills;
+	return monthsSkills;
 }
 
-public void setSkills(Map<String, SkillSetResponse> skills) {
-	this.skills = skills;
+public void setSkills(Map<String, Map<String, SkillSetResponse>> monthsSkills) {
+	this.monthsSkills = monthsSkills;
 }
 public static Double convertMinsToHours(int mins) {
 	
@@ -258,5 +264,23 @@ public String getProjectSubType() {
 
 public void setProjectSubType(String projectSubType) {
 	this.projectSubType = projectSubType;
+}
+
+@Override
+public String toString() {
+	return "ProjectDetailsBySkillsResponse [team=" + team + ", account=" + account + ", poNumber=" + poNumber
+			+ ", proposalNumber=" + proposalNumber + ", orderBookId=" + orderBookId + ", projectId=" + projectId
+			+ ", clientName=" + clientName + ", clientPartner=" + clientPartner + ", deliveryLeadName="
+			+ deliveryLeadName + ", projectName=" + projectName + ", projectCategory=" + projectCategory
+			+ ", newProjectCategory=" + newProjectCategory + ", projectSubType=" + projectSubType + ", startDate="
+			+ startDate + ", endDate=" + endDate + ", location=" + location + ", monthsSkills=" + monthsSkills + "]";
+}
+
+public String getProjectType() {
+	return projectType;
+}
+
+public void setProjectType(String projectType) {
+	this.projectType = projectType;
 }
 }

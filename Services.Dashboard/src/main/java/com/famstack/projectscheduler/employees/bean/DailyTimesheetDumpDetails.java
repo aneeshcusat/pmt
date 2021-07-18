@@ -2,6 +2,7 @@ package com.famstack.projectscheduler.employees.bean;
 
 import java.util.Date;
 
+import com.famstack.projectscheduler.contants.ProjectType;
 import com.famstack.projectscheduler.util.DateUtils;
 
 public class DailyTimesheetDumpDetails {
@@ -12,6 +13,7 @@ public class DailyTimesheetDumpDetails {
 	private String clientName;
 	private String projectCode;
 	private String projectId;
+	private ProjectType projectType;
 	private String projectNumber;
 	private String orderRefNumber;
 	private String proposalNumber;
@@ -200,5 +202,13 @@ public class DailyTimesheetDumpDetails {
 
 	public void setReportingManagerName(String reportingManagerName) {
 		this.reportingManagerName = reportingManagerName;
+	}
+
+	public ProjectType getProjectType() {
+		return projectType;
+	}
+
+	public void setProjectType(ProjectType projectType) {
+		this.projectType = projectType;
 	}
 }

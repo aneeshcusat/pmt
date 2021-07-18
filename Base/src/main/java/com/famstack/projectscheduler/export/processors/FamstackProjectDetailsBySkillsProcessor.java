@@ -117,76 +117,74 @@ public class FamstackProjectDetailsBySkillsProcessor extends BaseFamstackService
     if (projectDetailsBySkillsList != null) {
     	List<String> allSkills = new ArrayList<>(SkillsUtils.getUserSkillList());
 	    for (ProjectDetailsBySkillsResponse projectDetailsBySkill : projectDetailsBySkillsList) {
-	      setCellValue(sheet, rowIndex, 1, projectDetailsBySkill.getProjectSubType(), null);
-	      setCellValue(sheet, rowIndex, 2, projectDetailsBySkill.getAccount(), null);
-	      setCellValue(sheet, rowIndex, 3, projectDetailsBySkill.getTeam(), null);
-	      setCellValue(sheet, rowIndex, 4, projectDetailsBySkill.getClientPartner(), null);
-	      setCellValue(sheet, rowIndex, 5, projectDetailsBySkill.getMonthYear(), null);
-	      setCellValue(sheet, rowIndex, 6, projectDetailsBySkill.getPoNumber(), null);
-	      setCellValue(sheet, rowIndex, 7, projectDetailsBySkill.getProposalNumber(), null);
-	      setCellValue(sheet, rowIndex, 8, projectDetailsBySkill.getOrderBookId(), null);
-	      setCellValue(sheet, rowIndex, 9, projectDetailsBySkill.getProjectId(), null);
-	      setCellValue(sheet, rowIndex, 10, projectDetailsBySkill.getProjectName(), null);
-	      setCellValue(sheet, rowIndex, 11, projectDetailsBySkill.getLocation(), null);
-	      setCellValue(sheet, rowIndex, 12, projectDetailsBySkill.getClientName(), null);
-	      
-	      Map<String, SkillSetResponse> skills = projectDetailsBySkill.getSkills();
-	      
-	      if (skills != null) {
-	    	 
-	    	  
-	    	  Double totalOtherHours = 0d;
-	    	  int estOtherHours = 0;
-	    	  
-	    	  for (String skill : skills.keySet()) {
-	    		  int skillIndex =  SkillsUtils.getUserSkillList().indexOf(skill);
-	    		  if (skillIndex < 0) {
-	    			  skillIndex = SkillsUtils.getUserSkillList().size();
-	    			  totalOtherHours+=skills.get(skill).getTotalHours();
-	    			  estOtherHours+= skills.get(skill).getEstimatedHours();
-	    		  } else {
-	    			  if( skills.get(skill).getEstimatedHours() > 0) {
-		    			  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getEstimatedHours(), valueCellStyle);
-		    		  }
-		    		  if( skills.get(skill).getTotalHours() > 0) {
-		    			  Double totalOtherHoursXls = convertToActualTimeString(skills.get(skill).getTotalHours());
-		    			  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + skillIndex, totalOtherHoursXls , timeValueCellStyle);
-		    		  }
-	    		  }
-	    		  
-	    		  if (allSkills.indexOf(skill) == -1) {
-	    			  setCellValue(sheet, 1, resouceSkillHoursCellIndex + allSkills.size(), StringUtils.isNotBlank(skill) ? skill : "Others", headerValueCellStyle);
-	    			  allSkills.add(skill);
-	    		  }
-	    			  if (skills.get(skill).getResources() != null) {
-	    			  String resourceHours = "";
-	    			  for (Resources resource : skills.get(skill).getResources()) {
-	    				  if (resource.getHoursSpent() > 0) {
-	    					  resourceHours+= resource.getName() + " (" +resource.getHoursSpent()+")\n";
-	    				  }
-	    			  }
-	    			  setCellValue(sheet, rowIndex, resouceSkillHoursCellIndex + allSkills.indexOf(skill), resourceHours, valueLeftCellStyle);
-	    		  }
-    		  
-	    	  }
-	    	  if(totalOtherHours > 0) {
-	    		  Double totalOtherHoursXls = convertToActualTimeString(totalOtherHours);
-	    		  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + SkillsUtils.getUserSkillList().size(), totalOtherHoursXls, timeValueCellStyle);
-	    	  }
-	    	  if (estOtherHours > 0) {
-	    		  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + SkillsUtils.getUserSkillList().size(), "" + estOtherHours, valueCellStyle);
-	    	  }
-	      }
-	      
-	      rowIndex++;
-	    }
-	    
-	    for (String allSkill : allSkills) {
-	    	sheet.autoSizeColumn(resouceSkillHoursCellIndex + allSkills.indexOf(allSkill)); 
+	    	
+		    for(String monthYearString :	projectDetailsBySkill.getMonthsSkills().keySet()){
+		    	
+		    	setCellValue(sheet, rowIndex, 0, projectDetailsBySkill.getProjectType(), null);
+		    	 setCellValue(sheet, rowIndex, 1, projectDetailsBySkill.getProjectSubType(), null);
+			      setCellValue(sheet, rowIndex, 2, projectDetailsBySkill.getAccount(), null);
+			      setCellValue(sheet, rowIndex, 3, projectDetailsBySkill.getTeam(), null);
+			      setCellValue(sheet, rowIndex, 4, projectDetailsBySkill.getClientPartner(), null);
+			      setCellValue(sheet, rowIndex, 5, monthYearString, null);
+			      setCellValue(sheet, rowIndex, 6, projectDetailsBySkill.getPoNumber(), null);
+			      setCellValue(sheet, rowIndex, 7, projectDetailsBySkill.getProposalNumber(), null);
+			      setCellValue(sheet, rowIndex, 8, projectDetailsBySkill.getOrderBookId(), null);
+			      setCellValue(sheet, rowIndex, 9, projectDetailsBySkill.getProjectId(), null);
+			      setCellValue(sheet, rowIndex, 10, projectDetailsBySkill.getProjectName(), null);
+			      setCellValue(sheet, rowIndex, 11, projectDetailsBySkill.getLocation(), null);
+			      setCellValue(sheet, rowIndex, 12, projectDetailsBySkill.getClientName(), null);
+			      
+			     Map<String, SkillSetResponse> skills = projectDetailsBySkill.getMonthsSkills().get(monthYearString);
+			     if (skills != null) {
+			    	 Double totalOtherHours = 0d;
+			    	  int estOtherHours = 0;
+				     for(String skill : skills.keySet()) {
+				    	 int skillIndex =  SkillsUtils.getUserSkillList().indexOf(skill);
+			    		  if (skillIndex < 0) {
+			    			  skillIndex = SkillsUtils.getUserSkillList().size();
+			    			  totalOtherHours+=skills.get(skill).getTotalHours();
+			    			  estOtherHours+= skills.get(skill).getEstimatedHours();
+			    		  } else {
+			    			  if( skills.get(skill).getEstimatedHours() > 0) {
+				    			  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + skillIndex, "" + skills.get(skill).getEstimatedHours(), valueCellStyle);
+				    		  }
+				    		  if( skills.get(skill).getTotalHours() > 0) {
+				    			  Double totalOtherHoursXls = convertToActualTimeString(skills.get(skill).getTotalHours());
+				    			  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + skillIndex, totalOtherHoursXls , timeValueCellStyle);
+				    		  }
+			    		  }
+			    		  
+			    		  if (allSkills.indexOf(skill) == -1) {
+			    			  setCellValue(sheet, 1, resouceSkillHoursCellIndex + allSkills.size(), StringUtils.isNotBlank(skill) ? skill : "Others", headerValueCellStyle);
+			    			  allSkills.add(skill);
+			    		  }
+			    			  if (skills.get(skill).getResources() != null) {
+			    			  String resourceHours = "";
+			    			  for (Resources resource : skills.get(skill).getResources()) {
+			    				  if (resource.getHoursSpent() > 0) {
+			    					  resourceHours+= resource.getName() + " (" +resource.getHoursSpent()+")\n";
+			    				  }
+			    			  }
+			    			  setCellValue(sheet, rowIndex, resouceSkillHoursCellIndex + allSkills.indexOf(skill), resourceHours, valueLeftCellStyle);
+			    		  }
+				     }
+				     if(totalOtherHours > 0) {
+			    		  Double totalOtherHoursXls = convertToActualTimeString(totalOtherHours);
+			    		  setCellValue(sheet, rowIndex, actualSkillHoursCellIndex + SkillsUtils.getUserSkillList().size(), totalOtherHoursXls, timeValueCellStyle);
+			    	  }
+			    	  if (estOtherHours > 0) {
+			    		  setCellValue(sheet, rowIndex, estSkillHoursCellIndex + SkillsUtils.getUserSkillList().size(), "" + estOtherHours, valueCellStyle);
+			    	  }
+			     }
+			     rowIndex++;
+		    }
+		    for (String allSkill : allSkills) {
+		    	sheet.autoSizeColumn(resouceSkillHoursCellIndex + allSkills.indexOf(allSkill)); 
+		    }
 	    }
     }
   }
-
+	    	
   private double convertToActualTimeString(Double timeInMins)
   {
 

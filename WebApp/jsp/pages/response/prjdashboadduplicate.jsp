@@ -6,6 +6,7 @@
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 	<c:set var="employeeMap" value="${applicationScope.applicationConfiguraion.userMap}"/>
 	<c:set var="allowProjectCreationOnlyForSuperAdmin" value="${applicationScope.applicationConfiguraion.allowProjectCreationOnlyForSuperAdmin}"/>
+	<c:set var="currentUser" value="${applicationScope.applicationConfiguraion.currentUser}"/>
 	
 	<c:set var="applicationHome" value="${contextPath}/dashboard"/>
 			    <c:if test="${not empty projectDetailsData}">

@@ -401,9 +401,12 @@
                                               </td>
                                               
                                                <td width="1%">
+                                                <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUser.userGroupId == '1018'}">
+                                             
                                                <c:if test="${not taskDetails.extraTimeTask && taskDetails.status != 'INPROGRESS'}">
                                                 <a data-toggle="modal" data-backdrop="static" data-target="#createtaskmodal" onclick="loadTaskDetails('${taskDetails.taskId}');"
                                                  href="#"><i class="fa fa-pencil fa-lg" style="" aria-hidden="true"></i></a>
+                                               	</c:if>
                                                	</c:if>
                                                </td>
                                                 <td width="1%">

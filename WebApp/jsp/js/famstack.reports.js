@@ -492,6 +492,7 @@ function fillTimesheetDumpReportData(data){
 		reportBodyHtml += "<td>"+value.proposalNumber+"</td>";
 		reportBodyHtml += "<td>"+value.projectName+"</td>";
 		reportBodyHtml += "<td>"+value.projectStatus+"</td>";
+		reportBodyHtml += "<td>"+value.projectType+"</td>";
 		reportBodyHtml += "<td>"+value.projectCategory+"</td>";
 		reportBodyHtml += "<td>"+value.newProjectCategory+"</td>";
 		reportBodyHtml += "<td>"+value.taskName+"</td>";
