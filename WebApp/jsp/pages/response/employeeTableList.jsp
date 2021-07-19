@@ -5,6 +5,7 @@
 <c:set var="allUsersMap" value="${applicationScope.applicationConfiguraion.allUsersMap}"/>
 <c:set var="userMap" value="${applicationScope.applicationConfiguraion.userList}"/>
 <c:set var="allSortedUsers" value="${applicationScope.applicationConfiguraion.allSortedUsers}"/>
+<c:set var="currentUserGroupId" value="${applicationScope.applicationConfiguraion.currentUserGroupId}"/>
 
 <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN' || currentUser.userRole == 'ADMIN'}">
 <c:if test="${not empty allUsersMap}">
@@ -46,7 +47,9 @@
 		 <c:if test="${currentUser.userGroupId != '1012' && currentUser.userRole != 'SUPERADMIN'}">
 	    <c:if test="${not empty userMap}">
 	    <c:forEach var="user" items="${userMap}">
+	   		 <c:if test="${currentUserGroupId == '99999' || !user.deleted}">
 	        	<%@include file="../fagments/employeeTableDetails.jspf" %>
+	        </c:if>
 	    </c:forEach>
 	    </c:if>
     </c:if> 
@@ -54,7 +57,9 @@
      <c:if test="${currentUser.userGroupId == '1012' || currentUser.userRole == 'SUPERADMIN'}">
 	    <c:if test="${not empty allSortedUsers}">
 	    <c:forEach var="user" items="${allSortedUsers}">
+	    	<c:if test="${currentUserGroupId == '99999' || !user.deleted}">
 	        	<%@include file="../fagments/employeeTableDetails.jspf" %>
+	        	</c:if>
 	    </c:forEach>
 	    </c:if>
     </c:if> 

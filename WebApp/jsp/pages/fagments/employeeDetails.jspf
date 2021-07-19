@@ -1,4 +1,5 @@
 <c:if test="${user.role != 'SUPERADMIN' || currentUser.userRole == 'SUPERADMIN'}">
+
 <div class='col-md-3 <c:if test="${!user.deleted}">contact-name</c:if> userDetails${user.id}   <c:if test="${user.deleted}">deletedUser</c:if>'>
             <!-- CONTACT ITEM -->
             <div class='panel panel-default '>
@@ -40,4 +41,4 @@
             </div>
             <!-- END CONTACT ITEM -->
         </div>
-   </c:if>      
+   </c:if>    
