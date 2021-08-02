@@ -10,6 +10,7 @@ public class UtilizationByUserSkillOrCategory {
 	String monthYear = null;
 	String skillOrCategory = null;
 	String employeeName = null;
+	String userGroupName = null;
 	String employeeCode = null;
 	String designation = null;
 	Integer employeeId = null;
@@ -124,5 +125,13 @@ public class UtilizationByUserSkillOrCategory {
 	
 	public Set<String> getProjectAccounts() {
 		return projectAccounts;
+	}
+
+	public String getUserGroupName() {
+		return userGroupName;
+	}
+
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
 	}
 }

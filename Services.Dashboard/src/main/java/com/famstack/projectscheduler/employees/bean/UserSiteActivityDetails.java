@@ -9,6 +9,7 @@ public class UserSiteActivityDetails {
 	private String reportingManager;
 	private boolean includeInactive;
 	private String emailId;
+	private String userGroupName;
 	
 	List<UserSiteActivityStatus> statusList;
 
@@ -49,5 +50,13 @@ public class UserSiteActivityDetails {
 
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
+	}
+
+	public String getUserGroupName() {
+		return userGroupName;
+	}
+
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
 	}
 }

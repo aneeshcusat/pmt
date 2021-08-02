@@ -47,7 +47,7 @@
         
         <!-- CSS INCLUDE -->        
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/theme-default.css?version=3.2&v=${fsVersionNumber}"/>
-        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/famstack.css?v=${fsVersionNumber}"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/famstack.css?v=200"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/daterangepicker.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/datepicker/jquery.datetimerangepicker.min.css"/>
         <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/taginput/mab-jquery-taginput.css"/>

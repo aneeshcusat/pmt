@@ -189,7 +189,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
         userItem.setDeptLeadEmailId(employeeDetails.getDeptLeadEmailId());
         userItem.setLobHeadEmailId(employeeDetails.getLobHeadEmailId());
         userItem.setSkills(employeeDetails.getSkills());
-        
+        userItem.setAdditionalSkills(employeeDetails.getAdditionalSkills());
         return (UserItem) getFamstackDataAccessObjectManager().saveOrUpdateItem(userItem);
     }
 
@@ -288,6 +288,7 @@ public class FamstackUserProfileManager extends BaseFamstackManager
             employeeDetails.setDeptLeadEmailId(userItem.getDeptLeadEmailId());
             employeeDetails.setLobHeadEmailId(userItem.getLobHeadEmailId());
             employeeDetails.setSkills(userItem.getSkills());
+            employeeDetails.setAdditionalSkills(userItem.getAdditionalSkills());
             return employeeDetails;
         }
         return null;

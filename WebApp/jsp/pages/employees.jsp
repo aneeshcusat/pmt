@@ -365,7 +365,11 @@ function processUserResponseData(data) {
 	
 	$('#dateOfJoin').val(response.dateOfJoin);
 	$('#skills').val(response.skills);
+	//$('#additionalSkills').val(response.additionalSkills);
 	
+	if($('#additionalSkillsMultiple').length > 0 && response.additionalSkills != null && response.additionalSkills != "") {
+		$('#additionalSkillsMultiple').selectpicker('val', response.additionalSkills.split(','));
+	}
 	$('#role').selectpicker('refresh');
 	$('#reportingManger').selectpicker('refresh');
 	$('#deptLeadEmailId').selectpicker('refresh');
@@ -420,7 +424,7 @@ function clearUserData() {
 	$('#empType').val("");
 	$('#dateOfJoin').val("");
 	$('#skills').val("");
-	
+	$('#additionalSkills').val("");
 	$('#deptLeadEmailId').selectpicker('refresh');
 	$('#lobHeadEmailId').selectpicker('refresh');
 	$('#location').selectpicker('refresh');

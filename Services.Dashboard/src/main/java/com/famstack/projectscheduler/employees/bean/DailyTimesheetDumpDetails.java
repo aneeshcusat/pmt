@@ -34,6 +34,7 @@ public class DailyTimesheetDumpDetails {
 	private Date taskRecordedActivityStartTime;
 	private Date taskActivityStartTime;
 	private Date lastModifiedTime;
+	private String userGroupName;
 	
 	public String getLastModifiedTimeFormated() {
 		return lastModifiedTime != null ? DateUtils.format(lastModifiedTime, DateUtils.DATE_TIME_FORMAT) : "";
@@ -210,5 +211,13 @@ public class DailyTimesheetDumpDetails {
 
 	public void setProjectType(ProjectType projectType) {
 		this.projectType = projectType;
+	}
+
+	public String getUserGroupName() {
+		return userGroupName;
+	}
+
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
 	}
 }

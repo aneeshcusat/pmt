@@ -146,3 +146,16 @@ border-bottom: 1px solid lightgray;
 .divisionGroup .btn-default:hover, .divisionGroup .btn-default:focus, .divisionGroup .btn-default:active, .divisionGroup .btn-default.active{
     background-color: #d2d1d1;
 }
+button.multiselect-option.dropdown-item, button.dropdown-item.multiselect-all {
+border: none;
+    background-color: #fff;
+        display: block;
+}
+
+.multiselect-container.dropdown-menu{
+	min-width:275px
+}
+
+.multiselect-option.dropdown-item input.form-check-input{
+	margin-right:5px;
+}

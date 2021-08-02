@@ -91,6 +91,8 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
     private String lobHeadEmailId;
     
     private String skills;
+    
+    private String additionalSkills;
 
     public boolean isDeleted() {
 		return deleted;
@@ -498,6 +500,14 @@ public class EmployeeDetails implements Comparable<EmployeeDetails> {
 
 	public void setCsrToken(String csrToken) {
 		this.csrToken = csrToken;
+	}
+
+	public String getAdditionalSkills() {
+		return additionalSkills;
+	}
+
+	public void setAdditionalSkills(String additionalSkills) {
+		this.additionalSkills = additionalSkills;
 	}
 
 }

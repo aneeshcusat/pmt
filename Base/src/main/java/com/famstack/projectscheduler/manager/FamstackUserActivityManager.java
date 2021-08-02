@@ -3,6 +3,7 @@ package com.famstack.projectscheduler.manager;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.tomcat.util.buf.StringUtils;
 
 import com.famstack.projectscheduler.contants.FamstackConstants;
 import com.famstack.projectscheduler.contants.HQLStrings;
@@ -26,6 +30,7 @@ import com.famstack.projectscheduler.datatransferobject.UserTaskActivityItem;
 import com.famstack.projectscheduler.datatransferobject.UserUsageActivityItem;
 import com.famstack.projectscheduler.employees.bean.EmployeeDetails;
 import com.famstack.projectscheduler.employees.bean.TaskActivityDetails;
+import com.famstack.projectscheduler.employees.bean.UserGroupDetails;
 import com.famstack.projectscheduler.employees.bean.UserSiteActivityDetails;
 import com.famstack.projectscheduler.employees.bean.UserSiteActivityStatus;
 import com.famstack.projectscheduler.employees.bean.UserWorkDetails;
@@ -831,7 +836,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 			List<ProjectTaskActivityDetails> projectDetailsList,
 			List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList,
 			List<ProjectTaskActivityDetails> allTaskActivityProjectDetailsList,
-			Integer currentUserId, String userGroupId) {
+			Integer currentUserId, List<String> userGroupIds) {
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("calenderDateStart", DateUtils.getNextPreviousDate(
 				DateTimePeriod.DAY_START, startDate, 0));
@@ -841,13 +846,14 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 		String hqlQuery = HQLStrings
 				.getString("allUnBilledUserActivityItemsFromDatetoDate");
 
-		if (userGroupId == null) {
-			userGroupId = getFamstackApplicationConfiguration()
-					.getCurrentUserGroupId();
+		if (CollectionUtils.isEmpty(userGroupIds)) {
+			userGroupIds = Collections.singletonList(getFamstackApplicationConfiguration()
+					.getCurrentUserGroupId());
 		}
 		
 		if (currentUserId == null) {
-			hqlQuery += "and userGroupId=" + userGroupId;
+			String userGroupIdArray = org.apache.commons.lang3.StringUtils.join(userGroupIds, ",");
+			hqlQuery += "and userGroupId in (" + userGroupIdArray + ")";
 		}
 
 		List<UserTaskActivityItem> userTaskActivityItems = (List<UserTaskActivityItem>) getFamstackDataAccessObjectManager()
@@ -895,7 +901,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 							.getCompletionComment());
 			projectTaskActivityDetails.setClientName(userTaskActivityItem.getClientName());
 			projectTaskActivityDetails.setLastModifiedTime(userTaskActivityItem.getLastModifiedDate());
-			
+			projectTaskActivityDetails.setUserGroupId(userTaskActivityItem.getUserGroupId());
 			projectTaskActivityDetailsList.add(projectTaskActivityDetails);
 
 			String key = "D" + userTaskActivityItem.getActualStartTime();
@@ -1123,6 +1129,7 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 				UserSiteActivityDetails userSiteActivityDetails = new UserSiteActivityDetails();
 				userSiteActivityDetails.setEmployeeName(employeeDetails.getFirstName());
 				userSiteActivityDetails.setEmailId(employeeDetails.getEmail());
+				userSiteActivityDetails.setUserGroupName(getUserGroupName(employeeDetails.getUserGroupId()));
 				try{
 					if (employeeDetails.getReportertingManagerEmailId() != null) {
 						Integer reportingMangerId = getFamstackApplicationConfiguration().getUserIdMap().get(employeeDetails.getReportertingManagerEmailId());
@@ -1184,6 +1191,16 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 
 		return inActiveUserList;
 	}
+	
+	private String getUserGroupName(String groupId) {
+		UserGroupDetails groupDetails = getFamstackApplicationConfiguration().getUserGroupMap().get(groupId);
+		String groupName = "Other";
+		if (groupDetails != null) {
+			groupName = groupDetails.getName();
+		}
+		return groupName;
+	}
+
 
 	public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(
 			Date startDate, Date endDate, boolean uniqueList,
@@ -1195,13 +1212,13 @@ public class FamstackUserActivityManager extends BaseFamstackManager {
 	public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(
 			Date startDate, Date endDate, boolean uniqueList,
 			boolean addSameTaskActTime, Integer currentUserId,
-			String userGroupId) {
+			List<String> userGroupIds) {
 		List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList = new ArrayList<>();
 		List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
 		List<ProjectTaskActivityDetails> allTaskActProjectDetailsList = new ArrayList<>();
 		getAllNonBillabileTaskActivities(startDate,
 				endDate, projectDetailsList, projectDetailsUniqueTasksList,
-				allTaskActProjectDetailsList, currentUserId, userGroupId);
+				allTaskActProjectDetailsList, currentUserId, userGroupIds);
 
 		if (!addSameTaskActTime) {
 			return allTaskActProjectDetailsList;

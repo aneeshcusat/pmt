@@ -4,6 +4,7 @@
 <c:set var="userGroupMap" value="${applicationScope.applicationConfiguraion.userGroupMap}"/>
 
 <link rel="stylesheet" type="text/css" id="theme" href="${fn:escapeXml(css)}/pages/reports.css?version=4.2&v=${fsVersionNumber}"/>
+<link rel="stylesheet" href="${css}/multiselect/bootstrap-multiselect.min.css" type="text/css"/>
 
 <!-- START CONTENT FRAME -->
 <div class="content-frame">            
@@ -19,17 +20,17 @@
     <!-- START CONTENT FRAME BODY -->
         <div class="row">
         <div class="col-md-12" style="padding-top: 10px;padding-bottom: 10px">
-        	<div class="col-md-1">
-        	 <c:if test="${currentUser.userRole == 'SUPERADMIN'}">
+        	<div class="col-md-2">
+        	
         	 
-    		<select class="form-control" data-live-search="true" id="userGroupSelection">
-			    <option value="">- select -</option>
-			    <c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex"> 
+        	 <select id="multiUserGroupSelector" multiple="multiple">
+			    <c:forEach var="userGroup" items="${userGroupMap}" varStatus="userGroupIndex">
+			     <c:if test="${currentUser.userRole == 'SUPERADMIN' || currentUserGroupId == userGroup.value.userGroupId}"> 
 			      <option <c:if test="${currentUserGroupId == userGroup.value.userGroupId}">selected="selected"</c:if> value="${userGroup.value.userGroupId}">${userGroup.value.name}</option>
+			    </c:if>
 			    </c:forEach>
 			</select>
-			
-    		</c:if>
+	
     		</div>
     		<div class="col-md-2">
         	<select class="form-control autoReportType">
@@ -71,7 +72,7 @@
 	        	<a href="javascript:moveToNext();" style="float: right" title="Next"><span style="padding-left: 15px;font-weight: bold" class="fa fa-angle-right  fa-2x"></span></a>
         	</div>
         	
-        	<div class="col-md-3 reportHeaderInputs" style="text-align: center">
+        	<div class="col-md-2 reportHeaderInputs" style="text-align: center">
         		<input class="btn btn-info refreshButton hide" type="button" value="Refresh"/>
         		<button class="btn btn-warning clearfix exportButton hide"><span class="fa fa-file-excel-o"></span> Export</button>
         	</div>
@@ -194,12 +195,14 @@
     <table class="hide reportDataTemplate" >
     	<tr class="reportDataHeader-activity">
        	<th width="50px">Sl No</th>
+       	<th>User Group</th>
        	<th>Employee Name</th>
        	<th>Reporting Manager</th>
        </tr>
        
        	<tr class="reportDataHeader-utilization">
        	<th width="50px">Sl No</th>
+       	<th>User Group</th>
        	<th>Employee Name</th>
        	<th>Employee Code</th>
        	<th>Reporting Manager</th>
@@ -214,6 +217,7 @@
        	<tr class="reportDataHeader-timesheetdump">
 													
        	<th width="50px">Sl No</th>
+       	<th>User Group</th>
        	<th>Employee Name</th>
        	<th>Employee Code</th>
        	<th>Delivery Lead</th>
@@ -248,6 +252,7 @@
        </tr>
        <tr class="reportDataHeader-utilizationbyuserskills">
        	<th width="50px">Sl No</th>
+       	<th>User Group</th>
        	<th>Employee Code</th>
        	<th>Employee Name</th>
        	<th>Designation</th>
@@ -259,6 +264,7 @@
        </tr>
        <tr class="reportDataHeader-utilizationbyprojectcategory">
        	<th width="50px">Sl No</th>
+       	<th>User Group</th>
        	<th>Employee Code</th>
        	<th>Employee Name</th>
        	<th>Designation</th>
@@ -272,6 +278,7 @@
        
        	<tr class="reportDataHeader-projecthours">
        	<th width="50px">Sl No</th>
+       	<th>User Group</th>
        	<th>Team Name</th>
        	<th>Account Name</th>
        	<th>Year</th>
@@ -292,6 +299,7 @@
        
        <tr class="reportDataHeader-utilization-monthly">
        	<th width="50px">Sl No</th>
+       	<th>User Group</th>
        	<th>Employee Name</th>
        	<th>Employee Code</th>
        	<th>Reporting Manager</th>
@@ -299,6 +307,7 @@
        
         <tr class="reportDataHeader-poestimation">
         <th><strong>Sl No</strong></th>
+        <th>User Group</th>
         <th><strong>Client Name</strong></th>
         <th><strong>Order book ref id</strong></th>
 		<th><strong>Proposal Number</strong></th>
@@ -327,8 +336,9 @@
  <script type='text/javascript' src="${js}/plugins/tableexport/xlsx.core.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/FileSaver.js"></script>
 <script type='text/javascript' src="${js}/plugins/tableexport/tableexport.min.js"></script>
+<script type="text/javascript" src="${js}/plugins/multiselect/bootstrap-multiselect.min.js"></script>
  <script type="text/javascript"
-	src="${js}/famstack.reports.js?version=4.115&v=${fsVersionNumber}"></script> 
+	src="${js}/famstack.reports.js?version=4.118&v=${fsVersionNumber}"></script> 
   <script type="text/javascript" src="${js}/plugins/datatables/jquery.dataTables.min_v1.js?v=${fsVersionNumber}"></script> 
 <script type="text/javascript" src="${js}/plugins/datatables/dataTables.buttons.min.js?v=${fsVersionNumber}"></script>   
 <script type="text/javascript" src="${js}/plugins/canvasjs/canvasjs.js"></script> 

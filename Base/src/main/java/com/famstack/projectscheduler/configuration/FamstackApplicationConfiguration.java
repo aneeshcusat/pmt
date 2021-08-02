@@ -249,12 +249,12 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		return userList;
 	}
 
-	public List<EmployeeDetails> getUserList(String groupId) {
+	public List<EmployeeDetails> getUserList(List<String> userGroupIds) {
 		List<EmployeeDetails> userList = new ArrayList<>();
 		if (userMap != null) {
 			for (Integer userId : userMap.keySet()) {
 
-				if (groupId.equalsIgnoreCase(userMap.get(userId)
+				if (userGroupIds.contains(userMap.get(userId)
 						.getUserGroupId())) {
 					userList.add(userMap.get(userId));
 				}
@@ -264,8 +264,14 @@ public class FamstackApplicationConfiguration extends BaseFamstackService {
 		return userList;
 	}
 
+	public List<EmployeeDetails> sortedUserList(List<String> userGroupIds) {
+
+		List<EmployeeDetails> userDetails = getUserList(userGroupIds);
+		sortUserList(userDetails);
+		return userDetails;
+	}
 	public List<EmployeeDetails> sortedUserList(String userGroupId) {
-		List<EmployeeDetails> userDetails = getUserList(userGroupId);
+		List<EmployeeDetails> userDetails = getUserList(Collections.singletonList(userGroupId));
 		sortUserList(userDetails);
 		return userDetails;
 	}

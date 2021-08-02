@@ -343,10 +343,14 @@ function refreshReportDataOrDownload(isDownload) {
 		$(".teamUtilizationChartDiv").removeClass("hide");
 		refreshTeamUtilizationChart(reportStartDate, reportEndDate);
 	 } else {
+		 var selectedUserGroupIds = $("#multiUserGroupSelector").val();
+		 if(selectedUserGroupIds != null) {
+			 selectedUserGroupIds = selectedUserGroupIds.join(",");
+		 }
 		 if(isDownload) {
-			 window.location.href = fsApplicationHome + "/download?reportType=" + reportType + "&reportStartDate=" + reportStartDate + "&reportEndDate=" + reportEndDate +"&fileName=" + downloadXLSFileName;
+			 window.location.href = fsApplicationHome + "/download?reportType=" + reportType + "&reportStartDate=" + reportStartDate + "&reportEndDate=" + reportEndDate +"&fileName=" + downloadXLSFileName + "&userGroupIds=" + selectedUserGroupIds;
 		 } else {
-			 doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getReportData",{"reportType":reportType,"reportStartDate":reportStartDate,"reportEndDate":reportEndDate} , function(data) {
+			 doAjaxRequestWithGlobal("GET", fsApplicationHome + "/getReportData",{"reportType":reportType,"reportStartDate":reportStartDate,"reportEndDate":reportEndDate, "userGroupIds": selectedUserGroupIds} , function(data) {
 				fillReportTableData(data, reportType, autoReportDuration);
 				$(".exportButton").removeClass("hide");
 				 $("#reportSearchBoxId").removeClass("hide");
@@ -409,6 +413,7 @@ function fillUserActivityReportData(data) {
 	var reportBodyHtml="";
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		reportBodyHtml += "<td>"+value.userGroupName+"</td>";
 		reportBodyHtml += "<td>"+value.employeeName+"</td>";
 		
 		if(value.reportingManager == null) {
@@ -452,6 +457,7 @@ function fillUtilizationBySkillsReportData(data, reportType) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
 		
 		if("UTILIZATION_BY_SKILLS" != reportType){
+			reportBodyHtml += "<td>"+value.userGroupName+"</td>";
 			reportBodyHtml += "<td>"+value.employeeCode+"</td>";
 			reportBodyHtml += "<td>"+value.employeeName+"</td>";
 			reportBodyHtml += "<td>"+value.designation+"</td>";
@@ -481,6 +487,7 @@ function fillTimesheetDumpReportData(data){
 	var reportBodyHtml="";
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		reportBodyHtml += "<td>"+value.userGroupName+"</td>";
 		reportBodyHtml += "<td>"+value.fullName+"</td>";
 		reportBodyHtml += "<td>"+value.employeeeId+"</td>";
 		reportBodyHtml += "<td>"+value.deliveryLead+"</td>";
@@ -518,6 +525,7 @@ function fillUserUtilizationReportData(data) {
 	var reportBodyHtml="";
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		reportBodyHtml += "<td>"+value.userGroupName+"</td>";
 		reportBodyHtml += "<td>"+value.employeeName+"</td>";
 		reportBodyHtml += "<td>"+value.empId+"</td>";
 		
@@ -567,6 +575,7 @@ function fillUserUtilizationMonthlyReportData(data) {
 	var reportBodyHtml="";
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		reportBodyHtml += "<td>"+value.userGroupName+"</td>";
 		reportBodyHtml += "<td>"+value.employeeName+"</td>";
 		reportBodyHtml += "<td>"+value.empId+"</td>";
 		if(value.reportingManager == null) {
@@ -622,6 +631,7 @@ function fillPOEstimationReportData(data) {
 	var reportBodyHtml="";
 	$.each(jsonData.DATA, function( index, value ) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
+		reportBodyHtml += "<td>"+value.userGroupName+"</td>";
 		reportBodyHtml += "<td style='text-align: center;'>"+value.clientName+"</td>";
 		reportBodyHtml += "<td style='text-align: center;'>"+value.orderBookId+"</td>";
 		reportBodyHtml += "<td style='text-align: center;'>"+value.proposalNumber+"</td>";
@@ -681,6 +691,7 @@ function fillProjectHoursReportData(data) {
 		var year ="";
 		var month ="";
 		var weekNumber = "";
+		var userGroupName = "";
 		var clientName = "";
 		var projectNumber ="";
 		var projectName ="";
@@ -690,6 +701,12 @@ function fillProjectHoursReportData(data) {
 		reportBodyHtml += "<tr><td>"+(index+1)+"</td>";
 		
 		$.each(value.utilizationProjectDetailsList, function( projectIndex, projectValue ) {
+			if (userGroupName != "" && projectValue.userGroupName != null && projectValue.userGroupName != ""){
+				userGroupName += ", " +projectValue.userGroupName;
+			} else if (projectValue.teamName != null && projectValue.teamName != ""){
+				userGroupName += projectValue.userGroupName;
+			}
+			
 			if (teamName != "" && projectValue.teamName != null && projectValue.teamName != ""){
 				teamName += ", " +projectValue.teamName;
 			} else if (projectValue.teamName != null && projectValue.teamName != ""){
@@ -742,8 +759,10 @@ function fillProjectHoursReportData(data) {
 			} else if (projectValue.endDateString != null && projectValue.endDateString != ""){
 				endDateString += projectValue.endDateString;
 			}
+			
+			
 		});
-		
+		reportBodyHtml += "<td>"+userGroupName+"</td>";
 		reportBodyHtml += "<td>"+teamName+"</td>";
 		reportBodyHtml += "<td>"+accountName+"</td>";
 		reportBodyHtml += "<td>"+(moment().year())+"</td>";
@@ -872,6 +891,12 @@ function initializeExportTable(fileName) {
 
 $(document).ready(function(){
 	$(".refreshButton").removeClass("hide");
+	$('#multiUserGroupSelector').multiselect(
+	{
+      numberDisplayed: 1,
+      buttonClass: 'btn btn-link',
+      includeSelectAllOption: true
+    });
 });
 
 $("#reportSearchBoxId").keydown(function(e){

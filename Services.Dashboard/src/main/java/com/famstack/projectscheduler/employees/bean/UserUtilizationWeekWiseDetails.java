@@ -17,6 +17,7 @@ public class UserUtilizationWeekWiseDetails {
 	String emailId;
 	String empId;
 	Map<String, UserUtilization> userUtilizationMap;
+	String userGroupName;
 	
 	public String getEmployeeName() {
 		return employeeName;
@@ -88,5 +89,13 @@ public class UserUtilizationWeekWiseDetails {
 
 	public void setEmpId(String empId) {
 		this.empId = empId;
+	}
+
+	public String getUserGroupName() {
+		return userGroupName;
+	}
+
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
 	}
 }

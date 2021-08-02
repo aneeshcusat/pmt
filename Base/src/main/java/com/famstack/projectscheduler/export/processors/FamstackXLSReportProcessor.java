@@ -104,29 +104,29 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
   private void fillTimeSheetDumpReportData(Map<String, Object> dataMap, XSSFSheet sheet, XSSFWorkbook workBook) {
 	  
 	  setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
-	    
-	    setCellValue(sheet, 0, 1, "Employee Name", headerCellStyle);
-	    setCellValue(sheet, 0, 2, "Employee Code", headerCellStyle);
-	    setCellValue(sheet, 0, 3, "Delivery Lead", headerCellStyle);
-	    setCellValue(sheet, 0, 4, "Client", headerCellStyle);
-	    setCellValue(sheet, 0, 5, "Project code", headerCellStyle);
-	    setCellValue(sheet, 0, 6, "ID", headerCellStyle);
-	    setCellValue(sheet, 0, 7, "PO Id", headerCellStyle);
-	    setCellValue(sheet, 0, 8, "Order book Ref", headerCellStyle);
-	    setCellValue(sheet, 0, 9, "Proposal Number", headerCellStyle);
-	    setCellValue(sheet, 0, 10, "Project Name", headerCellStyle);
-	    setCellValue(sheet, 0, 11, "Project Status", headerCellStyle);
-	    setCellValue(sheet, 0, 12, "Project Type", headerCellStyle);
-	    setCellValue(sheet, 0, 13, "Project Category", headerCellStyle);
-	    setCellValue(sheet, 0, 14, "New Project Category", headerCellStyle);
-	    setCellValue(sheet, 0, 15, "Task Name", headerCellStyle);
-	    setCellValue(sheet, 0, 16, "Account", headerCellStyle);
-	    setCellValue(sheet, 0, 17, "Team", headerCellStyle);
-	    setCellValue(sheet, 0, 18, "Sub Team", headerCellStyle);
-	    setCellValue(sheet, 0, 19, "Date", headerCellStyle);
-	    setCellValue(sheet, 0, 20, "Actual Hours Spent", headerCellStyle);
-	    setCellValue(sheet, 0, 21, "comment", headerCellStyle);
-	    setCellValue(sheet, 0, 22, "Updated Date & Time", headerCellStyle);
+	  setCellValue(sheet, 0, 1, "User Group", headerCellStyle);
+	    setCellValue(sheet, 0, 2, "Employee Name", headerCellStyle);
+	    setCellValue(sheet, 0, 3, "Employee Code", headerCellStyle);
+	    setCellValue(sheet, 0, 4, "Delivery Lead", headerCellStyle);
+	    setCellValue(sheet, 0, 5, "Client", headerCellStyle);
+	    setCellValue(sheet, 0, 6, "Project code", headerCellStyle);
+	    setCellValue(sheet, 0, 7, "ID", headerCellStyle);
+	    setCellValue(sheet, 0, 8, "PO Id", headerCellStyle);
+	    setCellValue(sheet, 0, 9, "Order book Ref", headerCellStyle);
+	    setCellValue(sheet, 0, 10, "Proposal Number", headerCellStyle);
+	    setCellValue(sheet, 0, 11, "Project Name", headerCellStyle);
+	    setCellValue(sheet, 0, 12, "Project Status", headerCellStyle);
+	    setCellValue(sheet, 0, 13, "Project Type", headerCellStyle);
+	    setCellValue(sheet, 0, 14, "Project Category", headerCellStyle);
+	    setCellValue(sheet, 0, 15, "New Project Category", headerCellStyle);
+	    setCellValue(sheet, 0, 16, "Task Name", headerCellStyle);
+	    setCellValue(sheet, 0, 17, "Account", headerCellStyle);
+	    setCellValue(sheet, 0, 18, "Team", headerCellStyle);
+	    setCellValue(sheet, 0, 19, "Sub Team", headerCellStyle);
+	    setCellValue(sheet, 0, 20, "Date", headerCellStyle);
+	    setCellValue(sheet, 0, 21, "Actual Hours Spent", headerCellStyle);
+	    setCellValue(sheet, 0, 22, "comment", headerCellStyle);
+	    setCellValue(sheet, 0, 23, "Updated Date & Time", headerCellStyle);
 
 	    List<DailyTimesheetDumpDetails> data =
 	        (List<DailyTimesheetDumpDetails>) dataMap.get("DATA");
@@ -134,43 +134,44 @@ public class FamstackXLSReportProcessor extends BaseFamstackService
 	    int rowIndex = 1;
 	    for (DailyTimesheetDumpDetails dailyTimesheetDumpDetails : data) {
 	      setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
-	      setCellValue(sheet, rowIndex, 1, dailyTimesheetDumpDetails.getFullName(), null);
-	      setCellValue(sheet, rowIndex, 2, dailyTimesheetDumpDetails.getEmployeeeId(), null);
-	      setCellValue(sheet, rowIndex, 3, dailyTimesheetDumpDetails.getDeliveryLead(), null);
-	      setCellValue(sheet, rowIndex, 4, dailyTimesheetDumpDetails.getClientName(), null);
-	      setCellValue(sheet, rowIndex, 5, dailyTimesheetDumpDetails.getProjectCode(), null);
-	      setCellValue(sheet, rowIndex, 6, dailyTimesheetDumpDetails.getProjectId(), null);
+	      setCellValue(sheet, rowIndex, 1, dailyTimesheetDumpDetails.getUserGroupName(), null);
+	      setCellValue(sheet, rowIndex, 2, dailyTimesheetDumpDetails.getFullName(), null);
+	      setCellValue(sheet, rowIndex, 3, dailyTimesheetDumpDetails.getEmployeeeId(), null);
+	      setCellValue(sheet, rowIndex, 4, dailyTimesheetDumpDetails.getDeliveryLead(), null);
+	      setCellValue(sheet, rowIndex, 5, dailyTimesheetDumpDetails.getClientName(), null);
+	      setCellValue(sheet, rowIndex, 6, dailyTimesheetDumpDetails.getProjectCode(), null);
+	      setCellValue(sheet, rowIndex, 7, dailyTimesheetDumpDetails.getProjectId(), null);
 	      
-	      setCellValue(sheet, rowIndex, 7, dailyTimesheetDumpDetails.getProjectNumber(), null);
-	      setCellValue(sheet, rowIndex, 8, dailyTimesheetDumpDetails.getOrderRefNumber(), null);
-	      setCellValue(sheet, rowIndex, 9, dailyTimesheetDumpDetails.getProposalNumber(), null);
-	      setCellValue(sheet, rowIndex, 10, "" + dailyTimesheetDumpDetails.getProjectName(),
+	      setCellValue(sheet, rowIndex, 8, dailyTimesheetDumpDetails.getProjectNumber(), null);
+	      setCellValue(sheet, rowIndex, 9, dailyTimesheetDumpDetails.getOrderRefNumber(), null);
+	      setCellValue(sheet, rowIndex, 10, dailyTimesheetDumpDetails.getProposalNumber(), null);
+	      setCellValue(sheet, rowIndex, 11, "" + dailyTimesheetDumpDetails.getProjectName(),
 	          null);
-	      setCellValue(sheet, rowIndex, 11, dailyTimesheetDumpDetails.getProjectStatus(), null);
-	      setCellValue(sheet, rowIndex, 12, toString(dailyTimesheetDumpDetails.getProjectType()),
+	      setCellValue(sheet, rowIndex, 12, dailyTimesheetDumpDetails.getProjectStatus(), null);
+	      setCellValue(sheet, rowIndex, 13, toString(dailyTimesheetDumpDetails.getProjectType()),
 	          null);
-	      setCellValue(sheet, rowIndex, 13, dailyTimesheetDumpDetails.getProjectCategory(),
+	      setCellValue(sheet, rowIndex, 14, dailyTimesheetDumpDetails.getProjectCategory(),
 		          null);
-	      setCellValue(sheet, rowIndex, 14, dailyTimesheetDumpDetails.getNewProjectCategory(), null);
-	      setCellValue(sheet, rowIndex, 15,
-	          dailyTimesheetDumpDetails.getTaskName(), null);
+	      setCellValue(sheet, rowIndex, 15, dailyTimesheetDumpDetails.getNewProjectCategory(), null);
 	      setCellValue(sheet, rowIndex, 16,
-	          dailyTimesheetDumpDetails.getAccountName(), null);
+	          dailyTimesheetDumpDetails.getTaskName(), null);
 	      setCellValue(sheet, rowIndex, 17,
+	          dailyTimesheetDumpDetails.getAccountName(), null);
+	      setCellValue(sheet, rowIndex, 18,
 	          dailyTimesheetDumpDetails.getTeamName(),
 	          null);
-	      setCellValue(sheet, rowIndex, 18,
+	      setCellValue(sheet, rowIndex, 19,
 	          dailyTimesheetDumpDetails.getSubTeamName(),
 	          null);
-	      setCellValue(sheet, rowIndex, 19,
+	      setCellValue(sheet, rowIndex, 20,
 	           dailyTimesheetDumpDetails.getTaskActivityStartTime(),
 	           valueDateCellStyle);
-	      setCellValue(sheet, rowIndex, 20,convertToActualTimeString(dailyTimesheetDumpDetails.getActDurationInMins()),
+	      setCellValue(sheet, rowIndex, 21,convertToActualTimeString(dailyTimesheetDumpDetails.getActDurationInMins()),
 	          boldCenterTimeValueCellStyle);
-	      setCellValue(sheet, rowIndex, 21,
+	      setCellValue(sheet, rowIndex, 22,
 		          dailyTimesheetDumpDetails.getTaskCompletionComments(),
 		          null);
-	      setCellValue(sheet, rowIndex, 22,
+	      setCellValue(sheet, rowIndex, 23,
 		          dailyTimesheetDumpDetails.getLastModifiedTime(),
 		          valueDateTimeCellStyle);
 	      rowIndex++;
@@ -186,6 +187,7 @@ private void fillUtilizationBySkillsReportData(Map<String, Object> dataMap, XSSF
 	  	setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
 	  	 int rowHeaderCount = 1;
 	  	 if(ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
+	  		  setCellValue(sheet, 0, rowHeaderCount++, "User Group", headerCellStyle); 
 	  		  setCellValue(sheet, 0, rowHeaderCount++, "Employee Code", headerCellStyle);
 	  		  setCellValue(sheet, 0, rowHeaderCount++, "Employe Name", headerCellStyle);
 	  		  setCellValue(sheet, 0, rowHeaderCount++, "Designation", headerCellStyle);
@@ -208,6 +210,7 @@ private void fillUtilizationBySkillsReportData(Map<String, Object> dataMap, XSSF
 	      setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
 	      int rowCount = 1;
 	      if(ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS == reportType || ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY == reportType) {
+	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getUserGroupName(), null);
 	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getEmployeeCode(), null);
 	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getEmployeeName(), null);
 	    	  setCellValue(sheet, rowIndex, rowCount++, byUserSkillOrCategory.getDesignation(), null);
@@ -279,12 +282,13 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Date value,
       XSSFWorkbook workBook) {
 
     setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
-    setCellValue(sheet, 0, 1, "Employee Name", headerCellStyle);
-    setCellValue(sheet, 0, 2, "Reporting Manager", headerCellStyle);
+    setCellValue(sheet, 0, 1, "User Group", headerCellStyle);
+    setCellValue(sheet, 0, 2, "Employee Name", headerCellStyle);
+    setCellValue(sheet, 0, 3, "Reporting Manager", headerCellStyle);
     List<String> dateList = (List<String>) dataMap.get("DATE_LIST");
     int colIndex = 0;
     for (String headerDate : dateList) {
-      setCellValue(sheet, 0, 3 + colIndex, "Status (" + headerDate + ")", headerCellStyle);
+      setCellValue(sheet, 0, 4 + colIndex, "Status (" + headerDate + ")", headerCellStyle);
       colIndex++;
     }
 
@@ -293,14 +297,15 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Date value,
     int rowIndex = 1;
     for (UserSiteActivityDetails userSiteActivityDetails : data) {
       setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
-      setCellValue(sheet, rowIndex, 1, userSiteActivityDetails.getEmployeeName(), null);
-      setCellValue(sheet, rowIndex, 2, userSiteActivityDetails.getReportingManager(), null);
+      setCellValue(sheet, rowIndex, 1, userSiteActivityDetails.getUserGroupName(), null);
+      setCellValue(sheet, rowIndex, 2, userSiteActivityDetails.getEmployeeName(), null);
+      setCellValue(sheet, rowIndex, 3, userSiteActivityDetails.getReportingManager(), null);
       colIndex = 0;
       for (UserSiteActivityStatus status : userSiteActivityDetails.getStatusList()) {
         if ("Active".equalsIgnoreCase(status.getStatus())) {
-          setCellValue(sheet, rowIndex, 3 + colIndex, status.getStatus(), boldCenterValueCellStyle);
+          setCellValue(sheet, rowIndex, 4 + colIndex, status.getStatus(), boldCenterValueCellStyle);
         } else {
-          setCellValue(sheet, rowIndex, 3 + colIndex, status.getStatus(), boldCenterRedCellStyle);
+          setCellValue(sheet, rowIndex, 4 + colIndex, status.getStatus(), boldCenterRedCellStyle);
         }
         colIndex++;
       }
@@ -312,43 +317,45 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Date value,
       XSSFWorkbook workBook) {
 
     setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
-    setCellValue(sheet, 0, 1, "Employee Name", headerCellStyle);
-    setCellValue(sheet, 0, 2, "Employee Code", headerCellStyle);
-    setCellValue(sheet, 0, 3, "Reporting Manager", headerCellStyle);
-    setCellValue(sheet, 0, 4, "Billable Hours", headerCellStyle);
-    setCellValue(sheet, 0, 5, "Non Billable Hours", headerCellStyle);
-    setCellValue(sheet, 0, 6, "Leave or Holiday", headerCellStyle);
-    setCellValue(sheet, 0, 7, "Utilization", headerCellStyle);
-    setCellValue(sheet, 0, 8, "Total Hours", headerCellStyle);
+    setCellValue(sheet, 0, 1, "User Group", headerCellStyle);
+    setCellValue(sheet, 0, 2, "Employee Name", headerCellStyle);
+    setCellValue(sheet, 0, 3, "Employee Code", headerCellStyle);
+    setCellValue(sheet, 0, 4, "Reporting Manager", headerCellStyle);
+    setCellValue(sheet, 0, 5, "Billable Hours", headerCellStyle);
+    setCellValue(sheet, 0, 6, "Non Billable Hours", headerCellStyle);
+    setCellValue(sheet, 0, 7, "Leave or Holiday", headerCellStyle);
+    setCellValue(sheet, 0, 8, "Utilization", headerCellStyle);
+    setCellValue(sheet, 0, 9, "Total Hours", headerCellStyle);
 
     List<UserUtilizationDetails> data = (List<UserUtilizationDetails>) dataMap.get("DATA");
 
     int rowIndex = 1;
     for (UserUtilizationDetails userUtilizationDetails : data) {
       setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
-      setCellValue(sheet, rowIndex, 1, userUtilizationDetails.getEmployeeName(), null);
-      setCellValue(sheet, rowIndex, 2, userUtilizationDetails.getEmpId(), null);
-      setCellValue(sheet, rowIndex, 3, userUtilizationDetails.getReportingManager(), null);
-      setCellValue(sheet, rowIndex, 4, convertToActualTimeString(userUtilizationDetails.getBillableMins()),
+      setCellValue(sheet, rowIndex, 1, userUtilizationDetails.getUserGroupName(), null);
+      setCellValue(sheet, rowIndex, 2, userUtilizationDetails.getEmployeeName(), null);
+      setCellValue(sheet, rowIndex, 3, userUtilizationDetails.getEmpId(), null);
+      setCellValue(sheet, rowIndex, 4, userUtilizationDetails.getReportingManager(), null);
+      setCellValue(sheet, rowIndex, 5, convertToActualTimeString(userUtilizationDetails.getBillableMins()),
           boldCenterTimeValueCellStyle);
-      setCellValue(sheet, rowIndex, 5, convertToActualTimeString(userUtilizationDetails.getNonBillableMins()),
+      setCellValue(sheet, rowIndex, 6, convertToActualTimeString(userUtilizationDetails.getNonBillableMins()),
           boldCenterTimeValueCellStyle);
       if (userUtilizationDetails.getLeaveOrHolidayMins() > 0) {
-        setCellValue(sheet, rowIndex, 6, convertToActualTimeString(userUtilizationDetails.getLeaveOrHolidayMins()),
+        setCellValue(sheet, rowIndex, 7, convertToActualTimeString(userUtilizationDetails.getLeaveOrHolidayMins()),
             boldCenterTimeYelloCellStyle);
       } else {
-        setCellValue(sheet, rowIndex, 6, convertToActualTimeString(userUtilizationDetails.getLeaveOrHolidayMins()),
+        setCellValue(sheet, rowIndex, 7, convertToActualTimeString(userUtilizationDetails.getLeaveOrHolidayMins()),
             boldCenterTimeValueCellStyle);
       }
       if (userUtilizationDetails.isUnderOrOverUtilized()) {
-        setCellValue(sheet, rowIndex, 7, userUtilizationDetails.getUtilization() + " %",
+        setCellValue(sheet, rowIndex, 8, userUtilizationDetails.getUtilization() + " %",
             boldCenterRedCellStyle);
       } else {
-        setCellValue(sheet, rowIndex, 7, userUtilizationDetails.getUtilization() + " %",
+        setCellValue(sheet, rowIndex, 8, userUtilizationDetails.getUtilization() + " %",
             boldCenterValueCellStyle);
       }
 
-      setCellValue(sheet, rowIndex, 8, convertToActualTimeString(userUtilizationDetails.getTotalMins()),
+      setCellValue(sheet, rowIndex, 9, convertToActualTimeString(userUtilizationDetails.getTotalMins()),
           boldCenterTimeValueCellStyle);
       rowIndex++;
     }
@@ -360,20 +367,21 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Date value,
     sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 2));
 
     setCellValue(sheet, 1, 0, "Sl No", headerCellStyle);
-    setCellValue(sheet, 1, 1, "Employee Name", headerCellStyle);
-    setCellValue(sheet, 1, 2, "Employee Code", headerCellStyle);
-    setCellValue(sheet, 1, 3, "Reporting Manager", headerCellStyle);
+    setCellValue(sheet, 1, 1, "User Group", headerCellStyle);
+    setCellValue(sheet, 1, 2, "Employee Name", headerCellStyle);
+    setCellValue(sheet, 1, 3, "Employee Code", headerCellStyle);
+    setCellValue(sheet, 1, 4, "Reporting Manager", headerCellStyle);
 
     List<String> weekList = (List<String>) dataMap.get("WEEK_LIST");
     Map<String, String> dateMap = (Map<String, String>) dataMap.get("DATE_LIST");
     int colIndex = 0;
     for (String weekNumber : weekList) {
       sheet.addMergedRegion(new CellRangeAddress(0, 0, 3 + colIndex, 3 + colIndex + 3));
-      setCellValue(sheet, 0, 4 + colIndex, dateMap.get(weekNumber), boldCenterValueCellStyle);
-      setCellValue(sheet, 1, 4 + colIndex++, "Billable", headerCellStyle);
-      setCellValue(sheet, 1, 4 + colIndex++, "Non Billable", headerCellStyle);
-      setCellValue(sheet, 1, 4 + colIndex++, "Leave/Holiday", headerCellStyle);
-      setCellValue(sheet, 1, 4 + colIndex++, "Total Hours", headerCellStyle);
+      setCellValue(sheet, 0, 5 + colIndex, dateMap.get(weekNumber), boldCenterValueCellStyle);
+      setCellValue(sheet, 1, 5 + colIndex++, "Billable", headerCellStyle);
+      setCellValue(sheet, 1, 5 + colIndex++, "Non Billable", headerCellStyle);
+      setCellValue(sheet, 1, 5 + colIndex++, "Leave/Holiday", headerCellStyle);
+      setCellValue(sheet, 1, 5 + colIndex++, "Total Hours", headerCellStyle);
     }
 
     List<UserUtilizationWeekWiseDetails> data =
@@ -382,55 +390,56 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Date value,
     int rowIndex = 2;
     for (UserUtilizationWeekWiseDetails userUtilizationWeekWiseDetails : data) {
       setCellValue(sheet, rowIndex, 0, "" + (rowIndex - 1), null);
-      setCellValue(sheet, rowIndex, 1, userUtilizationWeekWiseDetails.getEmployeeName(), null);
-      setCellValue(sheet, rowIndex, 2, userUtilizationWeekWiseDetails.getEmpId(), null);
-      setCellValue(sheet, rowIndex, 3, userUtilizationWeekWiseDetails.getReportingManager(), null);
+      setCellValue(sheet, rowIndex, 1, userUtilizationWeekWiseDetails.getUserGroupName(), null);
+      setCellValue(sheet, rowIndex, 2, userUtilizationWeekWiseDetails.getEmployeeName(), null);
+      setCellValue(sheet, rowIndex, 3, userUtilizationWeekWiseDetails.getEmpId(), null);
+      setCellValue(sheet, rowIndex, 4, userUtilizationWeekWiseDetails.getReportingManager(), null);
 
       colIndex = 0;
       for (String weekNumber : weekList) {
         if (userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber)
             .getBillableMins() > 0) {
           setCellValue(
-              sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails
+              sheet, rowIndex, 5 + colIndex++, userUtilizationWeekWiseDetails
                   .getUserUtilizationMap().get(weekNumber).getBillableHours(),
               boldCenterValueCellStyle);
         } else {
-          setCellValue(sheet, rowIndex, 4 + colIndex++, "", boldCenterValueCellStyle);
+          setCellValue(sheet, rowIndex, 5 + colIndex++, "", boldCenterValueCellStyle);
         }
         if (userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber)
             .getNonBillableMins() > 0) {
           setCellValue(
-              sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails
+              sheet, rowIndex, 5 + colIndex++, userUtilizationWeekWiseDetails
                   .getUserUtilizationMap().get(weekNumber).getNonBillableHours(),
               boldCenterValueCellStyle);
         } else {
-          setCellValue(sheet, rowIndex, 4 + colIndex++, "", boldCenterValueCellStyle);
+          setCellValue(sheet, rowIndex, 5 + colIndex++, "", boldCenterValueCellStyle);
         }
         if (userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber)
             .getLeaveOrHolidayMins() > 0) {
           setCellValue(
-              sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails
+              sheet, rowIndex, 5 + colIndex++, userUtilizationWeekWiseDetails
                   .getUserUtilizationMap().get(weekNumber).getLeaveOrHolidayHours(),
               boldCenterYelloCellStyle);
         } else {
-          setCellValue(sheet, rowIndex, 4 + colIndex++, "", boldCenterValueCellStyle);
+          setCellValue(sheet, rowIndex, 5 + colIndex++, "", boldCenterValueCellStyle);
         }
         if (userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber)
             .getTotalWithLeaveMins() > 0) {
           if (userUtilizationWeekWiseDetails.getUserUtilizationMap().get(weekNumber)
               .isNotifyUsers()) {
             setCellValue(
-                sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails
+                sheet, rowIndex, 5 + colIndex++, userUtilizationWeekWiseDetails
                     .getUserUtilizationMap().get(weekNumber).getTotalWithLeaveHrs(),
                 boldCenterRedCellStyle);
           } else {
             setCellValue(
-                sheet, rowIndex, 4 + colIndex++, userUtilizationWeekWiseDetails
+                sheet, rowIndex, 5 + colIndex++, userUtilizationWeekWiseDetails
                     .getUserUtilizationMap().get(weekNumber).getTotalWithLeaveHrs(),
                 boldCenterValueCellStyle);
           }
         } else {
-          setCellValue(sheet, rowIndex, 4 + colIndex++, "00.00", boldCenterRedCellStyle);
+          setCellValue(sheet, rowIndex, 5 + colIndex++, "00.00", boldCenterRedCellStyle);
         }
       }
       rowIndex++;
@@ -442,25 +451,25 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Date value,
       XSSFWorkbook workBook) {
 
     setCellValue(sheet, 0, 0, "Sl No", headerCellStyle);
-    
-    setCellValue(sheet, 0, 1, "Client Name", headerCellStyle);
-    setCellValue(sheet, 0, 2, "Order book ref id", headerCellStyle);
-    setCellValue(sheet, 0, 3, "Proposal Number", headerCellStyle);
-    setCellValue(sheet, 0, 4, "Offshore/Onshore", headerCellStyle);
-    setCellValue(sheet, 0, 5, "Delivery Lead", headerCellStyle);
-    setCellValue(sheet, 0, 6, "Team Name", headerCellStyle);
-    setCellValue(sheet, 0, 7, "Account Name", headerCellStyle);
-    setCellValue(sheet, 0, 8, "Project Name", headerCellStyle);
-    setCellValue(sheet, 0, 9, "Project Id", headerCellStyle);
-    setCellValue(sheet, 0, 10, "Project Code", headerCellStyle);
-    setCellValue(sheet, 0, 11, "PO No", headerCellStyle);
-    setCellValue(sheet, 0, 12, "SOW", headerCellStyle);
-    setCellValue(sheet, 0, 13, "Start Date", headerCellStyle);
-    setCellValue(sheet, 0, 14, "End Date", headerCellStyle);
-    setCellValue(sheet, 0, 15, "Current Status", headerCellStyle);
-    setCellValue(sheet, 0, 16, "Total Estimation Hours", headerCellStyle);
-    setCellValue(sheet, 0, 17, "Consumed Hours", headerCellStyle);
-    setCellValue(sheet, 0, 18, "% of Utilization", headerCellStyle);
+    setCellValue(sheet, 0, 1, "User Group", headerCellStyle);
+    setCellValue(sheet, 0, 2, "Client Name", headerCellStyle);
+    setCellValue(sheet, 0, 3, "Order book ref id", headerCellStyle);
+    setCellValue(sheet, 0, 4, "Proposal Number", headerCellStyle);
+    setCellValue(sheet, 0, 5, "Offshore/Onshore", headerCellStyle);
+    setCellValue(sheet, 0, 6, "Delivery Lead", headerCellStyle);
+    setCellValue(sheet, 0, 7, "Team Name", headerCellStyle);
+    setCellValue(sheet, 0, 8, "Account Name", headerCellStyle);
+    setCellValue(sheet, 0, 9, "Project Name", headerCellStyle);
+    setCellValue(sheet, 0, 10, "Project Id", headerCellStyle);
+    setCellValue(sheet, 0, 11, "Project Code", headerCellStyle);
+    setCellValue(sheet, 0, 12, "PO No", headerCellStyle);
+    setCellValue(sheet, 0, 13, "SOW", headerCellStyle);
+    setCellValue(sheet, 0, 14, "Start Date", headerCellStyle);
+    setCellValue(sheet, 0, 15, "End Date", headerCellStyle);
+    setCellValue(sheet, 0, 16, "Current Status", headerCellStyle);
+    setCellValue(sheet, 0, 17, "Total Estimation Hours", headerCellStyle);
+    setCellValue(sheet, 0, 18, "Consumed Hours", headerCellStyle);
+    setCellValue(sheet, 0, 19, "% of Utilization", headerCellStyle);
 
     List<POEstimateProjectTaskActivityDetails> data =
         (List<POEstimateProjectTaskActivityDetails>) dataMap.get("DATA");
@@ -468,35 +477,36 @@ private void setCellValue(Sheet sheet, int rowIndex, int colIndex, Date value,
     int rowIndex = 1;
     for (POEstimateProjectTaskActivityDetails pOEstimateProjectTaskActivityDetails : data) {
       setCellValue(sheet, rowIndex, 0, "" + rowIndex, null);
-      setCellValue(sheet, rowIndex, 1, pOEstimateProjectTaskActivityDetails.getClientName(), null);
-      setCellValue(sheet, rowIndex, 2, pOEstimateProjectTaskActivityDetails.getOrderBookId(), null);
-      setCellValue(sheet, rowIndex, 3, pOEstimateProjectTaskActivityDetails.getProposalNumber(), null);
-      setCellValue(sheet, rowIndex, 4, pOEstimateProjectTaskActivityDetails.getLocation(), null);
-      setCellValue(sheet, rowIndex, 5, pOEstimateProjectTaskActivityDetails.getDeliveryLeadName(), null);
-      
-      setCellValue(sheet, rowIndex, 6, pOEstimateProjectTaskActivityDetails.getTeamName(), null);
-      setCellValue(sheet, rowIndex, 7, pOEstimateProjectTaskActivityDetails.getAccountName(), null);
-      setCellValue(sheet, rowIndex, 8, pOEstimateProjectTaskActivityDetails.getProjectName(), null);
-      setCellValue(sheet, rowIndex, 9, "" + pOEstimateProjectTaskActivityDetails.getProjectId(),
+      setCellValue(sheet, rowIndex, 1, pOEstimateProjectTaskActivityDetails.getUserGroupName(), null);
+      setCellValue(sheet, rowIndex, 2, pOEstimateProjectTaskActivityDetails.getClientName(), null);
+      setCellValue(sheet, rowIndex, 3, pOEstimateProjectTaskActivityDetails.getOrderBookId(), null);
+      setCellValue(sheet, rowIndex, 4, pOEstimateProjectTaskActivityDetails.getProposalNumber(), null);
+      setCellValue(sheet, rowIndex, 5, pOEstimateProjectTaskActivityDetails.getLocation(), null);
+      setCellValue(sheet, rowIndex, 6, pOEstimateProjectTaskActivityDetails.getDeliveryLeadName(), null);
+     
+      setCellValue(sheet, rowIndex, 7, pOEstimateProjectTaskActivityDetails.getTeamName(), null);
+      setCellValue(sheet, rowIndex, 8, pOEstimateProjectTaskActivityDetails.getAccountName(), null);
+      setCellValue(sheet, rowIndex, 9, pOEstimateProjectTaskActivityDetails.getProjectName(), null);
+      setCellValue(sheet, rowIndex, 10, "" + pOEstimateProjectTaskActivityDetails.getProjectId(),
           null);
-      setCellValue(sheet, rowIndex, 10, pOEstimateProjectTaskActivityDetails.getProjectCode(), null);
-      setCellValue(sheet, rowIndex, 11, pOEstimateProjectTaskActivityDetails.getProjectNumber(),
+      setCellValue(sheet, rowIndex, 11, pOEstimateProjectTaskActivityDetails.getProjectCode(), null);
+      setCellValue(sheet, rowIndex, 12, pOEstimateProjectTaskActivityDetails.getProjectNumber(),
           null);
-      setCellValue(sheet, rowIndex, 12, pOEstimateProjectTaskActivityDetails.getSowLineItem(), null);
-      setCellValue(sheet, rowIndex, 13,
-          pOEstimateProjectTaskActivityDetails.getProjectStartTimeFormated(), null);
+      setCellValue(sheet, rowIndex, 13, pOEstimateProjectTaskActivityDetails.getSowLineItem(), null);
       setCellValue(sheet, rowIndex, 14,
-          pOEstimateProjectTaskActivityDetails.getProjectCompletionTimeFormated(), null);
+          pOEstimateProjectTaskActivityDetails.getProjectStartTimeFormated(), null);
       setCellValue(sheet, rowIndex, 15,
+          pOEstimateProjectTaskActivityDetails.getProjectCompletionTimeFormated(), null);
+      setCellValue(sheet, rowIndex, 16,
           pOEstimateProjectTaskActivityDetails.getProjectEstimateStatus(),
           boldCenterValueCellStyle);
-      setCellValue(sheet, rowIndex, 16,
+      setCellValue(sheet, rowIndex, 17,
           "" + pOEstimateProjectTaskActivityDetails.getProjectDurationHrs(),
           boldCenterValueCellStyle);
-      setCellValue(sheet, rowIndex, 17,
+      setCellValue(sheet, rowIndex, 18,
           "" + pOEstimateProjectTaskActivityDetails.getTaskActivityDurationHrs(),
           boldCenterValueCellStyle);
-      setCellValue(sheet, rowIndex, 18,
+      setCellValue(sheet, rowIndex, 19,
           pOEstimateProjectTaskActivityDetails.getUtilizationString() + "%",
           boldCenterValueCellStyle);
       rowIndex++;

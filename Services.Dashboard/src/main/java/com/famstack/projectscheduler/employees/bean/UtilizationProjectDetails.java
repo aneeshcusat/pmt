@@ -16,6 +16,7 @@ public class UtilizationProjectDetails {
 	private String projectName;
 	private Date startDate;
 	private Date endDate;
+	private String userGroupName;
 	
 	public String getTeamName() {
 		return teamName;
@@ -82,6 +83,12 @@ public class UtilizationProjectDetails {
 	}
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
+	}
+	public String getUserGroupName() {
+		return userGroupName;
+	}
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
 	}
 
 }

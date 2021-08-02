@@ -741,28 +741,39 @@ public class FamstackProjectController extends BaseFamstackService
 	
 	@RequestMapping(value = "/getReportData", method = RequestMethod.GET)
     @ResponseBody
-	public String getReportData(@RequestParam("reportType") ReportType reportType, @RequestParam("reportStartDate") String reportStartDate, @RequestParam("reportEndDate") String reportEndDate)
+	public String getReportData(@RequestParam("userGroupIds") List<String> userGroupIds, @RequestParam("reportType") ReportType reportType, @RequestParam("reportStartDate") String reportStartDate, @RequestParam("reportEndDate") String reportEndDate)
     {
-        return famstackDashboardManager.getReportDataJson(reportType, reportStartDate, reportEndDate);
+		/*List<String> userGroupIds = null;
+		if (userGroupIdArray != null) {
+			userGroupIds = Arrays.asList(userGroupIdArray);
+		}*/
+		System.out.println("User Group Ids " + userGroupIds);
+        return famstackDashboardManager.getReportDataJson(reportType, reportStartDate, reportEndDate, userGroupIds);
     }
 	
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
-	public void downloadReport(@RequestParam("reportType") ReportType reportType,@RequestParam("fileName") String fileName, @RequestParam("reportStartDate") String reportStartDate, @RequestParam("reportEndDate") String reportEndDate, HttpServletRequest request,
+	public void downloadReport(@RequestParam("userGroupIds") List<String> userGroupIds,@RequestParam("reportType") ReportType reportType,@RequestParam("fileName") String fileName, @RequestParam("reportStartDate") String reportStartDate, @RequestParam("reportEndDate") String reportEndDate, HttpServletRequest request,
 	        HttpServletResponse response)
     {
-		 famstackXLSExportManager.downloadXLSReport(reportType, fileName, famstackDashboardManager.getReportData(reportType, reportStartDate, reportEndDate), request, response);
+		
+		/*List<String> userGroupIds = null;
+		if (userGroupIdArray != null) {
+			userGroupIds = Arrays.asList(userGroupIdArray);
+		}*/
+		System.out.println("User Group Ids " + userGroupIds);
+		 famstackXLSExportManager.downloadXLSReport(reportType, fileName, famstackDashboardManager.getReportData(reportType, reportStartDate, reportEndDate, userGroupIds), request, response);
     }
 	
 	@RequestMapping(value = "/downloadProjectReportBySkill", method = RequestMethod.GET)
 	  public void downloadProjectReportBySkill(@RequestParam("fileName") String fileName,
 	      @RequestParam("reportStartDate") String reportStartDate,
-	      @RequestParam("reportEndDate") String reportEndDate,  @RequestParam("teamIds") String teamIds,
+	      @RequestParam("reportEndDate") String reportEndDate,  @RequestParam("teamIds") List<String> userGroupIds,
 	      HttpServletRequest request, HttpServletResponse response) {
 	    Date startDate = DateUtils.tryParse(reportStartDate, DateUtils.DATE_FORMAT_CALENDER);
 	    Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
 
 	    List<ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponse =
-	        famstackDashboardManager.getProjectUtilizationBySkills(startDate, endDate, teamIds);
+	        famstackDashboardManager.getProjectUtilizationBySkills(startDate, endDate, userGroupIds);
 	    Map<String, Object> dataMap = new HashMap<>();
 	    dataMap.put("DATA", projectDetailsBySkillsResponse);
 
@@ -856,7 +867,9 @@ public class FamstackProjectController extends BaseFamstackService
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		
-		List<POEstimateResponse> poEstimateResponse = famstackDashboardManager.getPOEstimateList(startDate, endDate, sRequest.getTeamId());
+		List<String> userGroupIds = Arrays.asList(sRequest.getTeamId().split(","));
+		
+		List<POEstimateResponse> poEstimateResponse = famstackDashboardManager.getPOEstimateList(startDate, endDate, userGroupIds);
 		  return ResponseEntity
 		            .ok()
 		            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
@@ -889,7 +902,7 @@ public class FamstackProjectController extends BaseFamstackService
 
 	@RequestMapping(value = "/rest/reports", method = RequestMethod.POST,  produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity getReports(@RequestBody String searchRequest, @RequestParam("reportType") ReportType reportType, HttpServletRequest request) {
+	public ResponseEntity getReports(@RequestParam("userGroupIds") List<String> userGroupIds, @RequestBody String searchRequest, @RequestParam("reportType") ReportType reportType, HttpServletRequest request) {
 		String fClientId ="87534234598763332";
 		String fSecretKey ="knRIhdlZ0eBiO3TGExwR5XbLdTNR2rdTBCYRJpaPAoh0h7HL21UBTR7JE7H43D6a71UYiWGhKn1g4nIQuhRHXxEbJfzRTzjoGLP0";
 		String clientId = request.getHeader("clientId");
@@ -904,7 +917,7 @@ public class FamstackProjectController extends BaseFamstackService
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		
-		Map<String, Object> reportResponse = famstackDashboardManager.getReportData(reportType, sRequest.getStartDate(), sRequest.getEndDate(), sRequest.getTeamId());
+		Map<String, Object> reportResponse = famstackDashboardManager.getReportData(reportType, sRequest.getStartDate(), sRequest.getEndDate(), userGroupIds);
 		  return ResponseEntity
 		            .ok()
 		            .header("famstackaccesscode", "qwero-234kwerlk-werekl1255")
@@ -931,8 +944,8 @@ public ResponseEntity getProjectUtilizationBySkills(@RequestBody String searchRe
 	if (startDate == null || endDate == null || !StringUtils.isNotBlank(sRequest.getTeamId())) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 	}
-	
-	List<ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponse = famstackDashboardManager.getProjectUtilizationBySkills(startDate, endDate, sRequest.getTeamId());
+	List<String> userGroupIds = Arrays.asList(sRequest.getTeamId().split(","));
+	List<ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponse = famstackDashboardManager.getProjectUtilizationBySkills(startDate, endDate, userGroupIds);
 	logInfo("Returning projectDetails Size : " + projectDetailsBySkillsResponse.size());
 	return ResponseEntity
 	            .ok()

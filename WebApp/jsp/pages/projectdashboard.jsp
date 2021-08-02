@@ -20,6 +20,11 @@
 var assigneeMandatoryForQuickCloning = ${applicationScope.applicationConfiguraion.assignManForQckClone};
 var recurringOriginal = ${applicationScope.applicationConfiguraion.recurringOriginal};
 var userSkillHoursMappingEnabled = true;
+var enableQuickCloningTask = false;
+
+<c:if test="${currentUser.userGroupId == '1012'}">
+enableQuickCloningTask= true;
+</c:if>
 </script>
 <style>
 ::-webkit-scrollbar {
@@ -1288,16 +1293,18 @@ var loadDuplicateProjects = function(projectId, projectCode, isForce) {
 	        famstackalert(e);
 	    }, false);
 		
-		dataString = {"projectId" : projectId};
-		doAjaxRequestWithGlobal("GET", "${applicationHome}/projectTaskCloneJson", dataString, function(data) {
-	        $("#projectTaskCloneDIv"+projectId).html(data);
-	        if(!isForce) {
-	        	loadInitialTaskAvailabilityTime(projectId);
-	        }
-	    }, function(e) {
-	        famstacklog("ERROR: ", e);
-	        famstackalert(e);
-	    }, false);
+		if (enableQuickCloningTask) {
+			dataString = {"projectId" : projectId};
+			doAjaxRequestWithGlobal("GET", "${applicationHome}/projectTaskCloneJson", dataString, function(data) {
+		        $("#projectTaskCloneDIv"+projectId).html(data);
+		        if(!isForce) {
+		        	loadInitialTaskAvailabilityTime(projectId);
+		        }
+		    }, function(e) {
+		        famstacklog("ERROR: ", e);
+		        famstackalert(e);
+		    }, false);
+		}
 	}
 	if(!isForce) {
 		if ($("#projectOpenLink" + projectId).hasClass("fa-chevron-right")) {

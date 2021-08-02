@@ -159,6 +159,9 @@ public class UserItem implements FamstackBaseItem
     @Column(name = "skills", columnDefinition="LONGTEXT")
     private String skills;
     
+    @Column(name = "additional_skills", columnDefinition="LONGTEXT")
+    private String additionalSkills;
+    
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "group_subscribers", joinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "group_id", nullable = false, updatable = false)})
     private Set<GroupItem> groups;
@@ -633,6 +636,14 @@ public class UserItem implements FamstackBaseItem
 
 	public void setAccountLocked(Boolean accountLocked) {
 		this.accountLocked = accountLocked;
+	}
+
+	public String getAdditionalSkills() {
+		return additionalSkills;
+	}
+
+	public void setAdditionalSkills(String additionalSkills) {
+		this.additionalSkills = additionalSkills;
 	}
 
 }

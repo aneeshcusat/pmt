@@ -63,6 +63,7 @@ public class POEstimateProjectTaskActivityDetails
 	private Integer deliveryLead;
 	
 	private String deliveryLeadName;
+	private String userGroupName;
 	
     public String getProjectCode()
     {
@@ -417,5 +418,13 @@ public class POEstimateProjectTaskActivityDetails
 
 	public String getDeliveryLeadName() {
 		return deliveryLeadName;
+	}
+
+	public String getUserGroupName() {
+		return userGroupName;
+	}
+
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 public class UserUtilizationDetails  extends UserUtilization{
 
 	String employeeName;
+	String userGroupName;
 	String reportingManager;
 	String emailId;
 	String empId;
@@ -83,5 +84,13 @@ public class UserUtilizationDetails  extends UserUtilization{
 
 	public void setEmpId(String empId) {
 		this.empId = empId;
+	}
+
+	public String getUserGroupName() {
+		return userGroupName;
+	}
+
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
 	}
 }

@@ -18,6 +18,7 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Async;
@@ -1197,7 +1198,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	public List<ProjectTaskActivityDetails> getAllProjectTaskAssigneeData(Date startDate, Date endDate,
-			boolean getUnique, boolean addSameTaskActTime, Integer userId, String userGroupIds) {
+			boolean getUnique, boolean addSameTaskActTime, Integer userId, List<String> userGroupIds) {
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0));
 		dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
@@ -1206,11 +1207,12 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		List<ProjectTaskActivityDetails> projectDetailsUniqueTasksList = new ArrayList<>();
 		List<ProjectTaskActivityDetails> allTaskActProjectDetailsList = new ArrayList<>();
 		String sqlQuery = HQLStrings.getString("projectTeamAssigneeReportSQL");
-		if (userGroupIds == null) {
-			userGroupIds = getFamstackUserSessionConfiguration().getUserGroupId();
+		if (CollectionUtils.isEmpty(userGroupIds)) {
+			userGroupIds = Collections.singletonList(getFamstackUserSessionConfiguration().getUserGroupId());
 		}
 		if (userId == null) {
-				sqlQuery += " and utai.user_grp_id in (" + userGroupIds + ")";
+				String userGroupIdsArray = org.apache.commons.lang3.StringUtils.join(userGroupIds, ",");
+				sqlQuery += " and utai.user_grp_id in (" + userGroupIdsArray + ")";
 		}
 		if (userId != null) {
 			sqlQuery += " and uai.id = " + userId;
@@ -1236,17 +1238,18 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	public List<POEstimateProjectTaskActivityDetails> getAllProjectPOEstimateDuration(Date startDate, Date endDate,
-			String userGroupId) {
+			List<String> userGroupIds) {
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0));
 		dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
 
 		List<POEstimateProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
 		String sqlQuery = HQLStrings.getString("poEstimateReportSQL");
-		if (userGroupId == null) {
-			userGroupId = getFamstackUserSessionConfiguration().getUserGroupId();
+		if (CollectionUtils.isEmpty(userGroupIds)) {
+			userGroupIds = Collections.singletonList(getFamstackUserSessionConfiguration().getUserGroupId());
 		}
-		sqlQuery += " and utai.user_grp_id = " + userGroupId;
+		String userGroupIdArray = org.apache.commons.lang3.StringUtils.join(userGroupIds, ",");
+		sqlQuery += " and utai.user_grp_id in ( " + userGroupIdArray + ")";
 
 		sqlQuery += " " + HQLStrings.getString("poEstimateReportSQL-OrderBy");
 
@@ -1282,7 +1285,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			projectTaskActivityDetails.setProjectAccountId((Integer) data[11]);
 			projectTaskActivityDetails.setProjectLead((Integer) data[12]);
 			projectTaskActivityDetails.setSowLineItem((String) data[13]);
-
+			
 			String newProjectCategory = (String) data[14];
 
 			if (!StringUtils.isNotBlank(projectCategory)) {
@@ -1310,7 +1313,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 
 			projectTaskActivityDetails.setLocation((String) data[24]);
 			projectTaskActivityDetails.setEstHoursByMonthSkills(convertStringToJsonObject((String) data[25]));
-
+			projectTaskActivityDetails.setUserGroupName(getUserGroupName((String) data[26]));
 			projectDetailsList.add(projectTaskActivityDetails);
 		}
 
@@ -2212,7 +2215,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		String dateRange = getReportDateRangeString(dateList);
 
 		UserGroupDetails userGroupDetails = getFamstackApplicationConfiguration().getUserGroupMap().get(userGroupId);
-
+		List<String> userGroupIds = Collections.singletonList(userGroupId);
 		List<EmployeeDetails> employeesList = getFamstackApplicationConfiguration().sortedUserList(userGroupId);
 
 		Map<String, Object> notificationDataMap = new HashMap<>();
@@ -2254,9 +2257,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			}
 			/******** user site activity end *******/
 		} else if (reportType == ReportType.USER_UTILIZATION) {
-
+			
 			List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(startDate, endDate,
-					employeesList, userGroupId, excludeMailList);
+					employeesList, userGroupIds, excludeMailList);
 
 			logDebug(FamstackUtils.getJsonFromObject(utilizationDetails));
 			if (utilizationDetails != null) {
@@ -2293,7 +2296,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 				notificationDataMap.put("WEEK_LIST", yearMonthWeekNumberList);
 
 				List<UserUtilizationWeekWiseDetails> utilizationWeekWiseDetails = getAutoReportUtilizationWeekWiseDataForEmail(
-						startDate, endDate, employeesList, userGroupId, excludeMailList);
+						startDate, endDate, employeesList, userGroupIds, excludeMailList);
 
 				if (utilizationWeekWiseDetails != null) {
 
@@ -2315,7 +2318,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 					.getLastDayOfPreviousWeek(DateUtils.getNextPreviousDate(DateTimePeriod.DAY, new Date(), -1 * 3));
 
 			List<POEstimateProjectTaskActivityDetails> projectTaskActivityDetails = getAutoReportPOEstimationDataForEmail(
-					startDate, endDate, employeesList, userGroupId);
+					startDate, endDate, employeesList, userGroupIds);
 			if (projectTaskActivityDetails != null && !projectTaskActivityDetails.isEmpty()) {
 				notificationDataMap.put("REPORT_DATE",
 						getReportDateRangeString(getReportDateRangeList(startDate, endDate)));
@@ -2326,7 +2329,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		}
 	}
 
-	public Map<String, Object> getReportData(String userGroupId, ReportType reportType, Date reportStartDate,
+	public Map<String, Object> getReportData(List<String> userGroupIds, ReportType reportType, Date reportStartDate,
 			Date reportEndDate) {
 		Date startDate = DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, reportStartDate, 0);
 
@@ -2335,9 +2338,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		List<String> dateList = getReportDateRangeList(startDate, endDate);
 		String dateRange = getReportDateRangeString(dateList);
 
-		UserGroupDetails userGroupDetails = getFamstackApplicationConfiguration().getUserGroupMap().get(userGroupId);
+		//UserGroupDetails userGroupDetails = getFamstackApplicationConfiguration().getUserGroupMap().get(userGroupId);
 
-		List<EmployeeDetails> employeesList = getFamstackApplicationConfiguration().sortedUserList(userGroupId);
+		List<EmployeeDetails> employeesList = getFamstackApplicationConfiguration().sortedUserList(userGroupIds);
 
 		Map<String, Object> reportDataMap = new HashMap<>();
 
@@ -2345,12 +2348,12 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		reportDataMap.put("DATE_LIST", dateList);
 		if (reportType == ReportType.TIME_SHEET_DUMP) {
 			reportDataMap.put("DATA",
-					getDailyTimesheetDump(startDate, endDate, employeesList, userGroupId, reportType));
+					getDailyTimesheetDump(startDate, endDate, employeesList, userGroupIds, reportType));
 		} else if (reportType == ReportType.UTILIZATION_BY_SKILLS
 				|| reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_SKILLS
 				|| reportType == ReportType.UTILIZATION_BY_EMPLOYEE_BY_PROJECT_CATEGORY) {
 			reportDataMap.put("DATA", getUtilizationByEmployeeProjecctCategoryOrSkill(startDate, endDate, employeesList,
-					userGroupId, reportType));
+					userGroupIds, reportType));
 		} else if (reportType == ReportType.USER_SITE_ACTIVITY) {
 
 			Map<Integer, Map<String, UserTaskActivityItem>> nonBillativityMap = famstackUserActivityManager
@@ -2365,7 +2368,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		} else if (reportType == ReportType.USER_UTILIZATION || reportType == ReportType.WEEKLY_PROJECT_HOURS) {
 
 			List<UserUtilizationDetails> utilizationDetails = getAutoReportUtilizationDataForEmail(startDate, endDate,
-					employeesList, userGroupId, null);
+					employeesList, userGroupIds, null);
 			reportDataMap.put("DATA", utilizationDetails);
 		} else if (reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY
 				|| reportType == ReportType.WEEKWISE_USER_UTILIZATION_MONTHLY_ENE) {
@@ -2383,14 +2386,14 @@ public class FamstackProjectManager extends BaseFamstackManager {
 			reportDataMap.put("WEEK_LIST", yearMonthWeekNumberList);
 
 			List<UserUtilizationWeekWiseDetails> utilizationWeekWiseDetails = getAutoReportUtilizationWeekWiseDataForEmail(
-					startDate, endDate, employeesList, userGroupId, null);
+					startDate, endDate, employeesList, userGroupIds, null);
 			reportDataMap.put("DATA", utilizationWeekWiseDetails);
 			famstackNotificationServiceManager.notifyAll(NotificationType.WEEKWISE_USER_UTILIZATION_MONTHLY,
 					reportDataMap, null);
 		} else if (reportType == ReportType.WEEKLY_PO_ESTIMATION) {
 
 			List<POEstimateProjectTaskActivityDetails> projectTaskActivityDetails = getAutoReportPOEstimationDataForEmail(
-					startDate, endDate, employeesList, userGroupId);
+					startDate, endDate, employeesList, userGroupIds);
 			reportDataMap.put("DATA", projectTaskActivityDetails);
 		}
 
@@ -2398,16 +2401,16 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	private List<DailyTimesheetDumpDetails> getDailyTimesheetDump(Date startDate, Date endDate,
-			List<EmployeeDetails> employeesList, String userGroupId, ReportType reportType) {
+			List<EmployeeDetails> employeesList, List<String> userGroupIds, ReportType reportType) {
 
 		List<DailyTimesheetDumpDetails> dailyTimesheetDumpDetailsList = new ArrayList<>();
 		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
 
 		if (startDate != null && endDate != null) {
 			projectTaskAssigneeDataList
-					.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, false, null, userGroupId));
+					.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, false, null, userGroupIds));
 			projectTaskAssigneeDataList.addAll(famstackUserActivityManager.getAllNonBillableTaskActivities(startDate,
-					endDate, false, false, null, userGroupId));
+					endDate, false, false, null, userGroupIds));
 			if (projectTaskAssigneeDataList != null && !projectTaskAssigneeDataList.isEmpty()) {
 				for (ProjectTaskActivityDetails projectDetails : projectTaskAssigneeDataList) {
 
@@ -2452,7 +2455,14 @@ public class FamstackProjectManager extends BaseFamstackManager {
 							.setTaskRecordedActivityStartTime(projectDetails.getRecordedTaskStartTime());
 					dailyTimesheetDumpDetails.setLastModifiedTime(projectDetails.getLastModifiedTime());
 					dailyTimesheetDumpDetails.setActDurationInMins(projectDetails.getTaskActActivityDuration());
-
+					String projectUserGropuId = projectDetails.getUserGroupId();
+					if(projectUserGropuId != null) {
+						UserGroupDetails userGroupDetails = getFamstackApplicationConfiguration().getUserGroupMap().get(projectUserGropuId);
+						if(userGroupDetails !=null) {
+							dailyTimesheetDumpDetails.setUserGroupName(userGroupDetails.getName());
+						}
+					}
+					
 					dailyTimesheetDumpDetailsList.add(dailyTimesheetDumpDetails);
 				}
 			}
@@ -2469,16 +2479,16 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	private Object getUtilizationByEmployeeProjecctCategoryOrSkill(Date startDate, Date endDate,
-			List<EmployeeDetails> employeesList, String userGroupId, ReportType reportType) {
+			List<EmployeeDetails> employeesList, List<String> userGroupIds, ReportType reportType) {
 
 		List<UtilizationByUserSkillOrCategory> utilizationBySkillList = new ArrayList<>();
 		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
 
 		if (startDate != null && endDate != null) {
 			projectTaskAssigneeDataList
-					.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, userGroupId));
+					.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, userGroupIds));
 			projectTaskAssigneeDataList.addAll(famstackUserActivityManager.getAllNonBillableTaskActivities(startDate,
-					endDate, false, true, null, userGroupId));
+					endDate, false, true, null, userGroupIds));
 			// month:userid:skill:type:hours
 			Map<String, Map<Integer, Map<String, Map<String, Integer>>>> monthYearUserIdSkillHoursMap = new HashMap<>();
 			Map<String, Map<Integer, Map<String, Set<String>>>> monthUserCategoryProjectAccountMap = new HashMap<>();
@@ -2499,10 +2509,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 						continue;
 					}
 					String monthYear = DateUtils.getMonthYear(projectDetails.getTaskActivityStartTime());
-					if ("Dec-2021".equals(monthYear)) {
-						System.out.println("");
-						DateUtils.getMonthYear(projectDetails.getTaskActivityStartTime());
-					}
+					
 					int userId = projectDetails.getUserId();
 					int userIdValue = 0;
 					if (reportType != ReportType.UTILIZATION_BY_SKILLS) {
@@ -2580,6 +2587,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 								utilizationByUserSkillOrCategory.setEmployeeId(employeeDetails.getId());
 								utilizationByUserSkillOrCategory.setDesignation(employeeDetails.getDesignation());
 								utilizationByUserSkillOrCategory.setEmployeeName(employeeDetails.getFirstName());
+								//TODO: change to get user group from project item
+								utilizationByUserSkillOrCategory.setUserGroupName(getUserGroupName(employeeDetails.getUserGroupId()));
 							}
 						}
 						Map<String, Integer> hoursMap = monthYearUserIdSkillHoursMap.get(monthYear).get(userId)
@@ -2647,11 +2656,11 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	private List<POEstimateProjectTaskActivityDetails> getAutoReportPOEstimationDataForEmail(Date startDate,
-			Date endDate, List<EmployeeDetails> employeesList, String userGroupId) {
+			Date endDate, List<EmployeeDetails> employeesList, List<String> userGroupIds) {
 
 		List<POEstimateProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
 		if (startDate != null && endDate != null) {
-			projectTaskAssigneeDataList.addAll(getAllProjectPOEstimateDuration(startDate, endDate, userGroupId));
+			projectTaskAssigneeDataList.addAll(getAllProjectPOEstimateDuration(startDate, endDate, userGroupIds));
 		}
 		return projectTaskAssigneeDataList;
 	}
@@ -2759,7 +2768,7 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	public List<UserUtilizationDetails> getAutoReportUtilizationDataForEmail(Date startDate, Date endDate,
-			List<EmployeeDetails> employeesList, String userGroupId, List<String> excludeMailList) {
+			List<EmployeeDetails> employeesList, List<String> userGroupIds, List<String> excludeMailList) {
 
 		int numberOfWorkingDays = DateUtils.getWorkingDaysBetweenTwoDates(startDate, endDate);
 		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
@@ -2767,9 +2776,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		logDebug("endDate" + endDate);
 		if (startDate != null && endDate != null) {
 			projectTaskAssigneeDataList
-					.addAll(getAllProjectTaskAssigneeData(startDate, endDate, true, true, null, userGroupId));
+					.addAll(getAllProjectTaskAssigneeData(startDate, endDate, true, true, null, userGroupIds));
 			projectTaskAssigneeDataList.addAll(famstackUserActivityManager.getAllNonBillableTaskActivities(startDate,
-					endDate, true, true, null, userGroupId));
+					endDate, true, true, null, userGroupIds));
 			FamstackUtils.sortProjectTaskAssigneeDataList(projectTaskAssigneeDataList,
 					getFamstackApplicationConfiguration().getAllUsersMap());
 
@@ -2822,12 +2831,13 @@ public class FamstackProjectManager extends BaseFamstackManager {
 						userUtilizationProjectDetails.setMonth(Calendar.getInstance().get(Calendar.MONTH) + 1);
 						userUtilizationProjectDetails.setWeekNumber(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
 						userUtilizationProjectDetails.setYear(Calendar.getInstance().get(Calendar.YEAR));
-
+							
 						userUtilizationProjectDetails.setProjectName(projectDetails.getProjectName());
 						userUtilizationProjectDetails.setProjectNumber(projectDetails.getProjectNumber());
 						userUtilizationProjectDetails.setStartDate(projectDetails.getProjectStartTime());
 						userUtilizationProjectDetails.setTeamName(projectDetails.getTeamName());
 						userUtilizationProjectDetails.setAccountName(projectDetails.getAccountName());
+						userUtilizationProjectDetails.setUserGroupName(getUserGroupName(projectDetails.getUserGroupId()));
 						utilizationprojectDetailsMap.put(projectDetails.getProjectId(), userUtilizationProjectDetails);
 					}
 
@@ -2854,8 +2864,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 				}
 
 				UserUtilizationDetails userUtilizationDetails = new UserUtilizationDetails();
-
-				if (getFamstackApplicationConfiguration().isEnableUserAcivtiveUtilization(userGroupId)) {
+				
+				if (getFamstackApplicationConfiguration().isEnableUserAcivtiveUtilization(userGroupIds.get(0))) {
 					userUtilizationDetails.setUserExitDate(employeeDetails.getExitDate());
 					userUtilizationDetails.setUserJoinDate(employeeDetails.getDateOfJoin());
 					userUtilizationDetails.setNoOfWorkingDays(DateUtils.getUsersActualWorkingHours(numberOfWorkingDays,
@@ -2958,16 +2968,16 @@ public class FamstackProjectManager extends BaseFamstackManager {
 	}
 
 	private List<UserUtilizationWeekWiseDetails> getAutoReportUtilizationWeekWiseDataForEmail(Date startDate,
-			Date endDate, List<EmployeeDetails> employeesList, String userGroupId, List<String> excludeMailList) {
+			Date endDate, List<EmployeeDetails> employeesList, List<String> userGroupIds, List<String> excludeMailList) {
 		List<ProjectTaskActivityDetails> projectTaskAssigneeDataList = new ArrayList<>();
 		List<UserUtilizationWeekWiseDetails> userUtilizationList = new ArrayList<>();
 		List<UserUtilizationWeekWiseDetails> underOrOverUtilizedList = new ArrayList<>();
 
 		if (startDate != null && endDate != null) {
 			projectTaskAssigneeDataList
-					.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, userGroupId));
+					.addAll(getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, userGroupIds));
 			projectTaskAssigneeDataList.addAll(famstackUserActivityManager.getAllNonBillableTaskActivities(startDate,
-					endDate, false, true, null, userGroupId));
+					endDate, false, true, null, userGroupIds));
 			FamstackUtils.sortProjectTaskAssigneeDataList(projectTaskAssigneeDataList,
 					getFamstackApplicationConfiguration().getAllUsersMap());
 
@@ -3016,6 +3026,8 @@ public class FamstackProjectManager extends BaseFamstackManager {
 				userUtilizationWeekWiseDetails.setEmployeeName(employeeDetails.getFirstName());
 				userUtilizationWeekWiseDetails.setEmpId(employeeDetails.getEmpCode());
 				userUtilizationWeekWiseDetails.setEmailId(employeeDetails.getEmail());
+				// TODO: get user utilizaton from project item
+				userUtilizationWeekWiseDetails.setUserGroupName(getUserGroupName(employeeDetails.getUserGroupId()));
 				Map<String, Map<String, Integer>> utilizationWeekTypeMap = userDateWeekHoursMap
 						.get(employeeDetails.getId());
 
@@ -3209,13 +3221,15 @@ public class FamstackProjectManager extends BaseFamstackManager {
 		return projectDetailsList; 
 	}
 
-	public List<ProjectTaskActivityDetails> getAllProjectWithoutTasksAssigneeData(Date startDate,Date endDate, String userGroupIds) {
+	public List<ProjectTaskActivityDetails> getAllProjectWithoutTasksAssigneeData(Date startDate,Date endDate, List<String> userGroupIds) {
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("startDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_START, startDate, 0));
 		dataMap.put("endDate", DateUtils.getNextPreviousDate(DateTimePeriod.DAY_END, endDate, 0));
 
 		String sqlQuery = HQLStrings.getString("getProjectWithoutAssigneeData");
-		sqlQuery += " and user_grp_id in (" + userGroupIds + ")";
+		String userGroupIdArray = org.apache.commons.lang3.StringUtils.join(userGroupIds, ",");
+		sqlQuery += " and user_grp_id in (" + userGroupIdArray + ")";
+	
 		
 		List<ProjectTaskActivityDetails> projectDetailsList = new ArrayList<>();
 

@@ -1159,10 +1159,10 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	
 	public List<ProjectTaskActivityDetails> getAllNonBillableTaskActivities(
 			Date startDate, Date endDate, boolean uniqueList,
-			Integer currentUserId, String teamId) {
+			Integer currentUserId, List<String> userGroupIds) {
 		List<ProjectTaskActivityDetails> projectTaskActivityDetails = famstackUserActivityManager.getAllNonBillableTaskActivities(
 				startDate, endDate, uniqueList,
-				true, currentUserId, teamId);
+				true, currentUserId, userGroupIds);
 		if(getFamstackApplicationConfiguration().isRestrictionBasedOnDesignation()) {
 			projectTaskActivityDetails = famstackDataFilterManager.filterProjectTaskActivityDetails(projectTaskActivityDetails);
 		}
@@ -2277,22 +2277,24 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public String getReportDataJson(ReportType reportType, String reportStartDate,
-			String reportEndDate) {
+			String reportEndDate, List<String> userGroupIds) {
 		Date startDate = DateUtils.tryParse(reportStartDate, DateUtils.DATE_FORMAT_CALENDER);
 		Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
-		return FamstackUtils.getJsonFromObject(projectManager.getReportData(getFamstackApplicationConfiguration().getCurrentUserGroupId(), reportType, startDate, endDate));
+		if (CollectionUtils.isEmpty(userGroupIds)) {
+			userGroupIds = Collections.singletonList(getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		}
+		return FamstackUtils.getJsonFromObject(projectManager.getReportData(userGroupIds, reportType, startDate, endDate));
 	}
 	
-	public Map<String, Object> getReportData(ReportType reportType, String reportStartDate,
-			String reportEndDate ) {
-		return getReportData(reportType, reportStartDate, reportEndDate, getFamstackApplicationConfiguration().getCurrentUserGroupId() );
-	}
 	
 	public Map<String, Object> getReportData(ReportType reportType, String reportStartDate,
-			String reportEndDate, String groupId) {
+			String reportEndDate, List<String> userGroupIds) {
 		Date startDate = DateUtils.tryParse(reportStartDate, DateUtils.DATE_FORMAT_CALENDER);
 		Date endDate = DateUtils.tryParse(reportEndDate, DateUtils.DATE_FORMAT_CALENDER);
-		return projectManager.getReportData(groupId, reportType, startDate, endDate);
+		if (CollectionUtils.isEmpty(userGroupIds)) {
+			userGroupIds = Collections.singletonList(getFamstackApplicationConfiguration().getCurrentUserGroupId());
+		}
+		return projectManager.getReportData(userGroupIds, reportType, startDate, endDate);
 	}
 
 	public String getTeamUtilizationChartData(String groupIds, String reportStartDate, String reportEndDate) {
@@ -2309,8 +2311,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 	}
 
 	public List<ProjectDetailsResponse> getProjectList(Date startDate, Date endDate, String teamId, int version) {
-		List<ProjectTaskActivityDetails> projectTaskActivityDetails = projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, teamId);
-		projectTaskActivityDetails.addAll(getAllNonBillableTaskActivities(startDate, endDate, false, null, teamId));
+		List<String> userGroupIds = Collections.singletonList(teamId);
+		List<ProjectTaskActivityDetails> projectTaskActivityDetails = projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, userGroupIds);
+		projectTaskActivityDetails.addAll(getAllNonBillableTaskActivities(startDate, endDate, false, null, userGroupIds));
 		
 		List<ProjectDetailsResponse> projectDetailsResponsesList = new ArrayList<>();
 		
@@ -2406,9 +2409,9 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return projectDetailsResponsesList;
 	}
 
-	public List<POEstimateResponse> getPOEstimateList(Date startDate, Date endDate, String teamId) {
+	public List<POEstimateResponse> getPOEstimateList(Date startDate, Date endDate, List<String> userGroupIds) {
 		List<POEstimateProjectTaskActivityDetails> poEstimateProjectTaskActivityDetails = projectManager.getAllProjectPOEstimateDuration(
-				startDate, endDate, teamId);
+				startDate, endDate, userGroupIds);
 		List<POEstimateResponse> poEstimateResponsesList = new ArrayList<>();
 		
 		if (poEstimateProjectTaskActivityDetails != null) {
@@ -2468,15 +2471,15 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		return teamResponseList;
 	}
 
-	public List<ProjectDetailsBySkillsResponse> getProjectUtilizationBySkills(Date startDate, Date endDate, String teamIds) {
+	public List<ProjectDetailsBySkillsResponse> getProjectUtilizationBySkills(Date startDate, Date endDate, List<String> userGroupIds) {
 
-		logInfo("Starting getProjectUtilizationBySkills " +  teamIds);
+		logInfo("Starting getProjectUtilizationBySkills " +  userGroupIds);
 		
 		List<ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponsesList = new ArrayList<>();
 		List<ProjectTaskActivityDetails> projectTaskActivityDetails = new ArrayList<>();
-		projectTaskActivityDetails.addAll(projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, teamIds));
+		projectTaskActivityDetails.addAll(projectManager.getAllProjectTaskAssigneeData(startDate, endDate, false, true, null, userGroupIds));
 
-		List<ProjectTaskActivityDetails> projectsWithoutTasks = projectManager.getAllProjectWithoutTasksAssigneeData(startDate, endDate, teamIds);
+		List<ProjectTaskActivityDetails> projectsWithoutTasks = projectManager.getAllProjectWithoutTasksAssigneeData(startDate, endDate, userGroupIds);
 		
 		if(CollectionUtils.isNotEmpty(projectTaskActivityDetails) || CollectionUtils.isNotEmpty(projectsWithoutTasks)) {
 			
@@ -2494,7 +2497,7 @@ public class FamstackDashboardManager extends BaseFamstackService {
 		}
 		List<String> monthRange = DateUtils.getYearMonthNumberBetwwenTwoDates(startDate, endDate);
 		logInfo("MonthRage : " + monthRange);
-		logInfo("Retrived team project details : " + teamIds + ", size : " + projectTaskActivityDetails.size());
+		logInfo("Retrived team project details : " + userGroupIds + ", size : " + projectTaskActivityDetails.size());
 		
 		Map<String, ProjectDetailsBySkillsResponse> projectDetailsBySkillsResponsesCacheMap = new HashMap<>();
 		
