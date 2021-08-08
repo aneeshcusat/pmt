@@ -2879,6 +2879,9 @@ public class FamstackProjectManager extends BaseFamstackManager {
 				userUtilizationDetails.setReportingManager(getEmployeeReportingManager(employeeDetails));
 
 				userUtilizationDetails.setEmployeeName(employeeDetails.getFirstName());
+				if(!StringUtils.isNotBlank(userUtilizationDetails.getUserGroupName())) {
+					userUtilizationDetails.setUserGroupName(getUserGroupName(employeeDetails.getUserGroupId()));
+				}
 				userUtilizationDetails.setEmpId(employeeDetails.getEmpCode());
 				userUtilizationDetails.setFunded(employeeDetails.getFundedEmployee());
 				userUtilizationDetails.setEmailId(employeeDetails.getEmail());
